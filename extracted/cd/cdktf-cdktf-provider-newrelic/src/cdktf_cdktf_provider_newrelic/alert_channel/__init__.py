@@ -69,7 +69,7 @@ class AlertChannel(
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
         :param name: (Required) The name of the channel. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#name AlertChannel#name}
-        :param type: (Required) The type of channel. One of: (opsgenie, pagerduty, slack, user, victorops, webhook, email). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#type AlertChannel#type}
+        :param type: (Required) The type of channel. One of: (user, victorops, webhook, email, opsgenie, pagerduty, slack). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#type AlertChannel#type}
         :param account_id: The New Relic account ID where you want to create alert channels. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#account_id AlertChannel#account_id}
         :param config: config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#config AlertChannel#config}
         :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#id AlertChannel#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -349,7 +349,7 @@ class AlertChannelConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param provider: 
         :param provisioners: 
         :param name: (Required) The name of the channel. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#name AlertChannel#name}
-        :param type: (Required) The type of channel. One of: (opsgenie, pagerduty, slack, user, victorops, webhook, email). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#type AlertChannel#type}
+        :param type: (Required) The type of channel. One of: (user, victorops, webhook, email, opsgenie, pagerduty, slack). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#type AlertChannel#type}
         :param account_id: The New Relic account ID where you want to create alert channels. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#account_id AlertChannel#account_id}
         :param config: config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#config AlertChannel#config}
         :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#id AlertChannel#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -473,7 +473,7 @@ class AlertChannelConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def type(self) -> builtins.str:
-        '''(Required) The type of channel. One of: (opsgenie, pagerduty, slack, user, victorops, webhook, email).
+        '''(Required) The type of channel. One of: (user, victorops, webhook, email, opsgenie, pagerduty, slack).
 
         Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_channel#type AlertChannel#type}
         '''

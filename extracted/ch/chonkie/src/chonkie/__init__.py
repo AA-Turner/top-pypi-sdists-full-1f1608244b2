@@ -16,6 +16,7 @@ from .embeddings import (
     AutoEmbeddings,
     BaseEmbeddings,
     CohereEmbeddings,
+    GeminiEmbeddings,
     JinaEmbeddings,
     Model2VecEmbeddings,
     OpenAIEmbeddings,
@@ -27,6 +28,7 @@ from .friends import (
     BasePorter,
     ChromaHandshake,
     JSONPorter,
+    PgvectorHandshake,
     QdrantHandshake,
     TurbopufferHandshake,
 )
@@ -49,7 +51,9 @@ from .types import (
     Chunk,
     CodeChunk,
     Context,
+    LanguageConfig,
     LateChunk,
+    MergeRule,
     RecursiveChunk,
     RecursiveLevel,
     RecursiveRules,
@@ -57,6 +61,7 @@ from .types import (
     SemanticSentence,
     Sentence,
     SentenceChunk,
+    SplitRule,
 )
 from .utils import (
     Hubbie,
@@ -64,7 +69,7 @@ from .utils import (
 )
 
 # This hippo grows with every release 🦛✨~
-__version__ = "1.0.8"
+__version__ = "1.0.9"
 __name__ = "chonkie"
 __author__ = "🦛 Chonkie Inc"
 
@@ -88,6 +93,9 @@ __all__ += [
     "SemanticSentence",
     "LateChunk",
     "CodeChunk",
+    "LanguageConfig",
+    "MergeRule",
+    "SplitRule",
 ]
 
 # Add all tokenizer classes to __all__
@@ -118,6 +126,7 @@ __all__ += [
     "SentenceTransformerEmbeddings",
     "OpenAIEmbeddings",
     "CohereEmbeddings",
+    "GeminiEmbeddings",
     "AutoEmbeddings",
     "JinaEmbeddings",
     "VoyageAIEmbeddings",
@@ -149,6 +158,7 @@ __all__ += [
     "BaseHandshake",
     "JSONPorter",
     "ChromaHandshake",
+    "PgvectorHandshake",
     "QdrantHandshake",
     "TurbopufferHandshake",
 ]

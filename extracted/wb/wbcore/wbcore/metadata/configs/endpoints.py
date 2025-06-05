@@ -1,10 +1,12 @@
 import re
 
+from django.urls import NoReverseMatch, resolve
 from rest_framework.reverse import reverse
 
 from wbcore.enums import WidgetType
 from wbcore.utils.urls import get_parse_endpoint, get_urlencode_endpoint
 
+from ...utils.deprecations import deprecate_warning
 from .base import WBCoreViewConfig
 
 
@@ -15,6 +17,11 @@ class EndpointViewConfig(WBCoreViewConfig):
     PK_FIELD = "id"
     DELETE_PK_FIELD = "id"
     UPDATE_PK_FIELD = "id"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if hasattr(self, "get_list_endpoint"):
+            deprecate_warning("get_list_endpoint might be deprecated in a future version of wbcore.")
 
     def get_endpoint(self, **kwargs):
         model = self.view.get_model()
@@ -57,11 +64,11 @@ class EndpointViewConfig(WBCoreViewConfig):
                 return endpoint
         return None
 
-    def get_list_endpoint(self, **kwargs):
-        return self.get_endpoint(is_list=True)
-
     def _get_list_endpoint(self):
-        return self.get_list_endpoint()
+        try:
+            return reverse(resolve(self.request.path).view_name, kwargs=self.view.kwargs, request=self.request)
+        except NoReverseMatch:
+            return None
 
     def get_delete_endpoint(self, **kwargs):
         return self.get_endpoint()

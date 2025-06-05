@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: cdktf-cdktf-provider-snowflake
-Version: 14.0.1
+Version: 15.0.0
 Summary: Prebuilt snowflake Provider for Terraform CDK (cdktf)
 Home-page: https://github.com/cdktf/cdktf-provider-snowflake.git
 Author: HashiCorp
@@ -19,8 +19,8 @@ Classifier: License :: OSI Approved
 Requires-Python: ~=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: cdktf<0.21.0,>=0.20.0
-Requires-Dist: constructs<11.0.0,>=10.3.0
+Requires-Dist: cdktf<0.22.0,>=0.21.0
+Requires-Dist: constructs<11.0.0,>=10.4.2
 Requires-Dist: jsii<2.0.0,>=1.112.0
 Requires-Dist: publication>=0.0.3
 Requires-Dist: typeguard<4.3.0,>=2.13.3

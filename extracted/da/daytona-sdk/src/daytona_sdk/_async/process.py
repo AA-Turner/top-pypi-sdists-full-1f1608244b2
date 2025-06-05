@@ -1,12 +1,10 @@
 # Copyright 2025 Daytona Platforms Inc.
 # SPDX-License-Identifier: AGPL-3.0
 
-import asyncio
 import base64
 import json
 from typing import Awaitable, Callable, Dict, List, Optional
 
-import httpx
 from daytona_api_client_async import (
     Command,
     CreateSessionRequest,
@@ -16,11 +14,11 @@ from daytona_api_client_async import (
     ToolboxApi,
 )
 from daytona_sdk._utils.errors import intercept_errors
+from daytona_sdk._utils.stream import process_streaming_response
 from daytona_sdk.code_toolbox.sandbox_python_code_toolbox import SandboxPythonCodeToolbox
 from daytona_sdk.common.charts import parse_chart
 from daytona_sdk.common.process import CodeRunParams, ExecuteResponse, ExecutionArtifacts, SessionExecuteRequest
 from daytona_sdk.common.protocols import SandboxInstance
-from daytona_sdk._utils.stream import process_streaming_response
 
 
 class AsyncProcess:
@@ -405,6 +403,7 @@ class AsyncProcess:
         # unasync: preserve end
         async def should_terminate():
             return (await self.get_session_command(session_id, command_id)).exit_code is not None
+
         # unasync: preserve start
 
         await process_streaming_response(
@@ -413,6 +412,7 @@ class AsyncProcess:
             on_chunk=on_logs,
             should_terminate=should_terminate,
         )
+
     # unasync: preserve end
 
     @intercept_errors(message_prefix="Failed to list sessions: ")

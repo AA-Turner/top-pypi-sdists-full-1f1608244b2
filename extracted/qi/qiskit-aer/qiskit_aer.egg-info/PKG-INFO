@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: qiskit-aer
-Version: 0.17.0
+Version: 0.17.1
 Summary: Aer - High performance simulators for Qiskit
 Home-page: https://github.com/Qiskit/qiskit-aer
 Author: AER Development Team
@@ -30,6 +30,7 @@ Requires-Dist: qiskit>=1.1.0
 Requires-Dist: numpy>=1.16.3
 Requires-Dist: scipy>=1.0
 Requires-Dist: psutil>=5
+Requires-Dist: python-dateutil>=2.8.0
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
@@ -38,6 +39,7 @@ Dynamic: description-content-type
 Dynamic: home-page
 Dynamic: keywords
 Dynamic: license
+Dynamic: license-file
 Dynamic: requires-dist
 Dynamic: requires-python
 Dynamic: summary

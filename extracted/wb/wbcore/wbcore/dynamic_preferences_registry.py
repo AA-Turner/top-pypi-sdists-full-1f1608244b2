@@ -4,7 +4,7 @@ from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.types import IntegerPreference, StringPreference
 from dynamic_preferences.users.registries import user_preferences_registry
 
-from wbcore.dynamic_preference.types import ChoicePreference, LanguageChoicePreference
+from wbcore.contrib.dynamic_preferences.types import ChoicePreference, LanguageChoicePreference
 
 wbcore = Section("wbcore")
 
@@ -34,6 +34,7 @@ class SystemUserEmailPeriod(StringPreference):
 
 @user_preferences_registry.register
 class LanguagePreference(LanguageChoicePreference):
+    weight = -1
     choices = [
         ("de", "Deutsch"),
         ("fr", "Français"),
@@ -50,6 +51,7 @@ class LanguagePreference(LanguageChoicePreference):
 
 @user_preferences_registry.register
 class DateFormatPreference(ChoicePreference):
+    weight = 0
     choices = [
         ("DD.MM.YYYY", "13.04.2007"),
         ("DD/MM/YYYY", "13/04/2007"),
@@ -75,6 +77,7 @@ class DateFormatPreference(ChoicePreference):
 
 @user_preferences_registry.register
 class TimeFormatPreference(ChoicePreference):
+    weight = 1
     choices = [
         ("HH:mm", "14:05"),
         ("hh:mm", "02:05"),

@@ -12,3 +12,16 @@ from .._impl import (
     scout_channelvariables_api_WorkbookContext as WorkbookContext,
 )
 
+__all__ = [
+    'ChannelVariable',
+    'ChannelVariableName',
+    'ComputeNodeWithContext',
+    'ComputeSpec',
+    'ComputeSpecVisitor',
+    'ComputeSpecV1',
+    'VariableLocator',
+    'VariableLocatorVisitor',
+    'WorkbookChannelVariableMap',
+    'WorkbookContext',
+]
+

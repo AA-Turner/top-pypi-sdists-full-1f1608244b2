@@ -1,14 +1,21 @@
 Metadata-Version: 2.4
 Name: fugashi
-Version: 1.4.3
-Summary: A Cython MeCab wrapper for fast, pythonic Japanese tokenization.
-Home-page: https://github.com/polm/fugashi
-Author: Paul O'Leary McCann
-Author-email: polm@dampfkraft.com
-License: MIT
-Classifier: License :: OSI Approved :: MIT License
+Version: 1.5.0
+Summary: Cython MeCab wrapper for fast, pythonic Japanese tokenization.
+Author-email: Paul O'Leary McCann <polm@dampfkraft.com>
+License-Expression: MIT AND BSD-3-Clause
+Project-URL: source, https://github.com/polm/fugashi
+Project-URL: funding, https://github.com/sponsors/polm
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
 Classifier: Natural Language :: Japanese
-Requires-Python: >=3.8
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Programming Language :: Cython
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Text Processing :: Linguistic
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 License-File: LICENSE.mecab
@@ -16,16 +23,7 @@ Provides-Extra: unidic
 Requires-Dist: unidic; extra == "unidic"
 Provides-Extra: unidic-lite
 Requires-Dist: unidic-lite; extra == "unidic-lite"
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
 Dynamic: license-file
-Dynamic: provides-extra
-Dynamic: requires-python
-Dynamic: summary
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fugashi.streamlit.app)
 [![Current PyPI packages](https://badge.fury.io/py/fugashi.svg)](https://pypi.org/project/fugashi/)

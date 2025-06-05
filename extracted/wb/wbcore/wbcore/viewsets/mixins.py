@@ -186,6 +186,9 @@ class ListModelMixin(MessageMixin, OriginalListModelMixin):
 
 class RetrieveModelMixin(MessageMixin, OriginalRetrieveModelMixin):
     def retrieve(self, request, *args, **kwargs):
+        # TODO Check if this is necessary but will trigger a lot of loic's test error
+        # if self.endpoint_config_class(view=self, request=self.request, instance=True)._get_instance_endpoint() is None:
+        #     return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
         response = super().retrieve(request, *args, **kwargs)
         response.data = {"instance": response.data}
         try:

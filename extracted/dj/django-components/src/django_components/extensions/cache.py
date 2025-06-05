@@ -1,19 +1,22 @@
-from typing import Any, Optional
+from hashlib import md5
+from typing import Any, Dict, List, Optional
 
 from django.core.cache import BaseCache, caches
 
 from django_components.extension import (
     ComponentExtension,
+    ExtensionComponentConfig,
     OnComponentInputContext,
     OnComponentRenderedContext,
 )
+from django_components.slots import Slot
 
 # NOTE: We allow users to override cache key generation, but then we internally
 # still prefix their key with our own prefix, so it's clear where it comes from.
 CACHE_KEY_PREFIX = "components:cache:"
 
 
-class ComponentCache(ComponentExtension.ExtensionClass):  # type: ignore
+class ComponentCache(ExtensionComponentConfig):
     """
     The interface for `Component.Cache`.
 
@@ -37,6 +40,49 @@ class ComponentCache(ComponentExtension.ExtensionClass):  # type: ignore
     enabled: bool = False
     """
     Whether this Component should be cached. Defaults to `False`.
+    """
+    include_slots: bool = False
+    """
+    Whether the slots should be hashed into the cache key.
+
+    If enabled, the following two cases will be treated as different entries:
+
+    ```django
+    {% component "mycomponent" name="foo" %}
+        FILL ONE
+    {% endcomponent %}
+
+    {% component "mycomponent" name="foo" %}
+        FILL TWO
+    {% endcomponent %}
+    ```
+
+    !!! warning
+
+        Passing slots as functions to cached components with `include_slots=True` will raise an error.
+
+    !!! warning
+
+        Slot caching DOES NOT account for context variables within the `{% fill %}` tag.
+
+        For example, the following two cases will be treated as the same entry:
+
+        ```django
+        {% with my_var="foo" %}
+            {% component "mycomponent" name="foo" %}
+                {{ my_var }}
+            {% endcomponent %}
+        {% endwith %}
+
+        {% with my_var="bar" %}
+            {% component "mycomponent" name="bar" %}
+                {{ my_var }}
+            {% endcomponent %}
+        {% endwith %}
+        ```
+
+        Currently it's impossible to capture used variables. This will be addressed in v2.
+        Read more about it in https://github.com/django-components/django-components/issues/1164.
     """
 
     ttl: Optional[int] = None
@@ -67,14 +113,17 @@ class ComponentCache(ComponentExtension.ExtensionClass):  # type: ignore
         cache = caches[cache_name]
         return cache
 
-    def get_cache_key(self, *args: Any, **kwargs: Any) -> str:
+    def get_cache_key(self, args: List, kwargs: Dict, slots: Dict) -> str:
         # Allow user to override how the input is hashed into a cache key with `hash()`,
         # but then still prefix it wih our own prefix, so it's clear where it comes from.
-        cache_key = self.hash(*args, **kwargs)
-        cache_key = CACHE_KEY_PREFIX + self.component._class_hash + ":" + cache_key
+        cache_key = self.hash(args, kwargs)
+        if self.include_slots:
+            cache_key += ":" + self.hash_slots(slots)
+        cache_key = self.component._class_hash + ":" + cache_key
+        cache_key = CACHE_KEY_PREFIX + md5(cache_key.encode()).hexdigest()
         return cache_key
 
-    def hash(self, *args: Any, **kwargs: Any) -> str:
+    def hash(self, args: List, kwargs: Dict) -> str:
         """
         Defines how the input (both args and kwargs) is hashed into a cache key.
 
@@ -86,6 +135,19 @@ class ComponentCache(ComponentExtension.ExtensionClass):  # type: ignore
         sorted_items = sorted(kwargs.items())
         kwargs_hash = ",".join(f"{k}-{v}" for k, v in sorted_items)
         return f"{args_hash}:{kwargs_hash}"
+
+    def hash_slots(self, slots: Dict[str, Slot]) -> str:
+        sorted_items = sorted(slots.items())
+        hash_parts = []
+        for key, slot in sorted_items:
+            if callable(slot.contents):
+                raise ValueError(
+                    f"Cannot hash slot '{key}' of component '{self.component.name}' - Slot functions are unhashable."
+                    " Instead define the slot as a string or `{% fill %}` tag, or disable slot caching"
+                    " with `Cache.include_slots=False`."
+                )
+            hash_parts.append(f"{key}-{slot.contents}")
+        return ",".join(hash_parts)
 
 
 class CacheExtension(ComponentExtension):
@@ -111,17 +173,17 @@ class CacheExtension(ComponentExtension):
 
     name = "cache"
 
-    ExtensionClass = ComponentCache
+    ComponentConfig = ComponentCache
 
     def __init__(self, *args: Any, **kwargs: Any):
         self.render_id_to_cache_key: dict[str, str] = {}
 
     def on_component_input(self, ctx: OnComponentInputContext) -> Optional[Any]:
-        cache_instance: ComponentCache = ctx.component.cache
+        cache_instance = ctx.component.cache
         if not cache_instance.enabled:
             return None
 
-        cache_key = cache_instance.get_cache_key(*ctx.args, **ctx.kwargs)
+        cache_key = cache_instance.get_cache_key(ctx.args, ctx.kwargs, ctx.slots)
         self.render_id_to_cache_key[ctx.component_id] = cache_key
 
         # If cache entry exists, return it. This will short-circuit the rendering process.
@@ -132,9 +194,12 @@ class CacheExtension(ComponentExtension):
 
     # Save the rendered component to cache
     def on_component_rendered(self, ctx: OnComponentRenderedContext) -> None:
-        cache_instance: ComponentCache = ctx.component.cache
+        cache_instance = ctx.component.cache
         if not cache_instance.enabled:
             return None
+
+        if ctx.error is not None:
+            return
 
         cache_key = self.render_id_to_cache_key[ctx.component_id]
         cache_instance.set_entry(cache_key, ctx.result)

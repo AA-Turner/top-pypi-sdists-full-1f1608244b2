@@ -641,14 +641,19 @@ class DatawatchClient(BaseApiClient, GeneratedDatawatchClient, ABC):
         response = self._call_datawatch(Method.POST, url, request.to_json())
         return UpsertDeltaResponse().from_dict(response)
 
-    def purge_metric_suites(self, source_names: List[str], purge_all_sources: bool = False,
-                            apply: bool = False) -> List[MetricSuiteReport]:
+    def purge_metric_suites(self,
+                            source_names: List[str],
+                            purge_all_sources: bool = False,
+                            apply: bool = False,
+                            namespace: Optional[str] = None
+    ) -> List[MetricSuiteReport]:
         """
         Purges metric suites for all warehouse_ids.
         Args:
             source_names: one or more source names
             purge_all_sources: If true will purge all sources in workspace.
             apply: whether to apply the change
+            namespace: the namespace to purge
 
         return: list of metric suite responses.
 
@@ -671,7 +676,7 @@ class DatawatchClient(BaseApiClient, GeneratedDatawatchClient, ABC):
         if source_name_id_tuples:
             process_stage = ProcessStage.APPLY if apply else ProcessStage.PLAN
             for source_id, source_name in source_name_id_tuples:
-                metric_suite = MetricSuite(source_id=source_id)
+                metric_suite = MetricSuite(source_id=source_id, namespace=namespace)
                 response = self.post_bigconfig(metric_suite=metric_suite, apply=apply)
                 reports.append(MetricSuiteReport.from_datawatch_object(obj=response,
                                                                        source_name=source_name,

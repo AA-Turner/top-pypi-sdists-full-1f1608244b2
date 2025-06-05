@@ -7,3 +7,11 @@ from .._impl import (
     scout_favorites_api_SetFavoritesListRequest as SetFavoritesListRequest,
 )
 
+__all__ = [
+    'FavoriteResource',
+    'FavoriteResourceVisitor',
+    'FavoritesListResponse',
+    'ResourceType',
+    'SetFavoritesListRequest',
+]
+

@@ -241,6 +241,9 @@ BG_JOB_ISOLATED_LOOPS = env("BG_JOB_ISOLATED_LOOPS", cast=bool, default=False)
 BG_JOB_SHUTDOWN_GRACE_PERIOD_SECS = env(
     "BG_JOB_SHUTDOWN_GRACE_PERIOD_SECS", cast=int, default=3600
 )
+MAX_STREAM_CHUNK_SIZE_BYTES = env(
+    "MAX_STREAM_CHUNK_SIZE_BYTES", cast=int, default=1024 * 1024 * 128
+)
 
 
 def _parse_thread_ttl(value: str | None) -> ThreadTTLConfig | None:

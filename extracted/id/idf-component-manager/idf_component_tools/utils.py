@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023-2024 Espressif Systems (Shanghai) CO LTD
+# SPDX-FileCopyrightText: 2023-2025 Espressif Systems (Shanghai) CO LTD
 # SPDX-License-Identifier: Apache-2.0
 import os
 import sys
@@ -67,6 +67,7 @@ else:
 # so we need to convert them to string
 _http_url_adapter = TypeAdapter(HttpUrl)
 UrlField = Annotated[
+    # return with trailing slash
     str, BeforeValidator(lambda value: str(_http_url_adapter.validate_python(value)))
 ]
 
@@ -402,7 +403,7 @@ class HashedComponentVersion:
 class ComponentWithVersions:
     def __init__(self, name: str, versions: t.List[HashedComponentVersion]) -> None:
         self.versions = versions
-        self.name = name
+        self.name = name.lower()
 
     def merge(self, cmp_with_versions: 'ComponentWithVersions') -> None:
         if self.name != cmp_with_versions.name:

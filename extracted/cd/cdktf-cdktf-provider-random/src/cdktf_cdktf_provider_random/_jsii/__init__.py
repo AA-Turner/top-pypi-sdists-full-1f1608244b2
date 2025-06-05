@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@cdktf/provider-random",
-    "11.1.1",
+    "12.0.0",
     __name__[0:-6],
-    "provider-random@11.1.1.jsii.tgz",
+    "provider-random@12.0.0.jsii.tgz",
 )
 
 __all__ = [

@@ -12,7 +12,7 @@ from arelle.XmlValidateConst import VALID
 from collections.abc import Iterable
 from typing import Any, cast, TYPE_CHECKING
 
-from arelle import XmlUtil
+from arelle import XmlUtil, XbrlConst
 from arelle.ValidateXbrl import ValidateXbrl
 from arelle.typing import TypeGetText
 from arelle.utils.PluginHooks import ValidationHook
@@ -21,10 +21,11 @@ from arelle.utils.validate.Validation import Validation
 from arelle.ValidateDuplicateFacts import getHashEquivalentFactGroups, getAspectEqualFacts
 from arelle.utils.validate.ValidationUtil import etreeIterWithDepth
 from ..DisclosureSystems import DISCLOSURE_SYSTEM_NL_INLINE_2024
+from ..LinkbaseType import LinkbaseType
 from ..PluginValidationDataExtension import (PluginValidationDataExtension, ALLOWABLE_LANGUAGES,
-                                             DISALLOWED_IXT_NAMESPACES, EFFECTIVE_TAXONOMY_URLS,
-                                             MAX_REPORT_PACKAGE_SIZE_MBS, XBRLI_IDENTIFIER_PATTERN,
-                                             XBRLI_IDENTIFIER_SCHEMA)
+                                             DISALLOWED_IXT_NAMESPACES, EFFECTIVE_KVK_GAAP_IFRS_ENTRYPOINT_FILES,
+                                             MAX_REPORT_PACKAGE_SIZE_MBS, TAXONOMY_URLS_BY_YEAR,
+                                             XBRLI_IDENTIFIER_PATTERN, XBRLI_IDENTIFIER_SCHEMA)
 
 if TYPE_CHECKING:
     from arelle.ModelXbrl import ModelXbrl
@@ -532,7 +533,7 @@ def rule_nl_kvk_3_4_1_3 (
     if len(facts) > 0:
         yield Validation.error(
             codes='NL.NL-KVK.3.4.1.3.transformableElementIncludedInHiddenSection',
-            msg=_('The ix:hidden section should not include elements that are eligible for transformation'
+            msg=_('The ix:hidden section should not include elements that are eligible for transformation '
                   'according to the latest recommended Transformation Rules Registry.'),
             modelObject=facts
         )
@@ -770,7 +771,7 @@ def rule_nl_kvk_3_6_3_1(
     """
     invalidBasenames = []
     for basename in pluginData.getIxdsDocBasenames(val.modelXbrl):
-        filenameParts = pluginData.getFilenameParts(basename)
+        filenameParts = pluginData.getFilenameParts(basename, pluginData.getFilenameFormatPattern())
         if not filenameParts:
             continue  # Filename is not formatted correctly enough to determine {base}
         if len(filenameParts.get('base', '')) > 20:
@@ -803,7 +804,7 @@ def rule_nl_kvk_3_6_3_2(
     """
     invalidBasenames = []
     for basename in pluginData.getIxdsDocBasenames(val.modelXbrl):
-        filenameParts = pluginData.getFilenameParts(basename)
+        filenameParts = pluginData.getFilenameParts(basename, pluginData.getFilenameFormatPattern())
         if not filenameParts:
             invalidBasenames.append(basename)
     if len(invalidBasenames) > 0:
@@ -913,6 +914,96 @@ def rule_nl_kvk_3_7_1_2(
         DISCLOSURE_SYSTEM_NL_INLINE_2024
     ],
 )
+def rule_nl_kvk_4_1_1_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.1.1.1: Extension taxonomies MUST consist of at least a schema file and presentation,
+                                                                                   calculation and definition linkbases.
+    A label linkbase is also required if extension elements are present.
+    """
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    linkbaseIsMissing = {
+        LinkbaseType.CALCULATION: True,
+        LinkbaseType.DEFINITION: True,
+        LinkbaseType.LABEL: len(extensionData.extensionConcepts) > 0,
+        LinkbaseType.PRESENTATION: True,
+    }
+    for modelDocument, extensionDocumentData in extensionData.extensionDocuments.items():
+        hasArcs = False
+        linkbaseType = LinkbaseType.fromRefUri(extensionDocumentData.hrefXlinkRole)
+        for linkbaseData in extensionDocumentData.linkbases:
+            if linkbaseType is not None:
+                if linkbaseType == linkbaseData.linkbaseType:
+                    if linkbaseData.hasArcs:
+                        hasArcs = True
+                        break
+            elif linkbaseData.hasArcs:
+                linkbaseType = linkbaseData.linkbaseType
+                hasArcs = True
+                break
+        if linkbaseType is None:
+            continue
+        if hasArcs and linkbaseIsMissing.get(linkbaseType, False):
+            linkbaseIsMissing[linkbaseType] = False
+    missingFiles = set(linkbaseType.getLowerName() for linkbaseType, isMissing in linkbaseIsMissing.items() if isMissing)
+    if len(missingFiles) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.1.1.1.extensionTaxonomyWrongFilesStructure',
+            msg=_('The extension taxonomy is missing one or more required components: %(missingFiles)s '
+                  'Review to ensure that the schema file, presentation, calculation, '
+                  'and definition linkbases are included and not empty. '
+                  'A label linkbase is also required if extension elements are present.'),
+            modelObject=val.modelXbrl, missingFiles=", ".join(missingFiles)
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_1_1_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.1.1.2: Each linkbase type MUST be provided in a separate linkbase file.
+    """
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    errors = []
+    for modelDocument, extensionDocumentData in extensionData.extensionDocuments.items():
+        linkbasesFound = set(
+            linkbase.linkbaseType.getLowerName()
+            for linkbase in extensionDocumentData.linkbases
+            if linkbase.linkbaseType is not None
+        )
+        if len(linkbasesFound) > 1:
+            errors.append((modelDocument, linkbasesFound))
+    for modelDocument, linkbasesFound in errors:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.1.1.2.linkbasesNotSeparateFiles',
+            msg=_('Linkbase types are not stored in separate files. '
+                  'Review linkbase files and ensure they are provided as individual files. '
+                  'Found: %(linkbasesFound)s. in %(basename)s.'),
+            modelObject=modelDocument.xmlRootElement,
+            basename=modelDocument.basename,
+            linkbasesFound=", ".join(sorted(linkbasesFound))
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
 def rule_nl_kvk_4_1_2_1(
         pluginData: PluginValidationDataExtension,
         val: ValidateXbrl,
@@ -921,17 +1012,314 @@ def rule_nl_kvk_4_1_2_1(
 ) -> Iterable[Validation]:
     """
     NL-KVK.4.1.2.1: Validate that the imported taxonomy matches the KVK-specified entry point.
-        - https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-nlgaap-ext.xsd,
-        - https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-ifrs-ext.xsd.
+        - https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-nlgaap-ext.xsd
+        - https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-ifrs-ext.xsd
     """
-    if val.modelXbrl.modelDocument is not None:
-        pluginData.checkFilingDTS(val, val.modelXbrl.modelDocument, [])
-        if not any(e in val.extensionImportedUrls for e in EFFECTIVE_TAXONOMY_URLS):
-            yield Validation.error(
-                codes='NL.NL-KVK.4.1.2.1.requiredEntryPointNotImported',
-                msg=_('The extension taxonomy must import the entry point of the taxonomy files prepared by KVK.'),
-                modelObject=val.modelXbrl.modelDocument
-            )
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    matches = extensionData.extensionImportedUrls & EFFECTIVE_KVK_GAAP_IFRS_ENTRYPOINT_FILES
+    if not matches:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.1.2.1.requiredEntryPointNotImported',
+            msg=_('The extension taxonomy must import the entry point of the taxonomy files prepared by KVK.'),
+            modelObject=val.modelXbrl.modelDocument
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_1_2_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.1.2.2: The legal entity’s extension taxonomy MUST import the applicable version of
+                    the taxonomy files prepared by KVK.
+    """
+    reportingPeriod = pluginData.getReportingPeriod(val.modelXbrl)
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    matches = extensionData.extensionImportedUrls & TAXONOMY_URLS_BY_YEAR.get(reportingPeriod or '', set())
+    if not reportingPeriod or not matches:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.1.2.2.incorrectKvkTaxonomyVersionUsed',
+            msg=_('The extension taxonomy MUST import the applicable version of the taxonomy files prepared by KVK '
+                  'for the reported financial reporting period of %(reportingPeriod)s.'),
+            modelObject=val.modelXbrl.modelDocument
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_1_5_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.1.5.1: The `{base}` component of the extension document filename SHOULD not exceed twenty characters.
+    """
+    invalidBasenames = []
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for extensionDocument in extensionData.extensionDocuments.values():
+        basename = extensionDocument.basename
+        filenameParts = pluginData.getFilenameParts(basename, pluginData.getExtensionFilenameFormatPattern())
+        if not filenameParts:
+            continue  # Filename is not formatted correctly enough to determine {base}
+        if len(filenameParts.get('base', '')) > 20:
+            invalidBasenames.append(basename)
+    if len(invalidBasenames) > 0:
+        yield Validation.warning(
+            codes='NL.NL-KVK.4.1.5.1.baseComponentInNameOfTaxonomyFileExceedsTwentyCharacters',
+            invalidBasenames=', '.join(invalidBasenames),
+            msg=_('The {base} component of the extension document filename is greater than twenty characters. '
+                  'The {base} component can either be the KVK number or the legal entity\'s name. '
+                  'If the legal entity\'s name has been utilized, review to shorten the name to twenty characters or less. '
+                  'Invalid filenames: %(invalidBasenames)s'))
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_1_5_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.1.5.2: Extension document filename SHOULD match the {base}-{date}_{suffix}-{lang}.{extension} pattern.
+    """
+    invalidBasenames = []
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for extensionDocument in extensionData.extensionDocuments.values():
+        basename = extensionDocument.basename
+        filenameParts = pluginData.getFilenameParts(basename, pluginData.getExtensionFilenameFormatPattern())
+        if not filenameParts:
+            invalidBasenames.append(basename)
+    if len(invalidBasenames) > 0:
+        yield Validation.warning(
+            codes='NL.NL-KVK.4.1.5.2.extensionTaxonomyDocumentNameDoesNotFollowNamingConvention',
+            invalidBasenames=', '.join(invalidBasenames),
+            msg=_('The extension document filename does not match the naming convention outlined by the KVK. '
+                  'It is recommended to be in the {base}-{date}_{suffix}-{lang}.{extension} format. '
+                  '{extension} must be one of the following: html, htm, xhtml. '
+                  'Review formatting and update as appropriate. '
+                  'Invalid filenames: %(invalidBasenames)s'))
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_2_0_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.2.0.1: Tuples MUST NOT be defined in extension taxonomy.
+    """
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    tupleConcepts = [
+        concept for concept in extensionData.extensionConcepts if concept.isTuple
+    ]
+    if len(tupleConcepts) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.2.0.1.tupleElementUsed',
+            modelObject=tupleConcepts,
+            msg=_('The extension taxonomy must not define tuple concepts.'))
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_2_0_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.2.0.2: Items with xbrli:fractionItemType data type MUST NOT be defined in extension taxonomy
+    """
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    fractionConcepts = [
+        concept for concept in extensionData.extensionConcepts if concept.isFraction
+    ]
+    if len(fractionConcepts) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.2.0.2.fractionElementUsed',
+            modelObject=fractionConcepts,
+            msg=_('The extension taxonomy must not define fraction concepts.'))
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_2_1_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.2.1.1: Extension taxonomy MUST set xbrli:scenario as context element on definition arcs with
+    http://xbrl.org/int/dim/arcrole/all and http://xbrl.org/int/dim/arcrole/notAll arcroles.
+    """
+    errors = []
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for modelDocument, extensionDocumentData in extensionData.extensionDocuments.items():
+        for arc in extensionDocumentData.iterArcsByType(LinkbaseType.DEFINITION, includeArcroles={XbrlConst.all, XbrlConst.notAll}):
+            if arc.get(XbrlConst.qnXbrldtContextElement.clarkNotation) != "scenario":
+                errors.append(arc)
+    if len(errors) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.2.1.1.scenarioNotUsedInExtensionTaxonomy',
+            modelObject=errors,
+            msg=_('The definition linkbase is missing xbrli:scenario in extension taxonomy. '
+                  'Review definition linkbase and update as appropriate.'),
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_4_1_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.4.1.1: Arithmetical relationships defined in the calculation linkbase of an extension taxonomy
+    MUST use the https://xbrl.org/2023/arcrole/summation-item arcrole as defined in Calculation 1.1 specification.
+    """
+    errors = []
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for modelDocument, extensionDocumentData in extensionData.extensionDocuments.items():
+        for arc in extensionDocumentData.iterArcsByType(LinkbaseType.CALCULATION, excludeArcroles={XbrlConst.summationItem11}):
+            errors.append(arc)
+    if len(errors) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.4.1.1.incorrectSummationItemArcroleUsed',
+            modelObject=errors,
+            msg=_('Calculation relationships should follow the requirements of the Calculation 1.1 specification. '
+                  'Update to ensure use of summation-item arcrole in the calculation linkbase.'),
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_4_2_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.4.2.1: Extension taxonomies MUST NOT define definition arcs
+    with http://xbrl.org/int/dim/arcrole/notAll arcrole.
+    """
+    errors = []
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for modelDocument, extensionDocumentData in extensionData.extensionDocuments.items():
+        for arc in extensionDocumentData.iterArcsByType(LinkbaseType.DEFINITION, includeArcroles={XbrlConst.notAll}):
+            errors.append(arc)
+    if len(errors) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.4.2.1.notAllArcroleUsedInDefinitionLinkbase',
+            modelObject=errors,
+            msg=_('Incorrect hypercube settings are found.  Ensure that positive hypercubes are in use.'),
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_4_2_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.4.2.2: Hypercubes appearing as target of definition arc with
+    http://xbrl.org/int/dim/arcrole/all arcrole MUST have xbrldt:closed attribute set to “true”.
+    """
+    errors = []
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for modelDocument, extensionDocumentData in extensionData.extensionDocuments.items():
+        for arc in extensionDocumentData.iterArcsByType(LinkbaseType.DEFINITION, includeArcroles={XbrlConst.all}):
+            if arc.get(XbrlConst.qnXbrldtClosed.clarkNotation, "false") != "true":
+                errors.append(arc)
+    if len(errors) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.4.2.2.openPositiveHypercubeInDefinitionLinkbase',
+            modelObject=errors,
+            msg=_('Incorrect hypercube settings are found.  Ensure that positive hypercubes are closed.'),
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_4_2_3(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.4.2.3: Hypercubes appearing as target of definition arc with
+    http://xbrl.org/int/dim/arcrole/notAll arcrole MUST have xbrldt:closed attribute set to “false”.
+    """
+    errors = []
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for modelDocument, extensionDocumentData in extensionData.extensionDocuments.items():
+        for arc in extensionDocumentData.iterArcsByType(LinkbaseType.DEFINITION, includeArcroles={XbrlConst.notAll}):
+            if arc.get(XbrlConst.qnXbrldtClosed.clarkNotation, "true") != "false":
+                errors.append(arc)
+    if len(errors) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.4.2.3.closedNegativeHypercubeInDefinitionLinkbase',
+            modelObject=errors,
+            msg=_('Incorrect hypercube settings are found.  Ensure that negative hypercubes are not closed.'),
+        )
 
 
 @validation(

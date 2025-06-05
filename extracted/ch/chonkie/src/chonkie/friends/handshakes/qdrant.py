@@ -1,7 +1,6 @@
 """Qdrant Handshake to export Chonkie's Chunks into a Qdrant collection."""
 
 import importlib.util as importutil
-import warnings
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -21,12 +20,8 @@ from .base import BaseHandshake
 from .utils import generate_random_collection_name
 
 if TYPE_CHECKING:
-    try:
-        import qdrant_client
-        from qdrant_client.http.models import PointStruct
-    except ImportError:
-        qdrant_client = Any
-        PointStruct = Any
+    import qdrant_client
+    from qdrant_client.http.models import PointStruct
 
 class QdrantHandshake(BaseHandshake):
     """Qdrant Handshake to export Chonkie's Chunks into a Qdrant collection.
@@ -64,9 +59,6 @@ class QdrantHandshake(BaseHandshake):
             **kwargs: Additional keyword arguments to pass to the Qdrant client.
 
         """
-        # Warn the user that QdrantHandshake is experimental
-        warnings.warn("Chonkie's QdrantHandshake is experimental and may change in the future. Not all Chonkie features are supported yet.", FutureWarning)
-
         super().__init__()
 
         # Lazy importing the dependencies

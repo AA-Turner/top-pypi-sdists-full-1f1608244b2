@@ -121,8 +121,11 @@ async def appu(
         model='ppu',
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
+
+        dynamic: bool = False,  # 动态路由模型
+
 ):
-    if model not in MODEL_PRICE:
+    if not dynamic and model not in MODEL_PRICE:
         _ = f"模型未找到「{model}」，默认ppu-1"
 
         logger.warning(_)
@@ -142,6 +145,9 @@ async def ppu_flow(
         post: str = "ppu-1",  # 后计费
 
         pre: str = "ppu-0001",  # 前置判断，废弃
+
+        dynamic: bool = False,
+
         **kwargs
 ):
     """
@@ -164,7 +170,7 @@ async def ppu_flow(
 
         # 计费逻辑
         n = int(np.round(n)) or 1  # np.ceil(n)
-        await asyncio.gather(*[appu(post, api_key=api_key, base_url=base_url) for _ in range(n)])
+        await asyncio.gather(*[appu(post, api_key=api_key, base_url=base_url, dynamic=dynamic) for _ in range(n)])
 
         if money is None:  # 先扣费
             yield
@@ -237,6 +243,19 @@ async def create_chat_completion_chunk(
 
     yield chat_completion_chunk_stop.model_dump_json()
     yield "[DONE]"  # 兼容标准格式
+
+
+def get_payment_times(request: Union[BaseModel, dict], duration: float = 5):
+    if isinstance(request, BaseModel):
+        request = request.model_dump()
+
+    # 数量
+    N = request.get("n") or request.get("num_images") or 1
+
+    # 时长
+    N += request.get("duration", 0) // duration
+
+    return N
 
 
 if __name__ == '__main__':

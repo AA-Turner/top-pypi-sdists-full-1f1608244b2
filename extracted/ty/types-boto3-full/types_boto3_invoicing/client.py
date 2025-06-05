@@ -19,13 +19,13 @@ Usage::
 from __future__ import annotations
 
 import sys
-from typing import Any
+from typing import Any, overload
 
 from botocore.client import BaseClient, ClientMeta
 from botocore.errorfactory import BaseClientExceptions
 from botocore.exceptions import ClientError as BotocoreClientError
 
-from .paginator import ListInvoiceUnitsPaginator
+from .paginator import ListInvoiceSummariesPaginator, ListInvoiceUnitsPaginator
 from .type_defs import (
     BatchGetInvoiceProfileRequestTypeDef,
     BatchGetInvoiceProfileResponseTypeDef,
@@ -35,6 +35,8 @@ from .type_defs import (
     DeleteInvoiceUnitResponseTypeDef,
     GetInvoiceUnitRequestTypeDef,
     GetInvoiceUnitResponseTypeDef,
+    ListInvoiceSummariesRequestTypeDef,
+    ListInvoiceSummariesResponseTypeDef,
     ListInvoiceUnitsRequestTypeDef,
     ListInvoiceUnitsResponseTypeDef,
     ListTagsForResourceRequestTypeDef,
@@ -145,6 +147,16 @@ class InvoicingClient(BaseClient):
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_invoicing/client/#get_invoice_unit)
         """
 
+    def list_invoice_summaries(
+        self, **kwargs: Unpack[ListInvoiceSummariesRequestTypeDef]
+    ) -> ListInvoiceSummariesResponseTypeDef:
+        """
+        Retrieves your invoice details programmatically, without line item details.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/invoicing/client/list_invoice_summaries.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_invoicing/client/#list_invoice_summaries)
+        """
+
     def list_invoice_units(
         self, **kwargs: Unpack[ListInvoiceUnitsRequestTypeDef]
     ) -> ListInvoiceUnitsResponseTypeDef:
@@ -193,6 +205,18 @@ class InvoicingClient(BaseClient):
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_invoicing/client/#update_invoice_unit)
         """
 
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_invoice_summaries"]
+    ) -> ListInvoiceSummariesPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/invoicing/client/get_paginator.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_invoicing/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_invoice_units"]
     ) -> ListInvoiceUnitsPaginator:

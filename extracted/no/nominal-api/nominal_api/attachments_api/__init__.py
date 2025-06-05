@@ -11,3 +11,15 @@ from .._impl import (
     attachments_api_UpdateAttachmentRequest as UpdateAttachmentRequest,
 )
 
+__all__ = [
+    'Attachment',
+    'AttachmentUri',
+    'CreateAttachmentRequest',
+    'GetAttachmentsRequest',
+    'GetAttachmentsResponse',
+    'SearchAttachmentsQuery',
+    'SearchAttachmentsQueryVisitor',
+    'UpdateAttachmentRequest',
+    'AttachmentService',
+]
+

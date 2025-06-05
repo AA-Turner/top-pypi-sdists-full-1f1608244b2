@@ -147,4 +147,4 @@ class GroupClient(ServiceClient):
 
     def url(self, group: pb2.Group) -> str:
         group_id = self.resolve_group_id(group)
-        return f"{self.config.agent_address}/gr/{self._url_quote(group_id)}/compare"
+        return f"{self.config.agent_address}/gr/{self._url_quote(group_id)}"

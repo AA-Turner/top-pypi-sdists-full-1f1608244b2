@@ -111,7 +111,7 @@ class Client(ReportingClient):
         self.queued_postinit_actions = deque(maxlen=10)
 
     @_handle_errors(return_value=False)
-    def initialize_application(self, config: AgentConfig, framework="") -> bool:
+    def initialize_application(self, config: AgentConfig, server_type="") -> bool:
         """
         Initialize an application in the Contrast UI.
 
@@ -129,7 +129,7 @@ class Client(ReportingClient):
                 agent_version=get_canonical_version(),
                 server_host_name=config["server.name"],
                 server_path=config["server.path"],
-                server_type=config["server.type"] or framework,
+                server_type=server_type,
                 config_paths=list(reversed(DEFAULT_PATHS)),
                 overrides=agent_config_to_plain_dict(config),
             )

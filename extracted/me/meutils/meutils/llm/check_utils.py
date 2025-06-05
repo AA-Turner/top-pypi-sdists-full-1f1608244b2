@@ -168,6 +168,7 @@ async def check_token_for_ppinfra(api_key, threshold: float = 1):
 
 
 @retrying()
+# @rcache(ttl=120)
 async def check_token_for_sophnet(api_key, threshold: float = 1):
     if not isinstance(api_key, str):
         return await check_tokens(api_key, check_token_for_sophnet)
@@ -217,6 +218,8 @@ if __name__ == '__main__':
 
     check_valid_token = partial(check_token_for_siliconflow, threshold=-1)
 
+    arun(check_valid_token("sk-tythaoctwemlhkytdlmjcegtnufvhqgmwlncgmoxixdyqoxx"))
+
     pass
     # arun(check_valid_token("sk-LlB4W38z9kv5Wy1c3ceeu4PHeIWs6bbWsjr8Om31jYvsucRv", threshold=0.1))
 
@@ -245,4 +248,4 @@ if __name__ == '__main__':
 
     # arun(check_token_for_ppinfra("sk_F0kgPyCMTzmOH_-VCEJucOK8HIrbnLGYm_IWxBToHZQ"))
 
-    arun(check_token_for_volc(os.getenv("VOLC_API_KEY")))
+    # arun(check_token_for_volc(os.getenv("VOLC_API_KEY")))

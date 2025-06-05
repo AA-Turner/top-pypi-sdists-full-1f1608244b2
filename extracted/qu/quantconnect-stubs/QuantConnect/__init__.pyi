@@ -8118,6 +8118,18 @@ class AlgorithmSettings(System.Object, QuantConnect.Interfaces.IAlgorithmSetting
     def databases_refresh_period(self, value: datetime.timedelta) -> None:
         ...
 
+    @property
+    def ignore_unknown_asset_holdings(self) -> bool:
+        """
+        Determines whether to terminate the algorithm when an asset holding is not supported by Lean or the brokerage.
+        Defaults to true, meaning that the algorithm will not be terminated if an asset holding is not supported.
+        """
+        ...
+
+    @ignore_unknown_asset_holdings.setter
+    def ignore_unknown_asset_holdings(self, value: bool) -> None:
+        ...
+
     def __init__(self) -> None:
         """Initializes a new instance of the AlgorithmSettings class"""
         ...
@@ -9756,6 +9768,17 @@ class Messages(System.Object):
             """Returns a message indicating that the specified order type cannot be updated quantity using the given brokerage model."""
             ...
 
+    class AlpacaBrokerageModel(System.Object):
+        """Provides user-facing messages for the Brokerages.AlpacaBrokerageModel class and its consumers or related classes"""
+
+        @staticmethod
+        def trading_outside_regular_hours_not_supported(brokerage_model: QuantConnect.Brokerages.IBrokerageModel, order_type: QuantConnect.Orders.OrderType, time_in_force: QuantConnect.Orders.TimeInForce) -> str:
+            """
+            Returns a message indicating that the specified order type is not supported for trading outside
+            regular hours by the given brokerage model.
+            """
+            ...
+
     class AlphaStreamsBrokerageModel(System.Object):
         """Provides user-facing messages for the Brokerages.AlphaStreamsBrokerageModel class and its consumers or related classes"""
 
@@ -9952,6 +9975,11 @@ class Messages(System.Object):
 
         incorrect_order_quantity: str = "Quantity should be between 1 and 10,000,000"
         """Incorrect Order Quantity string message"""
+
+        @staticmethod
+        def extended_market_hours_trading_not_supported_outside_extended_session(pre_market_segment: QuantConnect.Securities.MarketHoursSegment, post_market_segment: QuantConnect.Securities.MarketHoursSegment) -> str:
+            """Extended Market Hours Trading Not Supported Outside Extended Session string message"""
+            ...
 
     class TradingTechnologiesBrokerageModel(System.Object):
         """Provides user-facing messages for the Brokerages.TradingTechnologiesBrokerageModel class and its consumers or related classes"""

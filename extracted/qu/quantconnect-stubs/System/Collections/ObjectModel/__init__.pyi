@@ -23,7 +23,7 @@ System_Collections_ObjectModel__EventContainer_Callable = typing.TypeVar("System
 System_Collections_ObjectModel__EventContainer_ReturnType = typing.TypeVar("System_Collections_ObjectModel__EventContainer_ReturnType")
 
 
-class Collection(typing.Generic[System_Collections_ObjectModel_Collection_T], System.Object, System.Collections.Generic.IList[System_Collections_ObjectModel_Collection_T], System.Collections.IList, System.Collections.Generic.IReadOnlyList[System_Collections_ObjectModel_Collection_T], typing.Iterable[System_Collections_ObjectModel_Collection_T]):
+class Collection(typing.Generic[System_Collections_ObjectModel_Collection_T], System.Object, System.Collections.Generic.IList[System_Collections_ObjectModel_Collection_T], System.Collections.IList, typing.Iterable[System_Collections_ObjectModel_Collection_T]):
     """This class has no documentation."""
 
     @property
@@ -96,10 +96,10 @@ class Collection(typing.Generic[System_Collections_ObjectModel_Collection_T], Sy
         ...
 
 
-class ReadOnlyDictionary(typing.Generic[System_Collections_ObjectModel_ReadOnlyDictionary_TKey, System_Collections_ObjectModel_ReadOnlyDictionary_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_ObjectModel_ReadOnlyDictionary_TKey, System_Collections_ObjectModel_ReadOnlyDictionary_TValue], System.Collections.IDictionary, System.Collections.Generic.IReadOnlyDictionary[System_Collections_ObjectModel_ReadOnlyDictionary_TKey, System_Collections_ObjectModel_ReadOnlyDictionary_TValue], typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_ObjectModel_ReadOnlyDictionary_TKey, System_Collections_ObjectModel_ReadOnlyDictionary_TValue]]):
+class ReadOnlyDictionary(typing.Generic[System_Collections_ObjectModel_ReadOnlyDictionary_TKey, System_Collections_ObjectModel_ReadOnlyDictionary_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_ObjectModel_ReadOnlyDictionary_TKey, System_Collections_ObjectModel_ReadOnlyDictionary_TValue], System.Collections.IDictionary, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_ObjectModel_ReadOnlyDictionary_TKey, System_Collections_ObjectModel_ReadOnlyDictionary_TValue]]):
     """This class has no documentation."""
 
-    class KeyCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_ObjectModel_ReadOnlyDictionary_TKey], System.Collections.ICollection, System.Collections.Generic.IReadOnlyCollection[System_Collections_ObjectModel_ReadOnlyDictionary_TKey], typing.Iterable[System_Collections_ObjectModel_ReadOnlyDictionary_TKey]):
+    class KeyCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_ObjectModel_ReadOnlyDictionary_TKey], System.Collections.ICollection, typing.Iterable[System_Collections_ObjectModel_ReadOnlyDictionary_TKey]):
         """This class has no documentation."""
 
         @property
@@ -118,7 +118,7 @@ class ReadOnlyDictionary(typing.Generic[System_Collections_ObjectModel_ReadOnlyD
         def get_enumerator(self) -> System.Collections.Generic.IEnumerator[System_Collections_ObjectModel_ReadOnlyDictionary_TKey]:
             ...
 
-    class ValueCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_ObjectModel_ReadOnlyDictionary_TValue], System.Collections.ICollection, System.Collections.Generic.IReadOnlyCollection[System_Collections_ObjectModel_ReadOnlyDictionary_TValue], typing.Iterable[System_Collections_ObjectModel_ReadOnlyDictionary_TValue]):
+    class ValueCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_ObjectModel_ReadOnlyDictionary_TValue], System.Collections.ICollection, typing.Iterable[System_Collections_ObjectModel_ReadOnlyDictionary_TValue]):
         """This class has no documentation."""
 
         @property
@@ -179,7 +179,7 @@ class ReadOnlyDictionary(typing.Generic[System_Collections_ObjectModel_ReadOnlyD
         ...
 
 
-class ReadOnlySet(typing.Generic[System_Collections_ObjectModel_ReadOnlySet_T], System.Object, System.Collections.Generic.IReadOnlySet[System_Collections_ObjectModel_ReadOnlySet_T], System.Collections.Generic.ISet[System_Collections_ObjectModel_ReadOnlySet_T], System.Collections.ICollection, typing.Iterable[System_Collections_ObjectModel_ReadOnlySet_T]):
+class ReadOnlySet(typing.Generic[System_Collections_ObjectModel_ReadOnlySet_T], System.Object, System.Collections.Generic.ISet[System_Collections_ObjectModel_ReadOnlySet_T], System.Collections.ICollection, typing.Iterable[System_Collections_ObjectModel_ReadOnlySet_T]):
     """Represents a read-only, generic set of values."""
 
     EMPTY: System.Collections.ObjectModel.ReadOnlySet[System_Collections_ObjectModel_ReadOnlySet_T]
@@ -234,7 +234,7 @@ class ReadOnlySet(typing.Generic[System_Collections_ObjectModel_ReadOnlySet_T], 
         ...
 
 
-class ReadOnlyCollection(typing.Generic[System_Collections_ObjectModel_ReadOnlyCollection_T], System.Object, System.Collections.Generic.IList[System_Collections_ObjectModel_ReadOnlyCollection_T], System.Collections.IList, System.Collections.Generic.IReadOnlyList[System_Collections_ObjectModel_ReadOnlyCollection_T], typing.Iterable[System_Collections_ObjectModel_ReadOnlyCollection_T]):
+class ReadOnlyCollection(typing.Generic[System_Collections_ObjectModel_ReadOnlyCollection_T], System.Object, System.Collections.Generic.IList[System_Collections_ObjectModel_ReadOnlyCollection_T], System.Collections.IList, typing.Iterable[System_Collections_ObjectModel_ReadOnlyCollection_T]):
     """Provides static methods for read-only collections."""
 
     EMPTY: System.Collections.ObjectModel.ReadOnlyCollection[System_Collections_ObjectModel_ReadOnlyCollection_T]

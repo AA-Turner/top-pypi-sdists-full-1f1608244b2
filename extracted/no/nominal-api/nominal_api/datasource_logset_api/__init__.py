@@ -18,3 +18,22 @@ from .._impl import (
     datasource_logset_api_SearchLogsResponse as SearchLogsResponse,
 )
 
+__all__ = [
+    'AttachLogsAndFinalizeRequest',
+    'BasicLogBody',
+    'CreateLogSetRequest',
+    'Log',
+    'LogBody',
+    'LogBodyVisitor',
+    'LogFormat',
+    'LogHandle',
+    'LogHandleVisitor',
+    'LogSetMetadata',
+    'LogSetRid',
+    'S3LogHandle',
+    'SearchLogSetsRequest',
+    'SearchLogSetsResponse',
+    'SearchLogsRequest',
+    'SearchLogsResponse',
+]
+

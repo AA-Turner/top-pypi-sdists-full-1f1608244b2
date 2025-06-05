@@ -4,6 +4,7 @@ import platform
 import sys
 
 from datetime import datetime, timezone
+from typing import Any
 
 import contrast
 from contrast import __version__
@@ -18,17 +19,18 @@ logger = logging.getLogger("contrast")
 
 
 class TelemetryEvent:
-    def __init__(self, instance_id):
+    def __init__(self, instance_id: str):
         self.timestamp = datetime.now(timezone.utc).astimezone().isoformat()
         self.telemetry_instance_id = instance_id
         self.tags = MetricsDict(str)
 
     @property
-    def path(self):
+    def path(self) -> str:
         return ""
 
-    def add_tags(self):
+    def add_tags(self) -> None:
         from contrast.agent.agent_state import (
+            detected_framework,
             free_threading_available,
             free_threading_enabled,
             jit_available,
@@ -45,7 +47,7 @@ class TelemetryEvent:
         self.tags["os_type"] = platform.system()
         self.tags["os_arch"] = platform.machine()
         self.tags["os_version"] = platform.version()
-        self.tags["app_framework_version"] = str(settings.framework)
+        self.tags["app_framework_version"] = str(detected_framework())
         self.tags["server_framework_version"] = str(settings.server)
         self.tags["teamserver"] = settings.config.teamserver_type
         self.tags["rewriter_enabled"] = str(is_rewriter_enabled()).lower()
@@ -54,7 +56,7 @@ class TelemetryEvent:
         self.tags["jit_available"] = str(jit_available()).lower()
         self.tags["jit_enabled"] = str(jit_enabled()).lower()
 
-    def to_json(self):
+    def to_json(self) -> dict[str, Any]:
         return dict(
             timestamp=self.timestamp,
             instance=self.telemetry_instance_id,
@@ -63,15 +65,15 @@ class TelemetryEvent:
 
 
 class MetricsTelemetryEvent(TelemetryEvent):
-    def __init__(self, instance_id):
+    def __init__(self, instance_id: str) -> None:
         super().__init__(instance_id)
         self.fields = MetricsDict(int)
         self.fields["_filler"] = 0
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.__class__.__name__}: {self.to_json()}"
 
-    def to_json(self):
+    def to_json(self) -> dict[str, Any]:
         return {
             **super().to_json(),
             **dict(fields=self.fields),
@@ -79,7 +81,7 @@ class MetricsTelemetryEvent(TelemetryEvent):
 
 
 class StartupMetricsTelemetryEvent(MetricsTelemetryEvent):
-    def __init__(self, instance_id):
+    def __init__(self, instance_id: str) -> None:
         super().__init__(instance_id)
 
         try:
@@ -90,7 +92,7 @@ class StartupMetricsTelemetryEvent(MetricsTelemetryEvent):
             contrast.TELEMETRY.enabled = False
 
     @property
-    def path(self):
+    def path(self) -> str:
         return "/metrics/startup"
 
 
@@ -108,8 +110,8 @@ class ErrorTelemetryEvent(TelemetryEvent, Validator):
     )
 
     def __init__(
-        self, instance_id, error: Exception, logger_="", message="", skip_frames=0
-    ):
+        self, instance_id: str, error: Exception, logger_="", message="", skip_frames=0
+    ) -> None:
         super().__init__(instance_id)
 
         # We may not use this field, it's meant to represent a named logger
@@ -128,14 +130,14 @@ class ErrorTelemetryEvent(TelemetryEvent, Validator):
 
         self.validate()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.__class__.__name__}: {self.to_json()}"
 
     @property
-    def path(self):
+    def path(self) -> str:
         return "/exceptions/error"
 
-    def to_json(self):
+    def to_json(self) -> dict[str, Any]:
         return {
             **super().to_json(),
             **dict(

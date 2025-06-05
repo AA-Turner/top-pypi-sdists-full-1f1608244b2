@@ -1139,18 +1139,16 @@ class SchedulerSummary(_message.Message):
     def __init__(self, timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., job_cancelations: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ..., sorted_unscheduled_job_ids: _Optional[_Iterable[str]] = ..., passes: _Optional[_Iterable[_Union[SchedulerPassSummary, _Mapping]]] = ..., total_assignment_count: _Optional[int] = ..., total_cancelation_count: _Optional[int] = ..., cluster_job_queues: _Optional[_Iterable[_Union[ClusterJobQueue, _Mapping]]] = ...) -> None: ...
 
 class SchedulerUpdateBatch(_message.Message):
-    __slots__ = ("node_id", "job_assignments", "job_cancelations", "job_reschedulings", "node_actions")
+    __slots__ = ("node_id", "job_assignments", "job_cancelations", "job_reschedulings")
     NODE_ID_FIELD_NUMBER: _ClassVar[int]
     JOB_ASSIGNMENTS_FIELD_NUMBER: _ClassVar[int]
     JOB_CANCELATIONS_FIELD_NUMBER: _ClassVar[int]
     JOB_RESCHEDULINGS_FIELD_NUMBER: _ClassVar[int]
-    NODE_ACTIONS_FIELD_NUMBER: _ClassVar[int]
     node_id: str
     job_assignments: _containers.RepeatedCompositeFieldContainer[JobAssignment]
     job_cancelations: _containers.RepeatedCompositeFieldContainer[JobCancelation]
     job_reschedulings: _containers.RepeatedCompositeFieldContainer[JobCancelation]
-    node_actions: _containers.RepeatedCompositeFieldContainer[NodeAction]
-    def __init__(self, node_id: _Optional[str] = ..., job_assignments: _Optional[_Iterable[_Union[JobAssignment, _Mapping]]] = ..., job_cancelations: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ..., job_reschedulings: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ..., node_actions: _Optional[_Iterable[_Union[NodeAction, _Mapping]]] = ...) -> None: ...
+    def __init__(self, node_id: _Optional[str] = ..., job_assignments: _Optional[_Iterable[_Union[JobAssignment, _Mapping]]] = ..., job_cancelations: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ..., job_reschedulings: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ...) -> None: ...
 
 class SchedulerOutput(_message.Message):
     __slots__ = ("id", "organization_id", "summary", "failed_scheduling_job_events", "update_batches", "estimated_assignments")
@@ -1857,11 +1855,15 @@ class CordonNodeResponse(_message.Message):
     node: Node
     def __init__(self, node: _Optional[_Union[Node, _Mapping]] = ...) -> None: ...
 
-class ExpireNodeRequest(_message.Message):
+class DeleteNodeRequest(_message.Message):
     __slots__ = ("node_id",)
     NODE_ID_FIELD_NUMBER: _ClassVar[int]
     node_id: str
     def __init__(self, node_id: _Optional[str] = ...) -> None: ...
+
+class DeleteNodeResponse(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
 
 class GetWorkloadRequest(_message.Message):
     __slots__ = ("workload_id",)
@@ -2038,24 +2040,14 @@ class ListJobsResponse(_message.Message):
     def __init__(self, next_page_token: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ...) -> None: ...
 
 class ScheduleJobsRequest(_message.Message):
-    __slots__ = ("job_assignments", "job_cancelations", "job_reschedulings", "node_actions")
+    __slots__ = ("job_assignments", "job_cancelations", "job_reschedulings")
     JOB_ASSIGNMENTS_FIELD_NUMBER: _ClassVar[int]
     JOB_CANCELATIONS_FIELD_NUMBER: _ClassVar[int]
     JOB_RESCHEDULINGS_FIELD_NUMBER: _ClassVar[int]
-    NODE_ACTIONS_FIELD_NUMBER: _ClassVar[int]
     job_assignments: _containers.RepeatedCompositeFieldContainer[JobAssignment]
     job_cancelations: _containers.RepeatedCompositeFieldContainer[JobCancelation]
     job_reschedulings: _containers.RepeatedCompositeFieldContainer[JobCancelation]
-    node_actions: _containers.RepeatedCompositeFieldContainer[NodeAction]
-    def __init__(self, job_assignments: _Optional[_Iterable[_Union[JobAssignment, _Mapping]]] = ..., job_cancelations: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ..., job_reschedulings: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ..., node_actions: _Optional[_Iterable[_Union[NodeAction, _Mapping]]] = ...) -> None: ...
-
-class NodeAction(_message.Message):
-    __slots__ = ("cordon", "expire")
-    CORDON_FIELD_NUMBER: _ClassVar[int]
-    EXPIRE_FIELD_NUMBER: _ClassVar[int]
-    cordon: CordonNodeRequest
-    expire: ExpireNodeRequest
-    def __init__(self, cordon: _Optional[_Union[CordonNodeRequest, _Mapping]] = ..., expire: _Optional[_Union[ExpireNodeRequest, _Mapping]] = ...) -> None: ...
+    def __init__(self, job_assignments: _Optional[_Iterable[_Union[JobAssignment, _Mapping]]] = ..., job_cancelations: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ..., job_reschedulings: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ...) -> None: ...
 
 class ScheduleJobsResponse(_message.Message):
     __slots__ = ()

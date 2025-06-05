@@ -6,18 +6,24 @@ authenticate.  There is code duplication between this and tcloud due to the
 isolation that tcloud needs.
 """
 
+from __future__ import annotations
+
 import logging
 import os
 import stat
 import time
 import typing as t
+from contextlib import contextmanager
 from pathlib import Path
 
 from authlib.integrations.requests_client import OAuth2Session
 from httpx import Auth, HTTPStatusError, Request, Response
 from ruamel.yaml import YAML
 
-from tobikodata.http_client.public import PublicHttpClient
+from tobikodata.http_client.public import HttpMethod, PublicHttpClient
+
+if t.TYPE_CHECKING:
+    from tobikodata.http_client.public import DATA_TYPE
 
 # Yaml
 yaml = YAML()
@@ -227,7 +233,8 @@ class AuthHttpClient(PublicHttpClient):
         self.sso = sso or tcloud_sso()
         super().__init__(*args, **kwargs)
 
-    def _call(self, *args: t.Any, **kwargs: t.Any) -> Response:
+    def _setup_auth(self, kwargs: t.Dict[str, t.Any]) -> t.Optional[Auth]:
+        """Setup authentication if needed and return the old auth to restore later."""
         old_auth = self._client.auth
         has_auth = old_auth or ("headers" in kwargs and "Authorization" in kwargs["headers"])
 
@@ -238,18 +245,45 @@ class AuthHttpClient(PublicHttpClient):
             if id_token:
                 self._client.auth = SSORequestAuth(id_token)
 
+        return old_auth
+
+    def _handle_auth_error(self, e: t.Union[HTTPStatusError, Exception]) -> None:
+        """Handle authentication errors with custom message."""
+        if isinstance(e, HTTPStatusError) and e.response.status_code == 401:
+            raise HTTPStatusError(UNAUTHENTICATED_MESSAGE, request=e.request, response=e.response)
+        elif hasattr(e, "status_code") and e.status_code == 401:
+            raise self.error_class(UNAUTHENTICATED_MESSAGE, status_code=401)
+
+    def _call(self, *args: t.Any, **kwargs: t.Any) -> Response:
+        old_auth = self._setup_auth(kwargs)
         try:
             response = super()._call(*args, **kwargs)
             return response
-        except HTTPStatusError as e:
-            if e.response.status_code == 401:
-                raise HTTPStatusError(
-                    UNAUTHENTICATED_MESSAGE, request=e.request, response=e.response
-                )
+        except (HTTPStatusError, self.error_class) as e:
+            self._handle_auth_error(e)
             raise e
-        except self.error_class as e:
-            if e.status_code == 401:
-                raise self.error_class(UNAUTHENTICATED_MESSAGE, status_code=401)
+        finally:
+            self._client.auth = old_auth
+
+    @contextmanager
+    def stream(
+        self,
+        method: HttpMethod,
+        url_parts: t.Union[str, t.Iterable[str]],
+        data: t.Optional[DATA_TYPE] = None,
+        params: t.Optional[t.Dict] = None,
+        raise_status_codes: t.Optional[t.Set[int]] = None,
+        **kwargs: t.Any,
+    ) -> t.Iterator[Response]:
+        """Stream with authentication support."""
+        old_auth = self._setup_auth(kwargs)
+        try:
+            with super().stream(
+                method, url_parts, data, params, raise_status_codes, **kwargs
+            ) as response:
+                yield response
+        except (HTTPStatusError, self.error_class) as e:
+            self._handle_auth_error(e)
             raise e
         finally:
             self._client.auth = old_auth

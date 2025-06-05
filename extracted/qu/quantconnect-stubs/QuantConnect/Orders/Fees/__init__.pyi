@@ -897,6 +897,19 @@ class AxosFeeModel(System.Object, QuantConnect.Orders.Fees.IFeeModel):
         ...
 
 
+class TastytradeFeeModel(QuantConnect.Orders.Fees.FeeModel):
+    """Represents a fee model specific to Tastytrade."""
+
+    def get_order_fee(self, parameters: QuantConnect.Orders.Fees.OrderFeeParameters) -> QuantConnect.Orders.Fees.OrderFee:
+        """
+        Gets the order fee for a given security and order.
+        
+        :param parameters: The parameters including the security and order details.
+        :returns: A OrderFee instance representing the total fee for the order, or OrderFee.Zero if no fee is applicable.
+        """
+        ...
+
+
 class AlpacaFeeModel(QuantConnect.Orders.Fees.FeeModel):
     """Represents the fee model specific to Alpaca trading platform."""
 

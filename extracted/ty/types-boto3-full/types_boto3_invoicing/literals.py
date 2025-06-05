@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_boto3_invoicing.literals import ListInvoiceUnitsPaginatorName
+    from types_boto3_invoicing.literals import InvoiceTypeType
 
-    data: ListInvoiceUnitsPaginatorName = "list_invoice_units"
+    data: InvoiceTypeType = "CREDIT_MEMO"
     ```
 """
 
@@ -23,7 +23,10 @@ else:
 
 
 __all__ = (
+    "InvoiceTypeType",
     "InvoicingServiceName",
+    "ListInvoiceSummariesPaginatorName",
+    "ListInvoiceSummariesResourceTypeType",
     "ListInvoiceUnitsPaginatorName",
     "PaginatorName",
     "ResourceServiceName",
@@ -31,6 +34,9 @@ __all__ = (
 )
 
 
+InvoiceTypeType = Literal["CREDIT_MEMO", "INVOICE"]
+ListInvoiceSummariesPaginatorName = Literal["list_invoice_summaries"]
+ListInvoiceSummariesResourceTypeType = Literal["ACCOUNT_ID", "INVOICE_ID"]
 ListInvoiceUnitsPaginatorName = Literal["list_invoice_units"]
 InvoicingServiceName = Literal["invoicing"]
 ServiceName = Literal[
@@ -178,6 +184,7 @@ ServiceName = Literal[
     "es",
     "events",
     "evidently",
+    "evs",
     "finspace",
     "finspace-data",
     "firehose",
@@ -450,4 +457,4 @@ ResourceServiceName = Literal[
     "sns",
     "sqs",
 ]
-PaginatorName = Literal["list_invoice_units"]
+PaginatorName = Literal["list_invoice_summaries", "list_invoice_units"]

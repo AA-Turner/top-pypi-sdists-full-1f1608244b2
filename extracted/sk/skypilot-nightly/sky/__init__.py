@@ -5,7 +5,7 @@ from typing import Optional
 import urllib.request
 
 # Replaced with the current commit when building the wheels.
-_SKYPILOT_COMMIT_SHA = '9c73386fdafb1dc43a5e83fbf16e67ba3fa5dbf8'
+_SKYPILOT_COMMIT_SHA = '3c15a1fa980f6ac4d4ed742bb2e538dcf3c6650f'
 
 
 def _get_git_commit():
@@ -35,7 +35,7 @@ def _get_git_commit():
 
 
 __commit__ = _get_git_commit()
-__version__ = '1.0.0.dev20250602'
+__version__ = '1.0.0.dev20250604'
 __root_dir__ = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -86,6 +86,7 @@ from sky import clouds
 from sky.admin_policy import AdminPolicy
 from sky.admin_policy import MutatedUserRequest
 from sky.admin_policy import UserRequest
+from sky.catalog import list_accelerators
 from sky.client.sdk import api_cancel
 from sky.client.sdk import api_info
 from sky.client.sdk import api_server_logs
@@ -110,7 +111,6 @@ from sky.client.sdk import storage_delete
 from sky.client.sdk import storage_ls
 from sky.client.sdk import stream_and_get
 from sky.client.sdk import tail_logs
-from sky.clouds.service_catalog import list_accelerators
 from sky.dag import Dag
 from sky.data import Storage
 from sky.data import StorageMode

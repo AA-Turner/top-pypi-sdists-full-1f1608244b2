@@ -93,9 +93,9 @@ class FormatedAxis(pg.AxisItem):
 
                 if isinstance(nv, bytes):
                     try:
-                        strns.append(f'{val}={nv.decode("utf-8", errors="replace")}')
+                        strns.append(f"{val}={nv.decode('utf-8', errors='replace')}")
                     except:
-                        strns.append(f'{val}={nv.decode("latin-1", errors="replace")}')
+                        strns.append(f"{val}={nv.decode('latin-1', errors='replace')}")
                 else:
                     strns.append(val)
         else:
@@ -150,7 +150,7 @@ class FormatedAxis(pg.AxisItem):
         return [val[:80] for val in strns]
 
     def setLabel(self, text=None, units=None, unitPrefix=None, **args):
-        """overwrites pyqtgraph setLabel"""
+        """Override pyqtgraph.AxisItem.setLabel."""
         show_label = False
         if text is not None:
             self.labelText = text
@@ -528,7 +528,7 @@ class FormatedAxis(pg.AxisItem):
 
                         y_pos_val, sig_y_bottom, sig_y_top = plot.value_at_cursor()
 
-                        if isinstance(y_pos_val, int | float):
+                        if isinstance(y_pos_val, (int, float)):
                             delta_proc = (y_pos_val - (sig_y_top + sig_y_bottom) / 2) / (sig_y_top - sig_y_bottom)
                             shift = delta_proc * (sig_y_top - sig_y_bottom)
                             sig_y_top, sig_y_bottom = sig_y_top + shift, sig_y_bottom + shift
@@ -672,10 +672,9 @@ class FormatedAxis(pg.AxisItem):
             self.picture = picture
 
     def generateDrawSpecs(self, p, ratio):
-        """
-        Calls tickValues() and tickStrings() to determine where and how ticks should
-        be drawn, then generates from this a set of drawing commands to be
-        interpreted by drawPicture().
+        """Call tickValues() and tickStrings() to determine where and how ticks
+        should be drawn, then generates from this a set of drawing commands to
+        be interpreted by drawPicture().
         """
         bounds = self.mapRectFromParent(self.geometry())
 

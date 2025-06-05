@@ -1,7 +1,6 @@
 """Main package for Django Components."""
 
 # Public API
-# NOTE: Middleware is exposed via django_components.middleware
 # NOTE: Some of the documentation is generated based on these exports
 # isort: off
 from django_components.app_settings import ContextBehavior, ComponentsSettings
@@ -19,7 +18,9 @@ from django_components.util.command import (
 from django_components.component import (
     Component,
     ComponentInput,
+    ComponentNode,
     ComponentVars,
+    OnRenderGenerator,
     all_components,
     get_component_by_class_id,
 )
@@ -34,9 +35,10 @@ from django_components.component_registry import (
     all_registries,
 )
 from django_components.components import DynamicComponent
-from django_components.dependencies import render_dependencies
+from django_components.dependencies import DependenciesStrategy, render_dependencies
 from django_components.extension import (
     ComponentExtension,
+    ExtensionComponentConfig,
     OnComponentRegisteredContext,
     OnComponentUnregisteredContext,
     OnRegistryCreatedContext,
@@ -48,11 +50,23 @@ from django_components.extension import (
 )
 from django_components.extensions.cache import ComponentCache
 from django_components.extensions.defaults import ComponentDefaults, Default
-from django_components.extensions.view import ComponentView
-from django_components.extensions.url import ComponentUrl, get_component_url
+from django_components.extensions.debug_highlight import ComponentDebugHighlight
+from django_components.extensions.view import ComponentView, get_component_url
 from django_components.library import TagProtectedError
 from django_components.node import BaseNode, template_tag
-from django_components.slots import SlotContent, Slot, SlotFunc, SlotRef, SlotResult
+from django_components.provide import ProvideNode
+from django_components.slots import (
+    FillNode,
+    Slot,
+    SlotContent,
+    SlotContext,
+    SlotFallback,
+    SlotFunc,
+    SlotInput,
+    SlotNode,
+    SlotRef,
+    SlotResult,
+)
 from django_components.tag_formatter import (
     ComponentFormatter,
     ShorthandComponentFormatter,
@@ -65,7 +79,7 @@ from django_components.template import cached_template
 import django_components.types as types
 from django_components.util.loader import ComponentFileEntry, get_component_dirs, get_component_files
 from django_components.util.routing import URLRoute, URLRouteHandler
-from django_components.util.types import EmptyTuple, EmptyDict
+from django_components.util.types import Empty
 
 # isort: on
 
@@ -86,6 +100,7 @@ __all__ = [
     "Component",
     "ComponentCache",
     "ComponentCommand",
+    "ComponentDebugHighlight",
     "ComponentDefaults",
     "ComponentExtension",
     "ComponentFileEntry",
@@ -93,18 +108,20 @@ __all__ = [
     "ComponentInput",
     "ComponentMediaInput",
     "ComponentMediaInputPath",
+    "ComponentNode",
     "ComponentRegistry",
     "ComponentVars",
     "ComponentView",
-    "ComponentUrl",
     "ComponentsSettings",
     "component_formatter",
     "component_shorthand_formatter",
     "ContextBehavior",
     "Default",
+    "DependenciesStrategy",
     "DynamicComponent",
-    "EmptyTuple",
-    "EmptyDict",
+    "Empty",
+    "ExtensionComponentConfig",
+    "FillNode",
     "format_attributes",
     "get_component_by_class_id",
     "get_component_dirs",
@@ -121,14 +138,20 @@ __all__ = [
     "OnComponentUnregisteredContext",
     "OnRegistryCreatedContext",
     "OnRegistryDeletedContext",
+    "OnRenderGenerator",
+    "ProvideNode",
     "register",
     "registry",
     "RegistrySettings",
     "render_dependencies",
     "ShorthandComponentFormatter",
-    "SlotContent",
     "Slot",
+    "SlotContent",
+    "SlotContext",
+    "SlotFallback",
     "SlotFunc",
+    "SlotInput",
+    "SlotNode",
     "SlotRef",
     "SlotResult",
     "TagFormatterABC",

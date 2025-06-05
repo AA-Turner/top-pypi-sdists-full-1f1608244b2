@@ -181,15 +181,17 @@ class FeatureWrapper:
         if not isinstance(window, (str, int)):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError("Window duration must be a string or an int")
 
-        from chalk.features import FeatureSetBase, Feature
+        from chalk.features import Feature
+        from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY
         from chalk.streams import get_name_with_duration
 
         underlying_feature = self._chalk_get_underlying()
         if not isinstance(underlying_feature, Feature):
             raise TypeError(f"Cannot get the windowed feature for {underlying_feature}, which is not a feature.")
 
+        registry = CURRENT_FEATURE_REGISTRY.get().get_feature_sets()
         parent = (
-            FeatureSetBase.registry[underlying_feature.namespace]
+            registry[underlying_feature.namespace]
             if len(underlying_feature.path) == 0
             else FeatureWrapper(underlying_feature.path[-1].parent)
         )
@@ -216,8 +218,8 @@ class FeatureWrapper:
         def f():
             from chalk.features.feature_field import get_distance_feature_name, Feature
             from chalk.features.pseudofeatures import Distance
-            from chalk.features.feature_set import FeatureSetBase
-
+            from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY
+            registry = CURRENT_FEATURE_REGISTRY.get()
             underlying = self._chalk_get_underlying()
             if not isinstance(underlying, Feature):
                 return underlying[item]  # pyright: ignore -- we want to pass through if the underlying isn't a feature
@@ -249,8 +251,8 @@ class FeatureWrapper:
                             op=filter.operation,
                             foreign_name=foreign_feature.name,
                         )
-                        x = next(
-                            f for f in FeatureSetBase.registry[foreign_feature.namespace].features if f.name == key)
+                        feature_fields = registry.get_feature_sets()[foreign_feature.namespace].features
+                        x = next(f for f in feature_fields if f.name == key)
                         dataframe_item[i] = x
                 tuple_item = tuple(dataframe_item)
 

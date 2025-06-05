@@ -1,16 +1,68 @@
-from typing import Any, Type
+from typing import Any, Optional, Type
 
 from django.template import Context, NodeList, Template
-from django.template.base import Parser
+from django.template.base import Origin, Parser
 
+from django_components.context import _COMPONENT_CONTEXT_KEY, _STRATEGY_CONTEXT_KEY
+from django_components.dependencies import COMPONENT_COMMENT_REGEX, render_dependencies
 from django_components.util.template_parser import parse_template
 
 
 # In some cases we can't work around Django's design, and need to patch the template class.
 def monkeypatch_template_cls(template_cls: Type[Template]) -> None:
+    monkeypatch_template_init(template_cls)
     monkeypatch_template_compile_nodelist(template_cls)
     monkeypatch_template_render(template_cls)
     template_cls._djc_patched = True
+
+
+# Patch `Template.__init__` to apply `extensions.on_template_preprocess()` if the template
+# belongs to a Component.
+def monkeypatch_template_init(template_cls: Type[Template]) -> None:
+    original_init = template_cls.__init__
+
+    # NOTE: Function signature of Template.__init__ hasn't changed in 11 years, so we can safely patch it.
+    #       See https://github.com/django/django/blame/main/django/template/base.py#L139
+    def __init__(
+        self: Template,
+        template_string: Any,
+        origin: Optional[Origin] = None,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
+        # NOTE: Avoids circular import
+        from django_components.template import (
+            get_component_by_template_file,
+            get_component_from_origin,
+            set_component_to_origin,
+        )
+
+        # If this Template instance was created by us when loading a template file for a component
+        # with `load_component_template()`, then we do 2 things:
+        #
+        # 1. Associate the Component class with the template by setting it on the `Origin` instance
+        #    (`template.origin.component_cls`). This way the `{% component%}` and `{% slot %}` tags
+        #    will know inside which Component class they were defined.
+        #
+        # 2. Apply `extensions.on_template_preprocess()` to the template, so extensions can modify
+        #    the template string before it's compiled into a nodelist.
+        if get_component_from_origin(origin) is not None:
+            component_cls = get_component_from_origin(origin)
+        elif origin is not None and origin.template_name is not None:
+            component_cls = get_component_by_template_file(origin.template_name)
+            if component_cls is not None:
+                set_component_to_origin(origin, component_cls)
+        else:
+            component_cls = None
+
+        if component_cls is not None:
+            # TODO - Apply extensions.on_template_preprocess() here.
+            #        Then also test both cases when template as `template` or `template_file`.
+            pass
+
+        original_init(self, template_string, origin, *args, **kwargs)  # type: ignore[misc]
+
+    template_cls.__init__ = __init__
 
 
 # Patch `Template.compile_nodelist` to use our custom parser. Our parser makes it possible
@@ -81,11 +133,9 @@ def monkeypatch_template_render(template_cls: Type[Template]) -> None:
         # Do not patch if done so already. This helps us avoid RecursionError
         return
 
+    # NOTE: This implementation is based on Django v5.1.3)
     def _template_render(self: Template, context: Context, *args: Any, **kwargs: Any) -> str:
         "Display stage -- can be called many times"
-        #  ---------------- ORIGINAL (Django v5.1.3) ----------------
-        # with context.render_context.push_state(self):
-        #  ---------------- OUR CHANGES START ----------------
         # We parametrized `isolated_context`, which was `True` in the original method.
         if not hasattr(self, "_djc_is_component_nested"):
             isolated_context = True
@@ -94,14 +144,47 @@ def monkeypatch_template_render(template_cls: Type[Template]) -> None:
             # and `False` otherwise.
             isolated_context = not self._djc_is_component_nested
 
+        # This is original implementation, except we override `isolated_context`,
+        # and we post-process the result with `render_dependencies()`.
         with context.render_context.push_state(self, isolated_context=isolated_context):
-            #  ---------------- OUR CHANGES END ----------------
             if context.template is None:
                 with context.bind_template(self):
                     context.template_name = self.name
-                    return self._render(context, *args, **kwargs)
+                    result: str = self._render(context, *args, **kwargs)
             else:
-                return self._render(context, *args, **kwargs)
+                result = self._render(context, *args, **kwargs)
+
+        # If the key is present, that means this Template is rendered as part of `Component.render()`
+        # or `{% component %}`. In that case the parent component will take care of rendering the
+        # dependencies, so we don't need to do that here.
+        if _COMPONENT_CONTEXT_KEY in context:
+            return result
+
+        # NOTE: Only process dependencies if the rendered result contains AT LEAST ONE rendered component.
+        #       This has two reasons:
+        #       1. To keep the behavior consistent with the previous implementation, when `Template.render()`
+        #          didn't call `render_dependencies()`.
+        #       2. To avoid unnecessary processing which otherwise has a considerable perf overhead.
+        #          See https://github.com/django-components/django-components/pull/1166#issuecomment-2850899765
+        if not COMPONENT_COMMENT_REGEX.search(result.encode("utf-8")):
+            return result
+
+        # Allow users to configure the `deps_strategy` kwarg of `render_dependencies()`, even if
+        # they render a Template directly with `Template.render()` or Django's `django.shortcuts.render()`.
+        #
+        # Example:
+        # ```
+        # result = render_dependencies(
+        #     result,
+        #     Context({ "DJC_DEPS_STRATEGY": "fragment" }),
+        # )
+        # ```
+        if _STRATEGY_CONTEXT_KEY in context and context[_STRATEGY_CONTEXT_KEY] is not None:
+            strategy = context[_STRATEGY_CONTEXT_KEY]
+            result = render_dependencies(result, strategy)
+        else:
+            result = render_dependencies(result)
+        return result
 
     template_cls.render = _template_render
 

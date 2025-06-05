@@ -22,3 +22,26 @@ from .._impl import (
     scout_integrations_api_UpdateIntegrationRequest as UpdateIntegrationRequest,
 )
 
+__all__ = [
+    'CreateIntegrationDetails',
+    'CreateIntegrationDetailsVisitor',
+    'CreateIntegrationRequest',
+    'CreateOpsgenieIntegrationDetails',
+    'CreateSimpleWebhookDetails',
+    'GenerateSlackWebhookResponse',
+    'Integration',
+    'IntegrationDetails',
+    'IntegrationDetailsVisitor',
+    'IntegrationRid',
+    'NotificationConfiguration',
+    'NotificationFilter',
+    'OpsgenieIntegration',
+    'OpsgenieRegion',
+    'SendMessageRequest',
+    'SimpleWebhookIntegration',
+    'SlackInstanceType',
+    'SlackWebhookIntegration',
+    'UpdateIntegrationRequest',
+    'IntegrationsService',
+]
+

@@ -48,7 +48,7 @@ class AssetCreateView(APIView):
         try:
             asset = Asset.objects.create(file=request.data["file"])
             return Response(reverse("wbcore:asset-retrieve", args=[asset.id], request=request))
-        except KeyError:
+        except (KeyError, AttributeError):
             return Response("file missing", status=400)
 
 

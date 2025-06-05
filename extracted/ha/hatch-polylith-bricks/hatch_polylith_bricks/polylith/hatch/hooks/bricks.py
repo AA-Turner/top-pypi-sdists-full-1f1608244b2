@@ -24,6 +24,12 @@ def filtered_bricks(data: dict, version: str) -> dict:
         return filter_dev_mode_bricks(data, bricks)
     return bricks
 
+def collect_configured_exclude_patterns(data: dict, target_name: str) -> set:
+    entry = data.get('tool', {}).get('hatch', {}).get('build', {})
+    target = entry.get('targets', {}).get(target_name, {})
+    exclude = target.get('exclude', [])
+    return set(exclude)
+
 class PolylithBricksHook(BuildHookInterface):
     PLUGIN_NAME = 'polylith-bricks'
 
@@ -42,8 +48,9 @@ class PolylithBricksHook(BuildHookInterface):
             build_data[include_key] = bricks
             return
         ns = parsing.parse_brick_namespace_from_path(bricks)
+        exclude_patterns = collect_configured_exclude_patterns(data, self.target_name)
         for source, brick in bricks.items():
-            path = parsing.copy_brick(source, brick, work_dir)
+            path = parsing.copy_brick(source, brick, work_dir, exclude_patterns)
             rewritten_bricks = parsing.rewrite_modules(path, ns, top_ns)
             for item in rewritten_bricks:
                 print(f'Updated {item} with new top namespace for local imports.')

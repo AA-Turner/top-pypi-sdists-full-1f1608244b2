@@ -34,7 +34,9 @@ class WorkspaceConfig(BaseModel):
     bigconfig_strict_mode: bool = False
     """API errors cause an exception if True. (Validation errors still cause an exception) Default = False"""
     bigconfig_auto_approve: bool = False
-    """Bigconfig applies should be allowed to run without excplit plan approvals. Default = False"""
+    """Bigconfig applies should be allowed to run without explicit plan approvals. Default = False"""
+    bigconfig_namespace: Optional[str] = None
+    """A default namespace to use for bigconfig. Default = None"""
     dbt_manifest_file: Optional[str] = None
     """The path to the dbt manifest.json file used to ingest model owners into Bigeye."""
     auto_update_enabled: bool = False

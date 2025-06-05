@@ -18,3 +18,22 @@ from .._impl import (
     scout_template_api_UpdateRefNameRequest as UpdateRefNameRequest,
 )
 
+__all__ = [
+    'CommitTemplateRequest',
+    'CreateTemplateRequest',
+    'GetAllLabelsAndPropertiesResponse',
+    'MergeToMainRequest',
+    'SaveTemplateRequest',
+    'SearchTemplatesQuery',
+    'SearchTemplatesQueryVisitor',
+    'SearchTemplatesRequest',
+    'SearchTemplatesResponse',
+    'SortBy',
+    'SortByField',
+    'Template',
+    'TemplateMetadata',
+    'TemplateSummary',
+    'UpdateMetadataRequest',
+    'UpdateRefNameRequest',
+]
+

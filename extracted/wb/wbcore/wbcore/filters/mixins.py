@@ -75,9 +75,6 @@ class WBCoreFilterMixin:
             return "Filter by " + self.label
 
     def get_representation(self, request, name, view):
-        if self.hidden:
-            return {}
-
         representation = {
             "key": self.key,
             "label_format": self.label_format,
@@ -94,8 +91,7 @@ class WBCoreFilterMixin:
             },
         }
         initial = self._get_initial(request, view)
-
-        if overridden_initial := self._validate_initial_with_request(initial, request, name):
+        if (overridden_initial := self._validate_initial_with_request(initial, request, name)) is not None:
             initial = overridden_initial
 
         if initial is not None or self.allow_empty_initial:

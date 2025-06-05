@@ -9,7 +9,6 @@ from typing import Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
-
 from seeq.base import util
 from seeq.base.seeq_names import SeeqNames
 from seeq.sdk import *
@@ -555,7 +554,8 @@ class Workbook(ItemWithOwnerAndAcl):
                                self._push_context.access_control)
 
             if include_inventory:
-                self._push_inventory(item_map, label, datasource_output, workbook_output)
+                results_df = self._push_inventory(item_map, label, datasource_output, workbook_output)
+                self._push_context.pushed_inventory[self.id] = results_df
 
             props.append(ScalarPropertyV1(name='Name', value=self.definition['Name']))
             if _common.present(self.definition, 'Description'):
@@ -747,6 +747,7 @@ class Workbook(ItemWithOwnerAndAcl):
                     self.update_status('Pushing item inventory', 1)
             if results_df.spy.friendly_error_string is not None:
                 self._push_context.status.on_error(results_df.spy.friendly_error_string)
+            return results_df
 
     def _do_references_exist(self):
         references = Workbook._fill_in_item_search_preview_on_references(

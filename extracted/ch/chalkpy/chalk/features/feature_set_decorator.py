@@ -18,11 +18,12 @@ from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple
 import pyarrow as pa
 
 from chalk._lsp.error_builder import FeatureClassErrorBuilder, LSPErrorBuilder
+from chalk.features import is_features_cls
 from chalk.features._class_property import classproperty, classproperty_support
 from chalk.features._encoding.pyarrow import pyarrow_to_primitive
 from chalk.features.dataframe._impl import DataFrameMeta
 from chalk.features.feature_field import CacheStrategy, Feature, VersionInfo
-from chalk.features.feature_set import ClassSource, Features, FeatureSetBase
+from chalk.features.feature_set import ClassSource, Features, CURRENT_FEATURE_REGISTRY
 from chalk.features.feature_time import feature_time
 from chalk.features.feature_wrapper import FeatureWrapper, unwrap_feature
 from chalk.features.namespace_context import build_namespaced_name
@@ -180,8 +181,9 @@ def features(
                     raise_error=ValueError,
                     code="13",
                 )
-
-        previous_features_class = FeatureSetBase.registry.get(namespace, None)
+        registry =  CURRENT_FEATURE_REGISTRY.get()
+        registry_features =registry.get_feature_sets()
+        previous_features_class = registry_features.get(namespace, None)
 
         if (
             previous_features_class is not None
@@ -223,24 +225,9 @@ def features(
             namespace=namespace,
             singleton=singleton,
         )
-        assert issubclass(updated_class, Features)
-        FeatureSetBase.registry[updated_class.__chalk_namespace__] = updated_class
+        assert is_features_cls(updated_class)
 
-        if updated_class.__chalk_is_singleton__:
-            FeatureSetBase.__chalk_singletons__[updated_class.__chalk_namespace__] = updated_class
-
-        if FeatureSetBase.hook is not None:
-            try:
-                FeatureSetBase.hook(cast(Type[Features], updated_class))
-            except:
-                # If we were unsuccessful, restore the previous features class, and call the hook again
-                if previous_features_class is not None:
-                    FeatureSetBase.registry[updated_class.__chalk_namespace__] = previous_features_class
-                    if updated_class.__chalk_is_singleton__:
-                        FeatureSetBase.__chalk_singletons__[updated_class.__chalk_namespace__] = previous_features_class
-                    FeatureSetBase.hook(previous_features_class)
-                # Now raise the original exception
-                raise
+        registry.add_feature_set(updated_class)
         return cast(Type[T], updated_class)
 
     # See if we're being called as @features or @features().
@@ -1314,6 +1301,7 @@ def _class_setattr(
     key: str,
     value: Any,
 ):
+    from chalk.features.feature_set import FeatureSetBase
     # Handle inline feature definitions in notebooks
     if (
         (key.startswith("__") and key.endswith("__"))
@@ -1420,10 +1408,6 @@ def _class_setattr(
         if is_notebook_defined_feature:
             assert f.unversioned_attribute_name is not None # for pyright
             FeatureSetBase.__chalk_notebook_defined_feature_fields__[cls.namespace].add(f.unversioned_attribute_name)
-    # Update graph in notebook for inline feature definition
-    if FeatureSetBase.hook:
-        FeatureSetBase.hook(cls)
-
 
 def parse_quoted_window_feature(annotation_str: str, module_str: str) -> Type[Windowed]:
     """

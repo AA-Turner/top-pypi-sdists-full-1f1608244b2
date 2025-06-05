@@ -92,13 +92,13 @@ def load_file(
         )
 
     model_id = validate_model(model_id)
-    download_url_response: (
-        GetBuildVersioningDownloadURLResponse
-    ) = BuildOrchestratorClient().get_build_versioning_download_url(
-        build_id=build_id,
-        model_id=model_id,
-        tag=tag,
-        tag_type=BuildVersioningTagsType.FILE_TAG_TYPE,
+    download_url_response: GetBuildVersioningDownloadURLResponse = (
+        BuildOrchestratorClient().get_build_versioning_download_url(
+            build_id=build_id,
+            model_id=model_id,
+            tag=tag,
+            tag_type=BuildVersioningTagsType.FILE_TAG_TYPE,
+        )
     )
 
     try:

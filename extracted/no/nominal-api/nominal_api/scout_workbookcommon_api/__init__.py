@@ -7,3 +7,11 @@ from .._impl import (
     scout_workbookcommon_api_WorkbookContent as WorkbookContent,
 )
 
+__all__ = [
+    'CheckAlertReference',
+    'EventReference',
+    'UnifiedWorkbookContent',
+    'UnifiedWorkbookContentVisitor',
+    'WorkbookContent',
+]
+

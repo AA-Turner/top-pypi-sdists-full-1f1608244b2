@@ -4,3 +4,8 @@ from .._impl import (
     scout_datasource_connection_ConnectionService as ConnectionService,
 )
 
+__all__ = [
+    'ConnectionBootstrapperService',
+    'ConnectionService',
+]
+

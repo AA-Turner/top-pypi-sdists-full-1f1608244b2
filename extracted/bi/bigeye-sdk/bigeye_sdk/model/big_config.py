@@ -331,6 +331,7 @@ class BigConfig(BigConfigFile, type='BIGCONFIG_FILE'):
     are applied -- and validated -- during the __post_init__ phase of instantiating a Bigconfig.
     """
     auto_apply_on_indexing: bool = False
+    namespace: Optional[str] = None
     tag_definitions: Optional[List[TagDefinition]] = Field(
         default_factory=lambda: [])  # only one because we must consolidate if creating Bigconfig from multiple files.
     row_creation_times: Optional[RowCreationTimes] = RowCreationTimes()

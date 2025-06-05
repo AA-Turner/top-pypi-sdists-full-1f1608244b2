@@ -166,6 +166,11 @@ class BeakerStub(object):
                 request_serializer=beaker__pb2.CordonNodeRequest.SerializeToString,
                 response_deserializer=beaker__pb2.CordonNodeResponse.FromString,
                 _registered_method=True)
+        self.DeleteNode = channel.unary_unary(
+                '/allenai.beaker.Beaker/DeleteNode',
+                request_serializer=beaker__pb2.DeleteNodeRequest.SerializeToString,
+                response_deserializer=beaker__pb2.DeleteNodeResponse.FromString,
+                _registered_method=True)
         self.GetWorkload = channel.unary_unary(
                 '/allenai.beaker.Beaker/GetWorkload',
                 request_serializer=beaker__pb2.GetWorkloadRequest.SerializeToString,
@@ -599,6 +604,12 @@ class BeakerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def CordonNode(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteNode(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -1066,6 +1077,11 @@ def add_BeakerServicer_to_server(servicer, server):
                     servicer.CordonNode,
                     request_deserializer=beaker__pb2.CordonNodeRequest.FromString,
                     response_serializer=beaker__pb2.CordonNodeResponse.SerializeToString,
+            ),
+            'DeleteNode': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteNode,
+                    request_deserializer=beaker__pb2.DeleteNodeRequest.FromString,
+                    response_serializer=beaker__pb2.DeleteNodeResponse.SerializeToString,
             ),
             'GetWorkload': grpc.unary_unary_rpc_method_handler(
                     servicer.GetWorkload,
@@ -2047,6 +2063,33 @@ class Beaker(object):
             '/allenai.beaker.Beaker/CordonNode',
             beaker__pb2.CordonNodeRequest.SerializeToString,
             beaker__pb2.CordonNodeResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteNode(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/allenai.beaker.Beaker/DeleteNode',
+            beaker__pb2.DeleteNodeRequest.SerializeToString,
+            beaker__pb2.DeleteNodeResponse.FromString,
             options,
             channel_credentials,
             insecure,

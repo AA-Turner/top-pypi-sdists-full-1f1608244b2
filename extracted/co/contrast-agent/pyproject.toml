@@ -121,7 +121,6 @@ filterwarnings = [
   "ignore:.*'utils.escape' is deprecated.*",
   "ignore:.*unicode_internal codec has been deprecated.*",
   "ignore:.*'cgi' is deprecated.*",
-  "ignore:Please use.*python_multipart.*instead.*:PendingDeprecationWarning", # TODO: PYT-3421 this can be removed after upgrading fastapi to 0.115.4+
   "ignore::contrast.utils.exceptions.deprecation_warning.ContrastDeprecationWarning",
 ]
 markers = [

@@ -1,5 +1,7 @@
 # Copyright © 2025 Contrast Security, Inc.
 # See https://www.contrastsecurity.com/enduser-terms-0317a for more details.
+from dataclasses import dataclass
+from functools import cached_property
 from typing import Optional
 from collections import namedtuple
 
@@ -39,18 +41,6 @@ class DiscoverablePackage:
     def set_info(self):
         raise NotImplementedError("Must implement set_info")
 
-    def discover_framework(self, framework_name: str) -> Optional[PackageMetadata]:
-        """
-        Except in the agent's own testing environment, the assumption here is
-        that all environments using the agent will have only
-        one supported framework or server.
-        """
-        with scope.contrast_scope():
-            try:
-                return metadata(framework_name)
-            except Exception:
-                return None
-
     def discover_server(self) -> Optional[PackageMetadata]:
         """
         Except in the agent's own testing environment, the assumption here is
@@ -70,13 +60,29 @@ class DiscoverablePackage:
         return f"{self.name} {self.full_version}"
 
 
-class Framework(DiscoverablePackage):
+class _ServerTypeFramework(DiscoverablePackage):
     """
-    A class to store information about the current web framework used in an application
+    Unless you're reporting server type on startup, use `Framework` instead.
+
+    This is only kept because it is used as the server type sent on startup, which the backend includes in
+    its server identifier. It's not displayed anywhere in the UI, but changing this value would create new
+    servers, leading to loss of settings, more license usage, and more pressure on the backend.
     """
 
     def __init__(self, framework_name):
         super().__init__(framework_name, DEFAULT_FRAMEWORK)
+
+    def discover_framework(self, framework_name: str) -> Optional[PackageMetadata]:
+        """
+        Except in the agent's own testing environment, the assumption here is
+        that all environments using the agent will have only
+        one supported framework or server.
+        """
+        with scope.contrast_scope():
+            try:
+                return metadata(framework_name)
+            except Exception:
+                return None
 
     def set_info(self):
         framework_metadata = (
@@ -115,3 +121,37 @@ class Server(DiscoverablePackage):
             )
             self._name = self.default_package
             self.version = Version(major="0", minor="0", patch="0")
+
+
+@dataclass
+class Framework:
+    name: str
+
+    def __post_init__(self):
+        self.name = self.name.capitalize()
+
+    @cached_property
+    def version(self) -> Optional[Version]:
+        """
+        Get the version of the package by its distribution name.
+        """
+        if self == UNKNOWN_FRAMEWORK:
+            return None
+        if dist := metadata(self.name):
+            version_parts = dist.get("Version", "0.0.0").split(".")
+            return Version(
+                major=version_parts[0],
+                minor=version_parts[1],
+                patch=version_parts[2] if len(version_parts) > 2 else "0",
+            )
+        return None
+
+    def __str__(self):
+        return (
+            f"{self.name} {self.version.major}.{self.version.minor}.{self.version.patch}"
+            if self.version
+            else self.name
+        )
+
+
+UNKNOWN_FRAMEWORK = Framework("UNKNOWN")

@@ -18,7 +18,7 @@ import asyncio
 from meutils.pipe import *
 from meutils.str_utils.json_utils import json_path
 
-from meutils.schemas.jimeng_types import BASE_URL, MODELS_MAP, FEISHU_URL
+from meutils.schemas.jimeng_types import BASE_URL
 from meutils.schemas.video_types import VideoRequest
 from meutils.schemas.task_types import TaskResponse
 from meutils.apis.jimeng.common import get_headers, check_token
@@ -29,6 +29,8 @@ from meutils.config_utils.lark_utils import get_next_token_for_polling
 from fake_useragent import UserAgent
 
 ua = UserAgent()
+
+FEISHU_URL = "https://xchatllm.feishu.cn/sheets/GYCHsvI4qhnDPNtI4VPcdw2knEd?sheet=gAUw8s"  # 视频
 
 
 async def get_task(task_id: str, token: str = "916fed81175f5186a2c05375699ea40d"):
@@ -59,8 +61,12 @@ async def get_task(task_id: str, token: str = "916fed81175f5186a2c05375699ea40d"
 
         else:
             response = TaskResponse(task_id=task_id, metadata=data)
-            if (message := json_path(data, "$..fail_msg")) and "success" not in str(message).lower():
-                response.message = str(message)
+            if (
+                    (fail_codes := json_path(data, "$..fail_code"))
+                    and fail_codes[-1] != "0"
+                    and (messages := json_path(data, "$..fail_msg"))
+            ):
+                response.message = f"{str(messages).lower().replace('success', '')}:{fail_codes}"
                 response.status = "fail"
                 return response
 
@@ -71,11 +77,12 @@ async def get_task(task_id: str, token: str = "916fed81175f5186a2c05375699ea40d"
                 response.data = [{"video": _} for _ in video_urls]
                 response.status = "success"
 
+            response.fail_code = fail_codes and fail_codes[-1]
             return response
 
 
 async def create_task(request: VideoRequest, token: Optional[str] = None):
-    token = "d2d142fc877e696484cc2fc521127b36"  ################### 线上注释掉
+    # token = "d2d142fc877e696484cc2fc521127b36"  ################### 线上注释掉
 
     token = token or await get_next_token_for_polling(FEISHU_URL, check_token)
 
@@ -145,6 +152,19 @@ async def create_task(request: VideoRequest, token: Optional[str] = None):
         task_id = task_ids[0]
         return TaskResponse(task_id=task_id, system_fingerprint=token)
 
+    else:
+        """
+       {
+           "ret": "1018",
+           "errmsg": "account punish limit ai generate",
+           "systime": "1749027488",
+           "logid": "202506041658081AB86654C66682A7DE2E",
+           "data": null
+       }
+        """
+
+        raise Exception(data)
+
 
 if __name__ == '__main__':
     token = None
@@ -156,12 +176,12 @@ if __name__ == '__main__':
         image_url="https://oss.ffire.cc/files/kling_watermark.png",  # 图生有问题
     )
 
-    # with timer():
-    #     r = arun(create_task(request, token))
-    #     print(r)
+    with timer():
+        r = arun(create_task(request, token))
+        print(r)
 
     # arun(get_task(r.task_id))
     # arun(get_task(r.task_id, "d2d142fc877e696484cc2fc521127b36"))
-    task_id = "4620067333122"
-
-    arun(get_task(task_id, token))
+    # task_id = "4620067333122"
+    #
+    # arun(get_task(task_id, token))

@@ -3,3 +3,7 @@ from .._impl import (
     timeseries_archetype_SeriesArchetypeService as SeriesArchetypeService,
 )
 
+__all__ = [
+    'SeriesArchetypeService',
+]
+

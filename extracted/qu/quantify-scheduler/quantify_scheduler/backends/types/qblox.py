@@ -91,8 +91,6 @@ class StaticHardwareProperties:
 
     instrument_type: str
     """The type of instrument."""
-    max_sequencers: int
-    """The amount of sequencers available."""
 
     def _get_connected_io_indices(self, mode: str, channel_idx: str) -> tuple[int, ...]:
         """Return the connected input/output indices associated to this channel name."""
@@ -140,6 +138,9 @@ class StaticAnalogModuleProperties(StaticHardwareProperties):
     """The default markers value to set at the beginning of programs and reset marker pulses to.
     A mapping from channel name to marker.
     Important for RF instruments that use the set_mrk command to enable/disable the RF output."""
+    default_nco_en: bool = False
+    """The default nco settings for sequencers
+    (``mod_en_awg`` and ``demod_en_acq`` QCoDeS parameters)."""
 
 
 @dataclass(frozen=True)
@@ -517,6 +518,12 @@ class RFModuleSettings(AnalogModuleSettings):
     lo5_freq: Optional[float] = None
     """The frequency of Output 5 (O6) LO. If left `None`, the parameter will not be set.
     """
+    in0_freq: Optional[float] = None
+    """The frequency of Input 0 (I1) LO. If left `None`, the parameter will not be set.
+    """
+    in1_freq: Optional[float] = None
+    """The frequency of Input 1 (I2) LO. If left `None`, the parameter will not be set.
+    """
     out0_att: Optional[int] = None
     """The attenuation of Output 0 (O1)."""
     out1_att: Optional[int] = None
@@ -560,6 +567,8 @@ class RFModuleSettings(AnalogModuleSettings):
             "complex_output_3": "lo3_freq",
             "complex_output_4": "lo4_freq",
             "complex_output_5": "lo5_freq",
+            "complex_input_0": "in0_freq",
+            "complex_input_1": "in1_freq",
         }
 
         rf_settings = {}
@@ -573,6 +582,18 @@ class RFModuleSettings(AnalogModuleSettings):
                     lo_freq_setting := channel_name_to_lo_freq_setting.get(path.channel_name)
                 ) is not None:
                     rf_settings[lo_freq_setting] = lo_freq
+                if path.channel_name_measure is not None:
+                    for channel_name in path.channel_name_measure:
+                        if (
+                            freq_setting := channel_name_to_lo_freq_setting.get(channel_name)
+                        ) is not None:
+                            in_freq = pc_freqs.lo_freq if pc_freqs is not None else None
+                            if freq_setting not in rf_settings:
+                                rf_settings[freq_setting] = in_freq
+                            elif rf_settings[freq_setting] != in_freq:
+                                raise ValueError(
+                                    f"Trying to set multiple input frequencies for {freq_setting}"
+                                )
 
         combined_settings = {**rf_settings, **kwargs}
         return cls(**combined_settings)
@@ -652,6 +673,7 @@ class SequencerSettings(DataClassJsonMixin):
         sequencer_cfg: _SequencerCompilationConfig,
         connected_output_indices: tuple[int, ...],
         connected_input_indices: tuple[int, ...],
+        default_nco_en: bool,  # noqa: ARG003 not used
     ) -> SequencerSettings:
         """
         Instantiates an instance of this class, with initial parameters determined from
@@ -665,6 +687,8 @@ class SequencerSettings(DataClassJsonMixin):
             Specifies the indices of the outputs this sequencer produces waveforms for.
         connected_input_indices
             Specifies the indices of the inputs this sequencer collects data for.
+        default_nco_en
+            Specifies the default setting to enable nco.
 
         Returns
         -------
@@ -765,6 +789,7 @@ class AnalogSequencerSettings(SequencerSettings):
         sequencer_cfg: _SequencerCompilationConfig,
         connected_output_indices: tuple[int, ...],
         connected_input_indices: tuple[int, ...],
+        default_nco_en: bool,
     ) -> AnalogSequencerSettings:
         """
         Instantiates an instance of this class, with initial parameters determined from
@@ -778,6 +803,8 @@ class AnalogSequencerSettings(SequencerSettings):
             Specifies the indices of the outputs this sequencer produces waveforms for.
         connected_input_indices
             Specifies the indices of the inputs this sequencer collects data for.
+        default_nco_en
+            Specifies the default setting to enable nco.
 
         Returns
         -------
@@ -791,7 +818,7 @@ class AnalogSequencerSettings(SequencerSettings):
             else None
         )
         # Allow NCO to be permanently disabled via `"interm_freq": 0` in the hardware config
-        nco_en: bool = not (
+        nco_en: bool = default_nco_en or not (
             modulation_freq == 0
             or isinstance(sequencer_cfg.hardware_description, DigitalChannelDescription)
             or len(connected_output_indices) == 0
@@ -876,7 +903,7 @@ class TimetagSequencerSettings(SequencerSettings):
     (e.g. parameters related to thresholded acquisition).
     """
 
-    in_threshold_primary: Optional[float] = None
+    analog_threshold: Optional[float] = None
     """The settings that determine when an analog voltage is counted as a pulse."""
     time_source: Optional[TimeSource] = None
     """Selects the timetag data source for timetag acquisitions."""
@@ -931,6 +958,7 @@ class TimetagSequencerSettings(SequencerSettings):
         sequencer_cfg: _SequencerCompilationConfig,
         connected_output_indices: tuple[int, ...],
         connected_input_indices: tuple[int, ...],
+        default_nco_en: bool,  # noqa: ARG003 not used
     ) -> TimetagSequencerSettings:
         """
         Instantiates an instance of this class, with initial parameters determined from
@@ -944,6 +972,9 @@ class TimetagSequencerSettings(SequencerSettings):
             Specifies the indices of the outputs this sequencer produces waveforms for.
         connected_input_indices
             Specifies the indices of the inputs this sequencer collects data for.
+        default_nco_en
+            Specifies the indices of the default setting to enable nco.
+            Not applicable for timetag sequencer.
 
         Returns
         -------
@@ -957,8 +988,8 @@ class TimetagSequencerSettings(SequencerSettings):
             channel_name_measure=sequencer_cfg.channel_name_measure,
             connected_output_indices=connected_output_indices,
             connected_input_indices=connected_input_indices,
-            in_threshold_primary=(
-                sequencer_cfg.digitization_thresholds.in_threshold_primary
+            analog_threshold=(
+                sequencer_cfg.digitization_thresholds.analog_threshold
                 if sequencer_cfg.digitization_thresholds is not None
                 else None
             ),
@@ -1584,7 +1615,7 @@ class QbloxHardwareDistortionCorrection(HardwareDistortionCorrection):
 class DigitizationThresholds(DataStructure):
     """The settings that determine when an analog voltage is counted as a pulse."""
 
-    in_threshold_primary: Optional[float] = None
+    analog_threshold: Optional[float] = None
     """
     For QTM modules only, this is the voltage threshold above which an input signal is
     registered as high.

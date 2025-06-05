@@ -12,7 +12,7 @@ LONG_DESCRIPTION = (Path(__file__).parent / "README.md").read_text()
 
 setup(
     name="boto3-stubs-full",
-    version="1.38.29",
+    version="1.38.30",
     packages=[
         "mypy_boto3_accessanalyzer",
         "mypy_boto3_account",
@@ -158,6 +158,7 @@ setup(
         "mypy_boto3_es",
         "mypy_boto3_events",
         "mypy_boto3_evidently",
+        "mypy_boto3_evs",
         "mypy_boto3_finspace",
         "mypy_boto3_finspace_data",
         "mypy_boto3_firehose",
@@ -422,7 +423,7 @@ setup(
     license="MIT License",
     author="Vlad Emelianov",
     author_email="vlad.emelianov.nz@gmail.com",
-    description="All-in-one type annotations for boto3 1.38.29 generated with mypy-boto3-builder 8.11.0",
+    description="All-in-one type annotations for boto3 1.38.30 generated with mypy-boto3-builder 8.11.0",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -590,6 +591,7 @@ setup(
         "mypy_boto3_es": ["py.typed", "*.pyi"],
         "mypy_boto3_events": ["py.typed", "*.pyi"],
         "mypy_boto3_evidently": ["py.typed", "*.pyi"],
+        "mypy_boto3_evs": ["py.typed", "*.pyi"],
         "mypy_boto3_finspace": ["py.typed", "*.pyi"],
         "mypy_boto3_finspace_data": ["py.typed", "*.pyi"],
         "mypy_boto3_firehose": ["py.typed", "*.pyi"],

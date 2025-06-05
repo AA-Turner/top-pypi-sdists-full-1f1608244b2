@@ -17,3 +17,21 @@ from .._impl import (
     comments_api_ResourceType as ResourceType,
 )
 
+__all__ = [
+    'Comment',
+    'CommentParent',
+    'CommentParentVisitor',
+    'CommentParentComment',
+    'CommentParentResource',
+    'CommentRid',
+    'Conversation',
+    'ConversationNode',
+    'CreateCommentRequest',
+    'EditCommentRequest',
+    'Reaction',
+    'ReactionRid',
+    'ReactionType',
+    'ResourceType',
+    'CommentsService',
+]
+

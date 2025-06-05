@@ -16,13 +16,14 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Development Status :: 4 - Beta",
 ]
 requires-python = ">=3.9"
 dynamic = ["version"]
 dependencies = [
-    "funcy>=1.14; python_version < '3.12'",
     "fsspec>=2024.2.0",
+    "funcy>=1.14; python_version < '3.12'",
 ]
 
 [project.urls]
@@ -31,7 +32,7 @@ Source = "https://github.com/iterative/dvc-objects"
 
 [project.optional-dependencies]
 tests = [
-    "pytest<8,>=7",
+    "pytest>=7,<9",
     "pytest-sugar",
     "pytest-cov>=4.1.0",
     "pytest-mock",
@@ -41,7 +42,7 @@ tests = [
 ]
 dev = [
     "dvc-objects[tests]",
-    "mypy==1.8.0",
+    "mypy==1.16.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -101,6 +102,7 @@ module = [
 
 [tool.codespell]
 ignore-words-list = "cachable,"
+skip = "CODE_OF_CONDUCT.rst"
 
 [tool.ruff]
 output-format = "full"

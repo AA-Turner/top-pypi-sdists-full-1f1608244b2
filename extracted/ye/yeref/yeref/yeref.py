@@ -16,6 +16,7 @@ import mimetypes
 import os
 import random
 import re
+import csv
 import subprocess
 
 import aioboto3
@@ -28,6 +29,7 @@ import urllib.parse
 import zipfile
 from html import unescape
 from calendar import monthrange
+from collections import defaultdict
 # import whisper
 # pip install openai-whisper
 from datetime import datetime, timezone, timedelta
@@ -120,8 +122,8 @@ from yeref.l_ import l_inline_demo, l_inline_bot, l_inline_post, l_inline_media,
     l_web_version, l_payment_of_post, l_payment_check_token, l_podcast_start, l_chn_no_rights_for_media, \
     l_refund_title, l_refund_already_done, l_refund_success, l_refund_incorrect, \
     l_tools_has_restricted, l_bot_need_start_add, l_chn_need_boost_for_story, l_bot_need_restart_extra_bot, \
-    l_bot_pub_with_payment
-
+    l_bot_pub_with_payment, l_sub_to_private_channel, l_payment_6_months, l_payment_1_months, l_material, \
+    l_payment_success, l_payment_hashtag
 
 # region group links
 payment_link = 'http://bagazhznaniy.ru/wp-content/uploads/2014/03/zhivaya-priroda.jpg'
@@ -211,7 +213,7 @@ BOT_CADMIN_ = '☐☑'
 BOT_VARS_ = '{"BOT_PROMO": "#911", "BOT_CHANNEL": 0, "BOT_CHANNELTID": 0, "BOT_GROUP": 0, "BOT_GROUPTID": 0, "BOT_CHATGPT": "", "BOT_GEO": 0, "BOT_TZ": "+00:00", "BOT_DT": "", "BOT_LZ": "en", "BOT_LC": "en", "BOT_ISSTARTED": 0, "BOT_ISMENTIONED": 0}'
 BOT_LSTS_ = '{"BOT_ADMINS": [], "BOT_COMMANDS": ["/start"]}'
 USER_VARS_ = '{"USER_TEXT": "", "USER_REACTION": "", "USER_PUSH": "", "USER_EMAIL": "", "USER_PROMO": "", "USER_CONTACT": "", "USER_GEO": "", "USER_UTM": "", "USER_ID": 0, "USER_DT": "", "USER_TZ": "+00:00", "USER_LC": "en", "USER_LZ": "en", "USER_ISADMIN": 0, "USER_ISBLOG": 0, "USER_ISPREMIUM": 0, "USER_BALL": 0, "USER_RAND": 0, "USER_QUIZ": 0, "USER_DICE": 0, "MSGID_PAID": 0, "DATE_TIME": 0}'
-USER_LSTS_ = '{"USER_UTMREF": [], "USER_PAYMENTS": [], "USER_TXS": [], "USER_DAU": [], "USER_MAU": []}'
+USER_LSTS_ = '{"USER_UTMREF": [], "USER_PAYMENTS": [], "USER_TXS": [], "USER_DAU": [], "USER_MAU": [], "USER_STATUSES": []}'
 
 UB_CONFIG_ = '☑☑☑☐☐☑☑☐☐☐☐☐☐'
 UB_CMONITOR_ = '☐'
@@ -2435,7 +2437,7 @@ effects_real_my = {'5107584321108051014': '👍', '5159385139981059251': '❤', 
 
 themes_ = ['🐥', '⛄', '💎', '👨\u200d🏫', '🌷', '💜', '🎄', '🎮']
 extra_prompt = 'hyper-realistic image, iphone photo, ultra-realistic photography, cinematic photo, uhd motion capture, high-contrast image, 8k camera, atmospheric light'
-short_description = f"""👩🏽‍💻 Web3ᵀᴼᴺ-@tg-#neuro apps
+short_description = f"""👩🏽‍💻 Web3ᵀᴼᴺ-@tg-#neuro apps for⋅ᯅ⋅creators
 
 Start: t.me/FereyDemoBot
 🇬🇧🇨🇳🇦🇪🇪🇸🇷🇺🇫🇷
@@ -15372,6 +15374,113 @@ async def check_sub_pay(chat_id, lz, BOT_TOKEN_E18B, BASE_D):
         return is_paid, till_paid
 
 
+async def pay_handler_for_all(bot, message, ideas_en, ideas_ru, PROJECT_USERNAME, EXTRA_D, BASE_P):
+    try:
+        successful_payment_data = {k: v for k, v in message.successful_payment.model_dump().items() if v is not None}
+        print(f"successful_payment {successful_payment_data}")
+        chat_id = message.from_user.id
+        lz = await lz_code_pg(chat_id, message.from_user.language_code, BASE_P)
+        total_amount = message.successful_payment.total_amount
+        payload = message.successful_payment.invoice_payload
+        # tx_id = message.successful_payment.telegram_payment_charge_id
+
+        DT_START = datetime.now(timezone.utc).strftime('%d-%m-%Y_%H-%M-%S')
+        DT_END = ""
+        sub_exp_date = message.successful_payment.subscription_expiration_date
+        if sub_exp_date: DT_END = datetime.fromtimestamp(sub_exp_date, tz=timezone.utc).strftime('%d-%m-%Y_%H-%M-%S')
+        print(f"{DT_END=}, {payload=}")
+        # if payload == '-': payload = 'material'
+
+        if payload == 'all':
+            payload_txt = l_sub_to_private_channel[lz]
+        elif payload == '6':
+            payload_txt = l_payment_6_months[lz]
+        elif payload == '1':
+            payload_txt = l_payment_1_months[lz]
+        elif payload == 'donate':
+            payload_txt = l_donate[lz]
+        elif payload == 'material':
+            payload_txt = l_material[lz]
+        else:
+            payload_txt = str(payload) if payload else ''
+
+        await bot.send_message(chat_id=chat_id, text='🎉')
+        USER_PAYMENTS = []
+        sql = "SELECT USER_TID, USER_LSTS FROM \"USER\" WHERE USER_TID=$1"
+        data_usr = await db_select_pg(sql, (chat_id,), BASE_P)
+        if not len(data_usr):
+            dt_ = datetime.now(timezone.utc).strftime('%d-%m-%Y_%H-%M-%S')
+            sql = "INSERT INTO \"USER\" (USER_TID, USER_DT) VALUES ($1, $2) ON CONFLICT DO NOTHING"
+            await db_change_pg(sql, (chat_id, dt_,), BASE_P)
+            USER_LSTS = json.loads(USER_LSTS_)
+        else:
+            USER_TID, USER_LSTS = data_usr[0]
+            USER_LSTS = json.loads(USER_LSTS or USER_LSTS_)
+            USER_PAYMENTS = USER_LSTS.get("USER_PAYMENTS", [])
+
+        print(f"{payload=}")
+        if payload in ['all', '6', '1']:
+            USER_PAYMENTS.append({
+                'TYPE': 'SUB',
+                'LOAD': 'month' if payload == '1' else payload,
+                'DT_START': DT_START,
+                'DT_END': DT_END,
+                'AMOUNT': total_amount
+            })
+        elif payload == 'donate':
+            USER_PAYMENTS.append({
+                'TYPE': 'DON',
+                'LOAD': payload,
+                'DT_START': DT_START,
+                'DT_END': DT_END,
+                'AMOUNT': total_amount
+            })
+        elif payload in ['material']:
+            USER_PAYMENTS.append({
+                'TYPE': 'MAT',
+                'LOAD': payload,
+                'DT_START': DT_START,
+                'DT_END': DT_END,
+                'AMOUNT': total_amount
+            })
+
+            ideas = ideas_ru if lz == 'ru' else ideas_en
+            lst = [[i + 1, idea] for i, idea in enumerate(ideas)]
+
+            f_name = f"{payload_txt}-{lz}.csv"
+            output = io.StringIO()
+            csv_writer = csv.writer(output)
+            csv_writer.writerow(["#", "i"])
+            csv_writer.writerows(lst)
+
+            async with aiofiles.open(f_name, 'w', newline='') as f:
+                await f.write(output.getvalue())
+            thumb = types.FSInputFile(os.path.join(EXTRA_D, 'parse.jpg'))
+            await bot.send_document(chat_id=chat_id, document=types.FSInputFile(f_name), thumbnail=thumb)
+            if os.path.exists(f_name): os.remove(f_name)
+        else:
+            USER_PAYMENTS.append({
+                'TYPE': 'EXT',
+                'LOAD': payload,
+                'DT_START': DT_START,
+                'DT_END': DT_END,
+                'AMOUNT': total_amount
+            })
+
+        USER_LSTS["USER_PAYMENTS"] = USER_PAYMENTS
+        USER_LSTS = json.dumps(USER_LSTS, ensure_ascii=False)
+
+        sql = f"UPDATE \"USER\" SET USER_LSTS=$1 WHERE USER_TID=$2"
+        await db_change_pg(sql, (USER_LSTS, chat_id,), BASE_P)
+
+        text = f"{l_payment_success[lz]} ★{total_amount}, {payload_txt}\n\n♥️ @{PROJECT_USERNAME} {l_payment_hashtag[lz]}"
+        await bot.send_message(chat_id=chat_id, text=text)
+    except TelegramRetryAfter as e:
+        logger.info(log_ % f'TelegramRetryAfter {e.retry_after}')
+        await asyncio.sleep(e.retry_after)
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(0, 1), 2))
 # endregion
 
 
@@ -15817,7 +15926,7 @@ async def upd_user_data(ENT_TID, data, web_app_init_data, PROJECT_USERNAME, BASE
 
 
 # region unit ecomonics
-async def return_view_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
+async def return_activity_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
     try:
         schema_name = "USER"
         if PROJECT_USERNAME == 'FereyBotBot':
@@ -15835,6 +15944,7 @@ async def return_view_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
             "mau": 0,
             "wallets": 0,
             "tx": 0,
+            "pay": 0,
             "tvl": 0,
             "/start": 0,
             "/startapp": 0
@@ -15843,8 +15953,79 @@ async def return_view_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
         seen_dau = set()
         wallets_set = set()
         users_set = set()
+        pay_set = set()
 
         def process_user_rows(rows):
+            # months = ["2025-06", "2025-07", "2025-08", "2025-09"]
+            # data_users = []
+            # for _ in range(3):
+            #     # дата входа
+            #     entry_month = random.choice(months)
+            #     entry_day = random.randint(1, 28)
+            #     entry_date = f"{entry_month}-{entry_day:02}"
+            #     entry_dt_obj = datetime.strptime(entry_date, '%Y-%m-%d')
+            #     entry_dt = f"{entry_dt_obj.strftime('%d-%m-%Y')}_{datetime.now().strftime('%H-%M-%S')}"
+            #     utm = random.choice(["/start", "/startapp"])
+            #
+            #     # месяцы от входа и дальше
+            #     valid_months = [m for m in months if datetime.strptime(m + "-01", "%Y-%m-%d") >= entry_dt_obj.replace(day=1)]
+            #     if not valid_months:
+            #         valid_months = [entry_month]
+            #
+            #     user_mau = sorted(random.sample(valid_months, k=random.randint(1, len(valid_months))))
+            #     user_dau_dates = set()
+            #     txs, payments = [], []
+            #
+            #     # транзакция
+            #     if user_mau and random.random() < 0.5:
+            #         tx_month = random.choice(user_mau)
+            #         tx_day = random.randint(1, 28)
+            #         tx_date = f"{tx_month}-{tx_day:02}"
+            #         dt_tx = datetime.strptime(tx_date, "%Y-%m-%d")
+            #         if dt_tx >= entry_dt_obj:
+            #             txs = [{
+            #                 "TYPE": random.choice(["don", "sub", "pst"]),
+            #                 "AMOUNT": str(random.randint(1, 10)),
+            #                 "ADDRESS": f"address{random.randint(1, 999)}",
+            #                 "DT_START": f"{dt_tx.strftime('%d-%m-%Y')}_12-00-00",
+            #             }]
+            #             user_dau_dates.add(tx_date)
+            #
+            #     # платеж
+            #     if user_mau and random.random() < 0.5:
+            #         pay_month = random.choice(user_mau)
+            #         pay_day = random.randint(1, 28)
+            #         pay_date = f"{pay_month}-{pay_day:02}"
+            #         dt_pay = datetime.strptime(pay_date, "%Y-%m-%d")
+            #         if dt_pay >= entry_dt_obj:
+            #             payments = [{
+            #                 "TYPE": random.choice(["don", "sub", "pst"]),
+            #                 "DT_START": f"{dt_pay.strftime('%d-%m-%Y')}_14-00-00",
+            #                 "DT_END": "0",
+            #                 "AMOUNT": str(random.randint(1, 10))
+            #             }]
+            #             user_dau_dates.add(pay_date)
+            #
+            #     # вход в приложение
+            #     user_dau_dates.add(entry_date)
+            #
+            #     # остальные посещения
+            #     for m in user_mau:
+            #         day = random.randint(1, 28)
+            #         visit = f"{m}-{day:02}"
+            #         dt_visit = datetime.strptime(visit, "%Y-%m-%d")
+            #         if dt_visit >= entry_dt_obj and random.random() < 0.7:
+            #             user_dau_dates.add(visit)
+            #
+            #     user_dau = sorted(user_dau_dates)
+            #     wallet = f"wallet{random.randint(1, 100)}" if txs else random.choice([f"wallet{random.randint(1, 100)}", ""])
+            #
+            #     data_users.append((
+            #         random.randint(100000, 999999),
+            #         json.dumps({"USER_WALLET": wallet, "USER_UTM": utm, "USER_DT": entry_dt}),
+            #         json.dumps({"USER_DAU": user_dau, "USER_MAU": user_mau, "USER_TXS": txs, "USER_PAYMENTS": payments})
+            #     ))
+
             for USER_TID, USER_VARS, USER_LSTS in rows:
                 USER_VARS = json.loads(USER_VARS or "{}")
                 USER_LSTS = json.loads(USER_LSTS or "{}")
@@ -15854,9 +16035,17 @@ async def return_view_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
                 USER_DAU = USER_LSTS.get("USER_DAU", [])
                 USER_MAU = USER_LSTS.get("USER_MAU", [])
                 USER_TXS = USER_LSTS.get("USER_TXS", [])
+                USER_PAYMENTS = USER_LSTS.get("USER_PAYMENTS", [])
+                USER_STATUSES = USER_LSTS.get("USER_STATUSES", [])
 
                 if USER_WALLET: wallets_set.add(USER_WALLET)
-                users_set.add(USER_TID)
+                if USER_STATUSES:
+                    last_status = max(USER_STATUSES, key=lambda x: list(x.values())[0])
+                    last_key = list(last_status.keys())[0]
+                    if last_key not in ['left', 'kicked']:
+                        users_set.add(USER_TID)
+                else:
+                    users_set.add(USER_TID)
 
                 for day_str in USER_DAU:
                     dt_day = datetime.strptime(day_str, "%Y-%m-%d")
@@ -15874,13 +16063,17 @@ async def return_view_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
                         if USER_WALLET:
                             metrics_by_month[month_key]["wallets"] += 1
 
-                for tx in USER_TXS:
-                    dt_start = tx.get("DT_START", "")
-                    amount = int(tx.get("AMOUNT", "0"))
+                for it in USER_TXS:
+                    dt_start = it.get("DT_START", "")
                     dt_tx = datetime.strptime(dt_start, "%d-%m-%Y_%H-%M-%S")
                     month_key = dt_tx.strftime("%Y-%m")
                     metrics_by_month[month_key]["tx"] += 1
-                    metrics_by_month[month_key]["tvl"] += amount
+
+                for it in USER_PAYMENTS:
+                    dt_start = it.get("DT_START", "")
+                    dt_tx = datetime.strptime(dt_start, "%d-%m-%Y_%H-%M-%S")
+                    month_key = dt_tx.strftime("%Y-%m")
+                    metrics_by_month[month_key]["pay"] += 1
 
                 if USER_DT:
                     dt_obj = datetime.strptime(USER_DT, "%d-%m-%Y_%H-%M-%S")
@@ -15892,38 +16085,603 @@ async def return_view_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
             ENT_TID = item[0]
             sql = f'SELECT USER_TID, USER_VARS, USER_LSTS FROM {schema_name}_{ENT_TID}.USER'
             data_users = await db_select_pg(sql, (), BASE_P)
+            print(f"schema_name {data_users=}")
             process_user_rows(data_users)
 
         sql = f"SELECT USER_TID, USER_VARS, USER_LSTS FROM \"USER\""
         data_users = await db_select_pg(sql, (), BASE_P)
+        print(f"{data_users=}")
         process_user_rows(data_users)
 
         all_months = sorted(metrics_by_month.keys())
-        f_name = os.path.join(EXTRA_D, "1_metrics.csv")
+        f_name = os.path.join(EXTRA_D, "1_activity_metrics.csv")
         with open(f_name, mode="w", encoding="utf-8", newline="") as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
-            writer.writerow(["MO", "DAU", "MAU", "Wallets", "Transactions", "TVL", "/start", "/startapp"])
+            writer.writerow(["MO", "/start", "/startapp", "DAU", "MAU", "Wallets", "TX Count", "PAY Count", "TVL"])
             for ym in all_months:
                 row = [
                     ym,
+                    metrics_by_month[ym]["/start"],
+                    metrics_by_month[ym]["/startapp"],
                     metrics_by_month[ym]["dau"],
                     metrics_by_month[ym]["mau"],
                     metrics_by_month[ym]["wallets"],
                     metrics_by_month[ym]["tx"],
+                    metrics_by_month[ym]["pay"],
                     "",
-                    metrics_by_month[ym]["/start"],
-                    metrics_by_month[ym]["/startapp"],
                 ]
                 writer.writerow(row)
-            f.write("\n")
-            f.write(f"Unique wallet count: {len(wallets_set)}\n")
-            f.write(f"Unique users count: {len(users_set)}\n")
+            csvfile.write("\n")
+            csvfile.write(f"Unique wallet count: {len(wallets_set)}\n")
+            csvfile.write(f"Unique users count: {len(users_set)}\n")
 
         thumb = types.FSInputFile(os.path.join(EXTRA_D, 'parse.jpg'))
         await bot.send_document(chat_id=my_tid, document=types.FSInputFile(f_name), thumbnail=thumb)
     except Exception as e:
         logger.info(log_ % str(e))
         await asyncio.sleep(round(random.uniform(0, 1), 2))
+
+
+async def return_unit_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
+    try:
+        sql = 'SELECT USER_TID, USER_VARS, USER_LSTS FROM "USER"'
+        data_users = await db_select_pg(sql, (), BASE_P)
+
+        metrics = defaultdict(lambda: {
+            "new_users": 0,
+            "sum_amount": 0.0,
+            "payments_count": 0,
+            "churn_count": 0
+        })
+        seen_new = set()
+
+        for USER_TID, USER_VARS, USER_LSTS in data_users:
+            USER_VARS = json.loads(USER_VARS or "{}")
+            USER_LSTS = json.loads(USER_LSTS or "{}")
+            USER_DT = USER_VARS.get("USER_DT", "")
+            USER_PAYMENTS = USER_LSTS.get("USER_PAYMENTS", [])
+            USER_STATUSES = USER_LSTS.get("USER_STATUSES", [])
+
+            if USER_DT:
+                mo = datetime.strptime(USER_DT, "%d-%m-%Y_%H-%M-%S").strftime("%Y-%m")
+                if (USER_TID, mo) not in seen_new:
+                    seen_new.add((USER_TID, mo))
+                    metrics[mo]["new_users"] += 1
+
+            for pay in USER_PAYMENTS:
+                dt_p = datetime.strptime(pay.get("DT_START", ""), "%d-%m-%Y_%H-%M-%S")
+                mo_p = dt_p.strftime("%Y-%m")
+                amt = float(pay.get("AMOUNT", 0)) * 0.013
+                metrics[mo_p]["sum_amount"] += amt
+                metrics[mo_p]["payments_count"] += 1
+
+            for status in USER_STATUSES:
+                key, ts = next(iter(status.items()))
+                if key in ("left", "kicked"):
+                    mo_s = datetime.strptime(ts, "%d-%m-%Y_%H-%M-%S").strftime("%Y-%m")
+                    metrics[mo_s]["churn_count"] += 1
+                    break
+
+        all_months = sorted(metrics.keys())
+        cumulative_users = 0
+        results = []
+
+        for idx, mo in enumerate(all_months):
+            data = metrics[mo]
+            new_u = data["new_users"]
+            cumulative_users += new_u
+
+            MRR = data["sum_amount"]
+            def fmt(x):
+                return f"{x:.2f}".rstrip("0").rstrip(".") if x is not None else ""
+
+            mrr_fmt = fmt(MRR)
+            N = cumulative_users
+            ARPU = MRR / N if N else None
+            ARR = MRR * 12 if N else None
+
+            churn = data["churn_count"]
+            ChurnR = churn / N if N else None
+            LTV1 = (ARPU / ChurnR) if (ARPU is not None and ChurnR and ChurnR > 0) else None
+
+            pay_cnt = data["payments_count"]
+            if N and pay_cnt:
+                LTV2 = (pay_cnt / N) * (MRR / pay_cnt)
+            else:
+                LTV2 = None
+
+            if idx == 0:
+                CMGR = None
+                first_mrr = MRR
+            else:
+                CMGR = ((MRR / first_mrr) ** (1 / idx)) - 1 if first_mrr and MRR is not None else None
+
+            results.append({
+                "MO": mo,
+                "N": str(N),
+                "MRR": mrr_fmt,
+                "ARPU": fmt(ARPU),
+                "ARR": fmt(ARR),
+                "ChurnR": fmt(ChurnR),
+                "LTV1": fmt(LTV1),
+                "LTV2": fmt(LTV2),
+                "CMGR": fmt(CMGR),
+                "CAC": ""
+            })
+
+        path = os.path.join(EXTRA_D, "2_unit_metrics.csv")
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["MO", "N", "MRR", "ARPU", "ARR", "ChurnR", "LTV1", "LTV2", "CMGR", "CAC"])
+            for row in results:
+                writer.writerow([
+                    row["MO"], row["N"], row["MRR"], row["ARPU"], row["ARR"],
+                    row["ChurnR"], row["LTV1"], row["LTV2"], row["CMGR"], row["CAC"]
+                ])
+
+            cmgr_vals = [float(r["CMGR"]) for r in results if r["CMGR"] != ""]
+            if cmgr_vals:
+                factors = [1 + v for v in cmgr_vals]
+                avg = math.prod(factors) ** (1 / len(factors))
+                writer.writerow([])
+                writer.writerow([f"Rev ~ ×{round(avg, 2)} monthly"])
+
+        thumb = types.FSInputFile(os.path.join(EXTRA_D, "parse.jpg"))
+        await bot.send_document(chat_id=my_tid, document=types.FSInputFile(path), thumbnail=thumb)
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(0, 1), 2))
+
+
+async def return_cohort_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
+    try:
+        sql = 'SELECT USER_TID, USER_VARS, USER_LSTS FROM "USER"'
+        data_users = await db_select_pg(sql, (), BASE_P)
+
+        months = ["2025-06", "2025-07", "2025-08", "2025-09"]
+        data_users = []
+        for _ in range(30):
+            # дата входа
+            entry_month = random.choice(months)
+            entry_day = random.randint(1, 28)
+            entry_date = f"{entry_month}-{entry_day:02}"
+            entry_dt_obj = datetime.strptime(entry_date, '%Y-%m-%d')
+            entry_dt = f"{entry_dt_obj.strftime('%d-%m-%Y')}_{datetime.now().strftime('%H-%M-%S')}"
+            utm = random.choice(["/start", "/startapp"])
+
+            # месяцы от входа и дальше
+            valid_months = [m for m in months if datetime.strptime(m + "-01", "%Y-%m-%d") >= entry_dt_obj.replace(day=1)]
+            if not valid_months:
+                valid_months = [entry_month]
+
+            user_mau = sorted(random.sample(valid_months, k=random.randint(1, len(valid_months))))
+            user_dau_dates = set()
+            txs, payments = [], []
+
+            # платеж
+            if user_mau:
+                pay_month = random.choice(user_mau)
+                pay_day = random.randint(1, 28)
+                pay_date = f"{pay_month}-{pay_day:02}"
+                dt_pay = datetime.strptime(pay_date, "%Y-%m-%d")
+                # if dt_pay >= entry_dt_obj:
+                payments = [{
+                    "TYPE": random.choice(["don", "sub", "pst"]),
+                    "DT_START": f"{dt_pay.strftime('%d-%m-%Y')}_14-00-00",
+                    "DT_END": "0",
+                    "AMOUNT": str(random.randint(1, 10))
+                }]
+                user_dau_dates.add(pay_date)
+
+            # вход в приложение
+            user_dau_dates.add(entry_date)
+            for m in user_mau:
+                day = random.randint(1, 28)
+                visit = f"{m}-{day:02}"
+                dt_visit = datetime.strptime(visit, "%Y-%m-%d")
+                if dt_visit >= entry_dt_obj and random.random() < 0.7:
+                    user_dau_dates.add(visit)
+
+            # статусы (отток) с низкой вероятностью
+            USER_STATUSES = []
+            if random.random() < 0.2:  # 10% шанс оттока
+                churn_month = random.choice(valid_months)
+                churn_day = random.randint(1, 28)
+                churn_date = f"{churn_month}-{churn_day:02}"
+                churn_ts = datetime.strptime(churn_date, "%Y-%m-%d").strftime("%d-%m-%Y") + "_23-59-59"
+                USER_STATUSES = [{random.choice(["left", "kicked"]): churn_ts}]
+
+            user_dau = sorted(user_dau_dates)
+            wallet = f"wallet{random.randint(1, 100)}" if txs else random.choice([f"wallet{random.randint(1, 100)}", ""])
+
+            data_users.append((
+                random.randint(100000, 999999),
+                json.dumps({"USER_WALLET": wallet, "USER_UTM": utm, "USER_DT": entry_dt}),
+                json.dumps({"USER_DAU": user_dau, "USER_MAU": user_mau, "USER_TXS": txs,
+                            "USER_PAYMENTS": payments, "USER_STATUSES": USER_STATUSES})
+            ))
+        print(f"gen {data_users=}")
+
+        cohorts = defaultdict(set)
+        activity_months = defaultdict(set)
+
+        for USER_TID, USER_VARS, USER_LSTS in data_users:
+            USER_VARS = json.loads(USER_VARS or "{}")
+            USER_LSTS = json.loads(USER_LSTS or "{}")
+            USER_DT = USER_VARS.get("USER_DT", "")
+            USER_DAU = USER_LSTS.get("USER_DAU", [])
+
+            entry_mo = datetime.strptime(USER_DT, "%d-%m-%Y_%H-%M-%S").strftime("%Y-%m")
+            cohorts[entry_mo].add(USER_TID)
+
+            for day_str in USER_DAU:
+                try:
+                    mo = datetime.strptime(day_str, "%Y-%m-%d").strftime("%Y-%m")
+                    activity_months[USER_TID].add(mo)
+                except:
+                    pass
+
+        cohort_months = sorted(cohorts.keys())
+        num_months = len(cohort_months)
+
+        def add_months(mo_str, n):
+            y, m = map(int, mo_str.split("-"))
+            total = m + n
+            new_y = y + (total - 1) // 12
+            new_m = (total - 1) % 12 + 1
+            return f"{new_y:04d}-{new_m:02d}"
+
+        # Собираем таблицу посменно по календарным месяцам
+        table = []
+        header = ["Месяц/Когорта"]
+        for mo in cohort_months:
+            header.append(f"{mo} ({len(cohorts[mo])})")
+        header.append("∑")
+        table.append(header)
+
+        # Матрица для подсчёта retention (counts[i][j] = активных из когорты j в календарном месяце i)
+        counts = [[0] * num_months for _ in range(num_months)]
+        for i in range(num_months):
+            calendar_mo = cohort_months[i]
+            row = [f"M{i+1}"]
+            row_sum = 0
+
+            for j in range(num_months):
+                if j > i:
+                    row.append("")
+                    continue
+
+                cohort_mo = cohort_months[j]
+                if i == j:
+                    # первый месяц когорты
+                    val = len(cohorts[cohort_mo])
+                else:
+                    # считаем, сколько из когорты j активны в календарном месяце i
+                    val = sum(1 for uid in cohorts[cohort_mo] if calendar_mo in activity_months.get(uid, set()))
+
+                counts[i][j] = val
+                if val:
+                    row.append(str(val))
+                    row_sum += val
+                else:
+                    row.append("0")
+
+            row.append(str(row_sum))
+            table.append(row)
+
+        # Считаем средний ежемесячный churn
+        total_lost = 0
+        total_start = 0
+        for j in range(num_months):
+            for i in range(j, num_months - 1):
+                start_cnt = counts[i][j]
+                next_cnt = counts[i + 1][j]
+                if start_cnt > 0:
+                    lost = max(start_cnt - next_cnt, 0)
+                    total_lost += lost
+                    total_start += start_cnt
+
+        avg_churn = (total_lost / total_start) if total_start else 0
+
+        path = os.path.join(EXTRA_D, "3_cohort_metrics.csv")
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            for r in table:
+                writer.writerow(r)
+            writer.writerow([])
+            writer.writerow([f"Churn ~ ×{avg_churn:.2f} monthly"])
+
+        thumb = types.FSInputFile(os.path.join(EXTRA_D, "parse.jpg"))
+        await bot.send_document(chat_id=my_tid, document=types.FSInputFile(path), thumbnail=thumb)
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(0, 1), 2))
+
+
+async def return_retention_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
+    try:
+        sql = 'SELECT USER_TID, USER_VARS, USER_LSTS FROM "USER"'
+        data_users = await db_select_pg(sql, (), BASE_P)
+
+        months = ["2025-06", "2025-07", "2025-08", "2025-09"]
+        data_users = []
+        for _ in range(30):
+            # дата входа
+            entry_month = random.choice(months)
+            entry_day = random.randint(1, 28)
+            entry_date = f"{entry_month}-{entry_day:02}"
+            entry_dt_obj = datetime.strptime(entry_date, '%Y-%m-%d')
+            entry_dt = f"{entry_dt_obj.strftime('%d-%m-%Y')}_{datetime.now().strftime('%H-%M-%S')}"
+            utm = random.choice(["/start", "/startapp"])
+
+            # месяцы от входа и дальше
+            valid_months = [m for m in months if datetime.strptime(m + "-01", "%Y-%m-%d") >= entry_dt_obj.replace(day=1)]
+            if not valid_months:
+                valid_months = [entry_month]
+
+            user_mau = sorted(random.sample(valid_months, k=random.randint(1, len(valid_months))))
+            user_dau_dates = set()
+            txs, payments = [], []
+
+            # платеж
+            if user_mau:
+                pay_month = random.choice(user_mau)
+                pay_day = random.randint(1, 28)
+                pay_date = f"{pay_month}-{pay_day:02}"
+                dt_pay = datetime.strptime(pay_date, "%Y-%m-%d")
+                # if dt_pay >= entry_dt_obj:
+                payments = [{
+                    "TYPE": random.choice(["don", "sub", "pst"]),
+                    "DT_START": f"{dt_pay.strftime('%d-%m-%Y')}_14-00-00",
+                    "DT_END": "0",
+                    "AMOUNT": str(random.randint(1, 10))
+                }]
+                user_dau_dates.add(pay_date)
+
+            # вход в приложение
+            user_dau_dates.add(entry_date)
+            for m in user_mau:
+                day = random.randint(1, 28)
+                visit = f"{m}-{day:02}"
+                dt_visit = datetime.strptime(visit, "%Y-%m-%d")
+                if dt_visit >= entry_dt_obj and random.random() < 0.7:
+                    user_dau_dates.add(visit)
+
+            # статусы (отток) с низкой вероятностью
+            USER_STATUSES = []
+            if random.random() < 0.2:  # 10% шанс оттока
+                churn_month = random.choice(valid_months)
+                churn_day = random.randint(1, 28)
+                churn_date = f"{churn_month}-{churn_day:02}"
+                churn_ts = datetime.strptime(churn_date, "%Y-%m-%d").strftime("%d-%m-%Y") + "_23-59-59"
+                USER_STATUSES = [{random.choice(["left", "kicked"]): churn_ts}]
+
+            user_dau = sorted(user_dau_dates)
+            wallet = f"wallet{random.randint(1, 100)}" if txs else random.choice([f"wallet{random.randint(1, 100)}", ""])
+
+            data_users.append((
+                random.randint(100000, 999999),
+                json.dumps({"USER_WALLET": wallet, "USER_UTM": utm, "USER_DT": entry_dt}),
+                json.dumps({"USER_DAU": user_dau, "USER_MAU": user_mau, "USER_TXS": txs,
+                            "USER_PAYMENTS": payments, "USER_STATUSES": USER_STATUSES})
+            ))
+        print(f"gen {data_users=}")
+
+        rev_by_cohort = defaultdict(lambda: defaultdict(float))
+        cohort_users = defaultdict(set)
+
+        for USER_TID, USER_VARS, USER_LSTS in data_users:
+            USER_VARS = json.loads(USER_VARS or "{}")
+            USER_LSTS = json.loads(USER_LSTS or "{}")
+            dt_entry_raw = USER_VARS.get("USER_DT", "").split("_")[0]
+            if not dt_entry_raw:
+                continue
+            cohort_mo = datetime.strptime(dt_entry_raw, "%d-%m-%Y").strftime("%Y-%m")
+            cohort_users[cohort_mo].add(USER_TID)
+
+            for pay in USER_LSTS.get("USER_PAYMENTS", []):
+                dt_pay = datetime.strptime(pay.get("DT_START", ""), "%d-%m-%Y_%H-%M-%S")
+                pay_mo = dt_pay.strftime("%Y-%m")
+                y0, m0 = map(int, cohort_mo.split("-"))
+                y1, m1 = map(int, pay_mo.split("-"))
+                offset = (y1 - y0) * 12 + (m1 - m0)
+                if offset < 0:
+                    continue
+                amt = float(pay.get("AMOUNT", 0)) * 0.013
+                rev_by_cohort[cohort_mo][offset] += amt
+
+        cohort_months = sorted(cohort_users.keys())
+        if not cohort_months:
+            return
+
+        # Функция прибавления месяцев
+        def add_months(mo_str, n):
+            y, m = map(int, mo_str.split("-"))
+            total = m + n
+            new_y = y + (total - 1) // 12
+            new_m = (total - 1) % 12 + 1
+            return f"{new_y:04d}-{new_m:02d}"
+
+        num_cohorts = len(cohort_months)
+        first_cohort = cohort_months[0]
+
+        path = os.path.join(EXTRA_D, "4_retention_metrics.csv")
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            header = ["Месяц/Когорта"] + [
+                f"{c} ({len(cohort_users[c])})" for c in cohort_months
+            ] + ["∑"]
+            writer.writerow(header)
+
+            for i in range(num_cohorts):
+                calendar_mo = add_months(first_cohort, i)
+                row = [f"M{i+1}"]
+                row_sum = 0.0
+                for c in cohort_months:
+                    y0, m0 = map(int, c.split("-"))
+                    y1, m1 = map(int, calendar_mo.split("-"))
+                    offset = (y1 - y0) * 12 + (m1 - m0)
+                    if offset < 0:
+                        row.append("")
+                    else:
+                        rev = rev_by_cohort[c].get(offset, 0.0)
+                        if rev > 0:
+                            cell = f"{rev:.1f}"
+                            row.append(cell)
+                            row_sum += rev
+                        else:
+                            row.append("0.0")
+                row.append(f"{row_sum:.1f}")
+                writer.writerow(row)
+
+            factors = []
+            for c in cohort_months:
+                for i in range(1, num_cohorts):
+                    prev_rev = rev_by_cohort[c].get(i - 1, 0.0)
+                    curr_rev = rev_by_cohort[c].get(i, 0.0)
+                    if prev_rev > 0 and curr_rev > 0:
+                        factors.append(curr_rev / prev_rev)
+            avg_multiplier = math.prod(factors) ** (1 / len(factors)) if factors else 1.0
+
+            writer.writerow([])
+            writer.writerow([f"NRR ~ ×{avg_multiplier:.2f} monthly"])
+
+        thumb = types.FSInputFile(os.path.join(EXTRA_D, "parse.jpg"))
+        await bot.send_document(chat_id=my_tid, document=types.FSInputFile(path), thumbnail=thumb)
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(0, 1), 2))
+
+
+async def return_profit_and_loss_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
+    try:
+        sql = 'SELECT USER_TID, USER_VARS, USER_LSTS FROM "USER"'
+        data_users = await db_select_pg(sql, (), BASE_P)
+
+        months = ["2025-06", "2025-07", "2025-08", "2025-09"]
+        data_users = []
+        for _ in range(30):
+            # дата входа
+            entry_month = random.choice(months)
+            entry_day = random.randint(1, 28)
+            entry_date = f"{entry_month}-{entry_day:02}"
+            entry_dt_obj = datetime.strptime(entry_date, '%Y-%m-%d')
+            entry_dt = f"{entry_dt_obj.strftime('%d-%m-%Y')}_{datetime.now().strftime('%H-%M-%S')}"
+            utm = random.choice(["/start", "/startapp"])
+
+            # месяцы от входа и дальше
+            valid_months = [m for m in months if datetime.strptime(m + "-01", "%Y-%m-%d") >= entry_dt_obj.replace(day=1)]
+            if not valid_months:
+                valid_months = [entry_month]
+
+            user_mau = sorted(random.sample(valid_months, k=random.randint(1, len(valid_months))))
+            user_dau_dates = set()
+            txs, payments = [], []
+
+            # платеж
+            if user_mau:
+                pay_month = random.choice(user_mau)
+                pay_day = random.randint(1, 28)
+                pay_date = f"{pay_month}-{pay_day:02}"
+                dt_pay = datetime.strptime(pay_date, "%Y-%m-%d")
+                payments = [{
+                    "TYPE": random.choice(["don", "sub", "pst"]),
+                    "DT_START": f"{dt_pay.strftime('%d-%m-%Y')}_14-00-00",
+                    "DT_END": "0",
+                    "AMOUNT": str(random.randint(10, 1000))
+                }]
+                user_dau_dates.add(pay_date)
+
+            # вход в приложение
+            user_dau_dates.add(entry_date)
+            for m in user_mau:
+                day = random.randint(1, 28)
+                visit = f"{m}-{day:02}"
+                dt_visit = datetime.strptime(visit, "%Y-%m-%d")
+                if dt_visit >= entry_dt_obj and random.random() < 0.7:
+                    user_dau_dates.add(visit)
+
+            # статусы (отток) с низкой вероятностью
+            USER_STATUSES = []
+            if random.random() < 0.2:  # 10% шанс оттока
+                churn_month = random.choice(valid_months)
+                churn_day = random.randint(1, 28)
+                churn_date = f"{churn_month}-{churn_day:02}"
+                churn_ts = datetime.strptime(churn_date, "%Y-%m-%d").strftime("%d-%m-%Y") + "_23-59-59"
+                USER_STATUSES = [{random.choice(["left", "kicked"]): churn_ts}]
+
+            user_dau = sorted(user_dau_dates)
+            wallet = f"wallet{random.randint(1, 100)}" if txs else random.choice([f"wallet{random.randint(1, 100)}", ""])
+
+            data_users.append((
+                random.randint(100000, 999999),
+                json.dumps({"USER_WALLET": wallet, "USER_UTM": utm, "USER_DT": entry_dt}),
+                json.dumps({"USER_DAU": user_dau, "USER_MAU": user_mau, "USER_TXS": txs,
+                            "USER_PAYMENTS": payments, "USER_STATUSES": USER_STATUSES})
+            ))
+        print(f"gen {data_users=}")
+
+        metrics = defaultdict(lambda: {"sum_amount": 0.0})
+
+        for USER_TID, USER_VARS, USER_LSTS in data_users:
+            USER_LSTS = json.loads(USER_LSTS or "{}")
+            USER_PAYMENTS = USER_LSTS.get("USER_PAYMENTS", [])
+
+            for pay in USER_PAYMENTS:
+                dt_p = datetime.strptime(pay.get("DT_START", ""), "%d-%m-%Y_%H-%M-%S")
+                mo_p = dt_p.strftime("%Y-%m")
+                amt = float(pay.get("AMOUNT", 0)) * 0.013
+                metrics[mo_p]["sum_amount"] += amt
+
+        def fmt(x):
+            return f"{x:.2f}".rstrip("0").rstrip(".") if x is not None else ""
+
+        # Сортируем месяцы
+        months_sorted = sorted(metrics.keys())
+        results = []
+
+        for mo in months_sorted:
+            MRR = metrics[mo]["sum_amount"]
+            COGS = 0.0
+            GP = MRR - COGS
+            OPEX = 4.5
+            OP = GP - OPEX
+
+            # из OP сначала вычитаем 30%, затем из результата вычитаем 1%
+            after_comm = OP * 0.70      # остаётся после 30% комиссии
+            after_fiat = after_comm * 0.99  # остаётся после ещё 1% на обмен
+            COMM = OP - after_comm      # сама комиссия (30% от OP)
+            EXCH = after_comm - after_fiat # сама часть обмена (1% от остатка после комиссии)
+            NP = after_fiat             # чистая прибыль
+
+            results.append([
+                mo,
+                fmt(MRR),
+                fmt(COGS),
+                fmt(GP),
+                fmt(OPEX),
+                fmt(OP),
+                fmt(COMM),
+                fmt(EXCH),
+                fmt(NP)
+            ])
+
+        path = os.path.join(EXTRA_D, "5_profit_and_loss_metrics.csv")
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                "Mo", "MRR", "COGS", "Gross Profit",
+                "OPEX", "Operating Profit", "Comission (30%)", "Fiat (1%)", "Net Profit"
+            ])
+            for row in results:
+                writer.writerow(row)
+
+        thumb = types.FSInputFile(os.path.join(EXTRA_D, "parse.jpg"))
+        await bot.send_document(chat_id=my_tid, document=types.FSInputFile(path), thumbnail=thumb)
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(0, 1), 2))
+
 # endregion
 
 

@@ -38,6 +38,7 @@ class AioHttpMiddleware(BaseMiddleware):
     def __init__(self, app_name: Optional[str] = None) -> None:
         self.app = None
         self.app_name = app_name or "aiohttp"
+        agent_state.set_detected_framework("aiohttp")
         super().__init__()
 
     async def __call__(self, request, handler) -> StreamResponse:

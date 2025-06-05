@@ -1,3 +1,4 @@
+import json
 import operator
 from functools import reduce
 
@@ -14,6 +15,12 @@ class MultipleChoiceContentTypeFilter(WBCoreFilterMixin, django_filters.Filter):
     field_class = ContentTypeMultiValueField
     filter_type = "text"
 
+    def _validate_initial_with_request(self, initial, request, name):
+        initial = super()._validate_initial_with_request(initial, request, name)
+        if initial:
+            initial = json.dumps(initial)
+        return initial
+
     def __init__(self, object_id_label="object_id", content_type_label="content_type", **kwargs):
         self.object_id_label = object_id_label
         self.content_type_label = content_type_label
@@ -22,8 +29,7 @@ class MultipleChoiceContentTypeFilter(WBCoreFilterMixin, django_filters.Filter):
     def filter(self, qs, value):
         if value in EMPTY_VALUES:
             return qs
-        if self.distinct:
-            qs = qs.distinct()
+
         conditions = [
             (
                 Q(**{self.content_type_label: ContentType.objects.get_for_model(val)})
@@ -31,4 +37,8 @@ class MultipleChoiceContentTypeFilter(WBCoreFilterMixin, django_filters.Filter):
             )
             for val in value
         ]
-        return qs.filter(reduce(operator.or_, conditions))
+        qs = qs.filter(reduce(operator.or_, conditions))
+
+        if self.distinct:
+            qs = qs.distinct()
+        return qs

@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@cdktf/provider-datadog",
-    "11.28.0",
+    "12.0.0",
     __name__[0:-6],
-    "provider-datadog@11.28.0.jsii.tgz",
+    "provider-datadog@12.0.0.jsii.tgz",
 )
 
 __all__ = [

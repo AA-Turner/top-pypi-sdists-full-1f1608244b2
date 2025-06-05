@@ -1,5 +1,7 @@
 from typing import Callable
 
+from django.conf import settings
+
 from ..signals.instance_buttons import add_extra_button
 from .buttons import add_clear_cache_button
 from .registry import periodic_cache_registry
@@ -13,7 +15,7 @@ def cache_table(
     periodic_caching_get_parameters: list[dict[str, str]] | Callable | None = None,
 ):
     def _decorator(pandas_view_class):
-        setattr(pandas_view_class, "CACHE_ENABLED", True)
+        setattr(pandas_view_class, "CACHE_ENABLED", not settings.DEBUG)
         setattr(pandas_view_class, "CACHE_TIMEOUT", timeout)
         setattr(pandas_view_class, "CACHE_KEY_PREFIX", key_prefix)
         add_extra_button.connect(add_clear_cache_button, sender=pandas_view_class, weak=False)

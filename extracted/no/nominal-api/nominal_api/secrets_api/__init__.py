@@ -15,3 +15,19 @@ from .._impl import (
     secrets_api_UpdateSecretRequest as UpdateSecretRequest,
 )
 
+__all__ = [
+    'CreateSecretRequest',
+    'GetSecretsRequest',
+    'GetSecretsResponse',
+    'SearchSecretsQuery',
+    'SearchSecretsQueryVisitor',
+    'SearchSecretsRequest',
+    'SearchSecretsResponse',
+    'Secret',
+    'SecretRid',
+    'SortField',
+    'SortOptions',
+    'UpdateSecretRequest',
+    'SecretService',
+]
+

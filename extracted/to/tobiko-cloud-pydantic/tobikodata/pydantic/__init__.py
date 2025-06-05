@@ -5,7 +5,8 @@ import typing as t
 
 import pydantic
 from pydantic.fields import FieldInfo
-from typing_extensions import Self
+from pydantic.functional_serializers import PlainSerializer
+from typing_extensions import Self, TypeAliasType
 
 from tobikodata.pydantic.utils import value_to_json
 
@@ -168,10 +169,7 @@ class ComputedColumn:
     @classmethod
     def is_computed_column(cls, field_info: FieldInfo) -> bool:
         """Helper function to determine if a Pydantic field has a ComputedColumn annotation."""
-        for metadata in field_info.metadata:
-            if isinstance(metadata, cls):
-                return True
-        return False
+        return _contains_annotation(cls, field_info)
 
     @classmethod
     def get_expression(cls, field_info: FieldInfo) -> Expression:
@@ -196,3 +194,29 @@ class PydanticVersionRecord(PydanticModel):
             for name, field_info in cls.model_fields.items()
         }
         return cls.parse_obj(kwargs)
+
+
+def _contains_annotation(cls: t.Any, field_info: FieldInfo) -> bool:
+    for metadata in field_info.metadata:
+        if isinstance(metadata, cls):
+            return True
+    return False
+
+
+def _hide_secret(v: str, info: pydantic.SerializationInfo) -> str:
+    if context := info.context:
+        if context.get("hide_secret", False):
+            return "******" if v else ""
+    return v
+
+
+secret_serializer = PlainSerializer(_hide_secret, return_type=str)
+
+SecretStr = TypeAliasType(
+    "SecretStr",
+    t.Annotated[str, secret_serializer],
+)
+SecretBytes = TypeAliasType(
+    "SecretBytes",
+    t.Annotated[bytes, secret_serializer],
+)

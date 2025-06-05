@@ -10,6 +10,7 @@
 
 from meutils.pipe import *
 from meutils.str_utils.regular_expression import parse_url
+from meutils.io.files_utils import to_url, to_url_fal
 
 from meutils.schemas.image_types import ImageRequest, FluxImageRequest, SDImageRequest, ImagesResponse
 from meutils.schemas.fal_types import FEISHU_URL
@@ -27,7 +28,7 @@ ideogram_styles = "auto, general, realistic, design, render_3D, anime"
 llms = "anthropic/claude-3.5-sonnet, anthropic/claude-3-5-haiku, anthropic/claude-3-haiku, google/gemini-pro-1.5, google/gemini-flash-1.5, google/gemini-flash-1.5-8b, meta-llama/llama-3.2-1b-instruct, meta-llama/llama-3.2-3b-instruct, meta-llama/llama-3.1-8b-instruct, meta-llama/llama-3.1-70b-instruct, openai/gpt-4o-mini, openai/gpt-4o, deepseek/deepseek-r1"
 
 
-@alru_cache(ttl=600)
+@alru_cache(ttl=300)
 async def check(token, threshold: float = 0):
     try:
         # data = await AsyncClient(key=token).upload(b'', '', '')
@@ -96,6 +97,10 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
     elif "kontext" in request.model:  # https://fal.ai/models/fal-ai/flux-pro/kontext/max
 
         if image_urls := parse_url(request.prompt):
+            # 转存
+            if request.user:
+                image_urls = await to_url_fal(image_urls)
+
             for image_url in image_urls:
                 request.prompt = request.prompt.replace(image_url, "")
 
@@ -127,6 +132,7 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
           "image_url": "https://v3.fal.media/files/rabbit/rmgBxhwGYb2d3pl3x9sKf_output.png"
         }
         """
+
         arguments = {
             **arguments,
 
@@ -139,12 +145,12 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
 
             "guidance_scale": request.guidance or 3.5,
 
-            "aspect_ratio": request.aspect_ratio or "1:1",  # 21:9, 16:9, 4:3, 3:2, 1:1, 2:3, 3:4, 9:16, 9:21
-
             "model": request.model,
             "prompt": await deeplx.llm_translate(request.prompt),
 
         }
+        if request.aspect_ratio:
+            arguments["aspect_ratio"] = request.aspect_ratio
 
         logger.debug(bjson(arguments))
 
@@ -247,8 +253,14 @@ if __name__ == '__main__':
 
     # arun(AsyncClient(key=token).key)
 
+    FEISHU_URL="https://xchatllm.feishu.cn/sheets/QB6Psj8zrhB4JStEW0acI4iInNg?sheet=ef2e81"
+
     tokens = arun(get_series(FEISHU_URL))
-    # tokens = [token]
+    # tokens = ["578e143c-702d-46a1-8c02-d451bc3e155b:bb531a95f79c6026e7bc7ab676163c71"]
+    tokens = """
+30e9fe5c-75d0-4bdd-b11d-ff17dbe4bba5:3de8535e2fa4d9347e599a845cf3e7b8
+05c0b4f6-1443-4b28-aeff-771b65ebaebc:28df6b9b71430b05aca6b8bc7e873a4a
+    """.split()
 
     r = []
     for t in tokens:

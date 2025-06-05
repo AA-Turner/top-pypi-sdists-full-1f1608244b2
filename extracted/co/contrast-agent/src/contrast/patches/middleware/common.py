@@ -46,13 +46,6 @@ def called_with_middleware():
         module.called_with_middleware.set(False)
 
 
-def _set_detected_framework(framework_name: str):
-    logger.info("Automatically applying %s instrumentation", framework_name)
-    from contrast.agent.agent_state import set_detected_framework
-
-    set_detected_framework(framework_name)
-
-
 def _is_asgi(app_interface: AppInterfaceType, app_call_func) -> bool:
     """
     Determine if we should consider this application to be an ASGI app.
@@ -84,16 +77,12 @@ def build__init__patch(
 
         result = wrapped(*args, **kwargs)
 
-        # NOTE: if additional functionality is eventually required here, we can
-        # pass it as an additional callback to build__init__patch.
-        _set_detected_framework(framework_name)
-
         is_asgi = _is_asgi(app_interface, instance.__call__)
         logger.info(f"Application interface: {'ASGI' if is_asgi else 'WSGI'}")
 
         with automatic_middleware():
-            module.middleware = (
-                ASGIMiddleware(instance) if is_asgi else WSGIMiddleware(instance)
+            module.middleware = (ASGIMiddleware if is_asgi else WSGIMiddleware)(
+                instance, framework_name=framework_name
             )
 
         return result

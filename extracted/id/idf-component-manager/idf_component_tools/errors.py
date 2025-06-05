@@ -1,8 +1,9 @@
-# SPDX-FileCopyrightText: 2022-2024 Espressif Systems (Shanghai) CO LTD
+# SPDX-FileCopyrightText: 2022-2025 Espressif Systems (Shanghai) CO LTD
 # SPDX-License-Identifier: Apache-2.0
 
 
 import typing as t
+from dataclasses import dataclass
 
 
 class FatalError(RuntimeError):
@@ -92,6 +93,12 @@ class GitError(ProcessingError):
     pass
 
 
+@dataclass
+class ModifiedComponent:
+    name: str
+    msg: str
+
+
 class ComponentModifiedError(ProcessingError):
     pass
 
@@ -117,4 +124,13 @@ class RunningEnvironmentError(FatalError):
 
 
 class WarningAsExceptionError(FatalError):
+    pass
+
+
+class NoSuchProfile(FatalError):
+    pass
+
+
+# not fatal error, since it shall be caught, and handle exit code
+class MissingKconfigError(Exception):
     pass

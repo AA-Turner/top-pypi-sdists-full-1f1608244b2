@@ -20,7 +20,7 @@ from union.filesystems._middleware import (
 )
 
 _ENDPOINT = "localhost:8080"
-MAX_MESSAGE_LENGTH = 100 * 1024 * 1024
+MAX_MESSAGE_LENGTH = 1 * 1024 * 1024 * 1024
 COMMON_GRPC_OPTIONS = [
     ("grpc.max_message_length", MAX_MESSAGE_LENGTH),
     ("grpc.max_send_message_length", MAX_MESSAGE_LENGTH),

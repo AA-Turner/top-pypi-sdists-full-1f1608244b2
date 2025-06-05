@@ -14,8 +14,5 @@ class UserProfileModelEndpointConfig(EndpointViewConfig):
     def get_endpoint(self, **kwargs):
         return None
 
-    def get_list_endpoint(self, **kwargs):
-        return reverse("wbcore:authentication:userprofile-list", args=[], request=self.request)
-
     def get_instance_endpoint(self, **kwargs):
         return reverse("wbcore:authentication:userprofile-list", args=[], request=self.request)

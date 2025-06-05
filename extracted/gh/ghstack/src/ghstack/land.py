@@ -152,11 +152,18 @@ to complain to the ghstack authors."""
                 sh.git("cherry-pick", "--abort")
                 raise
 
+        # All good! Push!
+        maybe_force_arg = []
+        if needs_force:
+            maybe_force_arg = ["--force-with-lease"]
+        sh.git(
+            "push", *maybe_force_arg, remote_name, f"HEAD:refs/heads/{default_branch}"
+        )
+
         # Advance base to head to "close" the PR for all PRs.
-        # This has to happen before the push because the push
-        # will trigger a closure, but we want a *merge*.  This should
-        # happen after the cherry-pick, because the cherry-picks can
-        # fail
+        # This happens after the cherry-pick and push, because the cherry-picks
+        # can fail (merge conflict) and the push can also fail (race condition)
+
         # TODO: It might be helpful to advance orig to reflect the true
         # state of upstream at the time we are doing the land, and then
         # directly *merge* head into base, so that the PR accurately
@@ -173,21 +180,19 @@ to complain to the ghstack authors."""
             )
             github.notify_merged(pr_resolved)
 
-        # All good! Push!
-        maybe_force_arg = []
-        if needs_force:
-            maybe_force_arg = ["--force-with-lease"]
-        sh.git(
-            "push", *maybe_force_arg, remote_name, f"HEAD:refs/heads/{default_branch}"
-        )
-
         # Delete the branches
         for orig_ref, _ in stack_orig_refs:
             # TODO: regex here so janky
             base_ref = re.sub(r"/orig$", "/base", orig_ref)
             head_ref = re.sub(r"/orig$", "/head", orig_ref)
             try:
-                sh.git("push", remote_name, "--delete", orig_ref, base_ref, head_ref)
+                sh.git("push", remote_name, "--delete", orig_ref, base_ref)
+            except RuntimeError:
+                # Whatever, keep going
+                logging.warning("Failed to delete branch, continuing", exc_info=True)
+            # Try deleting head_ref separately since often after it's merged it doesn't exist anymore
+            try:
+                sh.git("push", remote_name, "--delete", head_ref)
             except RuntimeError:
                 # Whatever, keep going
                 logging.warning("Failed to delete branch, continuing", exc_info=True)

@@ -1,5 +1,19 @@
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, NamedTuple, Optional, Set, Tuple, Type, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    ClassVar,
+    Dict,
+    List,
+    NamedTuple,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+)
 
 import django.urls
 from django.template import Context
@@ -14,9 +28,12 @@ from django_components.util.routing import URLRoute
 if TYPE_CHECKING:
     from django_components import Component
     from django_components.component_registry import ComponentRegistry
+    from django_components.perfutil.component import OnComponentRenderedResult
+    from django_components.slots import Slot, SlotNode, SlotResult
 
 
 TCallable = TypeVar("TCallable", bound=Callable)
+TClass = TypeVar("TClass", bound=Type[Any])
 
 
 ################################################
@@ -29,7 +46,7 @@ TCallable = TypeVar("TCallable", bound=Callable)
 
 # Mark a class as an extension hook context so we can place these in
 # a separate documentation section
-def mark_extension_hook_api(cls: Type[Any]) -> Type[Any]:
+def mark_extension_hook_api(cls: TClass) -> TClass:
     cls._extension_hook_api = True
     return cls
 
@@ -90,7 +107,7 @@ class OnComponentInputContext(NamedTuple):
     """List of positional arguments passed to the component"""
     kwargs: Dict
     """Dictionary of keyword arguments passed to the component"""
-    slots: Dict
+    slots: Dict[str, "Slot"]
     """Dictionary of slot definitions"""
     context: Context
     """The Django template Context object"""
@@ -104,8 +121,11 @@ class OnComponentDataContext(NamedTuple):
     """The Component class"""
     component_id: str
     """The unique identifier for this component instance"""
+    # TODO_V1 - Remove `context_data`
     context_data: Dict
-    """Dictionary of context data from `Component.get_context_data()`"""
+    """Deprecated. Use `template_data` instead. Will be removed in v1.0."""
+    template_data: Dict
+    """Dictionary of template data from `Component.get_template_data()`"""
     js_data: Dict
     """Dictionary of JavaScript data from `Component.get_js_data()`"""
     css_data: Dict
@@ -120,8 +140,32 @@ class OnComponentRenderedContext(NamedTuple):
     """The Component class"""
     component_id: str
     """The unique identifier for this component instance"""
-    result: str
-    """The rendered component"""
+    result: Optional[str]
+    """The rendered component, or `None` if rendering failed"""
+    error: Optional[Exception]
+    """The error that occurred during rendering, or `None` if rendering was successful"""
+
+
+@mark_extension_hook_api
+class OnSlotRenderedContext(NamedTuple):
+    component: "Component"
+    """The Component instance that contains the `{% slot %}` tag"""
+    component_cls: Type["Component"]
+    """The Component class that contains the `{% slot %}` tag"""
+    component_id: str
+    """The unique identifier for this component instance"""
+    slot: "Slot"
+    """The Slot instance that was rendered"""
+    slot_name: str
+    """The name of the `{% slot %}` tag"""
+    slot_node: "SlotNode"
+    """The node instance of the `{% slot %}` tag"""
+    slot_is_required: bool
+    """Whether the slot is required"""
+    slot_is_default: bool
+    """Whether the slot is default"""
+    result: "SlotResult"
+    """The rendered result of the slot"""
 
 
 ################################################
@@ -129,61 +173,184 @@ class OnComponentRenderedContext(NamedTuple):
 ################################################
 
 
-class BaseExtensionClass:
-    """Base class for all extension classes."""
+class ExtensionComponentConfig:
+    """
+    `ExtensionComponentConfig` is the base class for all extension component configs.
 
+    Extensions can define nested classes on the component class,
+    such as [`Component.View`](../api#django_components.Component.View) or
+    [`Component.Cache`](../api#django_components.Component.Cache):
+
+    ```py
+    class MyComp(Component):
+        class View:
+            def get(self, request):
+                ...
+
+        class Cache:
+            ttl = 60
+    ```
+
+    This allows users to configure extension behavior per component.
+
+    Behind the scenes, the nested classes that users define on their components
+    are merged with the extension's "base" class.
+
+    So the example above is the same as:
+
+    ```py
+    class MyComp(Component):
+        class View(ViewExtension.ComponentConfig):
+            def get(self, request):
+                ...
+
+        class Cache(CacheExtension.ComponentConfig):
+            ttl = 60
+    ```
+
+    Where both `ViewExtension.ComponentConfig` and `CacheExtension.ComponentConfig` are
+    subclasses of `ExtensionComponentConfig`.
+    """
+
+    component_cls: Type["Component"]
+    """The [`Component`](../api#django_components.Component) class that this extension is defined on."""
+
+    # TODO_v1 - Remove, superseded by `component_cls`
     component_class: Type["Component"]
-    """The Component class that this extension is defined on."""
+    """The [`Component`](../api#django_components.Component) class that this extension is defined on."""
+
+    component: "Component"
+    """
+    When a [`Component`](../api#django_components.Component) is instantiated,
+    also the nested extension classes (such as `Component.View`) are instantiated,
+    receiving the component instance as an argument.
+
+    This attribute holds the owner [`Component`](../api#django_components.Component) instance
+    that this extension is defined on.
+    """
 
     def __init__(self, component: "Component") -> None:
         self.component = component
 
 
+# TODO_v1 - Delete
+BaseExtensionClass = ExtensionComponentConfig
+"""
+Deprecated. Will be removed in v1.0. Use
+[`ComponentConfig`](../api#django_components.ExtensionComponentConfig) instead.
+"""
+
+
+# TODO_V1 - Delete, meta class was needed only for backwards support for ExtensionClass.
+class ExtensionMeta(type):
+    def __new__(mcs, name: Any, bases: Tuple, attrs: Dict) -> Any:
+        # Rename `ExtensionClass` to `ComponentConfig`
+        if "ExtensionClass" in attrs:
+            attrs["ComponentConfig"] = attrs.pop("ExtensionClass")
+
+        return super().__new__(mcs, name, bases, attrs)
+
+
 # NOTE: This class is used for generating documentation for the extension hooks API.
 #       To be recognized, all hooks must start with `on_` prefix.
-class ComponentExtension:
+class ComponentExtension(metaclass=ExtensionMeta):
     """
     Base class for all extensions.
 
     Read more on [Extensions](../../concepts/advanced/extensions).
+
+    **Example:**
+
+    ```python
+    class ExampleExtension(ComponentExtension):
+        name = "example"
+
+        # Component-level behavior and settings. User will be able to override
+        # the attributes and methods defined here on the component classes.
+        class ComponentConfig(ComponentExtension.ComponentConfig):
+            foo = "1"
+            bar = "2"
+
+            def baz(cls):
+                return "3"
+
+        # URLs
+        urls = [
+            URLRoute(path="dummy-view/", handler=dummy_view, name="dummy"),
+            URLRoute(path="dummy-view-2/<int:id>/<str:name>/", handler=dummy_view_2, name="dummy-2"),
+        ]
+
+        # Commands
+        commands = [
+            HelloWorldCommand,
+        ]
+
+        # Hooks
+        def on_component_class_created(self, ctx: OnComponentClassCreatedContext) -> None:
+            print(ctx.component_cls.__name__)
+
+        def on_component_class_deleted(self, ctx: OnComponentClassDeletedContext) -> None:
+            print(ctx.component_cls.__name__)
+    ```
+
+    Which users then can override on a per-component basis. E.g.:
+
+    ```python
+    class MyComp(Component):
+        class Example:
+            foo = "overridden"
+
+            def baz(self):
+                return "overridden baz"
+    ```
     """
 
     ###########################
     # USER INPUT
     ###########################
 
-    name: str
+    name: ClassVar[str]
     """
     Name of the extension.
 
     Name must be lowercase, and must be a valid Python identifier (e.g. `"my_extension"`).
 
     The extension may add new features to the [`Component`](../api#django_components.Component)
-    class by allowing users to define and access a nested class in the `Component` class.
+    class by allowing users to define and access a nested class in
+    the [`Component`](../api#django_components.Component) class.
 
-    The extension name determines the name of the nested class in the `Component` class, and the attribute
+    The extension name determines the name of the nested class in
+    the [`Component`](../api#django_components.Component) class, and the attribute
     under which the extension will be accessible.
 
-    E.g. if the extension name is `"my_extension"`, then the nested class in the `Component` class
-    will be `MyExtension`, and the extension will be accessible as `MyComp.my_extension`.
+    E.g. if the extension name is `"my_extension"`, then the nested class in
+    the [`Component`](../api#django_components.Component) class will be
+    `MyExtension`, and the extension will be accessible as `MyComp.my_extension`.
 
     ```python
     class MyComp(Component):
         class MyExtension:
             ...
 
-        def get_context_data(self):
+        def get_template_data(self, args, kwargs, slots, context):
             return {
                 "my_extension": self.my_extension.do_something(),
             }
     ```
+
+    !!! info
+
+        The extension class name can be customized by setting
+        the [`class_name`](../api#django_components.ComponentExtension.class_name) attribute.
     """
 
-    class_name: str
+    class_name: ClassVar[str]
     """
     Name of the extension class.
 
-    By default, this is the same as `name`, but with snake_case converted to PascalCase.
+    By default, this is set automatically at class creation. The class name is the same as
+    the [`name`](../api#django_components.ComponentExtension.name) attribute, but with snake_case
+    converted to PascalCase.
 
     So if the extension name is `"my_extension"`, then the extension class name will be `"MyExtension"`.
 
@@ -192,45 +359,67 @@ class ComponentExtension:
         class MyExtension:  # <--- This is the extension class
             ...
     ```
+
+    To customize the class name, you can manually set the `class_name` attribute.
+
+    The class name must be a valid Python identifier.
+
+    **Example:**
+
+    ```python
+    class MyExt(ComponentExtension):
+        name = "my_extension"
+        class_name = "MyCustomExtension"
+    ```
+
+    This will make the extension class name `"MyCustomExtension"`.
+
+    ```python
+    class MyComp(Component):
+        class MyCustomExtension:  # <--- This is the extension class
+            ...
+    ```
     """
 
-    ExtensionClass = BaseExtensionClass
+    ComponentConfig: ClassVar[Type[ExtensionComponentConfig]] = ExtensionComponentConfig
     """
-    Base class that the "extension class" nested within a [`Component`](../api#django_components.Component)
-    class will inherit from.
+    Base class that the "component-level" extension config nested within
+    a [`Component`](../api#django_components.Component) class will inherit from.
 
     This is where you can define new methods and attributes that will be available to the component
     instance.
 
     Background:
 
-    The extension may add new features to the `Component` class by allowing users to
-    define and access a nested class in the `Component` class. E.g.:
+    The extension may add new features to the [`Component`](../api#django_components.Component) class
+    by allowing users to define and access a nested class in
+    the [`Component`](../api#django_components.Component) class. E.g.:
 
     ```python
     class MyComp(Component):
         class MyExtension:
             ...
 
-        def get_context_data(self):
+        def get_template_data(self, args, kwargs, slots, context):
             return {
                 "my_extension": self.my_extension.do_something(),
             }
     ```
 
-    When rendering a component, the nested extension class will be set as a subclass of `ExtensionClass`.
-    So it will be same as if the user had directly inherited from `ExtensionClass`. E.g.:
+    When rendering a component, the nested extension class will be set as a subclass of
+    `ComponentConfig`. So it will be same as if the user had directly inherited from extension's
+    `ComponentConfig`. E.g.:
 
     ```python
     class MyComp(Component):
-        class MyExtension(ComponentExtension.ExtensionClass):
+        class MyExtension(ComponentExtension.ComponentConfig):
             ...
     ```
 
     This setting decides what the extension class will inherit from.
     """
 
-    commands: List[Type[ComponentCommand]] = []
+    commands: ClassVar[List[Type[ComponentCommand]]] = []
     """
     List of commands that can be run by the extension.
 
@@ -290,7 +479,7 @@ class ComponentExtension:
     ```
     """
 
-    urls: List[URLRoute] = []
+    urls: ClassVar[List[URLRoute]] = []
 
     ###########################
     # Misc
@@ -450,7 +639,7 @@ class ComponentExtension:
         Use this hook to modify or validate component inputs before they're processed.
 
         This is the first hook that is called when rendering a component. As such this hook is called before
-        [`Component.get_context_data()`](../api#django_components.Component.get_context_data),
+        [`Component.get_template_data()`](../api#django_components.Component.get_template_data),
         [`Component.get_js_data()`](../api#django_components.Component.get_js_data),
         and [`Component.get_css_data()`](../api#django_components.Component.get_css_data) methods,
         and the
@@ -473,6 +662,19 @@ class ComponentExtension:
                 # Add extra kwarg to all components when they are rendered
                 ctx.kwargs["my_input"] = "my_value"
         ```
+
+        !!! warning
+
+            In this hook, the components' inputs are still mutable.
+
+            As such, if a component defines [`Args`](../api#django_components.Component.Args),
+            [`Kwargs`](../api#django_components.Component.Kwargs),
+            [`Slots`](../api#django_components.Component.Slots) types, these types are NOT yet instantiated.
+
+            Instead, component fields like [`Component.args`](../api#django_components.Component.args),
+            [`Component.kwargs`](../api#django_components.Component.kwargs),
+            [`Component.slots`](../api#django_components.Component.slots)
+            are plain `list` / `dict` objects.
         """
         pass
 
@@ -482,7 +684,7 @@ class ComponentExtension:
         after a component's context and data methods have been processed.
 
         This hook is called after
-        [`Component.get_context_data()`](../api#django_components.Component.get_context_data),
+        [`Component.get_template_data()`](../api#django_components.Component.get_template_data),
         [`Component.get_js_data()`](../api#django_components.Component.get_js_data)
         and [`Component.get_css_data()`](../api#django_components.Component.get_css_data).
 
@@ -498,7 +700,7 @@ class ComponentExtension:
         class MyExtension(ComponentExtension):
             def on_component_data(self, ctx: OnComponentDataContext) -> None:
                 # Add extra template variable to all components when they are rendered
-                ctx.context_data["my_template_var"] = "my_value"
+                ctx.template_data["my_template_var"] = "my_value"
         ```
         """
         pass
@@ -510,9 +712,19 @@ class ComponentExtension:
 
         Use this hook to access or post-process the component's rendered output.
 
-        To modify the output, return a new string from this hook.
+        This hook works similarly to
+        [`Component.on_render_after()`](../api#django_components.Component.on_render_after):
 
-        **Example:**
+        1. To modify the output, return a new string from this hook. The original output or error will be ignored.
+
+        2. To cause this component to return a new error, raise that error. The original output and error
+            will be ignored.
+
+        3. If you neither raise nor return string, the original output or error will be used.
+
+        **Examples:**
+
+        Change the final output of a component:
 
         ```python
         from django_components import ComponentExtension, OnComponentRenderedContext
@@ -521,6 +733,77 @@ class ComponentExtension:
             def on_component_rendered(self, ctx: OnComponentRenderedContext) -> Optional[str]:
                 # Append a comment to the component's rendered output
                 return ctx.result + "<!-- MyExtension comment -->"
+        ```
+
+        Cause the component to raise a new exception:
+
+        ```python
+        from django_components import ComponentExtension, OnComponentRenderedContext
+
+        class MyExtension(ComponentExtension):
+            def on_component_rendered(self, ctx: OnComponentRenderedContext) -> Optional[str]:
+                # Raise a new exception
+                raise Exception("Error message")
+        ```
+
+        Return nothing (or `None`) to handle the result as usual:
+
+        ```python
+        from django_components import ComponentExtension, OnComponentRenderedContext
+
+        class MyExtension(ComponentExtension):
+            def on_component_rendered(self, ctx: OnComponentRenderedContext) -> Optional[str]:
+                if ctx.error is not None:
+                    # The component raised an exception
+                    print(f"Error: {ctx.error}")
+                else:
+                    # The component rendered successfully
+                    print(f"Result: {ctx.result}")
+        ```
+        """
+        pass
+
+    ##########################
+    # Tags lifecycle hooks
+    ##########################
+
+    def on_slot_rendered(self, ctx: OnSlotRenderedContext) -> Optional[str]:
+        """
+        Called when a [`{% slot %}`](../template_tags#slot) tag was rendered.
+
+        Use this hook to access or post-process the slot's rendered output.
+
+        To modify the output, return a new string from this hook.
+
+        **Example:**
+
+        ```python
+        from django_components import ComponentExtension, OnSlotRenderedContext
+
+        class MyExtension(ComponentExtension):
+            def on_slot_rendered(self, ctx: OnSlotRenderedContext) -> Optional[str]:
+                # Append a comment to the slot's rendered output
+                return ctx.result + "<!-- MyExtension comment -->"
+        ```
+
+        **Access slot metadata:**
+
+        You can access the [`{% slot %}` tag](../template_tags#slot)
+        node ([`SlotNode`](../api#django_components.SlotNode)) and its metadata using `ctx.slot_node`.
+
+        For example, to find the [`Component`](../api#django_components.Component) class to which
+        belongs the template where the [`{% slot %}`](../template_tags#slot) tag is defined, you can use
+        [`ctx.slot_node.template_component`](../api#django_components.SlotNode.template_component):
+
+        ```python
+        from django_components import ComponentExtension, OnSlotRenderedContext
+
+        class MyExtension(ComponentExtension):
+            def on_slot_rendered(self, ctx: OnSlotRenderedContext) -> Optional[str]:
+                # Access slot metadata
+                slot_node = ctx.slot_node
+                slot_owner = slot_node.template_component
+                print(f"Slot owner: {slot_owner}")
         ```
         """
         pass
@@ -566,19 +849,19 @@ class ExtensionManager:
         for extension in self.extensions:
             ext_class_name = extension.class_name
 
-            # If a Component class has an extension class, e.g.
+            # If a Component class has a nested extension class, e.g.
             # ```python
             # class MyComp(Component):
             #     class MyExtension:
             #         ...
             # ```
             # then create a dummy class to make `MyComp.MyExtension` extend
-            # the base class `extension.ExtensionClass`.
+            # the base class `extension.ComponentConfig`.
             #
-            # So it will be same as if the user had directly inherited from `extension.ExtensionClass`.
+            # So it will be same as if the user had directly inherited from `extension.ComponentConfig`.
             # ```python
             # class MyComp(Component):
-            #     class MyExtension(MyExtension.ExtensionClass):
+            #     class MyExtension(MyExtension.ComponentConfig):
             #         ...
             # ```
             component_ext_subclass = getattr(component_cls, ext_class_name, None)
@@ -586,11 +869,11 @@ class ExtensionManager:
             # Add escape hatch, so that user can override the extension class
             # from within the component class. E.g.:
             # ```python
-            # class MyExtDifferentStillSame(MyExtension.ExtensionClass):
+            # class MyExtDifferentButStillSame(MyExtension.ComponentConfig):
             #     ...
             #
             # class MyComp(Component):
-            #     my_extension_class = MyExtDifferentStillSame
+            #     my_extension_class = MyExtDifferentButStillSame
             #     class MyExtension:
             #         ...
             # ```
@@ -598,20 +881,54 @@ class ExtensionManager:
             # Will be effectively the same as:
             # ```python
             # class MyComp(Component):
-            #     class MyExtension(MyExtDifferentStillSame):
+            #     class MyExtension(MyExtDifferentButStillSame):
             #         ...
             # ```
             ext_class_override_attr = extension.name + "_class"  # "my_extension_class"
-            ext_base_class = getattr(component_cls, ext_class_override_attr, extension.ExtensionClass)
+            ext_base_class = getattr(component_cls, ext_class_override_attr, extension.ComponentConfig)
+
+            # Extensions have 3 levels of configuration:
+            # 1. Factory defaults - The values that the extension author set on the extension class
+            # 2. User global defaults with `COMPONENTS.extensions_defaults`
+            # 3. User component-level settings - The values that the user set on the component class
+            #
+            # The component-level settings override the global defaults, which in turn override
+            # the factory defaults.
+            #
+            # To apply these defaults, we set them as bases for our new extension class.
+            #
+            # The final class will look like this:
+            # ```
+            # class MyExtension(MyComp.MyExtension, MyExtensionDefaults, MyExtensionBase):
+            #     component_cls = MyComp
+            #     ...
+            # ```
+            # Where:
+            # - `MyComp.MyExtension` is the extension class that the user defined on the component class.
+            # - `MyExtensionDefaults` is a dummy class that holds the extension defaults from settings.
+            # - `MyExtensionBase` is the base class that the extension class inherits from.
+            bases_list = [ext_base_class]
+
+            all_extensions_defaults = app_settings._settings.extensions_defaults or {}
+            extension_defaults = all_extensions_defaults.get(extension.name, None)
+            if extension_defaults:
+                # Create dummy class that holds the extension defaults
+                defaults_class = type(f"{ext_class_name}Defaults", tuple(), extension_defaults.copy())
+                bases_list.insert(0, defaults_class)
 
             if component_ext_subclass:
-                bases: tuple[Type, ...] = (component_ext_subclass, ext_base_class)
-            else:
-                bases = (ext_base_class,)
+                bases_list.insert(0, component_ext_subclass)
 
-            # Allow to extension class to access the owner `Component` class that via
-            # `ExtensionClass.component_class`.
-            component_ext_subclass = type(ext_class_name, bases, {"component_class": component_cls})
+            bases: tuple[Type, ...] = tuple(bases_list)
+
+            # Allow component-level extension class to access the owner `Component` class that via
+            # `component_cls`.
+            component_ext_subclass = type(
+                ext_class_name,
+                bases,
+                # TODO_v1 - Remove `component_class`, superseded by `component_cls`
+                {"component_cls": component_cls, "component_class": component_cls},
+            )
 
             # Finally, reassign the new class extension class on the component class.
             setattr(component_cls, ext_class_name, component_ext_subclass)
@@ -835,9 +1152,29 @@ class ExtensionManager:
         for extension in self.extensions:
             extension.on_component_data(ctx)
 
-    def on_component_rendered(self, ctx: OnComponentRenderedContext) -> str:
+    def on_component_rendered(
+        self,
+        ctx: OnComponentRenderedContext,
+    ) -> Optional["OnComponentRenderedResult"]:
         for extension in self.extensions:
-            result = extension.on_component_rendered(ctx)
+            try:
+                result = extension.on_component_rendered(ctx)
+            except Exception as error:
+                # Error from `on_component_rendered()` - clear HTML and set error
+                ctx = ctx._replace(result=None, error=error)
+            else:
+                # No error from `on_component_rendered()` - set HTML and clear error
+                if result is not None:
+                    ctx = ctx._replace(result=result, error=None)
+        return ctx.result, ctx.error
+
+    ##########################
+    # Tags lifecycle hooks
+    ##########################
+
+    def on_slot_rendered(self, ctx: OnSlotRenderedContext) -> Optional[str]:
+        for extension in self.extensions:
+            result = extension.on_slot_rendered(ctx)
             if result is not None:
                 ctx = ctx._replace(result=result)
         return ctx.result

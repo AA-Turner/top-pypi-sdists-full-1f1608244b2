@@ -6,12 +6,12 @@ from setuptools import (
 
 setup(
     name='nominal-api',
-    version='0.706.0',
+    version='0.708.0',
     python_requires='>=3.8',
     package_data={"": ["py.typed"]},
     packages=find_packages(),
     install_requires=[
         'requests',
-        'conjure-python-client>=2.8.0,<3',
+        'conjure-python-client>=2.8.0,<4',
     ],
 )

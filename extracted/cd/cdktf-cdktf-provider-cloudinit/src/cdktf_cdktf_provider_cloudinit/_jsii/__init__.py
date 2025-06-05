@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@cdktf/provider-cloudinit",
-    "10.0.4",
+    "11.0.0",
     __name__[0:-6],
-    "provider-cloudinit@10.0.4.jsii.tgz",
+    "provider-cloudinit@11.0.0.jsii.tgz",
 )
 
 __all__ = [

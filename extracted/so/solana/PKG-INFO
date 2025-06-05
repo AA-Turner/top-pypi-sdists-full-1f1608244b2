@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: solana
-Version: 0.36.6
+Version: 0.36.7
 Summary: Solana Python API
 Home-page: https://github.com/michaelhly/solanapy
 License: MIT
@@ -17,11 +17,11 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
-Requires-Dist: construct-typing (>=0.5.2,<0.6.0)
+Requires-Dist: construct-typing (>=0.6.2,<0.7.0)
 Requires-Dist: httpx (>=0.23.0)
 Requires-Dist: solders (>=0.23,<0.27)
 Requires-Dist: typing-extensions (>=4.2.0)
-Requires-Dist: websockets (>=9.0,<=15.0)
+Requires-Dist: websockets (>=9.0,<=15.0.1)
 Project-URL: Documentation, https://michaelhly.github.io/solana-py/
 Description-Content-Type: text/markdown
 

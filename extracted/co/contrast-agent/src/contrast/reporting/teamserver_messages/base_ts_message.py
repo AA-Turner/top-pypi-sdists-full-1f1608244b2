@@ -41,7 +41,7 @@ class BaseTsMessage:
         self.base_url = f"{self.settings.api_url}/api/ng/"
         self.server_name_b64 = b64url_stripped(self.agent_state.get_server_name())
         self.server_path_b64 = b64url_stripped(self.settings.get_server_path())
-        self.server_type_b64 = b64url_stripped(self.settings.get_server_type())
+        self.server_type_b64 = b64url_stripped(self.settings.server_type)
 
         # most headers we will send in every TS request live on the ReportingClient, but
         # some specific messages require additional headers

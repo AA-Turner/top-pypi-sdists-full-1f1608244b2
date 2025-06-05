@@ -29,3 +29,33 @@ from .._impl import (
     datasource_api_SeriesArchetypeRidOrLogicalSeriesRidVisitor as SeriesArchetypeRidOrLogicalSeriesRidVisitor,
 )
 
+__all__ = [
+    'BatchGetChannelPrefixTreeRequest',
+    'BatchGetChannelPrefixTreeResponse',
+    'BatchGetDataScopeBoundsRequest',
+    'BatchGetDataScopeBoundsResponse',
+    'ChannelMetadata',
+    'ChannelOrPrefix',
+    'ChannelOrPrefixVisitor',
+    'ChannelPrefixTree',
+    'ChannelPrefixTreeNode',
+    'ChannelWithAvailableTags',
+    'ChannelWithTagFilters',
+    'DataScopeFilters',
+    'DataSourcePrefixNode',
+    'GetAvailableTagsForChannelRequest',
+    'GetAvailableTagsForChannelResponse',
+    'GetDataScopeBoundsRequest',
+    'GetDataScopeBoundsResponse',
+    'GetTagValuesForDataSourceRequest',
+    'IndexChannelPrefixTreeRequest',
+    'SearchChannelsRequest',
+    'SearchChannelsResponse',
+    'SearchFilteredChannelsRequest',
+    'SearchFilteredChannelsResponse',
+    'SearchHierarchicalChannelsRequest',
+    'SearchHierarchicalChannelsResponse',
+    'SeriesArchetypeRidOrLogicalSeriesRid',
+    'SeriesArchetypeRidOrLogicalSeriesRidVisitor',
+]
+

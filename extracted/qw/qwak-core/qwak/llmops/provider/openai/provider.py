@@ -26,9 +26,9 @@ class OpenAIProvider:
         self.client = OpenAIClient()
 
     def _get_random_openai_api_key(self) -> Optional[str]:
-        openai_api_keys: List[OpenAIApiKeySystemSecret] = (
-            IntegrationUtils().get_openai_api_keys()
-        )
+        openai_api_keys: List[
+            OpenAIApiKeySystemSecret
+        ] = IntegrationUtils().get_openai_api_keys()
         if len(openai_api_keys) == 0:
             return None
 

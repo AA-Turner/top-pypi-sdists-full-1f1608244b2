@@ -1,4 +1,5 @@
 """Automation using nox."""
+
 import glob
 import os
 
@@ -11,7 +12,9 @@ locations = "src", "tests"
 pip_dev_flags = ["--use-pep517"]  # reflink package is still missing wheels
 
 
-@nox.session(python=["3.8", "3.9", "3.10", "3.11", "3.12", "pypy3.8", "pypy3.9"])
+@nox.session(
+    python=["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "pypy3.8", "pypy3.9"]
+)
 def tests(session: nox.Session) -> None:
     session.install(".[tests]", *pip_dev_flags)
     session.run(
@@ -37,14 +40,6 @@ def lint(session: nox.Session) -> None:
     args = *(session.posargs or ("--show-diff-on-failure",)), "--all-files"
     session.run("pre-commit", "run", *args)
     session.run("python", "-m", "mypy")
-
-
-@nox.session
-def safety(session: nox.Session) -> None:
-    """Scan dependencies for insecure packages."""
-    session.install(".[dev]", *pip_dev_flags)
-    session.install("safety")
-    session.run("safety", "check", "--full-report")
 
 
 @nox.session

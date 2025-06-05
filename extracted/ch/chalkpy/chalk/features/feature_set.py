@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextvars
 import inspect
 import textwrap
 from collections import defaultdict
@@ -16,7 +17,7 @@ from typing import (
     Tuple,
     Type,
     cast,
-    Set,
+    Set, Protocol, Mapping,
 )
 
 from typing_extensions import TypeGuard
@@ -224,6 +225,18 @@ else:
 Features = _dummy_dict["0"]
 
 
+class FeatureRegistryProtocol(Protocol):
+
+    def get_feature_sets(self) -> Mapping[str, Type[Features]]:
+        ...
+
+    def add_feature_set(self, updated_class: Type[Features]):
+        ...
+
+    def get_singletons(self) -> Mapping[str, Type[Features]]:
+        ...
+
+
 class FeatureSetBase:
     """Registry containing all @features classes."""
 
@@ -244,6 +257,54 @@ class FeatureSetBase:
     def __init__(self) -> None:
         super().__init__()
         raise RuntimeError("FeatureSetBase should never be instantiated")
+
+
+class FeatureSetBaseWrapper(FeatureRegistryProtocol):
+    """
+    Wrapper around the global FeatureSetBase
+    """
+
+    def __init__(self):
+        super().__init__()
+
+    def get_feature_sets(self) -> Mapping[str, Type[Features]]:
+        return FeatureSetBase.registry
+
+    def add_feature_set(self, updated_class: Type[Features]):
+        namespace = updated_class.namespace
+        previous_features_class = FeatureSetBase.registry.get(namespace)
+        if notebook.is_notebook() and previous_features_class is not None and notebook.is_defined_in_module(previous_features_class):
+            # Not generating an LSP here because we're in a notebook anyway
+            # TODO: See if we can pretty-print lsp errors in notebooks, at which point we can generate one that points to the old feature class
+            raise ValueError(
+                f"Cannot re-define feature class '{previous_features_class.__name__}' in a notebook: it was previously defined in '{previous_features_class.__module__}'."
+            )
+
+        FeatureSetBase.registry[updated_class.__chalk_namespace__] = updated_class
+
+        if updated_class.__chalk_is_singleton__:
+            FeatureSetBase.__chalk_singletons__[updated_class.__chalk_namespace__] = updated_class
+
+        if FeatureSetBase.hook is not None:
+            try:
+                FeatureSetBase.hook(updated_class)
+            except:
+                # If we were unsuccessful, restore the previous features class, and call the hook again
+                if previous_features_class is not None:
+                    FeatureSetBase.registry[updated_class.__chalk_namespace__] = previous_features_class
+                    if updated_class.__chalk_is_singleton__:
+                        FeatureSetBase.__chalk_singletons__[updated_class.__chalk_namespace__] = previous_features_class
+                    FeatureSetBase.hook(previous_features_class)
+                # Now raise the original exception
+                raise
+
+        ...
+
+    def get_singletons(self) -> Mapping[str, Type[Features]]:
+        return FeatureSetBase.__chalk_singletons__
+
+_DEFAULT_FEATURE_REGISTRY: FeatureRegistryProtocol = FeatureSetBaseWrapper()
+CURRENT_FEATURE_REGISTRY: contextvars.ContextVar[FeatureRegistryProtocol] = contextvars.ContextVar("CURRENT_FEATURE_REGISTRY", default=_DEFAULT_FEATURE_REGISTRY)
 
 
 def is_features_cls(maybe_features: Any) -> TypeGuard[Type[Features]]:

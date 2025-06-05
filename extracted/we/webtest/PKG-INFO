@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: WebTest
-Version: 3.0.4
+Version: 3.0.6
 Summary: Helper to test WSGI applications
 Home-page: https://docs.pylonsproject.org/projects/webtest/en/latest/
 Author: Ian Bicking
@@ -35,6 +35,18 @@ Provides-Extra: docs
 Requires-Dist: docutils; extra == "docs"
 Requires-Dist: pylons-sphinx-themes>=1.0.8; extra == "docs"
 Requires-Dist: Sphinx>=3.0.0; extra == "docs"
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 =======
 WebTest

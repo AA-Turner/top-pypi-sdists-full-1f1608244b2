@@ -9,7 +9,7 @@ def deprecated_wsgi(framework: str):
     class DeprecatedWSGIMiddleware(WSGIMiddleware):
         def __init__(self, *args, **kwargs):
             detected_deprecated_middleware(framework=framework, is_asgi=False)
-            super().__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs, framework_name=framework)
 
     return DeprecatedWSGIMiddleware
 
@@ -18,6 +18,6 @@ def deprecated_asgi(framework: str):
     class DeprecatedASGIMiddleware(ASGIMiddleware):
         def __init__(self, *args, **kwargs):
             detected_deprecated_middleware(framework=framework, is_asgi=True)
-            super().__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs, framework_name=framework)
 
     return DeprecatedASGIMiddleware

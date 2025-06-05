@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: openeo-pg-parser-networkx
-Version: 2025.5.1
+Version: 2025.5.2
 Summary: Parse OpenEO process graphs from JSON to traversible Python objects.
 Home-page: https://github.com/Open-EO/openeo-pg-parser-networkx
 License: Apache 2.0

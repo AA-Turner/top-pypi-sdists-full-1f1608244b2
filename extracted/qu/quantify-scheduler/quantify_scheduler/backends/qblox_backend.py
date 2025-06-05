@@ -86,6 +86,7 @@ from quantify_scheduler.schedules.schedule import (
     ScheduleBase,
 )
 from quantify_scheduler.structure.model import DataStructure
+from quantify_scheduler.yaml_utils import yaml
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -743,9 +744,10 @@ def hardware_compile(
     return CompiledSchedule(schedule)
 
 
+@yaml.register_class
 class QbloxHardwareCompilationConfig(HardwareCompilationConfig):
     """
-    Datastructure containing the information needed to compile to the Qblox backend.
+    Data structure containing the information needed to compile to the Qblox backend.
 
     This information is structured in the same way as in the generic
     :class:`~quantify_scheduler.backends.types.common.HardwareCompilationConfig`, but
@@ -755,6 +757,7 @@ class QbloxHardwareCompilationConfig(HardwareCompilationConfig):
     config_type: type[QbloxHardwareCompilationConfig] = Field(  # type: ignore
         default="quantify_scheduler.backends.qblox_backend.QbloxHardwareCompilationConfig",
         validate_default=True,
+        exclude=True,
     )
     """
     A reference to the
@@ -1177,6 +1180,29 @@ class _LocalOscillatorCompilationConfig(DataStructure):
     """The frequency of this local oscillator."""
 
 
+SequencerIndex = int
+"""
+Index of a sequencer.
+"""
+
+
+class AllowedChannels(DataStructure):
+    """Allowed channels for a specific sequencer."""
+
+    output: set[str]
+    """
+    Allowed outputs.
+
+    For example `{"complex_output_0", "real_output_0", `digital_output_0"}`.
+    """
+    input: set[str]
+    """
+    Allowed inputs.
+
+    For example `{"complex_input_1", "real_input_1"}`.
+    """
+
+
 class _ClusterModuleCompilationConfig(ABC, DataStructure):
     """Configuration values for a :class:`~.ClusterModuleCompiler`."""
 
@@ -1194,6 +1220,58 @@ class _ClusterModuleCompilationConfig(ABC, DataStructure):
     """
     Version of the parent hardware compilation config used.
     """
+    sequencer_allowed_channels: dict[SequencerIndex, AllowedChannels]
+    """Allowed channels for each sequencer."""
+
+    def _sequencer_to_portclock(self) -> dict[SequencerIndex, str]:
+        # This logic assumes that each sequencer uses at most
+        # only one output, and one input. This is only a current
+        # restriction on quantify, but not in the hardware.
+        #
+        # See SE-672, with that change, this data and logic might need to also change.
+        sequencer_to_portclock: dict[SequencerIndex, str] = {}
+
+        def find_sequencer_index(portclock: str) -> SequencerIndex:
+            path: ChannelPath = self.portclock_to_path[portclock]
+            for sequencer_index, allowed_channels in self.sequencer_allowed_channels.items():
+                if sequencer_index not in sequencer_to_portclock:
+                    if path.channel_name_measure is None:
+                        # In this case path.channel_name can also be the input channel name.
+                        if (
+                            path.channel_name in allowed_channels.output
+                            or path.channel_name in allowed_channels.input
+                        ):
+                            return sequencer_index
+                    else:
+                        # In this case path.channel_name_measure can only be the input channel name.
+                        channel_name_measure = path.channel_name_measure or {}
+                        if path.channel_name in allowed_channels.output and all(
+                            (ch in allowed_channels.input) for ch in channel_name_measure
+                        ):
+                            return sequencer_index
+            raise ValueError(
+                f"Cannot reserve a Qblox sequencer for the module "
+                f"{self.hardware_description.instrument_type}, portclock {portclock}. "
+                f"There are not enough appropriate sequencers for "
+                f"the given portclocks and paths. "
+                f"Already reserved sequencer indices: {list(sequencer_to_portclock.keys())}. "
+                f"Output channel: {path.channel_name}, input channel: {path.channel_name_measure}."
+            )
+
+        # To make sure we efficiently reserve the sequencers,
+        # we first reserve the ones that use both output and input.
+        # Sort to ensure deterministic order sequencer allocation.
+        reserved_portclocks: set[str] = set()
+        for portclock in sorted(self.portclock_to_path):
+            path: ChannelPath = self.portclock_to_path[portclock]
+            if path.channel_name_measure is not None:
+                sequencer_to_portclock[find_sequencer_index(portclock)] = portclock
+                reserved_portclocks.add(portclock)
+        for portclock in sorted(self.portclock_to_path):
+            if portclock not in reserved_portclocks:
+                sequencer_to_portclock[find_sequencer_index(portclock)] = portclock
+
+        return sequencer_to_portclock
 
     def _extract_sequencer_compilation_configs(
         self,
@@ -1201,8 +1279,7 @@ class _ClusterModuleCompilationConfig(ABC, DataStructure):
         sequencer_configs = {}
         channel_to_lo = {path.channel_name: lo_name for lo_name, path in self.lo_to_path.items()}
 
-        # Sort to ensure deterministic order in sequencer instantiation
-        for seq_idx, portclock in enumerate(sorted(self.portclock_to_path)):
+        for seq_idx, portclock in self._sequencer_to_portclock().items():
             path = self.portclock_to_path[portclock]
             sequencer_options = (
                 self.hardware_options.sequencer_options.get(portclock, {})
@@ -1336,6 +1413,25 @@ class _ClusterModuleCompilationConfig(ABC, DataStructure):
 class _QCMCompilationConfig(_ClusterModuleCompilationConfig):
     """QCM-specific configuration values for a :class:`~.ClusterModuleCompiler`."""
 
+    sequencer_allowed_channels: dict[SequencerIndex, AllowedChannels] = {
+        sequencer: AllowedChannels(
+            output={
+                "complex_output_0",
+                "complex_output_1",
+                "real_output_0",
+                "real_output_1",
+                "real_output_2",
+                "real_output_3",
+                "digital_output_0",
+                "digital_output_1",
+                "digital_output_2",
+                "digital_output_3",
+            },
+            input=set(),
+        )
+        for sequencer in (0, 1, 2, 3, 4, 5)
+    }
+
     def _validate_channel_name_measure(self) -> None:
         for pc, path in self.portclock_to_path.items():
             if path.channel_name_measure is not None:
@@ -1349,6 +1445,26 @@ class _QCMCompilationConfig(_ClusterModuleCompilationConfig):
 
 class _QRMCompilationConfig(_ClusterModuleCompilationConfig):
     """QRM-specific configuration values for a :class:`~.ClusterModuleCompiler`."""
+
+    sequencer_allowed_channels: dict[SequencerIndex, AllowedChannels] = {
+        sequencer: AllowedChannels(
+            output={
+                "complex_output_0",
+                "real_output_0",
+                "real_output_1",
+                "digital_output_0",
+                "digital_output_1",
+                "digital_output_2",
+                "digital_output_3",
+            },
+            input={
+                "complex_input_0",
+                "real_input_0",
+                "real_input_1",
+            },
+        )
+        for sequencer in (0, 1, 2, 3, 4, 5)
+    }
 
     def _validate_channel_name_measure(self) -> None:
         for pc, path in self.portclock_to_path.items():
@@ -1395,6 +1511,19 @@ class _QRMCompilationConfig(_ClusterModuleCompilationConfig):
 class _QCMRFCompilationConfig(_ClusterModuleCompilationConfig):
     """QCM_RF-specific configuration values for a :class:`~.ClusterModuleCompiler`."""
 
+    sequencer_allowed_channels: dict[SequencerIndex, AllowedChannels] = {
+        sequencer: AllowedChannels(
+            output={
+                "complex_output_0",
+                "complex_output_1",
+                "digital_output_0",
+                "digital_output_1",
+            },
+            input=set(),
+        )
+        for sequencer in (0, 1, 2, 3, 4, 5)
+    }
+
     def _validate_channel_name_measure(self) -> None:
         for pc, path in self.portclock_to_path.items():
             if path.channel_name_measure is not None:
@@ -1407,6 +1536,14 @@ class _QCMRFCompilationConfig(_ClusterModuleCompilationConfig):
 
 class _QRMRFCompilationConfig(_ClusterModuleCompilationConfig):
     """QRMRF-specific configuration values for a :class:`~.ClusterModuleCompiler`."""
+
+    sequencer_allowed_channels: dict[SequencerIndex, AllowedChannels] = {
+        sequencer: AllowedChannels(
+            output={"complex_output_0", "complex_output_1", "digital_output_0", "digital_output_1"},
+            input={"complex_input_0"},
+        )
+        for sequencer in (0, 1, 2, 3, 4, 5)
+    }
 
     def _validate_channel_name_measure(self) -> None:
         for pc, path in self.portclock_to_path.items():
@@ -1429,26 +1566,82 @@ class _QRMRFCompilationConfig(_ClusterModuleCompilationConfig):
 class _QRCCompilationConfig(_ClusterModuleCompilationConfig):
     """QRC-specific configuration values for a :class:`~.ClusterModuleCompiler`."""
 
-    def _validate_channel_name_measure(self) -> None:
-        for pc, path in self.portclock_to_path.items():
-            if path.channel_name_measure is not None:  # noqa: SIM102
-                if not (
-                    "complex" in path.channel_name
-                    and all("complex_input" in ch_name for ch_name in path.channel_name_measure)
-                ):
-                    raise ValueError(
-                        f"Found channel names {path.channel_name} and "
-                        f"{path.channel_name_measure} that are not of the same mode for "
-                        f"portclock {pc}. Only channel names of the same mode (e.g. "
-                        f"`complex_output_0` and `complex_input_0`) are allowed when they share a "
-                        f"portclock in QRM_RF modules."
-                    )
-
-        return super()._validate_channel_name_measure()
+    sequencer_allowed_channels: dict[SequencerIndex, AllowedChannels] = {
+        0: AllowedChannels(
+            output={"complex_output_2", "complex_output_3", "complex_output_0", "digital_output_0"},
+            input={"complex_input_0", "complex_input_1"},
+        ),
+        1: AllowedChannels(
+            output={"complex_output_2", "complex_output_3", "complex_output_1", "digital_output_0"},
+            input={"complex_input_0", "complex_input_1"},
+        ),
+        2: AllowedChannels(
+            output={"complex_output_2", "complex_output_3", "complex_output_4", "digital_output_0"},
+            input={"complex_input_0", "complex_input_1"},
+        ),
+        3: AllowedChannels(
+            output={"complex_output_2", "complex_output_3", "complex_output_5", "digital_output_0"},
+            input={"complex_input_0", "complex_input_1"},
+        ),
+        4: AllowedChannels(
+            output={"complex_output_2", "complex_output_3", "complex_output_0", "digital_output_0"},
+            input={"complex_input_0", "complex_input_1"},
+        ),
+        5: AllowedChannels(
+            output={"complex_output_2", "complex_output_3", "complex_output_1", "digital_output_0"},
+            input={"complex_input_0", "complex_input_1"},
+        ),
+        6: AllowedChannels(
+            output={"complex_output_2", "complex_output_3", "complex_output_4", "digital_output_0"},
+            input={"complex_input_0", "complex_input_1"},
+        ),
+        7: AllowedChannels(
+            output={"complex_output_2", "complex_output_3", "complex_output_5", "digital_output_0"},
+            input={"complex_input_0", "complex_input_1"},
+        ),
+    } | {
+        sequencer: AllowedChannels(
+            output={
+                "complex_output_0",
+                "complex_output_1",
+                "complex_output_4",
+                "complex_output_5",
+                "digital_output_0",
+            },
+            input=set(),
+        )
+        for sequencer in (8, 9, 10, 11)
+    }
 
 
 class _QTMCompilationConfig(_ClusterModuleCompilationConfig):
     """QTM-specific configuration values for a :class:`~.ClusterModuleCompiler`."""
+
+    sequencer_allowed_channels: dict[SequencerIndex, AllowedChannels] = {
+        sequencer: AllowedChannels(
+            output={
+                "digital_output_0",
+                "digital_output_1",
+                "digital_output_2",
+                "digital_output_3",
+                "digital_output_4",
+                "digital_output_5",
+                "digital_output_6",
+                "digital_output_7",
+            },
+            input={
+                "digital_input_0",
+                "digital_input_1",
+                "digital_input_2",
+                "digital_input_3",
+                "digital_input_4",
+                "digital_input_5",
+                "digital_input_6",
+                "digital_input_7",
+            },
+        )
+        for sequencer in (0, 1, 2, 3, 4, 5, 6, 7)
+    }
 
     def _validate_channel_name_measure(self) -> None:
         for pc, path in self.portclock_to_path.items():

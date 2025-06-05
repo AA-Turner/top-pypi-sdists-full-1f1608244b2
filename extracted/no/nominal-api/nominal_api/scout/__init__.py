@@ -8,3 +8,12 @@ from .._impl import (
     scout_VersioningService as VersioningService,
 )
 
+__all__ = [
+    'InternalVersioningService',
+    'NotebookService',
+    'RunService',
+    'TemplateService',
+    'UnitsService',
+    'VersioningService',
+]
+

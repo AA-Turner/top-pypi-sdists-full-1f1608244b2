@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: craft-parts
-Version: 2.10.0
+Version: 2.11.0
 Summary: Craft parts tooling
 Author-email: "Canonical Ltd." <snapcraft@lists.snapcraft.io>
 Project-URL: Homepage, https://github.com/canonical/craft-parts
@@ -28,7 +28,9 @@ Requires-Dist: python-apt~=2.7.0; sys_platform == "linux" and extra == "apt-nobl
 Provides-Extra: apt-oracular
 Requires-Dist: python-apt<2.9.9,~=2.9.0; sys_platform == "linux" and extra == "apt-oracular"
 Provides-Extra: apt-plucky
-Requires-Dist: python-apt>=2.9.9; sys_platform == "linux" and extra == "apt-plucky"
+Requires-Dist: python-apt~=2.9.9; sys_platform == "linux" and extra == "apt-plucky"
+Provides-Extra: apt-questing
+Requires-Dist: python-apt~=3.0.0; sys_platform == "linux" and extra == "apt-questing"
 Provides-Extra: docs
 Requires-Dist: canonical-sphinx; extra == "docs"
 Requires-Dist: sphinx; extra == "docs"
@@ -68,6 +70,9 @@ Requires-Dist: types-pytz; extra == "dev"
 Requires-Dist: types-PyYAML; extra == "dev"
 Requires-Dist: types-requests; extra == "dev"
 Requires-Dist: types-setuptools; extra == "dev"
+Provides-Extra: tics
+Requires-Dist: flake8; extra == "tics"
+Requires-Dist: pylint; extra == "tics"
 Dynamic: license-file
 
 # Craft Parts

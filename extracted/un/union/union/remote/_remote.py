@@ -654,7 +654,16 @@ class UnionRemote(FlyteRemote):
         return resp.image.fqin
 
     def _get_hf_hub_download_image(self) -> ImageSpec:
-        # # TODO: The backend should provide the hfhub-cache image
+        # TODO: The backend should provide the hfhub-cache image
+        from union._config import _is_serverless_endpoint
+
+        if _is_serverless_endpoint(self.config.platform.endpoint):
+            # this is special handling for serverless so that the hf download
+            # image is built using the image-building service.
+            logger.info("Building huggingface downloader image.")
+            _hf_download_image.registry = None
+            _hf_download_image.builder = "union"
+
         return _hf_download_image
 
     def _get_deployable_engine_container(self, engine) -> str:

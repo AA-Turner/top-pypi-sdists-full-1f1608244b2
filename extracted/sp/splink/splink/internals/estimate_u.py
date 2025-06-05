@@ -5,7 +5,11 @@ import multiprocessing
 from copy import deepcopy
 from typing import TYPE_CHECKING, List
 
-from splink.internals.blocking import block_using_rules_sqls, blocking_rule_to_obj
+from splink.internals.blocking import (
+    BlockingRuleDict,
+    block_using_rules_sqls,
+    blocking_rule_to_obj,
+)
 from splink.internals.comparison_vector_values import (
     compute_comparison_vector_values_from_id_pairs_sqls,
 )
@@ -126,8 +130,9 @@ def estimate_u_values(linker: Linker, max_pairs: float, seed: int = None) -> Non
     # (which is what we want when we are supplying a seed)
     # don't bother when we aren't using a seed as it is needless computation
     if seed is not None:
+        uid_colname = settings_obj.column_info_settings.unique_id_input_column.name
         table_to_sample_from = (
-            f"(select * from {table_to_sample_from} order by unique_id)"
+            f"(select * from {table_to_sample_from} order by {uid_colname})"
         )
 
     pipeline = CTEPipeline()
@@ -145,12 +150,13 @@ def estimate_u_values(linker: Linker, max_pairs: float, seed: int = None) -> Non
     pipeline = CTEPipeline(input_dataframes=[df_sample])
 
     if linker._sql_dialect.sql_dialect_str == "duckdb" and max_pairs > 1e4:
-        br = blocking_rule_to_obj(
-            {
-                "blocking_rule": "1=1",
-                "salting_partitions": multiprocessing.cpu_count(),
-            }
-        )
+        blocking_rule_dict: BlockingRuleDict = {
+            "blocking_rule": "1=1",
+            "salting_partitions": multiprocessing.cpu_count(),
+            "sql_dialect": linker._sql_dialect_str,
+            "arrays_to_explode": None,
+        }
+        br = blocking_rule_to_obj(blocking_rule_dict)
         settings_obj._blocking_rules_to_generate_predictions = [br]
     else:
         settings_obj._blocking_rules_to_generate_predictions = []

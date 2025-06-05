@@ -1391,6 +1391,22 @@ class WolverineOrderProperties(QuantConnect.Orders.OrderProperties):
         ...
 
 
+class TradierOrderProperties(QuantConnect.Orders.OrderProperties):
+    """Provides an implementation of the OrderProperties specific to Tradier order."""
+
+    @property
+    def outside_regular_trading_hours(self) -> bool:
+        """
+        If set to true, allows orders to also trigger and fill outside of regular trading hours.
+        If on extended hours, the order will be valid only during the current extended session.
+        """
+        ...
+
+    @outside_regular_trading_hours.setter
+    def outside_regular_trading_hours(self, value: bool) -> None:
+        ...
+
+
 class FixOrderProperites(QuantConnect.Orders.OrderProperties):
     """FIX (Financial Information Exchange) order properties"""
 
@@ -1833,6 +1849,20 @@ class TradeStationOrderProperties(QuantConnect.Orders.OrderProperties):
 
     @outside_regular_trading_hours.setter
     def outside_regular_trading_hours(self, value: bool) -> None:
+        ...
+
+    @property
+    def post_only(self) -> bool:
+        """
+        This flag will ensure the order executes only as a maker (no fee) order.
+        If part of the order results in taking liquidity rather than providing,
+        it will be rejected and no part of the order will execute.
+        Note: this flag is only applied to Limit orders and equities.
+        """
+        ...
+
+    @post_only.setter
+    def post_only(self, value: bool) -> None:
         ...
 
 
@@ -2381,6 +2411,10 @@ class OrderTicket(System.Object):
         :returns: OrderResponse from updating the order.
         """
         ...
+
+
+class TastytradeOrderProperties(QuantConnect.Orders.OrderProperties):
+    """Contains additional properties and settings for an order submitted to Tastytrade brokerage"""
 
 
 class ApiOrderResponse(QuantConnect.Api.StringRepresentation):
@@ -3316,6 +3350,15 @@ class OrderError(Enum):
 
 class AlpacaOrderProperties(QuantConnect.Orders.OrderProperties):
     """Provides an implementation of the OrderProperties specific to Alpaca order."""
+
+    @property
+    def outside_regular_trading_hours(self) -> bool:
+        """Flag to allow orders to also trigger or fill outside of regular trading hours."""
+        ...
+
+    @outside_regular_trading_hours.setter
+    def outside_regular_trading_hours(self, value: bool) -> None:
+        ...
 
 
 class FTXOrderProperties(QuantConnect.Orders.OrderProperties):

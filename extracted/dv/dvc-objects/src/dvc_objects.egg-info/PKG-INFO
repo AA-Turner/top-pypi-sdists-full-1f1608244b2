@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: dvc-objects
-Version: 5.1.0
+Version: 5.1.1
 Summary: dvc objects - filesystem and object-db level abstractions to use in dvc and dvc-data
 Author-email: Iterative <support@dvc.org>
 License: Apache-2.0
@@ -11,14 +11,15 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Development Status :: 4 - Beta
 Requires-Python: >=3.9
 Description-Content-Type: text/x-rst
 License-File: LICENSE
-Requires-Dist: funcy>=1.14; python_version < "3.12"
 Requires-Dist: fsspec>=2024.2.0
+Requires-Dist: funcy>=1.14; python_version < "3.12"
 Provides-Extra: tests
-Requires-Dist: pytest<8,>=7; extra == "tests"
+Requires-Dist: pytest<9,>=7; extra == "tests"
 Requires-Dist: pytest-sugar; extra == "tests"
 Requires-Dist: pytest-cov>=4.1.0; extra == "tests"
 Requires-Dist: pytest-mock; extra == "tests"
@@ -27,7 +28,8 @@ Requires-Dist: pytest-asyncio<1,>=0.23.2; extra == "tests"
 Requires-Dist: reflink; extra == "tests"
 Provides-Extra: dev
 Requires-Dist: dvc-objects[tests]; extra == "dev"
-Requires-Dist: mypy==1.8.0; extra == "dev"
+Requires-Dist: mypy==1.16.0; extra == "dev"
+Dynamic: license-file
 
 DVC objects
 ===========

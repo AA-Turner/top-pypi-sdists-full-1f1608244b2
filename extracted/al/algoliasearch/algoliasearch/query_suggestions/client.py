@@ -27,16 +27,14 @@ from algoliasearch.http.transporter import Transporter
 from algoliasearch.http.transporter_sync import TransporterSync
 from algoliasearch.http.verb import Verb
 from algoliasearch.query_suggestions.config import QuerySuggestionsConfig
-from algoliasearch.query_suggestions.models.base_response import BaseResponse
-from algoliasearch.query_suggestions.models.config_status import ConfigStatus
-from algoliasearch.query_suggestions.models.configuration import Configuration
-from algoliasearch.query_suggestions.models.configuration_response import (
+from algoliasearch.query_suggestions.models import (
+    BaseResponse,
+    ConfigStatus,
+    Configuration,
     ConfigurationResponse,
-)
-from algoliasearch.query_suggestions.models.configuration_with_index import (
     ConfigurationWithIndex,
+    LogFile,
 )
-from algoliasearch.query_suggestions.models.log_file import LogFile
 
 
 class QuerySuggestionsClient:
@@ -73,9 +71,9 @@ class QuerySuggestionsClient:
             config = QuerySuggestionsConfig(
                 transporter.config.app_id, transporter.config.api_key, region
             )
-
-        if config is None:
+        elif config is None:
             config = QuerySuggestionsConfig(app_id, api_key, region)
+
         self._config = config
         self._request_options = RequestOptions(config)
 
@@ -891,9 +889,9 @@ class QuerySuggestionsClientSync:
             config = QuerySuggestionsConfig(
                 transporter.config.app_id, transporter.config.api_key, region
             )
-
-        if config is None:
+        elif config is None:
             config = QuerySuggestionsConfig(app_id, api_key, region)
+
         self._config = config
         self._request_options = RequestOptions(config)
 

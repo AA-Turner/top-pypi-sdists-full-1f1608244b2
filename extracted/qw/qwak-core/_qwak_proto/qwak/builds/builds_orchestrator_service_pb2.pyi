@@ -417,3 +417,28 @@ class ListBuildArtifactsResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["artifacts", b"artifacts"]) -> None: ...
 
 global___ListBuildArtifactsResponse = ListBuildArtifactsResponse
+
+class DetachBuildsFromModelVersionsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    MODEL_VERSION_IDS_FIELD_NUMBER: builtins.int
+    @property
+    def model_version_ids(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """The model versions to detach"""
+    def __init__(
+        self,
+        *,
+        model_version_ids: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["model_version_ids", b"model_version_ids"]) -> None: ...
+
+global___DetachBuildsFromModelVersionsRequest = DetachBuildsFromModelVersionsRequest
+
+class DetachBuildsFromModelVersionsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___DetachBuildsFromModelVersionsResponse = DetachBuildsFromModelVersionsResponse

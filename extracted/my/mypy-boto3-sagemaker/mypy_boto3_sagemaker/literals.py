@@ -1851,6 +1851,7 @@ ReservedCapacityInstanceTypeType = Literal[
     "ml.p5.48xlarge",
     "ml.p5e.48xlarge",
     "ml.p5en.48xlarge",
+    "ml.p6-b200.48xlarge",
     "ml.trn1.32xlarge",
     "ml.trn2.48xlarge",
 ]
@@ -2124,6 +2125,7 @@ TrainingInstanceTypeType = Literal[
     "ml.p5.48xlarge",
     "ml.p5e.48xlarge",
     "ml.p5en.48xlarge",
+    "ml.p6-b200.48xlarge",
     "ml.r5.12xlarge",
     "ml.r5.16xlarge",
     "ml.r5.24xlarge",
@@ -2423,6 +2425,7 @@ ServiceName = Literal[
     "es",
     "events",
     "evidently",
+    "evs",
     "finspace",
     "finspace-data",
     "firehose",

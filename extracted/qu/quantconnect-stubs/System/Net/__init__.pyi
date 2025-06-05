@@ -679,7 +679,7 @@ class HttpStatusCode(Enum):
     NETWORK_AUTHENTICATION_REQUIRED = 511
 
 
-class CookieCollection(System.Object, System.Collections.Generic.ICollection[System.Net.Cookie], System.Collections.Generic.IReadOnlyCollection[System.Net.Cookie], System.Collections.ICollection, typing.Iterable[System.Net.Cookie]):
+class CookieCollection(System.Object, System.Collections.Generic.ICollection[System.Net.Cookie], System.Collections.ICollection, typing.Iterable[System.Net.Cookie]):
     """This class has no documentation."""
 
     @property

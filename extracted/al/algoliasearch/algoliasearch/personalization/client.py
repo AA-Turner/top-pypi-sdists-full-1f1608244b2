@@ -27,16 +27,10 @@ from algoliasearch.http.transporter import Transporter
 from algoliasearch.http.transporter_sync import TransporterSync
 from algoliasearch.http.verb import Verb
 from algoliasearch.personalization.config import PersonalizationConfig
-from algoliasearch.personalization.models.delete_user_profile_response import (
+from algoliasearch.personalization.models import (
     DeleteUserProfileResponse,
-)
-from algoliasearch.personalization.models.get_user_token_response import (
     GetUserTokenResponse,
-)
-from algoliasearch.personalization.models.personalization_strategy_params import (
     PersonalizationStrategyParams,
-)
-from algoliasearch.personalization.models.set_personalization_strategy_response import (
     SetPersonalizationStrategyResponse,
 )
 
@@ -75,9 +69,9 @@ class PersonalizationClient:
             config = PersonalizationConfig(
                 transporter.config.app_id, transporter.config.api_key, region
             )
-
-        if config is None:
+        elif config is None:
             config = PersonalizationConfig(app_id, api_key, region)
+
         self._config = config
         self._request_options = RequestOptions(config)
 
@@ -727,9 +721,9 @@ class PersonalizationClientSync:
             config = PersonalizationConfig(
                 transporter.config.app_id, transporter.config.api_key, region
             )
-
-        if config is None:
+        elif config is None:
             config = PersonalizationConfig(app_id, api_key, region)
+
         self._config = config
         self._request_options = RequestOptions(config)
 

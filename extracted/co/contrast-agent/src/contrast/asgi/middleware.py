@@ -4,6 +4,7 @@ from functools import cached_property, lru_cache
 
 import contrast
 from contrast.agent import agent_state, request_state, scope as scope_
+from contrast.agent.framework import UNKNOWN_FRAMEWORK
 from contrast.agent.policy.trigger_node import TriggerNode
 from contrast.agent.middlewares.base_middleware import (
     BaseMiddleware,
@@ -32,7 +33,14 @@ def _get_quart_types():
 
 class ASGIMiddleware(BaseMiddleware):
     @scope_.contrast_scope()
-    def __init__(self, app, app_name=None, original_app=None):
+    def __init__(
+        self,
+        app,
+        app_name=None,
+        original_app=None,
+        *,
+        framework_name: str = UNKNOWN_FRAMEWORK.name,
+    ):
         """
         Contrast middleware - ASGI 3.0
 
@@ -58,6 +66,8 @@ class ASGIMiddleware(BaseMiddleware):
                 DEFAULT_ASGI_NAME,
             )
         )
+        self.framework_name = framework_name
+        agent_state.set_detected_framework(self.framework_name)
 
         super().__init__()
 

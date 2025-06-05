@@ -35,7 +35,7 @@ from chalk._validation.feature_validation import FeatureValidation
 from chalk._validation.validation import Validation
 from chalk.features._encoding.converter import FeatureConverter, JSONCodec, TDecoder, TEncoder
 from chalk.features._encoding.primitive import TPrimitive
-from chalk.features.feature_set import FeatureSetBase
+from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY, FeatureRegistryProtocol
 from chalk.features.feature_wrapper import FeatureWrapper
 from chalk.features.filter import Filter, TimeDelta, ClauseJoinWithAndException
 from chalk.features.tag import Tags
@@ -713,8 +713,13 @@ class Feature(Generic[_TPrim, _TRich]):
         return hasattr(self, "name")
 
     @classmethod
-    @functools.lru_cache(None)
     def from_root_fqn(cls, root_fqn: str) -> Feature:
+        registry = CURRENT_FEATURE_REGISTRY.get()
+        return cls._from_root_fqn(root_fqn, registry)
+
+    @classmethod
+    @functools.lru_cache(None)
+    def _from_root_fqn(cls, root_fqn: str, registry: FeatureRegistryProtocol) -> Feature:
         """Convert a Root FQN into a feature.
 
         Parameters
@@ -727,8 +732,8 @@ class Feature(Generic[_TPrim, _TRich]):
         Feature
             The feature for that root_fqn.
         """
-        from chalk.features.feature_set import FeatureSetBase
         from chalk.features.pseudofeatures import FQN_OR_NAME_TO_PSEUDOFEATURE
+        feature_sets = registry.get_feature_sets()
 
         if root_fqn in FQN_OR_NAME_TO_PSEUDOFEATURE:
             return FQN_OR_NAME_TO_PSEUDOFEATURE[root_fqn]
@@ -738,9 +743,9 @@ class Feature(Generic[_TPrim, _TRich]):
         root_ns_snake_case = to_snake_case(root_ns)
         root_ns = root_ns_snake_case
         split_fqn = split_fqn[1:]
-        if root_ns not in FeatureSetBase.registry:
+        if root_ns not in feature_sets:
             raise FeatureNotFoundException(root_fqn)
-        features_cls = FeatureSetBase.registry[root_ns]
+        features_cls = feature_sets[root_ns]
 
         # FQNs are by name, so must look up the feature in features_cls.features instead of using getattr
         feat: Optional[Feature] = None
@@ -1006,6 +1011,7 @@ class Feature(Generic[_TPrim, _TRich]):
                 assert f.join is not None
                 assert f.name is not None
                 join = f.join() if callable(f.join) else f.join
+                assert isinstance(join, Filter)
                 if join.operation == "==":
                     # If the join is a nearest neighbor, then implied reverse lookups do not apply
                     joins.add_join(join, f.fqn)
@@ -1505,7 +1511,8 @@ class Feature(Generic[_TPrim, _TRich]):
                     foreign_name=foreign_feature.name,
                 )
                 foreign_ns = filter.lhs.namespace if filter.lhs.namespace != self.namespace else filter.rhs.namespace
-                foreign_feature_set = FeatureSetBase.registry[foreign_ns]
+                registry = CURRENT_FEATURE_REGISTRY.get()
+                foreign_feature_set = registry.get_feature_sets()[foreign_ns]
                 f = Feature(
                     namespace=foreign_ns,
                     name=key,

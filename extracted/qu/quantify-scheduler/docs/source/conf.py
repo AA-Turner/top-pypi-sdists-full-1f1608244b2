@@ -528,6 +528,7 @@ nitpick_ignore = [
     ("myst", "schedulegettable-optionally-returns-xarray-dataset"),
     ("py:class", "ipywidgets.Tab"),
     ("py:class", "widgets.Tab"),
+    ("py:class", "SequencerIndex"),
 ]  # Tuple[str, str], ignore certain warnings
 
 
@@ -546,6 +547,7 @@ nitpick_ignore_regex = [
     ("py:class", r"\"[a-zA-Z]+\""),  # Ignore string literals
     ("py:class", r".*\.Self"),
     ("py:class", r"dataclasses.*"),
+    (".*:.*", r"ruamel.yaml.*"),
 ]
 
 with open("nitpick-exceptions.txt", encoding="utf-8") as nitpick_exceptions:

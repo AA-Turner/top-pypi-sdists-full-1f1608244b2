@@ -13,9 +13,11 @@ from worker_automate_hub.models.dto.rpa_processo_entrada_dto import (
 )
 from rich.console import Console
 import re
+import time
 import os
 import numpy
 from pywinauto.keyboard import send_keys
+from pywinauto.findwindows import ElementNotFoundError
 from worker_automate_hub.utils.util import login_emsys
 import warnings
 from PIL import ImageFilter, ImageEnhance
@@ -41,7 +43,7 @@ pyautogui.PAUSE = 0.5
 console = Console()
 emsys = EMSys()
 
-ASSETS_PATH_BASE = "assets/integracao_contabil/"
+ASSETS_PATH_BASE = "assets"
 
 
 async def localizar_e_clicar(caminho_imagem, tentativas=50, scroll_pixels=300):
@@ -191,7 +193,7 @@ async def integracao_contabil_generica(
         await worker_sleep(12)
         # pyautogui.press("tab")
         await worker_sleep(3)
-        caminho_imagem = r"C:\Users\automatehub\Pictures\desconto_duplicata.png"
+        caminho_imagem = "assets\\integracao_contabil\\fechamento_caixa.png"
         # console.print("Selecionando item do campo origem...")
         await metodo_selecao_origem_especial()
         await localizar_e_clicar(caminho_imagem)  # main_window.set_focus()
@@ -242,12 +244,12 @@ async def integracao_contabil_generica(
         ).wrapper_object()
         combobox.click_input()
 
-        await worker_sleep(60)
-
-        # Verifica mensagem sem lote pra integrar
-        imagem_alvo = r"C:\Users\automatehub\Pictures\sem_lote.png"
+        await worker_sleep(5)
 
         try:
+            # Verifica mensagem sem lote pra integrar
+            imagem_alvo = "assets\\integracao_contabil\\sem_lote.png"
+
             localizacao = pyautogui.locateOnScreen(imagem_alvo, confidence=0.997)
 
             if localizacao:
@@ -257,6 +259,33 @@ async def integracao_contabil_generica(
                 print("Imagem não encontrada.")
         except ImageNotFoundException:
             print("Imagem não encontrada (exceção capturada).")
+
+        await worker_sleep(5)
+
+        try:
+            imagem_finalizada = "assets\\integracao_contabil\\pesquisa_finalizada.png"
+
+            if not os.path.exists(imagem_finalizada):
+                raise FileNotFoundError(f"Imagem não encontrada: {imagem_finalizada}")
+
+            print("Aguardando a imagem aparecer...")
+
+            while True:
+                try:
+                    localizacao = pyautogui.locateOnScreen(
+                        imagem_finalizada, confidence=0.9
+                    )
+                    print("Verificando imagem...")
+                    if localizacao:
+                        print("Imagem encontrada!")
+                        break
+                except ImageNotFoundException as err:
+                    print(f"Imagem não encontrada ainda. Detalhe: {err}")
+                except Exception as e:
+                    print("Erro inesperado:")
+                time.sleep(5)
+        except Exception as e:
+            print("Procurando imagem...")
 
         # Conecta ao aplicativo
         app = Application(backend="win32").connect(title_re=".*Integrador Contábil.*")
@@ -279,15 +308,17 @@ async def integracao_contabil_generica(
         diferenca = numeros[0].window_text()
         total_debito = numeros[1].window_text()
         total_credito = numeros[2].window_text()
-
+        lotesMarcados = False
         print("Diferença:", diferenca)
         print("Total Débito:", total_debito)
         print("Total Crédito:", total_credito)
 
         await worker_sleep(10)
         clicou = False
-        if total_credito != total_debito:
+
+        if total_credito != total_debito or diferenca != "0,00":
             try:
+                lotesMarcados = True
                 # Tenta encontrar exatamente o checkbox com o texto "Lotes Consistentes"
                 checkbox = dlg.child_window(
                     title="Lotes Consistentes", class_name="TCheckBox"
@@ -302,11 +333,28 @@ async def integracao_contabil_generica(
                     print("Checkbox 'Lotes Consistentes' clicado com sucesso.")
 
                 await worker_sleep(10)
+                # Captura todos os campos do tipo TRzEditNumber apos atualizacao de tela..
+                numeros = [
+                    e
+                    for e in dlg.descendants()
+                    if e.friendly_class_name() == "Edit"
+                    and e.class_name() == "TRzEditNumber"
+                ]
 
-                if 0.01 <= diferenca <= 0.10:
-                    print("Clicar no botão integrar")
-                    clicou = True
-                else:
+                # Verifica os textos capturados
+                for i, campo in enumerate(numeros):
+                    print(f"[{i}] -> {campo.window_text()}")
+
+                # Atribui valores individuais
+                diferenca = numeros[0].window_text()
+                total_debito = numeros[1].window_text()
+                total_credito = numeros[2].window_text()
+
+                print("Diferença:", diferenca)
+                print("Total Débito:", total_debito)
+                print("Total Crédito:", total_credito)
+
+                if diferenca > 0.0:
                     clicou = True
                     main_window_capture = main_window.capture_as_image()
                     return RpaRetornoProcessoDTO(
@@ -320,195 +368,68 @@ async def integracao_contabil_generica(
         if not clicou:
             print("Clicar no botão integrar")
         # Clicar em integrar
-
-        ###############################################CÓDIGO ANTIGO##############################################
-        console.print("Aguardando carregamento...")
-        max_attempts = 240
-        found = False
-        console.print("Iniciando verificacoes...")
-
-        for attempt in range(1, max_attempts + 1):
-            console.print(
-                f"Verificacao {attempt} ( maximo {max_attempts} ) - aguardando 1 minuto..."
+        try:
+            # Conecta ao app pela classe principal
+            app = Application(backend="win32").connect(
+                class_name="TFrmIntegrador", found_index=0
             )
-            field = get_text_from_window(main_window, (1033, 770, 1301, 785))
-            poupop = get_text_from_window(main_window, (830, 500, 1100, 550))
-            if "finalizado" in field:
-                found = True
-                break
-            if "Não é possível realizar a operação em mídias" in field:
+            main_window = app["TFrmIntegrador"]
+
+            # Buscar botão pelo texto (mesmo com acento)
+            botao_integrar = main_window.child_window(
+                title="Integrar Lançamentos", class_name="TBitBtn"
+            )
+
+            botao_integrar.click_input()
+
+            # Aguardar finalizar
+            while True:
+                try:
+                    # Conecta à janela do tipo MsgBox
+                    time.sleep(1)
+                    app = Application(backend="win32").connect(class_name="TMsgBox")
+                    msgbox = app.window(class_name="TMsgBox", title_re="Inform.*")
+
+                    msgbox.set_focus()
+
+                    # Procura pelo botão com texto '&Ok'
+                    botao_ok = msgbox.child_window(class_name="TBitBtn", title="&Ok")
+                    if botao_ok.exists() and botao_ok.is_visible():
+                        botao_ok.click_input()
+                        console.print("Botão '&Ok' clicado com sucesso.")
+                        break
+                except ElementNotFoundError:
+                    pass  # A janela ainda não apareceu
+                except Exception as e:
+                    print(f"Erro ao tentar clicar no botão: {e}")
+
+            time.sleep(2)
+            if lotesMarcados:
+                if (
+                    checkbox.exists()
+                    and checkbox.is_enabled()
+                    and checkbox.is_visible()
+                ):
+                    checkbox.click_input()
+                    print("Checkbox 'Lotes Consistentes' desmarcado com sucesso.")
+                time.sleep(2)
                 return RpaRetornoProcessoDTO(
                     sucesso=False,
-                    retorno=f"Erro: '[Pesquisa] - Não é possível realizar a operação em mídias', por favor, reenfileirar processo",
+                    retorno=f"Integração realizada, porém, existem LOTES INCONSISTENTES.",
                     status=RpaHistoricoStatusEnum.Falha,
-                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
+                    tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)],
                 )
-            if "current transaction" in field:
+            else:
                 return RpaRetornoProcessoDTO(
-                    sucesso=False,
-                    retorno=f"A integração não foi realizada, erro no EMSYS: [Pesquisa] - current transaction is aborted.",
-                    status=RpaHistoricoStatusEnum.Falha,
+                    sucesso=True,
+                    retorno=f"Sucesso ao executar processo de integracao contabil",
+                    status=RpaHistoricoStatusEnum.Sucesso,
                     tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
                 )
-
-            try:
-                if "nenhum lote" in poupop or "menhum lote" in poupop:
-                    return RpaRetornoProcessoDTO(
-                        sucesso=False,
-                        retorno=f"A integração não foi realizada: nenhum lote para integrar.",
-                        status=RpaHistoricoStatusEnum.Falha,
-                        tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
-                    )
-            except:
-                pass
-            await worker_sleep(30)
-        if not found:
+        except Exception as erro:
             return RpaRetornoProcessoDTO(
                 sucesso=False,
-                retorno="Erro durante a pesquisa de lancamentos ( max_attempts excedido )",
-                status=RpaHistoricoStatusEnum.Falha,
-                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
-            )
-        await worker_sleep(4)
-
-        dados_consistentes = False
-        dados_consistentes_is_checked = False
-        max_attempts_dados_consistentes = 20
-        console.print("Verificando ocorrencia de inconsistencias...")
-        for attempt in range(1, max_attempts_dados_consistentes + 1):
-            console.print(f"Verificacao {attempt}...")
-            try:
-                total_debito = main_window.Edit3.window_text()
-                total_credito = main_window.Edit2.window_text()
-                diferenca = main_window.Edit.window_text()
-                if total_debito != total_credito or diferenca != "0,00":
-                    if not dados_consistentes_is_checked:
-                        pyautogui.click(x=702, y=758)  # lotes consistentes
-                        await worker_sleep(3)
-                        dados_consistentes_is_checked = True
-                        total_debito = main_window.Edit3.window_text()
-                        total_credito = main_window.Edit2.window_text()
-                        diferenca = main_window.Edit.window_text()
-                        if total_debito == total_credito:
-                            if total_debito == "0,00":
-                                await worker_sleep(2)
-                                console.print("Clicando em integrar lançamentos...")
-                                pyautogui.click(x=947, y=790)  # integrar lancamentos
-                                await worker_sleep(2)
-                                return RpaRetornoProcessoDTO(
-                                    sucesso=False,
-                                    retorno="Integração não realizada: nenhum lote para integrar após selecionar lotes consistentes",
-                                    status=RpaHistoricoStatusEnum.Falha,
-                                    tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)],
-                                )
-                            else:
-                                await worker_sleep(2)
-                                console.print("Clicando em integrar lançamentos...")
-                                pyautogui.click(x=947, y=790)  # integrar lancamentos
-                        else:
-
-                            return RpaRetornoProcessoDTO(
-                                sucesso=False,
-                                retorno="Integração não realizada, pois os valores de crédito e débito divergem mesmo após clicar em lotes consistentes.",
-                                status=RpaHistoricoStatusEnum.Falha,
-                                tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)],
-                            )
-
-                    else:
-                        return RpaRetornoProcessoDTO(
-                            sucesso=False,
-                            status=RpaHistoricoStatusEnum.Falha,
-                            tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)],
-                        )
-
-                    await worker_sleep(50)
-
-                else:
-                    await worker_sleep(2)
-                    console.print("Clicando em integrar lançamentos...")
-                    pyautogui.click(x=947, y=790)  # integrar lancamentos
-
-                if total_credito == total_debito and diferenca == "0,00":
-                    dados_consistentes = True
-                    break
-            except:
-                console.print(
-                    "Nao foi possivel encontrar os campos diretamente, tentando via ocr..."
-                )
-                total_debito = get_text_from_window(
-                    main_window, (854, 722, 956, 747)
-                ).replace("\n", "")
-                await worker_sleep(1)
-                total_credito = get_text_from_window(
-                    main_window, (1055, 722, 1162, 747)
-                ).replace("\n", "")
-                await worker_sleep(1)
-                diferenca = get_text_from_window(
-                    main_window, (1233, 722, 1336, 747)
-                ).replace("\n", "")
-                await worker_sleep(1)
-                if total_debito != total_credito or diferenca != "0,00":
-                    if not dados_consistentes_is_checked:
-                        pyautogui.click(x=702, y=758)  # lotes consistentes
-                        dados_consistentes_is_checked = True
-                    await worker_sleep(2)
-                    console.print("Clicando em integrar lançamentos...")
-                    pyautogui.click(x=947, y=790)  # integrar lancamentos
-                    await worker_sleep(60)
-        if not dados_consistentes:
-            return RpaRetornoProcessoDTO(
-                sucesso=False,
-                retorno="Erro: lotes inconsistentes (maximo de tentativas excedido em dados consistentes)",
-                status=RpaHistoricoStatusEnum.Falha,
-                tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)],
-            )
-        tela_processo_finalizado = None
-        main_window_capture = main_window.capture_as_image()
-        console.print("Aguardando a finalizacao do processo...")
-        for attempt in range(1, max_attempts + 1):
-            console.print("Aguardando 1 minuto...")
-            await worker_sleep(60)
-            new_window_capture = main_window.capture_as_image()
-            array_image1 = numpy.array(main_window_capture)
-            array_image2 = numpy.array(new_window_capture)
-            if not numpy.array_equal(array_image1, array_image2):
-                tela_processo_finalizado = new_window_capture
-                break
-
-        mensagem_mapeada = get_text_from_window(main_window, (830, 513, 998, 546))
-        console.print(f"Mensagem de erro extraída da tela: {mensagem_mapeada}")
-        if "conta indefinida" in mensagem_mapeada:
-            return RpaRetornoProcessoDTO(
-                sucesso=False,
-                retorno=f"Integração não realizada, existe um erro de conta indefinida",
-                status=RpaHistoricoStatusEnum.Falha,
-                tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)],
-            )
-
-        if tela_processo_finalizado and dados_consistentes_is_checked:
-            await worker_sleep(3)
-            pyautogui.click(x=951, y=573)  # clicando em ok
-            await worker_sleep(3)
-            pyautogui.click(x=702, y=758)
-            await worker_sleep(10)
-
-            return RpaRetornoProcessoDTO(
-                sucesso=False,
-                retorno=f"Integração realizada, porém, existem LOTES INCONSISTENTES",
-                status=RpaHistoricoStatusEnum.Falha,
-                tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)],
-            )
-        elif tela_processo_finalizado and not dados_consistentes_is_checked:
-            return RpaRetornoProcessoDTO(
-                sucesso=True,
-                retorno=f"Sucesso ao executar processo de integracao contabil",
-                status=RpaHistoricoStatusEnum.Sucesso,
-            )
-
-        if not tela_processo_finalizado:
-            return RpaRetornoProcessoDTO(
-                sucesso=False,
-                retorno=f"Erro de 'timeout' durante o processo integração contabil...",
+                retorno=f"Erro durante o processo integração contabil, erro : {erro}",
                 status=RpaHistoricoStatusEnum.Falha,
                 tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
             )
@@ -520,23 +441,3 @@ async def integracao_contabil_generica(
             status=RpaHistoricoStatusEnum.Falha,
             tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
         )
-
-
-if __name__ == "__main__":
-    task = RpaProcessoEntradaDTO(
-        datEntradaFila=datetime.now(),
-        configEntrada={
-            "origem": "Desconto de Duplicata",
-            "periodoFinal": "02/01/2025",
-            "periodoInicial": "02/01/2025",
-        },
-        uuidProcesso="e1696b6b-9de4-4f22-a977-b191a39506a9",
-        nomProcesso="Fechamento de caixa",
-        uuidFila="",
-        sistemas=[
-            {"sistema": "EMSys", "timeout": "1.0"},
-            {"sistema": "AutoSystem", "timeout": "1.0"},
-        ],
-        historico_id="01",
-    )
-    asyncio.run(integracao_contabil_generica(task))

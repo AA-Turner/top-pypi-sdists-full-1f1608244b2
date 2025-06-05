@@ -70,7 +70,7 @@ async def ppu_flow(
         yield
 
 
-def oneturn2multiturn(messages, template: Optional[str] = None):
+def oneturn2multiturn(messages, template: Optional[str] = None, ignore_system: bool = True):
     """todo: https://github.com/hiyouga/LLaMA-Factory/blob/e898fabbe3efcd8b44d0e119e7afaed4542a9f39/src/llmtuner/data/template.py#L423-L427
 
     _register_template(
@@ -99,36 +99,67 @@ def oneturn2multiturn(messages, template: Optional[str] = None):
     #     context += f"<|im_start|>{role}\n{content}<|im_end|>\n"
     # context += "<|im_start|>assistant\n"
     if len(messages) == 1:
-        return messages[0].get("content")
+        content = messages[0].get("content")
+        if isinstance(content, list):
+            content = content[-1].get('text', '')
+        return content
 
     context = "\n"
     for message in messages:
         role = message.get("role")
         content = message.get("content")
+
         if isinstance(content, list):  # content: {'type': 'text', 'text': ''}
             content = content[-1].get('text', '')
 
+        if role == "system" and ignore_system:
+            continue
+
         context += f"{role}:\n{content}\n\n"
-    context += "assistant:\n"
+
     return context
 
 
-
 if __name__ == '__main__':
-    async def main():
-        with timer():
-            try:
-                async with ppu_flow(
-                        api_key="sk-OYK4YxtTlWauT2TdGR5FTAJpkRmSnDwPly4cve0cAvMcrBkZ",
-                        model="api-oss",
-                        n=1):
-                    logger.debug("消费了哦")
+    messages = [
+        {
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "你是数学家"
+                }
+            ]
+        },
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "1+1"
+                }
+            ]
+        },
+        {
+            "role": "assistant",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "2"
+                }
+            ]
+        },
 
-            except Exception as e:
-                pass
-                logger.error(e)
-                # logger.debug(e.response.status_code)
-                # logger.debug(e.response.text)
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "1+2"
+                }
+            ]
+        },
 
+    ]
 
-    arun(main())
+    print(oneturn2multiturn(messages,ignore_system=False))

@@ -31,7 +31,7 @@ System_Collections_Immutable_IImmutableDictionary_TValue = typing.TypeVar("Syste
 System_Collections_Immutable_IImmutableQueue_T = typing.TypeVar("System_Collections_Immutable_IImmutableQueue_T")
 
 
-class ImmutableSortedSet(typing.Generic[System_Collections_Immutable_ImmutableSortedSet_T], System.Object, System.Collections.Immutable.IImmutableSet[System_Collections_Immutable_ImmutableSortedSet_T], System.Collections.Generic.IReadOnlyList[System_Collections_Immutable_ImmutableSortedSet_T], System.Collections.Generic.IList[System_Collections_Immutable_ImmutableSortedSet_T], System.Collections.Generic.ISet[System_Collections_Immutable_ImmutableSortedSet_T], System.Collections.IList, System.Collections.Immutable.IStrongEnumerable[System_Collections_Immutable_ImmutableSortedSet_T, System_Collections_Immutable_ImmutableSortedSet_Enumerator], typing.Iterable[System_Collections_Immutable_ImmutableSortedSet_T]):
+class ImmutableSortedSet(typing.Generic[System_Collections_Immutable_ImmutableSortedSet_T], System.Object, System.Collections.Immutable.IImmutableSet[System_Collections_Immutable_ImmutableSortedSet_T], System.Collections.Generic.IList[System_Collections_Immutable_ImmutableSortedSet_T], System.Collections.Generic.ISet[System_Collections_Immutable_ImmutableSortedSet_T], System.Collections.IList, System.Collections.Immutable.IStrongEnumerable[System_Collections_Immutable_ImmutableSortedSet_T, System_Collections_Immutable_ImmutableSortedSet_Enumerator], typing.Iterable[System_Collections_Immutable_ImmutableSortedSet_T]):
     """An immutable sorted set implementation."""
 
     class Enumerator(System.Collections.Generic.IEnumerator[System_Collections_Immutable_ImmutableSortedSet_T], System.Collections.Immutable.ISecurePooledObjectUser, System.Collections.Immutable.IStrongEnumerator[System_Collections_Immutable_ImmutableSortedSet_T]):
@@ -487,7 +487,7 @@ class ImmutableDictionary(typing.Generic[System_Collections_Immutable_ImmutableD
             """Sets the enumerator to its initial position, which is before the first element in the collection."""
             ...
 
-    class Builder(System.Object, System.Collections.Generic.IDictionary[System_Collections_Immutable_ImmutableDictionary_TKey, System_Collections_Immutable_ImmutableDictionary_TValue], System.Collections.Generic.IReadOnlyDictionary[System_Collections_Immutable_ImmutableDictionary_TKey, System_Collections_Immutable_ImmutableDictionary_TValue], System.Collections.IDictionary, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Immutable_ImmutableDictionary_TKey, System_Collections_Immutable_ImmutableDictionary_TValue]]):
+    class Builder(System.Object, System.Collections.Generic.IDictionary[System_Collections_Immutable_ImmutableDictionary_TKey, System_Collections_Immutable_ImmutableDictionary_TValue], System.Collections.IDictionary, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Immutable_ImmutableDictionary_TKey, System_Collections_Immutable_ImmutableDictionary_TValue]]):
         """
         A dictionary that mutates with little or no memory allocations,
         can produce and/or build on immutable dictionary instances very efficiently.
@@ -1005,7 +1005,7 @@ class ImmutableList(typing.Generic[System_Collections_Immutable_ImmutableList_T]
             """Restarts enumeration."""
             ...
 
-    class Builder(System.Object, System.Collections.Generic.IList[System_Collections_Immutable_ImmutableList_T], System.Collections.IList, System.Collections.Generic.IReadOnlyList[System_Collections_Immutable_ImmutableList_T], typing.Iterable[System_Collections_Immutable_ImmutableList_T]):
+    class Builder(System.Object, System.Collections.Generic.IList[System_Collections_Immutable_ImmutableList_T], System.Collections.IList, typing.Iterable[System_Collections_Immutable_ImmutableList_T]):
         """
         A list that mutates with little or no memory allocations,
         can produce and/or build on immutable list instances very efficiently.
@@ -2388,7 +2388,7 @@ class ImmutableSortedDictionary(typing.Generic[System_Collections_Immutable_Immu
             """Restarts enumeration."""
             ...
 
-    class Builder(System.Object, System.Collections.Generic.IDictionary[System_Collections_Immutable_ImmutableSortedDictionary_TKey, System_Collections_Immutable_ImmutableSortedDictionary_TValue], System.Collections.Generic.IReadOnlyDictionary[System_Collections_Immutable_ImmutableSortedDictionary_TKey, System_Collections_Immutable_ImmutableSortedDictionary_TValue], System.Collections.IDictionary, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Immutable_ImmutableSortedDictionary_TKey, System_Collections_Immutable_ImmutableSortedDictionary_TValue]]):
+    class Builder(System.Object, System.Collections.Generic.IDictionary[System_Collections_Immutable_ImmutableSortedDictionary_TKey, System_Collections_Immutable_ImmutableSortedDictionary_TValue], System.Collections.IDictionary, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Immutable_ImmutableSortedDictionary_TKey, System_Collections_Immutable_ImmutableSortedDictionary_TValue]]):
         """
         A sorted dictionary that mutates with little or no memory allocations,
         can produce and/or build on immutable sorted dictionary instances very efficiently.
@@ -2698,7 +2698,7 @@ class ImmutableSortedDictionary(typing.Generic[System_Collections_Immutable_Immu
 class ImmutableArray(typing.Generic[System_Collections_Immutable_ImmutableArray_T], System.Collections.Generic.IEnumerable[System_Collections_Immutable_ImmutableArray_T], System.IEquatable[System_Collections_Immutable_ImmutableArray], System.Collections.Immutable.IImmutableArray, System.Collections.Generic.IList[System_Collections_Immutable_ImmutableArray_T], System.Collections.IList, System.Collections.IStructuralComparable, System.Collections.IStructuralEquatable, System.Collections.Immutable.IImmutableList[System_Collections_Immutable_ImmutableArray_T], typing.Iterable[System_Collections_Immutable_ImmutableArray_T]):
     """A readonly array with O(1) indexable lookup time."""
 
-    class Builder(System.Object, System.Collections.Generic.IList[System_Collections_Immutable_ImmutableArray_T], System.Collections.Generic.IReadOnlyList[System_Collections_Immutable_ImmutableArray_T], typing.Iterable[System_Collections_Immutable_ImmutableArray_T]):
+    class Builder(System.Object, System.Collections.Generic.IList[System_Collections_Immutable_ImmutableArray_T], typing.Iterable[System_Collections_Immutable_ImmutableArray_T]):
         """
         A writable array accessor that can be converted into an ImmutableArray{T}
         instance without allocating memory.

@@ -74,7 +74,8 @@ class OperatorMetrics(object):
         self.name = name
         self.state = state
         self.progress = progress
-        self.total = total
+        if total is not None:
+            self.total = total
         self.start_time = start_time
         if end_time is not None:
             self.end_time = end_time
@@ -190,8 +191,6 @@ class OperatorMetrics(object):
         :param total: The total of this OperatorMetrics.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and total is None:  # noqa: E501
-            raise ValueError("Invalid value for `total`, must not be `None`")  # noqa: E501
 
         self._total = total
 

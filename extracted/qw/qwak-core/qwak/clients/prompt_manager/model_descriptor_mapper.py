@@ -44,10 +44,10 @@ class ModelDescriptorMapper:
         model_id: str, openai_chat_params: ProtoOpenAIChatModelParams
     ) -> OpenAIChat:
         p = openai_chat_params
-        _tool_choice: Union[str, ChatCompletionNamedToolChoiceParam] = (
-            ModelDescriptorMapper._from_tool_choice(
-                openai_chat_params=openai_chat_params
-            )
+        _tool_choice: Union[
+            str, ChatCompletionNamedToolChoiceParam
+        ] = ModelDescriptorMapper._from_tool_choice(
+            openai_chat_params=openai_chat_params
         )
         _tools: List[ChatCompletionToolParam] = []
 
@@ -57,23 +57,21 @@ class ModelDescriptorMapper:
 
         return OpenAIChat(
             model_id=model_id,
-            frequency_penalty=(
-                p.frequency_penalty if p.HasField("frequency_penalty") else None
-            ),
-            logit_bias=(
-                {k: int(v) for k, v in p.logit_bias.items()}
-                if p.HasField("logit_bias")
-                else None
-            ),
+            frequency_penalty=p.frequency_penalty
+            if p.HasField("frequency_penalty")
+            else None,
+            logit_bias={k: int(v) for k, v in p.logit_bias.items()}
+            if p.HasField("logit_bias")
+            else None,
             logprobs=p.logprobs if p.HasField("logprobs") else None,
             max_tokens=p.max_tokens if p.HasField("max_tokens") else None,
             n=p.n if p.HasField("n") else None,
-            presence_penalty=(
-                p.presence_penalty if p.HasField("presence_penalty") else None
-            ),
-            response_format=(
-                p.response_format if p.HasField("response_format") else None
-            ),  # noqa
+            presence_penalty=p.presence_penalty
+            if p.HasField("presence_penalty")
+            else None,
+            response_format=p.response_format
+            if p.HasField("response_format")
+            else None,  # noqa
             seed=p.seed if p.HasField("seed") else None,
             stop=[_ for _ in p.stop] if p.HasField("stop") else None,
             temperature=p.temperature if p.HasField("temperature") else None,
@@ -152,9 +150,9 @@ class ModelDescriptorMapper:
                     max_tokens=d.max_tokens,
                     n=d.n,
                     presence_penalty=d.presence_penalty,
-                    response_format=(
-                        d.response_format if d.response_format else None
-                    ),  # noqa
+                    response_format=d.response_format
+                    if d.response_format
+                    else None,  # noqa
                     seed=d.seed,
                     stop=stop_list_value if d.stop else None,
                     temperature=d.temperature,

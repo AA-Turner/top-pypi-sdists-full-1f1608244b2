@@ -90,11 +90,11 @@ async def worker(
         if request_created_at is not None
         else None
     )
-
     async with (
         connect() as conn,
         set_auth_ctx_for_run(run["kwargs"]),
         Runs.enter(run_id, main_loop) as done,
+        AsyncExitStack() as exit_stack,
     ):
         temporary = run["kwargs"].get("temporary", False)
         resumable = run["kwargs"].get("resumable", False)
@@ -156,12 +156,10 @@ async def worker(
 
                 raise RuntimeError(error_message)
             if temporary:
-                stream = astream_state(
-                    AsyncExitStack(), conn, cast(Run, run), attempt, done
-                )
+                stream = astream_state(exit_stack, conn, cast(Run, run), attempt, done)
             else:
                 stream = astream_state(
-                    AsyncExitStack(),
+                    exit_stack,
                     conn,
                     cast(Run, run),
                     attempt,
@@ -216,6 +214,8 @@ async def worker(
             run_ended_at_dt = datetime.now(UTC)
             run_ended_at = run_ended_at_dt.isoformat()
             try:
+                # Need to close the pipeline to re-use the connection
+                await exit_stack.aclose()
                 await Runs.delete(conn, run_id, thread_id=run["thread_id"])
                 await logger.ainfo(
                     "Background run rolled back",
@@ -240,9 +240,6 @@ async def worker(
                     run_created_at=run_created_at,
                     exc=str(e),
                 )
-                # We need to clean up the transaction early if we want to
-                # update the thread status with the same connection
-                await exit.aclose()
             except HTTPException as e:
                 if e.status_code == 404:
                     await logger.ainfo(

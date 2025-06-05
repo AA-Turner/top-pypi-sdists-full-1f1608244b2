@@ -1,10 +1,12 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, Iterable, Optional, Protocol
+from typing import Any, Dict, Iterable, Optional, Protocol, Type, TypeVar
+
+TClass = TypeVar("TClass", bound=Type[Any])
 
 
 # Mark object as related to extension URLs so we can place these in
 # a separate documentation section
-def mark_extension_url_api(obj: Any) -> Any:
+def mark_extension_url_api(obj: TClass) -> TClass:
     obj._extension_url_api = True
     return obj
 
@@ -23,7 +25,7 @@ class URLRoute:
     Framework-agnostic route definition.
 
     This is similar to Django's `URLPattern` object created with
-    [`django.urls.path()`](https://docs.djangoproject.com/en/5.1/ref/urls/#path).
+    [`django.urls.path()`](https://docs.djangoproject.com/en/5.2/ref/urls/#path).
 
     The `URLRoute` must either define a `handler` function or have a list of child routes `children`.
     If both are defined, an error will be raised.

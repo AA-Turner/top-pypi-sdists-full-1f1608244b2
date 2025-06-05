@@ -14,6 +14,7 @@ import sys
 from typing import Callable, Optional, Union
 import datetime
 from typing import Any
+import textwrap
 
 import click
 from botocore.exceptions import ClientError
@@ -33,13 +34,18 @@ from deadline.job_attachments.progress_tracker import (
     DownloadSummaryStatistics,
     ProgressReportMetadata,
 )
-from deadline.job_attachments._utils import _human_readable_file_size
+from deadline.job_attachments._path_summarization import (
+    human_readable_file_size,
+    summarize_path_list,
+)
 
 from ... import api
 from ...config import config_file
 from ...exceptions import DeadlineOperationError
 from .._common import _apply_cli_options_to_config, _cli_object_repr, _handle_error
 from ._sigint_handler import SigIntHandler
+
+logger = logging.getLogger("deadline.client.cli")
 
 JSON_MSG_TYPE_TITLE = "title"
 JSON_MSG_TYPE_PRESUMMARY = "presummary"
@@ -301,12 +307,12 @@ def _download_job_output(
                         )
 
     output_paths_by_root = job_output_downloader.get_output_paths_by_root()
-
-    _check_and_warn_long_output_paths(output_paths_by_root)
     # If no output paths were found, log a message and exit.
     if output_paths_by_root == {}:
         click.echo(_get_no_output_message(is_json_format))
         return
+
+    _check_and_warn_long_output_paths(output_paths_by_root)
 
     # Check if the asset roots came from different OS. If so, prompt users to
     # select alternative root paths to download to, (regardless of the auto-accept.)
@@ -336,6 +342,7 @@ def _download_job_output(
     output_paths_by_root = job_output_downloader.get_output_paths_by_root()
 
     _check_and_warn_long_output_paths(output_paths_by_root)
+
     # Prompt users to confirm local root paths where they will download outputs to,
     # and allow users to select different location to download files to if they want.
     # (If auto-accept is enabled, automatically download to the default root paths.)
@@ -387,6 +394,16 @@ def _download_job_output(
             output_paths_by_root = job_output_downloader.get_output_paths_by_root()
             _check_and_warn_long_output_paths(output_paths_by_root)
 
+    if not is_json_format:
+        # Create and print a summary of all the paths to download
+        all_output_paths: set[str] = set()
+        for asset_root, output_paths in output_paths_by_root.items():
+            all_output_paths.update(
+                os.path.normpath(os.path.join(asset_root, path)) for path in output_paths
+            )
+        click.echo("\nSummary of file paths to download:")
+        click.echo(textwrap.indent(summarize_path_list(all_output_paths), "  "))
+
     # If the conflict resolution option was not specified, auto-accept is false, and
     # if there are any conflicting files in local, prompt users to select a resolution method.
     # (skip, overwrite, or make a copy.)
@@ -431,7 +448,6 @@ def _download_job_output(
         if not is_json_format:
             # Note: click doesn't export the return type of progressbar(), so we suppress mypy warnings for
             # not annotating the type of download_progress.
-            click.echo()
             with click.progressbar(length=100, label="Downloading Outputs") as download_progress:  # type: ignore[var-annotated]
 
                 def _update_download_progress(download_metadata: ProgressReportMetadata) -> bool:
@@ -559,9 +575,9 @@ def _get_download_summary_message(
         return (
             "Download Summary:\n"
             f"    Downloaded {download_summary.processed_files} files totaling"
-            f" {_human_readable_file_size(download_summary.processed_bytes)}.\n"
+            f" {human_readable_file_size(download_summary.processed_bytes)}.\n"
             f"    Total download time of {round(download_summary.total_time, ndigits=5)} seconds"
-            f" at {_human_readable_file_size(int(download_summary.transfer_rate))}/s.\n"
+            f" at {human_readable_file_size(int(download_summary.transfer_rate))}/s.\n"
             f"    Download locations (total file counts):\n        {paths_joined}"
         )
 
@@ -685,6 +701,9 @@ def job_download_output(step_id, task_id, output, **args):
             click.echo(_get_json_line(JSON_MSG_TYPE_ERROR, error_one_liner))
             sys.exit(1)
         else:
+            logger.exception("Exception details:")
+            if logging.DEBUG >= logger.getEffectiveLevel():
+                logger.exception("Exception details:")
             raise DeadlineOperationError(f"Failed to download output:\n{e}") from e
 
 
@@ -706,7 +725,7 @@ def job_download_output(step_id, task_id, output, **args):
 @_handle_error
 def job_trace_schedule(verbose, trace_format, trace_file, **args):
     """
-    EXPERIMENTAL - Generate statistics from a completed job.
+    EXPERIMENTAL - Generate statistics from a job.
 
     To visualize the trace output file when providing the options
     "--trace-format chrome --trace-file <output>.json", use
@@ -725,10 +744,15 @@ def job_trace_schedule(verbose, trace_format, trace_file, **args):
         raise DeadlineOperationError("Error: Must provide --trace-format with --trace-file.")
 
     deadline = api.get_boto3_client("deadline", config=config)
+    trace_end_utc = datetime.datetime.now(datetime.timezone.utc)
 
     click.echo("Getting the job...")
     job = deadline.get_job(farmId=farm_id, queueId=queue_id, jobId=job_id)
     job.pop("ResponseMetadata", None)
+
+    if "startedAt" not in job:
+        raise DeadlineOperationError("No trace available - Job hasn't started yet, exiting")
+    started_at = job["startedAt"]
 
     click.echo("Getting all the sessions for the job...")
     response = deadline.list_sessions(farmId=farm_id, queueId=queue_id, jobId=job_id)
@@ -814,14 +838,14 @@ def job_trace_schedule(verbose, trace_format, trace_file, **args):
     click.echo("Processing the trace data...")
     trace_events = []
 
-    started_at = job["startedAt"]
-
     def time_int(timestamp: datetime.datetime):
         return int((timestamp - started_at) / datetime.timedelta(microseconds=1))
 
     def duration_of(resource):
         try:
-            return time_int(resource["endedAt"]) - time_int(resource["startedAt"])
+            return time_int(resource.get("endedAt", trace_end_utc)) - time_int(
+                resource["startedAt"]
+            )
         except KeyError:
             return 0
 
@@ -844,6 +868,8 @@ def job_trace_schedule(verbose, trace_format, trace_file, **args):
 
         pid = workers[session["workerId"]]
         session_event_name = f"{session['step']['name']} - {session['index']}"
+        if "endedAt" not in session:
+            session_event_name = f"{session_event_name} - In Progress"
         trace_events.append(
             {
                 "name": session_event_name,
@@ -891,6 +917,8 @@ def job_trace_schedule(verbose, trace_format, trace_file, **args):
                     name = "Sync Job Attchmnt (Dependencies)"
                 else:
                     name = "Sync Job Attchmnt (Submitted)"
+            if "endedAt" not in action:
+                name = f"{name} - In Progress"
             if "startedAt" in action:
                 trace_events.append(
                     {
@@ -908,12 +936,13 @@ def job_trace_schedule(verbose, trace_format, trace_file, **args):
                         },
                     }
                 )
+
         trace_events.append(
             {
                 "name": session_event_name,
                 "cat": "SESSION",
                 "ph": "E",  # End Event
-                "ts": time_int(session["endedAt"]),
+                "ts": time_int(session.get("endedAt", trace_end_utc)),
                 "pid": pid,
                 "tid": 0,
             }

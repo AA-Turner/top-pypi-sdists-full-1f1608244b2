@@ -7,3 +7,11 @@ from .._impl import (
     storage_datasource_api_UpdateNominalDataSourceRequest as UpdateNominalDataSourceRequest,
 )
 
+__all__ = [
+    'CreateNominalDataSourceRequest',
+    'NominalDataSource',
+    'NominalDataSourceId',
+    'UpdateNominalDataSourceRequest',
+    'NominalDataSourceService',
+]
+

@@ -20,6 +20,8 @@ def format_clouds_output(clouds: List[Cloud], json_format: bool) -> str:
 def format_clouds_output_json(clouds: List[Cloud]) -> str:
     cloud_jsons = []
     for cloud in clouds:
+        # Check if log ingestion is enabled based on is_aggregated_logs_enabled field
+        log_ingestion_enabled = getattr(cloud, "is_aggregated_logs_enabled", False)
         cloud_jsons.append(
             {
                 "id": cloud.id,
@@ -29,6 +31,7 @@ def format_clouds_output_json(clouds: List[Cloud]) -> str:
                 "added_date": cloud.created_at.strftime("%m/%d/%Y"),
                 "default": cloud.is_default,
                 "credentials": cloud.credentials,
+                "log_ingestion": "enabled" if log_ingestion_enabled else "disabled",
             }
         )
     return json.dumps(cloud_jsons)
@@ -37,6 +40,9 @@ def format_clouds_output_json(clouds: List[Cloud]) -> str:
 def format_clouds_output_table(clouds: List[Cloud]) -> str:
     table_rows = []
     for cloud in clouds:
+        # Check if log ingestion is enabled based on is_aggregated_logs_enabled field
+        log_ingestion_enabled = getattr(cloud, "is_aggregated_logs_enabled", False)
+        log_ingestion_status = "enabled" if log_ingestion_enabled else "disabled"
         table_rows.append(
             [
                 cloud.id,
@@ -46,6 +52,7 @@ def format_clouds_output_table(clouds: List[Cloud]) -> str:
                 cloud.created_at.strftime("%m/%d/%Y"),
                 cloud.is_default,
                 cloud.credentials,
+                log_ingestion_status,
             ]
         )
     table = tabulate.tabulate(
@@ -58,6 +65,7 @@ def format_clouds_output_table(clouds: List[Cloud]) -> str:
             "ADDED DATE",
             "DEFAULT",
             "CREDENTIALS",
+            "LOG INGESTION",
         ],
         tablefmt="plain",
     )

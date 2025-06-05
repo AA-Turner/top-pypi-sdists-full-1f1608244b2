@@ -9,3 +9,13 @@ from .._impl import (
     scout_comparisonrun_api_OffsetSeriesAnchor as OffsetSeriesAnchor,
 )
 
+__all__ = [
+    'ComparisonRun',
+    'ComparisonRunGroup',
+    'Offset',
+    'OffsetAnchor',
+    'OffsetAnchorVisitor',
+    'OffsetRunAnchor',
+    'OffsetSeriesAnchor',
+]
+

@@ -7,21 +7,11 @@ This module provides a CodeChunker class for splitting code into chunks of a spe
 import warnings
 from bisect import bisect_left
 from itertools import accumulate
-from typing import TYPE_CHECKING, Any, List, Literal, Tuple, Union
+from typing import Any, List, Literal, Tuple, Union
 
 from chonkie.chunker.base import BaseChunker
 from chonkie.tokenizer import Tokenizer
 from chonkie.types.code import CodeChunk
-
-if TYPE_CHECKING:
-    try: 
-        from tree_sitter import Node, Parser, Tree
-        from tree_sitter_language_pack import SupportedLanguage
-    except ImportError:
-        Node = Any
-        Parser = Any
-        Tree = Any
-        SupportedLanguage = Any
 
 
 class CodeChunker(BaseChunker):
@@ -86,7 +76,7 @@ class CodeChunker(BaseChunker):
             self.parser = get_parser(language) # type: ignore
         
         # Set the use_multiprocessing flag
-        self._use_multiprocessing = True
+        self._use_multiprocessing = False
 
     def _import_dependencies(self) -> None:
         """Import the dependencies for the CodeChunker."""
@@ -145,9 +135,18 @@ class CodeChunker(BaseChunker):
                     
                 # Recursively, add the child groups
                 child_groups, child_token_counts = self._group_child_nodes(child)
-                node_groups.extend(child_groups)
-                group_token_counts.extend(child_token_counts)
-                
+                if child_groups:  # Only use recursive result if it produced groups
+                    node_groups.extend(child_groups)
+                    group_token_counts.extend(child_token_counts)
+                else:
+                    # Fallback: Add the current child as is if no recursive groups
+                    node_groups.append([child])
+                    group_token_counts.append(token_count)
+
+                # Reinit current stuff
+                current_node_group = []
+                current_token_count = 0
+
             elif current_token_count + token_count > self.chunk_size:
                 # Add the current_node_group and token_count to the total
                 node_groups.append(current_node_group)

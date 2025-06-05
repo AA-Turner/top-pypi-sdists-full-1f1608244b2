@@ -1,7 +1,9 @@
 from __future__ import annotations as _annotations
 
 import re
+import shutil
 import sys
+from importlib.metadata import version as _metadata_version
 from itertools import dropwhile
 from time import perf_counter_ns
 from typing import TYPE_CHECKING, Callable
@@ -17,10 +19,10 @@ if TYPE_CHECKING:
 
     SummaryStats = tuple[list[tuple[str, dict[str, bool]]], str]
 
-__version__ = '1.2.0'
+__version__ = _metadata_version('pytest-pretty')
 start_time = 0
 end_time = 0
-console = Console()
+console = Console(width=shutil.get_terminal_size()[0])
 
 
 def pytest_sessionstart(session):
@@ -68,7 +70,6 @@ class CustomTerminalReporter(TerminalReporter):
             console.print(f'{count:>10} {label}', style=color)
 
     def short_test_summary(self) -> None:
-        summary_items, _ = self.build_summary_stats_line()
         fail_reports = self.stats.get('failed', [])
         if fail_reports:
             table = Table(title='Summary of Failures', padding=(0, 2), border_style='cyan')
@@ -90,7 +91,7 @@ class CustomTerminalReporter(TerminalReporter):
                 table.add_row(
                     escape(file),
                     escape(func),
-                    str(function_line + 1),
+                    str(function_line + 1) if function_line is not None else '',
                     escape(error_line),
                     escape(error),
                 )
@@ -143,7 +144,7 @@ def create_new_parseoutcomes(runresult_instance) -> Callable[[], dict[str, int]]
 class PytesterWrapper:
     """
     This is class for for make almost transparent wrapper
-    arround pytester output and allow substitute
+    around pytester output and allow substitute
     `parseoutcomes` method of `RunResult` instance.
     """
 
@@ -153,7 +154,7 @@ class PytesterWrapper:
         object.__setattr__(self, '_pytester', pytester)
 
     def runpytest(self, *args, **kwargs):
-        """wraper to overwritte `parseoutcomes` method of `RunResult` instance"""
+        """wrapper to overwrite `parseoutcomes` method of `RunResult` instance"""
         res = self._pytester.runpytest(*args, **kwargs)
         assert res is not None
         res.parseoutcomes = create_new_parseoutcomes(res)

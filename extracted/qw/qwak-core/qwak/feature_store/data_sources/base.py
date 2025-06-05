@@ -63,10 +63,10 @@ class BaseSource(ABC):
             uploaded_artifact_url = self._upload_artifact()
 
         if source_definition_path:
-            presign_url: (
-                str
-            ) = FeatureRegistryClient().get_datasource_source_code_presign_url(
-                ds_name=self.name
+            presign_url: str = (
+                FeatureRegistryClient().get_datasource_source_code_presign_url(
+                    ds_name=self.name
+                )
             )
             source_code_spec: SourceCodeSpec = (
                 SourceCodeSpecFactory.get_zip_source_code_spec(

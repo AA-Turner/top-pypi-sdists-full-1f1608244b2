@@ -48,8 +48,19 @@ class TestSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "end_date": parse_datetime("2019-12-27T18:11:19.117Z"),
                     "plan_phase_order": 0,
@@ -154,8 +165,19 @@ class TestSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "replaces_adjustment_id": "replaces_adjustment_id",
                 }
@@ -663,8 +685,19 @@ class TestSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "start_date": parse_datetime("2019-12-27T18:11:19.117Z"),
                     "end_date": parse_datetime("2019-12-27T18:11:19.117Z"),
@@ -736,7 +769,6 @@ class TestSubscriptions:
         subscription = client.subscriptions.redeem_coupon(
             subscription_id="subscription_id",
             change_option="requested_date",
-            coupon_id="coupon_id",
         )
         assert_matches_type(SubscriptionRedeemCouponResponse, subscription, path=["response"])
 
@@ -745,9 +777,10 @@ class TestSubscriptions:
         subscription = client.subscriptions.redeem_coupon(
             subscription_id="subscription_id",
             change_option="requested_date",
-            coupon_id="coupon_id",
             allow_invoice_credit_or_void=True,
             change_date=parse_datetime("2017-07-21T17:32:28Z"),
+            coupon_id="coupon_id",
+            coupon_redemption_code="coupon_redemption_code",
         )
         assert_matches_type(SubscriptionRedeemCouponResponse, subscription, path=["response"])
 
@@ -756,7 +789,6 @@ class TestSubscriptions:
         response = client.subscriptions.with_raw_response.redeem_coupon(
             subscription_id="subscription_id",
             change_option="requested_date",
-            coupon_id="coupon_id",
         )
 
         assert response.is_closed is True
@@ -769,7 +801,6 @@ class TestSubscriptions:
         with client.subscriptions.with_streaming_response.redeem_coupon(
             subscription_id="subscription_id",
             change_option="requested_date",
-            coupon_id="coupon_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -785,7 +816,6 @@ class TestSubscriptions:
             client.subscriptions.with_raw_response.redeem_coupon(
                 subscription_id="",
                 change_option="requested_date",
-                coupon_id="coupon_id",
             )
 
     @parametrize
@@ -806,8 +836,19 @@ class TestSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "end_date": parse_datetime("2019-12-27T18:11:19.117Z"),
                     "plan_phase_order": 0,
@@ -905,8 +946,19 @@ class TestSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "replaces_adjustment_id": "replaces_adjustment_id",
                 }
@@ -1298,8 +1350,19 @@ class TestAsyncSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "end_date": parse_datetime("2019-12-27T18:11:19.117Z"),
                     "plan_phase_order": 0,
@@ -1404,8 +1467,19 @@ class TestAsyncSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "replaces_adjustment_id": "replaces_adjustment_id",
                 }
@@ -1913,8 +1987,19 @@ class TestAsyncSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "start_date": parse_datetime("2019-12-27T18:11:19.117Z"),
                     "end_date": parse_datetime("2019-12-27T18:11:19.117Z"),
@@ -1986,7 +2071,6 @@ class TestAsyncSubscriptions:
         subscription = await async_client.subscriptions.redeem_coupon(
             subscription_id="subscription_id",
             change_option="requested_date",
-            coupon_id="coupon_id",
         )
         assert_matches_type(SubscriptionRedeemCouponResponse, subscription, path=["response"])
 
@@ -1995,9 +2079,10 @@ class TestAsyncSubscriptions:
         subscription = await async_client.subscriptions.redeem_coupon(
             subscription_id="subscription_id",
             change_option="requested_date",
-            coupon_id="coupon_id",
             allow_invoice_credit_or_void=True,
             change_date=parse_datetime("2017-07-21T17:32:28Z"),
+            coupon_id="coupon_id",
+            coupon_redemption_code="coupon_redemption_code",
         )
         assert_matches_type(SubscriptionRedeemCouponResponse, subscription, path=["response"])
 
@@ -2006,7 +2091,6 @@ class TestAsyncSubscriptions:
         response = await async_client.subscriptions.with_raw_response.redeem_coupon(
             subscription_id="subscription_id",
             change_option="requested_date",
-            coupon_id="coupon_id",
         )
 
         assert response.is_closed is True
@@ -2019,7 +2103,6 @@ class TestAsyncSubscriptions:
         async with async_client.subscriptions.with_streaming_response.redeem_coupon(
             subscription_id="subscription_id",
             change_option="requested_date",
-            coupon_id="coupon_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -2035,7 +2118,6 @@ class TestAsyncSubscriptions:
             await async_client.subscriptions.with_raw_response.redeem_coupon(
                 subscription_id="",
                 change_option="requested_date",
-                coupon_id="coupon_id",
             )
 
     @parametrize
@@ -2056,8 +2138,19 @@ class TestAsyncSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "end_date": parse_datetime("2019-12-27T18:11:19.117Z"),
                     "plan_phase_order": 0,
@@ -2155,8 +2248,19 @@ class TestAsyncSubscriptions:
                     "adjustment": {
                         "adjustment_type": "percentage_discount",
                         "percentage_discount": 0,
+                        "applies_to_all": True,
+                        "applies_to_item_ids": ["item_1", "item_2"],
                         "applies_to_price_ids": ["price_1", "price_2"],
+                        "currency": "currency",
+                        "filters": [
+                            {
+                                "field": "price_id",
+                                "operator": "includes",
+                                "values": ["string"],
+                            }
+                        ],
                         "is_invoice_level": True,
+                        "price_type": "usage",
                     },
                     "replaces_adjustment_id": "replaces_adjustment_id",
                 }

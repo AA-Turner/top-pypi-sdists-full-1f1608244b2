@@ -14,3 +14,18 @@ from .._impl import (
     api_rids_WorkspaceRid as WorkspaceRid,
 )
 
+__all__ = [
+    'AttachmentRid',
+    'AutomaticCheckEvaluationRid',
+    'ChunkRid',
+    'DataSourceRid',
+    'DatasetRid',
+    'EventRid',
+    'NominalDataSourceOrDatasetRid',
+    'NominalDataSourceRid',
+    'SegmentRid',
+    'VideoFileRid',
+    'VideoRid',
+    'WorkspaceRid',
+]
+

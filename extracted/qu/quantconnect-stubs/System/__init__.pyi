@@ -16902,7 +16902,7 @@ class NonSerializedAttribute(System.Attribute):
         ...
 
 
-class ArraySegment(typing.Generic[System_ArraySegment_T], System.Collections.Generic.IList[System_ArraySegment_T], System.Collections.Generic.IReadOnlyList[System_ArraySegment_T], typing.Iterable[System_ArraySegment_T]):
+class ArraySegment(typing.Generic[System_ArraySegment_T], System.Collections.Generic.IList[System_ArraySegment_T], typing.Iterable[System_ArraySegment_T]):
     """Delimits a section of a one-dimensional array."""
 
     class Enumerator(System.Collections.Generic.IEnumerator[System_ArraySegment_T]):

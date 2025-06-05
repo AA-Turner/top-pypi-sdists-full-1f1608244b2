@@ -1,37 +1,39 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: pyxero
-Version: 0.9.4
+Version: 0.9.5
 Summary: Python API for accessing the REST API of the Xero accounting tool.
-Home-page: http://github.com/freakboy3742/pyxero
-Author: Russell Keith-Magee
-Author-email: russell@keith-magee.com
-Maintainer: Russell Keith-Magee
-Maintainer-email: russell@keith-magee.com
-License: New BSD
+Author-email: Russell Keith-Magee <russell@keith-magee.com>
+Maintainer-email: Russell Keith-Magee <russell@keith-magee.com>
+License-Expression: BSD-3-Clause
+Project-URL: Homepage, https://github.com/freakboy3742/pyxero
+Project-URL: Tracker, https://github.com/freakboy3742/pyxero/issues
+Project-URL: Source, https://github.com/freakboy3742/pyxero
+Keywords: xero,api
 Classifier: Development Status :: 4 - Beta
 Classifier: Environment :: Web Environment
 Classifier: Intended Audience :: Financial and Insurance Industry
-Classifier: License :: OSI Approved :: BSD License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
 Classifier: Topic :: Office/Business :: Financial :: Accounting
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: requests<3,>=1.1.0
-Requires-Dist: requests-oauthlib<2,>=0.3.0
+Requires-Dist: requests-oauthlib<3,>=0.3.0
 Requires-Dist: python-dateutil<3,>=2.8
 Requires-Dist: PyJWT<3,>=1.6.4
 Requires-Dist: cryptography>=1.3.1
 Provides-Extra: dev
-Requires-Dist: pre-commit==3.0.2; extra == "dev"
-Requires-Dist: pytest==7.2.1; extra == "dev"
-Requires-Dist: pytest-tldr==0.2.5; extra == "dev"
-Requires-Dist: tox==4.4.2; extra == "dev"
+Requires-Dist: pre-commit==4.2.0; extra == "dev"
+Requires-Dist: pytest==8.3.5; extra == "dev"
+Requires-Dist: tox==4.26.0; extra == "dev"
+Dynamic: license-file
 
 PyXero
 ======
@@ -610,7 +612,7 @@ for normal operation of PyXero. It's only required for testing purposes.
 Once you've installed these dependencies, you can run the test suite by
 running the following from the root directory of the project:
 
-    $ python setup.py test
+    $ tox -e py
 
 If you find any problems with PyXero, you can log them on [Github Issues](https://github.com/freakboy3742/pyxero/issues).
 When reporting problems, it's extremely helpful if you can provide

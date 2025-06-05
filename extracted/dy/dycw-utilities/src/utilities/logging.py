@@ -23,7 +23,7 @@ from logging import (
 )
 from logging.handlers import BaseRotatingHandler, TimedRotatingFileHandler
 from pathlib import Path
-from re import Pattern, search
+from re import Pattern
 from sys import stdout
 from time import time
 from typing import (
@@ -160,13 +160,11 @@ class SizeAndTimeRotatingFileHandler(BaseRotatingHandler):
     def _should_rollover(self, record: LogRecord, /) -> bool:
         if self._max_bytes is not None:  # skipif-ci-and-windows
             try:
-                current = self._filename.stat().st_size
+                size = self._filename.stat().st_size
             except FileNotFoundError:
                 pass
             else:
-                delta = len(f"{self.format(record)}\n")
-                new = current + delta
-                if new >= self._max_bytes:
+                if size >= self._max_bytes:
                     return True
         return bool(self._time_handler.shouldRollover(record))  # skipif-ci-and-windows
 
@@ -417,16 +415,26 @@ def add_filters(handler: Handler, /, *filters: _FilterType) -> None:
 
 def basic_config(
     *,
-    format: str = "{asctime} | {name} | {levelname:8} | {message}",  # noqa: A002
+    logger: LoggerOrName | None = None,
+    format_: str = "{asctime} | {name} | {levelname:8} | {message}",
     level: LogLevel = "INFO",
 ) -> None:
     """Do the basic config."""
-    basicConfig(
-        format=format,
-        datefmt=maybe_sub_pct_y("%Y-%m-%d %H:%M:%S"),
-        style="{",
-        level=level,
-    )
+    datefmt = maybe_sub_pct_y("%Y-%m-%d %H:%M:%S")
+    if logger is None:
+        basicConfig(format=format_, datefmt=datefmt, style="{", level=level)
+    else:
+        logger_use = get_logger(logger=logger)
+        logger_use.setLevel(level)
+        logger_use.addHandler(handler := StreamHandler())
+        handler.setLevel(level)
+        try:
+            from coloredlogs import ColoredFormatter
+        except ModuleNotFoundError:  # pragma: no cover
+            formatter = Formatter(fmt=format_, datefmt=datefmt, style="{")
+        else:
+            formatter = ColoredFormatter(fmt=format_, datefmt=datefmt, style="{")
+        handler.setFormatter(formatter)
 
 
 ##
@@ -750,29 +758,6 @@ class _AdvancedLogRecord(LogRecord):
     def __init_subclass__(cls, *, time_zone: ZoneInfo, **kwargs: Any) -> None:
         cls.time_zone = time_zone.key  # skipif-ci-and-windows
         super().__init_subclass__(**kwargs)  # skipif-ci-and-windows
-
-    @override
-    def getMessage(self) -> str:
-        """Return the message for this LogRecord."""
-        msg = str(self.msg)  # pragma: no cover
-        if self.args:  # pragma: no cover
-            try:
-                return msg % self.args  # compability for 3rd party code
-            except ValueError as error:
-                if len(error.args) == 0:
-                    raise
-                first = error.args[0]
-                if search("unsupported format character", first):
-                    return msg.format(*self.args)
-                raise
-            except TypeError as error:
-                if len(error.args) == 0:
-                    raise
-                first = error.args[0]
-                if search("not all arguments converted", first):
-                    return msg.format(*self.args)
-                raise
-        return msg  # pragma: no cover
 
     @classmethod
     def get_now(cls) -> Any:

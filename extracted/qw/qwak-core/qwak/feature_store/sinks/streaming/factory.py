@@ -25,7 +25,7 @@ class StreamingSinkFactory:
     def get_streaming_sink(proto_streaming_sink: ProtoStreamingSink) -> BaseSink:
         sink_type = proto_streaming_sink.WhichOneof("sink_type")
 
-        auth_conf: BaseAuthentication  # noqa: F842
+        auth_conf: BaseAuthentication
         if sink_type == "kafka_sink":
             proto_kafka_sink: ProtoKafkaSink = proto_streaming_sink.kafka_sink
             auth_configuration: BaseAuthentication = cast(

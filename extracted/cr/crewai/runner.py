@@ -9,10 +9,10 @@ from crewai.agents.agent_adapters.langgraph.langgraph_adapter import (
     LangGraphAgentAdapter,
 )
 from crewai.agents.agent_adapters.openai_agents.openai_adapter import OpenAIAgentAdapter
-from src.crewai import Crew, Task
+from src.crewai import Crew, Task, Agent
 
 # Agents Defined
-code_helper_agent = OpenAIAgentAdapter(
+code_helper_agent = Agent(
     role="Code Helper",
     goal="Help users solve coding problems effectively and provide clear explanations.",
     backstory="You are an experienced programmer with deep knowledge across multiple programming languages and frameworks. You specialize in solving complex coding challenges and explaining solutions clearly.",

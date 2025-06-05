@@ -1,8 +1,8 @@
 Metadata-Version: 2.4
 Name: InvokeAI
-Version: 5.12.0
+Version: 5.13.0
 Summary: An implementation of Stable Diffusion which provides various new features and options to aid the image generation process
-Author-email: The InvokeAI Project <lincoln.stein@gmail.com>
+Author-email: Invoke <support@invoke.ai>
 License:                                  Apache License
                                    Version 2.0, January 2004
                                 http://www.apache.org/licenses/
@@ -186,18 +186,18 @@ Project-URL: Source, https://github.com/invoke-ai/InvokeAI/
 Project-URL: Bug Reports, https://github.com/invoke-ai/InvokeAI/issues
 Project-URL: Discord, https://discord.gg/ZmtBAhwWhy
 Keywords: stable-diffusion,AI
-Classifier: Development Status :: 4 - Beta
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: GPU
 Classifier: Environment :: GPU :: NVIDIA CUDA
 Classifier: Environment :: MacOS X
 Classifier: Intended Audience :: End Users/Desktop
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: MIT License
+Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Operating System :: POSIX :: Linux
 Classifier: Operating System :: MacOS
 Classifier: Operating System :: Microsoft :: Windows
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.12
 Classifier: Topic :: Artistic Software
 Classifier: Topic :: Internet :: WWW/HTTP :: WSGI :: Application
 Classifier: Topic :: Internet :: WWW/HTTP :: WSGI :: Server
@@ -211,7 +211,7 @@ License-File: LICENSE-SD1+SD2.txt
 License-File: LICENSE-SDXL.txt
 Requires-Dist: accelerate
 Requires-Dist: bitsandbytes; sys_platform != "darwin"
-Requires-Dist: compel==2.0.2
+Requires-Dist: compel==2.1.1
 Requires-Dist: diffusers[torch]==0.33.0
 Requires-Dist: gguf
 Requires-Dist: invisible-watermark==0.2.0
@@ -219,7 +219,7 @@ Requires-Dist: mediapipe==0.10.14
 Requires-Dist: numpy<2.0.0
 Requires-Dist: onnx==1.16.1
 Requires-Dist: onnxruntime==1.19.2
-Requires-Dist: opencv-python==4.9.0.80
+Requires-Dist: opencv-contrib-python
 Requires-Dist: safetensors
 Requires-Dist: sentencepiece
 Requires-Dist: spandrel

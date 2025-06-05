@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: deadline
-Version: 0.49.8
+Version: 0.50.1
 Summary: Multi-purpose library and command line tool that implements functionality to support applications using AWS Deadline Cloud.
 Project-URL: Homepage, https://github.com/aws-deadline/deadline-cloud
 Project-URL: Source, https://github.com/aws-deadline/deadline-cloud
@@ -27,12 +27,12 @@ Classifier: Topic :: Software Development :: Libraries
 Requires-Python: <3.14,>=3.8
 Requires-Dist: boto3>=1.36.8
 Requires-Dist: click>=8.1.7
-Requires-Dist: jsonschema==4.17.*
+Requires-Dist: jsonschema<5.0,>=4.17
+Requires-Dist: psutil>=7.0.0
 Requires-Dist: pywin32<311,>=307; sys_platform == 'win32'
 Requires-Dist: pyyaml>=6.0
 Requires-Dist: qtpy==2.4.*
-Requires-Dist: typing-extensions<4.14,>=4.7; python_version == '3.7'
-Requires-Dist: typing-extensions>=4.8; python_version > '3.7'
+Requires-Dist: typing-extensions>=4.8
 Requires-Dist: xxhash<3.6,>=3.4
 Provides-Extra: gui
 Requires-Dist: pyside6-essentials<6.10,>=6.6; extra == 'gui'
@@ -225,6 +225,42 @@ and removing them by logging out:
 ```sh
 $ deadline auth logout
 ```
+
+## AWS Credentials Integration
+
+You can use the Deadline Cloud client to obtain temporary AWS credentials for a queue and use them with the AWS CLI or SDK. This enables you to create AWS profiles that have queue-specific permissions for use in programmatic workflows.
+
+To export credentials for a queue in a format compatible with the AWS SDK credentials_process interface:
+
+```sh
+$ deadline queue export-credentials --farm-id farm-1234567890abcdefg --queue-id q-12345abcdef --mode USER
+{
+  "Version": 1,
+  "AccessKeyId": "ASIA...",
+  "SecretAccessKey": "wJalr...",
+  "SessionToken": "AQoD...",
+  "Expiration": "2025-04-08T20:00:46Z"
+}
+```
+
+You can then reference this command in your AWS config file to create a profile that uses these credentials. Often this will be a profile from a Deadline Cloud monitor session:
+
+```
+[profile deadline-queue]
+credential_process = deadline queue export-credentials --farm-id farm-1234567890abcdefg --queue-id q-12345abcdef --mode USER --profile myfarm-us-west-2
+region = us-west-2
+```
+
+Then use this profile with AWS CLI commands:
+
+```sh
+$ aws s3 ls --profile deadline-queue
+```
+
+Available modes:
+- `USER`: Credentials with full queue-role permissions.
+- `READ`: Credentials with read-only permissions for queue logs
+
 
 ## Code of Conduct
 

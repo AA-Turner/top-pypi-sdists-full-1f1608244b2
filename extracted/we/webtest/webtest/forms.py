@@ -432,7 +432,17 @@ class Form:
         fields = OrderedDict()
         field_order = []
         tags = ('input', 'select', 'textarea', 'button')
-        for pos, node in enumerate(self.html.find_all(tags)):
+        inner_elts = self.html.find_all(tags)
+        if self.id:
+            def _form_elt_filter(tag):
+                return tag.name in tags and any(
+                    prt.name == 'form' and prt.attrs.get('id') == self.id
+                    for prt in tag.parents
+                ) or tag.attrs.get('form') == self.id
+            elements = self.response.html.find_all(_form_elt_filter)
+        else:
+            elements = inner_elts
+        for pos, node in enumerate(elements):
             attrs = dict(node.attrs)
             tag = node.name
             name = None
@@ -496,7 +506,7 @@ class Form:
                     field.options.append(
                         (option.attrs.get('value', option.text),
                          'selected' in option.attrs,
-                         option.text))
+                         option.text.strip()))
 
         self.field_order = field_order
         self.fields = fields

@@ -114,7 +114,7 @@ async def to_tempfile(file: Union[UploadFile, str]):
 
         yield temp.name
 
-
+@retrying()
 async def to_url_fal(
         file: Union[str, bytes, List],
         filename: Optional[str] = None,

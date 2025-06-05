@@ -1,13 +1,12 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.3
 Name: sgqlc
-Version: 16.4
+Version: 16.5
 Summary: Simple GraphQL Client
-Home-page: http://github.com/profusion/sgqlc
 License: ISCL
 Keywords: graphql,client,http,endpoint
 Author: Gustavo Sverzut Barbieri
 Author-email: barbieri@profusion.mobi
-Requires-Python: >=3.8,<3.13
+Requires-Python: >=3.8,<4
 Classifier: Development Status :: 4 - Beta
 Classifier: Environment :: Console
 Classifier: Environment :: Web Environment
@@ -22,6 +21,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Utilities
 Provides-Extra: requests
 Provides-Extra: websocket
@@ -29,6 +29,7 @@ Requires-Dist: graphql-core (>=3.2.4,<4.0.0)
 Requires-Dist: requests ; extra == "requests"
 Requires-Dist: websocket-client ; extra == "websocket"
 Project-URL: Documentation, https://sgqlc.readthedocs.io/
+Project-URL: Homepage, http://github.com/profusion/sgqlc
 Project-URL: Repository, http://github.com/profusion/sgqlc
 Description-Content-Type: text/x-rst
 
@@ -541,7 +542,7 @@ Run the tests (one of the below):
 
 Keep 100% coverage. You can look at the coverage report at
 ``cover/index.html``.  To do that, prefer
-`doctest <https://docs.python.org/3.12/library/doctest.html>`_
+`doctest <https://docs.python.org/3.13/library/doctest.html>`_
 so it serves as
 both documentation and test. However we use
 `pytest <https://docs.pytest.org/>`_ to write explicit tests that would be

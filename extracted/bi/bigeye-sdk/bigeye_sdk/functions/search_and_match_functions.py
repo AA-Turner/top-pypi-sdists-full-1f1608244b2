@@ -83,6 +83,17 @@ def lines_match(search: str, content: str) -> bool:
     return is_match
 
 
+def update_for_namespace_is_none(search_line: str, content: List[str], matching_lines: Dict[int, str]) -> dict:
+    if namespace_not_in_file(content="".join(content)):
+        matching_lines[1] = search_line
+
+    return matching_lines
+
+
+def namespace_not_in_file(content: str) -> bool:
+    return re.search('namespace:', content) is None
+
+
 def is_only_comment(l: str) -> bool:
     p = re.compile(r'\s*#(.*)\s*#(.*)|#(.*)[^#]*')
     return re.fullmatch(p, l.strip()) is not None and not cleanse_line(l)
@@ -107,6 +118,16 @@ def search_lines_in_source_lines(
 
     search_line_matched_ix = 0
 
+    """Need a specific case for namespace when the key is not in the yaml file and that is the search line"""
+    if search_lines[0] == "namespace: None":
+        matching_lines = update_for_namespace_is_none(
+            search_line=search_lines[0], content=list(source_lines.values()), matching_lines=matching_lines
+        )
+
+    if matching_lines:
+        matching_lines_sets.append(matching_lines)
+
+
     def get_current_search_string():
         return search_lines[search_line_matched_ix]
 
@@ -116,7 +137,6 @@ def search_lines_in_source_lines(
             """for testing"""
             css = get_current_search_string()
 
-        # TODO: Look into multiline matching. Possibly with a list to add line by line.
         if lines_match(search=search_lines[0], content=line):
             "restarting when we find a line matching the first."
             matching_lines = {line_number: line}
@@ -134,11 +154,8 @@ def search_lines_in_source_lines(
             search_line_matched_ix = 0
             matching_lines = {}
 
-        if matching_lines and \
-                (len(matching_lines.keys()) == len(search_lines) or list(matching_lines.values())[0] in search_lines):
+        if matching_lines and len(matching_lines) == len(search_lines):
             "when the match line count is equal to search line count"
-            # if include_contains_search and any(a in b for a, b in zip(search_lines, matching_lines.values())):
-            #     matching_lines_sets.append(matching_lines)
             if any(lines_match(search=a, content=b)
                    for a, b in zip(search_lines, matching_lines.values())):
                 matching_lines_sets.append(matching_lines)

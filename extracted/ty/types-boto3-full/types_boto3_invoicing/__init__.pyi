@@ -12,19 +12,26 @@ Usage::
     from types_boto3_invoicing import (
         Client,
         InvoicingClient,
+        ListInvoiceSummariesPaginator,
         ListInvoiceUnitsPaginator,
     )
 
     session = Session()
     client: InvoicingClient = session.client("invoicing")
 
+    list_invoice_summaries_paginator: ListInvoiceSummariesPaginator = client.get_paginator("list_invoice_summaries")
     list_invoice_units_paginator: ListInvoiceUnitsPaginator = client.get_paginator("list_invoice_units")
     ```
 """
 
 from .client import InvoicingClient
-from .paginator import ListInvoiceUnitsPaginator
+from .paginator import ListInvoiceSummariesPaginator, ListInvoiceUnitsPaginator
 
 Client = InvoicingClient
 
-__all__ = ("Client", "InvoicingClient", "ListInvoiceUnitsPaginator")
+__all__ = (
+    "Client",
+    "InvoicingClient",
+    "ListInvoiceSummariesPaginator",
+    "ListInvoiceUnitsPaginator",
+)

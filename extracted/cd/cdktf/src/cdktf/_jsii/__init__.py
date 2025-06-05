@@ -31,7 +31,7 @@ def check_type(argname: str, value: object, expected_type: typing.Any) -> typing
 import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
-    "cdktf", "0.20.12", __name__[0:-6], "cdktf@0.20.12.jsii.tgz"
+    "cdktf", "0.21.0", __name__[0:-6], "cdktf@0.21.0.jsii.tgz"
 )
 
 __all__ = [

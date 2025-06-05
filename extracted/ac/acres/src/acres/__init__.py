@@ -69,7 +69,7 @@ class Loader:
 
         from acres import Loader
 
-        load_data = Loader(__spec__.name)
+        load_data = Loader(__spec__.name, list_contents=True)
 
     :class:`~Loader` objects implement the :func:`callable` interface
     and generate a docstring, and are intended to be treated and documented
@@ -106,36 +106,44 @@ class Loader:
 
         with as_file(files(other_package) / 'data') as pkgdata:
             func(pkgdata)
+
+    When creating a :class:`Loader` as a module attribute, it is frequently
+    useful for the docstring to list the contents of the package.
+    There is a slight cost to updating the docstring, so this is disabled by
+    default, for better performance in short-lived :class:`Loader` instances.
     """
 
-    def __init__(self, anchor: str | t.ModuleType):
+    def __init__(self, anchor: str | t.ModuleType, *, list_contents: bool = False):
         self._anchor = anchor
         # Allow class to have a different docstring from instances
-        self.__doc__ = self._doc()
+        self.__doc__ = self._doc(list_contents=list_contents)
 
-    def _doc(self) -> str:
+    def _doc(self, list_contents: bool) -> str:
         """Construct docstring for instances
 
-        Lists the public top-level paths inside the location, where
-        non-public means has a `.` or `_` prefix or is a 'tests'
-        directory.
+        Optionally lists the public top-level paths inside the location, where
+        non-public means has a `.` or `_` prefix or is a 'tests' directory.
         """
-        from ._compat import files
+        docstring = f'Load package files relative to ``{self._anchor}``.'
 
-        top_level = sorted(
-            f'{p.name}/' if p.is_dir() else p.name
-            for p in files(self._anchor).iterdir()
-            if p.name[0] not in ('.', '_') and p.name != 'tests'
-        )
-        doclines = [
-            f'Load package files relative to ``{self._anchor}``.',
-            '',
-            'This package contains the following (top-level) files/directories:',
-            '',
-            *(f'* ``{path}``' for path in top_level),
-        ]
+        if list_contents:
+            from ._compat import files
 
-        return '\n'.join(doclines)
+            top_level = sorted(
+                f'{p.name}/' if p.is_dir() else p.name
+                for p in files(self._anchor).iterdir()
+                if p.name[0] not in ('.', '_') and p.name != 'tests'
+            )
+            doclines = [
+                docstring,
+                '',
+                'This package contains the following (top-level) files/directories:',
+                '',
+                *(f'* ``{path}``' for path in top_level),
+            ]
+            docstring = '\n'.join(doclines)
+
+        return docstring
 
     def readable(self, *segments: str) -> t.Traversable:
         """Provide read access to a resource through a Path-like interface.

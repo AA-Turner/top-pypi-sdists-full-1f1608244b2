@@ -149,9 +149,9 @@ MODEL_PRICE = {
     "ideogram-ai/ideogram-v2": 0.2,
     "ideogram-ai/ideogram-v2-turbo": 0.1,
 
-    "imagen4": 0.05 * 2,
-    "flux-kontext-pro": 0.04 * 2,
-    "flux-kontext-max": 0.08 * 2,
+    "imagen4": 0.05 * 3,
+    "flux-kontext-pro": 0.04 * 3,
+    "flux-kontext-max": 0.08 * 3,
 
     "api-asr": 0.01,
     "api-stt": 0.01,
@@ -626,6 +626,7 @@ MODEL_RATIO = {
     "deepseek-r1-0528": 2,
     "deepseek-r1-250528": 2,
     "deepseek-r1-250528-qwen3-8b": 0.3,
+    "deepseek-r1-250528-think": 2,
 
     "deepseek-search": 1,
     'deepseek-r1-search': 2,
@@ -657,11 +658,14 @@ MODEL_RATIO = {
     "hunyuan-t1": 1,
     "hunyuan-t1-search": 1,
 
+    "hunyuan-r1-search": 2,
+
     "deepseek-r1-metasearch": 2,
     "meta-deepresearch": 2,
 
     # 豆包
     "doubao-1-5-ui-tars-250428": 1.75,
+    "ui-tars-72b": 1.75,
     "doubao-1-5-pro-32k": 0.4,
     "doubao-1-5-pro-32k-250115": 0.4,
     "doubao-1-5-pro-256k": 2.5,
@@ -679,9 +683,9 @@ MODEL_RATIO = {
     "doubao-pro-32k": 0.4,
     "doubao-pro-32k-character": 0.4,
     "doubao-pro-128k": 2.5,
-    "doubao-pro-256k": 5,
-    "doubao-1.5-pro-32k": 0.8 / 2,
-    "doubao-1.5-pro-256k": 5 / 2,
+    "doubao-pro-256k": 2.5,
+    "doubao-1.5-pro-32k": 0.4,
+    "doubao-1.5-pro-256k": 2.5,
 
     "doubao-1.5-vision-pro-32k": 1.5,
     "doubao-1.5-vision-pro-250328": 1.5,
@@ -901,6 +905,9 @@ MODEL_RATIO = {
     "o4-mini": 0.55,
     "gpt-image-1": 2.5,
 
+    "o3": 5,
+    "o3-2025-04-16": 5,
+
     # 硅基
     "llama-3.1-8b-instruct": 0.01,
     "meta-llama/Meta-Llama-3.1-8B-Instruct": 0.01,
@@ -1009,6 +1016,9 @@ COMPLETION_RATIO = {
     "o1-preview-2024-09-12": 4,
     "o3-mini": 4,
     "o4-mini": 4,
+
+    "o3": 4,
+    "o3-2025-04-16": 4,
 
     "gpt-4o-realtime-preview": 4,
     "gpt-4o-realtime-preview-2024-10-01": 4,
@@ -1178,22 +1188,22 @@ COMPLETION_RATIO = {
     "deepseek-ai/deepseek-vl2": 4,
 
     # 豆包
-    "doubao-1-5-ui-tars-250428": 4,
+    "doubao-1-5-ui-tars-250428": 3.43,
+    "ui-tars-72b": 4,
 
     "doubao-lite-128k": 3,
-    "doubao-lite-32k": 3,
+    "doubao-lite-32k": 2,
     "doubao-lite-32k-character": 3,
     "doubao-lite-4k": 3,
     "doubao-1.5-lite-32k": 2,
 
     "doubao-pro-4k": 3,
-    "doubao-pro-32k": 3,
-    "doubao-pro-32k-241215": 3,
+    "doubao-pro-32k": 2.5,
     "doubao-pro-32k-character": 3,
     "doubao-pro-128k": 3,
-    "doubao-pro-256k": 3,
-    "doubao-1.5-pro-32k": 3,
-    "doubao-1.5-pro-256k": 3,
+    "doubao-pro-256k": 1.8,
+    "doubao-1.5-pro-32k": 2.5,
+    "doubao-1.5-pro-256k": 1.8,
 
     "doubao-1.5-vision-pro-32k": 3,
     "doubao-1.5-vision-pro-250328": 3,
@@ -1205,7 +1215,7 @@ COMPLETION_RATIO = {
     "doubao-vision-pro-32k": 3,
 
     "doubao-1-5-pro-32k": 1.25,
-    "doubao-1-5-pro-32k-250115": 1.25,
+    "doubao-1-5-pro-32k-250115": 2.5,
     "doubao-1-5-pro-256k": 1.8,
     "doubao-1-5-pro-256k-250115": 1.8,
 
@@ -1236,6 +1246,7 @@ COMPLETION_RATIO = {
 
     "hunyuan-t1": 4,
     "hunyuan-t1-search": 4,
+    "hunyuan-r1-search": 4,
 
     "deepseek-r1-metasearch": 4,
     "meta-deepresearch": 4,
@@ -1252,6 +1263,7 @@ COMPLETION_RATIO = {
     "deepseek-r1-250120": 4,
     "deepseek-r1-0528": 4,
     "deepseek-r1-250528": 4,
+    "deepseek-r1-250528-think": 4,
 
     "deepseek-r1-250528-qwen3-8b": 4,
 
