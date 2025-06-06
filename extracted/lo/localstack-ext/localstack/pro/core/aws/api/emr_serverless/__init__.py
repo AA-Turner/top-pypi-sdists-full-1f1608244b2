@@ -7,6 +7,7 @@ from localstack.aws.api import RequestContext, ServiceException, ServiceRequest,
 ApplicationArn = str
 ApplicationId = str
 ApplicationName = str
+Arn = str
 AttemptNumber = int
 AutoStopConfigIdleTimeoutMinutesInteger = int
 Boolean = bool
@@ -38,6 +39,7 @@ LogStreamNamePrefix = str
 LogTypeString = str
 MemorySize = str
 NextToken = str
+PolicyDocument = str
 PrometheusUrlString = str
 Query = str
 ReleaseLabel = str
@@ -557,6 +559,19 @@ JobRunAttemptSummary = TypedDict(
     total=False,
 )
 JobRunAttempts = List[JobRunAttemptSummary]
+PolicyArnList = List[Arn]
+
+
+class JobRunExecutionIamPolicy(TypedDict, total=False):
+    """Optional IAM policy. The resulting job IAM role permissions will be an
+    intersection of the policies passed and the policy associated with your
+    job execution role.
+    """
+
+    policy: Optional[PolicyDocument]
+    policyArns: Optional[PolicyArnList]
+
+
 JobRunStateSet = List[JobRunState]
 JobRunSummary = TypedDict(
     "JobRunSummary",
@@ -641,6 +656,7 @@ class StartJobRunRequest(ServiceRequest):
     applicationId: ApplicationId
     clientToken: ClientToken
     executionRoleArn: IAMRoleArn
+    executionIamPolicy: Optional[JobRunExecutionIamPolicy]
     jobDriver: Optional[JobDriver]
     configurationOverrides: Optional[ConfigurationOverrides]
     tags: Optional[TagMap]
@@ -721,8 +737,8 @@ class EmrServerlessApi:
         :param job_run_id: The ID of the job run to cancel.
         :returns: CancelJobRunResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError
 
@@ -757,8 +773,8 @@ class EmrServerlessApi:
         application.
         :returns: CreateApplicationResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         :raises ConflictException:
         """
         raise NotImplementedError
@@ -773,8 +789,8 @@ class EmrServerlessApi:
         :param application_id: The ID of the application that will be deleted.
         :returns: DeleteApplicationResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError
 
@@ -787,8 +803,8 @@ class EmrServerlessApi:
         :param application_id: The ID of the application that will be described.
         :returns: GetApplicationResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError
 
@@ -798,8 +814,8 @@ class EmrServerlessApi:
         context: RequestContext,
         application_id: ApplicationId,
         job_run_id: JobRunId,
-        attempt: AttemptNumber = None,
-        access_system_profile_logs: Boolean = None,
+        attempt: AttemptNumber | None = None,
+        access_system_profile_logs: Boolean | None = None,
         **kwargs,
     ) -> GetDashboardForJobRunResponse:
         """Creates and returns a URL that you can use to access the application UIs
@@ -831,7 +847,7 @@ class EmrServerlessApi:
         context: RequestContext,
         application_id: ApplicationId,
         job_run_id: JobRunId,
-        attempt: AttemptNumber = None,
+        attempt: AttemptNumber | None = None,
         **kwargs,
     ) -> GetJobRunResponse:
         """Displays detailed information about a job run.
@@ -841,8 +857,8 @@ class EmrServerlessApi:
         :param attempt: An optimal parameter that indicates the amount of attempts for the job.
         :returns: GetJobRunResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError
 
@@ -850,9 +866,9 @@ class EmrServerlessApi:
     def list_applications(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: ListApplicationsRequestMaxResultsInteger = None,
-        states: ApplicationStateSet = None,
+        next_token: NextToken | None = None,
+        max_results: ListApplicationsRequestMaxResultsInteger | None = None,
+        states: ApplicationStateSet | None = None,
         **kwargs,
     ) -> ListApplicationsResponse:
         """Lists applications based on a set of parameters.
@@ -872,8 +888,8 @@ class EmrServerlessApi:
         context: RequestContext,
         application_id: ApplicationId,
         job_run_id: JobRunId,
-        next_token: NextToken = None,
-        max_results: ListJobRunAttemptsRequestMaxResultsInteger = None,
+        next_token: NextToken | None = None,
+        max_results: ListJobRunAttemptsRequestMaxResultsInteger | None = None,
         **kwargs,
     ) -> ListJobRunAttemptsResponse:
         """Lists all attempt of a job run.
@@ -884,8 +900,8 @@ class EmrServerlessApi:
         :param max_results: The maximum number of job run attempts to list.
         :returns: ListJobRunAttemptsResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError
 
@@ -894,12 +910,12 @@ class EmrServerlessApi:
         self,
         context: RequestContext,
         application_id: ApplicationId,
-        next_token: NextToken = None,
-        max_results: ListJobRunsRequestMaxResultsInteger = None,
-        created_at_after: Date = None,
-        created_at_before: Date = None,
-        states: JobRunStateSet = None,
-        mode: JobRunMode = None,
+        next_token: NextToken | None = None,
+        max_results: ListJobRunsRequestMaxResultsInteger | None = None,
+        created_at_after: Date | None = None,
+        created_at_before: Date | None = None,
+        states: JobRunStateSet | None = None,
+        mode: JobRunMode | None = None,
         **kwargs,
     ) -> ListJobRunsResponse:
         """Lists job runs based on a set of parameters.
@@ -927,8 +943,8 @@ class EmrServerlessApi:
         tags for.
         :returns: ListTagsForResourceResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError
 
@@ -942,8 +958,8 @@ class EmrServerlessApi:
         :param application_id: The ID of the application to start.
         :returns: StartApplicationResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         :raises ServiceQuotaExceededException:
         """
         raise NotImplementedError
@@ -955,13 +971,14 @@ class EmrServerlessApi:
         application_id: ApplicationId,
         client_token: ClientToken,
         execution_role_arn: IAMRoleArn,
-        job_driver: JobDriver = None,
-        configuration_overrides: ConfigurationOverrides = None,
-        tags: TagMap = None,
-        execution_timeout_minutes: Duration = None,
-        name: String256 = None,
-        mode: JobRunMode = None,
-        retry_policy: RetryPolicy = None,
+        execution_iam_policy: JobRunExecutionIamPolicy | None = None,
+        job_driver: JobDriver | None = None,
+        configuration_overrides: ConfigurationOverrides | None = None,
+        tags: TagMap | None = None,
+        execution_timeout_minutes: Duration | None = None,
+        name: String256 | None = None,
+        mode: JobRunMode | None = None,
+        retry_policy: RetryPolicy | None = None,
         **kwargs,
     ) -> StartJobRunResponse:
         """Starts a job run.
@@ -969,6 +986,7 @@ class EmrServerlessApi:
         :param application_id: The ID of the application on which to run the job.
         :param client_token: The client idempotency token of the job run to start.
         :param execution_role_arn: The execution role ARN for the job run.
+        :param execution_iam_policy: You can pass an optional IAM policy.
         :param job_driver: The job driver for the job run.
         :param configuration_overrides: The configuration overrides for the job run.
         :param tags: The tags assigned to the job run.
@@ -995,8 +1013,8 @@ class EmrServerlessApi:
         :param application_id: The ID of the application to stop.
         :returns: StopApplicationResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError
 
@@ -1016,8 +1034,8 @@ class EmrServerlessApi:
         :param tags: The tags to add to the resource.
         :returns: TagResourceResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError
 
@@ -1032,8 +1050,8 @@ class EmrServerlessApi:
         :param tag_keys: The keys of the tags to be removed.
         :returns: UntagResourceResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError
 
@@ -1043,19 +1061,19 @@ class EmrServerlessApi:
         context: RequestContext,
         application_id: ApplicationId,
         client_token: ClientToken,
-        initial_capacity: InitialCapacityConfigMap = None,
-        maximum_capacity: MaximumAllowedResources = None,
-        auto_start_configuration: AutoStartConfig = None,
-        auto_stop_configuration: AutoStopConfig = None,
-        network_configuration: NetworkConfiguration = None,
-        architecture: Architecture = None,
-        image_configuration: ImageConfigurationInput = None,
-        worker_type_specifications: WorkerTypeSpecificationInputMap = None,
-        interactive_configuration: InteractiveConfiguration = None,
-        release_label: ReleaseLabel = None,
-        runtime_configuration: ConfigurationList = None,
-        monitoring_configuration: MonitoringConfiguration = None,
-        scheduler_configuration: SchedulerConfiguration = None,
+        initial_capacity: InitialCapacityConfigMap | None = None,
+        maximum_capacity: MaximumAllowedResources | None = None,
+        auto_start_configuration: AutoStartConfig | None = None,
+        auto_stop_configuration: AutoStopConfig | None = None,
+        network_configuration: NetworkConfiguration | None = None,
+        architecture: Architecture | None = None,
+        image_configuration: ImageConfigurationInput | None = None,
+        worker_type_specifications: WorkerTypeSpecificationInputMap | None = None,
+        interactive_configuration: InteractiveConfiguration | None = None,
+        release_label: ReleaseLabel | None = None,
+        runtime_configuration: ConfigurationList | None = None,
+        monitoring_configuration: MonitoringConfiguration | None = None,
+        scheduler_configuration: SchedulerConfiguration | None = None,
         **kwargs,
     ) -> UpdateApplicationResponse:
         """Updates a specified application. An application has to be in a stopped
@@ -1084,7 +1102,7 @@ class EmrServerlessApi:
         application.
         :returns: UpdateApplicationResponse
         :raises ValidationException:
-        :raises ResourceNotFoundException:
         :raises InternalServerException:
+        :raises ResourceNotFoundException:
         """
         raise NotImplementedError

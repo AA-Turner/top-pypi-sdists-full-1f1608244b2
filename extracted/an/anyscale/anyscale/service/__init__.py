@@ -110,6 +110,7 @@ class ServiceSDK:
     )
     def terminate(  # noqa: F811
         self,
+        id: Optional[str] = None,  # noqa: A002
         name: Optional[str] = None,
         *,
         cloud: Optional[str] = None,
@@ -121,7 +122,9 @@ class ServiceSDK:
 
         Returns the id of the terminated service.
         """
-        return self._private_sdk.terminate(name=name, cloud=cloud, project=project)
+        return self._private_sdk.terminate(
+            id=id, name=name, cloud=cloud, project=project
+        )
 
     @sdk_docs(
         doc_py_example=_ARCHIVE_EXAMPLE, arg_docstrings=_ARCHIVE_ARG_DOCSTRINGS,

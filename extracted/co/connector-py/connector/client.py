@@ -10,7 +10,7 @@ from .oai.capability import (
     get_settings,
     get_token_auth,
 )
-from .utils.client_utils import create_client_response
+from .utils.client_utils import EndpointsBase, create_client_response
 from .utils.httpx_auth import BearerAuth
 from .utils.jwt_utils import sign_jwt
 from .utils.pagination import NextPageTokenInterface, PaginationBase, create_next_page_token
@@ -34,4 +34,5 @@ __all__ = [
     "NextPageTokenInterface",
     "PaginationBase",
     "create_next_page_token",
+    "EndpointsBase",
 ]

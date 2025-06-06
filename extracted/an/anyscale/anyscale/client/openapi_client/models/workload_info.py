@@ -36,17 +36,21 @@ class WorkloadInfo(object):
         'workload_name': 'str',
         'workload_type': 'str',
         'workload_start_time': 'datetime',
-        'workload_cloud': 'str'
+        'workload_cloud': 'str',
+        'workload_project': 'str',
+        'workload_creator': 'str'
     }
 
     attribute_map = {
         'workload_name': 'workload_name',
         'workload_type': 'workload_type',
         'workload_start_time': 'workload_start_time',
-        'workload_cloud': 'workload_cloud'
+        'workload_cloud': 'workload_cloud',
+        'workload_project': 'workload_project',
+        'workload_creator': 'workload_creator'
     }
 
-    def __init__(self, workload_name=None, workload_type=None, workload_start_time=None, workload_cloud=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, workload_name=None, workload_type=None, workload_start_time=None, workload_cloud=None, workload_project='', workload_creator='', local_vars_configuration=None):  # noqa: E501
         """WorkloadInfo - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -56,12 +60,18 @@ class WorkloadInfo(object):
         self._workload_type = None
         self._workload_start_time = None
         self._workload_cloud = None
+        self._workload_project = None
+        self._workload_creator = None
         self.discriminator = None
 
         self.workload_name = workload_name
         self.workload_type = workload_type
         self.workload_start_time = workload_start_time
         self.workload_cloud = workload_cloud
+        if workload_project is not None:
+            self.workload_project = workload_project
+        if workload_creator is not None:
+            self.workload_creator = workload_creator
 
     @property
     def workload_name(self):
@@ -162,6 +172,52 @@ class WorkloadInfo(object):
             raise ValueError("Invalid value for `workload_cloud`, must not be `None`")  # noqa: E501
 
         self._workload_cloud = workload_cloud
+
+    @property
+    def workload_project(self):
+        """Gets the workload_project of this WorkloadInfo.  # noqa: E501
+
+        The project of the workload.  # noqa: E501
+
+        :return: The workload_project of this WorkloadInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._workload_project
+
+    @workload_project.setter
+    def workload_project(self, workload_project):
+        """Sets the workload_project of this WorkloadInfo.
+
+        The project of the workload.  # noqa: E501
+
+        :param workload_project: The workload_project of this WorkloadInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._workload_project = workload_project
+
+    @property
+    def workload_creator(self):
+        """Gets the workload_creator of this WorkloadInfo.  # noqa: E501
+
+        The creator of the workload.  # noqa: E501
+
+        :return: The workload_creator of this WorkloadInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._workload_creator
+
+    @workload_creator.setter
+    def workload_creator(self, workload_creator):
+        """Sets the workload_creator of this WorkloadInfo.
+
+        The creator of the workload.  # noqa: E501
+
+        :param workload_creator: The workload_creator of this WorkloadInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._workload_creator = workload_creator
 
     def to_dict(self):
         """Returns the model properties as a dict"""

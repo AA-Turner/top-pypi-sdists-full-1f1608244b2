@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: skypilot-nightly
-Version: 1.0.0.dev20250604
+Version: 1.0.0.dev20250605
 Summary: SkyPilot: Run AI on Any Infra — Unified, Faster, Cheaper.
 Author: SkyPilot Team
 License: Apache 2.0
@@ -49,6 +49,8 @@ Requires-Dist: httpx
 Requires-Dist: setproctitle
 Requires-Dist: sqlalchemy
 Requires-Dist: psycopg2-binary
+Requires-Dist: casbin
+Requires-Dist: sqlalchemy_adapter
 Provides-Extra: aws
 Requires-Dist: awscli>=1.27.10; extra == "aws"
 Requires-Dist: botocore>=1.29.10; extra == "aws"

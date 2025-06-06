@@ -2025,9 +2025,9 @@ class OrganizationsApi:
         context: RequestContext,
         email: Email,
         account_name: CreateAccountName,
-        role_name: RoleName = None,
-        iam_user_access_to_billing: IAMUserAccessToBilling = None,
-        tags: Tags = None,
+        role_name: RoleName | None = None,
+        iam_user_access_to_billing: IAMUserAccessToBilling | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateAccountResponse:
         """Creates an Amazon Web Services account that is automatically a member of
@@ -2137,9 +2137,9 @@ class OrganizationsApi:
         context: RequestContext,
         email: Email,
         account_name: CreateAccountName,
-        role_name: RoleName = None,
-        iam_user_access_to_billing: IAMUserAccessToBilling = None,
-        tags: Tags = None,
+        role_name: RoleName | None = None,
+        iam_user_access_to_billing: IAMUserAccessToBilling | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateGovCloudAccountResponse:
         """This action is available if all of the following are true:
@@ -2297,7 +2297,7 @@ class OrganizationsApi:
 
     @handler("CreateOrganization")
     def create_organization(
-        self, context: RequestContext, feature_set: OrganizationFeatureSet = None, **kwargs
+        self, context: RequestContext, feature_set: OrganizationFeatureSet | None = None, **kwargs
     ) -> CreateOrganizationResponse:
         """Creates an Amazon Web Services organization. The account whose user is
         calling the ``CreateOrganization`` operation automatically becomes the
@@ -2336,7 +2336,7 @@ class OrganizationsApi:
         context: RequestContext,
         parent_id: ParentId,
         name: OrganizationalUnitName,
-        tags: Tags = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateOrganizationalUnitResponse:
         """Creates an organizational unit (OU) within a root or parent OU. An OU is
@@ -2613,7 +2613,7 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         policy_type: EffectivePolicyType,
-        target_id: PolicyTargetId = None,
+        target_id: PolicyTargetId | None = None,
         **kwargs,
     ) -> DescribeEffectivePolicyResponse:
         """Returns the contents of the effective policy for specified policy type
@@ -3072,8 +3072,8 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         target: HandshakeParty,
-        notes: HandshakeNotes = None,
-        tags: Tags = None,
+        notes: HandshakeNotes | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> InviteAccountToOrganizationResponse:
         """Sends an invitation to another account to join your organization as a
@@ -3205,8 +3205,8 @@ class OrganizationsApi:
     def list_aws_service_access_for_organization(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListAWSServiceAccessForOrganizationResponse:
         """Returns a list of the Amazon Web Services services that you enabled to
@@ -3243,8 +3243,8 @@ class OrganizationsApi:
     def list_accounts(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListAccountsResponse:
         """Lists all the accounts in the organization. To request only the accounts
@@ -3279,8 +3279,8 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         parent_id: ParentId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListAccountsForParentResponse:
         """Lists the accounts in an organization that are contained by the
@@ -3322,8 +3322,8 @@ class OrganizationsApi:
         context: RequestContext,
         parent_id: ParentId,
         child_type: ChildType,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListChildrenResponse:
         """Lists all of the organizational units (OUs) or accounts that are
@@ -3362,9 +3362,9 @@ class OrganizationsApi:
     def list_create_account_status(
         self,
         context: RequestContext,
-        states: CreateAccountStates = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        states: CreateAccountStates | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListCreateAccountStatusResponse:
         """Lists the account creation requests that match the specified status that
@@ -3399,9 +3399,9 @@ class OrganizationsApi:
     def list_delegated_administrators(
         self,
         context: RequestContext,
-        service_principal: ServicePrincipal = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        service_principal: ServicePrincipal | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListDelegatedAdministratorsResponse:
         """Lists the Amazon Web Services accounts that are designated as delegated
@@ -3432,8 +3432,8 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         account_id: AccountId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListDelegatedServicesForAccountResponse:
         """List the Amazon Web Services services for which the specified account is
@@ -3466,9 +3466,9 @@ class OrganizationsApi:
     def list_handshakes_for_account(
         self,
         context: RequestContext,
-        filter: HandshakeFilter = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        filter: HandshakeFilter | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListHandshakesForAccountResponse:
         """Lists the current handshakes that are associated with the account of the
@@ -3505,9 +3505,9 @@ class OrganizationsApi:
     def list_handshakes_for_organization(
         self,
         context: RequestContext,
-        filter: HandshakeFilter = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        filter: HandshakeFilter | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListHandshakesForOrganizationResponse:
         """Lists the handshakes that are associated with the organization that the
@@ -3550,8 +3550,8 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         parent_id: ParentId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListOrganizationalUnitsForParentResponse:
         """Lists the organizational units (OUs) in a parent organizational unit or
@@ -3588,8 +3588,8 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         child_id: ChildId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListParentsResponse:
         """Lists the root or organizational units (OUs) that serve as the immediate
@@ -3630,8 +3630,8 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         filter: PolicyType,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPoliciesResponse:
         """Retrieves the list of all policies in an organization of a specified
@@ -3668,8 +3668,8 @@ class OrganizationsApi:
         context: RequestContext,
         target_id: PolicyTargetId,
         filter: PolicyType,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPoliciesForTargetResponse:
         """Lists the policies that are directly attached to the specified target
@@ -3708,8 +3708,8 @@ class OrganizationsApi:
     def list_roots(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListRootsResponse:
         """Lists the roots that are defined in the current organization.
@@ -3749,7 +3749,7 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         resource_id: TaggableResourceId,
-        next_token: NextToken = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTagsForResourceResponse:
         """Lists tags that are attached to the specified resource.
@@ -3786,8 +3786,8 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         policy_id: PolicyId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListTargetsForPolicyResponse:
         """Lists all the roots, organizational units (OUs), and accounts that the
@@ -3855,7 +3855,11 @@ class OrganizationsApi:
 
     @handler("PutResourcePolicy")
     def put_resource_policy(
-        self, context: RequestContext, content: ResourcePolicyContent, tags: Tags = None, **kwargs
+        self,
+        context: RequestContext,
+        content: ResourcePolicyContent,
+        tags: Tags | None = None,
+        **kwargs,
     ) -> PutResourcePolicyResponse:
         """Creates or updates a resource policy.
 
@@ -4041,7 +4045,7 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         organizational_unit_id: OrganizationalUnitId,
-        name: OrganizationalUnitName = None,
+        name: OrganizationalUnitName | None = None,
         **kwargs,
     ) -> UpdateOrganizationalUnitResponse:
         """Renames the specified organizational unit (OU). The ID and ARN don't
@@ -4070,9 +4074,9 @@ class OrganizationsApi:
         self,
         context: RequestContext,
         policy_id: PolicyId,
-        name: PolicyName = None,
-        description: PolicyDescription = None,
-        content: PolicyContent = None,
+        name: PolicyName | None = None,
+        description: PolicyDescription | None = None,
+        content: PolicyContent | None = None,
         **kwargs,
     ) -> UpdatePolicyResponse:
         """Updates an existing policy with a new name, description, or content. If

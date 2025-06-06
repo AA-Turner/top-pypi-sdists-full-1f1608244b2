@@ -119,7 +119,6 @@ ALL_MODULES = [
             "get_default_project": None,
             "get_project": None,
             "search_projects": None,
-            "update_project": None,
         },
         legacy_sdk_models=[
             "CreateProject",
@@ -127,7 +126,6 @@ ALL_MODULES = [
             "ProjectListResponse",
             "ProjectResponse",
             "ProjectsQuery",
-            "UpdateProject",
         ],
     ),
     Module(
@@ -167,7 +165,6 @@ ALL_MODULES = [
         legacy_sdk_commands={
             "create_job": anyscale.job.submit,
             "get_production_job": anyscale.job.status,
-            "get_session_for_job": anyscale.job.status,
             "terminate_job": anyscale.job.terminate,
             "fetch_job_logs": anyscale.job.get_logs,
             "fetch_production_job_logs": anyscale.job.get_logs,
@@ -392,31 +389,26 @@ ALL_MODULES = [
             cluster_env_commands.list,
         ],
         legacy_sdk_commands={
-            "get_cluster_environment_build_operation": None,
             "create_byod_cluster_environment_build": anyscale.image.build,
             "create_cluster_environment_build": anyscale.image.build,
             "find_cluster_environment_build_by_identifier": None,
             "get_cluster_environment_build": None,
-            "get_cluster_environment_build_logs": None,
             "get_default_cluster_environment_build": None,
             "list_cluster_environment_builds": None,
             "create_byod_cluster_environment": anyscale.image.build,
             "create_cluster_environment": anyscale.image.build,
-            "delete_cluster_environment": None,
             "get_cluster_environment": None,
             "search_cluster_environments": None,
         },
         legacy_sdk_models=[
             "ClusterEnvironment",
             "ClusterEnvironmentBuild",
-            "ClusterEnvironmentBuildLogResponse",
             "ClusterEnvironmentBuildOperation",
             "ClusterEnvironmentBuildStatus",
             "ClusterEnvironmentsQuery",
             "ClusterenvironmentListResponse",
             "ClusterenvironmentResponse",
             "ClusterenvironmentbuildListResponse",
-            "ClusterenvironmentbuildlogresponseResponse",
             "ClusterenvironmentbuildoperationResponse",
             "CreateBYODClusterEnvironment",
             "CreateBYODClusterEnvironmentBuild",
@@ -461,12 +453,9 @@ ALL_MODULES = [
         cli_command_group_prefix={cloud_commands.cloud_config_update: "config"},
         legacy_sdk_commands={
             # limited support, no replacement yet
-            "create_cloud": None,
-            "delete_cloud": None,
             "get_cloud": None,
             "get_default_cloud": None,
             "search_clouds": None,
-            "update_cloud": None,
         },
         legacy_sdk_models=[
             "Cloud",
@@ -479,8 +468,6 @@ ALL_MODULES = [
             "CloudTypes",
             "CloudVersion",
             "CloudsQuery",
-            "CreateCloud",
-            "UpdateCloud",
         ],
     ),
     Module(
@@ -560,7 +547,6 @@ ALL_MODULES = [
         legacy_sdk_commands={
             "launch_cluster": None,
             "launch_cluster_with_new_cluster_environment": None,
-            "archive_cluster": None,
             "create_cluster": None,
             "delete_cluster": None,
             "get_cluster": None,
@@ -678,7 +664,6 @@ ALL_MODULES = [
             machine_commands.list_machines,
         ],
         legacy_sdk_commands={
-            "get_organization_temporary_object_storage_credentials": None,
             "partial_update_organization": None,
             "upsert_sso_config": None,
             "upsert_test_sso_config": None,
@@ -698,9 +683,6 @@ ALL_MODULES = [
             "IdleTerminationStatus",
             "ListResponseMetadata",
             "NodeType",
-            "ObjectStorageConfig",
-            "ObjectStorageConfigS3",
-            "ObjectstorageconfigResponse",
             "OperationError",
             "OperationProgress",
             "OperationResult",

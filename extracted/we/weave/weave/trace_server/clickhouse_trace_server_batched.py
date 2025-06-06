@@ -705,6 +705,7 @@ class ClickHouseTraceServer(tsi.TraceServerInterface):
             wb_user_id=req.obj.wb_user_id,
             kind=get_kind(processed_val),
             base_object_class=processed_result["base_object_class"],
+            leaf_object_class=processed_result["leaf_object_class"],
             refs=extract_refs_from_values(processed_val),
             val_dump=json_val,
             digest=digest,
@@ -754,6 +755,10 @@ class ClickHouseTraceServer(tsi.TraceServerInterface):
             if req.filter.base_object_classes:
                 object_query_builder.add_base_object_classes_condition(
                     req.filter.base_object_classes
+                )
+            if req.filter.leaf_object_classes:
+                object_query_builder.add_leaf_object_classes_condition(
+                    req.filter.leaf_object_classes
                 )
         if req.limit is not None:
             object_query_builder.set_limit(req.limit)
@@ -807,6 +812,7 @@ class ClickHouseTraceServer(tsi.TraceServerInterface):
                     val_dump=obj.val_dump,
                     refs=obj.refs,
                     base_object_class=obj.base_object_class,
+                    leaf_object_class=obj.leaf_object_class,
                     deleted_at=now,
                     wb_user_id=obj.wb_user_id,
                     # Keep the original created_at timestamp
@@ -2403,6 +2409,7 @@ def _ch_obj_to_obj_schema(ch_obj: SelectableCHObjSchema) -> tsi.ObjSchema:
         digest=ch_obj.digest,
         kind=ch_obj.kind,
         base_object_class=ch_obj.base_object_class,
+        leaf_object_class=ch_obj.leaf_object_class,
         val=json.loads(ch_obj.val_dump),
         size_bytes=ch_obj.size_bytes,
     )
@@ -2812,6 +2819,18 @@ def _setup_completion_model_info(
                 f"No API key {secret_name} found for model {model_name}",
                 api_key_name=secret_name,
             )
+    elif model_name.startswith("coreweave/"):
+        # See https://docs.litellm.ai/docs/providers/openai_compatible
+        # but ignore the bit about omitting the /v1 because it is actually necessary
+        req.inputs.model = "openai/" + model_name.split("/")[1]
+        provider = "custom"
+        base_url = "https://infr.cw4637-staging.coreweave.app/v1"
+        # The API key should have been passed in as an extra header.
+        if req.inputs.extra_headers:
+            api_key = req.inputs.extra_headers.pop("api_key", None)
+            extra_headers = req.inputs.extra_headers
+            req.inputs.extra_headers = None
+        return_type = "openai"
     else:
         # Custom provider path
         custom_provider_info = get_custom_provider_info(

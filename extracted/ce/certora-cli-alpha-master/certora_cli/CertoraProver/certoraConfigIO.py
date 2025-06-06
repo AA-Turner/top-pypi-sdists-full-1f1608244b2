@@ -17,6 +17,7 @@ import json5
 import logging
 from pathlib import Path
 from typing import Dict, Any
+from collections import OrderedDict
 
 import CertoraProver.certoraContext as Ctx
 import CertoraProver.certoraContextAttributes as Attrs
@@ -75,7 +76,7 @@ def read_from_conf_file(context: CertoraContext) -> None:
 
     try:
         with conf_file_path.open() as conf_file:
-            context.conf_file_attr = json5.load(conf_file, allow_duplicate_keys=False)
+            context.conf_file_attr = json5.load(conf_file, allow_duplicate_keys=False, object_pairs_hook=OrderedDict)
             try:
                 check_conf_content(context)
             except Util.CertoraUserInputError as e:

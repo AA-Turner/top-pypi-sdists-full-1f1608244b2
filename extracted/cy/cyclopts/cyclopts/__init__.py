@@ -1,5 +1,5 @@
 # Don't manually change, let poetry-dynamic-versioning handle it.
-__version__ = "3.16.2"
+__version__ = "3.17.0"
 
 __all__ = [
     "App",
@@ -8,6 +8,7 @@ __all__ = [
     "ArgumentOrderError",
     "Token",
     "CoercionError",
+    "CombinedShortOptionError",
     "CommandCollisionError",
     "CycloptsError",
     "CycloptsPanel",
@@ -45,6 +46,7 @@ from cyclopts.core import App, run
 from cyclopts.exceptions import (
     ArgumentOrderError,
     CoercionError,
+    CombinedShortOptionError,
     CommandCollisionError,
     CycloptsError,
     DocstringError,

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: interpret-core
-Version: 0.6.10
+Version: 0.6.11
 Summary: Fit interpretable models. Explain blackbox machine learning.
 Home-page: https://github.com/interpretml/interpret
 Author: The InterpretML Contributors
@@ -26,6 +26,11 @@ Requires-Dist: ipykernel>=4.10.0; extra == "notebook"
 Requires-Dist: ipython>=5.5.0; extra == "notebook"
 Provides-Extra: plotly
 Requires-Dist: plotly>=3.8.1; extra == "plotly"
+Provides-Extra: excel
+Requires-Dist: Xlsxwriter>=3.0.1; extra == "excel"
+Requires-Dist: dotsi>=0.0.3; extra == "excel"
+Requires-Dist: seaborn>=0.13.2; extra == "excel"
+Requires-Dist: matplotlib>=3.9.1; extra == "excel"
 Provides-Extra: lime
 Requires-Dist: lime>=0.1.1.33; extra == "lime"
 Provides-Extra: sensitivity
@@ -41,10 +46,7 @@ Requires-Dist: treeinterpreter>=0.2.2; extra == "treeinterpreter"
 Provides-Extra: aplr
 Requires-Dist: aplr>=10.6.1; extra == "aplr"
 Provides-Extra: dash
-Requires-Dist: dash<3.0.0,>=1.0.0; extra == "dash"
-Requires-Dist: dash-core-components>=1.0.0; extra == "dash"
-Requires-Dist: dash-html-components>=1.0.0; extra == "dash"
-Requires-Dist: dash-table>=4.1.0; extra == "dash"
+Requires-Dist: dash<3.0.0,>=2.0.0; extra == "dash"
 Requires-Dist: dash-cytoscape>=0.1.1; extra == "dash"
 Requires-Dist: gevent>=1.3.6; extra == "dash"
 Requires-Dist: requests>=2.19.0; extra == "dash"

@@ -70,6 +70,7 @@ DatabrewConditionValue = str
 Description = str
 DescriptionString = str
 DescriptionStringRemovable = str
+DisplayName = str
 Double = float
 DoubleValue = float
 EnclosedInStringProperty = str
@@ -148,6 +149,7 @@ NullableBoolean = bool
 NullableDouble = float
 NullableInteger = int
 NullableString = str
+NumberTargetPartitionsString = str
 Operation = str
 OptionKey = str
 OptionValue = str
@@ -224,10 +226,12 @@ TypeString = str
 URI = str
 UpdatedTimestamp = str
 UriString = str
+UrlString = str
 UserManagedClientApplicationClientId = str
 UserManagedClientApplicationClientSecret = str
 Username = str
 ValueString = str
+Vendor = str
 VersionString = str
 VersionsString = str
 ViewDialectVersionString = str
@@ -672,6 +676,17 @@ class HudiTargetCompressionType(StrEnum):
     snappy = "snappy"
 
 
+class HyperTargetCompressionType(StrEnum):
+    uncompressed = "uncompressed"
+
+
+class IcebergTargetCompressionType(StrEnum):
+    gzip = "gzip"
+    lzo = "lzo"
+    uncompressed = "uncompressed"
+    snappy = "snappy"
+
+
 class InclusionAnnotationValue(StrEnum):
     INCLUDE = "INCLUDE"
     EXCLUDE = "EXCLUDE"
@@ -830,6 +845,8 @@ class ParquetCompressionType(StrEnum):
     snappy = "snappy"
     lzo = "lzo"
     gzip = "gzip"
+    brotli = "brotli"
+    lz4 = "lz4"
     uncompressed = "uncompressed"
     none = "none"
 
@@ -1050,6 +1067,9 @@ class TargetFormat(StrEnum):
     parquet = "parquet"
     hudi = "hudi"
     delta = "delta"
+    iceberg = "iceberg"
+    hyper = "hyper"
+    xml = "xml"
 
 
 class TaskRunSortColumnType(StrEnum):
@@ -2791,6 +2811,7 @@ class S3DeltaDirectTarget(TypedDict, total=False):
     PartitionKeys: Optional[GlueStudioPathList]
     Path: EnclosedInStringProperty
     Compression: DeltaTargetCompressionType
+    NumberTargetPartitions: Optional[NumberTargetPartitionsString]
     Format: TargetFormat
     AdditionalOptions: Optional[AdditionalOptions]
     SchemaChangePolicy: Optional[DirectSchemaChangePolicy]
@@ -2881,6 +2902,7 @@ class S3HudiDirectTarget(TypedDict, total=False):
     Inputs: OneInput
     Path: EnclosedInStringProperty
     Compression: HudiTargetCompressionType
+    NumberTargetPartitions: Optional[NumberTargetPartitionsString]
     PartitionKeys: Optional[GlueStudioPathList]
     Format: TargetFormat
     AdditionalOptions: AdditionalOptions
@@ -3446,6 +3468,20 @@ class SelectFields(TypedDict, total=False):
     Paths: GlueStudioPathList
 
 
+class S3IcebergDirectTarget(TypedDict, total=False):
+    """Specifies a target that writes to an Iceberg data source in Amazon S3."""
+
+    Name: NodeName
+    Inputs: OneInput
+    PartitionKeys: Optional[GlueStudioPathList]
+    Path: EnclosedInStringProperty
+    Format: TargetFormat
+    AdditionalOptions: Optional[AdditionalOptions]
+    SchemaChangePolicy: Optional[DirectSchemaChangePolicy]
+    Compression: IcebergTargetCompressionType
+    NumberTargetPartitions: Optional[NumberTargetPartitionsString]
+
+
 class S3DirectTarget(TypedDict, total=False):
     """Specifies a data target that writes to Amazon S3."""
 
@@ -3454,7 +3490,19 @@ class S3DirectTarget(TypedDict, total=False):
     PartitionKeys: Optional[GlueStudioPathList]
     Path: EnclosedInStringProperty
     Compression: Optional[EnclosedInStringProperty]
+    NumberTargetPartitions: Optional[NumberTargetPartitionsString]
     Format: TargetFormat
+    SchemaChangePolicy: Optional[DirectSchemaChangePolicy]
+
+
+class S3HyperDirectTarget(TypedDict, total=False):
+    """Specifies a HyperDirect data target that writes to Amazon S3."""
+
+    Name: NodeName
+    Inputs: OneInput
+    PartitionKeys: Optional[GlueStudioPathList]
+    Path: EnclosedInStringProperty
+    Compression: Optional[HyperTargetCompressionType]
     SchemaChangePolicy: Optional[DirectSchemaChangePolicy]
 
 
@@ -3468,6 +3516,7 @@ class S3GlueParquetTarget(TypedDict, total=False):
     PartitionKeys: Optional[GlueStudioPathList]
     Path: EnclosedInStringProperty
     Compression: Optional[ParquetCompressionType]
+    NumberTargetPartitions: Optional[NumberTargetPartitionsString]
     SchemaChangePolicy: Optional[DirectSchemaChangePolicy]
 
 
@@ -3586,6 +3635,24 @@ class S3JsonSource(TypedDict, total=False):
     OutputSchemas: Optional[GlueSchemas]
 
 
+class S3ExcelSource(TypedDict, total=False):
+    """Specifies an S3 Excel data source."""
+
+    Name: NodeName
+    Paths: EnclosedInStringProperties
+    CompressionType: Optional[ParquetCompressionType]
+    Exclusions: Optional[EnclosedInStringProperties]
+    GroupSize: Optional[EnclosedInStringProperty]
+    GroupFiles: Optional[EnclosedInStringProperty]
+    Recurse: Optional[BoxedBoolean]
+    MaxBand: Optional[BoxedNonNegativeInt]
+    MaxFilesInBand: Optional[BoxedNonNegativeInt]
+    AdditionalOptions: Optional[S3DirectSourceAdditionalOptions]
+    NumberRows: Optional[BoxedLong]
+    SkipFooter: Optional[BoxedNonNegativeInt]
+    OutputSchemas: Optional[GlueSchemas]
+
+
 class S3CsvSource(TypedDict, total=False):
     """Specifies a command-separated value (CSV) data store stored in Amazon
     S3.
@@ -3690,6 +3757,7 @@ CodeGenConfigurationNode = TypedDict(
         "RedshiftSource": Optional[RedshiftSource],
         "S3CatalogSource": Optional[S3CatalogSource],
         "S3CsvSource": Optional[S3CsvSource],
+        "S3ExcelSource": Optional[S3ExcelSource],
         "S3JsonSource": Optional[S3JsonSource],
         "S3ParquetSource": Optional[S3ParquetSource],
         "RelationalCatalogSource": Optional[RelationalCatalogSource],
@@ -3700,7 +3768,9 @@ CodeGenConfigurationNode = TypedDict(
         "RedshiftTarget": Optional[RedshiftTarget],
         "S3CatalogTarget": Optional[S3CatalogTarget],
         "S3GlueParquetTarget": Optional[S3GlueParquetTarget],
+        "S3HyperDirectTarget": Optional[S3HyperDirectTarget],
         "S3DirectTarget": Optional[S3DirectTarget],
+        "S3IcebergDirectTarget": Optional[S3IcebergDirectTarget],
         "ApplyMapping": Optional[ApplyMapping],
         "SelectFields": Optional[SelectFields],
         "DropFields": Optional[DropFields],
@@ -5062,14 +5132,34 @@ class ConnectionPasswordEncryption(TypedDict, total=False):
     AwsKmsKeyId: Optional[NameString]
 
 
+class ConnectionTypeVariant(TypedDict, total=False):
+    """Represents a variant of a connection type in Glue Data Catalog.
+    Connection type variants provide specific configurations and behaviors
+    for different implementations of the same general connection type.
+    """
+
+    ConnectionTypeVariantName: Optional[DisplayName]
+    DisplayName: Optional[DisplayName]
+    Description: Optional[Description]
+    LogoUrl: Optional[UrlString]
+
+
+ConnectionTypeVariantList = List[ConnectionTypeVariant]
+
+
 class ConnectionTypeBrief(TypedDict, total=False):
     """Brief information about a supported connection type returned by the
     ``ListConnectionTypes`` API.
     """
 
     ConnectionType: Optional[ConnectionType]
+    DisplayName: Optional[DisplayName]
+    Vendor: Optional[Vendor]
     Description: Optional[Description]
+    Categories: Optional[ListOfString]
     Capabilities: Optional[Capabilities]
+    LogoUrl: Optional[UrlString]
+    ConnectionTypeVariants: Optional[ConnectionTypeVariantList]
 
 
 ConnectionTypeList = List[ConnectionTypeBrief]
@@ -5352,6 +5442,12 @@ class CreateDevEndpointResponse(TypedDict, total=False):
     Arguments: Optional[MapValue]
 
 
+class IntegrationConfig(TypedDict, total=False):
+    """Properties associated with the integration."""
+
+    RefreshInterval: Optional[String128]
+
+
 class Tag(TypedDict, total=False):
     """The ``Tag`` object represents a label that you can assign to an Amazon
     Web Services resource. Each tag consists of a key and an optional value,
@@ -5382,6 +5478,7 @@ class CreateIntegrationRequest(ServiceRequest):
     KmsKeyId: Optional[String2048]
     AdditionalEncryptionContext: Optional[IntegrationAdditionalEncryptionContextMap]
     Tags: Optional[IntegrationTagsList]
+    IntegrationConfig: Optional[IntegrationConfig]
 
 
 class TargetProcessingProperties(TypedDict, total=False):
@@ -5435,6 +5532,7 @@ class CreateIntegrationResponse(TypedDict, total=False):
     CreateTime: IntegrationTimestamp
     Errors: Optional[IntegrationErrorList]
     DataFilter: Optional[String2048]
+    IntegrationConfig: Optional[IntegrationConfig]
 
 
 class IntegrationPartition(TypedDict, total=False):
@@ -5442,6 +5540,7 @@ class IntegrationPartition(TypedDict, total=False):
 
     FieldName: Optional[String128]
     FunctionSpec: Optional[String128]
+    ConversionSpec: Optional[String128]
 
 
 IntegrationPartitionSpecList = List[IntegrationPartition]
@@ -6484,6 +6583,7 @@ class InboundIntegration(TypedDict, total=False):
     IntegrationArn: String128
     Status: IntegrationStatus
     CreateTime: IntegrationTimestamp
+    IntegrationConfig: Optional[IntegrationConfig]
     Errors: Optional[IntegrationErrorList]
 
 
@@ -6530,6 +6630,7 @@ class Integration(TypedDict, total=False):
     Tags: Optional[IntegrationTagsList]
     Status: IntegrationStatus
     CreateTime: IntegrationTimestamp
+    IntegrationConfig: Optional[IntegrationConfig]
     Errors: Optional[IntegrationErrorList]
     DataFilter: Optional[String2048]
 
@@ -9324,7 +9425,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         partition_input_list: PartitionInputList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> BatchCreatePartitionResponse:
         """Creates one or more partitions in a batch operation.
@@ -9351,7 +9452,7 @@ class GlueApi:
         self,
         context: RequestContext,
         connection_name_list: DeleteConnectionNameList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> BatchDeleteConnectionResponse:
         """Deletes a list of connection definitions from the Data Catalog.
@@ -9371,7 +9472,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         partitions_to_delete: BatchDeletePartitionValueList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> BatchDeletePartitionResponse:
         """Deletes one or more partitions in a batch operation.
@@ -9395,8 +9496,8 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         tables_to_delete: BatchDeleteTableNameList,
-        catalog_id: CatalogIdString = None,
-        transaction_id: TransactionIdString = None,
+        catalog_id: CatalogIdString | None = None,
+        transaction_id: TransactionIdString | None = None,
         **kwargs,
     ) -> BatchDeleteTableResponse:
         """Deletes multiple tables at once.
@@ -9433,7 +9534,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         version_ids: BatchDeleteTableVersionList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> BatchDeleteTableVersionResponse:
         """Deletes a specified batch of versions of a table.
@@ -9455,8 +9556,8 @@ class GlueApi:
         self,
         context: RequestContext,
         names: BatchGetBlueprintNames,
-        include_blueprint: NullableBoolean = None,
-        include_parameter_spec: NullableBoolean = None,
+        include_blueprint: NullableBoolean | None = None,
+        include_parameter_spec: NullableBoolean | None = None,
         **kwargs,
     ) -> BatchGetBlueprintsResponse:
         """Retrieves information about a list of blueprints.
@@ -9565,7 +9666,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         partitions_to_get: BatchGetPartitionValueList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> BatchGetPartitionResponse:
         """Retrieves partitions in a batch request.
@@ -9627,7 +9728,7 @@ class GlueApi:
         self,
         context: RequestContext,
         names: WorkflowNames,
-        include_graph: NullableBoolean = None,
+        include_graph: NullableBoolean | None = None,
         **kwargs,
     ) -> BatchGetWorkflowsResponse:
         """Returns a list of resource metadata for a given list of workflow names.
@@ -9652,7 +9753,7 @@ class GlueApi:
         self,
         context: RequestContext,
         inclusion_annotations: InclusionAnnotationList,
-        client_token: HashString = None,
+        client_token: HashString | None = None,
         **kwargs,
     ) -> BatchPutDataQualityStatisticAnnotationResponse:
         """Annotate datapoints over time for a specific data quality statistic.
@@ -9694,7 +9795,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         entries: BatchUpdatePartitionRequestEntryList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> BatchUpdatePartitionResponse:
         """Updates one or more partitions in a batch operation.
@@ -9771,7 +9872,7 @@ class GlueApi:
         context: RequestContext,
         session_id: NameString,
         id: IntegerValue,
-        request_origin: OrchestrationNameString = None,
+        request_origin: OrchestrationNameString | None = None,
         **kwargs,
     ) -> CancelStatementResponse:
         """Cancels the statement.
@@ -9817,8 +9918,8 @@ class GlueApi:
         context: RequestContext,
         name: OrchestrationNameString,
         blueprint_location: OrchestrationS3Location,
-        description: Generic512CharString = None,
-        tags: TagsMap = None,
+        description: Generic512CharString | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> CreateBlueprintResponse:
         """Registers a blueprint with Glue.
@@ -9842,7 +9943,7 @@ class GlueApi:
         context: RequestContext,
         name: CatalogNameString,
         catalog_input: CatalogInput,
-        tags: TagsMap = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> CreateCatalogResponse:
         """Creates a new catalog in the Glue Data Catalog.
@@ -9869,10 +9970,10 @@ class GlueApi:
     def create_classifier(
         self,
         context: RequestContext,
-        grok_classifier: CreateGrokClassifierRequest = None,
-        xml_classifier: CreateXMLClassifierRequest = None,
-        json_classifier: CreateJsonClassifierRequest = None,
-        csv_classifier: CreateCsvClassifierRequest = None,
+        grok_classifier: CreateGrokClassifierRequest | None = None,
+        xml_classifier: CreateXMLClassifierRequest | None = None,
+        json_classifier: CreateJsonClassifierRequest | None = None,
+        csv_classifier: CreateCsvClassifierRequest | None = None,
         **kwargs,
     ) -> CreateClassifierResponse:
         """Creates a classifier in the user's account. This can be a
@@ -9897,12 +9998,12 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         role: NameString,
-        schedule: CronExpression = None,
-        column_name_list: ColumnNameList = None,
-        sample_size: SampleSizePercentage = None,
-        catalog_id: NameString = None,
-        security_configuration: NameString = None,
-        tags: TagsMap = None,
+        schedule: CronExpression | None = None,
+        column_name_list: ColumnNameList | None = None,
+        sample_size: SampleSizePercentage | None = None,
+        catalog_id: NameString | None = None,
+        security_configuration: NameString | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> CreateColumnStatisticsTaskSettingsResponse:
         """Creates settings for a column statistics task.
@@ -9933,8 +10034,8 @@ class GlueApi:
         self,
         context: RequestContext,
         connection_input: ConnectionInput,
-        catalog_id: CatalogIdString = None,
-        tags: TagsMap = None,
+        catalog_id: CatalogIdString | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> CreateConnectionResponse:
         """Creates a connection definition in the Data Catalog.
@@ -9961,18 +10062,18 @@ class GlueApi:
         name: NameString,
         role: Role,
         targets: CrawlerTargets,
-        database_name: DatabaseName = None,
-        description: DescriptionString = None,
-        schedule: CronExpression = None,
-        classifiers: ClassifierNameList = None,
-        table_prefix: TablePrefix = None,
-        schema_change_policy: SchemaChangePolicy = None,
-        recrawl_policy: RecrawlPolicy = None,
-        lineage_configuration: LineageConfiguration = None,
-        lake_formation_configuration: LakeFormationConfiguration = None,
-        configuration: CrawlerConfiguration = None,
-        crawler_security_configuration: CrawlerSecurityConfiguration = None,
-        tags: TagsMap = None,
+        database_name: DatabaseName | None = None,
+        description: DescriptionString | None = None,
+        schedule: CronExpression | None = None,
+        classifiers: ClassifierNameList | None = None,
+        table_prefix: TablePrefix | None = None,
+        schema_change_policy: SchemaChangePolicy | None = None,
+        recrawl_policy: RecrawlPolicy | None = None,
+        lineage_configuration: LineageConfiguration | None = None,
+        lake_formation_configuration: LakeFormationConfiguration | None = None,
+        configuration: CrawlerConfiguration | None = None,
+        crawler_security_configuration: CrawlerSecurityConfiguration | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> CreateCrawlerResponse:
         """Creates a new crawler with specified targets, role, configuration, and
@@ -10015,8 +10116,8 @@ class GlueApi:
         context: RequestContext,
         name: NameString,
         regex_string: NameString,
-        context_words: ContextWords = None,
-        tags: TagsMap = None,
+        context_words: ContextWords | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> CreateCustomEntityTypeResponse:
         """Creates a custom pattern that is used to detect sensitive data across
@@ -10049,11 +10150,11 @@ class GlueApi:
         context: RequestContext,
         name: NameString,
         ruleset: DataQualityRulesetString,
-        description: DescriptionString = None,
-        tags: TagsMap = None,
-        target_table: DataQualityTargetTable = None,
-        data_quality_security_configuration: NameString = None,
-        client_token: HashString = None,
+        description: DescriptionString | None = None,
+        tags: TagsMap | None = None,
+        target_table: DataQualityTargetTable | None = None,
+        data_quality_security_configuration: NameString | None = None,
+        client_token: HashString | None = None,
         **kwargs,
     ) -> CreateDataQualityRulesetResponse:
         """Creates a data quality ruleset with DQDL rules applied to a specified
@@ -10086,8 +10187,8 @@ class GlueApi:
         self,
         context: RequestContext,
         database_input: DatabaseInput,
-        catalog_id: CatalogIdString = None,
-        tags: TagsMap = None,
+        catalog_id: CatalogIdString | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> CreateDatabaseResponse:
         """Creates a new database in a Data Catalog.
@@ -10115,19 +10216,19 @@ class GlueApi:
         context: RequestContext,
         endpoint_name: GenericString,
         role_arn: RoleArn,
-        security_group_ids: StringList = None,
-        subnet_id: GenericString = None,
-        public_key: GenericString = None,
-        public_keys: PublicKeysList = None,
-        number_of_nodes: IntegerValue = None,
-        worker_type: WorkerType = None,
-        glue_version: GlueVersionString = None,
-        number_of_workers: NullableInteger = None,
-        extra_python_libs_s3_path: GenericString = None,
-        extra_jars_s3_path: GenericString = None,
-        security_configuration: NameString = None,
-        tags: TagsMap = None,
-        arguments: MapValue = None,
+        security_group_ids: StringList | None = None,
+        subnet_id: GenericString | None = None,
+        public_key: GenericString | None = None,
+        public_keys: PublicKeysList | None = None,
+        number_of_nodes: IntegerValue | None = None,
+        worker_type: WorkerType | None = None,
+        glue_version: GlueVersionString | None = None,
+        number_of_workers: NullableInteger | None = None,
+        extra_python_libs_s3_path: GenericString | None = None,
+        extra_jars_s3_path: GenericString | None = None,
+        security_configuration: NameString | None = None,
+        tags: TagsMap | None = None,
+        arguments: MapValue | None = None,
         **kwargs,
     ) -> CreateDevEndpointResponse:
         """Creates a new development endpoint.
@@ -10174,11 +10275,12 @@ class GlueApi:
         integration_name: String128,
         source_arn: String128,
         target_arn: String128,
-        description: IntegrationDescription = None,
-        data_filter: String2048 = None,
-        kms_key_id: String2048 = None,
-        additional_encryption_context: IntegrationAdditionalEncryptionContextMap = None,
-        tags: IntegrationTagsList = None,
+        description: IntegrationDescription | None = None,
+        data_filter: String2048 | None = None,
+        kms_key_id: String2048 | None = None,
+        additional_encryption_context: IntegrationAdditionalEncryptionContextMap | None = None,
+        tags: IntegrationTagsList | None = None,
+        integration_config: IntegrationConfig | None = None,
         **kwargs,
     ) -> CreateIntegrationResponse:
         """Creates a Zero-ETL integration in the caller's account between two
@@ -10195,6 +10297,7 @@ class GlueApi:
         contextual information for encryption.
         :param tags: Metadata assigned to the resource consisting of a list of key-value
         pairs.
+        :param integration_config: The configuration settings.
         :returns: CreateIntegrationResponse
         :raises ValidationException:
         :raises AccessDeniedException:
@@ -10216,8 +10319,8 @@ class GlueApi:
         self,
         context: RequestContext,
         resource_arn: String128,
-        source_processing_properties: SourceProcessingProperties = None,
-        target_processing_properties: TargetProcessingProperties = None,
+        source_processing_properties: SourceProcessingProperties | None = None,
+        target_processing_properties: TargetProcessingProperties | None = None,
         **kwargs,
     ) -> CreateIntegrationResourcePropertyResponse:
         """This API can be used for setting up the ``ResourceProperty`` of the Glue
@@ -10249,8 +10352,8 @@ class GlueApi:
         context: RequestContext,
         resource_arn: String128,
         table_name: String128,
-        source_table_config: SourceTableConfig = None,
-        target_table_config: TargetTableConfig = None,
+        source_table_config: SourceTableConfig | None = None,
+        target_table_config: TargetTableConfig | None = None,
         **kwargs,
     ) -> CreateIntegrationTablePropertiesResponse:
         """This API is used to provide optional override properties for the the
@@ -10261,7 +10364,8 @@ class GlueApi:
         ``SourceTableConfig``, and the Glue database ARN as ``ResourceArn`` with
         ``TargetTableConfig`` respectively.
 
-        :param resource_arn: The connection ARN of the source, or the database ARN of the target.
+        :param resource_arn: The Amazon Resource Name (ARN) of the target table for which to create
+        integration table properties.
         :param table_name: The name of the table to be replicated.
         :param source_table_config: A structure for the source table configuration.
         :param target_table_config: A structure for the target table configuration.
@@ -10283,28 +10387,28 @@ class GlueApi:
         name: NameString,
         role: RoleString,
         command: JobCommand,
-        job_mode: JobMode = None,
-        job_run_queuing_enabled: NullableBoolean = None,
-        description: DescriptionString = None,
-        log_uri: UriString = None,
-        execution_property: ExecutionProperty = None,
-        default_arguments: GenericMap = None,
-        non_overridable_arguments: GenericMap = None,
-        connections: ConnectionsList = None,
-        max_retries: MaxRetries = None,
-        allocated_capacity: IntegerValue = None,
-        timeout: Timeout = None,
-        max_capacity: NullableDouble = None,
-        security_configuration: NameString = None,
-        tags: TagsMap = None,
-        notification_property: NotificationProperty = None,
-        glue_version: GlueVersionString = None,
-        number_of_workers: NullableInteger = None,
-        worker_type: WorkerType = None,
-        code_gen_configuration_nodes: CodeGenConfigurationNodes = None,
-        execution_class: ExecutionClass = None,
-        source_control_details: SourceControlDetails = None,
-        maintenance_window: MaintenanceWindow = None,
+        job_mode: JobMode | None = None,
+        job_run_queuing_enabled: NullableBoolean | None = None,
+        description: DescriptionString | None = None,
+        log_uri: UriString | None = None,
+        execution_property: ExecutionProperty | None = None,
+        default_arguments: GenericMap | None = None,
+        non_overridable_arguments: GenericMap | None = None,
+        connections: ConnectionsList | None = None,
+        max_retries: MaxRetries | None = None,
+        allocated_capacity: IntegerValue | None = None,
+        timeout: Timeout | None = None,
+        max_capacity: NullableDouble | None = None,
+        security_configuration: NameString | None = None,
+        tags: TagsMap | None = None,
+        notification_property: NotificationProperty | None = None,
+        glue_version: GlueVersionString | None = None,
+        number_of_workers: NullableInteger | None = None,
+        worker_type: WorkerType | None = None,
+        code_gen_configuration_nodes: CodeGenConfigurationNodes | None = None,
+        execution_class: ExecutionClass | None = None,
+        source_control_details: SourceControlDetails | None = None,
+        maintenance_window: MaintenanceWindow | None = None,
         **kwargs,
     ) -> CreateJobResponse:
         """Creates a new job definition.
@@ -10365,15 +10469,15 @@ class GlueApi:
         input_record_tables: GlueTables,
         parameters: TransformParameters,
         role: RoleString,
-        description: DescriptionString = None,
-        glue_version: GlueVersionString = None,
-        max_capacity: NullableDouble = None,
-        worker_type: WorkerType = None,
-        number_of_workers: NullableInteger = None,
-        timeout: Timeout = None,
-        max_retries: NullableInteger = None,
-        tags: TagsMap = None,
-        transform_encryption: TransformEncryption = None,
+        description: DescriptionString | None = None,
+        glue_version: GlueVersionString | None = None,
+        max_capacity: NullableDouble | None = None,
+        worker_type: WorkerType | None = None,
+        number_of_workers: NullableInteger | None = None,
+        timeout: Timeout | None = None,
+        max_retries: NullableInteger | None = None,
+        tags: TagsMap | None = None,
+        transform_encryption: TransformEncryption | None = None,
         **kwargs,
     ) -> CreateMLTransformResponse:
         """Creates an Glue machine learning transform. This operation creates the
@@ -10428,7 +10532,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         partition_input: PartitionInput,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> CreatePartitionResponse:
         """Creates a new partition.
@@ -10457,7 +10561,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         partition_index: PartitionIndex,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> CreatePartitionIndexResponse:
         """Creates a specified partition index in an existing table.
@@ -10485,8 +10589,8 @@ class GlueApi:
         self,
         context: RequestContext,
         registry_name: SchemaRegistryNameString,
-        description: DescriptionString = None,
-        tags: TagsMap = None,
+        description: DescriptionString | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> CreateRegistryResponse:
         """Creates a new registry which may be used to hold a collection of
@@ -10513,11 +10617,11 @@ class GlueApi:
         context: RequestContext,
         schema_name: SchemaRegistryNameString,
         data_format: DataFormat,
-        registry_id: RegistryId = None,
-        compatibility: Compatibility = None,
-        description: DescriptionString = None,
-        tags: TagsMap = None,
-        schema_definition: SchemaDefinitionString = None,
+        registry_id: RegistryId | None = None,
+        compatibility: Compatibility | None = None,
+        description: DescriptionString | None = None,
+        tags: TagsMap | None = None,
+        schema_definition: SchemaDefinitionString | None = None,
         **kwargs,
     ) -> CreateSchemaResponse:
         """Creates a new schema set and registers the schema definition. Returns an
@@ -10560,9 +10664,9 @@ class GlueApi:
     def create_script(
         self,
         context: RequestContext,
-        dag_nodes: DagNodes = None,
-        dag_edges: DagEdges = None,
-        language: Language = None,
+        dag_nodes: DagNodes | None = None,
+        dag_edges: DagEdges | None = None,
+        language: Language | None = None,
         **kwargs,
     ) -> CreateScriptResponse:
         """Transforms a directed acyclic graph (DAG) into code.
@@ -10610,18 +10714,18 @@ class GlueApi:
         id: NameString,
         role: OrchestrationRoleArn,
         command: SessionCommand,
-        description: DescriptionString = None,
-        timeout: Timeout = None,
-        idle_timeout: Timeout = None,
-        default_arguments: OrchestrationArgumentsMap = None,
-        connections: ConnectionsList = None,
-        max_capacity: NullableDouble = None,
-        number_of_workers: NullableInteger = None,
-        worker_type: WorkerType = None,
-        security_configuration: NameString = None,
-        glue_version: GlueVersionString = None,
-        tags: TagsMap = None,
-        request_origin: OrchestrationNameString = None,
+        description: DescriptionString | None = None,
+        timeout: Timeout | None = None,
+        idle_timeout: Timeout | None = None,
+        default_arguments: OrchestrationArgumentsMap | None = None,
+        connections: ConnectionsList | None = None,
+        max_capacity: NullableDouble | None = None,
+        number_of_workers: NullableInteger | None = None,
+        worker_type: WorkerType | None = None,
+        security_configuration: NameString | None = None,
+        glue_version: GlueVersionString | None = None,
+        tags: TagsMap | None = None,
+        request_origin: OrchestrationNameString | None = None,
         **kwargs,
     ) -> CreateSessionResponse:
         """Creates a new session.
@@ -10663,10 +10767,10 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         table_input: TableInput,
-        catalog_id: CatalogIdString = None,
-        partition_indexes: PartitionIndexList = None,
-        transaction_id: TransactionIdString = None,
-        open_table_format_input: OpenTableFormatInput = None,
+        catalog_id: CatalogIdString | None = None,
+        partition_indexes: PartitionIndexList | None = None,
+        transaction_id: TransactionIdString | None = None,
+        open_table_format_input: OpenTableFormatInput | None = None,
         **kwargs,
     ) -> CreateTableResponse:
         """Creates a new table definition in the Data Catalog.
@@ -10761,8 +10865,8 @@ class GlueApi:
         context: RequestContext,
         name: NameString,
         configuration: ProfileConfiguration,
-        description: DescriptionString = None,
-        tags: TagsMap = None,
+        description: DescriptionString | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> CreateUsageProfileResponse:
         """Creates an Glue usage profile.
@@ -10788,7 +10892,7 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         function_input: UserDefinedFunctionInput,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> CreateUserDefinedFunctionResponse:
         """Creates a new function definition in the Data Catalog.
@@ -10813,10 +10917,10 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        description: WorkflowDescriptionString = None,
-        default_run_properties: WorkflowRunProperties = None,
-        tags: TagsMap = None,
-        max_concurrent_runs: NullableInteger = None,
+        description: WorkflowDescriptionString | None = None,
+        default_run_properties: WorkflowRunProperties | None = None,
+        tags: TagsMap | None = None,
+        max_concurrent_runs: NullableInteger | None = None,
         **kwargs,
     ) -> CreateWorkflowResponse:
         """Creates a new workflow.
@@ -10906,7 +11010,7 @@ class GlueApi:
         table_name: NameString,
         partition_values: ValueStringList,
         column_name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeleteColumnStatisticsForPartitionResponse:
         """Delete the partition column statistics of a column.
@@ -10935,7 +11039,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         column_name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeleteColumnStatisticsForTableResponse:
         """Retrieves table statistics of columns.
@@ -10976,7 +11080,7 @@ class GlueApi:
         self,
         context: RequestContext,
         connection_name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeleteConnectionResponse:
         """Deletes a connection from the Data Catalog.
@@ -11041,7 +11145,7 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeleteDatabaseResponse:
         """Removes a specified database from a Data Catalog.
@@ -11172,7 +11276,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         partition_values: ValueStringList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeletePartitionResponse:
         """Deletes a specified partition.
@@ -11196,7 +11300,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         index_name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeletePartitionIndexResponse:
         """Deletes a specified partition index from an existing table.
@@ -11241,8 +11345,8 @@ class GlueApi:
     def delete_resource_policy(
         self,
         context: RequestContext,
-        policy_hash_condition: HashString = None,
-        resource_arn: GlueResourceArn = None,
+        policy_hash_condition: HashString | None = None,
+        resource_arn: GlueResourceArn | None = None,
         **kwargs,
     ) -> DeleteResourcePolicyResponse:
         """Deletes a specified policy.
@@ -11337,7 +11441,7 @@ class GlueApi:
         self,
         context: RequestContext,
         id: NameString,
-        request_origin: OrchestrationNameString = None,
+        request_origin: OrchestrationNameString | None = None,
         **kwargs,
     ) -> DeleteSessionResponse:
         """Deletes the session.
@@ -11360,8 +11464,8 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         name: NameString,
-        catalog_id: CatalogIdString = None,
-        transaction_id: TransactionIdString = None,
+        catalog_id: CatalogIdString | None = None,
+        transaction_id: TransactionIdString | None = None,
         **kwargs,
     ) -> DeleteTableResponse:
         """Removes a table definition from the Data Catalog.
@@ -11420,7 +11524,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         version_id: VersionString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeleteTableVersionResponse:
         """Deletes a specified version of a table.
@@ -11474,7 +11578,7 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         function_name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeleteUserDefinedFunctionResponse:
         """Deletes an existing function definition from the Data Catalog.
@@ -11527,9 +11631,9 @@ class GlueApi:
         context: RequestContext,
         connection_name: NameString,
         entity_name: EntityName,
-        catalog_id: CatalogIdString = None,
-        next_token: NextToken = None,
-        data_store_api_version: ApiVersion = None,
+        catalog_id: CatalogIdString | None = None,
+        next_token: NextToken | None = None,
+        data_store_api_version: ApiVersion | None = None,
         **kwargs,
     ) -> DescribeEntityResponse:
         """Provides details regarding the entity used with the connection type,
@@ -11560,10 +11664,10 @@ class GlueApi:
     def describe_inbound_integrations(
         self,
         context: RequestContext,
-        integration_arn: String128 = None,
-        marker: String128 = None,
-        max_records: IntegrationInteger = None,
-        target_arn: String128 = None,
+        integration_arn: String128 | None = None,
+        marker: String128 | None = None,
+        max_records: IntegrationInteger | None = None,
+        target_arn: String128 | None = None,
         **kwargs,
     ) -> DescribeInboundIntegrationsResponse:
         """Returns a list of inbound integrations for the specified integration.
@@ -11590,10 +11694,10 @@ class GlueApi:
     def describe_integrations(
         self,
         context: RequestContext,
-        integration_identifier: String128 = None,
-        marker: String128 = None,
-        max_records: IntegrationInteger = None,
-        filters: IntegrationFilterList = None,
+        integration_identifier: String128 | None = None,
+        marker: String128 | None = None,
+        max_records: IntegrationInteger | None = None,
+        filters: IntegrationFilterList | None = None,
         **kwargs,
     ) -> DescribeIntegrationsResponse:
         """The API is used to retrieve a list of integrations.
@@ -11619,8 +11723,8 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        include_blueprint: NullableBoolean = None,
-        include_parameter_spec: NullableBoolean = None,
+        include_blueprint: NullableBoolean | None = None,
+        include_parameter_spec: NullableBoolean | None = None,
         **kwargs,
     ) -> GetBlueprintResponse:
         """Retrieves the details of a blueprint.
@@ -11660,8 +11764,8 @@ class GlueApi:
         self,
         context: RequestContext,
         blueprint_name: NameString,
-        next_token: GenericString = None,
-        max_results: PageSize = None,
+        next_token: GenericString | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> GetBlueprintRunsResponse:
         """Retrieves the details of blueprint runs for a specified blueprint.
@@ -11699,7 +11803,7 @@ class GlueApi:
 
     @handler("GetCatalogImportStatus")
     def get_catalog_import_status(
-        self, context: RequestContext, catalog_id: CatalogIdString = None, **kwargs
+        self, context: RequestContext, catalog_id: CatalogIdString | None = None, **kwargs
     ) -> GetCatalogImportStatusResponse:
         """Retrieves the status of a migration operation.
 
@@ -11714,11 +11818,11 @@ class GlueApi:
     def get_catalogs(
         self,
         context: RequestContext,
-        parent_catalog_id: CatalogIdString = None,
-        next_token: Token = None,
-        max_results: PageSize = None,
-        recursive: Boolean = None,
-        include_root: NullableBoolean = None,
+        parent_catalog_id: CatalogIdString | None = None,
+        next_token: Token | None = None,
+        max_results: PageSize | None = None,
+        recursive: Boolean | None = None,
+        include_root: NullableBoolean | None = None,
         **kwargs,
     ) -> GetCatalogsResponse:
         """Retrieves all catalogs defined in a catalog in the Glue Data Catalog.
@@ -11762,8 +11866,8 @@ class GlueApi:
     def get_classifiers(
         self,
         context: RequestContext,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> GetClassifiersResponse:
         """Lists all classifier objects in the Data Catalog.
@@ -11783,7 +11887,7 @@ class GlueApi:
         table_name: NameString,
         partition_values: ValueStringList,
         column_names: GetColumnNamesList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> GetColumnStatisticsForPartitionResponse:
         """Retrieves partition statistics of columns.
@@ -11812,7 +11916,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         column_names: GetColumnNamesList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> GetColumnStatisticsForTableResponse:
         """Retrieves table statistics of columns.
@@ -11854,8 +11958,8 @@ class GlueApi:
         context: RequestContext,
         database_name: DatabaseName,
         table_name: NameString,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> GetColumnStatisticsTaskRunsResponse:
         """Retrieves information about all runs associated with the specified
@@ -11890,9 +11994,9 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        catalog_id: CatalogIdString = None,
-        hide_password: Boolean = None,
-        apply_override_for_compute_environment: ComputeEnvironment = None,
+        catalog_id: CatalogIdString | None = None,
+        hide_password: Boolean | None = None,
+        apply_override_for_compute_environment: ComputeEnvironment | None = None,
         **kwargs,
     ) -> GetConnectionResponse:
         """Retrieves a connection definition from the Data Catalog.
@@ -11915,11 +12019,11 @@ class GlueApi:
     def get_connections(
         self,
         context: RequestContext,
-        catalog_id: CatalogIdString = None,
-        filter: GetConnectionsFilter = None,
-        hide_password: Boolean = None,
-        next_token: Token = None,
-        max_results: PageSize = None,
+        catalog_id: CatalogIdString | None = None,
+        filter: GetConnectionsFilter | None = None,
+        hide_password: Boolean | None = None,
+        next_token: Token | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> GetConnectionsResponse:
         """Retrieves a list of connection definitions from the Data Catalog.
@@ -11955,9 +12059,9 @@ class GlueApi:
     def get_crawler_metrics(
         self,
         context: RequestContext,
-        crawler_name_list: CrawlerNameList = None,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        crawler_name_list: CrawlerNameList | None = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> GetCrawlerMetricsResponse:
         """Retrieves metrics about specified crawlers.
@@ -11974,8 +12078,8 @@ class GlueApi:
     def get_crawlers(
         self,
         context: RequestContext,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> GetCrawlersResponse:
         """Retrieves metadata for all crawlers defined in the customer account.
@@ -12005,7 +12109,7 @@ class GlueApi:
 
     @handler("GetDataCatalogEncryptionSettings")
     def get_data_catalog_encryption_settings(
-        self, context: RequestContext, catalog_id: CatalogIdString = None, **kwargs
+        self, context: RequestContext, catalog_id: CatalogIdString | None = None, **kwargs
     ) -> GetDataCatalogEncryptionSettingsResponse:
         """Retrieves the security configuration for a specified catalog.
 
@@ -12022,7 +12126,7 @@ class GlueApi:
         self,
         context: RequestContext,
         profile_id: HashString,
-        statistic_id: HashString = None,
+        statistic_id: HashString | None = None,
         **kwargs,
     ) -> GetDataQualityModelResponse:
         """Retrieve the training status of the model along with more information
@@ -12120,7 +12224,7 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> GetDatabaseResponse:
         """Retrieves the definition of a specified database.
@@ -12142,11 +12246,11 @@ class GlueApi:
     def get_databases(
         self,
         context: RequestContext,
-        catalog_id: CatalogIdString = None,
-        next_token: Token = None,
-        max_results: CatalogGetterPageSize = None,
-        resource_share_type: ResourceShareType = None,
-        attributes_to_get: DatabaseAttributesList = None,
+        catalog_id: CatalogIdString | None = None,
+        next_token: Token | None = None,
+        max_results: CatalogGetterPageSize | None = None,
+        resource_share_type: ResourceShareType | None = None,
+        attributes_to_get: DatabaseAttributesList | None = None,
         **kwargs,
     ) -> GetDatabasesResponse:
         """Retrieves all databases defined in a given Data Catalog.
@@ -12170,7 +12274,7 @@ class GlueApi:
 
     @handler("GetDataflowGraph")
     def get_dataflow_graph(
-        self, context: RequestContext, python_script: PythonScript = None, **kwargs
+        self, context: RequestContext, python_script: PythonScript | None = None, **kwargs
     ) -> GetDataflowGraphResponse:
         """Transforms a Python script into a directed acyclic graph (DAG).
 
@@ -12206,8 +12310,8 @@ class GlueApi:
     def get_dev_endpoints(
         self,
         context: RequestContext,
-        max_results: PageSize = None,
-        next_token: GenericString = None,
+        max_results: PageSize | None = None,
+        next_token: GenericString | None = None,
         **kwargs,
     ) -> GetDevEndpointsResponse:
         """Retrieves all the development endpoints in this Amazon Web Services
@@ -12234,14 +12338,14 @@ class GlueApi:
         context: RequestContext,
         entity_name: EntityName,
         limit: Limit,
-        connection_name: NameString = None,
-        catalog_id: CatalogIdString = None,
-        next_token: NextToken = None,
-        data_store_api_version: ApiVersion = None,
-        connection_options: ConnectionOptions = None,
-        filter_predicate: FilterPredicate = None,
-        order_by: String = None,
-        selected_fields: SelectedFields = None,
+        connection_name: NameString | None = None,
+        catalog_id: CatalogIdString | None = None,
+        next_token: NextToken | None = None,
+        data_store_api_version: ApiVersion | None = None,
+        connection_options: ConnectionOptions | None = None,
+        filter_predicate: FilterPredicate | None = None,
+        order_by: String | None = None,
+        selected_fields: SelectedFields | None = None,
         **kwargs,
     ) -> GetEntityRecordsResponse:
         """This API is used to query preview data from a given connection type or
@@ -12305,7 +12409,8 @@ class GlueApi:
         that need to be replicated. These properties can include properties for
         filtering and partition for source and target tables.
 
-        :param resource_arn: The connection ARN of the source, or the database ARN of the target.
+        :param resource_arn: The Amazon Resource Name (ARN) of the target table for which to retrieve
+        integration table properties.
         :param table_name: The name of the table to be replicated.
         :returns: GetIntegrationTablePropertiesResponse
         :raises ValidationException:
@@ -12333,7 +12438,7 @@ class GlueApi:
 
     @handler("GetJobBookmark")
     def get_job_bookmark(
-        self, context: RequestContext, job_name: JobName, run_id: RunId = None, **kwargs
+        self, context: RequestContext, job_name: JobName, run_id: RunId | None = None, **kwargs
     ) -> GetJobBookmarkResponse:
         """Returns information on a job bookmark entry.
 
@@ -12365,7 +12470,7 @@ class GlueApi:
         context: RequestContext,
         job_name: NameString,
         run_id: IdString,
-        predecessors_included: BooleanValue = None,
+        predecessors_included: BooleanValue | None = None,
         **kwargs,
     ) -> GetJobRunResponse:
         """Retrieves the metadata for a given job run. Job run history is
@@ -12387,8 +12492,8 @@ class GlueApi:
         self,
         context: RequestContext,
         job_name: NameString,
-        next_token: GenericString = None,
-        max_results: OrchestrationPageSize200 = None,
+        next_token: GenericString | None = None,
+        max_results: OrchestrationPageSize200 | None = None,
         **kwargs,
     ) -> GetJobRunsResponse:
         """Retrieves metadata for all runs of a given job definition.
@@ -12411,8 +12516,8 @@ class GlueApi:
     def get_jobs(
         self,
         context: RequestContext,
-        next_token: GenericString = None,
-        max_results: PageSize = None,
+        next_token: GenericString | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> GetJobsResponse:
         """Retrieves all current job definitions.
@@ -12452,10 +12557,10 @@ class GlueApi:
         self,
         context: RequestContext,
         transform_id: HashString,
-        next_token: PaginationToken = None,
-        max_results: PageSize = None,
-        filter: TaskRunFilterCriteria = None,
-        sort: TaskRunSortCriteria = None,
+        next_token: PaginationToken | None = None,
+        max_results: PageSize | None = None,
+        filter: TaskRunFilterCriteria | None = None,
+        sort: TaskRunSortCriteria | None = None,
         **kwargs,
     ) -> GetMLTaskRunsResponse:
         """Gets a list of runs for a machine learning transform. Machine learning
@@ -12507,10 +12612,10 @@ class GlueApi:
     def get_ml_transforms(
         self,
         context: RequestContext,
-        next_token: PaginationToken = None,
-        max_results: PageSize = None,
-        filter: TransformFilterCriteria = None,
-        sort: TransformSortCriteria = None,
+        next_token: PaginationToken | None = None,
+        max_results: PageSize | None = None,
+        filter: TransformFilterCriteria | None = None,
+        sort: TransformSortCriteria | None = None,
         **kwargs,
     ) -> GetMLTransformsResponse:
         """Gets a sortable, filterable list of existing Glue machine learning
@@ -12537,8 +12642,8 @@ class GlueApi:
         self,
         context: RequestContext,
         source: CatalogEntry,
-        sinks: CatalogEntries = None,
-        location: Location = None,
+        sinks: CatalogEntries | None = None,
+        location: Location | None = None,
         **kwargs,
     ) -> GetMappingResponse:
         """Creates mappings.
@@ -12561,7 +12666,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         partition_values: ValueStringList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> GetPartitionResponse:
         """Retrieves information about a specified partition.
@@ -12587,8 +12692,8 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         table_name: NameString,
-        catalog_id: CatalogIdString = None,
-        next_token: Token = None,
+        catalog_id: CatalogIdString | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> GetPartitionIndexesResponse:
         """Retrieves the partition indexes associated with a table.
@@ -12614,14 +12719,14 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         table_name: NameString,
-        catalog_id: CatalogIdString = None,
-        expression: PredicateString = None,
-        next_token: Token = None,
-        segment: Segment = None,
-        max_results: PageSize = None,
-        exclude_column_schema: BooleanNullable = None,
-        transaction_id: TransactionIdString = None,
-        query_as_of_time: Timestamp = None,
+        catalog_id: CatalogIdString | None = None,
+        expression: PredicateString | None = None,
+        next_token: Token | None = None,
+        segment: Segment | None = None,
+        max_results: PageSize | None = None,
+        exclude_column_schema: BooleanNullable | None = None,
+        transaction_id: TransactionIdString | None = None,
+        query_as_of_time: Timestamp | None = None,
         **kwargs,
     ) -> GetPartitionsResponse:
         """Retrieves information about the partitions in a table.
@@ -12656,10 +12761,10 @@ class GlueApi:
         context: RequestContext,
         mapping: MappingList,
         source: CatalogEntry,
-        sinks: CatalogEntries = None,
-        location: Location = None,
-        language: Language = None,
-        additional_plan_options_map: AdditionalPlanOptionsMap = None,
+        sinks: CatalogEntries | None = None,
+        location: Location | None = None,
+        language: Language | None = None,
+        additional_plan_options_map: AdditionalPlanOptionsMap | None = None,
         **kwargs,
     ) -> GetPlanResponse:
         """Gets code to perform a specified mapping.
@@ -12697,8 +12802,8 @@ class GlueApi:
     def get_resource_policies(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: PageSize = None,
+        next_token: Token | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> GetResourcePoliciesResponse:
         """Retrieves the resource policies set on individual resources by Resource
@@ -12721,7 +12826,7 @@ class GlueApi:
 
     @handler("GetResourcePolicy")
     def get_resource_policy(
-        self, context: RequestContext, resource_arn: GlueResourceArn = None, **kwargs
+        self, context: RequestContext, resource_arn: GlueResourceArn | None = None, **kwargs
     ) -> GetResourcePolicyResponse:
         """Retrieves a specified resource policy.
 
@@ -12778,9 +12883,9 @@ class GlueApi:
     def get_schema_version(
         self,
         context: RequestContext,
-        schema_id: SchemaId = None,
-        schema_version_id: SchemaVersionIdString = None,
-        schema_version_number: SchemaVersionNumber = None,
+        schema_id: SchemaId | None = None,
+        schema_version_id: SchemaVersionIdString | None = None,
+        schema_version_number: SchemaVersionNumber | None = None,
         **kwargs,
     ) -> GetSchemaVersionResponse:
         """Get the specified schema by its unique ID assigned when a version of the
@@ -12845,8 +12950,8 @@ class GlueApi:
     def get_security_configurations(
         self,
         context: RequestContext,
-        max_results: PageSize = None,
-        next_token: GenericString = None,
+        max_results: PageSize | None = None,
+        next_token: GenericString | None = None,
         **kwargs,
     ) -> GetSecurityConfigurationsResponse:
         """Retrieves a list of all security configurations.
@@ -12866,7 +12971,7 @@ class GlueApi:
         self,
         context: RequestContext,
         id: NameString,
-        request_origin: OrchestrationNameString = None,
+        request_origin: OrchestrationNameString | None = None,
         **kwargs,
     ) -> GetSessionResponse:
         """Retrieves the session.
@@ -12888,7 +12993,7 @@ class GlueApi:
         context: RequestContext,
         session_id: NameString,
         id: IntegerValue,
-        request_origin: OrchestrationNameString = None,
+        request_origin: OrchestrationNameString | None = None,
         **kwargs,
     ) -> GetStatementResponse:
         """Retrieves the statement.
@@ -12912,10 +13017,10 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         name: NameString,
-        catalog_id: CatalogIdString = None,
-        transaction_id: TransactionIdString = None,
-        query_as_of_time: Timestamp = None,
-        include_status_details: BooleanNullable = None,
+        catalog_id: CatalogIdString | None = None,
+        transaction_id: TransactionIdString | None = None,
+        query_as_of_time: Timestamp | None = None,
+        include_status_details: BooleanNullable | None = None,
         **kwargs,
     ) -> GetTableResponse:
         """Retrieves the ``Table`` definition in a Data Catalog for a specified
@@ -12966,8 +13071,8 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         table_name: NameString,
-        catalog_id: CatalogIdString = None,
-        version_id: VersionString = None,
+        catalog_id: CatalogIdString | None = None,
+        version_id: VersionString | None = None,
         **kwargs,
     ) -> GetTableVersionResponse:
         """Retrieves a specified version of a table.
@@ -12991,9 +13096,9 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         table_name: NameString,
-        catalog_id: CatalogIdString = None,
-        next_token: Token = None,
-        max_results: CatalogGetterPageSize = None,
+        catalog_id: CatalogIdString | None = None,
+        next_token: Token | None = None,
+        max_results: CatalogGetterPageSize | None = None,
         **kwargs,
     ) -> GetTableVersionsResponse:
         """Retrieves a list of strings that identify available versions of a
@@ -13018,14 +13123,14 @@ class GlueApi:
         self,
         context: RequestContext,
         database_name: NameString,
-        catalog_id: CatalogIdString = None,
-        expression: FilterString = None,
-        next_token: Token = None,
-        max_results: CatalogGetterPageSize = None,
-        transaction_id: TransactionIdString = None,
-        query_as_of_time: Timestamp = None,
-        include_status_details: BooleanNullable = None,
-        attributes_to_get: TableAttributesList = None,
+        catalog_id: CatalogIdString | None = None,
+        expression: FilterString | None = None,
+        next_token: Token | None = None,
+        max_results: CatalogGetterPageSize | None = None,
+        transaction_id: TransactionIdString | None = None,
+        query_as_of_time: Timestamp | None = None,
+        include_status_details: BooleanNullable | None = None,
+        attributes_to_get: TableAttributesList | None = None,
         **kwargs,
     ) -> GetTablesResponse:
         """Retrieves the definitions of some or all of the tables in a given
@@ -13087,9 +13192,9 @@ class GlueApi:
     def get_triggers(
         self,
         context: RequestContext,
-        next_token: GenericString = None,
-        dependent_job_name: NameString = None,
-        max_results: OrchestrationPageSize200 = None,
+        next_token: GenericString | None = None,
+        dependent_job_name: NameString | None = None,
+        max_results: OrchestrationPageSize200 | None = None,
         **kwargs,
     ) -> GetTriggersResponse:
         """Gets all the triggers associated with a job.
@@ -13114,9 +13219,9 @@ class GlueApi:
         table_name: NameString,
         partition_values: ValueStringList,
         supported_permission_types: PermissionTypeList,
-        region: ValueString = None,
-        audit_context: AuditContext = None,
-        query_session_context: QuerySessionContext = None,
+        region: ValueString | None = None,
+        audit_context: AuditContext | None = None,
+        query_session_context: QuerySessionContext | None = None,
         **kwargs,
     ) -> GetUnfilteredPartitionMetadataResponse:
         """Retrieves partition metadata from the Data Catalog that contains
@@ -13155,13 +13260,13 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         supported_permission_types: PermissionTypeList,
-        region: ValueString = None,
-        expression: PredicateString = None,
-        audit_context: AuditContext = None,
-        next_token: Token = None,
-        segment: Segment = None,
-        max_results: PageSize = None,
-        query_session_context: QuerySessionContext = None,
+        region: ValueString | None = None,
+        expression: PredicateString | None = None,
+        audit_context: AuditContext | None = None,
+        next_token: Token | None = None,
+        segment: Segment | None = None,
+        max_results: PageSize | None = None,
+        query_session_context: QuerySessionContext | None = None,
         **kwargs,
     ) -> GetUnfilteredPartitionsMetadataResponse:
         """Retrieves partition metadata from the Data Catalog that contains
@@ -13204,13 +13309,13 @@ class GlueApi:
         database_name: NameString,
         name: NameString,
         supported_permission_types: PermissionTypeList,
-        region: ValueString = None,
-        audit_context: AuditContext = None,
-        parent_resource_arn: ArnString = None,
-        root_resource_arn: ArnString = None,
-        supported_dialect: SupportedDialect = None,
-        permissions: PermissionList = None,
-        query_session_context: QuerySessionContext = None,
+        region: ValueString | None = None,
+        audit_context: AuditContext | None = None,
+        parent_resource_arn: ArnString | None = None,
+        root_resource_arn: ArnString | None = None,
+        supported_dialect: SupportedDialect | None = None,
+        permissions: PermissionList | None = None,
+        query_session_context: QuerySessionContext | None = None,
         **kwargs,
     ) -> GetUnfilteredTableMetadataResponse:
         """Allows a third-party analytical engine to retrieve unfiltered table
@@ -13270,7 +13375,7 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         function_name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> GetUserDefinedFunctionResponse:
         """Retrieves a specified function definition from the Data Catalog.
@@ -13293,10 +13398,10 @@ class GlueApi:
         self,
         context: RequestContext,
         pattern: NameString,
-        catalog_id: CatalogIdString = None,
-        database_name: NameString = None,
-        next_token: Token = None,
-        max_results: CatalogGetterPageSize = None,
+        catalog_id: CatalogIdString | None = None,
+        database_name: NameString | None = None,
+        next_token: Token | None = None,
+        max_results: CatalogGetterPageSize | None = None,
         **kwargs,
     ) -> GetUserDefinedFunctionsResponse:
         """Retrieves multiple function definitions from the Data Catalog.
@@ -13322,7 +13427,7 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        include_graph: NullableBoolean = None,
+        include_graph: NullableBoolean | None = None,
         **kwargs,
     ) -> GetWorkflowResponse:
         """Retrieves resource metadata for a workflow.
@@ -13344,7 +13449,7 @@ class GlueApi:
         context: RequestContext,
         name: NameString,
         run_id: IdString,
-        include_graph: NullableBoolean = None,
+        include_graph: NullableBoolean | None = None,
         **kwargs,
     ) -> GetWorkflowRunResponse:
         """Retrieves the metadata for a given workflow run. Job run history is
@@ -13382,9 +13487,9 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        include_graph: NullableBoolean = None,
-        next_token: GenericString = None,
-        max_results: PageSize = None,
+        include_graph: NullableBoolean | None = None,
+        next_token: GenericString | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> GetWorkflowRunsResponse:
         """Retrieves metadata for all runs of a given workflow.
@@ -13403,7 +13508,7 @@ class GlueApi:
 
     @handler("ImportCatalogToGlue")
     def import_catalog_to_glue(
-        self, context: RequestContext, catalog_id: CatalogIdString = None, **kwargs
+        self, context: RequestContext, catalog_id: CatalogIdString | None = None, **kwargs
     ) -> ImportCatalogToGlueResponse:
         """Imports an existing Amazon Athena Data Catalog to Glue.
 
@@ -13418,9 +13523,9 @@ class GlueApi:
     def list_blueprints(
         self,
         context: RequestContext,
-        next_token: GenericString = None,
-        max_results: OrchestrationPageSize25 = None,
-        tags: TagsMap = None,
+        next_token: GenericString | None = None,
+        max_results: OrchestrationPageSize25 | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> ListBlueprintsResponse:
         """Lists all the blueprint names in an account.
@@ -13439,8 +13544,8 @@ class GlueApi:
     def list_column_statistics_task_runs(
         self,
         context: RequestContext,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListColumnStatisticsTaskRunsResponse:
         """List all task runs for a particular account.
@@ -13456,8 +13561,8 @@ class GlueApi:
     def list_connection_types(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListConnectionTypesResponse:
         """The ``ListConnectionTypes`` API provides a discovery mechanism to learn
@@ -13479,9 +13584,9 @@ class GlueApi:
     def list_crawlers(
         self,
         context: RequestContext,
-        max_results: PageSize = None,
-        next_token: Token = None,
-        tags: TagsMap = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> ListCrawlersResponse:
         """Retrieves the names of all crawler resources in this Amazon Web Services
@@ -13507,9 +13612,9 @@ class GlueApi:
         self,
         context: RequestContext,
         crawler_name: NameString,
-        max_results: PageSize = None,
-        filters: CrawlsFilterList = None,
-        next_token: Token = None,
+        max_results: PageSize | None = None,
+        filters: CrawlsFilterList | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListCrawlsResponse:
         """Returns all the crawls of a specified crawler. Returns only the crawls
@@ -13546,9 +13651,9 @@ class GlueApi:
     def list_custom_entity_types(
         self,
         context: RequestContext,
-        next_token: PaginationToken = None,
-        max_results: PageSize = None,
-        tags: TagsMap = None,
+        next_token: PaginationToken | None = None,
+        max_results: PageSize | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> ListCustomEntityTypesResponse:
         """Lists all the custom patterns that have been created.
@@ -13567,9 +13672,9 @@ class GlueApi:
     def list_data_quality_results(
         self,
         context: RequestContext,
-        filter: DataQualityResultFilterCriteria = None,
-        next_token: PaginationToken = None,
-        max_results: PageSize = None,
+        filter: DataQualityResultFilterCriteria | None = None,
+        next_token: PaginationToken | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> ListDataQualityResultsResponse:
         """Returns all data quality execution results for your account.
@@ -13588,9 +13693,9 @@ class GlueApi:
     def list_data_quality_rule_recommendation_runs(
         self,
         context: RequestContext,
-        filter: DataQualityRuleRecommendationRunFilter = None,
-        next_token: PaginationToken = None,
-        max_results: PageSize = None,
+        filter: DataQualityRuleRecommendationRunFilter | None = None,
+        next_token: PaginationToken | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> ListDataQualityRuleRecommendationRunsResponse:
         """Lists the recommendation runs meeting the filter criteria.
@@ -13609,9 +13714,9 @@ class GlueApi:
     def list_data_quality_ruleset_evaluation_runs(
         self,
         context: RequestContext,
-        filter: DataQualityRulesetEvaluationRunFilter = None,
-        next_token: PaginationToken = None,
-        max_results: PageSize = None,
+        filter: DataQualityRulesetEvaluationRunFilter | None = None,
+        next_token: PaginationToken | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> ListDataQualityRulesetEvaluationRunsResponse:
         """Lists all the runs meeting the filter criteria, where a ruleset is
@@ -13631,10 +13736,10 @@ class GlueApi:
     def list_data_quality_rulesets(
         self,
         context: RequestContext,
-        next_token: PaginationToken = None,
-        max_results: PageSize = None,
-        filter: DataQualityRulesetFilterCriteria = None,
-        tags: TagsMap = None,
+        next_token: PaginationToken | None = None,
+        max_results: PageSize | None = None,
+        filter: DataQualityRulesetFilterCriteria | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> ListDataQualityRulesetsResponse:
         """Returns a paginated list of rulesets for the specified list of Glue
@@ -13656,11 +13761,11 @@ class GlueApi:
     def list_data_quality_statistic_annotations(
         self,
         context: RequestContext,
-        statistic_id: HashString = None,
-        profile_id: HashString = None,
-        timestamp_filter: TimestampFilter = None,
-        max_results: PageSize = None,
-        next_token: PaginationToken = None,
+        statistic_id: HashString | None = None,
+        profile_id: HashString | None = None,
+        timestamp_filter: TimestampFilter | None = None,
+        max_results: PageSize | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListDataQualityStatisticAnnotationsResponse:
         """Retrieve annotations for a data quality statistic.
@@ -13680,11 +13785,11 @@ class GlueApi:
     def list_data_quality_statistics(
         self,
         context: RequestContext,
-        statistic_id: HashString = None,
-        profile_id: HashString = None,
-        timestamp_filter: TimestampFilter = None,
-        max_results: PageSize = None,
-        next_token: PaginationToken = None,
+        statistic_id: HashString | None = None,
+        profile_id: HashString | None = None,
+        timestamp_filter: TimestampFilter | None = None,
+        max_results: PageSize | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListDataQualityStatisticsResponse:
         """Retrieves a list of data quality statistics.
@@ -13705,9 +13810,9 @@ class GlueApi:
     def list_dev_endpoints(
         self,
         context: RequestContext,
-        next_token: GenericString = None,
-        max_results: PageSize = None,
-        tags: TagsMap = None,
+        next_token: GenericString | None = None,
+        max_results: PageSize | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> ListDevEndpointsResponse:
         """Retrieves the names of all ``DevEndpoint`` resources in this Amazon Web
@@ -13735,11 +13840,11 @@ class GlueApi:
     def list_entities(
         self,
         context: RequestContext,
-        connection_name: NameString = None,
-        catalog_id: CatalogIdString = None,
-        parent_entity_name: EntityName = None,
-        next_token: NextToken = None,
-        data_store_api_version: ApiVersion = None,
+        connection_name: NameString | None = None,
+        catalog_id: CatalogIdString | None = None,
+        parent_entity_name: EntityName | None = None,
+        next_token: NextToken | None = None,
+        data_store_api_version: ApiVersion | None = None,
         **kwargs,
     ) -> ListEntitiesResponse:
         """Returns the available entities supported by the connection type.
@@ -13765,9 +13870,9 @@ class GlueApi:
     def list_jobs(
         self,
         context: RequestContext,
-        next_token: GenericString = None,
-        max_results: PageSize = None,
-        tags: TagsMap = None,
+        next_token: GenericString | None = None,
+        max_results: PageSize | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> ListJobsResponse:
         """Retrieves the names of all job resources in this Amazon Web Services
@@ -13795,11 +13900,11 @@ class GlueApi:
     def list_ml_transforms(
         self,
         context: RequestContext,
-        next_token: PaginationToken = None,
-        max_results: PageSize = None,
-        filter: TransformFilterCriteria = None,
-        sort: TransformSortCriteria = None,
-        tags: TagsMap = None,
+        next_token: PaginationToken | None = None,
+        max_results: PageSize | None = None,
+        filter: TransformFilterCriteria | None = None,
+        sort: TransformSortCriteria | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> ListMLTransformsResponse:
         """Retrieves a sortable, filterable list of existing Glue machine learning
@@ -13828,8 +13933,8 @@ class GlueApi:
     def list_registries(
         self,
         context: RequestContext,
-        max_results: MaxResultsNumber = None,
-        next_token: SchemaRegistryTokenString = None,
+        max_results: MaxResultsNumber | None = None,
+        next_token: SchemaRegistryTokenString | None = None,
         **kwargs,
     ) -> ListRegistriesResponse:
         """Returns a list of registries that you have created, with minimal
@@ -13851,8 +13956,8 @@ class GlueApi:
         self,
         context: RequestContext,
         schema_id: SchemaId,
-        max_results: MaxResultsNumber = None,
-        next_token: SchemaRegistryTokenString = None,
+        max_results: MaxResultsNumber | None = None,
+        next_token: SchemaRegistryTokenString | None = None,
         **kwargs,
     ) -> ListSchemaVersionsResponse:
         """Returns a list of schema versions that you have created, with minimal
@@ -13875,9 +13980,9 @@ class GlueApi:
     def list_schemas(
         self,
         context: RequestContext,
-        registry_id: RegistryId = None,
-        max_results: MaxResultsNumber = None,
-        next_token: SchemaRegistryTokenString = None,
+        registry_id: RegistryId | None = None,
+        max_results: MaxResultsNumber | None = None,
+        next_token: SchemaRegistryTokenString | None = None,
         **kwargs,
     ) -> ListSchemasResponse:
         """Returns a list of schemas with minimal details. Schemas in Deleting
@@ -13903,10 +14008,10 @@ class GlueApi:
     def list_sessions(
         self,
         context: RequestContext,
-        next_token: OrchestrationToken = None,
-        max_results: PageSize = None,
-        tags: TagsMap = None,
-        request_origin: OrchestrationNameString = None,
+        next_token: OrchestrationToken | None = None,
+        max_results: PageSize | None = None,
+        tags: TagsMap | None = None,
+        request_origin: OrchestrationNameString | None = None,
         **kwargs,
     ) -> ListSessionsResponse:
         """Retrieve a list of sessions.
@@ -13929,8 +14034,8 @@ class GlueApi:
         self,
         context: RequestContext,
         session_id: NameString,
-        request_origin: OrchestrationNameString = None,
-        next_token: OrchestrationToken = None,
+        request_origin: OrchestrationNameString | None = None,
+        next_token: OrchestrationToken | None = None,
         **kwargs,
     ) -> ListStatementsResponse:
         """Lists statements for the session.
@@ -13974,10 +14079,10 @@ class GlueApi:
     def list_triggers(
         self,
         context: RequestContext,
-        next_token: GenericString = None,
-        dependent_job_name: NameString = None,
-        max_results: OrchestrationPageSize200 = None,
-        tags: TagsMap = None,
+        next_token: GenericString | None = None,
+        dependent_job_name: NameString | None = None,
+        max_results: OrchestrationPageSize200 | None = None,
+        tags: TagsMap | None = None,
         **kwargs,
     ) -> ListTriggersResponse:
         """Retrieves the names of all trigger resources in this Amazon Web Services
@@ -14006,8 +14111,8 @@ class GlueApi:
     def list_usage_profiles(
         self,
         context: RequestContext,
-        next_token: OrchestrationToken = None,
-        max_results: OrchestrationPageSize200 = None,
+        next_token: OrchestrationToken | None = None,
+        max_results: OrchestrationPageSize200 | None = None,
         **kwargs,
     ) -> ListUsageProfilesResponse:
         """List all the Glue usage profiles.
@@ -14026,8 +14131,8 @@ class GlueApi:
     def list_workflows(
         self,
         context: RequestContext,
-        next_token: GenericString = None,
-        max_results: OrchestrationPageSize25 = None,
+        next_token: GenericString | None = None,
+        max_results: OrchestrationPageSize25 | None = None,
         **kwargs,
     ) -> ListWorkflowsResponse:
         """Lists names of workflows created in the account.
@@ -14046,9 +14151,9 @@ class GlueApi:
         self,
         context: RequestContext,
         integration_identifier: String128,
-        description: IntegrationDescription = None,
-        data_filter: String2048 = None,
-        integration_name: String128 = None,
+        description: IntegrationDescription | None = None,
+        data_filter: String2048 | None = None,
+        integration_name: String128 | None = None,
         **kwargs,
     ) -> ModifyIntegrationResponse:
         """Modifies a Zero-ETL integration in the caller's account.
@@ -14077,7 +14182,7 @@ class GlueApi:
         self,
         context: RequestContext,
         data_catalog_encryption_settings: DataCatalogEncryptionSettings,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> PutDataCatalogEncryptionSettingsResponse:
         """Sets the security configuration for a specified catalog. After the
@@ -14117,10 +14222,10 @@ class GlueApi:
         self,
         context: RequestContext,
         policy_in_json: PolicyJsonString,
-        resource_arn: GlueResourceArn = None,
-        policy_hash_condition: HashString = None,
-        policy_exists_condition: ExistCondition = None,
-        enable_hybrid: EnableHybridValues = None,
+        resource_arn: GlueResourceArn | None = None,
+        policy_hash_condition: HashString | None = None,
+        policy_exists_condition: ExistCondition | None = None,
+        enable_hybrid: EnableHybridValues | None = None,
         **kwargs,
     ) -> PutResourcePolicyResponse:
         """Sets the Data Catalog resource policy for access control.
@@ -14151,9 +14256,9 @@ class GlueApi:
         self,
         context: RequestContext,
         metadata_key_value: MetadataKeyValuePair,
-        schema_id: SchemaId = None,
-        schema_version_number: SchemaVersionNumber = None,
-        schema_version_id: SchemaVersionIdString = None,
+        schema_id: SchemaId | None = None,
+        schema_version_number: SchemaVersionNumber | None = None,
+        schema_version_id: SchemaVersionIdString | None = None,
         **kwargs,
     ) -> PutSchemaVersionMetadataResponse:
         """Puts the metadata key value pair for a specified schema version ID. A
@@ -14205,12 +14310,12 @@ class GlueApi:
     def query_schema_version_metadata(
         self,
         context: RequestContext,
-        schema_id: SchemaId = None,
-        schema_version_number: SchemaVersionNumber = None,
-        schema_version_id: SchemaVersionIdString = None,
-        metadata_list: MetadataList = None,
-        max_results: QuerySchemaVersionMetadataMaxResults = None,
-        next_token: SchemaRegistryTokenString = None,
+        schema_id: SchemaId | None = None,
+        schema_version_number: SchemaVersionNumber | None = None,
+        schema_version_id: SchemaVersionIdString | None = None,
+        metadata_list: MetadataList | None = None,
+        max_results: QuerySchemaVersionMetadataMaxResults | None = None,
+        next_token: SchemaRegistryTokenString | None = None,
         **kwargs,
     ) -> QuerySchemaVersionMetadataResponse:
         """Queries for the schema version metadata information.
@@ -14272,9 +14377,9 @@ class GlueApi:
         self,
         context: RequestContext,
         metadata_key_value: MetadataKeyValuePair,
-        schema_id: SchemaId = None,
-        schema_version_number: SchemaVersionNumber = None,
-        schema_version_id: SchemaVersionIdString = None,
+        schema_id: SchemaId | None = None,
+        schema_version_number: SchemaVersionNumber | None = None,
+        schema_version_id: SchemaVersionIdString | None = None,
         **kwargs,
     ) -> RemoveSchemaVersionMetadataResponse:
         """Removes a key value pair from the schema version metadata for the
@@ -14294,7 +14399,7 @@ class GlueApi:
 
     @handler("ResetJobBookmark")
     def reset_job_bookmark(
-        self, context: RequestContext, job_name: JobName, run_id: RunId = None, **kwargs
+        self, context: RequestContext, job_name: JobName, run_id: RunId | None = None, **kwargs
     ) -> ResetJobBookmarkResponse:
         """Resets a bookmark entry.
 
@@ -14351,7 +14456,7 @@ class GlueApi:
         context: RequestContext,
         session_id: NameString,
         code: OrchestrationStatementCodeString,
-        request_origin: OrchestrationNameString = None,
+        request_origin: OrchestrationNameString | None = None,
         **kwargs,
     ) -> RunStatementResponse:
         """Executes the statement.
@@ -14375,14 +14480,14 @@ class GlueApi:
     def search_tables(
         self,
         context: RequestContext,
-        catalog_id: CatalogIdString = None,
-        next_token: Token = None,
-        filters: SearchPropertyPredicates = None,
-        search_text: ValueString = None,
-        sort_criteria: SortCriteria = None,
-        max_results: PageSize = None,
-        resource_share_type: ResourceShareType = None,
-        include_status_details: BooleanNullable = None,
+        catalog_id: CatalogIdString | None = None,
+        next_token: Token | None = None,
+        filters: SearchPropertyPredicates | None = None,
+        search_text: ValueString | None = None,
+        sort_criteria: SortCriteria | None = None,
+        max_results: PageSize | None = None,
+        resource_share_type: ResourceShareType | None = None,
+        include_status_details: BooleanNullable | None = None,
         **kwargs,
     ) -> SearchTablesResponse:
         """Searches a set of tables based on properties in the table metadata as
@@ -14422,7 +14527,7 @@ class GlueApi:
         context: RequestContext,
         blueprint_name: OrchestrationNameString,
         role_arn: OrchestrationIAMRoleArn,
-        parameters: BlueprintParameters = None,
+        parameters: BlueprintParameters | None = None,
         **kwargs,
     ) -> StartBlueprintRunResponse:
         """Starts a new run of the specified blueprint.
@@ -14447,10 +14552,10 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         role: NameString,
-        column_name_list: ColumnNameList = None,
-        sample_size: SampleSizePercentage = None,
-        catalog_id: NameString = None,
-        security_configuration: NameString = None,
+        column_name_list: ColumnNameList | None = None,
+        sample_size: SampleSizePercentage | None = None,
+        catalog_id: NameString | None = None,
+        security_configuration: NameString | None = None,
         **kwargs,
     ) -> StartColumnStatisticsTaskRunResponse:
         """Starts a column statistics task run, for a specified table and columns.
@@ -14530,11 +14635,11 @@ class GlueApi:
         context: RequestContext,
         data_source: DataSource,
         role: RoleString,
-        number_of_workers: NullableInteger = None,
-        timeout: Timeout = None,
-        created_ruleset_name: NameString = None,
-        data_quality_security_configuration: NameString = None,
-        client_token: HashString = None,
+        number_of_workers: NullableInteger | None = None,
+        timeout: Timeout | None = None,
+        created_ruleset_name: NameString | None = None,
+        data_quality_security_configuration: NameString | None = None,
+        client_token: HashString | None = None,
         **kwargs,
     ) -> StartDataQualityRuleRecommendationRunResponse:
         """Starts a recommendation run that is used to generate rules when you
@@ -14569,11 +14674,11 @@ class GlueApi:
         data_source: DataSource,
         role: RoleString,
         ruleset_names: RulesetNames,
-        number_of_workers: NullableInteger = None,
-        timeout: Timeout = None,
-        client_token: HashString = None,
-        additional_run_options: DataQualityEvaluationRunAdditionalRunOptions = None,
-        additional_data_sources: DataSourceMap = None,
+        number_of_workers: NullableInteger | None = None,
+        timeout: Timeout | None = None,
+        client_token: HashString | None = None,
+        additional_run_options: DataQualityEvaluationRunAdditionalRunOptions | None = None,
+        additional_data_sources: DataSourceMap | None = None,
         **kwargs,
     ) -> StartDataQualityRulesetEvaluationRunResponse:
         """Once you have a ruleset definition (either recommended or your own), you
@@ -14632,7 +14737,7 @@ class GlueApi:
         context: RequestContext,
         transform_id: HashString,
         input_s3_path: UriString,
-        replace_all_labels: ReplaceBoolean = None,
+        replace_all_labels: ReplaceBoolean | None = None,
         **kwargs,
     ) -> StartImportLabelsTaskRunResponse:
         """Enables you to provide additional labels (examples of truth) to be used
@@ -14682,17 +14787,17 @@ class GlueApi:
         self,
         context: RequestContext,
         job_name: NameString,
-        job_run_queuing_enabled: NullableBoolean = None,
-        job_run_id: IdString = None,
-        arguments: GenericMap = None,
-        allocated_capacity: IntegerValue = None,
-        timeout: Timeout = None,
-        max_capacity: NullableDouble = None,
-        security_configuration: NameString = None,
-        notification_property: NotificationProperty = None,
-        worker_type: WorkerType = None,
-        number_of_workers: NullableInteger = None,
-        execution_class: ExecutionClass = None,
+        job_run_queuing_enabled: NullableBoolean | None = None,
+        job_run_id: IdString | None = None,
+        arguments: GenericMap | None = None,
+        allocated_capacity: IntegerValue | None = None,
+        timeout: Timeout | None = None,
+        max_capacity: NullableDouble | None = None,
+        security_configuration: NameString | None = None,
+        notification_property: NotificationProperty | None = None,
+        worker_type: WorkerType | None = None,
+        number_of_workers: NullableInteger | None = None,
+        execution_class: ExecutionClass | None = None,
         **kwargs,
     ) -> StartJobRunResponse:
         """Starts a job run using a job definition.
@@ -14804,7 +14909,7 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        run_properties: WorkflowRunProperties = None,
+        run_properties: WorkflowRunProperties | None = None,
         **kwargs,
     ) -> StartWorkflowRunResponse:
         """Starts a new run of the specified workflow.
@@ -14889,7 +14994,7 @@ class GlueApi:
         self,
         context: RequestContext,
         id: NameString,
-        request_origin: OrchestrationNameString = None,
+        request_origin: OrchestrationNameString | None = None,
         **kwargs,
     ) -> StopSessionResponse:
         """Stops the session.
@@ -14963,9 +15068,9 @@ class GlueApi:
     def test_connection(
         self,
         context: RequestContext,
-        connection_name: NameString = None,
-        catalog_id: CatalogIdString = None,
-        test_connection_input: TestConnectionInput = None,
+        connection_name: NameString | None = None,
+        catalog_id: CatalogIdString | None = None,
+        test_connection_input: TestConnectionInput | None = None,
         **kwargs,
     ) -> TestConnectionResponse:
         """Tests a connection to a service to validate the service credentials that
@@ -15021,7 +15126,7 @@ class GlueApi:
         context: RequestContext,
         name: OrchestrationNameString,
         blueprint_location: OrchestrationS3Location,
-        description: Generic512CharString = None,
+        description: Generic512CharString | None = None,
         **kwargs,
     ) -> UpdateBlueprintResponse:
         """Updates a registered blueprint.
@@ -15068,10 +15173,10 @@ class GlueApi:
     def update_classifier(
         self,
         context: RequestContext,
-        grok_classifier: UpdateGrokClassifierRequest = None,
-        xml_classifier: UpdateXMLClassifierRequest = None,
-        json_classifier: UpdateJsonClassifierRequest = None,
-        csv_classifier: UpdateCsvClassifierRequest = None,
+        grok_classifier: UpdateGrokClassifierRequest | None = None,
+        xml_classifier: UpdateXMLClassifierRequest | None = None,
+        json_classifier: UpdateJsonClassifierRequest | None = None,
+        csv_classifier: UpdateCsvClassifierRequest | None = None,
         **kwargs,
     ) -> UpdateClassifierResponse:
         """Modifies an existing classifier (a ``GrokClassifier``, an
@@ -15098,7 +15203,7 @@ class GlueApi:
         table_name: NameString,
         partition_values: ValueStringList,
         column_statistics_list: UpdateColumnStatisticsList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> UpdateColumnStatisticsForPartitionResponse:
         """Creates or updates partition statistics of columns.
@@ -15127,7 +15232,7 @@ class GlueApi:
         database_name: NameString,
         table_name: NameString,
         column_statistics_list: UpdateColumnStatisticsList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> UpdateColumnStatisticsForTableResponse:
         """Creates or updates table statistics of columns.
@@ -15154,12 +15259,12 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         table_name: NameString,
-        role: NameString = None,
-        schedule: CronExpression = None,
-        column_name_list: ColumnNameList = None,
-        sample_size: SampleSizePercentage = None,
-        catalog_id: NameString = None,
-        security_configuration: NameString = None,
+        role: NameString | None = None,
+        schedule: CronExpression | None = None,
+        column_name_list: ColumnNameList | None = None,
+        sample_size: SampleSizePercentage | None = None,
+        catalog_id: NameString | None = None,
+        security_configuration: NameString | None = None,
         **kwargs,
     ) -> UpdateColumnStatisticsTaskSettingsResponse:
         """Updates settings for a column statistics task.
@@ -15188,7 +15293,7 @@ class GlueApi:
         context: RequestContext,
         name: NameString,
         connection_input: ConnectionInput,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> UpdateConnectionResponse:
         """Updates a connection definition in the Data Catalog.
@@ -15210,19 +15315,19 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        role: Role = None,
-        database_name: DatabaseName = None,
-        description: DescriptionStringRemovable = None,
-        targets: CrawlerTargets = None,
-        schedule: CronExpression = None,
-        classifiers: ClassifierNameList = None,
-        table_prefix: TablePrefix = None,
-        schema_change_policy: SchemaChangePolicy = None,
-        recrawl_policy: RecrawlPolicy = None,
-        lineage_configuration: LineageConfiguration = None,
-        lake_formation_configuration: LakeFormationConfiguration = None,
-        configuration: CrawlerConfiguration = None,
-        crawler_security_configuration: CrawlerSecurityConfiguration = None,
+        role: Role | None = None,
+        database_name: DatabaseName | None = None,
+        description: DescriptionStringRemovable | None = None,
+        targets: CrawlerTargets | None = None,
+        schedule: CronExpression | None = None,
+        classifiers: ClassifierNameList | None = None,
+        table_prefix: TablePrefix | None = None,
+        schema_change_policy: SchemaChangePolicy | None = None,
+        recrawl_policy: RecrawlPolicy | None = None,
+        lineage_configuration: LineageConfiguration | None = None,
+        lake_formation_configuration: LakeFormationConfiguration | None = None,
+        configuration: CrawlerConfiguration | None = None,
+        crawler_security_configuration: CrawlerSecurityConfiguration | None = None,
         **kwargs,
     ) -> UpdateCrawlerResponse:
         """Updates a crawler. If a crawler is running, you must stop it using
@@ -15262,7 +15367,7 @@ class GlueApi:
         self,
         context: RequestContext,
         crawler_name: NameString,
-        schedule: CronExpression = None,
+        schedule: CronExpression | None = None,
         **kwargs,
     ) -> UpdateCrawlerScheduleResponse:
         """Updates the schedule of a crawler using a ``cron`` expression.
@@ -15285,8 +15390,8 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        description: DescriptionString = None,
-        ruleset: DataQualityRulesetString = None,
+        description: DescriptionString | None = None,
+        ruleset: DataQualityRulesetString | None = None,
         **kwargs,
     ) -> UpdateDataQualityRulesetResponse:
         """Updates the specified data quality ruleset.
@@ -15311,7 +15416,7 @@ class GlueApi:
         context: RequestContext,
         name: NameString,
         database_input: DatabaseInput,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> UpdateDatabaseResponse:
         """Updates an existing database definition in a Data Catalog.
@@ -15338,13 +15443,13 @@ class GlueApi:
         self,
         context: RequestContext,
         endpoint_name: GenericString,
-        public_key: GenericString = None,
-        add_public_keys: PublicKeysList = None,
-        delete_public_keys: PublicKeysList = None,
-        custom_libraries: DevEndpointCustomLibraries = None,
-        update_etl_libraries: BooleanValue = None,
-        delete_arguments: StringList = None,
-        add_arguments: MapValue = None,
+        public_key: GenericString | None = None,
+        add_public_keys: PublicKeysList | None = None,
+        delete_public_keys: PublicKeysList | None = None,
+        custom_libraries: DevEndpointCustomLibraries | None = None,
+        update_etl_libraries: BooleanValue | None = None,
+        delete_arguments: StringList | None = None,
+        add_arguments: MapValue | None = None,
         **kwargs,
     ) -> UpdateDevEndpointResponse:
         """Updates a specified development endpoint.
@@ -15374,8 +15479,8 @@ class GlueApi:
         self,
         context: RequestContext,
         resource_arn: String128,
-        source_processing_properties: SourceProcessingProperties = None,
-        target_processing_properties: TargetProcessingProperties = None,
+        source_processing_properties: SourceProcessingProperties | None = None,
+        target_processing_properties: TargetProcessingProperties | None = None,
         **kwargs,
     ) -> UpdateIntegrationResourcePropertyResponse:
         """This API can be used for updating the ``ResourceProperty`` of the Glue
@@ -15404,8 +15509,8 @@ class GlueApi:
         context: RequestContext,
         resource_arn: String128,
         table_name: String128,
-        source_table_config: SourceTableConfig = None,
-        target_table_config: TargetTableConfig = None,
+        source_table_config: SourceTableConfig | None = None,
+        target_table_config: TargetTableConfig | None = None,
         **kwargs,
     ) -> UpdateIntegrationTablePropertiesResponse:
         """This API is used to provide optional override properties for the tables
@@ -15456,15 +15561,15 @@ class GlueApi:
     def update_job_from_source_control(
         self,
         context: RequestContext,
-        job_name: NameString = None,
-        provider: SourceControlProvider = None,
-        repository_name: NameString = None,
-        repository_owner: NameString = None,
-        branch_name: NameString = None,
-        folder: NameString = None,
-        commit_id: CommitIdString = None,
-        auth_strategy: SourceControlAuthStrategy = None,
-        auth_token: AuthTokenString = None,
+        job_name: NameString | None = None,
+        provider: SourceControlProvider | None = None,
+        repository_name: NameString | None = None,
+        repository_owner: NameString | None = None,
+        branch_name: NameString | None = None,
+        folder: NameString | None = None,
+        commit_id: CommitIdString | None = None,
+        auth_strategy: SourceControlAuthStrategy | None = None,
+        auth_token: AuthTokenString | None = None,
         **kwargs,
     ) -> UpdateJobFromSourceControlResponse:
         """Synchronizes a job from the source control repository. This operation
@@ -15501,16 +15606,16 @@ class GlueApi:
         self,
         context: RequestContext,
         transform_id: HashString,
-        name: NameString = None,
-        description: DescriptionString = None,
-        parameters: TransformParameters = None,
-        role: RoleString = None,
-        glue_version: GlueVersionString = None,
-        max_capacity: NullableDouble = None,
-        worker_type: WorkerType = None,
-        number_of_workers: NullableInteger = None,
-        timeout: Timeout = None,
-        max_retries: NullableInteger = None,
+        name: NameString | None = None,
+        description: DescriptionString | None = None,
+        parameters: TransformParameters | None = None,
+        role: RoleString | None = None,
+        glue_version: GlueVersionString | None = None,
+        max_capacity: NullableDouble | None = None,
+        worker_type: WorkerType | None = None,
+        number_of_workers: NullableInteger | None = None,
+        timeout: Timeout | None = None,
+        max_retries: NullableInteger | None = None,
         **kwargs,
     ) -> UpdateMLTransformResponse:
         """Updates an existing machine learning transform. Call this operation to
@@ -15555,7 +15660,7 @@ class GlueApi:
         table_name: NameString,
         partition_value_list: BoundedPartitionValueList,
         partition_input: PartitionInput,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> UpdatePartitionResponse:
         """Updates a partition.
@@ -15603,9 +15708,9 @@ class GlueApi:
         self,
         context: RequestContext,
         schema_id: SchemaId,
-        schema_version_number: SchemaVersionNumber = None,
-        compatibility: Compatibility = None,
-        description: DescriptionString = None,
+        schema_version_number: SchemaVersionNumber | None = None,
+        compatibility: Compatibility | None = None,
+        description: DescriptionString | None = None,
         **kwargs,
     ) -> UpdateSchemaResponse:
         """Updates the description, compatibility setting, or version checkpoint
@@ -15640,15 +15745,15 @@ class GlueApi:
     def update_source_control_from_job(
         self,
         context: RequestContext,
-        job_name: NameString = None,
-        provider: SourceControlProvider = None,
-        repository_name: NameString = None,
-        repository_owner: NameString = None,
-        branch_name: NameString = None,
-        folder: NameString = None,
-        commit_id: CommitIdString = None,
-        auth_strategy: SourceControlAuthStrategy = None,
-        auth_token: AuthTokenString = None,
+        job_name: NameString | None = None,
+        provider: SourceControlProvider | None = None,
+        repository_name: NameString | None = None,
+        repository_owner: NameString | None = None,
+        branch_name: NameString | None = None,
+        folder: NameString | None = None,
+        commit_id: CommitIdString | None = None,
+        auth_strategy: SourceControlAuthStrategy | None = None,
+        auth_token: AuthTokenString | None = None,
         **kwargs,
     ) -> UpdateSourceControlFromJobResponse:
         """Synchronizes a job to the source control repository. This operation
@@ -15686,12 +15791,12 @@ class GlueApi:
         context: RequestContext,
         database_name: NameString,
         table_input: TableInput,
-        catalog_id: CatalogIdString = None,
-        skip_archive: BooleanNullable = None,
-        transaction_id: TransactionIdString = None,
-        version_id: VersionString = None,
-        view_update_action: ViewUpdateAction = None,
-        force: Boolean = None,
+        catalog_id: CatalogIdString | None = None,
+        skip_archive: BooleanNullable | None = None,
+        transaction_id: TransactionIdString | None = None,
+        version_id: VersionString | None = None,
+        view_update_action: ViewUpdateAction | None = None,
+        force: Boolean | None = None,
         **kwargs,
     ) -> UpdateTableResponse:
         """Updates a metadata table in the Data Catalog.
@@ -15773,7 +15878,7 @@ class GlueApi:
         context: RequestContext,
         name: NameString,
         configuration: ProfileConfiguration,
-        description: DescriptionString = None,
+        description: DescriptionString | None = None,
         **kwargs,
     ) -> UpdateUsageProfileResponse:
         """Update an Glue usage profile.
@@ -15799,7 +15904,7 @@ class GlueApi:
         database_name: NameString,
         function_name: NameString,
         function_input: UserDefinedFunctionInput,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> UpdateUserDefinedFunctionResponse:
         """Updates an existing function definition in the Data Catalog.
@@ -15824,9 +15929,9 @@ class GlueApi:
         self,
         context: RequestContext,
         name: NameString,
-        description: WorkflowDescriptionString = None,
-        default_run_properties: WorkflowRunProperties = None,
-        max_concurrent_runs: NullableInteger = None,
+        description: WorkflowDescriptionString | None = None,
+        default_run_properties: WorkflowRunProperties | None = None,
+        max_concurrent_runs: NullableInteger | None = None,
         **kwargs,
     ) -> UpdateWorkflowResponse:
         """Updates an existing workflow.

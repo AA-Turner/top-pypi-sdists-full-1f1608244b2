@@ -35,6 +35,7 @@ LookupAttributeValue = str
 MaxQueryResults = int
 MaxResults = int
 NextToken = str
+OperatorTargetListMember = str
 OperatorValue = str
 PaginationToken = str
 PartitionKeyName = str
@@ -161,6 +162,11 @@ class LookupAttributeKey(StrEnum):
     AccessKeyId = "AccessKeyId"
 
 
+class MaxEventSize(StrEnum):
+    Standard = "Standard"
+    Large = "Large"
+
+
 class QueryStatus(StrEnum):
     QUEUED = "QUEUED"
     RUNNING = "RUNNING"
@@ -184,6 +190,11 @@ class RefreshScheduleFrequencyUnit(StrEnum):
 class RefreshScheduleStatus(StrEnum):
     ENABLED = "ENABLED"
     DISABLED = "DISABLED"
+
+
+class Type(StrEnum):
+    TagContext = "TagContext"
+    RequestContext = "RequestContext"
 
 
 class AccessDeniedException(ServiceException):
@@ -518,6 +529,17 @@ class InsufficientEncryptionPolicyException(ServiceException):
     """
 
     code: str = "InsufficientEncryptionPolicyException"
+    sender_fault: bool = False
+    status_code: int = 400
+
+
+class InsufficientIAMAccessPermissionException(ServiceException):
+    """The task can't be completed because you are signed in with an account
+    that lacks permissions to view or create a service-linked role. Sign in
+    with an account that has the required permissions and then try again.
+    """
+
+    code: str = "InsufficientIAMAccessPermissionException"
     sender_fault: bool = False
     status_code: int = 400
 
@@ -1187,6 +1209,19 @@ class Channel(TypedDict, total=False):
 
 
 Channels = List[Channel]
+OperatorTargetList = List[OperatorTargetListMember]
+
+
+class ContextKeySelector(TypedDict, total=False):
+    """An object that contains information types to be included in CloudTrail
+    enriched events.
+    """
+
+    Type: Type
+    Equals: OperatorTargetList
+
+
+ContextKeySelectors = List[ContextKeySelector]
 
 
 class Destination(TypedDict, total=False):
@@ -1729,6 +1764,16 @@ class GetDashboardResponse(TypedDict, total=False):
     TerminationProtectionEnabled: Optional[TerminationProtectionEnabled]
 
 
+class GetEventConfigurationRequest(ServiceRequest):
+    EventDataStore: Optional[String]
+
+
+class GetEventConfigurationResponse(TypedDict, total=False):
+    EventDataStoreArn: Optional[EventDataStoreArn]
+    MaxEventSize: Optional[MaxEventSize]
+    ContextKeySelectors: Optional[ContextKeySelectors]
+
+
 class GetEventDataStoreRequest(ServiceRequest):
     EventDataStore: EventDataStoreArn
 
@@ -2164,6 +2209,18 @@ class LookupEventsResponse(TypedDict, total=False):
     NextToken: Optional[NextToken]
 
 
+class PutEventConfigurationRequest(ServiceRequest):
+    EventDataStore: Optional[String]
+    MaxEventSize: MaxEventSize
+    ContextKeySelectors: ContextKeySelectors
+
+
+class PutEventConfigurationResponse(TypedDict, total=False):
+    EventDataStoreArn: Optional[EventDataStoreArn]
+    MaxEventSize: Optional[MaxEventSize]
+    ContextKeySelectors: Optional[ContextKeySelectors]
+
+
 class PutEventSelectorsRequest(ServiceRequest):
     TrailName: String
     EventSelectors: Optional[EventSelectors]
@@ -2526,8 +2583,8 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         query_id: UUID,
-        event_data_store: EventDataStoreArn = None,
-        event_data_store_owner_account_id: AccountId = None,
+        event_data_store: EventDataStoreArn | None = None,
+        event_data_store_owner_account_id: AccountId | None = None,
         **kwargs,
     ) -> CancelQueryResponse:
         """Cancels a query if the query is not in a terminated state, such as
@@ -2562,7 +2619,7 @@ class CloudtrailApi:
         name: ChannelName,
         source: Source,
         destinations: Destinations,
-        tags: TagsList = None,
+        tags: TagsList | None = None,
         **kwargs,
     ) -> CreateChannelResponse:
         """Creates a channel for CloudTrail to ingest events from a partner or
@@ -2595,10 +2652,10 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         name: DashboardName,
-        refresh_schedule: RefreshSchedule = None,
-        tags_list: TagsList = None,
-        termination_protection_enabled: TerminationProtectionEnabled = None,
-        widgets: RequestWidgetList = None,
+        refresh_schedule: RefreshSchedule | None = None,
+        tags_list: TagsList | None = None,
+        termination_protection_enabled: TerminationProtectionEnabled | None = None,
+        widgets: RequestWidgetList | None = None,
         **kwargs,
     ) -> CreateDashboardResponse:
         """Creates a custom dashboard or the Highlights dashboard.
@@ -2657,15 +2714,15 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         name: EventDataStoreName,
-        advanced_event_selectors: AdvancedEventSelectors = None,
-        multi_region_enabled: Boolean = None,
-        organization_enabled: Boolean = None,
-        retention_period: RetentionPeriod = None,
-        termination_protection_enabled: TerminationProtectionEnabled = None,
-        tags_list: TagsList = None,
-        kms_key_id: EventDataStoreKmsKeyId = None,
-        start_ingestion: Boolean = None,
-        billing_mode: BillingMode = None,
+        advanced_event_selectors: AdvancedEventSelectors | None = None,
+        multi_region_enabled: Boolean | None = None,
+        organization_enabled: Boolean | None = None,
+        retention_period: RetentionPeriod | None = None,
+        termination_protection_enabled: TerminationProtectionEnabled | None = None,
+        tags_list: TagsList | None = None,
+        kms_key_id: EventDataStoreKmsKeyId | None = None,
+        start_ingestion: Boolean | None = None,
+        billing_mode: BillingMode | None = None,
         **kwargs,
     ) -> CreateEventDataStoreResponse:
         """Creates a new event data store.
@@ -2716,16 +2773,16 @@ class CloudtrailApi:
         context: RequestContext,
         name: String,
         s3_bucket_name: String,
-        s3_key_prefix: String = None,
-        sns_topic_name: String = None,
-        include_global_service_events: Boolean = None,
-        is_multi_region_trail: Boolean = None,
-        enable_log_file_validation: Boolean = None,
-        cloud_watch_logs_log_group_arn: String = None,
-        cloud_watch_logs_role_arn: String = None,
-        kms_key_id: String = None,
-        is_organization_trail: Boolean = None,
-        tags_list: TagsList = None,
+        s3_key_prefix: String | None = None,
+        sns_topic_name: String | None = None,
+        include_global_service_events: Boolean | None = None,
+        is_multi_region_trail: Boolean | None = None,
+        enable_log_file_validation: Boolean | None = None,
+        cloud_watch_logs_log_group_arn: String | None = None,
+        cloud_watch_logs_role_arn: String | None = None,
+        kms_key_id: String | None = None,
+        is_organization_trail: Boolean | None = None,
+        tags_list: TagsList | None = None,
         **kwargs,
     ) -> CreateTrailResponse:
         """Creates a trail that specifies the settings for delivery of log data to
@@ -2929,11 +2986,11 @@ class CloudtrailApi:
     def describe_query(
         self,
         context: RequestContext,
-        event_data_store: EventDataStoreArn = None,
-        query_id: UUID = None,
-        query_alias: QueryAlias = None,
-        refresh_id: RefreshId = None,
-        event_data_store_owner_account_id: AccountId = None,
+        event_data_store: EventDataStoreArn | None = None,
+        query_id: UUID | None = None,
+        query_alias: QueryAlias | None = None,
+        refresh_id: RefreshId | None = None,
+        event_data_store_owner_account_id: AccountId | None = None,
         **kwargs,
     ) -> DescribeQueryResponse:
         """Returns metadata about a query, including query run time in
@@ -2969,8 +3026,8 @@ class CloudtrailApi:
     def describe_trails(
         self,
         context: RequestContext,
-        trail_name_list: TrailNameList = None,
-        include_shadow_trails: Boolean = None,
+        trail_name_list: TrailNameList | None = None,
+        include_shadow_trails: Boolean | None = None,
         **kwargs,
     ) -> DescribeTrailsResponse:
         """Retrieves settings for one or more trails associated with the current
@@ -3144,6 +3201,30 @@ class CloudtrailApi:
         """
         raise NotImplementedError
 
+    @handler("GetEventConfiguration")
+    def get_event_configuration(
+        self, context: RequestContext, event_data_store: String | None = None, **kwargs
+    ) -> GetEventConfigurationResponse:
+        """Retrieves the current event configuration settings for the specified
+        event data store, including details about maximum event size and context
+        key selectors configured for the event data store.
+
+        :param event_data_store: The Amazon Resource Name (ARN) or ID suffix of the ARN of the event data
+        store for which you want to retrieve event configuration settings.
+        :returns: GetEventConfigurationResponse
+        :raises CloudTrailARNInvalidException:
+        :raises UnsupportedOperationException:
+        :raises OperationNotPermittedException:
+        :raises EventDataStoreARNInvalidException:
+        :raises EventDataStoreNotFoundException:
+        :raises InvalidEventDataStoreStatusException:
+        :raises InvalidParameterException:
+        :raises InvalidEventDataStoreCategoryException:
+        :raises NoManagementAccountSLRExistsException:
+        :raises InvalidParameterCombinationException:
+        """
+        raise NotImplementedError
+
     @handler("GetEventDataStore")
     def get_event_data_store(
         self, context: RequestContext, event_data_store: EventDataStoreArn, **kwargs
@@ -3224,8 +3305,8 @@ class CloudtrailApi:
     def get_insight_selectors(
         self,
         context: RequestContext,
-        trail_name: String = None,
-        event_data_store: EventDataStoreArn = None,
+        trail_name: String | None = None,
+        event_data_store: EventDataStoreArn | None = None,
         **kwargs,
     ) -> GetInsightSelectorsResponse:
         """Describes the settings for the Insights event selectors that you
@@ -3267,10 +3348,10 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         query_id: UUID,
-        event_data_store: EventDataStoreArn = None,
-        next_token: PaginationToken = None,
-        max_query_results: MaxQueryResults = None,
-        event_data_store_owner_account_id: AccountId = None,
+        event_data_store: EventDataStoreArn | None = None,
+        next_token: PaginationToken | None = None,
+        max_query_results: MaxQueryResults | None = None,
+        event_data_store_owner_account_id: AccountId | None = None,
         **kwargs,
     ) -> GetQueryResultsResponse:
         """Gets event data results of a query. You must specify the ``QueryID``
@@ -3356,8 +3437,8 @@ class CloudtrailApi:
     def list_channels(
         self,
         context: RequestContext,
-        max_results: ListChannelsMaxResultsCount = None,
-        next_token: PaginationToken = None,
+        max_results: ListChannelsMaxResultsCount | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListChannelsResponse:
         """Lists the channels in the current account, and their source names.
@@ -3392,8 +3473,8 @@ class CloudtrailApi:
     def list_event_data_stores(
         self,
         context: RequestContext,
-        next_token: PaginationToken = None,
-        max_results: ListEventDataStoresMaxResultsCount = None,
+        next_token: PaginationToken | None = None,
+        max_results: ListEventDataStoresMaxResultsCount | None = None,
         **kwargs,
     ) -> ListEventDataStoresResponse:
         """Returns information about all event data stores in the account, in the
@@ -3415,8 +3496,8 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         import_id: UUID,
-        max_results: ListImportFailuresMaxResultsCount = None,
-        next_token: PaginationToken = None,
+        max_results: ListImportFailuresMaxResultsCount | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListImportFailuresResponse:
         """Returns a list of failures for the specified import.
@@ -3436,10 +3517,10 @@ class CloudtrailApi:
     def list_imports(
         self,
         context: RequestContext,
-        max_results: ListImportsMaxResultsCount = None,
-        destination: EventDataStoreArn = None,
-        import_status: ImportStatus = None,
-        next_token: PaginationToken = None,
+        max_results: ListImportsMaxResultsCount | None = None,
+        destination: EventDataStoreArn | None = None,
+        import_status: ImportStatus | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListImportsResponse:
         """Returns information on all imports, or a select set of imports by
@@ -3465,13 +3546,13 @@ class CloudtrailApi:
         event_source: EventSource,
         event_name: EventName,
         insight_type: InsightType,
-        error_code: ErrorCode = None,
-        start_time: Date = None,
-        end_time: Date = None,
-        period: InsightsMetricPeriod = None,
-        data_type: InsightsMetricDataType = None,
-        max_results: InsightsMetricMaxResults = None,
-        next_token: InsightsMetricNextToken = None,
+        error_code: ErrorCode | None = None,
+        start_time: Date | None = None,
+        end_time: Date | None = None,
+        period: InsightsMetricPeriod | None = None,
+        data_type: InsightsMetricDataType | None = None,
+        max_results: InsightsMetricMaxResults | None = None,
+        next_token: InsightsMetricNextToken | None = None,
         **kwargs,
     ) -> ListInsightsMetricDataResponse:
         """Returns Insights metrics data for trails that have enabled Insights. The
@@ -3522,9 +3603,9 @@ class CloudtrailApi:
     def list_public_keys(
         self,
         context: RequestContext,
-        start_time: Date = None,
-        end_time: Date = None,
-        next_token: String = None,
+        start_time: Date | None = None,
+        end_time: Date | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListPublicKeysResponse:
         """Returns all public keys whose private keys were used to sign the digest
@@ -3555,11 +3636,11 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         event_data_store: EventDataStoreArn,
-        next_token: PaginationToken = None,
-        max_results: ListQueriesMaxResultsCount = None,
-        start_time: Date = None,
-        end_time: Date = None,
-        query_status: QueryStatus = None,
+        next_token: PaginationToken | None = None,
+        max_results: ListQueriesMaxResultsCount | None = None,
+        start_time: Date | None = None,
+        end_time: Date | None = None,
+        query_status: QueryStatus | None = None,
         **kwargs,
     ) -> ListQueriesResponse:
         """Returns a list of queries and query statuses for the past seven days.
@@ -3599,7 +3680,7 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         resource_id_list: ResourceIdList,
-        next_token: String = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListTagsResponse:
         """Lists the tags for the specified trails, event data stores, dashboards,
@@ -3626,7 +3707,7 @@ class CloudtrailApi:
 
     @handler("ListTrails")
     def list_trails(
-        self, context: RequestContext, next_token: String = None, **kwargs
+        self, context: RequestContext, next_token: String | None = None, **kwargs
     ) -> ListTrailsResponse:
         """Lists trails that are in the current account.
 
@@ -3642,12 +3723,12 @@ class CloudtrailApi:
     def lookup_events(
         self,
         context: RequestContext,
-        lookup_attributes: LookupAttributesList = None,
-        start_time: Date = None,
-        end_time: Date = None,
-        event_category: EventCategory = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        lookup_attributes: LookupAttributesList | None = None,
+        start_time: Date | None = None,
+        end_time: Date | None = None,
+        event_category: EventCategory | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> LookupEventsResponse:
         """Looks up `management
@@ -3715,13 +3796,51 @@ class CloudtrailApi:
         """
         raise NotImplementedError
 
+    @handler("PutEventConfiguration")
+    def put_event_configuration(
+        self,
+        context: RequestContext,
+        max_event_size: MaxEventSize,
+        context_key_selectors: ContextKeySelectors,
+        event_data_store: String | None = None,
+        **kwargs,
+    ) -> PutEventConfigurationResponse:
+        """Updates the event configuration settings for the specified event data
+        store. You can update the maximum event size and context key selectors.
+
+        :param max_event_size: The maximum allowed size for events to be stored in the specified event
+        data store.
+        :param context_key_selectors: A list of context key selectors that will be included to provide
+        enriched event data.
+        :param event_data_store: The Amazon Resource Name (ARN) or ID suffix of the ARN of the event data
+        store for which you want to update event configuration settings.
+        :returns: PutEventConfigurationResponse
+        :raises EventDataStoreARNInvalidException:
+        :raises EventDataStoreNotFoundException:
+        :raises InvalidEventDataStoreStatusException:
+        :raises InvalidEventDataStoreCategoryException:
+        :raises InactiveEventDataStoreException:
+        :raises UnsupportedOperationException:
+        :raises OperationNotPermittedException:
+        :raises ThrottlingException:
+        :raises InvalidParameterException:
+        :raises InvalidParameterCombinationException:
+        :raises CloudTrailARNInvalidException:
+        :raises ConflictException:
+        :raises NotOrganizationMasterAccountException:
+        :raises NoManagementAccountSLRExistsException:
+        :raises InsufficientDependencyServiceAccessPermissionException:
+        :raises InsufficientIAMAccessPermissionException:
+        """
+        raise NotImplementedError
+
     @handler("PutEventSelectors")
     def put_event_selectors(
         self,
         context: RequestContext,
         trail_name: String,
-        event_selectors: EventSelectors = None,
-        advanced_event_selectors: AdvancedEventSelectors = None,
+        event_selectors: EventSelectors | None = None,
+        advanced_event_selectors: AdvancedEventSelectors | None = None,
         **kwargs,
     ) -> PutEventSelectorsResponse:
         """Configures event selectors (also referred to as *basic event selectors*)
@@ -3817,9 +3936,9 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         insight_selectors: InsightSelectors,
-        trail_name: String = None,
-        event_data_store: EventDataStoreArn = None,
-        insights_destination: EventDataStoreArn = None,
+        trail_name: String | None = None,
+        event_data_store: EventDataStoreArn | None = None,
+        insights_destination: EventDataStoreArn | None = None,
         **kwargs,
     ) -> PutInsightSelectorsResponse:
         """Lets you enable Insights event logging by specifying the Insights
@@ -3933,6 +4052,7 @@ class CloudtrailApi:
         :raises OrganizationsNotInUseException:
         :raises UnsupportedOperationException:
         :raises OperationNotPermittedException:
+        :raises InsufficientIAMAccessPermissionException:
         """
         raise NotImplementedError
 
@@ -3999,8 +4119,8 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         search_phrase: SearchSampleQueriesSearchPhrase,
-        max_results: SearchSampleQueriesMaxResults = None,
-        next_token: PaginationToken = None,
+        max_results: SearchSampleQueriesMaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> SearchSampleQueriesResponse:
         """Searches sample queries and returns a list of sample queries that are
@@ -4022,7 +4142,7 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         dashboard_id: DashboardArn,
-        query_parameter_values: QueryParameterValues = None,
+        query_parameter_values: QueryParameterValues | None = None,
         **kwargs,
     ) -> StartDashboardRefreshResponse:
         """Starts a refresh of the specified dashboard.
@@ -4073,6 +4193,7 @@ class CloudtrailApi:
         :raises NotOrganizationMasterAccountException:
         :raises NoManagementAccountSLRExistsException:
         :raises InsufficientDependencyServiceAccessPermissionException:
+        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -4080,11 +4201,11 @@ class CloudtrailApi:
     def start_import(
         self,
         context: RequestContext,
-        destinations: ImportDestinations = None,
-        import_source: ImportSource = None,
-        start_event_time: Date = None,
-        end_event_time: Date = None,
-        import_id: UUID = None,
+        destinations: ImportDestinations | None = None,
+        import_source: ImportSource | None = None,
+        start_event_time: Date | None = None,
+        end_event_time: Date | None = None,
+        import_id: UUID | None = None,
         **kwargs,
     ) -> StartImportResponse:
         """Starts an import of logged trail events from a source S3 bucket to a
@@ -4169,11 +4290,11 @@ class CloudtrailApi:
     def start_query(
         self,
         context: RequestContext,
-        query_statement: QueryStatement = None,
-        delivery_s3_uri: DeliveryS3Uri = None,
-        query_alias: QueryAlias = None,
-        query_parameters: QueryParameters = None,
-        event_data_store_owner_account_id: AccountId = None,
+        query_statement: QueryStatement | None = None,
+        delivery_s3_uri: DeliveryS3Uri | None = None,
+        query_alias: QueryAlias | None = None,
+        query_parameters: QueryParameters | None = None,
+        event_data_store_owner_account_id: AccountId | None = None,
         **kwargs,
     ) -> StartQueryResponse:
         """Starts a CloudTrail Lake query. Use the ``QueryStatement`` parameter to
@@ -4233,6 +4354,7 @@ class CloudtrailApi:
         :raises NotOrganizationMasterAccountException:
         :raises NoManagementAccountSLRExistsException:
         :raises InsufficientDependencyServiceAccessPermissionException:
+        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -4282,8 +4404,8 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         channel: ChannelArn,
-        destinations: Destinations = None,
-        name: ChannelName = None,
+        destinations: Destinations | None = None,
+        name: ChannelName | None = None,
         **kwargs,
     ) -> UpdateChannelResponse:
         """Updates a channel specified by a required channel ARN or UUID.
@@ -4311,9 +4433,9 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         dashboard_id: DashboardArn,
-        widgets: RequestWidgetList = None,
-        refresh_schedule: RefreshSchedule = None,
-        termination_protection_enabled: TerminationProtectionEnabled = None,
+        widgets: RequestWidgetList | None = None,
+        refresh_schedule: RefreshSchedule | None = None,
+        termination_protection_enabled: TerminationProtectionEnabled | None = None,
         **kwargs,
     ) -> UpdateDashboardResponse:
         """Updates the specified dashboard.
@@ -4356,14 +4478,14 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         event_data_store: EventDataStoreArn,
-        name: EventDataStoreName = None,
-        advanced_event_selectors: AdvancedEventSelectors = None,
-        multi_region_enabled: Boolean = None,
-        organization_enabled: Boolean = None,
-        retention_period: RetentionPeriod = None,
-        termination_protection_enabled: TerminationProtectionEnabled = None,
-        kms_key_id: EventDataStoreKmsKeyId = None,
-        billing_mode: BillingMode = None,
+        name: EventDataStoreName | None = None,
+        advanced_event_selectors: AdvancedEventSelectors | None = None,
+        multi_region_enabled: Boolean | None = None,
+        organization_enabled: Boolean | None = None,
+        retention_period: RetentionPeriod | None = None,
+        termination_protection_enabled: TerminationProtectionEnabled | None = None,
+        kms_key_id: EventDataStoreKmsKeyId | None = None,
+        billing_mode: BillingMode | None = None,
         **kwargs,
     ) -> UpdateEventDataStoreResponse:
         """Updates an event data store. The required ``EventDataStore`` value is an
@@ -4431,16 +4553,16 @@ class CloudtrailApi:
         self,
         context: RequestContext,
         name: String,
-        s3_bucket_name: String = None,
-        s3_key_prefix: String = None,
-        sns_topic_name: String = None,
-        include_global_service_events: Boolean = None,
-        is_multi_region_trail: Boolean = None,
-        enable_log_file_validation: Boolean = None,
-        cloud_watch_logs_log_group_arn: String = None,
-        cloud_watch_logs_role_arn: String = None,
-        kms_key_id: String = None,
-        is_organization_trail: Boolean = None,
+        s3_bucket_name: String | None = None,
+        s3_key_prefix: String | None = None,
+        sns_topic_name: String | None = None,
+        include_global_service_events: Boolean | None = None,
+        is_multi_region_trail: Boolean | None = None,
+        enable_log_file_validation: Boolean | None = None,
+        cloud_watch_logs_log_group_arn: String | None = None,
+        cloud_watch_logs_role_arn: String | None = None,
+        kms_key_id: String | None = None,
+        is_organization_trail: Boolean | None = None,
         **kwargs,
     ) -> UpdateTrailResponse:
         """Updates trail settings that control what events you are logging, and how

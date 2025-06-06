@@ -340,7 +340,7 @@ class EvmAttributes(AttrUtil.Attributes):
         default_desc="do not set via_ir during compilation unless solc_via_ir is set",
         argparse_args={
             'action': AttrUtil.UniqueStore,
-            'type': lambda value: Vf.parse_dict('solc_via_ir_map', value, bool)
+            'type': lambda value: Vf.parse_ordered_dict('solc_via_ir_map', value, bool)
         },
         affects_build_cache_key=True,
         disables_build_cache=False,
@@ -382,7 +382,7 @@ class EvmAttributes(AttrUtil.Attributes):
         default_desc="Uses the same Solidity EVM version for all contracts",
         argparse_args={
             'action': AttrUtil.UniqueStore,
-            'type': lambda value: Vf.parse_dict('solc_evm_version_map', value)
+            'type': lambda value: Vf.parse_ordered_dict('solc_evm_version_map', value)
         },
         affects_build_cache_key=True,
         disables_build_cache=False,
@@ -405,7 +405,7 @@ class EvmAttributes(AttrUtil.Attributes):
         default_desc="Uses the same Solidity compiler version for all contracts",
         argparse_args={
             'action': AttrUtil.UniqueStore,
-            'type': lambda value: Vf.parse_dict('solc_map', value)
+            'type': lambda value: Vf.parse_ordered_dict('solc_map', value)
         },
         affects_build_cache_key=True,
         disables_build_cache=False,
@@ -428,7 +428,7 @@ class EvmAttributes(AttrUtil.Attributes):
         default_desc="Uses the same compiler version for all contracts",
         argparse_args={
             'action': AttrUtil.UniqueStore,
-            'type': lambda value: Vf.parse_dict('compiler_map', value)
+            'type': lambda value: Vf.parse_ordered_dict('compiler_map', value)
         },
         affects_build_cache_key=True,
         disables_build_cache=False,
@@ -481,7 +481,7 @@ class EvmAttributes(AttrUtil.Attributes):
         default_desc="Compiles all contracts with the same optimization settings",
         argparse_args={
             'action': AttrUtil.UniqueStore,
-            'type': lambda value: Vf.parse_dict('solc_optimize_map', value)
+            'type': lambda value: Vf.parse_ordered_dict('solc_optimize_map', value)
         },
         affects_build_cache_key=True,
         disables_build_cache=False,

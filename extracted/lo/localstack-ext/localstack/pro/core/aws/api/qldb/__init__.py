@@ -493,9 +493,9 @@ class QldbApi:
         context: RequestContext,
         name: LedgerName,
         permissions_mode: PermissionsMode,
-        tags: Tags = None,
-        deletion_protection: DeletionProtection = None,
-        kms_key: KmsKey = None,
+        tags: Tags | None = None,
+        deletion_protection: DeletionProtection | None = None,
+        kms_key: KmsKey | None = None,
         **kwargs,
     ) -> CreateLedgerResponse:
         """Creates a new ledger in your Amazon Web Services account in the current
@@ -607,7 +607,7 @@ class QldbApi:
         exclusive_end_time: Timestamp,
         s3_export_configuration: S3ExportConfiguration,
         role_arn: Arn,
-        output_format: OutputFormat = None,
+        output_format: OutputFormat | None = None,
         **kwargs,
     ) -> ExportJournalToS3Response:
         """Exports journal contents within a date and time range from a ledger into
@@ -649,7 +649,7 @@ class QldbApi:
         context: RequestContext,
         name: LedgerName,
         block_address: ValueHolder,
-        digest_tip_address: ValueHolder = None,
+        digest_tip_address: ValueHolder | None = None,
         **kwargs,
     ) -> GetBlockResponse:
         """Returns a block object at a specified address in a journal. Also returns
@@ -700,7 +700,7 @@ class QldbApi:
         name: LedgerName,
         block_address: ValueHolder,
         document_id: UniqueId,
-        digest_tip_address: ValueHolder = None,
+        digest_tip_address: ValueHolder | None = None,
         **kwargs,
     ) -> GetRevisionResponse:
         """Returns a revision data object for a specified document ID and block
@@ -725,8 +725,8 @@ class QldbApi:
         self,
         context: RequestContext,
         ledger_name: LedgerName,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListJournalKinesisStreamsForLedgerResponse:
         """Returns all Amazon QLDB journal streams for a given ledger.
@@ -756,8 +756,8 @@ class QldbApi:
     def list_journal_s3_exports(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListJournalS3ExportsResponse:
         """Returns all journal export jobs for all ledgers that are associated with
@@ -785,8 +785,8 @@ class QldbApi:
         self,
         context: RequestContext,
         name: LedgerName,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListJournalS3ExportsForLedgerResponse:
         """Returns all journal export jobs for a specified ledger.
@@ -813,8 +813,8 @@ class QldbApi:
     def list_ledgers(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListLedgersResponse:
         """Returns all ledgers that are associated with the current Amazon Web
@@ -854,8 +854,8 @@ class QldbApi:
         inclusive_start_time: Timestamp,
         kinesis_configuration: KinesisConfiguration,
         stream_name: StreamName,
-        tags: Tags = None,
-        exclusive_end_time: Timestamp = None,
+        tags: Tags | None = None,
+        exclusive_end_time: Timestamp | None = None,
         **kwargs,
     ) -> StreamJournalToKinesisResponse:
         """Creates a journal stream for a given Amazon QLDB ledger. The stream
@@ -919,8 +919,8 @@ class QldbApi:
         self,
         context: RequestContext,
         name: LedgerName,
-        deletion_protection: DeletionProtection = None,
-        kms_key: KmsKey = None,
+        deletion_protection: DeletionProtection | None = None,
+        kms_key: KmsKey | None = None,
         **kwargs,
     ) -> UpdateLedgerResponse:
         """Updates properties on a ledger.

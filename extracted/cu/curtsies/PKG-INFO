@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: curtsies
-Version: 0.4.2
+Version: 0.4.3
 Summary: Curses-like terminal wrapper, with colored strings!
 Home-page: https://github.com/bpython/curtsies
 Author: Thomas Ballinger
@@ -13,9 +13,12 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: POSIX
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Requires-Python: >=3.7
+Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: blessed>=1.5
+Requires-Dist: cwcwidth
+Dynamic: license-file
 
 [![Documentation Status](https://readthedocs.org/projects/curtsies/badge/?version=latest)](https://readthedocs.org/projects/curtsies/?badge=latest)
 ![Curtsies Logo](http://ballingt.com/assets/curtsiestitle.png)

@@ -1800,7 +1800,7 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         layer_digests: BatchedOperationLayerDigestList,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> BatchCheckLayerAvailabilityResponse:
         """Checks the availability of one or more image layers in a repository.
@@ -1831,7 +1831,7 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         image_ids: ImageIdentifierList,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> BatchDeleteImageResponse:
         """Deletes a list of specified images within a repository. Images are
@@ -1861,8 +1861,8 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         image_ids: ImageIdentifierList,
-        registry_id: RegistryId = None,
-        accepted_media_types: MediaTypeList = None,
+        registry_id: RegistryId | None = None,
+        accepted_media_types: MediaTypeList | None = None,
         **kwargs,
     ) -> BatchGetImageResponse:
         """Gets detailed information for an image. Images are specified with either
@@ -1910,7 +1910,7 @@ class EcrApi:
         repository_name: RepositoryName,
         upload_id: UploadId,
         layer_digests: LayerDigestList,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> CompleteLayerUploadResponse:
         """Informs Amazon ECR that the image layer upload has completed for a
@@ -1950,11 +1950,11 @@ class EcrApi:
         context: RequestContext,
         ecr_repository_prefix: PullThroughCacheRuleRepositoryPrefix,
         upstream_registry_url: Url,
-        registry_id: RegistryId = None,
-        upstream_registry: UpstreamRegistry = None,
-        credential_arn: CredentialArn = None,
-        custom_role_arn: CustomRoleArn = None,
-        upstream_repository_prefix: PullThroughCacheRuleRepositoryPrefix = None,
+        registry_id: RegistryId | None = None,
+        upstream_registry: UpstreamRegistry | None = None,
+        credential_arn: CredentialArn | None = None,
+        custom_role_arn: CustomRoleArn | None = None,
+        upstream_repository_prefix: PullThroughCacheRuleRepositoryPrefix | None = None,
         **kwargs,
     ) -> CreatePullThroughCacheRuleResponse:
         """Creates a pull through cache rule. A pull through cache rule provides a
@@ -1995,11 +1995,11 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
-        tags: TagList = None,
-        image_tag_mutability: ImageTagMutability = None,
-        image_scanning_configuration: ImageScanningConfiguration = None,
-        encryption_configuration: EncryptionConfiguration = None,
+        registry_id: RegistryId | None = None,
+        tags: TagList | None = None,
+        image_tag_mutability: ImageTagMutability | None = None,
+        image_scanning_configuration: ImageScanningConfiguration | None = None,
+        encryption_configuration: EncryptionConfiguration | None = None,
         **kwargs,
     ) -> CreateRepositoryResponse:
         """Creates a repository. For more information, see `Amazon ECR
@@ -2031,13 +2031,14 @@ class EcrApi:
         context: RequestContext,
         prefix: Prefix,
         applied_for: RCTAppliedForList,
-        description: RepositoryTemplateDescription = None,
-        encryption_configuration: EncryptionConfigurationForRepositoryCreationTemplate = None,
-        resource_tags: TagList = None,
-        image_tag_mutability: ImageTagMutability = None,
-        repository_policy: RepositoryPolicyText = None,
-        lifecycle_policy: LifecyclePolicyTextForRepositoryCreationTemplate = None,
-        custom_role_arn: CustomRoleArn = None,
+        description: RepositoryTemplateDescription | None = None,
+        encryption_configuration: EncryptionConfigurationForRepositoryCreationTemplate
+        | None = None,
+        resource_tags: TagList | None = None,
+        image_tag_mutability: ImageTagMutability | None = None,
+        repository_policy: RepositoryPolicyText | None = None,
+        lifecycle_policy: LifecyclePolicyTextForRepositoryCreationTemplate | None = None,
+        custom_role_arn: CustomRoleArn | None = None,
         **kwargs,
     ) -> CreateRepositoryCreationTemplateResponse:
         """Creates a repository creation template. This template is used to define
@@ -2074,7 +2075,7 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> DeleteLifecyclePolicyResponse:
         """Deletes the lifecycle policy associated with the specified repository.
@@ -2096,7 +2097,7 @@ class EcrApi:
         self,
         context: RequestContext,
         ecr_repository_prefix: PullThroughCacheRuleRepositoryPrefix,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> DeletePullThroughCacheRuleResponse:
         """Deletes a pull through cache rule.
@@ -2132,8 +2133,8 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
-        force: ForceFlag = None,
+        registry_id: RegistryId | None = None,
+        force: ForceFlag | None = None,
         **kwargs,
     ) -> DeleteRepositoryResponse:
         """Deletes a repository. If the repository isn't empty, you must either
@@ -2176,7 +2177,7 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> DeleteRepositoryPolicyResponse:
         """Deletes the repository policy associated with the specified repository.
@@ -2199,7 +2200,7 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         image_id: ImageIdentifier,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> DescribeImageReplicationStatusResponse:
         """Returns the replication status for a specified image.
@@ -2223,9 +2224,9 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         image_id: ImageIdentifier,
-        registry_id: RegistryId = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        registry_id: RegistryId | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> DescribeImageScanFindingsResponse:
         """Returns the scan findings for the specified image.
@@ -2256,11 +2257,11 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
-        image_ids: ImageIdentifierList = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        filter: DescribeImagesFilter = None,
+        registry_id: RegistryId | None = None,
+        image_ids: ImageIdentifierList | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        filter: DescribeImagesFilter | None = None,
         **kwargs,
     ) -> DescribeImagesResponse:
         """Returns metadata about the images in a repository.
@@ -2294,10 +2295,10 @@ class EcrApi:
     def describe_pull_through_cache_rules(
         self,
         context: RequestContext,
-        registry_id: RegistryId = None,
-        ecr_repository_prefixes: PullThroughCacheRuleRepositoryPrefixList = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        registry_id: RegistryId | None = None,
+        ecr_repository_prefixes: PullThroughCacheRuleRepositoryPrefixList | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> DescribePullThroughCacheRulesResponse:
         """Returns the pull through cache rules for a registry.
@@ -2336,10 +2337,10 @@ class EcrApi:
     def describe_repositories(
         self,
         context: RequestContext,
-        registry_id: RegistryId = None,
-        repository_names: RepositoryNameList = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        registry_id: RegistryId | None = None,
+        repository_names: RepositoryNameList | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> DescribeRepositoriesResponse:
         """Describes image repositories in a registry.
@@ -2363,9 +2364,9 @@ class EcrApi:
     def describe_repository_creation_templates(
         self,
         context: RequestContext,
-        prefixes: PrefixList = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        prefixes: PrefixList | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> DescribeRepositoryCreationTemplatesResponse:
         """Returns details about the repository creation templates in a registry.
@@ -2405,7 +2406,7 @@ class EcrApi:
     def get_authorization_token(
         self,
         context: RequestContext,
-        registry_ids: GetAuthorizationTokenRegistryIdList = None,
+        registry_ids: GetAuthorizationTokenRegistryIdList | None = None,
         **kwargs,
     ) -> GetAuthorizationTokenResponse:
         """Retrieves an authorization token. An authorization token represents your
@@ -2434,7 +2435,7 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         layer_digest: LayerDigest,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> GetDownloadUrlForLayerResponse:
         """Retrieves the pre-signed Amazon S3 download URL corresponding to an
@@ -2468,7 +2469,7 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> GetLifecyclePolicyResponse:
         """Retrieves the lifecycle policy for the specified repository.
@@ -2490,11 +2491,11 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
-        image_ids: ImageIdentifierList = None,
-        next_token: NextToken = None,
-        max_results: LifecyclePreviewMaxResults = None,
-        filter: LifecyclePolicyPreviewFilter = None,
+        registry_id: RegistryId | None = None,
+        image_ids: ImageIdentifierList | None = None,
+        next_token: NextToken | None = None,
+        max_results: LifecyclePreviewMaxResults | None = None,
+        filter: LifecyclePolicyPreviewFilter | None = None,
         **kwargs,
     ) -> GetLifecyclePolicyPreviewResponse:
         """Retrieves the results of the lifecycle policy preview request for the
@@ -2550,7 +2551,7 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> GetRepositoryPolicyResponse:
         """Retrieves the repository policy for the specified repository.
@@ -2571,7 +2572,7 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> InitiateLayerUploadResponse:
         """Notifies Amazon ECR that you intend to upload an image layer.
@@ -2601,10 +2602,10 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        filter: ListImagesFilter = None,
+        registry_id: RegistryId | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        filter: ListImagesFilter | None = None,
         **kwargs,
     ) -> ListImagesResponse:
         """Lists all the image IDs for the specified repository.
@@ -2676,10 +2677,10 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         image_manifest: ImageManifest,
-        registry_id: RegistryId = None,
-        image_manifest_media_type: MediaType = None,
-        image_tag: ImageTag = None,
-        image_digest: ImageDigest = None,
+        registry_id: RegistryId | None = None,
+        image_manifest_media_type: MediaType | None = None,
+        image_tag: ImageTag | None = None,
+        image_digest: ImageDigest | None = None,
         **kwargs,
     ) -> PutImageResponse:
         """Creates or updates the image manifest and tags associated with an image.
@@ -2719,7 +2720,7 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         image_scanning_configuration: ImageScanningConfiguration,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> PutImageScanningConfigurationResponse:
         """The ``PutImageScanningConfiguration`` API is being deprecated, in favor
@@ -2748,7 +2749,7 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         image_tag_mutability: ImageTagMutability,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> PutImageTagMutabilityResponse:
         """Updates the image tag mutability settings for the specified repository.
@@ -2775,7 +2776,7 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         lifecycle_policy_text: LifecyclePolicyText,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> PutLifecyclePolicyResponse:
         """Creates or updates the lifecycle policy for the specified repository.
@@ -2818,8 +2819,8 @@ class EcrApi:
     def put_registry_scanning_configuration(
         self,
         context: RequestContext,
-        scan_type: ScanType = None,
-        rules: RegistryScanningRuleList = None,
+        scan_type: ScanType | None = None,
+        rules: RegistryScanningRuleList | None = None,
         **kwargs,
     ) -> PutRegistryScanningConfigurationResponse:
         """Creates or updates the scanning configuration for your private registry.
@@ -2868,8 +2869,8 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         policy_text: RepositoryPolicyText,
-        registry_id: RegistryId = None,
-        force: ForceFlag = None,
+        registry_id: RegistryId | None = None,
+        force: ForceFlag | None = None,
         **kwargs,
     ) -> SetRepositoryPolicyResponse:
         """Applies a repository policy to the specified repository to control
@@ -2897,7 +2898,7 @@ class EcrApi:
         context: RequestContext,
         repository_name: RepositoryName,
         image_id: ImageIdentifier,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> StartImageScanResponse:
         """Starts a basic image vulnerability scan.
@@ -2931,8 +2932,8 @@ class EcrApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        registry_id: RegistryId = None,
-        lifecycle_policy_text: LifecyclePolicyText = None,
+        registry_id: RegistryId | None = None,
+        lifecycle_policy_text: LifecyclePolicyText | None = None,
         **kwargs,
     ) -> StartLifecyclePolicyPreviewResponse:
         """Starts a preview of a lifecycle policy for the specified repository.
@@ -2995,9 +2996,9 @@ class EcrApi:
         self,
         context: RequestContext,
         ecr_repository_prefix: PullThroughCacheRuleRepositoryPrefix,
-        registry_id: RegistryId = None,
-        credential_arn: CredentialArn = None,
-        custom_role_arn: CustomRoleArn = None,
+        registry_id: RegistryId | None = None,
+        credential_arn: CredentialArn | None = None,
+        custom_role_arn: CustomRoleArn | None = None,
         **kwargs,
     ) -> UpdatePullThroughCacheRuleResponse:
         """Updates an existing pull through cache rule.
@@ -3027,14 +3028,15 @@ class EcrApi:
         self,
         context: RequestContext,
         prefix: Prefix,
-        description: RepositoryTemplateDescription = None,
-        encryption_configuration: EncryptionConfigurationForRepositoryCreationTemplate = None,
-        resource_tags: TagList = None,
-        image_tag_mutability: ImageTagMutability = None,
-        repository_policy: RepositoryPolicyText = None,
-        lifecycle_policy: LifecyclePolicyTextForRepositoryCreationTemplate = None,
-        applied_for: RCTAppliedForList = None,
-        custom_role_arn: CustomRoleArn = None,
+        description: RepositoryTemplateDescription | None = None,
+        encryption_configuration: EncryptionConfigurationForRepositoryCreationTemplate
+        | None = None,
+        resource_tags: TagList | None = None,
+        image_tag_mutability: ImageTagMutability | None = None,
+        repository_policy: RepositoryPolicyText | None = None,
+        lifecycle_policy: LifecyclePolicyTextForRepositoryCreationTemplate | None = None,
+        applied_for: RCTAppliedForList | None = None,
+        custom_role_arn: CustomRoleArn | None = None,
         **kwargs,
     ) -> UpdateRepositoryCreationTemplateResponse:
         """Updates an existing repository creation template.
@@ -3070,7 +3072,7 @@ class EcrApi:
         part_first_byte: PartSize,
         part_last_byte: PartSize,
         layer_part_blob: LayerPartBlob,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> UploadLayerPartResponse:
         """Uploads an image layer part to Amazon ECR.
@@ -3110,7 +3112,7 @@ class EcrApi:
         self,
         context: RequestContext,
         ecr_repository_prefix: PullThroughCacheRuleRepositoryPrefix,
-        registry_id: RegistryId = None,
+        registry_id: RegistryId | None = None,
         **kwargs,
     ) -> ValidatePullThroughCacheRuleResponse:
         """Validates an existing pull through cache rule for an upstream registry

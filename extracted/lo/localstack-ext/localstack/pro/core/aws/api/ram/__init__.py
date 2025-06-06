@@ -1033,7 +1033,7 @@ class RamApi:
         self,
         context: RequestContext,
         resource_share_invitation_arn: String,
-        client_token: String = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> AcceptResourceShareInvitationResponse:
         """Accepts an invitation to a resource share from another Amazon Web
@@ -1064,10 +1064,10 @@ class RamApi:
         self,
         context: RequestContext,
         resource_share_arn: String,
-        resource_arns: ResourceArnList = None,
-        principals: PrincipalArnOrIdList = None,
-        client_token: String = None,
-        sources: SourceArnOrAccountList = None,
+        resource_arns: ResourceArnList | None = None,
+        principals: PrincipalArnOrIdList | None = None,
+        client_token: String | None = None,
+        sources: SourceArnOrAccountList | None = None,
         **kwargs,
     ) -> AssociateResourceShareResponse:
         """Adds the specified list of principals and list of resources to a
@@ -1108,9 +1108,9 @@ class RamApi:
         context: RequestContext,
         resource_share_arn: String,
         permission_arn: String,
-        replace: Boolean = None,
-        client_token: String = None,
-        permission_version: Integer = None,
+        replace: Boolean | None = None,
+        client_token: String | None = None,
+        permission_version: Integer | None = None,
         **kwargs,
     ) -> AssociateResourceSharePermissionResponse:
         """Adds or replaces the RAM permission for a resource type included in a
@@ -1147,8 +1147,8 @@ class RamApi:
         name: PermissionName,
         resource_type: String,
         policy_template: Policy,
-        client_token: String = None,
-        tags: TagList = None,
+        client_token: String | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreatePermissionResponse:
         """Creates a customer managed permission for a specified resource type that
@@ -1186,7 +1186,7 @@ class RamApi:
         context: RequestContext,
         permission_arn: String,
         policy_template: Policy,
-        client_token: String = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CreatePermissionVersionResponse:
         """Creates a new version of the specified customer managed permission. The
@@ -1227,13 +1227,13 @@ class RamApi:
         self,
         context: RequestContext,
         name: String,
-        resource_arns: ResourceArnList = None,
-        principals: PrincipalArnOrIdList = None,
-        tags: TagList = None,
-        allow_external_principals: Boolean = None,
-        client_token: String = None,
-        permission_arns: PermissionArnList = None,
-        sources: SourceArnOrAccountList = None,
+        resource_arns: ResourceArnList | None = None,
+        principals: PrincipalArnOrIdList | None = None,
+        tags: TagList | None = None,
+        allow_external_principals: Boolean | None = None,
+        client_token: String | None = None,
+        permission_arns: PermissionArnList | None = None,
+        sources: SourceArnOrAccountList | None = None,
         **kwargs,
     ) -> CreateResourceShareResponse:
         """Creates a resource share. You can provide a list of the `Amazon Resource
@@ -1280,7 +1280,11 @@ class RamApi:
 
     @handler("DeletePermission")
     def delete_permission(
-        self, context: RequestContext, permission_arn: String, client_token: String = None, **kwargs
+        self,
+        context: RequestContext,
+        permission_arn: String,
+        client_token: String | None = None,
+        **kwargs,
     ) -> DeletePermissionResponse:
         """Deletes the specified customer managed permission in the Amazon Web
         Services Region in which you call this operation. You can delete a
@@ -1309,7 +1313,7 @@ class RamApi:
         context: RequestContext,
         permission_arn: String,
         permission_version: Integer,
-        client_token: String = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> DeletePermissionVersionResponse:
         """Deletes one version of a customer managed permission. The version you
@@ -1341,7 +1345,7 @@ class RamApi:
         self,
         context: RequestContext,
         resource_share_arn: String,
-        client_token: String = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> DeleteResourceShareResponse:
         """Deletes the specified resource share.
@@ -1372,10 +1376,10 @@ class RamApi:
         self,
         context: RequestContext,
         resource_share_arn: String,
-        resource_arns: ResourceArnList = None,
-        principals: PrincipalArnOrIdList = None,
-        client_token: String = None,
-        sources: SourceArnOrAccountList = None,
+        resource_arns: ResourceArnList | None = None,
+        principals: PrincipalArnOrIdList | None = None,
+        client_token: String | None = None,
+        sources: SourceArnOrAccountList | None = None,
         **kwargs,
     ) -> DisassociateResourceShareResponse:
         """Removes the specified principals or resources from participating in the
@@ -1411,7 +1415,7 @@ class RamApi:
         context: RequestContext,
         resource_share_arn: String,
         permission_arn: String,
-        client_token: String = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> DisassociateResourceSharePermissionResponse:
         """Removes a managed permission from a resource share. Permission changes
@@ -1468,7 +1472,7 @@ class RamApi:
         self,
         context: RequestContext,
         permission_arn: String,
-        permission_version: Integer = None,
+        permission_version: Integer | None = None,
         **kwargs,
     ) -> GetPermissionResponse:
         """Retrieves the contents of a managed permission in JSON format.
@@ -1491,9 +1495,9 @@ class RamApi:
         self,
         context: RequestContext,
         resource_arns: ResourceArnList,
-        principal: String = None,
-        next_token: String = None,
-        max_results: MaxResults = None,
+        principal: String | None = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> GetResourcePoliciesResponse:
         """Retrieves the resource policies for the specified resources that you own
@@ -1520,12 +1524,12 @@ class RamApi:
         self,
         context: RequestContext,
         association_type: ResourceShareAssociationType,
-        resource_share_arns: ResourceShareArnList = None,
-        resource_arn: String = None,
-        principal: String = None,
-        association_status: ResourceShareAssociationStatus = None,
-        next_token: String = None,
-        max_results: MaxResults = None,
+        resource_share_arns: ResourceShareArnList | None = None,
+        resource_arn: String | None = None,
+        principal: String | None = None,
+        association_status: ResourceShareAssociationStatus | None = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> GetResourceShareAssociationsResponse:
         """Retrieves the lists of resources and principals that associated for
@@ -1559,10 +1563,10 @@ class RamApi:
     def get_resource_share_invitations(
         self,
         context: RequestContext,
-        resource_share_invitation_arns: ResourceShareInvitationArnList = None,
-        resource_share_arns: ResourceShareArnList = None,
-        next_token: String = None,
-        max_results: MaxResults = None,
+        resource_share_invitation_arns: ResourceShareInvitationArnList | None = None,
+        resource_share_arns: ResourceShareArnList | None = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> GetResourceShareInvitationsResponse:
         """Retrieves details about invitations that you have received for resource
@@ -1593,14 +1597,14 @@ class RamApi:
         self,
         context: RequestContext,
         resource_owner: ResourceOwner,
-        resource_share_arns: ResourceShareArnList = None,
-        resource_share_status: ResourceShareStatus = None,
-        name: String = None,
-        tag_filters: TagFilters = None,
-        next_token: String = None,
-        max_results: MaxResults = None,
-        permission_arn: String = None,
-        permission_version: Integer = None,
+        resource_share_arns: ResourceShareArnList | None = None,
+        resource_share_status: ResourceShareStatus | None = None,
+        name: String | None = None,
+        tag_filters: TagFilters | None = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
+        permission_arn: String | None = None,
+        permission_version: Integer | None = None,
         **kwargs,
     ) -> GetResourceSharesResponse:
         """Retrieves details about the resource shares that you own or that are
@@ -1645,9 +1649,9 @@ class RamApi:
         self,
         context: RequestContext,
         resource_share_invitation_arn: String,
-        next_token: String = None,
-        max_results: MaxResults = None,
-        resource_region_scope: ResourceRegionScopeFilter = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
+        resource_region_scope: ResourceRegionScopeFilter | None = None,
         **kwargs,
     ) -> ListPendingInvitationResourcesResponse:
         """Lists the resources in a resource share that is shared with you but for
@@ -1678,14 +1682,14 @@ class RamApi:
     def list_permission_associations(
         self,
         context: RequestContext,
-        permission_arn: String = None,
-        permission_version: Integer = None,
-        association_status: ResourceShareAssociationStatus = None,
-        resource_type: String = None,
-        feature_set: PermissionFeatureSet = None,
-        default_version: Boolean = None,
-        next_token: String = None,
-        max_results: MaxResults = None,
+        permission_arn: String | None = None,
+        permission_version: Integer | None = None,
+        association_status: ResourceShareAssociationStatus | None = None,
+        resource_type: String | None = None,
+        feature_set: PermissionFeatureSet | None = None,
+        default_version: Boolean | None = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPermissionAssociationsResponse:
         """Lists information about the managed permission and its associations to
@@ -1723,8 +1727,8 @@ class RamApi:
         self,
         context: RequestContext,
         permission_arn: String,
-        next_token: String = None,
-        max_results: MaxResults = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPermissionVersionsResponse:
         """Lists the available versions of the specified RAM permission.
@@ -1749,10 +1753,10 @@ class RamApi:
     def list_permissions(
         self,
         context: RequestContext,
-        resource_type: String = None,
-        next_token: String = None,
-        max_results: MaxResults = None,
-        permission_type: PermissionTypeFilter = None,
+        resource_type: String | None = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
+        permission_type: PermissionTypeFilter | None = None,
         **kwargs,
     ) -> ListPermissionsResponse:
         """Retrieves a list of available RAM permissions that you can use for the
@@ -1780,12 +1784,12 @@ class RamApi:
         self,
         context: RequestContext,
         resource_owner: ResourceOwner,
-        resource_arn: String = None,
-        principals: PrincipalArnOrIdList = None,
-        resource_type: String = None,
-        resource_share_arns: ResourceShareArnList = None,
-        next_token: String = None,
-        max_results: MaxResults = None,
+        resource_arn: String | None = None,
+        principals: PrincipalArnOrIdList | None = None,
+        resource_type: String | None = None,
+        resource_share_arns: ResourceShareArnList | None = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPrincipalsResponse:
         """Lists the principals that you are sharing resources with or that are
@@ -1827,10 +1831,10 @@ class RamApi:
     def list_replace_permission_associations_work(
         self,
         context: RequestContext,
-        work_ids: ReplacePermissionAssociationsWorkIdList = None,
-        status: ReplacePermissionAssociationsWorkStatus = None,
-        next_token: String = None,
-        max_results: MaxResults = None,
+        work_ids: ReplacePermissionAssociationsWorkIdList | None = None,
+        status: ReplacePermissionAssociationsWorkStatus | None = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListReplacePermissionAssociationsWorkResponse:
         """Retrieves the current status of the asynchronous tasks performed by RAM
@@ -1855,8 +1859,8 @@ class RamApi:
         self,
         context: RequestContext,
         resource_share_arn: String,
-        next_token: String = None,
-        max_results: MaxResults = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListResourceSharePermissionsResponse:
         """Lists the RAM permissions that are associated with a resource share.
@@ -1881,9 +1885,9 @@ class RamApi:
     def list_resource_types(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: MaxResults = None,
-        resource_region_scope: ResourceRegionScopeFilter = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
+        resource_region_scope: ResourceRegionScopeFilter | None = None,
         **kwargs,
     ) -> ListResourceTypesResponse:
         """Lists the resource types that can be shared by RAM.
@@ -1906,13 +1910,13 @@ class RamApi:
         self,
         context: RequestContext,
         resource_owner: ResourceOwner,
-        principal: String = None,
-        resource_type: String = None,
-        resource_arns: ResourceArnList = None,
-        resource_share_arns: ResourceShareArnList = None,
-        next_token: String = None,
-        max_results: MaxResults = None,
-        resource_region_scope: ResourceRegionScopeFilter = None,
+        principal: String | None = None,
+        resource_type: String | None = None,
+        resource_arns: ResourceArnList | None = None,
+        resource_share_arns: ResourceShareArnList | None = None,
+        next_token: String | None = None,
+        max_results: MaxResults | None = None,
+        resource_region_scope: ResourceRegionScopeFilter | None = None,
         **kwargs,
     ) -> ListResourcesResponse:
         """Lists the resources that you added to a resource share or the resources
@@ -1957,7 +1961,7 @@ class RamApi:
         context: RequestContext,
         permission_arn: String,
         name: String,
-        client_token: String = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> PromotePermissionCreatedFromPolicyResponse:
         """When you attach a resource-based policy to a resource, RAM automatically
@@ -2052,7 +2056,7 @@ class RamApi:
         self,
         context: RequestContext,
         resource_share_invitation_arn: String,
-        client_token: String = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> RejectResourceShareInvitationResponse:
         """Rejects an invitation to a resource share from another Amazon Web
@@ -2082,8 +2086,8 @@ class RamApi:
         context: RequestContext,
         from_permission_arn: String,
         to_permission_arn: String,
-        from_permission_version: Integer = None,
-        client_token: String = None,
+        from_permission_version: Integer | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> ReplacePermissionAssociationsResponse:
         """Updates all resource shares that use a managed permission to a different
@@ -2132,7 +2136,7 @@ class RamApi:
         context: RequestContext,
         permission_arn: String,
         permission_version: Integer,
-        client_token: String = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> SetDefaultPermissionVersionResponse:
         """Designates the specified version number as the default version for the
@@ -2163,8 +2167,8 @@ class RamApi:
         self,
         context: RequestContext,
         tags: TagList,
-        resource_share_arn: String = None,
-        resource_arn: String = None,
+        resource_share_arn: String | None = None,
+        resource_arn: String | None = None,
         **kwargs,
     ) -> TagResourceResponse:
         """Adds the specified tag keys and values to a resource share or managed
@@ -2197,8 +2201,8 @@ class RamApi:
         self,
         context: RequestContext,
         tag_keys: TagKeyList,
-        resource_share_arn: String = None,
-        resource_arn: String = None,
+        resource_share_arn: String | None = None,
+        resource_arn: String | None = None,
         **kwargs,
     ) -> UntagResourceResponse:
         """Removes the specified tag key and value pairs from the specified
@@ -2223,9 +2227,9 @@ class RamApi:
         self,
         context: RequestContext,
         resource_share_arn: String,
-        name: String = None,
-        allow_external_principals: Boolean = None,
-        client_token: String = None,
+        name: String | None = None,
+        allow_external_principals: Boolean | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> UpdateResourceShareResponse:
         """Modifies some of the properties of the specified resource share.

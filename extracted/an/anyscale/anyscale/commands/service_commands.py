@@ -159,7 +159,7 @@ def _read_name_from_config_file(path: str):
     required=False,
     default=None,
     type=int,
-    help="The percentage of traffic to send to the canary version of the service (0-100). This can be used to manually shift traffic toward (or away from) the canary version. If not provided, traffic will be shifted incrementally toward the canary version until it reaches 100. Not supported when using --in-place.",
+    help="The percentage of traffic to send to the canary version of the service (0-100). This can be used to manually shift traffic toward (or away from) the canary version. If not provided, traffic will be shifted incrementally toward the canary version until it reaches 100. Not supported when using --in-place. This is ignored when restarting a service or creating a new service.",
 )
 @click.option(
     "--max-surge-percent",
@@ -967,6 +967,8 @@ def terminate(
 
     This applies to both v1 and v2 services.
     """
+    # TODO: Remove service_controller and use the sdk method. Need to update the sdk method
+    # so that it can resolve either service name or config file to the service id.
     service_controller = ServiceController()
     service_id = service_controller.get_service_id(
         service_id=service_id,
@@ -975,7 +977,7 @@ def terminate(
         project_id=project_id,
     )
     try:
-        anyscale.service.terminate(service_id)
+        anyscale.service.terminate(id=service_id)
         log.info(f"Service {service_id} terminate initiated.")
         log.info(
             f'View the service in the UI at {get_endpoint(f"/services/{service_id}")}'

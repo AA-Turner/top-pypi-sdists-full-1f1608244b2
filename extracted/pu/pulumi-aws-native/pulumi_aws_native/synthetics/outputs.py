@@ -21,6 +21,7 @@ __all__ = [
     'CanaryArtifactConfig',
     'CanaryBaseScreenshot',
     'CanaryCode',
+    'CanaryRetryConfig',
     'CanaryRunConfig',
     'CanaryS3Encryption',
     'CanarySchedule',
@@ -148,8 +149,8 @@ class CanaryCode(dict):
         """
         :param builtins.str handler: The entry point to use for the source code when running the canary. For canaries that use the `syn-python-selenium-1.0` runtime or a `syn-nodejs.puppeteer` runtime earlier than `syn-nodejs.puppeteer-3.4` , the handler must be specified as `*fileName* .handler` . For `syn-python-selenium-1.1` , `syn-nodejs.puppeteer-3.4` , and later runtimes, the handler can be specified as `*fileName* . *functionName*` , or you can specify a folder where canary scripts reside as `*folder* / *fileName* . *functionName*` .
         :param builtins.str s3_bucket: If your canary script is located in S3, specify the bucket name here. The bucket must already exist.
-        :param builtins.str s3_key: The S3 key of your script. For more information, see [Working with Amazon S3 Objects](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingObjects.html) .
-        :param builtins.str s3_object_version: The S3 version ID of your script.
+        :param builtins.str s3_key: The Amazon S3 key of your script. For more information, see [Working with Amazon S3 Objects](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingObjects.html) .
+        :param builtins.str s3_object_version: The Amazon S3 version ID of your script.
         :param builtins.str script: If you input your canary script directly into the canary instead of referring to an S3 location, the value of this parameter is the script in plain text. It can be up to 5 MB.
         :param builtins.str source_location_arn: The ARN of the Lambda layer where Synthetics stores the canary script code.
         """
@@ -185,7 +186,7 @@ class CanaryCode(dict):
     @pulumi.getter(name="s3Key")
     def s3_key(self) -> Optional[builtins.str]:
         """
-        The S3 key of your script. For more information, see [Working with Amazon S3 Objects](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingObjects.html) .
+        The Amazon S3 key of your script. For more information, see [Working with Amazon S3 Objects](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingObjects.html) .
         """
         return pulumi.get(self, "s3_key")
 
@@ -193,7 +194,7 @@ class CanaryCode(dict):
     @pulumi.getter(name="s3ObjectVersion")
     def s3_object_version(self) -> Optional[builtins.str]:
         """
-        The S3 version ID of your script.
+        The Amazon S3 version ID of your script.
         """
         return pulumi.get(self, "s3_object_version")
 
@@ -212,6 +213,41 @@ class CanaryCode(dict):
         The ARN of the Lambda layer where Synthetics stores the canary script code.
         """
         return pulumi.get(self, "source_location_arn")
+
+
+@pulumi.output_type
+class CanaryRetryConfig(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "maxRetries":
+            suggest = "max_retries"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in CanaryRetryConfig. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        CanaryRetryConfig.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        CanaryRetryConfig.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 max_retries: builtins.int):
+        """
+        :param builtins.int max_retries: maximum times the canary will be retried upon the scheduled run failure
+        """
+        pulumi.set(__self__, "max_retries", max_retries)
+
+    @property
+    @pulumi.getter(name="maxRetries")
+    def max_retries(self) -> builtins.int:
+        """
+        maximum times the canary will be retried upon the scheduled run failure
+        """
+        return pulumi.get(self, "max_retries")
 
 
 @pulumi.output_type
@@ -349,6 +385,8 @@ class CanarySchedule(dict):
         suggest = None
         if key == "durationInSeconds":
             suggest = "duration_in_seconds"
+        elif key == "retryConfig":
+            suggest = "retry_config"
 
         if suggest:
             pulumi.log.warn(f"Key '{key}' not found in CanarySchedule. Access the value via the '{suggest}' property getter instead.")
@@ -363,7 +401,8 @@ class CanarySchedule(dict):
 
     def __init__(__self__, *,
                  expression: builtins.str,
-                 duration_in_seconds: Optional[builtins.str] = None):
+                 duration_in_seconds: Optional[builtins.str] = None,
+                 retry_config: Optional['outputs.CanaryRetryConfig'] = None):
         """
         :param builtins.str expression: A `rate` expression or a `cron` expression that defines how often the canary is to run.
                
@@ -375,10 +414,13 @@ class CanarySchedule(dict):
                
                Use `cron( *expression* )` to specify a cron expression. You can't schedule a canary to wait for more than a year before running. For information about the syntax for cron expressions, see [Scheduling canary runs using cron](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_cron.html) .
         :param builtins.str duration_in_seconds: How long, in seconds, for the canary to continue making regular runs according to the schedule in the `Expression` value. If you specify 0, the canary continues making runs until you stop it. If you omit this field, the default of 0 is used.
+        :param 'CanaryRetryConfig' retry_config: Provide canary auto retry configuration
         """
         pulumi.set(__self__, "expression", expression)
         if duration_in_seconds is not None:
             pulumi.set(__self__, "duration_in_seconds", duration_in_seconds)
+        if retry_config is not None:
+            pulumi.set(__self__, "retry_config", retry_config)
 
     @property
     @pulumi.getter
@@ -403,6 +445,14 @@ class CanarySchedule(dict):
         How long, in seconds, for the canary to continue making regular runs according to the schedule in the `Expression` value. If you specify 0, the canary continues making runs until you stop it. If you omit this field, the default of 0 is used.
         """
         return pulumi.get(self, "duration_in_seconds")
+
+    @property
+    @pulumi.getter(name="retryConfig")
+    def retry_config(self) -> Optional['outputs.CanaryRetryConfig']:
+        """
+        Provide canary auto retry configuration
+        """
+        return pulumi.get(self, "retry_config")
 
 
 @pulumi.output_type

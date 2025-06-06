@@ -3947,8 +3947,8 @@ class Wafv2Api:
         scope: Scope,
         ip_address_version: IPAddressVersion,
         addresses: IPAddresses,
-        description: EntityDescription = None,
-        tags: TagList = None,
+        description: EntityDescription | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateIPSetResponse:
         """Creates an IPSet, which you use to identify web requests that originate
@@ -3985,8 +3985,8 @@ class Wafv2Api:
         name: EntityName,
         scope: Scope,
         regular_expression_list: RegularExpressionList,
-        description: EntityDescription = None,
-        tags: TagList = None,
+        description: EntityDescription | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateRegexPatternSetResponse:
         """Creates a RegexPatternSet, which you reference in a
@@ -4019,10 +4019,10 @@ class Wafv2Api:
         scope: Scope,
         capacity: CapacityUnit,
         visibility_config: VisibilityConfig,
-        description: EntityDescription = None,
-        rules: Rules = None,
-        tags: TagList = None,
-        custom_response_bodies: CustomResponseBodies = None,
+        description: EntityDescription | None = None,
+        rules: Rules | None = None,
+        tags: TagList | None = None,
+        custom_response_bodies: CustomResponseBodies | None = None,
         **kwargs,
     ) -> CreateRuleGroupResponse:
         """Creates a RuleGroup per the specifications provided.
@@ -4067,15 +4067,15 @@ class Wafv2Api:
         scope: Scope,
         default_action: DefaultAction,
         visibility_config: VisibilityConfig,
-        description: EntityDescription = None,
-        rules: Rules = None,
-        data_protection_config: DataProtectionConfig = None,
-        tags: TagList = None,
-        custom_response_bodies: CustomResponseBodies = None,
-        captcha_config: CaptchaConfig = None,
-        challenge_config: ChallengeConfig = None,
-        token_domains: TokenDomains = None,
-        association_config: AssociationConfig = None,
+        description: EntityDescription | None = None,
+        rules: Rules | None = None,
+        data_protection_config: DataProtectionConfig | None = None,
+        tags: TagList | None = None,
+        custom_response_bodies: CustomResponseBodies | None = None,
+        captcha_config: CaptchaConfig | None = None,
+        challenge_config: ChallengeConfig | None = None,
+        token_domains: TokenDomains | None = None,
+        association_config: AssociationConfig | None = None,
         **kwargs,
     ) -> CreateWebACLResponse:
         """Creates a WebACL per the specifications provided.
@@ -4212,8 +4212,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         resource_arn: ResourceArn,
-        log_type: LogType = None,
-        log_scope: LogScope = None,
+        log_type: LogType | None = None,
+        log_scope: LogScope | None = None,
         **kwargs,
     ) -> DeleteLoggingConfigurationResponse:
         """Deletes the LoggingConfiguration from the specified web ACL.
@@ -4402,7 +4402,7 @@ class Wafv2Api:
         vendor_name: VendorName,
         name: EntityName,
         scope: Scope,
-        version_name: VersionKeyString = None,
+        version_name: VersionKeyString | None = None,
         **kwargs,
     ) -> DescribeManagedRuleGroupResponse:
         """Provides high-level information for a managed rule group, including
@@ -4531,8 +4531,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         resource_arn: ResourceArn,
-        log_type: LogType = None,
-        log_scope: LogScope = None,
+        log_type: LogType | None = None,
+        log_scope: LogScope | None = None,
         **kwargs,
     ) -> GetLoggingConfigurationResponse:
         """Returns the LoggingConfiguration for the specified web ACL.
@@ -4630,7 +4630,7 @@ class Wafv2Api:
         web_acl_name: EntityName,
         web_acl_id: EntityId,
         rule_name: EntityName,
-        rule_group_rule_name: EntityName = None,
+        rule_group_rule_name: EntityName | None = None,
         **kwargs,
     ) -> GetRateBasedStatementManagedKeysResponse:
         """Retrieves the IP addresses that are currently blocked by a rate-based
@@ -4691,10 +4691,10 @@ class Wafv2Api:
     def get_rule_group(
         self,
         context: RequestContext,
-        name: EntityName = None,
-        scope: Scope = None,
-        id: EntityId = None,
-        arn: ResourceArn = None,
+        name: EntityName | None = None,
+        scope: Scope | None = None,
+        id: EntityId | None = None,
+        arn: ResourceArn | None = None,
         **kwargs,
     ) -> GetRuleGroupResponse:
         """Retrieves the specified RuleGroup.
@@ -4758,10 +4758,10 @@ class Wafv2Api:
     def get_web_acl(
         self,
         context: RequestContext,
-        name: EntityName = None,
-        scope: Scope = None,
-        id: EntityId = None,
-        arn: ResourceArn = None,
+        name: EntityName | None = None,
+        scope: Scope | None = None,
+        id: EntityId | None = None,
+        arn: ResourceArn | None = None,
         **kwargs,
     ) -> GetWebACLResponse:
         """Retrieves the specified WebACL.
@@ -4818,8 +4818,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         scope: Scope,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListAPIKeysResponse:
         """Retrieves a list of the API keys that you've defined for the specified
@@ -4855,8 +4855,8 @@ class Wafv2Api:
         vendor_name: VendorName,
         name: EntityName,
         scope: Scope,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListAvailableManagedRuleGroupVersionsResponse:
         """Returns a list of the available versions for the specified managed rule
@@ -4884,8 +4884,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         scope: Scope,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListAvailableManagedRuleGroupsResponse:
         """Retrieves an array of managed rule groups that are available for you to
@@ -4912,8 +4912,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         scope: Scope,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListIPSetsResponse:
         """Retrieves an array of IPSetSummary objects for the IP sets that you
@@ -4938,9 +4938,9 @@ class Wafv2Api:
         self,
         context: RequestContext,
         scope: Scope,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
-        log_scope: LogScope = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
+        log_scope: LogScope | None = None,
         **kwargs,
     ) -> ListLoggingConfigurationsResponse:
         """Retrieves an array of your LoggingConfiguration objects.
@@ -4966,8 +4966,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         scope: Scope,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListManagedRuleSetsResponse:
         """Retrieves the managed rule sets that you own.
@@ -5000,8 +5000,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         platform: Platform,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListMobileSdkReleasesResponse:
         """Retrieves a list of the available releases for the mobile SDK and the
@@ -5032,8 +5032,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         scope: Scope,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListRegexPatternSetsResponse:
         """Retrieves an array of RegexPatternSetSummary objects for the regex
@@ -5058,7 +5058,7 @@ class Wafv2Api:
         self,
         context: RequestContext,
         web_acl_arn: ResourceArn,
-        resource_type: ResourceType = None,
+        resource_type: ResourceType | None = None,
         **kwargs,
     ) -> ListResourcesForWebACLResponse:
         """Retrieves an array of the Amazon Resource Names (ARNs) for the resources
@@ -5091,8 +5091,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         scope: Scope,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListRuleGroupsResponse:
         """Retrieves an array of RuleGroupSummary objects for the rule groups that
@@ -5117,8 +5117,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         resource_arn: ResourceArn,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListTagsForResourceResponse:
         """Retrieves the TagInfoForResource for the specified resource. Tags are
@@ -5153,8 +5153,8 @@ class Wafv2Api:
         self,
         context: RequestContext,
         scope: Scope,
-        next_marker: NextMarker = None,
-        limit: PaginationLimit = None,
+        next_marker: NextMarker | None = None,
+        limit: PaginationLimit | None = None,
         **kwargs,
     ) -> ListWebACLsResponse:
         """Retrieves an array of WebACLSummary objects for the web ACLs that you
@@ -5250,8 +5250,8 @@ class Wafv2Api:
         scope: Scope,
         id: EntityId,
         lock_token: LockToken,
-        recommended_version: VersionKeyString = None,
-        versions_to_publish: VersionsToPublish = None,
+        recommended_version: VersionKeyString | None = None,
+        versions_to_publish: VersionsToPublish | None = None,
         **kwargs,
     ) -> PutManagedRuleSetVersionsResponse:
         """Defines the versions of your managed rule set that you are offering to
@@ -5391,7 +5391,7 @@ class Wafv2Api:
         id: EntityId,
         addresses: IPAddresses,
         lock_token: LockToken,
-        description: EntityDescription = None,
+        description: EntityDescription | None = None,
         **kwargs,
     ) -> UpdateIPSetResponse:
         """Updates the specified IPSet.
@@ -5504,7 +5504,7 @@ class Wafv2Api:
         id: EntityId,
         regular_expression_list: RegularExpressionList,
         lock_token: LockToken,
-        description: EntityDescription = None,
+        description: EntityDescription | None = None,
         **kwargs,
     ) -> UpdateRegexPatternSetResponse:
         """Updates the specified RegexPatternSet.
@@ -5573,9 +5573,9 @@ class Wafv2Api:
         id: EntityId,
         visibility_config: VisibilityConfig,
         lock_token: LockToken,
-        description: EntityDescription = None,
-        rules: Rules = None,
-        custom_response_bodies: CustomResponseBodies = None,
+        description: EntityDescription | None = None,
+        rules: Rules | None = None,
+        custom_response_bodies: CustomResponseBodies | None = None,
         **kwargs,
     ) -> UpdateRuleGroupResponse:
         """Updates the specified RuleGroup.
@@ -5658,14 +5658,14 @@ class Wafv2Api:
         default_action: DefaultAction,
         visibility_config: VisibilityConfig,
         lock_token: LockToken,
-        description: EntityDescription = None,
-        rules: Rules = None,
-        data_protection_config: DataProtectionConfig = None,
-        custom_response_bodies: CustomResponseBodies = None,
-        captcha_config: CaptchaConfig = None,
-        challenge_config: ChallengeConfig = None,
-        token_domains: TokenDomains = None,
-        association_config: AssociationConfig = None,
+        description: EntityDescription | None = None,
+        rules: Rules | None = None,
+        data_protection_config: DataProtectionConfig | None = None,
+        custom_response_bodies: CustomResponseBodies | None = None,
+        captcha_config: CaptchaConfig | None = None,
+        challenge_config: ChallengeConfig | None = None,
+        token_domains: TokenDomains | None = None,
+        association_config: AssociationConfig | None = None,
         **kwargs,
     ) -> UpdateWebACLResponse:
         """Updates the specified WebACL. While updating a web ACL, WAF provides

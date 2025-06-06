@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "bec-server"
-version = "3.37.2"
+version = "3.39.0"
 description = "BEC server"
 requires-python = ">=3.10"
 classifiers = [
@@ -20,7 +20,7 @@ dependencies = [
     "msgpack~=1.0",
     "numpy>=1.24, <3.0",
     "ophyd~=1.9",
-    "ophyd_devices>=1.10.3, <2.0",
+    "ophyd_devices>=1.21.0, <2.0",
     "psutil",
     "pydantic~=2.8",
     "pyyaml~=6.0",

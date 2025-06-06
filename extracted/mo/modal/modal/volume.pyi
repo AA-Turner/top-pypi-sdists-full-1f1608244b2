@@ -20,6 +20,8 @@ class FileEntryType(enum.IntEnum):
     FILE = 1
     DIRECTORY = 2
     SYMLINK = 3
+    FIFO = 4
+    SOCKET = 5
 
 class FileEntry:
     path: str
@@ -85,22 +87,16 @@ class _Volume(modal._object._Object):
     def iterdir(self, path: str, *, recursive: bool = True) -> collections.abc.AsyncIterator[FileEntry]: ...
     async def listdir(self, path: str, *, recursive: bool = False) -> list[FileEntry]: ...
     def read_file(self, path: str) -> collections.abc.AsyncIterator[bytes]: ...
-    def _read_file1(self, path: str) -> collections.abc.AsyncIterator[bytes]: ...
-    def _read_file2(self, path: str) -> collections.abc.AsyncIterator[bytes]: ...
     async def read_file_into_fileobj(
         self,
         path: str,
         fileobj: typing.IO[bytes],
         progress_cb: typing.Optional[collections.abc.Callable[..., typing.Any]] = None,
     ) -> int: ...
-    async def _read_file_into_fileobj1(
-        self, path: str, fileobj: typing.IO[bytes], progress_cb: collections.abc.Callable[..., typing.Any]
-    ) -> int: ...
-    async def _read_file_into_fileobj2(
-        self, path: str, fileobj: typing.IO[bytes], progress_cb: collections.abc.Callable[..., typing.Any]
-    ) -> int: ...
     async def remove_file(self, path: str, recursive: bool = False) -> None: ...
-    async def copy_files(self, src_paths: collections.abc.Sequence[str], dst_path: str) -> None: ...
+    async def copy_files(
+        self, src_paths: collections.abc.Sequence[str], dst_path: str, recursive: bool = False
+    ) -> None: ...
     async def batch_upload(self, force: bool = False) -> _AbstractVolumeUploadContextManager: ...
     async def _instance_delete(self): ...
     @staticmethod
@@ -234,18 +230,6 @@ class Volume(modal.object.Object):
 
     read_file: __read_file_spec[typing_extensions.Self]
 
-    class ___read_file1_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(self, /, path: str) -> typing.Iterator[bytes]: ...
-        def aio(self, /, path: str) -> collections.abc.AsyncIterator[bytes]: ...
-
-    _read_file1: ___read_file1_spec[typing_extensions.Self]
-
-    class ___read_file2_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(self, /, path: str) -> typing.Iterator[bytes]: ...
-        def aio(self, /, path: str) -> collections.abc.AsyncIterator[bytes]: ...
-
-    _read_file2: ___read_file2_spec[typing_extensions.Self]
-
     class __read_file_into_fileobj_spec(typing_extensions.Protocol[SUPERSELF]):
         def __call__(
             self,
@@ -264,26 +248,6 @@ class Volume(modal.object.Object):
 
     read_file_into_fileobj: __read_file_into_fileobj_spec[typing_extensions.Self]
 
-    class ___read_file_into_fileobj1_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(
-            self, /, path: str, fileobj: typing.IO[bytes], progress_cb: collections.abc.Callable[..., typing.Any]
-        ) -> int: ...
-        async def aio(
-            self, /, path: str, fileobj: typing.IO[bytes], progress_cb: collections.abc.Callable[..., typing.Any]
-        ) -> int: ...
-
-    _read_file_into_fileobj1: ___read_file_into_fileobj1_spec[typing_extensions.Self]
-
-    class ___read_file_into_fileobj2_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(
-            self, /, path: str, fileobj: typing.IO[bytes], progress_cb: collections.abc.Callable[..., typing.Any]
-        ) -> int: ...
-        async def aio(
-            self, /, path: str, fileobj: typing.IO[bytes], progress_cb: collections.abc.Callable[..., typing.Any]
-        ) -> int: ...
-
-    _read_file_into_fileobj2: ___read_file_into_fileobj2_spec[typing_extensions.Self]
-
     class __remove_file_spec(typing_extensions.Protocol[SUPERSELF]):
         def __call__(self, /, path: str, recursive: bool = False) -> None: ...
         async def aio(self, /, path: str, recursive: bool = False) -> None: ...
@@ -291,8 +255,12 @@ class Volume(modal.object.Object):
     remove_file: __remove_file_spec[typing_extensions.Self]
 
     class __copy_files_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(self, /, src_paths: collections.abc.Sequence[str], dst_path: str) -> None: ...
-        async def aio(self, /, src_paths: collections.abc.Sequence[str], dst_path: str) -> None: ...
+        def __call__(
+            self, /, src_paths: collections.abc.Sequence[str], dst_path: str, recursive: bool = False
+        ) -> None: ...
+        async def aio(
+            self, /, src_paths: collections.abc.Sequence[str], dst_path: str, recursive: bool = False
+        ) -> None: ...
 
     copy_files: __copy_files_spec[typing_extensions.Self]
 

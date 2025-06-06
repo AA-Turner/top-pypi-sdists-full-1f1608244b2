@@ -16,6 +16,7 @@ from .simple_job import (SimpleTestJob, SimpleTestJobData)
 from .jobs.load_slack_people import (LoadSlackPeopleJob, LoadSlackPeopleJobData)
 from .jobs.load_slack_users import LoadSlackUsersJob, LoadSlackUsersJobData
 from .jobs.bots_killer import BotsKillerJob, BotsKillerData
+from .jobs.send_slack_invites import SendSlackInvitesJob, SendSlackInvitesJobData
 
 jobs_map = {
     "SimpleTestJob": SimpleTestJob,
@@ -29,7 +30,8 @@ jobs_map = {
     "ConnectSourceJob": ConnectSourceJob,
     "LoadSlackPeopleJob": LoadSlackPeopleJob,
     "BotsKillerJob": BotsKillerJob,
-    "LoadSlackUsersJob": LoadSlackUsersJob
+    "LoadSlackUsersJob": LoadSlackUsersJob,
+    "SendSlackInvitesJob": SendSlackInvitesJob
 }
 __all__ = [
     # Jobs
@@ -46,6 +48,7 @@ __all__ = [
     LoadSlackPeopleJob,
     LoadSlackUsersJob,
     BotsKillerJob,
+    SendSlackInvitesJob,
 
     # module classes
     BackgroundJobRunner,
@@ -64,6 +67,7 @@ __all__ = [
     LoadSlackPeopleJobData,
     LoadSlackUsersJobData,
     BotsKillerData,
+    SendSlackInvitesJobData,
     # mapping
     jobs_map
 ]

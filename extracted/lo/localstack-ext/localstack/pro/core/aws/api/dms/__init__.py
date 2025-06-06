@@ -11,6 +11,7 @@ ExceptionMessage = str
 Integer = int
 IntegerOptional = int
 Marker = str
+MigrationProjectIdentifier = str
 ReplicationInstanceClass = str
 ResourceArn = str
 SecretString = str
@@ -144,6 +145,11 @@ class MigrationTypeValue(StrEnum):
     full_load_and_cdc = "full-load-and-cdc"
 
 
+class MySQLAuthenticationMethod(StrEnum):
+    password = "password"
+    iam = "iam"
+
+
 class NestingLevelValue(StrEnum):
     none = "none"
     one = "one"
@@ -168,6 +174,11 @@ class PluginNameValue(StrEnum):
     no_preference = "no-preference"
     test_decoding = "test-decoding"
     pglogical = "pglogical"
+
+
+class PostgreSQLAuthenticationMethod(StrEnum):
+    password = "password"
+    iam = "iam"
 
 
 class RedisAuthTypeValue(StrEnum):
@@ -1190,6 +1201,8 @@ class MySQLSettings(TypedDict, total=False):
     SecretsManagerAccessRoleArn: Optional[String]
     SecretsManagerSecretId: Optional[String]
     ExecuteTimeout: Optional[IntegerOptional]
+    ServiceAccessRoleArn: Optional[String]
+    AuthenticationMethod: Optional[MySQLAuthenticationMethod]
 
 
 class PostgreSQLSettings(TypedDict, total=False):
@@ -1220,6 +1233,8 @@ class PostgreSQLSettings(TypedDict, total=False):
     DatabaseMode: Optional[DatabaseMode]
     BabelfishDatabaseName: Optional[String]
     DisableUnicodeSourceFilter: Optional[BooleanOptional]
+    ServiceAccessRoleArn: Optional[String]
+    AuthenticationMethod: Optional[PostgreSQLAuthenticationMethod]
 
 
 class RedshiftSettings(TypedDict, total=False):
@@ -2124,7 +2139,7 @@ class DescribeConnectionsResponse(TypedDict, total=False):
 
 
 class DescribeConversionConfigurationMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
 
 
 class DescribeConversionConfigurationResponse(TypedDict, total=False):
@@ -2328,7 +2343,7 @@ class DescribeEventsResponse(TypedDict, total=False):
 
 
 class DescribeExtensionPackAssociationsMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     Filters: Optional[FilterList]
     Marker: Optional[String]
     MaxRecords: Optional[IntegerOptional]
@@ -2486,7 +2501,7 @@ class DescribeInstanceProfilesResponse(TypedDict, total=False):
 
 
 class DescribeMetadataModelAssessmentsMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     Filters: Optional[FilterList]
     Marker: Optional[String]
     MaxRecords: Optional[IntegerOptional]
@@ -2498,7 +2513,7 @@ class DescribeMetadataModelAssessmentsResponse(TypedDict, total=False):
 
 
 class DescribeMetadataModelConversionsMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     Filters: Optional[FilterList]
     Marker: Optional[String]
     MaxRecords: Optional[IntegerOptional]
@@ -2510,7 +2525,7 @@ class DescribeMetadataModelConversionsResponse(TypedDict, total=False):
 
 
 class DescribeMetadataModelExportsAsScriptMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     Filters: Optional[FilterList]
     Marker: Optional[String]
     MaxRecords: Optional[IntegerOptional]
@@ -2522,7 +2537,7 @@ class DescribeMetadataModelExportsAsScriptResponse(TypedDict, total=False):
 
 
 class DescribeMetadataModelExportsToTargetMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     Filters: Optional[FilterList]
     Marker: Optional[String]
     MaxRecords: Optional[IntegerOptional]
@@ -2534,7 +2549,7 @@ class DescribeMetadataModelExportsToTargetResponse(TypedDict, total=False):
 
 
 class DescribeMetadataModelImportsMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     Filters: Optional[FilterList]
     Marker: Optional[String]
     MaxRecords: Optional[IntegerOptional]
@@ -2844,6 +2859,11 @@ class TableStatistics(TypedDict, total=False):
     ValidationSuspendedRecords: Optional[Long]
     ValidationState: Optional[String]
     ValidationStateDetails: Optional[String]
+    ResyncState: Optional[String]
+    ResyncRowsAttempted: Optional[LongOptional]
+    ResyncRowsSucceeded: Optional[LongOptional]
+    ResyncRowsFailed: Optional[LongOptional]
+    ResyncProgress: Optional[DoubleOptional]
 
 
 ReplicationTableStatisticsList = List[TableStatistics]
@@ -3064,7 +3084,7 @@ ExcludeTestList = List[String]
 
 
 class ExportMetadataModelAssessmentMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     SelectionRules: String
     FileName: Optional[String]
     AssessmentReportTypes: Optional[AssessmentReportTypesList]
@@ -3107,7 +3127,7 @@ class ListTagsForResourceResponse(TypedDict, total=False):
 
 
 class ModifyConversionConfigurationMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     ConversionConfiguration: String
 
 
@@ -3374,7 +3394,7 @@ class StartDataMigrationResponse(TypedDict, total=False):
 
 
 class StartExtensionPackAssociationMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
 
 
 class StartExtensionPackAssociationResponse(TypedDict, total=False):
@@ -3382,7 +3402,7 @@ class StartExtensionPackAssociationResponse(TypedDict, total=False):
 
 
 class StartMetadataModelAssessmentMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     SelectionRules: String
 
 
@@ -3391,7 +3411,7 @@ class StartMetadataModelAssessmentResponse(TypedDict, total=False):
 
 
 class StartMetadataModelConversionMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     SelectionRules: String
 
 
@@ -3400,7 +3420,7 @@ class StartMetadataModelConversionResponse(TypedDict, total=False):
 
 
 class StartMetadataModelExportAsScriptMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     SelectionRules: String
     Origin: OriginTypeValue
     FileName: Optional[String]
@@ -3411,7 +3431,7 @@ class StartMetadataModelExportAsScriptResponse(TypedDict, total=False):
 
 
 class StartMetadataModelExportToTargetMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     SelectionRules: String
     OverwriteExtensionPack: Optional[BooleanOptional]
 
@@ -3421,7 +3441,7 @@ class StartMetadataModelExportToTargetResponse(TypedDict, total=False):
 
 
 class StartMetadataModelImportMessage(ServiceRequest):
-    MigrationProjectIdentifier: String
+    MigrationProjectIdentifier: MigrationProjectIdentifier
     SelectionRules: String
     Origin: OriginTypeValue
     Refresh: Optional[Boolean]
@@ -3575,7 +3595,10 @@ class DmsApi:
 
     @handler("BatchStartRecommendations")
     def batch_start_recommendations(
-        self, context: RequestContext, data: StartRecommendationsRequestEntryList = None, **kwargs
+        self,
+        context: RequestContext,
+        data: StartRecommendationsRequestEntryList | None = None,
+        **kwargs,
     ) -> BatchStartRecommendationsResponse:
         """Starts the analysis of up to 20 source databases to recommend target
         engines for each source database. This is a batch version of
@@ -3620,13 +3643,13 @@ class DmsApi:
         migration_project_identifier: String,
         data_migration_type: MigrationTypeValue,
         service_access_role_arn: String,
-        data_migration_name: String = None,
-        enable_cloudwatch_logs: BooleanOptional = None,
-        source_data_settings: SourceDataSettings = None,
-        target_data_settings: TargetDataSettings = None,
-        number_of_jobs: IntegerOptional = None,
-        tags: TagList = None,
-        selection_rules: SecretString = None,
+        data_migration_name: String | None = None,
+        enable_cloudwatch_logs: BooleanOptional | None = None,
+        source_data_settings: SourceDataSettings | None = None,
+        target_data_settings: TargetDataSettings | None = None,
+        number_of_jobs: IntegerOptional | None = None,
+        tags: TagList | None = None,
+        selection_rules: SecretString | None = None,
         **kwargs,
     ) -> CreateDataMigrationResponse:
         """Creates a data migration using the provided settings.
@@ -3660,9 +3683,9 @@ class DmsApi:
         context: RequestContext,
         engine: String,
         settings: DataProviderSettings,
-        data_provider_name: String = None,
-        description: String = None,
-        tags: TagList = None,
+        data_provider_name: String | None = None,
+        description: String | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateDataProviderResponse:
         """Creates a data provider using the provided settings. A data provider
@@ -3688,38 +3711,38 @@ class DmsApi:
         endpoint_identifier: String,
         endpoint_type: ReplicationEndpointTypeValue,
         engine_name: String,
-        username: String = None,
-        password: SecretString = None,
-        server_name: String = None,
-        port: IntegerOptional = None,
-        database_name: String = None,
-        extra_connection_attributes: String = None,
-        kms_key_id: String = None,
-        tags: TagList = None,
-        certificate_arn: String = None,
-        ssl_mode: DmsSslModeValue = None,
-        service_access_role_arn: String = None,
-        external_table_definition: String = None,
-        dynamo_db_settings: DynamoDbSettings = None,
-        s3_settings: S3Settings = None,
-        dms_transfer_settings: DmsTransferSettings = None,
-        mongo_db_settings: MongoDbSettings = None,
-        kinesis_settings: KinesisSettings = None,
-        kafka_settings: KafkaSettings = None,
-        elasticsearch_settings: ElasticsearchSettings = None,
-        neptune_settings: NeptuneSettings = None,
-        redshift_settings: RedshiftSettings = None,
-        postgre_sql_settings: PostgreSQLSettings = None,
-        my_sql_settings: MySQLSettings = None,
-        oracle_settings: OracleSettings = None,
-        sybase_settings: SybaseSettings = None,
-        microsoft_sql_server_settings: MicrosoftSQLServerSettings = None,
-        ibm_db2_settings: IBMDb2Settings = None,
-        resource_identifier: String = None,
-        doc_db_settings: DocDbSettings = None,
-        redis_settings: RedisSettings = None,
-        gcp_my_sql_settings: GcpMySQLSettings = None,
-        timestream_settings: TimestreamSettings = None,
+        username: String | None = None,
+        password: SecretString | None = None,
+        server_name: String | None = None,
+        port: IntegerOptional | None = None,
+        database_name: String | None = None,
+        extra_connection_attributes: String | None = None,
+        kms_key_id: String | None = None,
+        tags: TagList | None = None,
+        certificate_arn: String | None = None,
+        ssl_mode: DmsSslModeValue | None = None,
+        service_access_role_arn: String | None = None,
+        external_table_definition: String | None = None,
+        dynamo_db_settings: DynamoDbSettings | None = None,
+        s3_settings: S3Settings | None = None,
+        dms_transfer_settings: DmsTransferSettings | None = None,
+        mongo_db_settings: MongoDbSettings | None = None,
+        kinesis_settings: KinesisSettings | None = None,
+        kafka_settings: KafkaSettings | None = None,
+        elasticsearch_settings: ElasticsearchSettings | None = None,
+        neptune_settings: NeptuneSettings | None = None,
+        redshift_settings: RedshiftSettings | None = None,
+        postgre_sql_settings: PostgreSQLSettings | None = None,
+        my_sql_settings: MySQLSettings | None = None,
+        oracle_settings: OracleSettings | None = None,
+        sybase_settings: SybaseSettings | None = None,
+        microsoft_sql_server_settings: MicrosoftSQLServerSettings | None = None,
+        ibm_db2_settings: IBMDb2Settings | None = None,
+        resource_identifier: String | None = None,
+        doc_db_settings: DocDbSettings | None = None,
+        redis_settings: RedisSettings | None = None,
+        gcp_my_sql_settings: GcpMySQLSettings | None = None,
+        timestream_settings: TimestreamSettings | None = None,
         **kwargs,
     ) -> CreateEndpointResponse:
         """Creates an endpoint using the provided settings.
@@ -3790,11 +3813,11 @@ class DmsApi:
         context: RequestContext,
         subscription_name: String,
         sns_topic_arn: String,
-        source_type: String = None,
-        event_categories: EventCategoriesList = None,
-        source_ids: SourceIdsList = None,
-        enabled: BooleanOptional = None,
-        tags: TagList = None,
+        source_type: String | None = None,
+        event_categories: EventCategoriesList | None = None,
+        source_ids: SourceIdsList | None = None,
+        enabled: BooleanOptional | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateEventSubscriptionResponse:
         """Creates an DMS event notification subscription.
@@ -3848,7 +3871,7 @@ class DmsApi:
         collector_name: String,
         service_access_role_arn: String,
         s3_bucket_name: String,
-        description: String = None,
+        description: String | None = None,
         **kwargs,
     ) -> CreateFleetAdvisorCollectorResponse:
         """Creates a Fleet Advisor collector using the specified parameters.
@@ -3873,15 +3896,15 @@ class DmsApi:
     def create_instance_profile(
         self,
         context: RequestContext,
-        availability_zone: String = None,
-        kms_key_arn: String = None,
-        publicly_accessible: BooleanOptional = None,
-        tags: TagList = None,
-        network_type: String = None,
-        instance_profile_name: String = None,
-        description: String = None,
-        subnet_group_identifier: String = None,
-        vpc_security_groups: StringList = None,
+        availability_zone: String | None = None,
+        kms_key_arn: String | None = None,
+        publicly_accessible: BooleanOptional | None = None,
+        tags: TagList | None = None,
+        network_type: String | None = None,
+        instance_profile_name: String | None = None,
+        description: String | None = None,
+        subnet_group_identifier: String | None = None,
+        vpc_security_groups: StringList | None = None,
         **kwargs,
     ) -> CreateInstanceProfileResponse:
         """Creates the instance profile using the specified parameters.
@@ -3917,11 +3940,11 @@ class DmsApi:
         source_data_provider_descriptors: DataProviderDescriptorDefinitionList,
         target_data_provider_descriptors: DataProviderDescriptorDefinitionList,
         instance_profile_identifier: String,
-        migration_project_name: String = None,
-        transformation_rules: String = None,
-        description: String = None,
-        tags: TagList = None,
-        schema_conversion_application_attributes: SCApplicationAttributes = None,
+        migration_project_name: String | None = None,
+        transformation_rules: String | None = None,
+        description: String | None = None,
+        tags: TagList | None = None,
+        schema_conversion_application_attributes: SCApplicationAttributes | None = None,
         **kwargs,
     ) -> CreateMigrationProjectResponse:
         """Creates the migration project using the specified parameters.
@@ -3964,10 +3987,10 @@ class DmsApi:
         compute_config: ComputeConfig,
         replication_type: MigrationTypeValue,
         table_mappings: String,
-        replication_settings: String = None,
-        supplemental_settings: String = None,
-        resource_identifier: String = None,
-        tags: TagList = None,
+        replication_settings: String | None = None,
+        supplemental_settings: String | None = None,
+        resource_identifier: String | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateReplicationConfigResponse:
         """Creates a configuration that you can later provide to configure and
@@ -4011,21 +4034,21 @@ class DmsApi:
         context: RequestContext,
         replication_instance_identifier: String,
         replication_instance_class: ReplicationInstanceClass,
-        allocated_storage: IntegerOptional = None,
-        vpc_security_group_ids: VpcSecurityGroupIdList = None,
-        availability_zone: String = None,
-        replication_subnet_group_identifier: String = None,
-        preferred_maintenance_window: String = None,
-        multi_az: BooleanOptional = None,
-        engine_version: String = None,
-        auto_minor_version_upgrade: BooleanOptional = None,
-        tags: TagList = None,
-        kms_key_id: String = None,
-        publicly_accessible: BooleanOptional = None,
-        dns_name_servers: String = None,
-        resource_identifier: String = None,
-        network_type: String = None,
-        kerberos_authentication_settings: KerberosAuthenticationSettings = None,
+        allocated_storage: IntegerOptional | None = None,
+        vpc_security_group_ids: VpcSecurityGroupIdList | None = None,
+        availability_zone: String | None = None,
+        replication_subnet_group_identifier: String | None = None,
+        preferred_maintenance_window: String | None = None,
+        multi_az: BooleanOptional | None = None,
+        engine_version: String | None = None,
+        auto_minor_version_upgrade: BooleanOptional | None = None,
+        tags: TagList | None = None,
+        kms_key_id: String | None = None,
+        publicly_accessible: BooleanOptional | None = None,
+        dns_name_servers: String | None = None,
+        resource_identifier: String | None = None,
+        network_type: String | None = None,
+        kerberos_authentication_settings: KerberosAuthenticationSettings | None = None,
         **kwargs,
     ) -> CreateReplicationInstanceResponse:
         """Creates the replication instance using the specified parameters.
@@ -4093,7 +4116,7 @@ class DmsApi:
         replication_subnet_group_identifier: String,
         replication_subnet_group_description: String,
         subnet_ids: SubnetIdentifierList,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateReplicationSubnetGroupResponse:
         """Creates a replication subnet group given a list of the subnet IDs in a
@@ -4135,13 +4158,13 @@ class DmsApi:
         replication_instance_arn: String,
         migration_type: MigrationTypeValue,
         table_mappings: String,
-        replication_task_settings: String = None,
-        cdc_start_time: TStamp = None,
-        cdc_start_position: String = None,
-        cdc_stop_position: String = None,
-        tags: TagList = None,
-        task_data: String = None,
-        resource_identifier: String = None,
+        replication_task_settings: String | None = None,
+        cdc_start_time: TStamp | None = None,
+        cdc_start_position: String | None = None,
+        cdc_stop_position: String | None = None,
+        tags: TagList | None = None,
+        task_data: String | None = None,
+        resource_identifier: String | None = None,
         **kwargs,
     ) -> CreateReplicationTaskResponse:
         """Creates a replication task using the specified parameters.
@@ -4438,14 +4461,14 @@ class DmsApi:
     def describe_applicable_individual_assessments(
         self,
         context: RequestContext,
-        replication_task_arn: String = None,
-        replication_instance_arn: String = None,
-        replication_config_arn: String = None,
-        source_engine_name: String = None,
-        target_engine_name: String = None,
-        migration_type: MigrationTypeValue = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        replication_task_arn: String | None = None,
+        replication_instance_arn: String | None = None,
+        replication_config_arn: String | None = None,
+        source_engine_name: String | None = None,
+        target_engine_name: String | None = None,
+        migration_type: MigrationTypeValue | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeApplicableIndividualAssessmentsResponse:
         """Provides a list of individual assessments that you can specify for a new
@@ -4496,9 +4519,9 @@ class DmsApi:
     def describe_certificates(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeCertificatesResponse:
         """Provides a description of the certificate.
@@ -4516,9 +4539,9 @@ class DmsApi:
     def describe_connections(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeConnectionsResponse:
         """Describes the status of the connections that have been made between the
@@ -4535,7 +4558,10 @@ class DmsApi:
 
     @handler("DescribeConversionConfiguration")
     def describe_conversion_configuration(
-        self, context: RequestContext, migration_project_identifier: String, **kwargs
+        self,
+        context: RequestContext,
+        migration_project_identifier: MigrationProjectIdentifier,
+        **kwargs,
     ) -> DescribeConversionConfigurationResponse:
         """Returns configuration parameters for a schema conversion project.
 
@@ -4550,11 +4576,11 @@ class DmsApi:
     def describe_data_migrations(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: Marker = None,
-        without_settings: BooleanOptional = None,
-        without_statistics: BooleanOptional = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: Marker | None = None,
+        without_settings: BooleanOptional | None = None,
+        without_statistics: BooleanOptional | None = None,
         **kwargs,
     ) -> DescribeDataMigrationsResponse:
         """Returns information about data migrations.
@@ -4575,9 +4601,9 @@ class DmsApi:
     def describe_data_providers(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeDataProvidersResponse:
         """Returns a paginated list of data providers for your account in the
@@ -4600,8 +4626,8 @@ class DmsApi:
         self,
         context: RequestContext,
         engine_name: String,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeEndpointSettingsResponse:
         """Returns information about the possible endpoint settings available when
@@ -4618,9 +4644,9 @@ class DmsApi:
     def describe_endpoint_types(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeEndpointTypesResponse:
         """Returns information about the type of endpoints available.
@@ -4636,9 +4662,9 @@ class DmsApi:
     def describe_endpoints(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeEndpointsResponse:
         """Returns information about the endpoints for your account in the current
@@ -4656,8 +4682,8 @@ class DmsApi:
     def describe_engine_versions(
         self,
         context: RequestContext,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeEngineVersionsResponse:
         """Returns information about the replication instance versions used in the
@@ -4673,8 +4699,8 @@ class DmsApi:
     def describe_event_categories(
         self,
         context: RequestContext,
-        source_type: String = None,
-        filters: FilterList = None,
+        source_type: String | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeEventCategoriesResponse:
         """Lists categories for all event source types, or, if specified, for a
@@ -4693,10 +4719,10 @@ class DmsApi:
     def describe_event_subscriptions(
         self,
         context: RequestContext,
-        subscription_name: String = None,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        subscription_name: String | None = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeEventSubscriptionsResponse:
         """Lists all the event subscriptions for a customer account. The
@@ -4720,15 +4746,15 @@ class DmsApi:
     def describe_events(
         self,
         context: RequestContext,
-        source_identifier: String = None,
-        source_type: SourceType = None,
-        start_time: TStamp = None,
-        end_time: TStamp = None,
-        duration: IntegerOptional = None,
-        event_categories: EventCategoriesList = None,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        source_identifier: String | None = None,
+        source_type: SourceType | None = None,
+        start_time: TStamp | None = None,
+        end_time: TStamp | None = None,
+        duration: IntegerOptional | None = None,
+        event_categories: EventCategoriesList | None = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeEventsResponse:
         """Lists events for a given source identifier and source type. You can also
@@ -4754,10 +4780,10 @@ class DmsApi:
     def describe_extension_pack_associations(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
-        filters: FilterList = None,
-        marker: String = None,
-        max_records: IntegerOptional = None,
+        migration_project_identifier: MigrationProjectIdentifier,
+        filters: FilterList | None = None,
+        marker: String | None = None,
+        max_records: IntegerOptional | None = None,
         **kwargs,
     ) -> DescribeExtensionPackAssociationsResponse:
         """Returns a paginated list of extension pack associations for the
@@ -4779,9 +4805,9 @@ class DmsApi:
     def describe_fleet_advisor_collectors(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        next_token: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeFleetAdvisorCollectorsResponse:
         """Returns a list of the Fleet Advisor collectors in your account.
@@ -4803,9 +4829,9 @@ class DmsApi:
     def describe_fleet_advisor_databases(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        next_token: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeFleetAdvisorDatabasesResponse:
         """Returns a list of Fleet Advisor databases in your account.
@@ -4826,8 +4852,8 @@ class DmsApi:
     def describe_fleet_advisor_lsa_analysis(
         self,
         context: RequestContext,
-        max_records: IntegerOptional = None,
-        next_token: String = None,
+        max_records: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeFleetAdvisorLsaAnalysisResponse:
         """Provides descriptions of large-scale assessment (LSA) analyses produced
@@ -4845,9 +4871,9 @@ class DmsApi:
     def describe_fleet_advisor_schema_object_summary(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        next_token: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeFleetAdvisorSchemaObjectSummaryResponse:
         """Provides descriptions of the schemas discovered by your Fleet Advisor
@@ -4870,9 +4896,9 @@ class DmsApi:
     def describe_fleet_advisor_schemas(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        next_token: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeFleetAdvisorSchemasResponse:
         """Returns a list of schemas detected by Fleet Advisor Collectors in your
@@ -4894,9 +4920,9 @@ class DmsApi:
     def describe_instance_profiles(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeInstanceProfilesResponse:
         """Returns a paginated list of instance profiles for your account in the
@@ -4918,10 +4944,10 @@ class DmsApi:
     def describe_metadata_model_assessments(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
-        filters: FilterList = None,
-        marker: String = None,
-        max_records: IntegerOptional = None,
+        migration_project_identifier: MigrationProjectIdentifier,
+        filters: FilterList | None = None,
+        marker: String | None = None,
+        max_records: IntegerOptional | None = None,
         **kwargs,
     ) -> DescribeMetadataModelAssessmentsResponse:
         """Returns a paginated list of metadata model assessments for your account
@@ -4942,10 +4968,10 @@ class DmsApi:
     def describe_metadata_model_conversions(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
-        filters: FilterList = None,
-        marker: String = None,
-        max_records: IntegerOptional = None,
+        migration_project_identifier: MigrationProjectIdentifier,
+        filters: FilterList | None = None,
+        marker: String | None = None,
+        max_records: IntegerOptional | None = None,
         **kwargs,
     ) -> DescribeMetadataModelConversionsResponse:
         """Returns a paginated list of metadata model conversions for a migration
@@ -4966,10 +4992,10 @@ class DmsApi:
     def describe_metadata_model_exports_as_script(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
-        filters: FilterList = None,
-        marker: String = None,
-        max_records: IntegerOptional = None,
+        migration_project_identifier: MigrationProjectIdentifier,
+        filters: FilterList | None = None,
+        marker: String | None = None,
+        max_records: IntegerOptional | None = None,
         **kwargs,
     ) -> DescribeMetadataModelExportsAsScriptResponse:
         """Returns a paginated list of metadata model exports.
@@ -4989,10 +5015,10 @@ class DmsApi:
     def describe_metadata_model_exports_to_target(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
-        filters: FilterList = None,
-        marker: String = None,
-        max_records: IntegerOptional = None,
+        migration_project_identifier: MigrationProjectIdentifier,
+        filters: FilterList | None = None,
+        marker: String | None = None,
+        max_records: IntegerOptional | None = None,
         **kwargs,
     ) -> DescribeMetadataModelExportsToTargetResponse:
         """Returns a paginated list of metadata model exports.
@@ -5012,10 +5038,10 @@ class DmsApi:
     def describe_metadata_model_imports(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
-        filters: FilterList = None,
-        marker: String = None,
-        max_records: IntegerOptional = None,
+        migration_project_identifier: MigrationProjectIdentifier,
+        filters: FilterList | None = None,
+        marker: String | None = None,
+        max_records: IntegerOptional | None = None,
         **kwargs,
     ) -> DescribeMetadataModelImportsResponse:
         """Returns a paginated list of metadata model imports.
@@ -5035,9 +5061,9 @@ class DmsApi:
     def describe_migration_projects(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeMigrationProjectsResponse:
         """Returns a paginated list of migration projects for your account in the
@@ -5059,8 +5085,8 @@ class DmsApi:
     def describe_orderable_replication_instances(
         self,
         context: RequestContext,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeOrderableReplicationInstancesResponse:
         """Returns information about the replication instance types that can be
@@ -5076,10 +5102,10 @@ class DmsApi:
     def describe_pending_maintenance_actions(
         self,
         context: RequestContext,
-        replication_instance_arn: String = None,
-        filters: FilterList = None,
-        marker: String = None,
-        max_records: IntegerOptional = None,
+        replication_instance_arn: String | None = None,
+        filters: FilterList | None = None,
+        marker: String | None = None,
+        max_records: IntegerOptional | None = None,
         **kwargs,
     ) -> DescribePendingMaintenanceActionsResponse:
         """Returns a list of upcoming maintenance events for replication instances
@@ -5098,9 +5124,9 @@ class DmsApi:
     def describe_recommendation_limitations(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        next_token: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeRecommendationLimitationsResponse:
         """Returns a paginated list of limitations for recommendations of target
@@ -5121,9 +5147,9 @@ class DmsApi:
     def describe_recommendations(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        next_token: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeRecommendationsResponse:
         """Returns a paginated list of target engine recommendations for your
@@ -5158,9 +5184,9 @@ class DmsApi:
     def describe_replication_configs(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeReplicationConfigsResponse:
         """Returns one or more existing DMS Serverless replication configurations
@@ -5179,8 +5205,8 @@ class DmsApi:
         self,
         context: RequestContext,
         replication_instance_arn: String,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeReplicationInstanceTaskLogsResponse:
         """Returns information about the task logs for the specified task.
@@ -5198,9 +5224,9 @@ class DmsApi:
     def describe_replication_instances(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeReplicationInstancesResponse:
         """Returns information about replication instances for your account in the
@@ -5218,9 +5244,9 @@ class DmsApi:
     def describe_replication_subnet_groups(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeReplicationSubnetGroupsResponse:
         """Returns information about the replication subnet groups.
@@ -5238,9 +5264,9 @@ class DmsApi:
         self,
         context: RequestContext,
         replication_config_arn: String,
-        max_records: IntegerOptional = None,
-        marker: String = None,
-        filters: FilterList = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeReplicationTableStatisticsResponse:
         """Returns table and schema statistics for one or more provisioned
@@ -5260,9 +5286,9 @@ class DmsApi:
     def describe_replication_task_assessment_results(
         self,
         context: RequestContext,
-        replication_task_arn: String = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        replication_task_arn: String | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeReplicationTaskAssessmentResultsResponse:
         """Returns the task assessment results from the Amazon S3 bucket that DMS
@@ -5286,9 +5312,9 @@ class DmsApi:
     def describe_replication_task_assessment_runs(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeReplicationTaskAssessmentRunsResponse:
         """Returns a paginated list of premigration assessment runs based on filter
@@ -5315,9 +5341,9 @@ class DmsApi:
     def describe_replication_task_individual_assessments(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeReplicationTaskIndividualAssessmentsResponse:
         """Returns a paginated list of individual assessments based on filter
@@ -5339,10 +5365,10 @@ class DmsApi:
     def describe_replication_tasks(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
-        without_settings: BooleanOptional = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
+        without_settings: BooleanOptional | None = None,
         **kwargs,
     ) -> DescribeReplicationTasksResponse:
         """Returns information about replication tasks for your account in the
@@ -5361,9 +5387,9 @@ class DmsApi:
     def describe_replications(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        filters: FilterList | None = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeReplicationsResponse:
         """Provides details on replication progress by returning status information
@@ -5382,8 +5408,8 @@ class DmsApi:
         self,
         context: RequestContext,
         endpoint_arn: String,
-        max_records: IntegerOptional = None,
-        marker: String = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
         **kwargs,
     ) -> DescribeSchemasResponse:
         """Returns information about the schema for the specified endpoint.
@@ -5403,9 +5429,9 @@ class DmsApi:
         self,
         context: RequestContext,
         replication_task_arn: String,
-        max_records: IntegerOptional = None,
-        marker: String = None,
-        filters: FilterList = None,
+        max_records: IntegerOptional | None = None,
+        marker: String | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeTableStatisticsResponse:
         """Returns table statistics on the database migration task, including table
@@ -5430,10 +5456,10 @@ class DmsApi:
     def export_metadata_model_assessment(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
+        migration_project_identifier: MigrationProjectIdentifier,
         selection_rules: String,
-        file_name: String = None,
-        assessment_report_types: AssessmentReportTypesList = None,
+        file_name: String | None = None,
+        assessment_report_types: AssessmentReportTypesList | None = None,
         **kwargs,
     ) -> ExportMetadataModelAssessmentResponse:
         """Saves a copy of a database migration assessment report to your Amazon S3
@@ -5454,9 +5480,9 @@ class DmsApi:
         self,
         context: RequestContext,
         certificate_identifier: String,
-        certificate_pem: SecretString = None,
-        certificate_wallet: CertificateWallet = None,
-        tags: TagList = None,
+        certificate_pem: SecretString | None = None,
+        certificate_wallet: CertificateWallet | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> ImportCertificateResponse:
         """Uploads the specified certificate.
@@ -5476,8 +5502,8 @@ class DmsApi:
     def list_tags_for_resource(
         self,
         context: RequestContext,
-        resource_arn: String = None,
-        resource_arn_list: ArnList = None,
+        resource_arn: String | None = None,
+        resource_arn_list: ArnList | None = None,
         **kwargs,
     ) -> ListTagsForResourceResponse:
         """Lists all metadata tags attached to an DMS resource, including
@@ -5500,7 +5526,7 @@ class DmsApi:
     def modify_conversion_configuration(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
+        migration_project_identifier: MigrationProjectIdentifier,
         conversion_configuration: String,
         **kwargs,
     ) -> ModifyConversionConfigurationResponse:
@@ -5520,14 +5546,14 @@ class DmsApi:
         self,
         context: RequestContext,
         data_migration_identifier: String,
-        data_migration_name: String = None,
-        enable_cloudwatch_logs: BooleanOptional = None,
-        service_access_role_arn: String = None,
-        data_migration_type: MigrationTypeValue = None,
-        source_data_settings: SourceDataSettings = None,
-        target_data_settings: TargetDataSettings = None,
-        number_of_jobs: IntegerOptional = None,
-        selection_rules: SecretString = None,
+        data_migration_name: String | None = None,
+        enable_cloudwatch_logs: BooleanOptional | None = None,
+        service_access_role_arn: String | None = None,
+        data_migration_type: MigrationTypeValue | None = None,
+        source_data_settings: SourceDataSettings | None = None,
+        target_data_settings: TargetDataSettings | None = None,
+        number_of_jobs: IntegerOptional | None = None,
+        selection_rules: SecretString | None = None,
         **kwargs,
     ) -> ModifyDataMigrationResponse:
         """Modifies an existing DMS data migration.
@@ -5557,11 +5583,11 @@ class DmsApi:
         self,
         context: RequestContext,
         data_provider_identifier: String,
-        data_provider_name: String = None,
-        description: String = None,
-        engine: String = None,
-        exact_settings: BooleanOptional = None,
-        settings: DataProviderSettings = None,
+        data_provider_name: String | None = None,
+        description: String | None = None,
+        engine: String | None = None,
+        exact_settings: BooleanOptional | None = None,
+        settings: DataProviderSettings | None = None,
         **kwargs,
     ) -> ModifyDataProviderResponse:
         """Modifies the specified data provider using the provided settings.
@@ -5590,39 +5616,39 @@ class DmsApi:
         self,
         context: RequestContext,
         endpoint_arn: String,
-        endpoint_identifier: String = None,
-        endpoint_type: ReplicationEndpointTypeValue = None,
-        engine_name: String = None,
-        username: String = None,
-        password: SecretString = None,
-        server_name: String = None,
-        port: IntegerOptional = None,
-        database_name: String = None,
-        extra_connection_attributes: String = None,
-        certificate_arn: String = None,
-        ssl_mode: DmsSslModeValue = None,
-        service_access_role_arn: String = None,
-        external_table_definition: String = None,
-        dynamo_db_settings: DynamoDbSettings = None,
-        s3_settings: S3Settings = None,
-        dms_transfer_settings: DmsTransferSettings = None,
-        mongo_db_settings: MongoDbSettings = None,
-        kinesis_settings: KinesisSettings = None,
-        kafka_settings: KafkaSettings = None,
-        elasticsearch_settings: ElasticsearchSettings = None,
-        neptune_settings: NeptuneSettings = None,
-        redshift_settings: RedshiftSettings = None,
-        postgre_sql_settings: PostgreSQLSettings = None,
-        my_sql_settings: MySQLSettings = None,
-        oracle_settings: OracleSettings = None,
-        sybase_settings: SybaseSettings = None,
-        microsoft_sql_server_settings: MicrosoftSQLServerSettings = None,
-        ibm_db2_settings: IBMDb2Settings = None,
-        doc_db_settings: DocDbSettings = None,
-        redis_settings: RedisSettings = None,
-        exact_settings: BooleanOptional = None,
-        gcp_my_sql_settings: GcpMySQLSettings = None,
-        timestream_settings: TimestreamSettings = None,
+        endpoint_identifier: String | None = None,
+        endpoint_type: ReplicationEndpointTypeValue | None = None,
+        engine_name: String | None = None,
+        username: String | None = None,
+        password: SecretString | None = None,
+        server_name: String | None = None,
+        port: IntegerOptional | None = None,
+        database_name: String | None = None,
+        extra_connection_attributes: String | None = None,
+        certificate_arn: String | None = None,
+        ssl_mode: DmsSslModeValue | None = None,
+        service_access_role_arn: String | None = None,
+        external_table_definition: String | None = None,
+        dynamo_db_settings: DynamoDbSettings | None = None,
+        s3_settings: S3Settings | None = None,
+        dms_transfer_settings: DmsTransferSettings | None = None,
+        mongo_db_settings: MongoDbSettings | None = None,
+        kinesis_settings: KinesisSettings | None = None,
+        kafka_settings: KafkaSettings | None = None,
+        elasticsearch_settings: ElasticsearchSettings | None = None,
+        neptune_settings: NeptuneSettings | None = None,
+        redshift_settings: RedshiftSettings | None = None,
+        postgre_sql_settings: PostgreSQLSettings | None = None,
+        my_sql_settings: MySQLSettings | None = None,
+        oracle_settings: OracleSettings | None = None,
+        sybase_settings: SybaseSettings | None = None,
+        microsoft_sql_server_settings: MicrosoftSQLServerSettings | None = None,
+        ibm_db2_settings: IBMDb2Settings | None = None,
+        doc_db_settings: DocDbSettings | None = None,
+        redis_settings: RedisSettings | None = None,
+        exact_settings: BooleanOptional | None = None,
+        gcp_my_sql_settings: GcpMySQLSettings | None = None,
+        timestream_settings: TimestreamSettings | None = None,
         **kwargs,
     ) -> ModifyEndpointResponse:
         """Modifies the specified endpoint.
@@ -5690,10 +5716,10 @@ class DmsApi:
         self,
         context: RequestContext,
         subscription_name: String,
-        sns_topic_arn: String = None,
-        source_type: String = None,
-        event_categories: EventCategoriesList = None,
-        enabled: BooleanOptional = None,
+        sns_topic_arn: String | None = None,
+        source_type: String | None = None,
+        event_categories: EventCategoriesList | None = None,
+        enabled: BooleanOptional | None = None,
         **kwargs,
     ) -> ModifyEventSubscriptionResponse:
         """Modifies an existing DMS event notification subscription.
@@ -5725,14 +5751,14 @@ class DmsApi:
         self,
         context: RequestContext,
         instance_profile_identifier: String,
-        availability_zone: String = None,
-        kms_key_arn: String = None,
-        publicly_accessible: BooleanOptional = None,
-        network_type: String = None,
-        instance_profile_name: String = None,
-        description: String = None,
-        subnet_group_identifier: String = None,
-        vpc_security_groups: StringList = None,
+        availability_zone: String | None = None,
+        kms_key_arn: String | None = None,
+        publicly_accessible: BooleanOptional | None = None,
+        network_type: String | None = None,
+        instance_profile_name: String | None = None,
+        description: String | None = None,
+        subnet_group_identifier: String | None = None,
+        vpc_security_groups: StringList | None = None,
         **kwargs,
     ) -> ModifyInstanceProfileResponse:
         """Modifies the specified instance profile using the provided parameters.
@@ -5766,13 +5792,13 @@ class DmsApi:
         self,
         context: RequestContext,
         migration_project_identifier: String,
-        migration_project_name: String = None,
-        source_data_provider_descriptors: DataProviderDescriptorDefinitionList = None,
-        target_data_provider_descriptors: DataProviderDescriptorDefinitionList = None,
-        instance_profile_identifier: String = None,
-        transformation_rules: String = None,
-        description: String = None,
-        schema_conversion_application_attributes: SCApplicationAttributes = None,
+        migration_project_name: String | None = None,
+        source_data_provider_descriptors: DataProviderDescriptorDefinitionList | None = None,
+        target_data_provider_descriptors: DataProviderDescriptorDefinitionList | None = None,
+        instance_profile_identifier: String | None = None,
+        transformation_rules: String | None = None,
+        description: String | None = None,
+        schema_conversion_application_attributes: SCApplicationAttributes | None = None,
         **kwargs,
     ) -> ModifyMigrationProjectResponse:
         """Modifies the specified migration project using the provided parameters.
@@ -5805,14 +5831,14 @@ class DmsApi:
         self,
         context: RequestContext,
         replication_config_arn: String,
-        replication_config_identifier: String = None,
-        replication_type: MigrationTypeValue = None,
-        table_mappings: String = None,
-        replication_settings: String = None,
-        supplemental_settings: String = None,
-        compute_config: ComputeConfig = None,
-        source_endpoint_arn: String = None,
-        target_endpoint_arn: String = None,
+        replication_config_identifier: String | None = None,
+        replication_type: MigrationTypeValue | None = None,
+        table_mappings: String | None = None,
+        replication_settings: String | None = None,
+        supplemental_settings: String | None = None,
+        compute_config: ComputeConfig | None = None,
+        source_endpoint_arn: String | None = None,
+        target_endpoint_arn: String | None = None,
         **kwargs,
     ) -> ModifyReplicationConfigResponse:
         """Modifies an existing DMS Serverless replication configuration that you
@@ -5853,18 +5879,18 @@ class DmsApi:
         self,
         context: RequestContext,
         replication_instance_arn: String,
-        allocated_storage: IntegerOptional = None,
-        apply_immediately: Boolean = None,
-        replication_instance_class: ReplicationInstanceClass = None,
-        vpc_security_group_ids: VpcSecurityGroupIdList = None,
-        preferred_maintenance_window: String = None,
-        multi_az: BooleanOptional = None,
-        engine_version: String = None,
-        allow_major_version_upgrade: Boolean = None,
-        auto_minor_version_upgrade: BooleanOptional = None,
-        replication_instance_identifier: String = None,
-        network_type: String = None,
-        kerberos_authentication_settings: KerberosAuthenticationSettings = None,
+        allocated_storage: IntegerOptional | None = None,
+        apply_immediately: Boolean | None = None,
+        replication_instance_class: ReplicationInstanceClass | None = None,
+        vpc_security_group_ids: VpcSecurityGroupIdList | None = None,
+        preferred_maintenance_window: String | None = None,
+        multi_az: BooleanOptional | None = None,
+        engine_version: String | None = None,
+        allow_major_version_upgrade: Boolean | None = None,
+        auto_minor_version_upgrade: BooleanOptional | None = None,
+        replication_instance_identifier: String | None = None,
+        network_type: String | None = None,
+        kerberos_authentication_settings: KerberosAuthenticationSettings | None = None,
         **kwargs,
     ) -> ModifyReplicationInstanceResponse:
         """Modifies the replication instance to apply new settings. You can change
@@ -5911,7 +5937,7 @@ class DmsApi:
         context: RequestContext,
         replication_subnet_group_identifier: String,
         subnet_ids: SubnetIdentifierList,
-        replication_subnet_group_description: String = None,
+        replication_subnet_group_description: String | None = None,
         **kwargs,
     ) -> ModifyReplicationSubnetGroupResponse:
         """Modifies the settings for the specified replication subnet group.
@@ -5934,14 +5960,14 @@ class DmsApi:
         self,
         context: RequestContext,
         replication_task_arn: String,
-        replication_task_identifier: String = None,
-        migration_type: MigrationTypeValue = None,
-        table_mappings: String = None,
-        replication_task_settings: String = None,
-        cdc_start_time: TStamp = None,
-        cdc_start_position: String = None,
-        cdc_stop_position: String = None,
-        task_data: String = None,
+        replication_task_identifier: String | None = None,
+        migration_type: MigrationTypeValue | None = None,
+        table_mappings: String | None = None,
+        replication_task_settings: String | None = None,
+        cdc_start_time: TStamp | None = None,
+        cdc_start_position: String | None = None,
+        cdc_stop_position: String | None = None,
+        task_data: String | None = None,
         **kwargs,
     ) -> ModifyReplicationTaskResponse:
         """Modifies the specified replication task.
@@ -6002,8 +6028,8 @@ class DmsApi:
         self,
         context: RequestContext,
         replication_instance_arn: String,
-        force_failover: BooleanOptional = None,
-        force_planned_failover: BooleanOptional = None,
+        force_failover: BooleanOptional | None = None,
+        force_planned_failover: BooleanOptional | None = None,
         **kwargs,
     ) -> RebootReplicationInstanceResponse:
         """Reboots a replication instance. Rebooting results in a momentary outage,
@@ -6050,7 +6076,7 @@ class DmsApi:
         context: RequestContext,
         replication_config_arn: String,
         tables_to_reload: TableListToReload,
-        reload_option: ReloadOptionValue = None,
+        reload_option: ReloadOptionValue | None = None,
         **kwargs,
     ) -> ReloadReplicationTablesResponse:
         """Reloads the target database table with the source data for a given DMS
@@ -6076,7 +6102,7 @@ class DmsApi:
         context: RequestContext,
         replication_task_arn: String,
         tables_to_reload: TableListToReload,
-        reload_option: ReloadOptionValue = None,
+        reload_option: ReloadOptionValue | None = None,
         **kwargs,
     ) -> ReloadTablesResponse:
         """Reloads the target database table with the source data.
@@ -6148,7 +6174,10 @@ class DmsApi:
 
     @handler("StartExtensionPackAssociation")
     def start_extension_pack_association(
-        self, context: RequestContext, migration_project_identifier: String, **kwargs
+        self,
+        context: RequestContext,
+        migration_project_identifier: MigrationProjectIdentifier,
+        **kwargs,
     ) -> StartExtensionPackAssociationResponse:
         """Applies the extension pack to your target database. An extension pack is
         an add-on module that emulates functions present in a source database
@@ -6171,7 +6200,7 @@ class DmsApi:
     def start_metadata_model_assessment(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
+        migration_project_identifier: MigrationProjectIdentifier,
         selection_rules: String,
         **kwargs,
     ) -> StartMetadataModelAssessmentResponse:
@@ -6199,7 +6228,7 @@ class DmsApi:
     def start_metadata_model_conversion(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
+        migration_project_identifier: MigrationProjectIdentifier,
         selection_rules: String,
         **kwargs,
     ) -> StartMetadataModelConversionResponse:
@@ -6224,10 +6253,10 @@ class DmsApi:
     def start_metadata_model_export_as_script(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
+        migration_project_identifier: MigrationProjectIdentifier,
         selection_rules: String,
         origin: OriginTypeValue,
-        file_name: String = None,
+        file_name: String | None = None,
         **kwargs,
     ) -> StartMetadataModelExportAsScriptResponse:
         """Saves your converted code to a file as a SQL script, and stores this
@@ -6253,9 +6282,9 @@ class DmsApi:
     def start_metadata_model_export_to_target(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
+        migration_project_identifier: MigrationProjectIdentifier,
         selection_rules: String,
-        overwrite_extension_pack: BooleanOptional = None,
+        overwrite_extension_pack: BooleanOptional | None = None,
         **kwargs,
     ) -> StartMetadataModelExportToTargetResponse:
         """Applies converted database objects to your target database.
@@ -6279,10 +6308,10 @@ class DmsApi:
     def start_metadata_model_import(
         self,
         context: RequestContext,
-        migration_project_identifier: String,
+        migration_project_identifier: MigrationProjectIdentifier,
         selection_rules: String,
         origin: OriginTypeValue,
-        refresh: Boolean = None,
+        refresh: Boolean | None = None,
         **kwargs,
     ) -> StartMetadataModelImportResponse:
         """Loads the metadata for all the dependent database objects of the parent
@@ -6338,10 +6367,10 @@ class DmsApi:
         context: RequestContext,
         replication_config_arn: String,
         start_replication_type: String,
-        premigration_assessment_settings: String = None,
-        cdc_start_time: TStamp = None,
-        cdc_start_position: String = None,
-        cdc_stop_position: String = None,
+        premigration_assessment_settings: String | None = None,
+        cdc_start_time: TStamp | None = None,
+        cdc_start_position: String | None = None,
+        cdc_stop_position: String | None = None,
         **kwargs,
     ) -> StartReplicationResponse:
         """For a given DMS Serverless replication configuration, DMS connects to
@@ -6371,9 +6400,9 @@ class DmsApi:
         context: RequestContext,
         replication_task_arn: String,
         start_replication_task_type: StartReplicationTaskTypeValue,
-        cdc_start_time: TStamp = None,
-        cdc_start_position: String = None,
-        cdc_stop_position: String = None,
+        cdc_start_time: TStamp | None = None,
+        cdc_start_position: String | None = None,
+        cdc_stop_position: String | None = None,
         **kwargs,
     ) -> StartReplicationTaskResponse:
         """Starts the replication task.
@@ -6431,12 +6460,12 @@ class DmsApi:
         service_access_role_arn: String,
         result_location_bucket: String,
         assessment_run_name: String,
-        result_location_folder: String = None,
-        result_encryption_mode: String = None,
-        result_kms_key_arn: String = None,
-        include_only: IncludeTestList = None,
-        exclude: ExcludeTestList = None,
-        tags: TagList = None,
+        result_location_folder: String | None = None,
+        result_encryption_mode: String | None = None,
+        result_kms_key_arn: String | None = None,
+        include_only: IncludeTestList | None = None,
+        exclude: ExcludeTestList | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> StartReplicationTaskAssessmentRunResponse:
         """Starts a new premigration assessment run for one or more individual
@@ -6550,7 +6579,7 @@ class DmsApi:
 
     @handler("UpdateSubscriptionsToEventBridge")
     def update_subscriptions_to_event_bridge(
-        self, context: RequestContext, force_move: BooleanOptional = None, **kwargs
+        self, context: RequestContext, force_move: BooleanOptional | None = None, **kwargs
     ) -> UpdateSubscriptionsToEventBridgeResponse:
         """Migrates 10 active and enabled Amazon SNS subscriptions at a time and
         converts them to corresponding Amazon EventBridge rules. By default,

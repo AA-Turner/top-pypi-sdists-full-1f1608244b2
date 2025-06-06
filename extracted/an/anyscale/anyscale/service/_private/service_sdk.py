@@ -515,11 +515,16 @@ class PrivateServiceSDK(WorkloadSDK):
 
     def terminate(
         self,
+        id: Optional[str] = None,  # noqa: A002
         name: Optional[str] = None,
         *,
         cloud: Optional[str] = None,
         project: Optional[str] = None,
     ) -> str:
+        if id is not None:
+            self.client.terminate_service(id)
+            return id
+
         model = self._resolve_to_service_model(name=name, cloud=cloud, project=project)
 
         self.client.terminate_service(model.id)

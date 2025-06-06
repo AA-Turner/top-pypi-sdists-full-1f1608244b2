@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    Copyright (C) 2014 Yahoo! Inc. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -16,13 +14,12 @@
 
 import functools
 import logging
-import re
 import string
 import threading
 
-from oslo_utils import encodeutils
+from oslo_utils import netutils
 from oslo_utils import strutils
-from packaging import version
+from oslo_utils import versionutils
 import redis
 from redis import exceptions
 from redis import sentinel
@@ -60,27 +57,22 @@ def _handle_failures(n_tries=15):
                             "retry limit has been reached, aborting - %s", e
                         )
                         utils.raise_with_cause(
-                            coordination.ToozConnectionError,
-                            encodeutils.exception_to_unicode(e),
-                            cause=e)
+                            coordination.ToozConnectionError, str(e), cause=e)
                     LOG.debug("Redis connection error, will retry - %s", e)
 
                 except (exceptions.TimeoutError) as e:
                     utils.raise_with_cause(coordination.ToozConnectionError,
-                                           encodeutils.exception_to_unicode(e),
-                                           cause=e)
+                                           str(e), cause=e)
                 except exceptions.RedisError as e:
-                    utils.raise_with_cause(tooz.ToozError,
-                                           encodeutils.exception_to_unicode(e),
-                                           cause=e)
+                    utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
         return wrapper
     return inner
 
 
 class RedisLock(locking.Lock):
     def __init__(self, coord, client, name, timeout):
-        name = "%s_%s_lock" % (coord.namespace, str(name))
-        super(RedisLock, self).__init__(name)
+        name = "{}_{}_lock".format(coord.namespace, str(name))
+        super().__init__(name)
         # NOTE(jd) Make sure we don't release and heartbeat at the same time by
         # using a exclusive access lock (LP#1557593)
         self._exclusive_access = threading.Lock()
@@ -219,7 +211,7 @@ class RedisDriver(coordination.CoordinationDriverCachedRunWatchers,
     enum member(s) that can be used to interogate how this driver works.
     """
 
-    MIN_VERSION = version.Version("2.6.0")
+    MIN_VERSION = "2.6.0"
     """
     The min redis version that this driver requires to operate with...
     """
@@ -373,7 +365,7 @@ return 1
     EXCLUDE_OPTIONS = CLIENT_LIST_ARGS
 
     def __init__(self, member_id, parsed_url, options):
-        super(RedisDriver, self).__init__(member_id, parsed_url, options)
+        super().__init__(member_id, parsed_url, options)
         self._parsed_url = parsed_url
         self._encoding = self._options.get('encoding', self.DEFAULT_ENCODING)
         timeout = self._options.get('timeout', self.CLIENT_DEFAULT_SOCKET_TO)
@@ -393,22 +385,16 @@ return 1
         self._server_info = {}
         self._scripts = {}
 
-    def _check_fetch_redis_version(self, geq_version, not_existent=True):
-        if isinstance(geq_version, str):
-            desired_version = version.Version(geq_version)
-        elif isinstance(geq_version, version.Version):
-            desired_version = geq_version
-        else:
-            raise TypeError("Version check expects a string/version type")
+    def _check_fetch_redis_version(self, desired_version, not_existent=True):
         try:
-            redis_version = version.Version(self._server_info['redis_version'])
+            redis_version = self._server_info['redis_version']
         except KeyError:
             return (not_existent, None)
-        else:
-            if redis_version < desired_version:
-                return (False, redis_version)
-            else:
-                return (True, redis_version)
+
+        if versionutils.is_compatible(desired_version, redis_version,
+                                      same_major=False):
+            return (True, redis_version)
+        return (False, redis_version)
 
     @property
     def namespace(self):
@@ -426,15 +412,10 @@ return 1
 
     @classmethod
     def _parse_sentinel(cls, sentinel):
-        # IPv6 (eg. [::1]:6379 )
-        match = re.search(r'^\[(\S+)\]:(\d+)$', sentinel)
-        if match:
-            return (match[1], int(match[2]))
-        # IPv4 or hostname (eg. 127.0.0.1:6379 or localhost:6379)
-        match = re.search(r'^(\S+):(\d+)$', sentinel)
-        if match:
-            return (match[1], int(match[2]))
-        raise ValueError('Malformed sentinel server format')
+        host, port = netutils.parse_host_port(sentinel)
+        if host is None or port is None:
+            raise ValueError('Malformed sentinel server format')
+        return (host, port)
 
     @classmethod
     def _make_client(cls, parsed_url, options, default_socket_timeout):
@@ -503,14 +484,13 @@ return 1
 
     @_handle_failures()
     def _start(self):
-        super(RedisDriver, self)._start()
+        super()._start()
         try:
             self._client = self._make_client(self._parsed_url, self._options,
                                              self.timeout)
         except exceptions.RedisError as e:
             utils.raise_with_cause(coordination.ToozConnectionError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         else:
             # Ensure that the server is alive and not dead, this does not
             # ensure the server will always be alive, but does insure that it
@@ -597,7 +577,7 @@ return 1
                 lock.release()
             except tooz.ToozError:
                 LOG.warning("Unable to release lock '%s'", lock, exc_info=True)
-        super(RedisDriver, self)._stop()
+        super()._stop()
         if self._client is not None:
             # Make sure we no longer exist...
             beat_id = self._encode_beat_id(self._member_id)
@@ -714,8 +694,8 @@ return 1
                                             for m in gone_members)
                 p.hdel(encoded_group, *encoded_gone_members)
                 p.execute()
-                return set(m for m in potential_members
-                           if m not in gone_members)
+                return {m for m in potential_members
+                        if m not in gone_members}
             return potential_members
 
         return RedisFutureResult(self._submit(self._client.transaction,
@@ -816,7 +796,7 @@ return 1
                                                      self._member_id))
 
     def run_watchers(self, timeout=None):
-        result = super(RedisDriver, self).run_watchers(timeout=timeout)
+        result = super().run_watchers(timeout=timeout)
         self.run_elect_coordinator()
         return result
 

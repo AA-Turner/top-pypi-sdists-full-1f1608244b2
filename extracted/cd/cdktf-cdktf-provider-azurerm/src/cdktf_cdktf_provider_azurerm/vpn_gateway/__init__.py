@@ -1,7 +1,7 @@
 r'''
 # `azurerm_vpn_gateway`
 
-Refer to the Terraform Registry for docs: [`azurerm_vpn_gateway`](https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway).
+Refer to the Terraform Registry for docs: [`azurerm_vpn_gateway`](https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class VpnGateway(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-azurerm.vpnGateway.VpnGateway",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway azurerm_vpn_gateway}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway azurerm_vpn_gateway}.'''
 
     def __init__(
         self,
@@ -70,21 +70,21 @@ class VpnGateway(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway azurerm_vpn_gateway} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway azurerm_vpn_gateway} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#location VpnGateway#location}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#name VpnGateway#name}.
-        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#resource_group_name VpnGateway#resource_group_name}.
-        :param virtual_hub_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#virtual_hub_id VpnGateway#virtual_hub_id}.
-        :param bgp_route_translation_for_nat_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#bgp_route_translation_for_nat_enabled VpnGateway#bgp_route_translation_for_nat_enabled}.
-        :param bgp_settings: bgp_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#bgp_settings VpnGateway#bgp_settings}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#id VpnGateway#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param routing_preference: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#routing_preference VpnGateway#routing_preference}.
-        :param scale_unit: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#scale_unit VpnGateway#scale_unit}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#tags VpnGateway#tags}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#timeouts VpnGateway#timeouts}
+        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#location VpnGateway#location}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#name VpnGateway#name}.
+        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#resource_group_name VpnGateway#resource_group_name}.
+        :param virtual_hub_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#virtual_hub_id VpnGateway#virtual_hub_id}.
+        :param bgp_route_translation_for_nat_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#bgp_route_translation_for_nat_enabled VpnGateway#bgp_route_translation_for_nat_enabled}.
+        :param bgp_settings: bgp_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#bgp_settings VpnGateway#bgp_settings}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#id VpnGateway#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param routing_preference: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#routing_preference VpnGateway#routing_preference}.
+        :param scale_unit: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#scale_unit VpnGateway#scale_unit}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#tags VpnGateway#tags}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#timeouts VpnGateway#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -133,7 +133,7 @@ class VpnGateway(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the VpnGateway to import.
-        :param import_from_id: The id of the existing VpnGateway that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing VpnGateway that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the VpnGateway to import is found.
         '''
         if __debug__:
@@ -154,10 +154,10 @@ class VpnGateway(
         instance1_bgp_peering_address: typing.Optional[typing.Union["VpnGatewayBgpSettingsInstance1BgpPeeringAddress", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param asn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#asn VpnGateway#asn}.
-        :param peer_weight: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#peer_weight VpnGateway#peer_weight}.
-        :param instance0_bgp_peering_address: instance_0_bgp_peering_address block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#instance_0_bgp_peering_address VpnGateway#instance_0_bgp_peering_address}
-        :param instance1_bgp_peering_address: instance_1_bgp_peering_address block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#instance_1_bgp_peering_address VpnGateway#instance_1_bgp_peering_address}
+        :param asn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#asn VpnGateway#asn}.
+        :param peer_weight: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#peer_weight VpnGateway#peer_weight}.
+        :param instance0_bgp_peering_address: instance_0_bgp_peering_address block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#instance_0_bgp_peering_address VpnGateway#instance_0_bgp_peering_address}
+        :param instance1_bgp_peering_address: instance_1_bgp_peering_address block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#instance_1_bgp_peering_address VpnGateway#instance_1_bgp_peering_address}
         '''
         value = VpnGatewayBgpSettings(
             asn=asn,
@@ -178,10 +178,10 @@ class VpnGateway(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#create VpnGateway#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#delete VpnGateway#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#read VpnGateway#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#update VpnGateway#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#create VpnGateway#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#delete VpnGateway#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#read VpnGateway#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#update VpnGateway#update}.
         '''
         value = VpnGatewayTimeouts(
             create=create, delete=delete, read=read, update=update
@@ -234,6 +234,11 @@ class VpnGateway(
     @jsii.member(jsii_name="bgpSettings")
     def bgp_settings(self) -> "VpnGatewayBgpSettingsOutputReference":
         return typing.cast("VpnGatewayBgpSettingsOutputReference", jsii.get(self, "bgpSettings"))
+
+    @builtins.property
+    @jsii.member(jsii_name="ipConfiguration")
+    def ip_configuration(self) -> "VpnGatewayIpConfigurationList":
+        return typing.cast("VpnGatewayIpConfigurationList", jsii.get(self, "ipConfiguration"))
 
     @builtins.property
     @jsii.member(jsii_name="timeouts")
@@ -433,10 +438,10 @@ class VpnGatewayBgpSettings:
         instance1_bgp_peering_address: typing.Optional[typing.Union["VpnGatewayBgpSettingsInstance1BgpPeeringAddress", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param asn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#asn VpnGateway#asn}.
-        :param peer_weight: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#peer_weight VpnGateway#peer_weight}.
-        :param instance0_bgp_peering_address: instance_0_bgp_peering_address block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#instance_0_bgp_peering_address VpnGateway#instance_0_bgp_peering_address}
-        :param instance1_bgp_peering_address: instance_1_bgp_peering_address block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#instance_1_bgp_peering_address VpnGateway#instance_1_bgp_peering_address}
+        :param asn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#asn VpnGateway#asn}.
+        :param peer_weight: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#peer_weight VpnGateway#peer_weight}.
+        :param instance0_bgp_peering_address: instance_0_bgp_peering_address block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#instance_0_bgp_peering_address VpnGateway#instance_0_bgp_peering_address}
+        :param instance1_bgp_peering_address: instance_1_bgp_peering_address block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#instance_1_bgp_peering_address VpnGateway#instance_1_bgp_peering_address}
         '''
         if isinstance(instance0_bgp_peering_address, dict):
             instance0_bgp_peering_address = VpnGatewayBgpSettingsInstance0BgpPeeringAddress(**instance0_bgp_peering_address)
@@ -459,14 +464,14 @@ class VpnGatewayBgpSettings:
 
     @builtins.property
     def asn(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#asn VpnGateway#asn}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#asn VpnGateway#asn}.'''
         result = self._values.get("asn")
         assert result is not None, "Required property 'asn' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
     def peer_weight(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#peer_weight VpnGateway#peer_weight}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#peer_weight VpnGateway#peer_weight}.'''
         result = self._values.get("peer_weight")
         assert result is not None, "Required property 'peer_weight' is missing"
         return typing.cast(jsii.Number, result)
@@ -477,7 +482,7 @@ class VpnGatewayBgpSettings:
     ) -> typing.Optional["VpnGatewayBgpSettingsInstance0BgpPeeringAddress"]:
         '''instance_0_bgp_peering_address block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#instance_0_bgp_peering_address VpnGateway#instance_0_bgp_peering_address}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#instance_0_bgp_peering_address VpnGateway#instance_0_bgp_peering_address}
         '''
         result = self._values.get("instance0_bgp_peering_address")
         return typing.cast(typing.Optional["VpnGatewayBgpSettingsInstance0BgpPeeringAddress"], result)
@@ -488,7 +493,7 @@ class VpnGatewayBgpSettings:
     ) -> typing.Optional["VpnGatewayBgpSettingsInstance1BgpPeeringAddress"]:
         '''instance_1_bgp_peering_address block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#instance_1_bgp_peering_address VpnGateway#instance_1_bgp_peering_address}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#instance_1_bgp_peering_address VpnGateway#instance_1_bgp_peering_address}
         '''
         result = self._values.get("instance1_bgp_peering_address")
         return typing.cast(typing.Optional["VpnGatewayBgpSettingsInstance1BgpPeeringAddress"], result)
@@ -513,7 +518,7 @@ class VpnGatewayBgpSettings:
 class VpnGatewayBgpSettingsInstance0BgpPeeringAddress:
     def __init__(self, *, custom_ips: typing.Sequence[builtins.str]) -> None:
         '''
-        :param custom_ips: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.
+        :param custom_ips: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1323fadf8335ede578559bceec082769fb338d53e7dab87cc56de113f4e113cf)
@@ -524,7 +529,7 @@ class VpnGatewayBgpSettingsInstance0BgpPeeringAddress:
 
     @builtins.property
     def custom_ips(self) -> typing.List[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.'''
         result = self._values.get("custom_ips")
         assert result is not None, "Required property 'custom_ips' is missing"
         return typing.cast(typing.List[builtins.str], result)
@@ -619,7 +624,7 @@ class VpnGatewayBgpSettingsInstance0BgpPeeringAddressOutputReference(
 class VpnGatewayBgpSettingsInstance1BgpPeeringAddress:
     def __init__(self, *, custom_ips: typing.Sequence[builtins.str]) -> None:
         '''
-        :param custom_ips: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.
+        :param custom_ips: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__4ca12a56385e79fb2a883bb6620dd8121e651660ae43e7f4eef7ba9d2fd89e8e)
@@ -630,7 +635,7 @@ class VpnGatewayBgpSettingsInstance1BgpPeeringAddress:
 
     @builtins.property
     def custom_ips(self) -> typing.List[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.'''
         result = self._values.get("custom_ips")
         assert result is not None, "Required property 'custom_ips' is missing"
         return typing.cast(typing.List[builtins.str], result)
@@ -744,7 +749,7 @@ class VpnGatewayBgpSettingsOutputReference(
         custom_ips: typing.Sequence[builtins.str],
     ) -> None:
         '''
-        :param custom_ips: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.
+        :param custom_ips: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.
         '''
         value = VpnGatewayBgpSettingsInstance0BgpPeeringAddress(custom_ips=custom_ips)
 
@@ -757,7 +762,7 @@ class VpnGatewayBgpSettingsOutputReference(
         custom_ips: typing.Sequence[builtins.str],
     ) -> None:
         '''
-        :param custom_ips: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.
+        :param custom_ips: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#custom_ips VpnGateway#custom_ips}.
         '''
         value = VpnGatewayBgpSettingsInstance1BgpPeeringAddress(custom_ips=custom_ips)
 
@@ -906,17 +911,17 @@ class VpnGatewayConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#location VpnGateway#location}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#name VpnGateway#name}.
-        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#resource_group_name VpnGateway#resource_group_name}.
-        :param virtual_hub_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#virtual_hub_id VpnGateway#virtual_hub_id}.
-        :param bgp_route_translation_for_nat_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#bgp_route_translation_for_nat_enabled VpnGateway#bgp_route_translation_for_nat_enabled}.
-        :param bgp_settings: bgp_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#bgp_settings VpnGateway#bgp_settings}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#id VpnGateway#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param routing_preference: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#routing_preference VpnGateway#routing_preference}.
-        :param scale_unit: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#scale_unit VpnGateway#scale_unit}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#tags VpnGateway#tags}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#timeouts VpnGateway#timeouts}
+        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#location VpnGateway#location}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#name VpnGateway#name}.
+        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#resource_group_name VpnGateway#resource_group_name}.
+        :param virtual_hub_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#virtual_hub_id VpnGateway#virtual_hub_id}.
+        :param bgp_route_translation_for_nat_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#bgp_route_translation_for_nat_enabled VpnGateway#bgp_route_translation_for_nat_enabled}.
+        :param bgp_settings: bgp_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#bgp_settings VpnGateway#bgp_settings}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#id VpnGateway#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param routing_preference: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#routing_preference VpnGateway#routing_preference}.
+        :param scale_unit: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#scale_unit VpnGateway#scale_unit}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#tags VpnGateway#tags}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#timeouts VpnGateway#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1045,28 +1050,28 @@ class VpnGatewayConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def location(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#location VpnGateway#location}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#location VpnGateway#location}.'''
         result = self._values.get("location")
         assert result is not None, "Required property 'location' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#name VpnGateway#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#name VpnGateway#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def resource_group_name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#resource_group_name VpnGateway#resource_group_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#resource_group_name VpnGateway#resource_group_name}.'''
         result = self._values.get("resource_group_name")
         assert result is not None, "Required property 'resource_group_name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def virtual_hub_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#virtual_hub_id VpnGateway#virtual_hub_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#virtual_hub_id VpnGateway#virtual_hub_id}.'''
         result = self._values.get("virtual_hub_id")
         assert result is not None, "Required property 'virtual_hub_id' is missing"
         return typing.cast(builtins.str, result)
@@ -1075,7 +1080,7 @@ class VpnGatewayConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def bgp_route_translation_for_nat_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#bgp_route_translation_for_nat_enabled VpnGateway#bgp_route_translation_for_nat_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#bgp_route_translation_for_nat_enabled VpnGateway#bgp_route_translation_for_nat_enabled}.'''
         result = self._values.get("bgp_route_translation_for_nat_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1083,14 +1088,14 @@ class VpnGatewayConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def bgp_settings(self) -> typing.Optional[VpnGatewayBgpSettings]:
         '''bgp_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#bgp_settings VpnGateway#bgp_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#bgp_settings VpnGateway#bgp_settings}
         '''
         result = self._values.get("bgp_settings")
         return typing.cast(typing.Optional[VpnGatewayBgpSettings], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#id VpnGateway#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#id VpnGateway#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1100,19 +1105,19 @@ class VpnGatewayConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def routing_preference(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#routing_preference VpnGateway#routing_preference}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#routing_preference VpnGateway#routing_preference}.'''
         result = self._values.get("routing_preference")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def scale_unit(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#scale_unit VpnGateway#scale_unit}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#scale_unit VpnGateway#scale_unit}.'''
         result = self._values.get("scale_unit")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#tags VpnGateway#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#tags VpnGateway#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1120,7 +1125,7 @@ class VpnGatewayConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["VpnGatewayTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#timeouts VpnGateway#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#timeouts VpnGateway#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["VpnGatewayTimeouts"], result)
@@ -1135,6 +1140,154 @@ class VpnGatewayConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         return "VpnGatewayConfig(%s)" % ", ".join(
             k + "=" + repr(v) for k, v in self._values.items()
         )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-azurerm.vpnGateway.VpnGatewayIpConfiguration",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class VpnGatewayIpConfiguration:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "VpnGatewayIpConfiguration(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class VpnGatewayIpConfigurationList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-azurerm.vpnGateway.VpnGatewayIpConfigurationList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__408e88c44e99d921e63fb79611ff8824a92a558a04458db99120a3838cc2ea13)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(self, index: jsii.Number) -> "VpnGatewayIpConfigurationOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__eddf877b887c1c36b5db259ea5cac7a640cc3df48d513f04b9c8d1f2e38c14b2)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("VpnGatewayIpConfigurationOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__bfe2dc05c0cc6f8ff775eaa76c37d88a1897ba78ab549d221d3dfc087558850a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__83c37b881cfc2bb4e76de8658e4420f5e88e8615dab354472c9dc2308ebe11de)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b675ae6a2aaafb73ffcfc2f3173cbcbe06843ff483c96ae6d9289680b87e5766)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class VpnGatewayIpConfigurationOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-azurerm.vpnGateway.VpnGatewayIpConfigurationOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5ea5ea539da18fb8f0fc8c25b4087f9b396cb80a6134c1c6c9835a8486197403)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="id")
+    def id(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "id"))
+
+    @builtins.property
+    @jsii.member(jsii_name="privateIpAddress")
+    def private_ip_address(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "privateIpAddress"))
+
+    @builtins.property
+    @jsii.member(jsii_name="publicIpAddress")
+    def public_ip_address(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "publicIpAddress"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(self) -> typing.Optional[VpnGatewayIpConfiguration]:
+        return typing.cast(typing.Optional[VpnGatewayIpConfiguration], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(self, value: typing.Optional[VpnGatewayIpConfiguration]) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__bb0b256c7eac48ce17d037990f8cc5258ed0c2c4576ff660bf5fa52af821005a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
 @jsii.data_type(
@@ -1157,10 +1310,10 @@ class VpnGatewayTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#create VpnGateway#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#delete VpnGateway#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#read VpnGateway#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#update VpnGateway#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#create VpnGateway#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#delete VpnGateway#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#read VpnGateway#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#update VpnGateway#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__410c66273cb06ad0f43000cd96377538d00e9c1454a39971772b58ae812f1104)
@@ -1180,25 +1333,25 @@ class VpnGatewayTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#create VpnGateway#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#create VpnGateway#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#delete VpnGateway#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#delete VpnGateway#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#read VpnGateway#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#read VpnGateway#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/vpn_gateway#update VpnGateway#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/vpn_gateway#update VpnGateway#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1345,6 +1498,9 @@ __all__ = [
     "VpnGatewayBgpSettingsInstance1BgpPeeringAddressOutputReference",
     "VpnGatewayBgpSettingsOutputReference",
     "VpnGatewayConfig",
+    "VpnGatewayIpConfiguration",
+    "VpnGatewayIpConfigurationList",
+    "VpnGatewayIpConfigurationOutputReference",
     "VpnGatewayTimeouts",
     "VpnGatewayTimeoutsOutputReference",
 ]
@@ -1547,6 +1703,53 @@ def _typecheckingstub__e4b83bc996eef3fbea9174a40869c242f4e03da70b49d9100a26f9977
     scale_unit: typing.Optional[jsii.Number] = None,
     tags: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     timeouts: typing.Optional[typing.Union[VpnGatewayTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__408e88c44e99d921e63fb79611ff8824a92a558a04458db99120a3838cc2ea13(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__eddf877b887c1c36b5db259ea5cac7a640cc3df48d513f04b9c8d1f2e38c14b2(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__bfe2dc05c0cc6f8ff775eaa76c37d88a1897ba78ab549d221d3dfc087558850a(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__83c37b881cfc2bb4e76de8658e4420f5e88e8615dab354472c9dc2308ebe11de(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b675ae6a2aaafb73ffcfc2f3173cbcbe06843ff483c96ae6d9289680b87e5766(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__5ea5ea539da18fb8f0fc8c25b4087f9b396cb80a6134c1c6c9835a8486197403(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__bb0b256c7eac48ce17d037990f8cc5258ed0c2c4576ff660bf5fa52af821005a(
+    value: typing.Optional[VpnGatewayIpConfiguration],
 ) -> None:
     """Type checking stubs"""
     pass

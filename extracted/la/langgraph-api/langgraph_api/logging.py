@@ -57,6 +57,16 @@ class AddPrefixedEnvVars:
         return event_dict
 
 
+class AddApiVersion:
+    def __call__(
+        self, logger: logging.Logger, method_name: str, event_dict: EventDict
+    ) -> EventDict:
+        from langgraph_api import __version__
+
+        event_dict["langgraph_api_version"] = __version__
+        return event_dict
+
+
 class AddLoggingContext:
     def __call__(
         self, logger: logging.Logger, method_name: str, event_dict: EventDict
@@ -90,11 +100,14 @@ shared_processors = [
     structlog.stdlib.PositionalArgumentsFormatter(),
     structlog.stdlib.ExtraAdder(),
     AddPrefixedEnvVars("LANGSMITH_LANGGRAPH_"),  # injected by docker build
+    AddApiVersion(),
     structlog.processors.TimeStamper(fmt="iso", utc=True),
     structlog.processors.StackInfoRenderer(),
-    structlog.processors.dict_tracebacks
-    if LOG_JSON
-    else structlog.processors.format_exc_info,
+    (
+        structlog.processors.dict_tracebacks
+        if LOG_JSON
+        else structlog.processors.format_exc_info
+    ),
     structlog.processors.UnicodeDecoder(),
     AddLoggingContext(),
 ]

@@ -2,7 +2,9 @@ import importlib
 import os
 import subprocess
 import sys
+import traceback
 
+import copier
 import pytest
 from pytest import TempPathFactory
 
@@ -16,6 +18,8 @@ def install(package):
 def uninstall(package):
     subprocess.check_call([sys.executable, "-m", "pip", "uninstall", "-y", package])
 
+
+PLUGIN_REPO = "https://github.com/bec-project/plugin_copier_template.git"
 
 TEST_SCHEMA_FILE = """
 from bec_lib.metadata_schema import BasicScanMetadata
@@ -46,7 +50,6 @@ class ScanForTesting(ScanBase):
 
 
 class TestPluginSystem:
-
     @pytest.fixture(scope="class", autouse=True)
     def setup_env(self, tmp_path_factory: TempPathFactory):
         print("\n\nSetting up plugin for tests: generating files...\n")
@@ -58,9 +61,22 @@ class TestPluginSystem:
         )
         print("Done. Modifying files with test code...\n")
         # run plugin generation script
-        subprocess.check_call(
-            [sys.executable, TestPluginSystem._plugin_script, str(TestPluginSystem._tmp_plugin_dir)]
-        )
+        try:
+            copier.run_copy(
+                PLUGIN_REPO,
+                str(TestPluginSystem._tmp_plugin_dir),
+                defaults=True,
+                data={
+                    "project_name": TestPluginSystem._tmp_plugin_name,
+                    "widget_plugins_input": [{"name": "test_widget", "use_ui": True}],
+                },
+                unsafe=True,
+            )
+        except Exception:
+            # If there are permission issues on the test runner with making git commits, it's not really important
+            print(
+                f"Encountered error in setting up test repo: \n {traceback.format_exc()} \n Attempting to continue anyway..."
+            )
 
         # add some test things
         with open(
@@ -174,6 +190,8 @@ class TestPluginSystem:
             "bec_ipython_client",
             "services",
             "file_writer",
+            "deployments",
+            "device_configs",
         ]:
             importlib.import_module(TestPluginSystem._tmp_plugin_name + "." + submod)
 

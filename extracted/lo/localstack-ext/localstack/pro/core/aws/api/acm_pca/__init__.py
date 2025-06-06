@@ -1011,11 +1011,11 @@ class AcmPcaApi:
         context: RequestContext,
         certificate_authority_configuration: CertificateAuthorityConfiguration,
         certificate_authority_type: CertificateAuthorityType,
-        revocation_configuration: RevocationConfiguration = None,
-        idempotency_token: IdempotencyToken = None,
-        key_storage_security_standard: KeyStorageSecurityStandard = None,
-        tags: TagList = None,
-        usage_mode: CertificateAuthorityUsageMode = None,
+        revocation_configuration: RevocationConfiguration | None = None,
+        idempotency_token: IdempotencyToken | None = None,
+        key_storage_security_standard: KeyStorageSecurityStandard | None = None,
+        tags: TagList | None = None,
+        usage_mode: CertificateAuthorityUsageMode | None = None,
         **kwargs,
     ) -> CreateCertificateAuthorityResponse:
         """Creates a root or subordinate private certificate authority (CA). You
@@ -1114,7 +1114,7 @@ class AcmPcaApi:
         certificate_authority_arn: Arn,
         principal: Principal,
         actions: ActionList,
-        source_account: AccountId = None,
+        source_account: AccountId | None = None,
         **kwargs,
     ) -> None:
         """Grants one or more permissions on a private CA to the Certificate
@@ -1166,7 +1166,7 @@ class AcmPcaApi:
         self,
         context: RequestContext,
         certificate_authority_arn: Arn,
-        permanent_deletion_time_in_days: PermanentDeletionTimeInDays = None,
+        permanent_deletion_time_in_days: PermanentDeletionTimeInDays | None = None,
         **kwargs,
     ) -> None:
         """Deletes a private certificate authority (CA). You must provide the
@@ -1219,7 +1219,7 @@ class AcmPcaApi:
         context: RequestContext,
         certificate_authority_arn: Arn,
         principal: Principal,
-        source_account: AccountId = None,
+        source_account: AccountId | None = None,
         **kwargs,
     ) -> None:
         """Revokes permissions on a private CA granted to the Certificate Manager
@@ -1511,7 +1511,7 @@ class AcmPcaApi:
         context: RequestContext,
         certificate_authority_arn: Arn,
         certificate: CertificateBodyBlob,
-        certificate_chain: CertificateChainBlob = None,
+        certificate_chain: CertificateChainBlob | None = None,
         **kwargs,
     ) -> None:
         """Imports a signed private CA certificate into Amazon Web Services Private
@@ -1638,10 +1638,10 @@ class AcmPcaApi:
         csr: CsrBlob,
         signing_algorithm: SigningAlgorithm,
         validity: Validity,
-        api_passthrough: ApiPassthrough = None,
-        template_arn: Arn = None,
-        validity_not_before: Validity = None,
-        idempotency_token: IdempotencyToken = None,
+        api_passthrough: ApiPassthrough | None = None,
+        template_arn: Arn | None = None,
+        validity_not_before: Validity | None = None,
+        idempotency_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> IssueCertificateResponse:
         """Uses your private certificate authority (CA), or one that has been
@@ -1684,9 +1684,9 @@ class AcmPcaApi:
     def list_certificate_authorities(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        resource_owner: ResourceOwner = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        resource_owner: ResourceOwner | None = None,
         **kwargs,
     ) -> ListCertificateAuthoritiesResponse:
         """Lists the private certificate authorities that you created by using the
@@ -1709,8 +1709,8 @@ class AcmPcaApi:
         self,
         context: RequestContext,
         certificate_authority_arn: Arn,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListPermissionsResponse:
         """List all permissions on a private CA, if any, granted to the Certificate
@@ -1762,8 +1762,8 @@ class AcmPcaApi:
         self,
         context: RequestContext,
         certificate_authority_arn: Arn,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTagsResponse:
         """Lists the tags, if any, that are associated with your private CA or one
@@ -1991,8 +1991,8 @@ class AcmPcaApi:
         self,
         context: RequestContext,
         certificate_authority_arn: Arn,
-        revocation_configuration: RevocationConfiguration = None,
-        status: CertificateAuthorityStatus = None,
+        revocation_configuration: RevocationConfiguration | None = None,
+        status: CertificateAuthorityStatus | None = None,
         **kwargs,
     ) -> None:
         """Updates the status or configuration of a private certificate authority

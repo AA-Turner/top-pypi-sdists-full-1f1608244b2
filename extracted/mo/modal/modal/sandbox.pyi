@@ -58,6 +58,7 @@ class _Sandbox(modal._object._Object):
         ] = {},
         pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
         encrypted_ports: collections.abc.Sequence[int] = [],
+        h2_ports: collections.abc.Sequence[int] = [],
         unencrypted_ports: collections.abc.Sequence[int] = [],
         proxy: typing.Optional[modal.proxy._Proxy] = None,
         _experimental_scheduler_placement: typing.Optional[modal.scheduler_placement.SchedulerPlacement] = None,
@@ -86,6 +87,7 @@ class _Sandbox(modal._object._Object):
         ] = {},
         pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
         encrypted_ports: collections.abc.Sequence[int] = [],
+        h2_ports: collections.abc.Sequence[int] = [],
         unencrypted_ports: collections.abc.Sequence[int] = [],
         proxy: typing.Optional[modal.proxy._Proxy] = None,
         _experimental_enable_snapshot: bool = False,
@@ -116,6 +118,7 @@ class _Sandbox(modal._object._Object):
         ] = {},
         pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
         encrypted_ports: collections.abc.Sequence[int] = [],
+        h2_ports: collections.abc.Sequence[int] = [],
         unencrypted_ports: collections.abc.Sequence[int] = [],
         proxy: typing.Optional[modal.proxy._Proxy] = None,
         _experimental_enable_snapshot: bool = False,
@@ -129,9 +132,9 @@ class _Sandbox(modal._object._Object):
     async def snapshot_filesystem(self, timeout: int = 55) -> modal.image._Image: ...
     async def wait(self, raise_on_termination: bool = True): ...
     async def tunnels(self, timeout: int = 50) -> dict[int, modal._tunnel.Tunnel]: ...
-    async def terminate(self): ...
+    async def terminate(self) -> None: ...
     async def poll(self) -> typing.Optional[int]: ...
-    async def _get_task_id(self): ...
+    async def _get_task_id(self) -> str: ...
     @typing.overload
     async def exec(
         self,
@@ -228,6 +231,7 @@ class Sandbox(modal.object.Object):
         ] = {},
         pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
         encrypted_ports: collections.abc.Sequence[int] = [],
+        h2_ports: collections.abc.Sequence[int] = [],
         unencrypted_ports: collections.abc.Sequence[int] = [],
         proxy: typing.Optional[modal.proxy.Proxy] = None,
         _experimental_scheduler_placement: typing.Optional[modal.scheduler_placement.SchedulerPlacement] = None,
@@ -261,6 +265,7 @@ class Sandbox(modal.object.Object):
             ] = {},
             pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
             encrypted_ports: collections.abc.Sequence[int] = [],
+            h2_ports: collections.abc.Sequence[int] = [],
             unencrypted_ports: collections.abc.Sequence[int] = [],
             proxy: typing.Optional[modal.proxy.Proxy] = None,
             _experimental_enable_snapshot: bool = False,
@@ -293,6 +298,7 @@ class Sandbox(modal.object.Object):
             ] = {},
             pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
             encrypted_ports: collections.abc.Sequence[int] = [],
+            h2_ports: collections.abc.Sequence[int] = [],
             unencrypted_ports: collections.abc.Sequence[int] = [],
             proxy: typing.Optional[modal.proxy.Proxy] = None,
             _experimental_enable_snapshot: bool = False,
@@ -330,6 +336,7 @@ class Sandbox(modal.object.Object):
             ] = {},
             pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
             encrypted_ports: collections.abc.Sequence[int] = [],
+            h2_ports: collections.abc.Sequence[int] = [],
             unencrypted_ports: collections.abc.Sequence[int] = [],
             proxy: typing.Optional[modal.proxy.Proxy] = None,
             _experimental_enable_snapshot: bool = False,
@@ -363,6 +370,7 @@ class Sandbox(modal.object.Object):
             ] = {},
             pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
             encrypted_ports: collections.abc.Sequence[int] = [],
+            h2_ports: collections.abc.Sequence[int] = [],
             unencrypted_ports: collections.abc.Sequence[int] = [],
             proxy: typing.Optional[modal.proxy.Proxy] = None,
             _experimental_enable_snapshot: bool = False,
@@ -405,8 +413,8 @@ class Sandbox(modal.object.Object):
     tunnels: __tunnels_spec[typing_extensions.Self]
 
     class __terminate_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(self, /): ...
-        async def aio(self, /): ...
+        def __call__(self, /) -> None: ...
+        async def aio(self, /) -> None: ...
 
     terminate: __terminate_spec[typing_extensions.Self]
 
@@ -417,8 +425,8 @@ class Sandbox(modal.object.Object):
     poll: __poll_spec[typing_extensions.Self]
 
     class ___get_task_id_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(self, /): ...
-        async def aio(self, /): ...
+        def __call__(self, /) -> str: ...
+        async def aio(self, /) -> str: ...
 
     _get_task_id: ___get_task_id_spec[typing_extensions.Self]
 

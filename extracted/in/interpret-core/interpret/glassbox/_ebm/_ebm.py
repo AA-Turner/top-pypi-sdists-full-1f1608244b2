@@ -873,7 +873,7 @@ class EBMModel(ExplainerMixin, BaseEstimator):
                     msg = "A value in bags is outside the valid range -128 to 127"
                     _log.error(msg)
                     raise ValueError(msg)
-                bag = bag.astype(np.int8, copy=not bag.flags.c_contiguous)
+                bag = bag.astype(np.int8, "C", copy=False)
 
             rngs.append(bagged_rng)
             internal_bags.append(bag)
@@ -884,13 +884,17 @@ class EBMModel(ExplainerMixin, BaseEstimator):
                 if sample_weight is None:
                     bag_weights.append(n_samples)
                 else:
-                    bag_weights.append(sample_weight.sum())
+                    bag_weight = np.array(1, np.float64)
+                    native.safe_sum(sample_weight, bag_weight, 0)
+                    bag_weights.append(bag_weight.item())
             else:
                 keep = bag > 0
                 if sample_weight is None:
                     bag_weights.append(bag[keep].sum())
                 else:
-                    bag_weights.append((bag[keep] * sample_weight[keep]).sum())
+                    bag_weight = np.array(1, np.float64)
+                    native.safe_sum(bag[keep] * sample_weight[keep], bag_weight, 0)
+                    bag_weights.append(bag_weight.item())
                 del keep
         bag_weights = np.array(bag_weights, np.float64)
 
@@ -1044,8 +1048,14 @@ class EBMModel(ExplainerMixin, BaseEstimator):
                                 )
 
                         probs = np.bincount(y_local, weights=sample_weight_local)
-                        total = probs.sum()
-                        probs = probs.astype(np.float64, copy=False)
+                        if sample_weight_local is None:
+                            total = probs.sum()
+                            probs = probs.astype(np.float64, copy=False)
+                        else:
+                            total = np.array(1, np.float64)
+                            native.safe_sum(probs, total, 0)
+                            total = total.item()
+
                         probs /= total
                         bagged_intercept[idx, :] = link_func(probs, link, link_param)
 
@@ -1171,16 +1181,39 @@ class EBMModel(ExplainerMixin, BaseEstimator):
 
                 if n_classes >= Native.Task_MulticlassPlus:
                     warn(
-                        "Detected multiclass problem. Forcing interactions to 0. "
-                        "Multiclass interactions only have local explanations. "
-                        "They are not currently displayed in the global explanation "
-                        "visualizations. Set interactions=0 to disable this warning. "
-                        "If you still want multiclass interactions, this API accepts "
-                        "a list, and the measure_interactions function can be used to "
-                        "detect them.",
-                        stacklevel=1,
+                        "For multiclass we cannot currently visualize pairs and they will be stripped from the global explanations. Set interactions=0 to generate a fully interpretable glassbox model."
                     )
-                    break
+
+                # at this point interactions will be a positive, nonzero integer
+            elif isinstance(interactions, str):
+                interactions = interactions.strip()
+
+                if not interactions.lower().endswith("x"):
+                    raise ValueError(
+                        "If passing a string for interactions, it must end in an 'x' character."
+                    )
+
+                interactions = interactions[:-1]
+                try:
+                    interactions = float(interactions)
+                except ValueError:
+                    raise ValueError(
+                        f"'{interactions}' is not a valid floating-point number."
+                    )
+
+                if interactions <= 0.0:
+                    if interactions == 0.0:
+                        break
+                    msg = "interactions cannot be negative"
+                    _log.error(msg)
+                    raise ValueError(msg)
+
+                if n_classes >= Native.Task_MulticlassPlus:
+                    warn(
+                        "For multiclass we cannot currently visualize pairs and they will be stripped from the global explanations. Set interactions=0 to generate a fully interpretable glassbox model."
+                    )
+
+                interactions = int(ceil(n_features_in * interactions))
 
                 # at this point interactions will be a positive, nonzero integer
             elif len(interactions) == 0:
@@ -1683,6 +1716,40 @@ class EBMModel(ExplainerMixin, BaseEstimator):
             jsonable = json.load(fp)
             UNTESTED_from_jsonable(self, jsonable)
         return self
+
+    def to_excel_exportable(self, file):
+        """Converts the model to an Excel exportable representation.
+
+        Args:
+
+        Returns:
+            An xlsxwriter.Workbook object with an Excel representation of the model.
+            This Workbook can be modified and then exported as any xlsxwriter object
+            for advanced usages when custom export is required.
+        """
+
+        check_is_fitted(self, "has_fitted_")
+
+        from ._excel import UNTESTED_to_excel_exportable
+
+        assert isinstance(self, ExplainableBoostingClassifier)
+
+        workbook = UNTESTED_to_excel_exportable(self, file)
+
+        return workbook
+
+    def to_excel(self, file):
+        """Exports the model to an Excel workbook.
+
+        Args:
+            file: a path-like object (str or os.PathLike),
+                or a file-like object implementing .write().
+        """
+
+        check_is_fitted(self, "has_fitted_")
+
+        workbook = self.to_excel_exportable(file)
+        workbook.close()
 
     def _predict_score(self, X, init_score=None):
         """Predict scores on provided samples.
@@ -2759,7 +2826,7 @@ class ExplainableBoostingClassifier(ClassifierMixin, EBMModel):
         Number of initial highly regularized rounds to set the basic shape of the main effect feature graphs.
     interaction_smoothing_rounds : int, default=75
         Number of initial highly regularized rounds to set the basic shape of the interaction effect feature graphs during fitting.
-    max_rounds : int, default=25000
+    max_rounds : int, default=50000
         Total number of boosting rounds with n_terms boosting steps per round.
     early_stopping_rounds : int, default=100
         Number of rounds with no improvement to trigger early stopping. 0 turns off
@@ -2963,7 +3030,7 @@ class ExplainableBoostingClassifier(ClassifierMixin, EBMModel):
         cyclic_progress: Union[bool, float, int] = False,  # noqa: PYI041
         smoothing_rounds: Optional[int] = 75,
         interaction_smoothing_rounds: Optional[int] = 75,
-        max_rounds: Optional[int] = 25000,
+        max_rounds: Optional[int] = 50000,
         early_stopping_rounds: Optional[int] = 100,
         early_stopping_tolerance: Optional[float] = 1e-5,
         # Trees
@@ -3259,7 +3326,7 @@ class ExplainableBoostingRegressor(RegressorMixin, EBMModel):
         Number of initial highly regularized rounds to set the basic shape of the main effect feature graphs.
     interaction_smoothing_rounds : int, default=100
         Number of initial highly regularized rounds to set the basic shape of the interaction effect feature graphs during fitting.
-    max_rounds : int, default=25000
+    max_rounds : int, default=50000
         Total number of boosting rounds with n_terms boosting steps per round.
     early_stopping_rounds : int, default=100
         Number of rounds with no improvement to trigger early stopping. 0 turns off
@@ -3463,7 +3530,7 @@ class ExplainableBoostingRegressor(RegressorMixin, EBMModel):
         cyclic_progress: Union[bool, float, int] = False,  # noqa: PYI041
         smoothing_rounds: Optional[int] = 500,
         interaction_smoothing_rounds: Optional[int] = 100,
-        max_rounds: Optional[int] = 25000,
+        max_rounds: Optional[int] = 50000,
         early_stopping_rounds: Optional[int] = 100,
         early_stopping_tolerance: Optional[float] = 1e-5,
         # Trees

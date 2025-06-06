@@ -389,15 +389,29 @@ class cli:
                 target_name = name_dir[-1]
 
                 dist_path = os.path.join(self.current_dir, "dist")
-                new_path = os.path.join(self.current_dir, target_name)
+                temp_path = os.path.join(self.current_dir, f"{target_name}_temp")
+                inner_path = os.path.join(temp_path, target_name)
+
+                if os.path.isfile(os.path.join(self.current_dir, f"{target_name}.zip")):
+                    os.remove(os.path.join(self.current_dir, f"{target_name}.zip"))
+
+                if os.path.exists(os.path.join(self.current_dir, f"{target_name}")):
+                    shutil.rmtree(os.path.join(self.current_dir, f"{target_name}"))
 
                 if os.path.exists(dist_path):
-                    os.rename(dist_path, new_path)
-                    print(f"Renamed 'dist' to '{target_name}'")
+                    if os.path.exists(temp_path):
+                        shutil.rmtree(temp_path)
+                    os.mkdir(temp_path)
+                    shutil.move(dist_path, inner_path)
                 else:
-                    print("Error: 'dist' directory not found!")
+                    raise FileNotFoundError(f"{self.visuals.bold}{self.visuals.RD}Error: 'dist' directory not found!{self.visuals.RESET}")
 
-                zip_path = shutil.make_archive(new_path, 'zip', new_path)
+                zip_path = shutil.make_archive(
+                    os.path.join(self.current_dir, target_name),
+                    'zip',
+                    root_dir=temp_path,
+                    base_dir=target_name
+                )
 
                 # Espera o sistema liberar o zip
                 wait = 0
@@ -411,7 +425,7 @@ class cli:
                         if wait >= 600:
                             raise TimeoutError("Timeout while waiting for zip file to be accessible.")
 
-                shutil.rmtree(new_path)
+                shutil.rmtree(temp_path)
                 zip_log = True
 
             except Exception as e:
@@ -421,9 +435,9 @@ class cli:
                 animation.finish()
 
                 if zip_log:
-                    print(f"{self.visuals.bold}{self.visuals.GR} > Zip file created successfully {self.visuals.RESET}\n")
+                    print(f"{self.visuals.bold}{self.visuals.GR} > Zip file created successfully {self.visuals.RESET}\033[J\n\033[J")
                 else:
-                    print(f"{self.visuals.bold}{self.visuals.RD} > Error creating zip file:\n")
+                    print(f"{self.visuals.bold}{self.visuals.RD} > Error creating zip file:\033[J")
                     print(f"{self.ultimate_error}{self.visuals.RESET}")
                     sys.exit(1)
 
@@ -486,10 +500,13 @@ class cli:
         def main(self, return_=False):
             self.target_file = self.cli.file  #FIX
 
+            if not self.target_file:
+                print(f"{self.visuals.bold}{self.visuals.RD} > Error: Please pass your 'target_file' to detect the libraries.{self.visuals.RESET}")
+                sys.exit(1)
+
             if not os.path.exists(self.target_file):
-                self.descerror = f"Error: File '{self.target_file}' does not exist."
-                self.error = 1
-                return
+                print(f"{self.visuals.bold}{self.visuals.RD} > Error: Your 'target_file' does not exist or can't be accessed.{self.visuals.RESET}")
+                sys.exit(1)
 
             try:
                 with open(self.target_file, "r", encoding="utf-8", errors="replace") as file:

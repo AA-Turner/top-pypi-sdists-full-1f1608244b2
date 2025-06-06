@@ -16,6 +16,7 @@ import ophyd
 import ophyd_devices as opd
 from ophyd.ophydobj import OphydObject
 from ophyd.signal import EpicsSignalBase
+from ophyd_devices.utils.bec_signals import BECMessageSignal
 from typeguard import typechecked
 
 from bec_lib import messages, plugin_helper
@@ -26,6 +27,7 @@ from bec_lib.devicemanager import DeviceManagerBase
 from bec_lib.endpoints import MessageEndpoints
 from bec_lib.logger import bec_logger
 from bec_lib.utils.rpc_utils import rgetattr
+from bec_server.device_server.bec_message_handler import BECMessageHandler
 from bec_server.device_server.devices.config_update_handler import ConfigUpdateHandler
 from bec_server.device_server.devices.device_serializer import get_device_info
 
@@ -92,6 +94,7 @@ class DeviceManagerDS(DeviceManagerBase):
         self._config_update_handler_cls = config_update_handler
         self.config_update_handler = None
         self.failed_devices = {}
+        self._bec_message_handler = BECMessageHandler(self)
 
     def initialize(self, bootstrap_server) -> None:
         self.config_update_handler = (
@@ -354,6 +357,9 @@ class DeviceManagerDS(DeviceManagerBase):
         if not hasattr(obj, "event_types"):
             return opaas_obj
         self._subscribe_to_device_events(obj, opaas_obj)
+        self._subscribe_to_bec_device_events(obj)
+        self._subscribe_to_auto_monitors(obj)
+        self._subscribe_to_bec_signals(obj)
 
         return opaas_obj
 
@@ -364,6 +370,21 @@ class DeviceManagerDS(DeviceManagerBase):
             obj.subscribe(self._obj_callback_readback, event_type="readback", run=opaas_obj.enabled)
         elif "value" in obj.event_types:
             obj.subscribe(self._obj_callback_readback, event_type="value", run=opaas_obj.enabled)
+        if hasattr(obj, "motor_is_moving"):
+            obj.motor_is_moving.subscribe(self._obj_callback_is_moving, run=opaas_obj.enabled)
+
+    def _subscribe_to_bec_device_events(self, obj: OphydObject):
+        """
+        Subscribe to BEC device events, such as device_monitor_2d, device_monitor_1d,
+        file_event, done_moving, flyer, and progress.
+
+        These events are deprecated and will be removed in the future. Use the
+        _subscribe_to_bec_signals method instead.
+
+        Args:
+            obj (OphydObject): Ophyd object to subscribe to BEC device events
+
+        """
         if "device_monitor_2d" in obj.event_types:
             obj.subscribe(
                 self._obj_callback_device_monitor_2d, event_type="device_monitor_2d", run=False
@@ -381,18 +402,42 @@ class DeviceManagerDS(DeviceManagerBase):
         if "progress" in obj.event_types:
             obj.subscribe(self._obj_callback_progress, event_type="progress", run=False)
 
-        if hasattr(obj, "motor_is_moving"):
-            obj.motor_is_moving.subscribe(self._obj_callback_is_moving, run=opaas_obj.enabled)
+    def _subscribe_to_auto_monitors(self, obj: OphydObject):
+        """
+        If the component has set the _auto_monitor attribute to True,
+        subscribe to the readback or configuration signals.
 
-        if hasattr(obj, "component_names"):
-            for component_name in obj.component_names:
-                component = getattr(obj, component_name)
-                if not getattr(component, "_auto_monitor", False):
-                    continue
-                if component.kind in (ophyd.Kind.normal, ophyd.Kind.hinted):
-                    component.subscribe(self._obj_callback_readback, run=False)
-                elif component.kind == ophyd.Kind.config:
-                    component.subscribe(self._obj_callback_configuration, run=False)
+        Args:
+            obj (OphydObject): Ophyd object to subscribe to auto monitors
+        """
+
+        if not hasattr(obj, "component_names"):
+            return
+
+        for component_name in obj.component_names:
+            component = getattr(obj, component_name)
+            if not getattr(component, "_auto_monitor", False):
+                continue
+            if component.kind in (ophyd.Kind.normal, ophyd.Kind.hinted):
+                component.subscribe(self._obj_callback_readback, run=False)
+            elif component.kind == ophyd.Kind.config:
+                component.subscribe(self._obj_callback_configuration, run=False)
+
+    def _subscribe_to_bec_signals(self, obj: OphydObject):
+        """
+        Subscribe to BEC signals, such as PreviewSignal, ProgressSignal, FileEventSignal, etc.
+
+        Args:
+            obj (OphydObject): Ophyd object to subscribe to BEC signals
+
+        """
+        if not hasattr(obj, "walk_signals"):
+            # If the object does not have walk_components, it is likely a simple signal
+            return
+        signal_walk = obj.walk_signals()
+        for _ancestor, _signal_name, signal in signal_walk:
+            if isinstance(signal, BECMessageSignal):
+                signal.subscribe(callback=self._obj_callback_bec_message_signal, run=False)
 
     def initialize_enabled_device(self, opaas_obj):
         """connect to an enabled device and initialize the device buffer"""
@@ -504,6 +549,8 @@ class DeviceManagerDS(DeviceManagerBase):
         self, *_args, obj: OphydObject, value: np.ndarray, timestamp: float | None = None, **kwargs
     ):
         """
+        DEPRECATED: Use _obj_callback_preview instead.
+
         Callback for ophyd monitor events. Sends the data to redis.
         Introduces a check of the data size, and incoporates a limit which is defined in max_size (in MB)
 
@@ -540,6 +587,8 @@ class DeviceManagerDS(DeviceManagerBase):
         self, *_args, obj: OphydObject, value: np.ndarray, timestamp: float | None = None, **kwargs
     ):
         """
+        DEPRECATED: Use _obj_callback_preview instead.
+
         Callback for ophyd monitor events. Sends the data to redis.
         Introduces a check of the data size, and incoporates a limit which is defined in max_size (in MB)
 
@@ -632,6 +681,11 @@ class DeviceManagerDS(DeviceManagerBase):
         pipe.execute()
 
     def _obj_callback_progress(self, *_args, obj, value, max_value, done, **kwargs):
+        """
+        DEPRECATED: Use _obj_callback_progress_signal instead.
+
+        Callback for progress events. Sends the data to redis.
+        """
         metadata = self.devices[obj.root.name].metadata
         msg = messages.ProgressMessage(
             value=value, max_value=max_value, done=done, metadata=metadata
@@ -649,7 +703,10 @@ class DeviceManagerDS(DeviceManagerBase):
         hinted_h5_entries: dict[str, str] | None = None,
         **kwargs,
     ):
-        """Callback for file events on devices. This callback set and publishes
+        """
+        DEPRECATED: Use _obj_callback_file_event_signal instead.
+
+        Callback for file events on devices. This callback set and publishes
         a file message to the file_event and public_file endpoints in Redis to inform
         the file writer and other services about externally created files.
 
@@ -682,3 +739,19 @@ class DeviceManagerDS(DeviceManagerBase):
             MessageEndpoints.public_file(scan_id=scan_id, name=device_name), msg, pipe=pipe
         )
         pipe.execute()
+
+    def _obj_callback_bec_message_signal(
+        self, *_args, obj: OphydObject, value: messages.BECMessage, **kwargs
+    ):
+        """
+        Callback for BECMessageSignal events. Sends the data to redis.
+
+        Args:
+            obj (OphydObject): ophyd object
+            value (BECMessageSignal): data from ophyd device
+        """
+        if not obj.connected:
+            return
+        if not isinstance(value, messages.BECMessage):
+            return
+        self._bec_message_handler.emit(obj, value)

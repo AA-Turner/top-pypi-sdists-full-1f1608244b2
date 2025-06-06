@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -20,7 +19,6 @@ import uuid
 
 import etcd3gw
 from etcd3gw import exceptions as etcd3_exc
-from oslo_utils import encodeutils
 
 import tooz
 from tooz import _retry
@@ -45,16 +43,12 @@ def _translate_failures(func):
             return func(*args, **kwargs)
         except etcd3_exc.ConnectionFailedError as e:
             utils.raise_with_cause(coordination.ToozConnectionError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except etcd3_exc.ConnectionTimeoutError as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except etcd3_exc.Etcd3Exception as e:
-            utils.raise_with_cause(coordination.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(coordination.ToozError, str(e), cause=e)
 
     return wrapper
 
@@ -69,7 +63,7 @@ class Etcd3Lock(locking.Lock):
     LOCK_PREFIX = b"/tooz/locks"
 
     def __init__(self, coord, name, timeout):
-        super(Etcd3Lock, self).__init__(name)
+        super().__init__(name)
         self._timeout = timeout
         self._coord = coord
         self._key = self.LOCK_PREFIX + name
@@ -214,7 +208,7 @@ class Etcd3Driver(coordination.CoordinationDriverCachedRunWatchers,
     )
 
     def __init__(self, member_id, parsed_url, options):
-        super(Etcd3Driver, self).__init__(member_id, parsed_url, options)
+        super().__init__(member_id, parsed_url, options)
         protocol = 'https' if parsed_url.scheme.endswith('https') else 'http'
         host = parsed_url.hostname or self.DEFAULT_HOST
         port = parsed_url.port or self.DEFAULT_PORT
@@ -243,7 +237,7 @@ class Etcd3Driver(coordination.CoordinationDriverCachedRunWatchers,
         self._membership_lease = None
 
     def _start(self):
-        super(Etcd3Driver, self)._start()
+        super()._start()
         self._membership_lease = self.client.lease(self.membership_timeout)
 
     def get_lock(self, name):

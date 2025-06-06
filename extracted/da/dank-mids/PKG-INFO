@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: dank-mids
-Version: 4.20.158
+Version: 4.20.159
 Summary: Multicall batching middleware for asynchronous scripts using web3.py
 License: MIT
 Author: BobTheBuidler
@@ -19,6 +19,7 @@ Requires-Dist: cchecksum (>=0.0.3,<1)
 Requires-Dist: eth-retry (>=0.3.1,<1)
 Requires-Dist: evmspec (>=0.4.1,<1)
 Requires-Dist: ez-a-sync (>=0.28,<1)
+Requires-Dist: faster-eth-utils
 Requires-Dist: multicall (>=0.6.2,<1)
 Requires-Dist: typed-envs (>=0.1.3,<0.2)
 Requires-Dist: web3 (>=5.27,!=5.29.*,!=5.30.*,!=5.31.1,!=5.31.2,<8)
@@ -40,9 +41,11 @@ The goal of this tool is to reduce the workload on RPC nodes and allow users to 
 ### Why is Dank so fast?
 
 There are a number of optimizations that went into making Dank the fastest way to pull rpc data to Python.
-1. JSON encoding and decoding is handled by [msgspec](https://jcristharif.com/msgspec/). All responses are decoded to specialized [msgspec.Struct](https://jcristharif.com/msgspec/structs.html) objects defined by the [evmspec](https://github.com/BobTheBuidler/evmspec) library.
-2. Responses are decoded on a JIT (just-in-time) basis, meaning individual task cancellation works as expected even when response data is received as part of a larger batch. 
-3. more stuff I'll write down later...
+1. Implemented (mostly) in C.
+2. JSON encoding and decoding is handled by [msgspec](https://jcristharif.com/msgspec/). All responses are decoded to specialized [msgspec.Struct](https://jcristharif.com/msgspec/structs.html) objects defined in the [evmspec](https://github.com/BobTheBuidler/evmspec) library.
+3. We use my C-compiled [faster-eth-utils](https://github.com/BobTheBuidler/faster-eth-utils/tree/master) instead of the original python implementation [eth-utils](https://github.com/ethereum/eth-utils)
+4. Responses are decoded on a JIT (just-in-time) basis, meaning individual task cancellation works as expected even when response data is received as part of a larger batch. 
+5. more stuff I'll write down later...
 
 ### Installation
 

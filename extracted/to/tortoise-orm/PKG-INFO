@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: tortoise-orm
-Version: 0.25.0
+Version: 0.25.1
 Summary: Easy async ORM for python, built with relations in mind
 License: Apache-2.0
 Keywords: sql,mysql,postgres,psql,sqlite,aiosqlite,asyncpg,relational,database,rdbms,orm,object mapper,async,asyncio,aio,psycopg
@@ -40,7 +40,7 @@ Requires-Dist: ciso8601 ; (sys_platform != "win32" and implementation_name == "c
 Requires-Dist: iso8601 (>=2.1.0,<3.0.0) ; python_version < "4.0"
 Requires-Dist: orjson ; extra == "accel"
 Requires-Dist: psycopg[binary,pool] (>=3.0.12,<4.0.0) ; extra == "psycopg"
-Requires-Dist: pypika-tortoise (>=0.5.0,<1.0.0) ; python_version < "4.0"
+Requires-Dist: pypika-tortoise (>=0.6.1,<1.0.0) ; python_version < "4.0"
 Requires-Dist: pytz
 Requires-Dist: uvloop ; (sys_platform != "win32" and implementation_name == "cpython") and (extra == "accel")
 Project-URL: Documentation, https://tortoise-orm.readthedocs.io
@@ -81,16 +81,9 @@ Tortoise ORM supports CPython 3.9 and later for SQLite, MySQL, PostgreSQL, Micro
 Why was Tortoise ORM built?
 ---------------------------
 
-Python has many existing and mature ORMs, unfortunately they are designed with an opposing paradigm of how I/O gets processed.
-``asyncio`` is relatively new technology that has a very different concurrency model, and the largest change is regarding how I/O is handled.
+Tortoise ORM was built to provide a lightweight, async-native Object-Relational Mapper for Python with a familiar Django-like API.
 
-However, Tortoise ORM is not the first attempt of building an ``asyncio`` ORM. While there are many cases of developers attempting to map synchronous Python ORMs to the async world, initial attempts did not have a clean API.
-
-Hence we started Tortoise ORM.
-
-Tortoise ORM is designed to be functional, yet familiar, to ease the migration of developers wishing to switch to ``asyncio``.
-
-It also performs well when compared to other Python ORMs. In `our benchmarks <https://github.com/tortoise/orm-benchmarks>`_, where we measure different read and write operations (rows/sec, more is better), it's trading places with Pony ORM:
+Tortoise ORM performs well when compared to other Python ORMs. In `our benchmarks <https://github.com/tortoise/orm-benchmarks>`_, where we measure different read and write operations (rows/sec, more is better), it's trading places with Pony ORM:
 
 .. image:: https://raw.githubusercontent.com/tortoise/tortoise-orm/develop/docs/ORM_Perf.png
     :target: https://github.com/tortoise/orm-benchmarks
@@ -148,19 +141,19 @@ Define the models by inheriting from ``tortoise.models.Model``.
 
     class Tournament(Model):
         id = fields.IntField(primary_key=True)
-        name = fields.TextField()
+        name = fields.CharField(max_length=20)
 
 
     class Event(Model):
-        id = fields.IntField(primary_key=True)
+        id = fields.BigIntField(primary_key=True)
         name = fields.TextField()
-        tournament = fields.ForeignKeyField('models.Tournament', related_name='events')
-        participants = fields.ManyToManyField('models.Team', related_name='events', through='event_team')
+        tournament = fields.ForeignKeyField('models.Tournament', related_name='events', on_delete=fields.OnDelete.CASCADE)
+        participants = fields.ManyToManyField('models.Team', related_name='events', through='event_team', on_delete=fields.OnDelete.SET_NULL)
 
 
     class Team(Model):
-        id = fields.IntField(primary_key=True)
-        name = fields.TextField()
+        id = fields.UUIDField(primary_key=True)
+        name = fields.CharField(max_length=20, unique=True)
 
 
 After defining the models, Tortoise ORM needs to be initialized to establish the relationships between models and connect to the database.

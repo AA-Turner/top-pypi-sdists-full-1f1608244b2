@@ -1219,11 +1219,12 @@ class FisApi:
         stop_conditions: CreateExperimentTemplateStopConditionInputList,
         actions: CreateExperimentTemplateActionInputMap,
         role_arn: RoleArn,
-        targets: CreateExperimentTemplateTargetInputMap = None,
-        tags: TagMap = None,
-        log_configuration: CreateExperimentTemplateLogConfigurationInput = None,
-        experiment_options: CreateExperimentTemplateExperimentOptionsInput = None,
-        experiment_report_configuration: CreateExperimentTemplateReportConfigurationInput = None,
+        targets: CreateExperimentTemplateTargetInputMap | None = None,
+        tags: TagMap | None = None,
+        log_configuration: CreateExperimentTemplateLogConfigurationInput | None = None,
+        experiment_options: CreateExperimentTemplateExperimentOptionsInput | None = None,
+        experiment_report_configuration: CreateExperimentTemplateReportConfigurationInput
+        | None = None,
         **kwargs,
     ) -> CreateExperimentTemplateResponse:
         """Creates an experiment template.
@@ -1273,8 +1274,8 @@ class FisApi:
         experiment_template_id: ExperimentTemplateId,
         account_id: TargetAccountId,
         role_arn: RoleArn,
-        client_token: ClientToken = None,
-        description: TargetAccountConfigurationDescription = None,
+        client_token: ClientToken | None = None,
+        description: TargetAccountConfigurationDescription | None = None,
         **kwargs,
     ) -> CreateTargetAccountConfigurationResponse:
         """Creates a target account configuration for the experiment template. A
@@ -1434,8 +1435,8 @@ class FisApi:
     def list_actions(
         self,
         context: RequestContext,
-        max_results: ListActionsMaxResults = None,
-        next_token: NextToken = None,
+        max_results: ListActionsMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListActionsResponse:
         """Lists the available FIS actions.
@@ -1452,9 +1453,9 @@ class FisApi:
         self,
         context: RequestContext,
         experiment_id: ExperimentId,
-        max_results: ListExperimentResolvedTargetsMaxResults = None,
-        next_token: NextToken = None,
-        target_name: TargetName = None,
+        max_results: ListExperimentResolvedTargetsMaxResults | None = None,
+        next_token: NextToken | None = None,
+        target_name: TargetName | None = None,
         **kwargs,
     ) -> ListExperimentResolvedTargetsResponse:
         """Lists the resolved targets information of the specified experiment.
@@ -1474,7 +1475,7 @@ class FisApi:
         self,
         context: RequestContext,
         experiment_id: ExperimentId,
-        next_token: NextToken = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListExperimentTargetAccountConfigurationsResponse:
         """Lists the target account configurations of the specified experiment.
@@ -1491,8 +1492,8 @@ class FisApi:
     def list_experiment_templates(
         self,
         context: RequestContext,
-        max_results: ListExperimentTemplatesMaxResults = None,
-        next_token: NextToken = None,
+        max_results: ListExperimentTemplatesMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListExperimentTemplatesResponse:
         """Lists your experiment templates.
@@ -1508,9 +1509,9 @@ class FisApi:
     def list_experiments(
         self,
         context: RequestContext,
-        max_results: ListExperimentsMaxResults = None,
-        next_token: NextToken = None,
-        experiment_template_id: ExperimentTemplateId = None,
+        max_results: ListExperimentsMaxResults | None = None,
+        next_token: NextToken | None = None,
+        experiment_template_id: ExperimentTemplateId | None = None,
         **kwargs,
     ) -> ListExperimentsResponse:
         """Lists your experiments.
@@ -1539,8 +1540,8 @@ class FisApi:
         self,
         context: RequestContext,
         experiment_template_id: ExperimentTemplateId,
-        max_results: ListTargetAccountConfigurationsMaxResults = None,
-        next_token: NextToken = None,
+        max_results: ListTargetAccountConfigurationsMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTargetAccountConfigurationsResponse:
         """Lists the target account configurations of the specified experiment
@@ -1559,8 +1560,8 @@ class FisApi:
     def list_target_resource_types(
         self,
         context: RequestContext,
-        max_results: ListTargetResourceTypesMaxResults = None,
-        next_token: NextToken = None,
+        max_results: ListTargetResourceTypesMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTargetResourceTypesResponse:
         """Lists the target resource types.
@@ -1578,8 +1579,8 @@ class FisApi:
         context: RequestContext,
         client_token: ClientToken,
         experiment_template_id: ExperimentTemplateId,
-        experiment_options: StartExperimentExperimentOptionsInput = None,
-        tags: TagMap = None,
+        experiment_options: StartExperimentExperimentOptionsInput | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> StartExperimentResponse:
         """Starts running an experiment from the specified experiment template.
@@ -1627,7 +1628,7 @@ class FisApi:
         self,
         context: RequestContext,
         resource_arn: ResourceArn,
-        tag_keys: TagKeyList = None,
+        tag_keys: TagKeyList | None = None,
         **kwargs,
     ) -> UntagResourceResponse:
         """Removes the specified tags from the specified resource.
@@ -1643,14 +1644,15 @@ class FisApi:
         self,
         context: RequestContext,
         id: ExperimentTemplateId,
-        description: ExperimentTemplateDescription = None,
-        stop_conditions: UpdateExperimentTemplateStopConditionInputList = None,
-        targets: UpdateExperimentTemplateTargetInputMap = None,
-        actions: UpdateExperimentTemplateActionInputMap = None,
-        role_arn: RoleArn = None,
-        log_configuration: UpdateExperimentTemplateLogConfigurationInput = None,
-        experiment_options: UpdateExperimentTemplateExperimentOptionsInput = None,
-        experiment_report_configuration: UpdateExperimentTemplateReportConfigurationInput = None,
+        description: ExperimentTemplateDescription | None = None,
+        stop_conditions: UpdateExperimentTemplateStopConditionInputList | None = None,
+        targets: UpdateExperimentTemplateTargetInputMap | None = None,
+        actions: UpdateExperimentTemplateActionInputMap | None = None,
+        role_arn: RoleArn | None = None,
+        log_configuration: UpdateExperimentTemplateLogConfigurationInput | None = None,
+        experiment_options: UpdateExperimentTemplateExperimentOptionsInput | None = None,
+        experiment_report_configuration: UpdateExperimentTemplateReportConfigurationInput
+        | None = None,
         **kwargs,
     ) -> UpdateExperimentTemplateResponse:
         """Updates the specified experiment template.
@@ -1697,8 +1699,8 @@ class FisApi:
         context: RequestContext,
         experiment_template_id: ExperimentTemplateId,
         account_id: TargetAccountId,
-        role_arn: RoleArn = None,
-        description: TargetAccountConfigurationDescription = None,
+        role_arn: RoleArn | None = None,
+        description: TargetAccountConfigurationDescription | None = None,
         **kwargs,
     ) -> UpdateTargetAccountConfigurationResponse:
         """Updates the target account configuration for the specified experiment

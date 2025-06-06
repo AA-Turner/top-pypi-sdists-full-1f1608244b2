@@ -1139,6 +1139,12 @@ class CloudV2(OldCloud, Generic[IsAsynchronous]):
     ) -> dict:
         workspace = workspace or self.default_workspace
 
+        # rate limit so that client will only hit /states endpoint at most once per second
+        since_last_request = time.monotonic() - getattr(self, "_get_cluster_states_declarative_last_request", 0)
+        request_interval = parse_timedelta(dask.config.get("coiled.cluster-state-check-interval", "1 s"))
+        if since_last_request < request_interval:
+            return {}
+
         params = {"start_time": start_time.isoformat()} if start_time is not None else {}
 
         response = await self._do_request_idempotent(
@@ -1146,6 +1152,8 @@ class CloudV2(OldCloud, Generic[IsAsynchronous]):
             self.server + f"/api/v2/clusters/account/{workspace}/id/{cluster_id}/states",
             params=params,
         )
+
+        self._get_cluster_states_declarative_last_request = time.monotonic()
 
         # if we get 403 on this endpoint, most likely it's temporary,
         # unless we've never gotten 403 or it's been too long since we got a good response from the endpoint

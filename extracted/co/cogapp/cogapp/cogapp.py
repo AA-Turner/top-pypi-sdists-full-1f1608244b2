@@ -1,7 +1,7 @@
-""" Cog content generation tool.
-"""
+"""Cog content generation tool."""
 
 import copy
+import difflib
 import getopt
 import glob
 import io
@@ -13,10 +13,11 @@ import sys
 import traceback
 import types
 
-from .whiteutils import commonPrefix, reindentBlock, whitePrefix
+from .whiteutils import common_prefix, reindent_block, white_prefix
 from .utils import NumberedFileReader, Redirectable, change_dir, md5
+from .hashhandler import HashHandler
 
-__version__ = "3.4.1"
+__version__ = "3.5.0"
 
 usage = """\
 cog - generate content with inlined Python code.
@@ -51,6 +52,7 @@ OPTIONS:
     -z          The end-output marker can be omitted, and is assumed at eof.
     -v          Print the version of cog and exit.
     --check     Check that the files would not change if run again.
+    --diff      With --check, show a diff of what failed the check.
     --markers='START END END-OUTPUT'
                 The patterns surrounding cog inline instructions. Should
                 include three values separated by spaces, the start, end,
@@ -58,85 +60,93 @@ OPTIONS:
     --verbosity=VERBOSITY
                 Control the amount of output. 2 (the default) lists all files,
                 1 lists only changed files, 0 lists no files.
-    -h          Print this help.
+    -h, --help  Print this help.
 """
 
+
 class CogError(Exception):
-    """ Any exception raised by Cog.
-    """
-    def __init__(self, msg, file='', line=0):
+    """Any exception raised by Cog."""
+
+    def __init__(self, msg, file="", line=0):
         if file:
             super().__init__(f"{file}({line}): {msg}")
         else:
             super().__init__(msg)
 
+
 class CogUsageError(CogError):
-    """ An error in usage of command-line arguments in cog.
-    """
+    """An error in usage of command-line arguments in cog."""
+
     pass
+
 
 class CogInternalError(CogError):
-    """ An error in the coding of Cog. Should never happen.
-    """
+    """An error in the coding of Cog. Should never happen."""
+
     pass
+
 
 class CogGeneratedError(CogError):
-    """ An error raised by a user's cog generator.
-    """
+    """An error raised by a user's cog generator."""
+
     pass
+
 
 class CogUserException(CogError):
-    """ An exception caught when running a user's cog generator.
-        The argument is the traceback message to print.
+    """An exception caught when running a user's cog generator.
+
+    The argument is the traceback message to print.
+
     """
+
     pass
 
+
 class CogCheckFailed(CogError):
-    """ A --check failed.
-    """
+    """A --check failed."""
+
     pass
 
 
 class CogGenerator(Redirectable):
-    """ A generator pulled from a source file.
-    """
+    """A generator pulled from a source file."""
+
     def __init__(self, options=None):
         super().__init__()
         self.markers = []
         self.lines = []
         self.options = options or CogOptions()
 
-    def parseMarker(self, l):
-        self.markers.append(l)
+    def parse_marker(self, line):
+        self.markers.append(line)
 
-    def parseLine(self, l):
-        self.lines.append(l.strip('\n'))
+    def parse_line(self, line):
+        self.lines.append(line.strip("\n"))
 
-    def getCode(self):
-        """ Extract the executable Python code from the generator.
-        """
+    def get_code(self):
+        """Extract the executable Python code from the generator."""
         # If the markers and lines all have the same prefix
         # (end-of-line comment chars, for example),
         # then remove it from all the lines.
-        prefIn = commonPrefix(self.markers + self.lines)
-        if prefIn:
-            self.markers = [ l.replace(prefIn, '', 1) for l in self.markers ]
-            self.lines = [ l.replace(prefIn, '', 1) for l in self.lines ]
+        pref_in = common_prefix(self.markers + self.lines)
+        if pref_in:
+            self.markers = [line.replace(pref_in, "", 1) for line in self.markers]
+            self.lines = [line.replace(pref_in, "", 1) for line in self.lines]
 
-        return reindentBlock(self.lines, '')
+        return reindent_block(self.lines, "")
 
     def evaluate(self, cog, globals, fname):
         # figure out the right whitespace prefix for the output
-        prefOut = whitePrefix(self.markers)
+        pref_out = white_prefix(self.markers)
 
-        intext = self.getCode()
+        intext = self.get_code()
         if not intext:
-            return ''
+            return ""
 
         prologue = "import " + cog.cogmodulename + " as cog\n"
-        if self.options.sPrologue:
-            prologue += self.options.sPrologue + '\n'
-        code = compile(prologue + intext, str(fname), 'exec')
+        if self.options.prologue:
+            prologue += self.options.prologue + "\n"
+        code = compile(prologue + intext, str(fname), "exec")
 
         # Make sure the "cog" module has our state.
         cog.cogmodule.msg = self.msg
@@ -145,15 +155,15 @@ class CogGenerator(Redirectable):
         cog.cogmodule.error = self.error
 
         real_stdout = sys.stdout
-        if self.options.bPrintOutput:
+        if self.options.print_output:
             sys.stdout = captured_stdout = io.StringIO()
 
-        self.outstring = ''
+        self.outstring = ""
         try:
             eval(code, globals)
         except CogError:
             raise
-        except:
+        except:  # noqa: E722 (we're just wrapping in CogUserException and rethrowing)
             typ, err, tb = sys.exc_info()
             frames = (tuple(fr) for fr in traceback.extract_tb(tb.tb_next))
             frames = find_cog_source(frames, prologue)
@@ -163,150 +173,151 @@ class CogGenerator(Redirectable):
         finally:
             sys.stdout = real_stdout
 
-        if self.options.bPrintOutput:
+        if self.options.print_output:
             self.outstring = captured_stdout.getvalue()
 
         # We need to make sure that the last line in the output
         # ends with a newline, or it will be joined to the
         # end-output line, ruining cog's idempotency.
-        if self.outstring and self.outstring[-1] != '\n':
-            self.outstring += '\n'
+        if self.outstring and self.outstring[-1] != "\n":
+            self.outstring += "\n"
 
-        return reindentBlock(self.outstring, prefOut)
+        return reindent_block(self.outstring, pref_out)
 
     def msg(self, s):
-        self.prout("Message: "+s)
+        self.prout("Message: " + s)
 
-    def out(self, sOut='', dedent=False, trimblanklines=False):
-        """ The cog.out function.
-        """
-        if trimblanklines and ('\n' in sOut):
-            lines = sOut.split('\n')
-            if lines[0].strip() == '':
+    def out(self, sOut="", dedent=False, trimblanklines=False):
+        """The cog.out function."""
+        if trimblanklines and ("\n" in sOut):
+            lines = sOut.split("\n")
+            if lines[0].strip() == "":
                 del lines[0]
-            if lines and lines[-1].strip() == '':
+            if lines and lines[-1].strip() == "":
                 del lines[-1]
-            sOut = '\n'.join(lines)+'\n'
+            sOut = "\n".join(lines) + "\n"
         if dedent:
-            sOut = reindentBlock(sOut)
+            sOut = reindent_block(sOut)
         self.outstring += sOut
 
-    def outl(self, sOut='', **kw):
-        """ The cog.outl function.
-        """
+    def outl(self, sOut="", **kw):
+        """The cog.outl function."""
         self.out(sOut, **kw)
-        self.out('\n')
+        self.out("\n")
 
-    def error(self, msg='Error raised by cog generator.'):
-        """ The cog.error function.
-            Instead of raising standard python errors, cog generators can use
-            this function.  It will display the error without a scary Python
-            traceback.
+    def error(self, msg="Error raised by cog generator."):
+        """The cog.error function.
+
+        Instead of raising standard python errors, cog generators can use
+        this function.  It will display the error without a scary Python
+        traceback.
+
         """
         raise CogGeneratedError(msg)
 
 
 class CogOptions:
-    """ Options for a run of cog.
-    """
+    """Options for a run of cog."""
+
     def __init__(self):
         # Defaults for argument values.
         self.args = []
-        self.includePath = []
+        self.include_path = []
         self.defines = {}
-        self.bShowVersion = False
-        self.sMakeWritableCmd = None
-        self.bReplace = False
-        self.bNoGenerate = False
-        self.sOutputName = None
-        self.bWarnEmpty = False
-        self.bHashOutput = False
-        self.bDeleteCode = False
-        self.bEofCanBeEnd = False
-        self.sSuffix = None
-        self.bNewlines = False
-        self.sBeginSpec = '[[[cog'
-        self.sEndSpec = ']]]'
-        self.sEndOutput = '[[[end]]]'
-        self.sEncoding = "utf-8"
+        self.show_version = False
+        self.make_writable_cmd = None
+        self.replace = False
+        self.no_generate = False
+        self.output_name = None
+        self.warn_empty = False
+        self.hash_output = False
+        self.delete_code = False
+        self.eof_can_be_end = False
+        self.suffix = None
+        self.newlines = False
+        self.begin_spec = "[[[cog"
+        self.end_spec = "]]]"
+        self.end_output = "[[[end]]]"
+        self.encoding = "utf-8"
         self.verbosity = 2
-        self.sPrologue = ''
-        self.bPrintOutput = False
-        self.bCheck = False
+        self.prologue = ""
+        self.print_output = False
+        self.check = False
+        self.diff = False
 
     def __eq__(self, other):
-        """ Comparison operator for tests to use.
-        """
+        """Comparison operator for tests to use."""
         return self.__dict__ == other.__dict__
 
     def clone(self):
-        """ Make a clone of these options, for further refinement.
-        """
+        """Make a clone of these options, for further refinement."""
         return copy.deepcopy(self)
 
-    def addToIncludePath(self, dirs):
-        """ Add directories to the include path.
-        """
+    def add_to_include_path(self, dirs):
+        """Add directories to the include path."""
         dirs = dirs.split(os.pathsep)
-        self.includePath.extend(dirs)
+        self.include_path.extend(dirs)
 
-    def parseArgs(self, argv):
+    def parse_args(self, argv):
         # Parse the command line arguments.
         try:
             opts, self.args = getopt.getopt(
                 argv,
-                'cdD:eI:n:o:rs:p:PUvw:xz',
+                "cdD:eI:n:o:rs:p:PUvw:xz",
                 [
-                    'check',
-                    'markers=',
-                    'verbosity=',
-                ]
+                    "check",
+                    "diff",
+                    "markers=",
+                    "verbosity=",
+                ],
             )
         except getopt.error as msg:
             raise CogUsageError(msg)
 
         # Handle the command line arguments.
         for o, a in opts:
-            if o == '-c':
-                self.bHashOutput = True
-            elif o == '-d':
-                self.bDeleteCode = True
-            elif o == '-D':
-                if a.count('=') < 1:
+            if o == "-c":
+                self.hash_output = True
+            elif o == "-d":
+                self.delete_code = True
+            elif o == "-D":
+                if a.count("=") < 1:
                     raise CogUsageError("-D takes a name=value argument")
-                name, value = a.split('=', 1)
+                name, value = a.split("=", 1)
                 self.defines[name] = value
-            elif o == '-e':
-                self.bWarnEmpty = True
-            elif o == '-I':
-                self.addToIncludePath(os.path.abspath(a))
-            elif o == '-n':
-                self.sEncoding = a
-            elif o == '-o':
-                self.sOutputName = a
-            elif o == '-r':
-                self.bReplace = True
-            elif o == '-s':
-                self.sSuffix = a
-            elif o == '-p':
-                self.sPrologue = a
-            elif o == '-P':
-                self.bPrintOutput = True
-            elif o == '-U':
-                self.bNewlines = True
-            elif o == '-v':
-                self.bShowVersion = True
-            elif o == '-w':
-                self.sMakeWritableCmd = a
-            elif o == '-x':
-                self.bNoGenerate = True
-            elif o == '-z':
-                self.bEofCanBeEnd = True
-            elif o == '--check':
-                self.bCheck = True
-            elif o == '--markers':
+            elif o == "-e":
+                self.warn_empty = True
+            elif o == "-I":
+                self.add_to_include_path(os.path.abspath(a))
+            elif o == "-n":
+                self.encoding = a
+            elif o == "-o":
+                self.output_name = a
+            elif o == "-r":
+                self.replace = True
+            elif o == "-s":
+                self.suffix = a
+            elif o == "-p":
+                self.prologue = a
+            elif o == "-P":
+                self.print_output = True
+            elif o == "-U":
+                self.newlines = True
+            elif o == "-v":
+                self.show_version = True
+            elif o == "-w":
+                self.make_writable_cmd = a
+            elif o == "-x":
+                self.no_generate = True
+            elif o == "-z":
+                self.eof_can_be_end = True
+            elif o == "--check":
+                self.check = True
+            elif o == "--diff":
+                self.diff = True
+            elif o == "--markers":
                 self._parse_markers(a)
-            elif o == '--verbosity':
+            elif o == "--verbosity":
                 self.verbosity = int(a)
             else:
                 # Since getopt.getopt is given a list of possible flags,
@@ -315,107 +326,113 @@ class CogOptions:
 
     def _parse_markers(self, val):
         try:
-            self.sBeginSpec, self.sEndSpec, self.sEndOutput = val.split(" ")
+            self.begin_spec, self.end_spec, self.end_output = val.split(" ")
         except ValueError:
             raise CogUsageError(
                 f"--markers requires 3 values separated by spaces, could not parse {val!r}"
             )
 
     def validate(self):
-        """ Does nothing if everything is OK, raises CogError's if it's not.
-        """
-        if self.bReplace and self.bDeleteCode:
-            raise CogUsageError("Can't use -d with -r (or you would delete all your source!)")
+        """Does nothing if everything is OK, raises CogError's if it's not."""
+        if self.replace and self.delete_code:
+            raise CogUsageError(
+                "Can't use -d with -r (or you would delete all your source!)"
+            )
 
-        if self.bReplace and self.sOutputName:
+        if self.replace and self.output_name:
             raise CogUsageError("Can't use -o with -r (they are opposites)")
+
+        if self.diff and not self.check:
+            raise CogUsageError("Can't use --diff without --check")
 
 
 class Cog(Redirectable):
-    """ The Cog engine.
-    """
+    """The Cog engine."""
+
     def __init__(self):
         super().__init__()
         self.options = CogOptions()
-        self._fixEndOutputPatterns()
         self.cogmodulename = "cog"
-        self.createCogModule()
-        self.bCheckFailed = False
+        self.create_cog_module()
+        self.check_failed = False
+        self.hash_handler = None
+        self._fix_end_output_patterns()
 
-    def _fixEndOutputPatterns(self):
-        end_output = re.escape(self.options.sEndOutput)
-        self.reEndOutput = re.compile(end_output + r"(?P<hashsect> *\(checksum: (?P<hash>[a-f0-9]+)\))")
-        self.sEndFormat = self.options.sEndOutput + " (checksum: %s)"
+    def _fix_end_output_patterns(self):
+        self.hash_handler = HashHandler(self.options.end_output)
 
-    def showWarning(self, msg):
+    def show_warning(self, msg):
         self.prout(f"Warning: {msg}")
 
-    def isBeginSpecLine(self, s):
-        return self.options.sBeginSpec in s
+    def is_begin_spec_line(self, s):
+        return self.options.begin_spec in s
 
-    def isEndSpecLine(self, s):
-        return self.options.sEndSpec in s and not self.isEndOutputLine(s)
+    def is_end_spec_line(self, s):
+        return self.options.end_spec in s and not self.is_end_output_line(s)
 
-    def isEndOutputLine(self, s):
-        return self.options.sEndOutput in s
+    def is_end_output_line(self, s):
+        return self.options.end_output in s
 
-    def createCogModule(self):
-        """ Make a cog "module" object so that imported Python modules
-            can say "import cog" and get our state.
+    def create_cog_module(self):
+        """Make a cog "module" object.
+
+        Imported Python modules can use "import cog" to get our state.
+
         """
         self.cogmodule = types.SimpleNamespace()
         self.cogmodule.path = []
 
-    def openOutputFile(self, fname):
-        """ Open an output file, taking all the details into account.
-        """
+    def open_output_file(self, fname):
+        """Open an output file, taking all the details into account."""
         opts = {}
         mode = "w"
-        opts['encoding'] = self.options.sEncoding
-        if self.options.bNewlines:
+        opts["encoding"] = self.options.encoding
+        if self.options.newlines:
             opts["newline"] = "\n"
         fdir = os.path.dirname(fname)
         if os.path.dirname(fdir) and not os.path.exists(fdir):
             os.makedirs(fdir)
         return open(fname, mode, **opts)
 
-    def openInputFile(self, fname):
-        """ Open an input file.
-        """
+    def open_input_file(self, fname):
+        """Open an input file."""
         if fname == "-":
             return sys.stdin
         else:
-            return open(fname, encoding=self.options.sEncoding)
+            return open(fname, encoding=self.options.encoding)
 
-    def processFile(self, fIn, fOut, fname=None, globals=None):
-        """ Process an input file object to an output file object.
-            fIn and fOut can be file objects, or file names.
+    def process_file(self, file_in, file_out, fname=None, globals=None):
+        """Process an input file object to an output file object.
+
+        `fileIn` and `fileOut` can be file objects, or file names.
+
         """
-
-        sFileIn = fname or ''
-        sFileOut = fname or ''
-        fInToClose = fOutToClose = None
+        file_name_in = fname or ""
+        file_name_out = fname or ""
+        file_in_to_close = file_out_to_close = None
         # Convert filenames to files.
-        if isinstance(fIn, (bytes, str)):
+        if isinstance(file_in, (bytes, str)):
             # Open the input file.
-            sFileIn = fIn
-            fIn = fInToClose = self.openInputFile(fIn)
-        if isinstance(fOut, (bytes, str)):
+            file_name_in = file_in
+            file_in = file_in_to_close = self.open_input_file(file_in)
+        if isinstance(file_out, (bytes, str)):
             # Open the output file.
-            sFileOut = fOut
-            fOut = fOutToClose = self.openOutputFile(fOut)
+            file_name_out = file_out
+            file_out = file_out_to_close = self.open_output_file(file_out)
+
+        start_dir = os.getcwd()
 
         try:
-            fIn = NumberedFileReader(fIn)
+            file_in = NumberedFileReader(file_in)
 
-            bSawCog = False
+            saw_cog = False
 
-            self.cogmodule.inFile = sFileIn
-            self.cogmodule.outFile = sFileOut
-            self.cogmodulename = 'cog_' + md5(sFileOut.encode()).hexdigest()
+            self.cogmodule.inFile = file_name_in
+            self.cogmodule.outFile = file_name_out
+            self.cogmodulename = "cog_" + md5(file_name_out.encode()).hexdigest()
             sys.modules[self.cogmodulename] = self.cogmodule
             # if "import cog" explicitly done in code by user, note threading will cause clashes.
-            sys.modules['cog'] = self.cogmodule
+            sys.modules["cog"] = self.cogmodule
 
             # The globals dict we'll use for this file.
             if globals is None:
@@ -425,108 +442,111 @@ class Cog(Redirectable):
             globals.update(self.options.defines)
 
             # loop over generator chunks
-            l = fIn.readline()
-            while l:
+            line = file_in.readline()
+            while line:
                 # Find the next spec begin
-                while l and not self.isBeginSpecLine(l):
-                    if self.isEndSpecLine(l):
+                while line and not self.is_begin_spec_line(line):
+                    if self.is_end_spec_line(line):
                         raise CogError(
-                            f"Unexpected {self.options.sEndSpec!r}",
-                            file=sFileIn,
-                            line=fIn.linenumber(),
+                            f"Unexpected {self.options.end_spec!r}",
+                            file=file_name_in,
+                            line=file_in.linenumber(),
                         )
-                    if self.isEndOutputLine(l):
+                    if self.is_end_output_line(line):
                         raise CogError(
-                            f"Unexpected {self.options.sEndOutput!r}",
-                            file=sFileIn,
-                            line=fIn.linenumber(),
+                            f"Unexpected {self.options.end_output!r}",
+                            file=file_name_in,
+                            line=file_in.linenumber(),
                         )
-                    fOut.write(l)
-                    l = fIn.readline()
-                if not l:
+                    file_out.write(line)
+                    line = file_in.readline()
+                if not line:
                     break
-                if not self.options.bDeleteCode:
-                    fOut.write(l)
+                if not self.options.delete_code:
+                    file_out.write(line)
 
-                # l is the begin spec
+                # `line` is the begin spec
                 gen = CogGenerator(options=self.options)
-                gen.setOutput(stdout=self.stdout)
-                gen.parseMarker(l)
-                firstLineNum = fIn.linenumber()
-                self.cogmodule.firstLineNum = firstLineNum
+                gen.set_output(stdout=self.stdout)
+                gen.parse_marker(line)
+                first_line_num = file_in.linenumber()
+                self.cogmodule.firstLineNum = first_line_num
 
                 # If the spec begin is also a spec end, then process the single
                 # line of code inside.
-                if self.isEndSpecLine(l):
-                    beg = l.find(self.options.sBeginSpec)
-                    end = l.find(self.options.sEndSpec)
+                if self.is_end_spec_line(line):
+                    beg = line.find(self.options.begin_spec)
+                    end = line.find(self.options.end_spec)
                     if beg > end:
-                        raise CogError("Cog code markers inverted",
-                            file=sFileIn, line=firstLineNum)
+                        raise CogError(
+                            "Cog code markers inverted",
+                            file=file_name_in,
+                            line=first_line_num,
+                        )
                     else:
-                        sCode = l[beg+len(self.options.sBeginSpec):end].strip()
-                        gen.parseLine(sCode)
+                        code = line[beg + len(self.options.begin_spec) : end].strip()
+                        gen.parse_line(code)
                 else:
                     # Deal with an ordinary code block.
-                    l = fIn.readline()
+                    line = file_in.readline()
 
                     # Get all the lines in the spec
-                    while l and not self.isEndSpecLine(l):
-                        if self.isBeginSpecLine(l):
+                    while line and not self.is_end_spec_line(line):
+                        if self.is_begin_spec_line(line):
                             raise CogError(
-                                f"Unexpected {self.options.sBeginSpec!r}",
-                                file=sFileIn,
-                                line=fIn.linenumber(),
+                                f"Unexpected {self.options.begin_spec!r}",
+                                file=file_name_in,
+                                line=file_in.linenumber(),
                             )
-                        if self.isEndOutputLine(l):
+                        if self.is_end_output_line(line):
                             raise CogError(
-                                f"Unexpected {self.options.sEndOutput!r}",
-                                file=sFileIn,
-                                line=fIn.linenumber(),
+                                f"Unexpected {self.options.end_output!r}",
+                                file=file_name_in,
+                                line=file_in.linenumber(),
                             )
-                        if not self.options.bDeleteCode:
-                            fOut.write(l)
-                        gen.parseLine(l)
-                        l = fIn.readline()
-                    if not l:
+                        if not self.options.delete_code:
+                            file_out.write(line)
+                        gen.parse_line(line)
+                        line = file_in.readline()
+                    if not line:
                         raise CogError(
                             "Cog block begun but never ended.",
-                            file=sFileIn, line=firstLineNum)
+                            file=file_name_in,
+                            line=first_line_num,
+                        )
 
-                    if not self.options.bDeleteCode:
-                        fOut.write(l)
-                    gen.parseMarker(l)
+                    if not self.options.delete_code:
+                        file_out.write(line)
+                    gen.parse_marker(line)
 
-                l = fIn.readline()
+                line = file_in.readline()
 
                 # Eat all the lines in the output section.  While reading past
                 # them, compute the md5 hash of the old output.
                 previous = []
-                hasher = md5()
-                while l and not self.isEndOutputLine(l):
-                    if self.isBeginSpecLine(l):
+                while line and not self.is_end_output_line(line):
+                    if self.is_begin_spec_line(line):
                         raise CogError(
-                            f"Unexpected {self.options.sBeginSpec!r}",
-                            file=sFileIn,
-                            line=fIn.linenumber(),
+                            f"Unexpected {self.options.begin_spec!r}",
+                            file=file_name_in,
+                            line=file_in.linenumber(),
                         )
-                    if self.isEndSpecLine(l):
+                    if self.is_end_spec_line(line):
                         raise CogError(
-                            f"Unexpected {self.options.sEndSpec!r}",
-                            file=sFileIn,
-                            line=fIn.linenumber(),
+                            f"Unexpected {self.options.end_spec!r}",
+                            file=file_name_in,
+                            line=file_in.linenumber(),
                         )
-                    previous.append(l)
-                    hasher.update(l.encode("utf-8"))
-                    l = fIn.readline()
-                curHash = hasher.hexdigest()
+                    previous.append(line)
+                    line = file_in.readline()
+                cur_hash = self.hash_handler.compute_lines_hash(previous)
 
-                if not l and not self.options.bEofCanBeEnd:
+                if not line and not self.options.eof_can_be_end:
                     # We reached end of file before we found the end output line.
                     raise CogError(
-                        f"Missing {self.options.sEndOutput!r} before end of file.",
-                        file=sFileIn,
-                        line=fIn.linenumber(),
+                        f"Missing {self.options.end_output!r} before end of file.",
+                        file=file_name_in,
+                        line=file_in.linenumber(),
                     )
 
                 # Make the previous output available to the current code
@@ -534,244 +554,257 @@ class Cog(Redirectable):
 
                 # Write the output of the spec to be the new output if we're
                 # supposed to generate code.
-                hasher = md5()
-                if not self.options.bNoGenerate:
-                    sFile = f"<cog {sFileIn}:{firstLineNum}>"
-                    sGen = gen.evaluate(cog=self, globals=globals, fname=sFile)
-                    sGen = self.suffixLines(sGen)
-                    hasher.update(sGen.encode("utf-8"))
-                    fOut.write(sGen)
-                newHash = hasher.hexdigest()
+                if not self.options.no_generate:
+                    fname = f"<cog {file_name_in}:{first_line_num}>"
+                    gen = gen.evaluate(cog=self, globals=globals, fname=fname)
+                    gen = self.suffix_lines(gen)
+                    new_hash = self.hash_handler.compute_hash(gen)
+                    file_out.write(gen)
+                else:
+                    new_hash = ""
 
-                bSawCog = True
+                saw_cog = True
 
                 # Write the ending output line
-                hashMatch = self.reEndOutput.search(l)
-                if self.options.bHashOutput:
-                    if hashMatch:
-                        oldHash = hashMatch['hash']
-                        if oldHash != curHash:
-                            raise CogError("Output has been edited! Delete old checksum to unprotect.",
-                                file=sFileIn, line=fIn.linenumber())
-                        # Create a new end line with the correct hash.
-                        endpieces = l.split(hashMatch.group(0), 1)
-                    else:
-                        # There was no old hash, but we want a new hash.
-                        endpieces = l.split(self.options.sEndOutput, 1)
-                    l = (self.sEndFormat % newHash).join(endpieces)
+                if self.options.hash_output:
+                    try:
+                        self.hash_handler.validate_hash(line, cur_hash)
+                    except ValueError as e:
+                        raise CogError(
+                            str(e),
+                            file=file_name_in,
+                            line=file_in.linenumber(),
+                        )
+                    line = self.hash_handler.format_end_line_with_hash(
+                        line,
+                        new_hash,
+                        add_hash=True,
+                        preserve_format=self.options.check,
+                    )
                 else:
-                    # We don't want hashes output, so if there was one, get rid of
-                    # it.
-                    if hashMatch:
-                        l = l.replace(hashMatch['hashsect'], '', 1)
+                    line = self.hash_handler.format_end_line_with_hash(
+                        line, new_hash, add_hash=False
+                    )
 
-                if not self.options.bDeleteCode:
-                    fOut.write(l)
-                l = fIn.readline()
+                if not self.options.delete_code:
+                    file_out.write(line)
+                line = file_in.readline()
 
-            if not bSawCog and self.options.bWarnEmpty:
-                self.showWarning(f"no cog code found in {sFileIn}")
+            if not saw_cog and self.options.warn_empty:
+                self.show_warning(f"no cog code found in {file_name_in}")
         finally:
-            if fInToClose:
-                fInToClose.close()
-            if fOutToClose:
-                fOutToClose.close()
-
+            if file_in_to_close:
+                file_in_to_close.close()
+            if file_out_to_close:
+                file_out_to_close.close()
+            os.chdir(start_dir)
 
     # A regex for non-empty lines, used by suffixLines.
-    reNonEmptyLines = re.compile(r"^\s*\S+.*$", re.MULTILINE)
+    re_non_empty_lines = re.compile(r"^\s*\S+.*$", re.MULTILINE)
 
-    def suffixLines(self, text):
-        """ Add suffixes to the lines in text, if our options desire it.
-            text is many lines, as a single string.
+    def suffix_lines(self, text):
+        """Add suffixes to the lines in text, if our options desire it.
+
+        `text` is many lines, as a single string.
+
         """
-        if self.options.sSuffix:
+        if self.options.suffix:
             # Find all non-blank lines, and add the suffix to the end.
-            repl = r"\g<0>" + self.options.sSuffix.replace('\\', '\\\\')
-            text = self.reNonEmptyLines.sub(repl, text)
+            repl = r"\g<0>" + self.options.suffix.replace("\\", "\\\\")
+            text = self.re_non_empty_lines.sub(repl, text)
         return text
 
-    def processString(self, sInput, fname=None):
-        """ Process sInput as the text to cog.
-            Return the cogged output as a string.
-        """
-        fOld = io.StringIO(sInput)
-        fNew = io.StringIO()
-        self.processFile(fOld, fNew, fname=fname)
-        return fNew.getvalue()
+    def process_string(self, input, fname=None):
+        """Process `input` as the text to cog.
 
-    def replaceFile(self, sOldPath, sNewText):
-        """ Replace file sOldPath with the contents sNewText
+        Return the cogged output as a string.
+
         """
-        if not os.access(sOldPath, os.W_OK):
+        file_old = io.StringIO(input)
+        file_new = io.StringIO()
+        self.process_file(file_old, file_new, fname=fname)
+        return file_new.getvalue()
+
+    def replace_file(self, old_path, new_text):
+        """Replace file oldPath with the contents newText"""
+        if not os.access(old_path, os.W_OK):
             # Need to ensure we can write.
-            if self.options.sMakeWritableCmd:
+            if self.options.make_writable_cmd:
                 # Use an external command to make the file writable.
-                cmd = self.options.sMakeWritableCmd.replace('%s', sOldPath)
+                cmd = self.options.make_writable_cmd.replace("%s", old_path)
                 with os.popen(cmd) as cmdout:
                     self.stdout.write(cmdout.read())
-                if not os.access(sOldPath, os.W_OK):
-                    raise CogError(f"Couldn't make {sOldPath} writable")
+                if not os.access(old_path, os.W_OK):
+                    raise CogError(f"Couldn't make {old_path} writable")
             else:
                 # Can't write!
-                raise CogError(f"Can't overwrite {sOldPath}")
-        f = self.openOutputFile(sOldPath)
-        f.write(sNewText)
+                raise CogError(f"Can't overwrite {old_path}")
+        f = self.open_output_file(old_path)
+        f.write(new_text)
         f.close()
 
-    def saveIncludePath(self):
-        self.savedInclude = self.options.includePath[:]
-        self.savedSysPath = sys.path[:]
+    def save_include_path(self):
+        self.saved_include = self.options.include_path[:]
+        self.saved_sys_path = sys.path[:]
 
-    def restoreIncludePath(self):
-        self.options.includePath = self.savedInclude
-        self.cogmodule.path = self.options.includePath
-        sys.path = self.savedSysPath
+    def restore_include_path(self):
+        self.options.include_path = self.saved_include
+        self.cogmodule.path = self.options.include_path
+        sys.path = self.saved_sys_path
 
-    def addToIncludePath(self, includePath):
-        self.cogmodule.path.extend(includePath)
-        sys.path.extend(includePath)
+    def add_to_include_path(self, include_path):
+        self.cogmodule.path.extend(include_path)
+        sys.path.extend(include_path)
 
-    def processOneFile(self, sFile):
-        """ Process one filename through cog.
-        """
+    def process_one_file(self, fname):
+        """Process one filename through cog."""
 
-        self.saveIncludePath()
-        bNeedNewline = False
+        self.save_include_path()
+        need_newline = False
 
         try:
-            self.addToIncludePath(self.options.includePath)
+            self.add_to_include_path(self.options.include_path)
             # Since we know where the input file came from,
             # push its directory onto the include path.
-            self.addToIncludePath([os.path.dirname(sFile)])
+            self.add_to_include_path([os.path.dirname(fname)])
 
             # How we process the file depends on where the output is going.
-            if self.options.sOutputName:
-                self.processFile(sFile, self.options.sOutputName, sFile)
-            elif self.options.bReplace or self.options.bCheck:
+            if self.options.output_name:
+                self.process_file(fname, self.options.output_name, fname)
+            elif self.options.replace or self.options.check:
                 # We want to replace the cog file with the output,
                 # but only if they differ.
-                verb = "Cogging" if self.options.bReplace else "Checking"
+                verb = "Cogging" if self.options.replace else "Checking"
                 if self.options.verbosity >= 2:
-                    self.prout(f"{verb} {sFile}", end="")
-                    bNeedNewline = True
+                    self.prout(f"{verb} {fname}", end="")
+                    need_newline = True
 
                 try:
-                    fOldFile = self.openInputFile(sFile)
-                    sOldText = fOldFile.read()
-                    fOldFile.close()
-                    sNewText = self.processString(sOldText, fname=sFile)
-                    if sOldText != sNewText:
+                    file_old_file = self.open_input_file(fname)
+                    old_text = file_old_file.read()
+                    file_old_file.close()
+                    new_text = self.process_string(old_text, fname=fname)
+                    if old_text != new_text:
                         if self.options.verbosity >= 1:
                             if self.options.verbosity < 2:
-                                self.prout(f"{verb} {sFile}", end="")
+                                self.prout(f"{verb} {fname}", end="")
                             self.prout("  (changed)")
-                            bNeedNewline = False
-                        if self.options.bReplace:
-                            self.replaceFile(sFile, sNewText)
+                            need_newline = False
+                        if self.options.replace:
+                            self.replace_file(fname, new_text)
                         else:
-                            assert self.options.bCheck
-                            self.bCheckFailed = True
+                            assert self.options.check
+                            self.check_failed = True
+                            if self.options.diff:
+                                old_lines = old_text.splitlines()
+                                new_lines = new_text.splitlines()
+                                diff = difflib.unified_diff(
+                                    old_lines,
+                                    new_lines,
+                                    fromfile=f"current {fname}",
+                                    tofile=f"changed {fname}",
+                                    lineterm="",
+                                )
+                                for diff_line in diff:
+                                    self.prout(diff_line)
                 finally:
                     # The try-finally block is so we can print a partial line
                     # with the name of the file, and print (changed) on the
                     # same line, but also make sure to break the line before
                     # any traceback.
-                    if bNeedNewline:
+                    if need_newline:
                         self.prout("")
             else:
-                self.processFile(sFile, self.stdout, sFile)
+                self.process_file(fname, self.stdout, fname)
         finally:
-            self.restoreIncludePath()
+            self.restore_include_path()
 
-    def processWildcards(self, sFile):
-        files = glob.glob(sFile)
+    def process_wildcards(self, fname):
+        files = glob.glob(fname)
         if files:
-            for sMatchingFile in files:
-                self.processOneFile(sMatchingFile)
+            for matching_file in files:
+                self.process_one_file(matching_file)
         else:
-            self.processOneFile(sFile)
+            self.process_one_file(fname)
 
-    def processFileList(self, sFileList):
-        """ Process the files in a file list.
-        """
-        flist = self.openInputFile(sFileList)
+    def process_file_list(self, file_name_list):
+        """Process the files in a file list."""
+        flist = self.open_input_file(file_name_list)
         lines = flist.readlines()
         flist.close()
-        for l in lines:
+        for line in lines:
             # Use shlex to parse the line like a shell.
-            lex = shlex.shlex(l, posix=True)
+            lex = shlex.shlex(line, posix=True)
             lex.whitespace_split = True
-            lex.commenters = '#'
+            lex.commenters = "#"
             # No escapes, so that backslash can be part of the path
-            lex.escape = ''
+            lex.escape = ""
             args = list(lex)
             if args:
-                self.processArguments(args)
+                self.process_arguments(args)
 
-    def processArguments(self, args):
-        """ Process one command-line.
-        """
+    def process_arguments(self, args):
+        """Process one command-line."""
         saved_options = self.options
         self.options = self.options.clone()
 
-        self.options.parseArgs(args[1:])
+        self.options.parse_args(args[1:])
         self.options.validate()
 
-        if args[0][0] == '@':
-            if self.options.sOutputName:
+        if args[0][0] == "@":
+            if self.options.output_name:
                 raise CogUsageError("Can't use -o with @file")
-            self.processFileList(args[0][1:])
-        elif args[0][0] == '&':
-            if self.options.sOutputName:
+            self.process_file_list(args[0][1:])
+        elif args[0][0] == "&":
+            if self.options.output_name:
                 raise CogUsageError("Can't use -o with &file")
             file_list = args[0][1:]
             with change_dir(os.path.dirname(file_list)):
-                self.processFileList(os.path.basename(file_list))
+                self.process_file_list(os.path.basename(file_list))
         else:
-            self.processWildcards(args[0])
+            self.process_wildcards(args[0])
 
         self.options = saved_options
 
-    def callableMain(self, argv):
-        """ All of command-line cog, but in a callable form.
-            This is used by main.
-            argv is the equivalent of sys.argv.
+    def callable_main(self, argv):
+        """All of command-line cog, but in a callable form.
+
+        This is used by main.  `argv` is the equivalent of sys.argv.
+
         """
         argv = argv[1:]
 
         # Provide help if asked for anywhere in the command line.
-        if '-?' in argv or '-h' in argv:
+        if "-?" in argv or "-h" in argv or "--help" in argv:
             self.prerr(usage, end="")
             return
 
-        self.options.parseArgs(argv)
+        self.options.parse_args(argv)
         self.options.validate()
-        self._fixEndOutputPatterns()
+        self._fix_end_output_patterns()
 
-        if self.options.bShowVersion:
+        if self.options.show_version:
             self.prout(f"Cog version {__version__}")
             return
 
         if self.options.args:
             for a in self.options.args:
-                self.processArguments([a])
+                self.process_arguments([a])
         else:
             raise CogUsageError("No files to process")
 
-        if self.bCheckFailed:
+        if self.check_failed:
             raise CogCheckFailed("Check failed")
 
     def main(self, argv):
-        """ Handle the command-line execution for cog.
-        """
+        """Handle the command-line execution for cog."""
 
         try:
-            self.callableMain(argv)
+            self.callable_main(argv)
             return 0
         except CogUsageError as err:
             self.prerr(err)
-            self.prerr("(for help use -h)")
+            self.prerr("(for help use --help)")
             return 2
         except CogGeneratedError as err:
             self.prerr(f"Error: {err}")
@@ -805,9 +838,11 @@ def find_cog_source(frame_summary, prologue):
             m = re.search(r"^<cog ([^:]+):(\d+)>$", filename)
             if m:
                 if lineno <= len(prolines):
-                    filename = '<prologue>'
-                    source = prolines[lineno-1]
-                    lineno -= 1     # Because "import cog" is the first line in the prologue
+                    filename = "<prologue>"
+                    source = prolines[lineno - 1]
+                    lineno -= (
+                        1  # Because "import cog" is the first line in the prologue
+                    )
                 else:
                     filename, coglineno = m.groups()
                     coglineno = int(coglineno)

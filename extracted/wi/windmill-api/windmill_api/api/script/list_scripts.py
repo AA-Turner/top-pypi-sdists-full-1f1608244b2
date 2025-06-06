@@ -28,6 +28,7 @@ def _get_kwargs(
     kinds: Union[Unset, None, str] = UNSET,
     starred_only: Union[Unset, None, bool] = UNSET,
     with_deployment_msg: Union[Unset, None, bool] = UNSET,
+    languages: Union[Unset, None, str] = UNSET,
 ) -> Dict[str, Any]:
     pass
 
@@ -63,6 +64,8 @@ def _get_kwargs(
     params["starred_only"] = starred_only
 
     params["with_deployment_msg"] = with_deployment_msg
+
+    params["languages"] = languages
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -124,6 +127,7 @@ def sync_detailed(
     kinds: Union[Unset, None, str] = UNSET,
     starred_only: Union[Unset, None, bool] = UNSET,
     with_deployment_msg: Union[Unset, None, bool] = UNSET,
+    languages: Union[Unset, None, str] = UNSET,
 ) -> Response[List["ListScriptsResponse200Item"]]:
     """list all scripts
 
@@ -145,6 +149,7 @@ def sync_detailed(
         kinds (Union[Unset, None, str]):
         starred_only (Union[Unset, None, bool]):
         with_deployment_msg (Union[Unset, None, bool]):
+        languages (Union[Unset, None, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -172,6 +177,7 @@ def sync_detailed(
         kinds=kinds,
         starred_only=starred_only,
         with_deployment_msg=with_deployment_msg,
+        languages=languages,
     )
 
     response = client.get_httpx_client().request(
@@ -201,6 +207,7 @@ def sync(
     kinds: Union[Unset, None, str] = UNSET,
     starred_only: Union[Unset, None, bool] = UNSET,
     with_deployment_msg: Union[Unset, None, bool] = UNSET,
+    languages: Union[Unset, None, str] = UNSET,
 ) -> Optional[List["ListScriptsResponse200Item"]]:
     """list all scripts
 
@@ -222,6 +229,7 @@ def sync(
         kinds (Union[Unset, None, str]):
         starred_only (Union[Unset, None, bool]):
         with_deployment_msg (Union[Unset, None, bool]):
+        languages (Union[Unset, None, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -250,6 +258,7 @@ def sync(
         kinds=kinds,
         starred_only=starred_only,
         with_deployment_msg=with_deployment_msg,
+        languages=languages,
     ).parsed
 
 
@@ -273,6 +282,7 @@ async def asyncio_detailed(
     kinds: Union[Unset, None, str] = UNSET,
     starred_only: Union[Unset, None, bool] = UNSET,
     with_deployment_msg: Union[Unset, None, bool] = UNSET,
+    languages: Union[Unset, None, str] = UNSET,
 ) -> Response[List["ListScriptsResponse200Item"]]:
     """list all scripts
 
@@ -294,6 +304,7 @@ async def asyncio_detailed(
         kinds (Union[Unset, None, str]):
         starred_only (Union[Unset, None, bool]):
         with_deployment_msg (Union[Unset, None, bool]):
+        languages (Union[Unset, None, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -321,6 +332,7 @@ async def asyncio_detailed(
         kinds=kinds,
         starred_only=starred_only,
         with_deployment_msg=with_deployment_msg,
+        languages=languages,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -348,6 +360,7 @@ async def asyncio(
     kinds: Union[Unset, None, str] = UNSET,
     starred_only: Union[Unset, None, bool] = UNSET,
     with_deployment_msg: Union[Unset, None, bool] = UNSET,
+    languages: Union[Unset, None, str] = UNSET,
 ) -> Optional[List["ListScriptsResponse200Item"]]:
     """list all scripts
 
@@ -369,6 +382,7 @@ async def asyncio(
         kinds (Union[Unset, None, str]):
         starred_only (Union[Unset, None, bool]):
         with_deployment_msg (Union[Unset, None, bool]):
+        languages (Union[Unset, None, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -398,5 +412,6 @@ async def asyncio(
             kinds=kinds,
             starred_only=starred_only,
             with_deployment_msg=with_deployment_msg,
+            languages=languages,
         )
     ).parsed

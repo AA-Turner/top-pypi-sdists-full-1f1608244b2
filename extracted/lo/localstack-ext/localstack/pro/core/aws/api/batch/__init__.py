@@ -2194,9 +2194,9 @@ class BatchApi:
         self,
         context: RequestContext,
         consumable_resource_name: String,
-        total_quantity: Long = None,
-        resource_type: String = None,
-        tags: TagrisTagsMap = None,
+        total_quantity: Long | None = None,
+        resource_type: String | None = None,
+        tags: TagrisTagsMap | None = None,
         **kwargs,
     ) -> CreateConsumableResourceResponse:
         """Creates an Batch consumable resource.
@@ -2220,10 +2220,10 @@ class BatchApi:
         job_queue_name: String,
         priority: Integer,
         compute_environment_order: ComputeEnvironmentOrders,
-        state: JQState = None,
-        scheduling_policy_arn: String = None,
-        tags: TagrisTagsMap = None,
-        job_state_time_limit_actions: JobStateTimeLimitActions = None,
+        state: JQState | None = None,
+        scheduling_policy_arn: String | None = None,
+        tags: TagrisTagsMap | None = None,
+        job_state_time_limit_actions: JobStateTimeLimitActions | None = None,
         **kwargs,
     ) -> CreateJobQueueResponse:
         """Creates an Batch job queue. When you create a job queue, you associate
@@ -2257,8 +2257,8 @@ class BatchApi:
         self,
         context: RequestContext,
         name: String,
-        fairshare_policy: FairsharePolicy = None,
-        tags: TagrisTagsMap = None,
+        fairshare_policy: FairsharePolicy | None = None,
+        tags: TagrisTagsMap | None = None,
         **kwargs,
     ) -> CreateSchedulingPolicyResponse:
         """Creates an Batch scheduling policy.
@@ -2362,9 +2362,9 @@ class BatchApi:
     def describe_compute_environments(
         self,
         context: RequestContext,
-        compute_environments: StringList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        compute_environments: StringList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeComputeEnvironmentsResponse:
         """Describes one or more of your compute environments.
@@ -2405,11 +2405,11 @@ class BatchApi:
     def describe_job_definitions(
         self,
         context: RequestContext,
-        job_definitions: StringList = None,
-        max_results: Integer = None,
-        job_definition_name: String = None,
-        status: String = None,
-        next_token: String = None,
+        job_definitions: StringList | None = None,
+        max_results: Integer | None = None,
+        job_definition_name: String | None = None,
+        status: String | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeJobDefinitionsResponse:
         """Describes a list of job definitions. You can specify a ``status`` (such
@@ -2433,9 +2433,9 @@ class BatchApi:
     def describe_job_queues(
         self,
         context: RequestContext,
-        job_queues: StringList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        job_queues: StringList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeJobQueuesResponse:
         """Describes one or more of your job queues.
@@ -2498,9 +2498,9 @@ class BatchApi:
     def list_consumable_resources(
         self,
         context: RequestContext,
-        filters: ListConsumableResourcesFilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        filters: ListConsumableResourcesFilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListConsumableResourcesResponse:
         """Returns a list of Batch consumable resources.
@@ -2521,13 +2521,13 @@ class BatchApi:
     def list_jobs(
         self,
         context: RequestContext,
-        job_queue: String = None,
-        array_job_id: String = None,
-        multi_node_job_id: String = None,
-        job_status: JobStatus = None,
-        max_results: Integer = None,
-        next_token: String = None,
-        filters: ListJobsFilterList = None,
+        job_queue: String | None = None,
+        array_job_id: String | None = None,
+        multi_node_job_id: String | None = None,
+        job_status: JobStatus | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        filters: ListJobsFilterList | None = None,
         **kwargs,
     ) -> ListJobsResponse:
         """Returns a list of Batch jobs.
@@ -2566,9 +2566,9 @@ class BatchApi:
         self,
         context: RequestContext,
         consumable_resource: String,
-        filters: ListJobsByConsumableResourceFilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        filters: ListJobsByConsumableResourceFilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListJobsByConsumableResourceResponse:
         """Returns a list of Batch jobs that require a specific consumable
@@ -2591,8 +2591,8 @@ class BatchApi:
     def list_scheduling_policies(
         self,
         context: RequestContext,
-        max_results: Integer = None,
-        next_token: String = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListSchedulingPoliciesResponse:
         """Returns a list of Batch scheduling policies.
@@ -2666,20 +2666,20 @@ class BatchApi:
         job_name: String,
         job_queue: String,
         job_definition: String,
-        share_identifier: String = None,
-        scheduling_priority_override: Integer = None,
-        array_properties: ArrayProperties = None,
-        depends_on: JobDependencyList = None,
-        parameters: ParametersMap = None,
-        container_overrides: ContainerOverrides = None,
-        node_overrides: NodeOverrides = None,
-        retry_strategy: RetryStrategy = None,
-        propagate_tags: Boolean = None,
-        timeout: JobTimeout = None,
-        tags: TagrisTagsMap = None,
-        eks_properties_override: EksPropertiesOverride = None,
-        ecs_properties_override: EcsPropertiesOverride = None,
-        consumable_resource_properties_override: ConsumableResourceProperties = None,
+        share_identifier: String | None = None,
+        scheduling_priority_override: Integer | None = None,
+        array_properties: ArrayProperties | None = None,
+        depends_on: JobDependencyList | None = None,
+        parameters: ParametersMap | None = None,
+        container_overrides: ContainerOverrides | None = None,
+        node_overrides: NodeOverrides | None = None,
+        retry_strategy: RetryStrategy | None = None,
+        propagate_tags: Boolean | None = None,
+        timeout: JobTimeout | None = None,
+        tags: TagrisTagsMap | None = None,
+        eks_properties_override: EksPropertiesOverride | None = None,
+        ecs_properties_override: EcsPropertiesOverride | None = None,
+        consumable_resource_properties_override: ConsumableResourceProperties | None = None,
         **kwargs,
     ) -> SubmitJobResponse:
         """Submits an Batch job from a job definition. Parameters that are
@@ -2814,9 +2814,9 @@ class BatchApi:
         self,
         context: RequestContext,
         consumable_resource: String,
-        operation: String = None,
-        quantity: Long = None,
-        client_token: ClientRequestToken = None,
+        operation: String | None = None,
+        quantity: Long | None = None,
+        client_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> UpdateConsumableResourceResponse:
         """Updates a consumable resource.
@@ -2838,11 +2838,11 @@ class BatchApi:
         self,
         context: RequestContext,
         job_queue: String,
-        state: JQState = None,
-        scheduling_policy_arn: String = None,
-        priority: Integer = None,
-        compute_environment_order: ComputeEnvironmentOrders = None,
-        job_state_time_limit_actions: JobStateTimeLimitActions = None,
+        state: JQState | None = None,
+        scheduling_policy_arn: String | None = None,
+        priority: Integer | None = None,
+        compute_environment_order: ComputeEnvironmentOrders | None = None,
+        job_state_time_limit_actions: JobStateTimeLimitActions | None = None,
         **kwargs,
     ) -> UpdateJobQueueResponse:
         """Updates a job queue.
@@ -2866,7 +2866,7 @@ class BatchApi:
         self,
         context: RequestContext,
         arn: String,
-        fairshare_policy: FairsharePolicy = None,
+        fairshare_policy: FairsharePolicy | None = None,
         **kwargs,
     ) -> UpdateSchedulingPolicyResponse:
         """Updates a scheduling policy.

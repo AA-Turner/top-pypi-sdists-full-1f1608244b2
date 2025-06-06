@@ -1,11 +1,10 @@
 Metadata-Version: 2.4
 Name: tavily-python
-Version: 0.7.4
+Version: 0.7.5
 Summary: Python wrapper for the Tavily API
 Home-page: https://github.com/tavily-ai/tavily-python
 Author: Tavily AI
 Author-email: support@tavily.com
-License: MIT
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
@@ -21,7 +20,6 @@ Dynamic: classifier
 Dynamic: description
 Dynamic: description-content-type
 Dynamic: home-page
-Dynamic: license
 Dynamic: license-file
 Dynamic: requires-dist
 Dynamic: requires-python

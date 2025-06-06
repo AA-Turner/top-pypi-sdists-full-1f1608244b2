@@ -5,8 +5,9 @@ and part is for general purpose.
 """
 
 import argparse
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, Sequence
+from typing import Any, Optional
 
 from fawltydeps.settings import (
     Action,
@@ -20,7 +21,7 @@ from fawltydeps.utils import version
 class ArgparseUnionAction(argparse.Action):
     """Action to take the union of given arguments/values for one CLI option."""
 
-    def __call__(  # type: ignore[misc, override]
+    def __call__(  # type: ignore[explicit-any, override]
         self,
         _parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
@@ -128,7 +129,7 @@ def populate_parser_paths_options(parser: argparse._ActionsContainer) -> None:
     .create() below.
     """
     parser.add_argument(
-        "basepaths",
+        "search_paths",
         type=lambda p: None if p == argparse.SUPPRESS else Path(p),
         nargs="*",
         help=(
@@ -145,7 +146,7 @@ def populate_parser_paths_options(parser: argparse._ActionsContainer) -> None:
         metavar="PATH_OR_STDIN",
         help=(
             "Code to parse for import statements (files or directories, or use"
-            " '-' to read code from stdin). Defaults to basepaths (see above)."
+            " '-' to read code from stdin). Defaults to search_paths (see above)."
         ),
     )
     parser.add_argument(
@@ -156,7 +157,7 @@ def populate_parser_paths_options(parser: argparse._ActionsContainer) -> None:
         metavar="PATH",
         help=(
             "Where to find dependency declarations (files or directories)."
-            " Defaults to finding supported files under basepaths (see above)."
+            " Defaults to finding supported files under search_paths (see above)."
         ),
     )
     parser.add_argument(
@@ -177,7 +178,7 @@ def populate_parser_paths_options(parser: argparse._ActionsContainer) -> None:
         metavar="PYENV_DIR",
         help=(
             "Where to search for Python environments that have project"
-            " dependencies installed. Defaults to searching under basepaths"
+            " dependencies installed. Defaults to searching under search_paths"
             " (see above)."
         ),
     )
@@ -201,6 +202,17 @@ def populate_parser_paths_options(parser: argparse._ActionsContainer) -> None:
         help=(
             "Files containing exclude patterns to apply when looking for code"
             " (imports), dependency declarations and/or Python environments."
+        ),
+    )
+    parser.add_argument(
+        "--base-dir",
+        type=Path,
+        metavar="BASE_DIR",
+        help=(
+            "Directory used as base for determining 1st-party imports, i.e."
+            " where your project expects to find its own packages/modules."
+            " If not given, base directories will be deduced from the --code"
+            " (or search_paths) arguments. See docs for more details."
         ),
     )
     parser.add_argument(

@@ -1080,7 +1080,7 @@ class ElbApi:
         context: RequestContext,
         load_balancer_name: AccessPointName,
         policy_name: PolicyName,
-        cookie_expiration_period: CookieExpirationPeriod = None,
+        cookie_expiration_period: CookieExpirationPeriod | None = None,
         **kwargs,
     ) -> CreateLBCookieStickinessPolicyOutput:
         """Generates a stickiness policy with sticky session lifetimes controlled
@@ -1122,11 +1122,11 @@ class ElbApi:
         context: RequestContext,
         load_balancer_name: AccessPointName,
         listeners: Listeners,
-        availability_zones: AvailabilityZones = None,
-        subnets: Subnets = None,
-        security_groups: SecurityGroups = None,
-        scheme: LoadBalancerScheme = None,
-        tags: TagList = None,
+        availability_zones: AvailabilityZones | None = None,
+        subnets: Subnets | None = None,
+        security_groups: SecurityGroups | None = None,
+        scheme: LoadBalancerScheme | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateAccessPointOutput:
         """Creates a Classic Load Balancer.
@@ -1205,7 +1205,7 @@ class ElbApi:
         load_balancer_name: AccessPointName,
         policy_name: PolicyName,
         policy_type_name: PolicyTypeName,
-        policy_attributes: PolicyAttributes = None,
+        policy_attributes: PolicyAttributes | None = None,
         **kwargs,
     ) -> CreateLoadBalancerPolicyOutput:
         """Creates a policy with the specified attributes for the specified load
@@ -1313,7 +1313,11 @@ class ElbApi:
 
     @handler("DescribeAccountLimits")
     def describe_account_limits(
-        self, context: RequestContext, marker: Marker = None, page_size: PageSize = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
+        **kwargs,
     ) -> DescribeAccountLimitsOutput:
         """Describes the current Elastic Load Balancing resource limits for your
         AWS account.
@@ -1333,7 +1337,7 @@ class ElbApi:
         self,
         context: RequestContext,
         load_balancer_name: AccessPointName,
-        instances: Instances = None,
+        instances: Instances | None = None,
         **kwargs,
     ) -> DescribeEndPointStateOutput:
         """Describes the state of the specified instances with respect to the
@@ -1368,8 +1372,8 @@ class ElbApi:
     def describe_load_balancer_policies(
         self,
         context: RequestContext,
-        load_balancer_name: AccessPointName = None,
-        policy_names: PolicyNames = None,
+        load_balancer_name: AccessPointName | None = None,
+        policy_names: PolicyNames | None = None,
         **kwargs,
     ) -> DescribeLoadBalancerPoliciesOutput:
         """Describes the specified policies.
@@ -1392,7 +1396,7 @@ class ElbApi:
 
     @handler("DescribeLoadBalancerPolicyTypes")
     def describe_load_balancer_policy_types(
-        self, context: RequestContext, policy_type_names: PolicyTypeNames = None, **kwargs
+        self, context: RequestContext, policy_type_names: PolicyTypeNames | None = None, **kwargs
     ) -> DescribeLoadBalancerPolicyTypesOutput:
         """Describes the specified load balancer policy types or all load balancer
         policy types.
@@ -1417,9 +1421,9 @@ class ElbApi:
     def describe_load_balancers(
         self,
         context: RequestContext,
-        load_balancer_names: LoadBalancerNames = None,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        load_balancer_names: LoadBalancerNames | None = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> DescribeAccessPointsOutput:
         """Describes the specified the load balancers. If no load balancers are

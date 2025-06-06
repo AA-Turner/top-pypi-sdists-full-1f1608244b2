@@ -2064,8 +2064,8 @@ class Kinesisanalyticsv2Api:
         context: RequestContext,
         application_name: ApplicationName,
         cloud_watch_logging_option: CloudWatchLoggingOption,
-        current_application_version_id: ApplicationVersionId = None,
-        conditional_token: ConditionalToken = None,
+        current_application_version_id: ApplicationVersionId | None = None,
+        conditional_token: ConditionalToken | None = None,
         **kwargs,
     ) -> AddApplicationCloudWatchLoggingOptionResponse:
         """Adds an Amazon CloudWatch log stream to monitor application
@@ -2231,8 +2231,8 @@ class Kinesisanalyticsv2Api:
         context: RequestContext,
         application_name: ApplicationName,
         vpc_configuration: VpcConfiguration,
-        current_application_version_id: ApplicationVersionId = None,
-        conditional_token: ConditionalToken = None,
+        current_application_version_id: ApplicationVersionId | None = None,
+        conditional_token: ConditionalToken | None = None,
         **kwargs,
     ) -> AddApplicationVpcConfigurationResponse:
         """Adds a Virtual Private Cloud (VPC) configuration to the application.
@@ -2269,11 +2269,11 @@ class Kinesisanalyticsv2Api:
         application_name: ApplicationName,
         runtime_environment: RuntimeEnvironment,
         service_execution_role: RoleARN,
-        application_description: ApplicationDescription = None,
-        application_configuration: ApplicationConfiguration = None,
-        cloud_watch_logging_options: CloudWatchLoggingOptions = None,
-        tags: Tags = None,
-        application_mode: ApplicationMode = None,
+        application_description: ApplicationDescription | None = None,
+        application_configuration: ApplicationConfiguration | None = None,
+        cloud_watch_logging_options: CloudWatchLoggingOptions | None = None,
+        tags: Tags | None = None,
+        application_mode: ApplicationMode | None = None,
         **kwargs,
     ) -> CreateApplicationResponse:
         """Creates a Managed Service for Apache Flink application. For information
@@ -2311,7 +2311,7 @@ class Kinesisanalyticsv2Api:
         context: RequestContext,
         application_name: ApplicationName,
         url_type: UrlType,
-        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds = None,
+        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds | None = None,
         **kwargs,
     ) -> CreateApplicationPresignedUrlResponse:
         """Creates and returns a URL that you can use to connect to an
@@ -2394,8 +2394,8 @@ class Kinesisanalyticsv2Api:
         context: RequestContext,
         application_name: ApplicationName,
         cloud_watch_logging_option_id: Id,
-        current_application_version_id: ApplicationVersionId = None,
-        conditional_token: ConditionalToken = None,
+        current_application_version_id: ApplicationVersionId | None = None,
+        conditional_token: ConditionalToken | None = None,
         **kwargs,
     ) -> DeleteApplicationCloudWatchLoggingOptionResponse:
         """Deletes an Amazon CloudWatch log stream from an SQL-based Kinesis Data
@@ -2524,8 +2524,8 @@ class Kinesisanalyticsv2Api:
         context: RequestContext,
         application_name: ApplicationName,
         vpc_configuration_id: Id,
-        current_application_version_id: ApplicationVersionId = None,
-        conditional_token: ConditionalToken = None,
+        current_application_version_id: ApplicationVersionId | None = None,
+        conditional_token: ConditionalToken | None = None,
         **kwargs,
     ) -> DeleteApplicationVpcConfigurationResponse:
         """Removes a VPC configuration from a Managed Service for Apache Flink
@@ -2549,7 +2549,7 @@ class Kinesisanalyticsv2Api:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        include_additional_details: BooleanObject = None,
+        include_additional_details: BooleanObject | None = None,
         **kwargs,
     ) -> DescribeApplicationResponse:
         """Returns information about a specific Managed Service for Apache Flink
@@ -2637,10 +2637,10 @@ class Kinesisanalyticsv2Api:
         self,
         context: RequestContext,
         service_execution_role: RoleARN,
-        resource_arn: ResourceARN = None,
-        input_starting_position_configuration: InputStartingPositionConfiguration = None,
-        s3_configuration: S3Configuration = None,
-        input_processing_configuration: InputProcessingConfiguration = None,
+        resource_arn: ResourceARN | None = None,
+        input_starting_position_configuration: InputStartingPositionConfiguration | None = None,
+        s3_configuration: S3Configuration | None = None,
+        input_processing_configuration: InputProcessingConfiguration | None = None,
         **kwargs,
     ) -> DiscoverInputSchemaResponse:
         """Infers a schema for a SQL-based Kinesis Data Analytics application by
@@ -2677,10 +2677,10 @@ class Kinesisanalyticsv2Api:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        limit: ListApplicationOperationsInputLimit = None,
-        next_token: NextToken = None,
-        operation: Operation = None,
-        operation_status: OperationStatus = None,
+        limit: ListApplicationOperationsInputLimit | None = None,
+        next_token: NextToken | None = None,
+        operation: Operation | None = None,
+        operation_status: OperationStatus | None = None,
         **kwargs,
     ) -> ListApplicationOperationsResponse:
         """Lists information about operations performed on a Managed Service for
@@ -2704,8 +2704,8 @@ class Kinesisanalyticsv2Api:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        limit: ListSnapshotsInputLimit = None,
-        next_token: NextToken = None,
+        limit: ListSnapshotsInputLimit | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListApplicationSnapshotsResponse:
         """Lists information about the current application snapshots.
@@ -2725,8 +2725,8 @@ class Kinesisanalyticsv2Api:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        limit: ListApplicationVersionsInputLimit = None,
-        next_token: NextToken = None,
+        limit: ListApplicationVersionsInputLimit | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListApplicationVersionsResponse:
         """Lists all the versions for the specified application, including versions
@@ -2754,8 +2754,8 @@ class Kinesisanalyticsv2Api:
     def list_applications(
         self,
         context: RequestContext,
-        limit: ListApplicationsInputLimit = None,
-        next_token: ApplicationName = None,
+        limit: ListApplicationsInputLimit | None = None,
+        next_token: ApplicationName | None = None,
         **kwargs,
     ) -> ListApplicationsResponse:
         """Returns a list of Managed Service for Apache Flink applications in your
@@ -2825,7 +2825,7 @@ class Kinesisanalyticsv2Api:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        run_configuration: RunConfiguration = None,
+        run_configuration: RunConfiguration | None = None,
         **kwargs,
     ) -> StartApplicationResponse:
         """Starts the specified Managed Service for Apache Flink application. After
@@ -2849,7 +2849,7 @@ class Kinesisanalyticsv2Api:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        force: BooleanObject = None,
+        force: BooleanObject | None = None,
         **kwargs,
     ) -> StopApplicationResponse:
         """Stops the application from processing data. You can stop an application
@@ -2924,13 +2924,13 @@ class Kinesisanalyticsv2Api:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        current_application_version_id: ApplicationVersionId = None,
-        application_configuration_update: ApplicationConfigurationUpdate = None,
-        service_execution_role_update: RoleARN = None,
-        run_configuration_update: RunConfigurationUpdate = None,
-        cloud_watch_logging_option_updates: CloudWatchLoggingOptionUpdates = None,
-        conditional_token: ConditionalToken = None,
-        runtime_environment_update: RuntimeEnvironment = None,
+        current_application_version_id: ApplicationVersionId | None = None,
+        application_configuration_update: ApplicationConfigurationUpdate | None = None,
+        service_execution_role_update: RoleARN | None = None,
+        run_configuration_update: RunConfigurationUpdate | None = None,
+        cloud_watch_logging_option_updates: CloudWatchLoggingOptionUpdates | None = None,
+        conditional_token: ConditionalToken | None = None,
+        runtime_environment_update: RuntimeEnvironment | None = None,
         **kwargs,
     ) -> UpdateApplicationResponse:
         """Updates an existing Managed Service for Apache Flink application. Using

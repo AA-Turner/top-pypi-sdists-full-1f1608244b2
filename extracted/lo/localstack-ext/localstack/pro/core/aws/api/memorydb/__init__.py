@@ -1501,7 +1501,7 @@ class MemorydbApi:
         self,
         context: RequestContext,
         cluster_names: ClusterNameList,
-        service_update: ServiceUpdateRequest = None,
+        service_update: ServiceUpdateRequest | None = None,
         **kwargs,
     ) -> BatchUpdateClusterResponse:
         """Apply the service update to a list of clusters supplied. For more
@@ -1523,9 +1523,9 @@ class MemorydbApi:
         context: RequestContext,
         source_snapshot_name: String,
         target_snapshot_name: String,
-        target_bucket: TargetBucket = None,
-        kms_key_id: KmsKeyId = None,
-        tags: TagList = None,
+        target_bucket: TargetBucket | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CopySnapshotResponse:
         """Makes a copy of an existing snapshot.
@@ -1552,8 +1552,8 @@ class MemorydbApi:
         self,
         context: RequestContext,
         acl_name: String,
-        user_names: UserNameListInput = None,
-        tags: TagList = None,
+        user_names: UserNameListInput | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateACLResponse:
         """Creates an Access Control List. For more information, see
@@ -1581,29 +1581,29 @@ class MemorydbApi:
         cluster_name: String,
         node_type: String,
         acl_name: ACLName,
-        multi_region_cluster_name: String = None,
-        parameter_group_name: String = None,
-        description: String = None,
-        num_shards: IntegerOptional = None,
-        num_replicas_per_shard: IntegerOptional = None,
-        subnet_group_name: String = None,
-        security_group_ids: SecurityGroupIdsList = None,
-        maintenance_window: String = None,
-        port: IntegerOptional = None,
-        sns_topic_arn: String = None,
-        tls_enabled: BooleanOptional = None,
-        kms_key_id: String = None,
-        snapshot_arns: SnapshotArnsList = None,
-        snapshot_name: String = None,
-        snapshot_retention_limit: IntegerOptional = None,
-        tags: TagList = None,
-        snapshot_window: String = None,
-        engine: String = None,
-        engine_version: String = None,
-        auto_minor_version_upgrade: BooleanOptional = None,
-        data_tiering: BooleanOptional = None,
-        network_type: NetworkType = None,
-        ip_discovery: IpDiscovery = None,
+        multi_region_cluster_name: String | None = None,
+        parameter_group_name: String | None = None,
+        description: String | None = None,
+        num_shards: IntegerOptional | None = None,
+        num_replicas_per_shard: IntegerOptional | None = None,
+        subnet_group_name: String | None = None,
+        security_group_ids: SecurityGroupIdsList | None = None,
+        maintenance_window: String | None = None,
+        port: IntegerOptional | None = None,
+        sns_topic_arn: String | None = None,
+        tls_enabled: BooleanOptional | None = None,
+        kms_key_id: String | None = None,
+        snapshot_arns: SnapshotArnsList | None = None,
+        snapshot_name: String | None = None,
+        snapshot_retention_limit: IntegerOptional | None = None,
+        tags: TagList | None = None,
+        snapshot_window: String | None = None,
+        engine: String | None = None,
+        engine_version: String | None = None,
+        auto_minor_version_upgrade: BooleanOptional | None = None,
+        data_tiering: BooleanOptional | None = None,
+        network_type: NetworkType | None = None,
+        ip_discovery: IpDiscovery | None = None,
         **kwargs,
     ) -> CreateClusterResponse:
         """Creates a cluster. All nodes in the cluster run the same
@@ -1670,13 +1670,13 @@ class MemorydbApi:
         context: RequestContext,
         multi_region_cluster_name_suffix: String,
         node_type: String,
-        description: String = None,
-        engine: String = None,
-        engine_version: String = None,
-        multi_region_parameter_group_name: String = None,
-        num_shards: IntegerOptional = None,
-        tls_enabled: BooleanOptional = None,
-        tags: TagList = None,
+        description: String | None = None,
+        engine: String | None = None,
+        engine_version: String | None = None,
+        multi_region_parameter_group_name: String | None = None,
+        num_shards: IntegerOptional | None = None,
+        tls_enabled: BooleanOptional | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateMultiRegionClusterResponse:
         """Creates a new multi-Region cluster.
@@ -1707,8 +1707,8 @@ class MemorydbApi:
         context: RequestContext,
         parameter_group_name: String,
         family: String,
-        description: String = None,
-        tags: TagList = None,
+        description: String | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateParameterGroupResponse:
         """Creates a new MemoryDB parameter group. A parameter group is a
@@ -1739,8 +1739,8 @@ class MemorydbApi:
         context: RequestContext,
         cluster_name: String,
         snapshot_name: String,
-        kms_key_id: String = None,
-        tags: TagList = None,
+        kms_key_id: String | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateSnapshotResponse:
         """Creates a copy of an entire cluster at a specific moment in time.
@@ -1767,8 +1767,8 @@ class MemorydbApi:
         context: RequestContext,
         subnet_group_name: String,
         subnet_ids: SubnetIdentifierList,
-        description: String = None,
-        tags: TagList = None,
+        description: String | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateSubnetGroupResponse:
         """Creates a subnet group. A subnet group is a collection of subnets
@@ -1802,7 +1802,7 @@ class MemorydbApi:
         user_name: UserName,
         authentication_mode: AuthenticationMode,
         access_string: AccessString,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateUserResponse:
         """Creates a MemoryDB user. For more information, see `Authenticating users
@@ -1844,8 +1844,8 @@ class MemorydbApi:
         self,
         context: RequestContext,
         cluster_name: String,
-        multi_region_cluster_name: String = None,
-        final_snapshot_name: String = None,
+        multi_region_cluster_name: String | None = None,
+        final_snapshot_name: String | None = None,
         **kwargs,
     ) -> DeleteClusterResponse:
         """Deletes a cluster. It also deletes all associated nodes and node
@@ -1952,9 +1952,9 @@ class MemorydbApi:
     def describe_ac_ls(
         self,
         context: RequestContext,
-        acl_name: String = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
+        acl_name: String | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeACLsResponse:
         """Returns a list of ACLs.
@@ -1973,10 +1973,10 @@ class MemorydbApi:
     def describe_clusters(
         self,
         context: RequestContext,
-        cluster_name: String = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
-        show_shard_details: BooleanOptional = None,
+        cluster_name: String | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
+        show_shard_details: BooleanOptional | None = None,
         **kwargs,
     ) -> DescribeClustersResponse:
         """Returns information about all provisioned clusters if no cluster
@@ -2001,12 +2001,12 @@ class MemorydbApi:
     def describe_engine_versions(
         self,
         context: RequestContext,
-        engine: String = None,
-        engine_version: String = None,
-        parameter_group_family: String = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
-        default_only: Boolean = None,
+        engine: String | None = None,
+        engine_version: String | None = None,
+        parameter_group_family: String | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
+        default_only: Boolean | None = None,
         **kwargs,
     ) -> DescribeEngineVersionsResponse:
         """Returns a list of the available Redis OSS engine versions.
@@ -2030,13 +2030,13 @@ class MemorydbApi:
     def describe_events(
         self,
         context: RequestContext,
-        source_name: String = None,
-        source_type: SourceType = None,
-        start_time: TStamp = None,
-        end_time: TStamp = None,
-        duration: IntegerOptional = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
+        source_name: String | None = None,
+        source_type: SourceType | None = None,
+        start_time: TStamp | None = None,
+        end_time: TStamp | None = None,
+        duration: IntegerOptional | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeEventsResponse:
         """Returns events related to clusters, security groups, and parameter
@@ -2066,10 +2066,10 @@ class MemorydbApi:
     def describe_multi_region_clusters(
         self,
         context: RequestContext,
-        multi_region_cluster_name: String = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
-        show_cluster_details: BooleanOptional = None,
+        multi_region_cluster_name: String | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
+        show_cluster_details: BooleanOptional | None = None,
         **kwargs,
     ) -> DescribeMultiRegionClustersResponse:
         """Returns details about one or more multi-Region clusters.
@@ -2090,9 +2090,9 @@ class MemorydbApi:
     def describe_parameter_groups(
         self,
         context: RequestContext,
-        parameter_group_name: String = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
+        parameter_group_name: String | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeParameterGroupsResponse:
         """Returns a list of parameter group descriptions. If a parameter group
@@ -2116,8 +2116,8 @@ class MemorydbApi:
         self,
         context: RequestContext,
         parameter_group_name: String,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeParametersResponse:
         """Returns the detailed parameter list for a particular parameter group.
@@ -2138,13 +2138,13 @@ class MemorydbApi:
     def describe_reserved_nodes(
         self,
         context: RequestContext,
-        reservation_id: String = None,
-        reserved_nodes_offering_id: String = None,
-        node_type: String = None,
-        duration: String = None,
-        offering_type: String = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
+        reservation_id: String | None = None,
+        reserved_nodes_offering_id: String | None = None,
+        node_type: String | None = None,
+        duration: String | None = None,
+        offering_type: String | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeReservedNodesResponse:
         """Returns information about reserved nodes for this account, or about a
@@ -2169,12 +2169,12 @@ class MemorydbApi:
     def describe_reserved_nodes_offerings(
         self,
         context: RequestContext,
-        reserved_nodes_offering_id: String = None,
-        node_type: String = None,
-        duration: String = None,
-        offering_type: String = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
+        reserved_nodes_offering_id: String | None = None,
+        node_type: String | None = None,
+        duration: String | None = None,
+        offering_type: String | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeReservedNodesOfferingsResponse:
         """Lists available reserved node offerings.
@@ -2197,11 +2197,11 @@ class MemorydbApi:
     def describe_service_updates(
         self,
         context: RequestContext,
-        service_update_name: String = None,
-        cluster_names: ClusterNameList = None,
-        status: ServiceUpdateStatusList = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
+        service_update_name: String | None = None,
+        cluster_names: ClusterNameList | None = None,
+        status: ServiceUpdateStatusList | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeServiceUpdatesResponse:
         """Returns details of the service updates.
@@ -2222,12 +2222,12 @@ class MemorydbApi:
     def describe_snapshots(
         self,
         context: RequestContext,
-        cluster_name: String = None,
-        snapshot_name: String = None,
-        source: String = None,
-        next_token: String = None,
-        max_results: IntegerOptional = None,
-        show_detail: BooleanOptional = None,
+        cluster_name: String | None = None,
+        snapshot_name: String | None = None,
+        source: String | None = None,
+        next_token: String | None = None,
+        max_results: IntegerOptional | None = None,
+        show_detail: BooleanOptional | None = None,
         **kwargs,
     ) -> DescribeSnapshotsResponse:
         """Returns information about cluster snapshots. By default,
@@ -2256,9 +2256,9 @@ class MemorydbApi:
     def describe_subnet_groups(
         self,
         context: RequestContext,
-        subnet_group_name: String = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
+        subnet_group_name: String | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeSubnetGroupsResponse:
         """Returns a list of subnet group descriptions. If a subnet group name is
@@ -2278,10 +2278,10 @@ class MemorydbApi:
     def describe_users(
         self,
         context: RequestContext,
-        user_name: UserName = None,
-        filters: FilterList = None,
-        max_results: IntegerOptional = None,
-        next_token: String = None,
+        user_name: UserName | None = None,
+        filters: FilterList | None = None,
+        max_results: IntegerOptional | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeUsersResponse:
         """Returns a list of users.
@@ -2391,9 +2391,9 @@ class MemorydbApi:
         self,
         context: RequestContext,
         reserved_nodes_offering_id: String,
-        reservation_id: String = None,
-        node_count: IntegerOptional = None,
-        tags: TagList = None,
+        reservation_id: String | None = None,
+        node_count: IntegerOptional | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> PurchaseReservedNodesOfferingResponse:
         """Allows you to purchase a reserved node offering. Reserved nodes are not
@@ -2419,8 +2419,8 @@ class MemorydbApi:
         self,
         context: RequestContext,
         parameter_group_name: String,
-        all_parameters: Boolean = None,
-        parameter_names: ParameterNameList = None,
+        all_parameters: Boolean | None = None,
+        parameter_names: ParameterNameList | None = None,
         **kwargs,
     ) -> ResetParameterGroupResponse:
         """Modifies the parameters of a parameter group to the engine or system
@@ -2534,8 +2534,8 @@ class MemorydbApi:
         self,
         context: RequestContext,
         acl_name: String,
-        user_names_to_add: UserNameListInput = None,
-        user_names_to_remove: UserNameListInput = None,
+        user_names_to_add: UserNameListInput | None = None,
+        user_names_to_remove: UserNameListInput | None = None,
         **kwargs,
     ) -> UpdateACLResponse:
         """Changes the list of users that belong to the Access Control List.
@@ -2559,21 +2559,21 @@ class MemorydbApi:
         self,
         context: RequestContext,
         cluster_name: String,
-        description: String = None,
-        security_group_ids: SecurityGroupIdsList = None,
-        maintenance_window: String = None,
-        sns_topic_arn: String = None,
-        sns_topic_status: String = None,
-        parameter_group_name: String = None,
-        snapshot_window: String = None,
-        snapshot_retention_limit: IntegerOptional = None,
-        node_type: String = None,
-        engine: String = None,
-        engine_version: String = None,
-        replica_configuration: ReplicaConfigurationRequest = None,
-        shard_configuration: ShardConfigurationRequest = None,
-        acl_name: ACLName = None,
-        ip_discovery: IpDiscovery = None,
+        description: String | None = None,
+        security_group_ids: SecurityGroupIdsList | None = None,
+        maintenance_window: String | None = None,
+        sns_topic_arn: String | None = None,
+        sns_topic_status: String | None = None,
+        parameter_group_name: String | None = None,
+        snapshot_window: String | None = None,
+        snapshot_retention_limit: IntegerOptional | None = None,
+        node_type: String | None = None,
+        engine: String | None = None,
+        engine_version: String | None = None,
+        replica_configuration: ReplicaConfigurationRequest | None = None,
+        shard_configuration: ShardConfigurationRequest | None = None,
+        acl_name: ACLName | None = None,
+        ip_discovery: IpDiscovery | None = None,
         **kwargs,
     ) -> UpdateClusterResponse:
         """Modifies the settings for a cluster. You can use this operation to
@@ -2625,12 +2625,12 @@ class MemorydbApi:
         self,
         context: RequestContext,
         multi_region_cluster_name: String,
-        node_type: String = None,
-        description: String = None,
-        engine_version: String = None,
-        shard_configuration: ShardConfigurationRequest = None,
-        multi_region_parameter_group_name: String = None,
-        update_strategy: UpdateStrategy = None,
+        node_type: String | None = None,
+        description: String | None = None,
+        engine_version: String | None = None,
+        shard_configuration: ShardConfigurationRequest | None = None,
+        multi_region_parameter_group_name: String | None = None,
+        update_strategy: UpdateStrategy | None = None,
         **kwargs,
     ) -> UpdateMultiRegionClusterResponse:
         """Updates the configuration of an existing multi-Region cluster.
@@ -2679,8 +2679,8 @@ class MemorydbApi:
         self,
         context: RequestContext,
         subnet_group_name: String,
-        description: String = None,
-        subnet_ids: SubnetIdentifierList = None,
+        description: String | None = None,
+        subnet_ids: SubnetIdentifierList | None = None,
         **kwargs,
     ) -> UpdateSubnetGroupResponse:
         """Updates a subnet group. For more information, see `Updating a subnet
@@ -2704,8 +2704,8 @@ class MemorydbApi:
         self,
         context: RequestContext,
         user_name: UserName,
-        authentication_mode: AuthenticationMode = None,
-        access_string: AccessString = None,
+        authentication_mode: AuthenticationMode | None = None,
+        access_string: AccessString | None = None,
         **kwargs,
     ) -> UpdateUserResponse:
         """Changes user password(s) and/or access string.

@@ -1147,6 +1147,21 @@ class Annotation(AccessControlledModel):
                     lastTime = time.time()
             annot['elements'] = elements
         except jsonschema.ValidationError as exp:
+            try:
+                error_freq = {}
+                for err in exp.context:
+                    key = err.schema_path[0]
+                    error_freq.setdefault(key, [])
+                    error_freq[key].append(err)
+                min_error = min(error_freq.values(), key=lambda k: (len(k), k[0].schema_path))[0]
+                for key in dir(min_error):
+                    if not key.startswith('_'):
+                        try:
+                            setattr(exp, key, getattr(min_error, key))
+                        except Exception:
+                            pass
+            except Exception:
+                pass
             raise ValidationException(exp)
         if time.time() - startTime > 10:
             logger.info('Validated in %5.3fs' % (time.time() - startTime))
@@ -1358,16 +1373,15 @@ class Annotation(AccessControlledModel):
             logger.info('Counting inactive annotations, %r' % report)
             logtime = time.time()
         report['recentVersions'] = self.collection.count_documents({'_active': False})
-        recentDateStep = {'$addFields': {'mostRecentDate': {'$max': [
-            '$created', {'$ifNull': ['$updated', '$created']}]}}}
         itemLookupStep = {'$lookup': {
             'from': 'item',
             'localField': 'itemId',
             'foreignField': '_id',
             'as': 'item',
         }}
-        oldDeletedPipeline = [recentDateStep, itemLookupStep, {
-            '$match': {'item': {'$size': 0}, 'mostRecentDate': {'$lt': age}},
+        oldDeletedPipeline = [itemLookupStep, {
+            '$match': {'item': {'$size': 0}, 'created': {'$lt': age}, '$or': [
+                {'updated': {'$exists': False}}, {'updated': {'$lt': age}}]},
         }, {
             '$project': {'item': 0},
         }]
@@ -1399,8 +1413,9 @@ class Annotation(AccessControlledModel):
             '$unwind': '$annotations',
         }, {
             '$replaceRoot': {'newRoot': '$annotations'},
-        }, recentDateStep, {
-            '$match': {'mostRecentDate': {'$lt': age}},
+        }, {
+            '$match': {'created': {'$lt': age}, '$or': [
+                {'updated': {'$exists': False}}, {'updated': {'$lt': age}}]},
         }]
         if time.time() - logtime > 10:
             logger.info('Finding old annotations, %r' % report)

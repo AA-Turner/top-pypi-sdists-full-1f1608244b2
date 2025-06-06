@@ -193,8 +193,13 @@ async def integracao_contabil_generica(
         await worker_sleep(12)
         # pyautogui.press("tab")
         await worker_sleep(3)
-        caminho_imagem = "assets\\integracao_contabil\\fechamento_caixa.png"
+        
+        
         # console.print("Selecionando item do campo origem...")
+        uuid_processo = task.uuidProcesso
+        caminho_imagem = f"assets\\integracao_contabil\\{uuid_processo}.png"
+
+
         await metodo_selecao_origem_especial()
         await localizar_e_clicar(caminho_imagem)  # main_window.set_focus()
         await worker_sleep(5)

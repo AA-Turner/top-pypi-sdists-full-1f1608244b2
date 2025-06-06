@@ -4,8 +4,9 @@ import ast
 import json
 import logging
 import tokenize
+from collections.abc import Iterable, Iterator
 from pathlib import Path
-from typing import BinaryIO, Iterable, Iterator, Optional, Tuple, Union
+from typing import BinaryIO, Optional, Union
 
 import isort
 
@@ -21,7 +22,7 @@ from fawltydeps.utils import dirs_between
 logger = logging.getLogger(__name__)
 
 
-def make_isort_config(path: Path, src_paths: Tuple[Path, ...] = ()) -> isort.Config:
+def make_isort_config(path: Path, src_paths: tuple[Path, ...] = ()) -> isort.Config:
     """Configure isort to correctly classify import statements.
 
     In order for isort to correctly differentiate between first- and third-party
@@ -187,14 +188,10 @@ def parse_source(
 
     assert isinstance(src.path, Path)  # noqa: S101, sanity check / silence mypy
 
-    local_context = (
-        None
-        if src.base_dir is None
-        else make_isort_config(
-            path=src.base_dir,
-            src_paths=tuple(dirs_between(src.base_dir, src.path.parent)),
-        )
-    )
+    local_context = None
+    if src.base_dir is not None:
+        src_paths = tuple(dirs_between(src.base_dir, src.path.parent))
+        local_context = make_isort_config(path=src.base_dir, src_paths=src_paths)
 
     if src.path.suffix == ".py":
         logger.info("Parsing Python file %s", src.path)

@@ -9,7 +9,6 @@ from ._clean_x import unify_columns, categorical_encode
 from ._native import Native
 
 _log = logging.getLogger(__name__)
-_none_ndarray = np.array(None)
 
 
 def bin_native(
@@ -52,47 +51,39 @@ def bin_native(
         y = y.copy()
 
     n_bytes = native.measure_dataset_header(len(feature_idxs), n_weights, 1)
-    for feature_idx, feature_bins, (_, nonmissings, uniques, X_col, bad) in zip(
-        feature_idxs,
-        bins_iter,
-        unify_columns(
-            X, feature_idxs, feature_names_in, feature_types_in, None, False, False
-        ),
-    ):
+    get_col = unify_columns(
+        X, n_samples, feature_names_in, feature_types_in, None, False, False
+    )
+    for feature_idx, feature_bins in zip(feature_idxs, bins_iter):
+        feature_type = feature_types_in[feature_idx]
+        if feature_type == "ignore":
+            # TODO: exclude ignored features from the compressed dataset
+            raise Exception("ignored features not supported yet")
+
+        _, nonmissings, uniques, X_col, bad = get_col(feature_idx)
+
         if isinstance(feature_bins, dict):
             # categorical feature
 
-            X_col, bad = categorical_encode(uniques, X_col, nonmissings, feature_bins)
-
-            if n_samples != len(X_col):
-                msg = "The columns of X are mismatched in the number of of samples"
-                _log.error(msg)
-                raise ValueError(msg)
-
+            X_col = categorical_encode(uniques, X_col, nonmissings, feature_bins)
+            bad = X_col == -1
+            if not bad.any():
+                bad = None
             n_bins = 2 if len(feature_bins) == 0 else (max(feature_bins.values()) + 2)
         else:
             # continuous feature
-
-            if n_samples != len(X_col):
-                msg = "The columns of X are mismatched in the number of of samples"
-                _log.error(msg)
-                raise ValueError(msg)
-
-            if not X_col.flags.c_contiguous:
-                # X_col could be a slice that has a stride.  We need contiguous for caling into C
-                X_col = X_col.copy()
 
             X_col = native.discretize(X_col, feature_bins)
             n_bins = len(feature_bins) + 3
 
         if bad is not None:
-            X_col[bad != _none_ndarray] = n_bins - 1
+            X_col[bad] = n_bins - 1
 
         n_bytes += native.measure_feature(
             n_bins,
             np.count_nonzero(X_col) != len(X_col),
             bad is not None,
-            feature_types_in[feature_idx] == "nominal",
+            feature_type == "nominal",
             X_col,
         )
 
@@ -112,37 +103,40 @@ def bin_native(
 
     native.fill_dataset_header(len(feature_idxs), n_weights, 1, dataset)
 
-    for feature_idx, feature_bins, (_, nonmissings, uniques, X_col, bad) in zip(
-        feature_idxs,
-        bins_iter,
-        unify_columns(
-            X, feature_idxs, feature_names_in, feature_types_in, None, False, False
-        ),
-    ):
+    get_col = unify_columns(
+        X, n_samples, feature_names_in, feature_types_in, None, False, False
+    )
+    for feature_idx, feature_bins in zip(feature_idxs, bins_iter):
+        feature_type = feature_types_in[feature_idx]
+        if feature_type == "ignore":
+            # TODO: exclude ignored features from the compressed dataset
+            raise Exception("ignored features not supported yet")
+
+        _, nonmissings, uniques, X_col, bad = get_col(feature_idx)
+
         if isinstance(feature_bins, dict):
             # categorical feature
 
-            X_col, bad = categorical_encode(uniques, X_col, nonmissings, feature_bins)
+            X_col = categorical_encode(uniques, X_col, nonmissings, feature_bins)
+            bad = X_col == -1
+            if not bad.any():
+                bad = None
 
             n_bins = 2 if len(feature_bins) == 0 else (max(feature_bins.values()) + 2)
         else:
             # continuous feature
 
-            if not X_col.flags.c_contiguous:
-                # X_col could be a slice that has a stride.  We need contiguous for caling into C
-                X_col = X_col.copy()
-
             X_col = native.discretize(X_col, feature_bins)
             n_bins = len(feature_bins) + 3
 
         if bad is not None:
-            X_col[bad != _none_ndarray] = n_bins - 1
+            X_col[bad] = n_bins - 1
 
         native.fill_feature(
             n_bins,
             np.count_nonzero(X_col) != len(X_col),
             bad is not None,
-            feature_types_in[feature_idx] == "nominal",
+            feature_type == "nominal",
             X_col,
             dataset,
         )

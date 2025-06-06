@@ -1766,7 +1766,7 @@ class VerifiedpermissionsApi:
         context: RequestContext,
         policy_store_id: PolicyStoreId,
         requests: BatchIsAuthorizedInputList,
-        entities: EntitiesDefinition = None,
+        entities: EntitiesDefinition | None = None,
         **kwargs,
     ) -> BatchIsAuthorizedOutput:
         """Makes a series of decisions about multiple authorization requests for
@@ -1814,9 +1814,9 @@ class VerifiedpermissionsApi:
         context: RequestContext,
         policy_store_id: PolicyStoreId,
         requests: BatchIsAuthorizedWithTokenInputList,
-        identity_token: Token = None,
-        access_token: Token = None,
-        entities: EntitiesDefinition = None,
+        identity_token: Token | None = None,
+        access_token: Token | None = None,
+        entities: EntitiesDefinition | None = None,
         **kwargs,
     ) -> BatchIsAuthorizedWithTokenOutput:
         """Makes a series of decisions about multiple authorization requests for
@@ -1867,8 +1867,8 @@ class VerifiedpermissionsApi:
         context: RequestContext,
         policy_store_id: PolicyStoreId,
         configuration: Configuration,
-        client_token: IdempotencyToken = None,
-        principal_entity_type: PrincipalEntityType = None,
+        client_token: IdempotencyToken | None = None,
+        principal_entity_type: PrincipalEntityType | None = None,
         **kwargs,
     ) -> CreateIdentitySourceOutput:
         """Adds an identity source to a policy store–an Amazon Cognito user pool or
@@ -1935,7 +1935,7 @@ class VerifiedpermissionsApi:
         context: RequestContext,
         policy_store_id: PolicyStoreId,
         definition: PolicyDefinition,
-        client_token: IdempotencyToken = None,
+        client_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> CreatePolicyOutput:
         """Creates a Cedar policy and saves it in the specified policy store. You
@@ -1984,10 +1984,10 @@ class VerifiedpermissionsApi:
         self,
         context: RequestContext,
         validation_settings: ValidationSettings,
-        client_token: IdempotencyToken = None,
-        description: PolicyStoreDescription = None,
-        deletion_protection: DeletionProtection = None,
-        tags: TagMap = None,
+        client_token: IdempotencyToken | None = None,
+        description: PolicyStoreDescription | None = None,
+        deletion_protection: DeletionProtection | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> CreatePolicyStoreOutput:
         """Creates a policy store. A policy store is a container for policy
@@ -2027,8 +2027,8 @@ class VerifiedpermissionsApi:
         context: RequestContext,
         policy_store_id: PolicyStoreId,
         statement: PolicyStatement,
-        client_token: IdempotencyToken = None,
-        description: PolicyTemplateDescription = None,
+        client_token: IdempotencyToken | None = None,
+        description: PolicyTemplateDescription | None = None,
         **kwargs,
     ) -> CreatePolicyTemplateOutput:
         """Creates a policy template. A template can use placeholders for the
@@ -2207,7 +2207,7 @@ class VerifiedpermissionsApi:
         self,
         context: RequestContext,
         policy_store_id: PolicyStoreId,
-        tags: Boolean = None,
+        tags: Boolean | None = None,
         **kwargs,
     ) -> GetPolicyStoreOutput:
         """Retrieves details about a policy store.
@@ -2341,9 +2341,9 @@ class VerifiedpermissionsApi:
         self,
         context: RequestContext,
         policy_store_id: PolicyStoreId,
-        next_token: NextToken = None,
-        max_results: ListIdentitySourcesMaxResults = None,
-        filters: IdentitySourceFilters = None,
+        next_token: NextToken | None = None,
+        max_results: ListIdentitySourcesMaxResults | None = None,
+        filters: IdentitySourceFilters | None = None,
         **kwargs,
     ) -> ListIdentitySourcesOutput:
         """Returns a paginated list of all of the identity sources defined in the
@@ -2370,9 +2370,9 @@ class VerifiedpermissionsApi:
         self,
         context: RequestContext,
         policy_store_id: PolicyStoreId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        filter: PolicyFilter = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        filter: PolicyFilter | None = None,
         **kwargs,
     ) -> ListPoliciesOutput:
         """Returns a paginated list of all policies stored in the specified policy
@@ -2397,8 +2397,8 @@ class VerifiedpermissionsApi:
     def list_policy_stores(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPolicyStoresOutput:
         """Returns a paginated list of all policy stores in the calling Amazon Web
@@ -2420,8 +2420,8 @@ class VerifiedpermissionsApi:
         self,
         context: RequestContext,
         policy_store_id: PolicyStoreId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPolicyTemplatesOutput:
         """Returns a paginated list of all policy templates in the specified policy
@@ -2557,7 +2557,7 @@ class VerifiedpermissionsApi:
         policy_store_id: PolicyStoreId,
         identity_source_id: IdentitySourceId,
         update_configuration: UpdateConfiguration,
-        principal_entity_type: PrincipalEntityType = None,
+        principal_entity_type: PrincipalEntityType | None = None,
         **kwargs,
     ) -> UpdateIdentitySourceOutput:
         """Updates the specified identity source to use a new identity provider
@@ -2658,8 +2658,8 @@ class VerifiedpermissionsApi:
         context: RequestContext,
         policy_store_id: PolicyStoreId,
         validation_settings: ValidationSettings,
-        deletion_protection: DeletionProtection = None,
-        description: PolicyStoreDescription = None,
+        deletion_protection: DeletionProtection | None = None,
+        description: PolicyStoreDescription | None = None,
         **kwargs,
     ) -> UpdatePolicyStoreOutput:
         """Modifies the validation setting for a policy store.
@@ -2693,7 +2693,7 @@ class VerifiedpermissionsApi:
         policy_store_id: PolicyStoreId,
         policy_template_id: PolicyTemplateId,
         statement: PolicyStatement,
-        description: PolicyTemplateDescription = None,
+        description: PolicyTemplateDescription | None = None,
         **kwargs,
     ) -> UpdatePolicyTemplateOutput:
         """Updates the specified policy template. You can update only the

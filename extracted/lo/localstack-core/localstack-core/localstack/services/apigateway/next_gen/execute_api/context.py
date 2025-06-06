@@ -5,10 +5,10 @@ from rolo import Request
 from rolo.gateway import RequestContext
 from werkzeug.datastructures import Headers
 
-from localstack.aws.api.apigateway import Integration, Method, Resource
+from localstack.aws.api.apigateway import Integration, Method, Resource, Stage
 from localstack.services.apigateway.models import RestApiDeployment
 
-from .variables import ContextVariables, LoggingContextVariables
+from .variables import ContextVariableOverrides, ContextVariables, LoggingContextVariables
 
 
 class InvocationRequest(TypedDict, total=False):
@@ -79,7 +79,7 @@ class RestApiInvocationContext(RequestContext):
     api_id: Optional[str]
     """The REST API identifier of the invoked API"""
     stage: Optional[str]
-    """The REST API stage linked to this invocation"""
+    """The REST API stage name linked to this invocation"""
     base_path: Optional[str]
     """The REST API base path mapped to the stage of this invocation"""
     deployment_id: Optional[str]
@@ -96,8 +96,15 @@ class RestApiInvocationContext(RequestContext):
     """The method of the resource the invocation matched"""
     stage_variables: Optional[dict[str, str]]
     """The Stage variables, also used in parameters mapping and mapping templates"""
+    stage_configuration: Optional[Stage]
+    """The Stage configuration, containing canary deployment settings"""
+    is_canary: Optional[bool]
+    """If the current call was directed to a canary deployment"""
     context_variables: Optional[ContextVariables]
     """The $context used in data models, authorizers, mapping templates, and CloudWatch access logging"""
+    context_variable_overrides: Optional[ContextVariableOverrides]
+    """requestOverrides and responseOverrides are passed from request templates to response templates but are
+    not in the integration context"""
     logging_context_variables: Optional[LoggingContextVariables]
     """Additional $context variables available only for access logging, not yet implemented"""
     invocation_request: Optional[InvocationRequest]
@@ -123,9 +130,12 @@ class RestApiInvocationContext(RequestContext):
         self.resource_method = None
         self.integration = None
         self.stage_variables = None
+        self.stage_configuration = None
+        self.is_canary = None
         self.context_variables = None
         self.logging_context_variables = None
         self.integration_request = None
         self.endpoint_response = None
         self.invocation_response = None
         self.trace_id = None
+        self.context_variable_overrides = None

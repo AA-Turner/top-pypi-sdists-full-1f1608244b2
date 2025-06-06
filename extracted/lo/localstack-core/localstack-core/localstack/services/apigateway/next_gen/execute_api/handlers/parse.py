@@ -17,8 +17,13 @@ from ..api import RestApiGatewayHandler, RestApiGatewayHandlerChain
 from ..context import InvocationRequest, RestApiInvocationContext
 from ..header_utils import should_drop_header_from_invocation
 from ..helpers import generate_trace_id, generate_trace_parent, parse_trace_id
-from ..moto_helpers import get_stage_variables
-from ..variables import ContextVariables, ContextVarsIdentity
+from ..variables import (
+    ContextVariableOverrides,
+    ContextVariables,
+    ContextVarsIdentity,
+    ContextVarsRequestOverride,
+    ContextVarsResponseOverride,
+)
 
 LOG = logging.getLogger(__name__)
 
@@ -40,10 +45,14 @@ class InvocationRequestParser(RestApiGatewayHandler):
         # then we can create the ContextVariables, used throughout the invocation as payload and to render authorizer
         # payload, mapping templates and such.
         context.context_variables = self.create_context_variables(context)
+        context.context_variable_overrides = ContextVariableOverrides(
+            requestOverride=ContextVarsRequestOverride(header={}, querystring={}, path={}),
+            responseOverride=ContextVarsResponseOverride(header={}, status=0),
+        )
         # TODO: maybe adjust the logging
         LOG.debug("Initializing $context='%s'", context.context_variables)
         # then populate the stage variables
-        context.stage_variables = self.fetch_stage_variables(context)
+        context.stage_variables = self.get_stage_variables(context)
         LOG.debug("Initializing $stageVariables='%s'", context.stage_variables)
 
         context.trace_id = self.populate_trace_id(context.request.headers)
@@ -163,18 +172,21 @@ class InvocationRequestParser(RestApiGatewayHandler):
             requestTimeEpoch=int(now.timestamp() * 1000),
             stage=context.stage,
         )
+        if context.is_canary is not None:
+            context_variables["isCanaryRequest"] = context.is_canary
+
         return context_variables
 
     @staticmethod
-    def fetch_stage_variables(context: RestApiInvocationContext) -> Optional[dict[str, str]]:
-        stage_variables = get_stage_variables(
-            account_id=context.account_id,
-            region=context.region,
-            api_id=context.api_id,
-            stage_name=context.stage,
-        )
+    def get_stage_variables(context: RestApiInvocationContext) -> Optional[dict[str, str]]:
+        stage_variables = context.stage_configuration.get("variables")
+        if context.is_canary:
+            overrides = (
+                context.stage_configuration["canarySettings"].get("stageVariableOverrides") or {}
+            )
+            stage_variables = (stage_variables or {}) | overrides
+
         if not stage_variables:
-            # we need to set the stage variables to None in the context if we don't have at least one
             return None
 
         return stage_variables

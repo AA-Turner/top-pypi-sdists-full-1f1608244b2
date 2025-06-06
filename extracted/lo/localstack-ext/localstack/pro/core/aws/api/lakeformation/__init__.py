@@ -1603,7 +1603,7 @@ class LakeformationApi:
         context: RequestContext,
         resource: Resource,
         lf_tags: LFTagsList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> AddLFTagsToResourceResponse:
         """Attaches one or more LF-tags to an existing resource.
@@ -1628,7 +1628,7 @@ class LakeformationApi:
         saml_assertion: SAMLAssertionString,
         role_arn: IAMRoleArn,
         principal_arn: IAMSAMLProviderArn,
-        duration_seconds: CredentialTimeoutDurationSecondInteger = None,
+        duration_seconds: CredentialTimeoutDurationSecondInteger | None = None,
         **kwargs,
     ) -> AssumeDecoratedRoleWithSAMLResponse:
         """Allows a caller to assume an IAM role decorated as the SAML user
@@ -1670,7 +1670,7 @@ class LakeformationApi:
         self,
         context: RequestContext,
         entries: BatchPermissionsRequestEntryList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> BatchGrantPermissionsResponse:
         """Batch operation to grant permissions to the principal.
@@ -1689,7 +1689,7 @@ class LakeformationApi:
         self,
         context: RequestContext,
         entries: BatchPermissionsRequestEntryList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> BatchRevokePermissionsResponse:
         """Batch operation to revoke permissions from the principal.
@@ -1767,7 +1767,7 @@ class LakeformationApi:
         context: RequestContext,
         tag_key: LFTagKey,
         tag_values: TagValueList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> CreateLFTagResponse:
         """Creates an LF-tag with the specified name and values.
@@ -1791,8 +1791,8 @@ class LakeformationApi:
         context: RequestContext,
         name: NameString,
         expression: Expression,
-        description: DescriptionString = None,
-        catalog_id: CatalogIdString = None,
+        description: DescriptionString | None = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> CreateLFTagExpressionResponse:
         """Creates a new LF-Tag expression with the provided name, description,
@@ -1824,10 +1824,10 @@ class LakeformationApi:
     def create_lake_formation_identity_center_configuration(
         self,
         context: RequestContext,
-        catalog_id: CatalogIdString = None,
-        instance_arn: IdentityCenterInstanceArn = None,
-        external_filtering: ExternalFilteringConfiguration = None,
-        share_recipients: DataLakePrincipalList = None,
+        catalog_id: CatalogIdString | None = None,
+        instance_arn: IdentityCenterInstanceArn | None = None,
+        external_filtering: ExternalFilteringConfiguration | None = None,
+        share_recipients: DataLakePrincipalList | None = None,
         **kwargs,
     ) -> CreateLakeFormationIdentityCenterConfigurationResponse:
         """Creates an IAM Identity Center connection with Lake Formation to allow
@@ -1857,7 +1857,7 @@ class LakeformationApi:
         context: RequestContext,
         principal: DataLakePrincipal,
         resource: Resource,
-        condition: Condition = None,
+        condition: Condition | None = None,
         **kwargs,
     ) -> CreateLakeFormationOptInResponse:
         """Enforce Lake Formation permissions for the given databases, tables, and
@@ -1882,10 +1882,10 @@ class LakeformationApi:
     def delete_data_cells_filter(
         self,
         context: RequestContext,
-        table_catalog_id: CatalogIdString = None,
-        database_name: NameString = None,
-        table_name: NameString = None,
-        name: NameString = None,
+        table_catalog_id: CatalogIdString | None = None,
+        database_name: NameString | None = None,
+        table_name: NameString | None = None,
+        name: NameString | None = None,
         **kwargs,
     ) -> DeleteDataCellsFilterResponse:
         """Deletes a data cell filter.
@@ -1908,7 +1908,7 @@ class LakeformationApi:
         self,
         context: RequestContext,
         tag_key: LFTagKey,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeleteLFTagResponse:
         """Deletes the specified LF-tag given a key name. If the input parameter
@@ -1934,7 +1934,7 @@ class LakeformationApi:
         self,
         context: RequestContext,
         name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeleteLFTagExpressionResponse:
         """Deletes the LF-Tag expression. The caller must be a data lake admin or
@@ -1955,7 +1955,7 @@ class LakeformationApi:
 
     @handler("DeleteLakeFormationIdentityCenterConfiguration")
     def delete_lake_formation_identity_center_configuration(
-        self, context: RequestContext, catalog_id: CatalogIdString = None, **kwargs
+        self, context: RequestContext, catalog_id: CatalogIdString | None = None, **kwargs
     ) -> DeleteLakeFormationIdentityCenterConfigurationResponse:
         """Deletes an IAM Identity Center connection with Lake Formation.
 
@@ -1976,7 +1976,7 @@ class LakeformationApi:
         context: RequestContext,
         principal: DataLakePrincipal,
         resource: Resource,
-        condition: Condition = None,
+        condition: Condition | None = None,
         **kwargs,
     ) -> DeleteLakeFormationOptInResponse:
         """Remove the Lake Formation permissions enforcement of the given
@@ -2004,7 +2004,7 @@ class LakeformationApi:
         table_name: NameString,
         transaction_id: TransactionIdString,
         objects: VirtualObjectList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> DeleteObjectsOnCancelResponse:
         """For a specific governed table, provides a list of Amazon S3 objects that
@@ -2057,7 +2057,7 @@ class LakeformationApi:
 
     @handler("DescribeLakeFormationIdentityCenterConfiguration")
     def describe_lake_formation_identity_center_configuration(
-        self, context: RequestContext, catalog_id: CatalogIdString = None, **kwargs
+        self, context: RequestContext, catalog_id: CatalogIdString | None = None, **kwargs
     ) -> DescribeLakeFormationIdentityCenterConfigurationResponse:
         """Retrieves the instance ARN and application ARN for the connection.
 
@@ -2104,7 +2104,7 @@ class LakeformationApi:
 
     @handler("ExtendTransaction")
     def extend_transaction(
-        self, context: RequestContext, transaction_id: TransactionIdString = None, **kwargs
+        self, context: RequestContext, transaction_id: TransactionIdString | None = None, **kwargs
     ) -> ExtendTransactionResponse:
         """Indicates to the service that the specified transaction is still active
         and should not be treated as idle and aborted.
@@ -2164,7 +2164,7 @@ class LakeformationApi:
 
     @handler("GetDataLakeSettings")
     def get_data_lake_settings(
-        self, context: RequestContext, catalog_id: CatalogIdString = None, **kwargs
+        self, context: RequestContext, catalog_id: CatalogIdString | None = None, **kwargs
     ) -> GetDataLakeSettingsResponse:
         """Retrieves the list of the data lake administrators of a Lake
         Formation-managed data lake.
@@ -2182,9 +2182,9 @@ class LakeformationApi:
         self,
         context: RequestContext,
         resource_arn: ResourceArnString,
-        catalog_id: CatalogIdString = None,
-        next_token: Token = None,
-        max_results: PageSize = None,
+        catalog_id: CatalogIdString | None = None,
+        next_token: Token | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> GetEffectivePermissionsForPathResponse:
         """Returns the Lake Formation permissions for a specified table or database
@@ -2211,7 +2211,7 @@ class LakeformationApi:
         self,
         context: RequestContext,
         tag_key: LFTagKey,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> GetLFTagResponse:
         """Returns an LF-tag definition.
@@ -2232,7 +2232,7 @@ class LakeformationApi:
         self,
         context: RequestContext,
         name: NameString,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> GetLFTagExpressionResponse:
         """Returns the details about the LF-Tag expression. The caller must be a
@@ -2289,8 +2289,8 @@ class LakeformationApi:
         self,
         context: RequestContext,
         resource: Resource,
-        catalog_id: CatalogIdString = None,
-        show_assigned_lf_tags: BooleanNullable = None,
+        catalog_id: CatalogIdString | None = None,
+        show_assigned_lf_tags: BooleanNullable | None = None,
         **kwargs,
     ) -> GetResourceLFTagsResponse:
         """Returns the LF-tags applied to a resource.
@@ -2315,12 +2315,12 @@ class LakeformationApi:
         context: RequestContext,
         database_name: NameString,
         table_name: NameString,
-        catalog_id: CatalogIdString = None,
-        transaction_id: TransactionIdString = None,
-        query_as_of_time: Timestamp = None,
-        partition_predicate: PredicateString = None,
-        max_results: PageSize = None,
-        next_token: TokenString = None,
+        catalog_id: CatalogIdString | None = None,
+        transaction_id: TransactionIdString | None = None,
+        query_as_of_time: Timestamp | None = None,
+        partition_predicate: PredicateString | None = None,
+        max_results: PageSize | None = None,
+        next_token: TokenString | None = None,
         **kwargs,
     ) -> GetTableObjectsResponse:
         """Returns the set of Amazon S3 objects that make up the specified governed
@@ -2354,10 +2354,10 @@ class LakeformationApi:
         context: RequestContext,
         table_arn: ResourceArnString,
         partition: PartitionValueList,
-        permissions: PermissionList = None,
-        duration_seconds: CredentialTimeoutDurationSecondInteger = None,
-        audit_context: AuditContext = None,
-        supported_permission_types: PermissionTypeList = None,
+        permissions: PermissionList | None = None,
+        duration_seconds: CredentialTimeoutDurationSecondInteger | None = None,
+        audit_context: AuditContext | None = None,
+        supported_permission_types: PermissionTypeList | None = None,
         **kwargs,
     ) -> GetTemporaryGluePartitionCredentialsResponse:
         """This API is identical to ``GetTemporaryTableCredentials`` except that
@@ -2390,12 +2390,12 @@ class LakeformationApi:
         self,
         context: RequestContext,
         table_arn: ResourceArnString,
-        permissions: PermissionList = None,
-        duration_seconds: CredentialTimeoutDurationSecondInteger = None,
-        audit_context: AuditContext = None,
-        supported_permission_types: PermissionTypeList = None,
-        s3_path: PathString = None,
-        query_session_context: QuerySessionContext = None,
+        permissions: PermissionList | None = None,
+        duration_seconds: CredentialTimeoutDurationSecondInteger | None = None,
+        audit_context: AuditContext | None = None,
+        supported_permission_types: PermissionTypeList | None = None,
+        s3_path: PathString | None = None,
+        query_session_context: QuerySessionContext | None = None,
         **kwargs,
     ) -> GetTemporaryGlueTableCredentialsResponse:
         """Allows a caller in a secure environment to assume a role with permission
@@ -2458,8 +2458,8 @@ class LakeformationApi:
         self,
         context: RequestContext,
         query_id: GetWorkUnitsRequestQueryIdString,
-        next_token: Token = None,
-        page_size: Integer = None,
+        next_token: Token | None = None,
+        page_size: Integer | None = None,
         **kwargs,
     ) -> GetWorkUnitsResponse:
         """Retrieves the work units generated by the ``StartQueryPlanning``
@@ -2484,9 +2484,9 @@ class LakeformationApi:
         principal: DataLakePrincipal,
         resource: Resource,
         permissions: PermissionList,
-        catalog_id: CatalogIdString = None,
-        condition: Condition = None,
-        permissions_with_grant_option: PermissionList = None,
+        catalog_id: CatalogIdString | None = None,
+        condition: Condition | None = None,
+        permissions_with_grant_option: PermissionList | None = None,
         **kwargs,
     ) -> GrantPermissionsResponse:
         """Grants permissions to the principal to access metadata in the Data
@@ -2515,9 +2515,9 @@ class LakeformationApi:
     def list_data_cells_filter(
         self,
         context: RequestContext,
-        table: TableResource = None,
-        next_token: Token = None,
-        max_results: PageSize = None,
+        table: TableResource | None = None,
+        next_token: Token | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> ListDataCellsFilterResponse:
         """Lists all the data cell filters on a table.
@@ -2537,9 +2537,9 @@ class LakeformationApi:
     def list_lf_tag_expressions(
         self,
         context: RequestContext,
-        catalog_id: CatalogIdString = None,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        catalog_id: CatalogIdString | None = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListLFTagExpressionsResponse:
         """Returns the LF-Tag expressions in caller’s account filtered based on
@@ -2564,10 +2564,10 @@ class LakeformationApi:
     def list_lf_tags(
         self,
         context: RequestContext,
-        catalog_id: CatalogIdString = None,
-        resource_share_type: ResourceShareType = None,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        catalog_id: CatalogIdString | None = None,
+        resource_share_type: ResourceShareType | None = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListLFTagsResponse:
         """Lists LF-tags that the requester has permission to view.
@@ -2591,10 +2591,10 @@ class LakeformationApi:
     def list_lake_formation_opt_ins(
         self,
         context: RequestContext,
-        principal: DataLakePrincipal = None,
-        resource: Resource = None,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        principal: DataLakePrincipal | None = None,
+        resource: Resource | None = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListLakeFormationOptInsResponse:
         """Retrieve the current list of resources and principals that are opt in to
@@ -2617,13 +2617,13 @@ class LakeformationApi:
     def list_permissions(
         self,
         context: RequestContext,
-        catalog_id: CatalogIdString = None,
-        principal: DataLakePrincipal = None,
-        resource_type: DataLakeResourceType = None,
-        resource: Resource = None,
-        next_token: Token = None,
-        max_results: PageSize = None,
-        include_related: TrueFalseString = None,
+        catalog_id: CatalogIdString | None = None,
+        principal: DataLakePrincipal | None = None,
+        resource_type: DataLakeResourceType | None = None,
+        resource: Resource | None = None,
+        next_token: Token | None = None,
+        max_results: PageSize | None = None,
+        include_related: TrueFalseString | None = None,
         **kwargs,
     ) -> ListPermissionsResponse:
         """Returns a list of the principal permissions on the resource, filtered by
@@ -2657,9 +2657,9 @@ class LakeformationApi:
     def list_resources(
         self,
         context: RequestContext,
-        filter_condition_list: FilterConditionList = None,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        filter_condition_list: FilterConditionList | None = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListResourcesResponse:
         """Lists the resources registered to be managed by the Data Catalog.
@@ -2682,10 +2682,10 @@ class LakeformationApi:
         context: RequestContext,
         database_name: NameString,
         table_name: NameString,
-        catalog_id: CatalogIdString = None,
-        storage_optimizer_type: OptimizerType = None,
-        max_results: PageSize = None,
-        next_token: Token = None,
+        catalog_id: CatalogIdString | None = None,
+        storage_optimizer_type: OptimizerType | None = None,
+        max_results: PageSize | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListTableStorageOptimizersResponse:
         """Returns the configuration of all storage optimizers associated with a
@@ -2709,10 +2709,10 @@ class LakeformationApi:
     def list_transactions(
         self,
         context: RequestContext,
-        catalog_id: CatalogIdString = None,
-        status_filter: TransactionStatusFilter = None,
-        max_results: PageSize = None,
-        next_token: TokenString = None,
+        catalog_id: CatalogIdString | None = None,
+        status_filter: TransactionStatusFilter | None = None,
+        max_results: PageSize | None = None,
+        next_token: TokenString | None = None,
         **kwargs,
     ) -> ListTransactionsResponse:
         """Returns metadata about transactions and their status. To prevent the
@@ -2739,7 +2739,7 @@ class LakeformationApi:
         self,
         context: RequestContext,
         data_lake_settings: DataLakeSettings,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> PutDataLakeSettingsResponse:
         """Sets the list of data lake administrators who have admin privileges on
@@ -2765,11 +2765,11 @@ class LakeformationApi:
         self,
         context: RequestContext,
         resource_arn: ResourceArnString,
-        use_service_linked_role: NullableBoolean = None,
-        role_arn: IAMRoleArn = None,
-        with_federation: NullableBoolean = None,
-        hybrid_access_enabled: NullableBoolean = None,
-        with_privileged_access: Boolean = None,
+        use_service_linked_role: NullableBoolean | None = None,
+        role_arn: IAMRoleArn | None = None,
+        with_federation: NullableBoolean | None = None,
+        hybrid_access_enabled: NullableBoolean | None = None,
+        with_privileged_access: Boolean | None = None,
         **kwargs,
     ) -> RegisterResourceResponse:
         """Registers the resource as managed by the Data Catalog.
@@ -2821,7 +2821,7 @@ class LakeformationApi:
         context: RequestContext,
         resource: Resource,
         lf_tags: LFTagsList,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> RemoveLFTagsFromResourceResponse:
         """Removes an LF-tag from the resource. Only database, table, or
@@ -2850,9 +2850,9 @@ class LakeformationApi:
         principal: DataLakePrincipal,
         resource: Resource,
         permissions: PermissionList,
-        catalog_id: CatalogIdString = None,
-        condition: Condition = None,
-        permissions_with_grant_option: PermissionList = None,
+        catalog_id: CatalogIdString | None = None,
+        condition: Condition | None = None,
+        permissions_with_grant_option: PermissionList | None = None,
         **kwargs,
     ) -> RevokePermissionsResponse:
         """Revokes permissions to the principal to access metadata in the Data
@@ -2878,9 +2878,9 @@ class LakeformationApi:
         self,
         context: RequestContext,
         expression: Expression,
-        next_token: Token = None,
-        max_results: SearchPageSize = None,
-        catalog_id: CatalogIdString = None,
+        next_token: Token | None = None,
+        max_results: SearchPageSize | None = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> SearchDatabasesByLFTagsResponse:
         """This operation allows a search on ``DATABASE`` resources by
@@ -2911,9 +2911,9 @@ class LakeformationApi:
         self,
         context: RequestContext,
         expression: Expression,
-        next_token: Token = None,
-        max_results: SearchPageSize = None,
-        catalog_id: CatalogIdString = None,
+        next_token: Token | None = None,
+        max_results: SearchPageSize | None = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> SearchTablesByLFTagsResponse:
         """This operation allows a search on ``TABLE`` resources by ``LFTag`` s.
@@ -2965,7 +2965,7 @@ class LakeformationApi:
 
     @handler("StartTransaction")
     def start_transaction(
-        self, context: RequestContext, transaction_type: TransactionType = None, **kwargs
+        self, context: RequestContext, transaction_type: TransactionType | None = None, **kwargs
     ) -> StartTransactionResponse:
         """Starts a new transaction and returns its transaction ID. Transaction IDs
         are opaque objects that you can use to identify a transaction.
@@ -3001,9 +3001,9 @@ class LakeformationApi:
         self,
         context: RequestContext,
         tag_key: LFTagKey,
-        catalog_id: CatalogIdString = None,
-        tag_values_to_delete: TagValueList = None,
-        tag_values_to_add: TagValueList = None,
+        catalog_id: CatalogIdString | None = None,
+        tag_values_to_delete: TagValueList | None = None,
+        tag_values_to_add: TagValueList | None = None,
         **kwargs,
     ) -> UpdateLFTagResponse:
         """Updates the list of possible values for the specified LF-tag key. If the
@@ -3033,8 +3033,8 @@ class LakeformationApi:
         context: RequestContext,
         name: NameString,
         expression: Expression,
-        description: DescriptionString = None,
-        catalog_id: CatalogIdString = None,
+        description: DescriptionString | None = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> UpdateLFTagExpressionResponse:
         """Updates the name of the LF-Tag expression to the new description and
@@ -3060,10 +3060,10 @@ class LakeformationApi:
     def update_lake_formation_identity_center_configuration(
         self,
         context: RequestContext,
-        catalog_id: CatalogIdString = None,
-        share_recipients: DataLakePrincipalList = None,
-        application_status: ApplicationStatus = None,
-        external_filtering: ExternalFilteringConfiguration = None,
+        catalog_id: CatalogIdString | None = None,
+        share_recipients: DataLakePrincipalList | None = None,
+        application_status: ApplicationStatus | None = None,
+        external_filtering: ExternalFilteringConfiguration | None = None,
         **kwargs,
     ) -> UpdateLakeFormationIdentityCenterConfigurationResponse:
         """Updates the IAM Identity Center connection parameters.
@@ -3091,8 +3091,8 @@ class LakeformationApi:
         context: RequestContext,
         role_arn: IAMRoleArn,
         resource_arn: ResourceArnString,
-        with_federation: NullableBoolean = None,
-        hybrid_access_enabled: NullableBoolean = None,
+        with_federation: NullableBoolean | None = None,
+        hybrid_access_enabled: NullableBoolean | None = None,
         **kwargs,
     ) -> UpdateResourceResponse:
         """Updates the data access role used for vending access to the given
@@ -3119,8 +3119,8 @@ class LakeformationApi:
         database_name: NameString,
         table_name: NameString,
         write_operations: WriteOperationList,
-        catalog_id: CatalogIdString = None,
-        transaction_id: TransactionIdString = None,
+        catalog_id: CatalogIdString | None = None,
+        transaction_id: TransactionIdString | None = None,
         **kwargs,
     ) -> UpdateTableObjectsResponse:
         """Updates the manifest of Amazon S3 objects that make up the specified
@@ -3152,7 +3152,7 @@ class LakeformationApi:
         database_name: NameString,
         table_name: NameString,
         storage_optimizer_config: StorageOptimizerConfigMap,
-        catalog_id: CatalogIdString = None,
+        catalog_id: CatalogIdString | None = None,
         **kwargs,
     ) -> UpdateTableStorageOptimizerResponse:
         """Updates the configuration of the storage optimizers for a table.

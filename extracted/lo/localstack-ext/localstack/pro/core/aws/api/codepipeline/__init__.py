@@ -103,6 +103,7 @@ StopPipelineExecutionReason = str
 String = str
 TagKey = str
 TagValue = str
+TargetFilterValue = str
 ThirdPartyJobId = str
 TriggerDetail = str
 Url = str
@@ -180,6 +181,11 @@ class ConditionType(StrEnum):
 
 class EncryptionKeyType(StrEnum):
     KMS = "KMS"
+
+
+class EnvironmentVariableType(StrEnum):
+    PLAINTEXT = "PLAINTEXT"
+    SECRETS_MANAGER = "SECRETS_MANAGER"
 
 
 class ExecutionMode(StrEnum):
@@ -307,6 +313,10 @@ class StartTimeRange(StrEnum):
     All = "All"
 
 
+class TargetFilterName(StrEnum):
+    TARGET_STATUS = "TARGET_STATUS"
+
+
 class TriggerType(StrEnum):
     CreatePipeline = "CreatePipeline"
     StartPipelineExecution = "StartPipelineExecution"
@@ -323,6 +333,14 @@ class WebhookAuthenticationType(StrEnum):
     GITHUB_HMAC = "GITHUB_HMAC"
     IP = "IP"
     UNAUTHENTICATED = "UNAUTHENTICATED"
+
+
+class ActionExecutionNotFoundException(ServiceException):
+    """The action execution was not found."""
+
+    code: str = "ActionExecutionNotFoundException"
+    sender_fault: bool = False
+    status_code: int = 400
 
 
 class ActionNotFoundException(ServiceException):
@@ -757,13 +775,15 @@ class ActionContext(TypedDict, total=False):
     actionExecutionId: Optional[ActionExecutionId]
 
 
-class EnvironmentVariable(TypedDict, total=False):
-    """The environment variables for the action."""
-
-    name: EnvironmentVariableName
-    value: EnvironmentVariableValue
-
-
+EnvironmentVariable = TypedDict(
+    "EnvironmentVariable",
+    {
+        "name": EnvironmentVariableName,
+        "value": EnvironmentVariableValue,
+        "type": Optional[EnvironmentVariableType],
+    },
+    total=False,
+)
 EnvironmentVariableList = List[EnvironmentVariable]
 OutputVariableList = List[OutputVariable]
 
@@ -1576,6 +1596,40 @@ class DeleteWebhookOutput(TypedDict, total=False):
     pass
 
 
+class DeployTargetEventContext(TypedDict, total=False):
+    """The context for the event for the deploy action."""
+
+    ssmCommandId: Optional[String]
+    message: Optional[String]
+
+
+class DeployTargetEvent(TypedDict, total=False):
+    """A lifecycle event for the deploy action."""
+
+    name: Optional[String]
+    status: Optional[String]
+    startTime: Optional[Timestamp]
+    endTime: Optional[Timestamp]
+    context: Optional[DeployTargetEventContext]
+
+
+DeployTargetEventList = List[DeployTargetEvent]
+
+
+class DeployActionExecutionTarget(TypedDict, total=False):
+    """The target for the deploy action."""
+
+    targetId: Optional[String]
+    targetType: Optional[String]
+    status: Optional[String]
+    startTime: Optional[Timestamp]
+    endTime: Optional[Timestamp]
+    events: Optional[DeployTargetEventList]
+
+
+DeployActionExecutionTargetList = List[DeployActionExecutionTarget]
+
+
 class DeregisterWebhookWithThirdPartyInput(ServiceRequest):
     webhookName: Optional[WebhookName]
 
@@ -1920,6 +1974,32 @@ class ListActionTypesOutput(TypedDict, total=False):
     """Represents the output of a ``ListActionTypes`` action."""
 
     actionTypes: ActionTypeList
+    nextToken: Optional[NextToken]
+
+
+TargetFilterValueList = List[TargetFilterValue]
+
+
+class TargetFilter(TypedDict, total=False):
+    """Filters the list of targets."""
+
+    name: Optional[TargetFilterName]
+    values: Optional[TargetFilterValueList]
+
+
+TargetFilterList = List[TargetFilter]
+
+
+class ListDeployActionExecutionTargetsInput(ServiceRequest):
+    pipelineName: Optional[PipelineName]
+    actionExecutionId: ActionExecutionId
+    filters: Optional[TargetFilterList]
+    maxResults: Optional[MaxResults]
+    nextToken: Optional[NextToken]
+
+
+class ListDeployActionExecutionTargetsOutput(TypedDict, total=False):
+    targets: Optional[DeployActionExecutionTargetList]
     nextToken: Optional[NextToken]
 
 
@@ -2516,9 +2596,9 @@ class CodepipelineApi:
         version: Version,
         input_artifact_details: ArtifactDetails,
         output_artifact_details: ArtifactDetails,
-        settings: ActionTypeSettings = None,
-        configuration_properties: ActionConfigurationPropertyList = None,
-        tags: TagList = None,
+        settings: ActionTypeSettings | None = None,
+        configuration_properties: ActionConfigurationPropertyList | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateCustomActionTypeOutput:
         """Creates a new custom action that can be used in all pipelines associated
@@ -2545,7 +2625,11 @@ class CodepipelineApi:
 
     @handler("CreatePipeline")
     def create_pipeline(
-        self, context: RequestContext, pipeline: PipelineDeclaration, tags: TagList = None, **kwargs
+        self,
+        context: RequestContext,
+        pipeline: PipelineDeclaration,
+        tags: TagList | None = None,
+        **kwargs,
     ) -> CreatePipelineOutput:
         """Creates a pipeline.
 
@@ -2629,7 +2713,7 @@ class CodepipelineApi:
 
     @handler("DeregisterWebhookWithThirdParty")
     def deregister_webhook_with_third_party(
-        self, context: RequestContext, webhook_name: WebhookName = None, **kwargs
+        self, context: RequestContext, webhook_name: WebhookName | None = None, **kwargs
     ) -> DeregisterWebhookWithThirdPartyOutput:
         """Removes the connection between the webhook that was created by
         CodePipeline and the external tool with events to be detected. Currently
@@ -2743,7 +2827,11 @@ class CodepipelineApi:
 
     @handler("GetPipeline")
     def get_pipeline(
-        self, context: RequestContext, name: PipelineName, version: PipelineVersion = None, **kwargs
+        self,
+        context: RequestContext,
+        name: PipelineName,
+        version: PipelineVersion | None = None,
+        **kwargs,
     ) -> GetPipelineOutput:
         """Returns the metadata, structure, stages, and actions of a pipeline. Can
         be used to return the entire structure of a pipeline in JSON format,
@@ -2828,9 +2916,9 @@ class CodepipelineApi:
         self,
         context: RequestContext,
         pipeline_name: PipelineName,
-        filter: ActionExecutionFilter = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        filter: ActionExecutionFilter | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListActionExecutionsOutput:
         """Lists the action executions that have occurred in a pipeline.
@@ -2854,9 +2942,9 @@ class CodepipelineApi:
     def list_action_types(
         self,
         context: RequestContext,
-        action_owner_filter: ActionOwner = None,
-        next_token: NextToken = None,
-        region_filter: AWSRegionName = None,
+        action_owner_filter: ActionOwner | None = None,
+        next_token: NextToken | None = None,
+        region_filter: AWSRegionName | None = None,
         **kwargs,
     ) -> ListActionTypesOutput:
         """Gets a summary of all CodePipeline action types associated with your
@@ -2873,14 +2961,42 @@ class CodepipelineApi:
         """
         raise NotImplementedError
 
+    @handler("ListDeployActionExecutionTargets")
+    def list_deploy_action_execution_targets(
+        self,
+        context: RequestContext,
+        action_execution_id: ActionExecutionId,
+        pipeline_name: PipelineName | None = None,
+        filters: TargetFilterList | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        **kwargs,
+    ) -> ListDeployActionExecutionTargetsOutput:
+        """Lists the targets for the deploy action.
+
+        :param action_execution_id: The execution ID for the deploy action.
+        :param pipeline_name: The name of the pipeline with the deploy action.
+        :param filters: Filters the targets for a specified deploy action.
+        :param max_results: The maximum number of results to return in a single call.
+        :param next_token: An identifier that was returned from the previous list action types
+        call, which can be used to return the next set of action types in the
+        list.
+        :returns: ListDeployActionExecutionTargetsOutput
+        :raises ValidationException:
+        :raises PipelineNotFoundException:
+        :raises InvalidNextTokenException:
+        :raises ActionExecutionNotFoundException:
+        """
+        raise NotImplementedError
+
     @handler("ListPipelineExecutions")
     def list_pipeline_executions(
         self,
         context: RequestContext,
         pipeline_name: PipelineName,
-        max_results: MaxResults = None,
-        filter: PipelineExecutionFilter = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        filter: PipelineExecutionFilter | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListPipelineExecutionsOutput:
         """Gets a summary of the most recent executions for a pipeline.
@@ -2907,8 +3023,8 @@ class CodepipelineApi:
     def list_pipelines(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxPipelines = None,
+        next_token: NextToken | None = None,
+        max_results: MaxPipelines | None = None,
         **kwargs,
     ) -> ListPipelinesOutput:
         """Gets a summary of all of the pipelines associated with your account.
@@ -2926,9 +3042,9 @@ class CodepipelineApi:
         self,
         context: RequestContext,
         pipeline_name: PipelineName,
-        filter: RuleExecutionFilter = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        filter: RuleExecutionFilter | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListRuleExecutionsOutput:
         """Lists the rule executions that have occurred in a pipeline configured
@@ -2953,8 +3069,8 @@ class CodepipelineApi:
     def list_rule_types(
         self,
         context: RequestContext,
-        rule_owner_filter: RuleOwner = None,
-        region_filter: AWSRegionName = None,
+        rule_owner_filter: RuleOwner | None = None,
+        region_filter: AWSRegionName | None = None,
         **kwargs,
     ) -> ListRuleTypesOutput:
         """Lists the rules for the condition. For more information about
@@ -2978,8 +3094,8 @@ class CodepipelineApi:
         self,
         context: RequestContext,
         resource_arn: ResourceArn,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListTagsForResourceOutput:
         """Gets the set of key-value pairs (metadata) that are used to manage the
@@ -3001,8 +3117,8 @@ class CodepipelineApi:
     def list_webhooks(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListWebhooksOutput:
         """Gets a listing of all the webhooks in this Amazon Web Services Region
@@ -3057,8 +3173,8 @@ class CodepipelineApi:
         self,
         context: RequestContext,
         action_type_id: ActionTypeId,
-        max_batch_size: MaxBatchSize = None,
-        query_param: QueryParamMap = None,
+        max_batch_size: MaxBatchSize | None = None,
+        query_param: QueryParamMap | None = None,
         **kwargs,
     ) -> PollForJobsOutput:
         """Returns information about any jobs for CodePipeline to act on.
@@ -3085,7 +3201,7 @@ class CodepipelineApi:
         self,
         context: RequestContext,
         action_type_id: ActionTypeId,
-        max_batch_size: MaxBatchSize = None,
+        max_batch_size: MaxBatchSize | None = None,
         **kwargs,
     ) -> PollForThirdPartyJobsOutput:
         """Determines whether there are any third party jobs for a job worker to
@@ -3179,10 +3295,10 @@ class CodepipelineApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        current_revision: CurrentRevision = None,
-        continuation_token: ContinuationToken = None,
-        execution_details: ExecutionDetails = None,
-        output_variables: OutputVariablesMap = None,
+        current_revision: CurrentRevision | None = None,
+        continuation_token: ContinuationToken | None = None,
+        execution_details: ExecutionDetails | None = None,
+        output_variables: OutputVariablesMap | None = None,
         **kwargs,
     ) -> None:
         """Represents the success of a job as returned to the pipeline by a job
@@ -3234,9 +3350,9 @@ class CodepipelineApi:
         context: RequestContext,
         job_id: ThirdPartyJobId,
         client_token: ClientToken,
-        current_revision: CurrentRevision = None,
-        continuation_token: ContinuationToken = None,
-        execution_details: ExecutionDetails = None,
+        current_revision: CurrentRevision | None = None,
+        continuation_token: ContinuationToken | None = None,
+        execution_details: ExecutionDetails | None = None,
         **kwargs,
     ) -> None:
         """Represents the success of a third party job as returned to the pipeline
@@ -3260,7 +3376,11 @@ class CodepipelineApi:
 
     @handler("PutWebhook")
     def put_webhook(
-        self, context: RequestContext, webhook: WebhookDefinition, tags: TagList = None, **kwargs
+        self,
+        context: RequestContext,
+        webhook: WebhookDefinition,
+        tags: TagList | None = None,
+        **kwargs,
     ) -> PutWebhookOutput:
         """Defines a webhook and returns a unique webhook URL generated by
         CodePipeline. This URL can be supplied to third party source hosting
@@ -3300,7 +3420,7 @@ class CodepipelineApi:
 
     @handler("RegisterWebhookWithThirdParty")
     def register_webhook_with_third_party(
-        self, context: RequestContext, webhook_name: WebhookName = None, **kwargs
+        self, context: RequestContext, webhook_name: WebhookName | None = None, **kwargs
     ) -> RegisterWebhookWithThirdPartyOutput:
         """Configures a connection between the webhook that was created and the
         external tool with events to be detected.
@@ -3378,9 +3498,9 @@ class CodepipelineApi:
         self,
         context: RequestContext,
         name: PipelineName,
-        variables: PipelineVariableList = None,
-        client_request_token: ClientRequestToken = None,
-        source_revisions: SourceRevisionOverrideList = None,
+        variables: PipelineVariableList | None = None,
+        client_request_token: ClientRequestToken | None = None,
+        source_revisions: SourceRevisionOverrideList | None = None,
         **kwargs,
     ) -> StartPipelineExecutionOutput:
         """Starts the specified pipeline. Specifically, it begins processing the
@@ -3407,8 +3527,8 @@ class CodepipelineApi:
         context: RequestContext,
         pipeline_name: PipelineName,
         pipeline_execution_id: PipelineExecutionId,
-        abandon: Boolean = None,
-        reason: StopPipelineExecutionReason = None,
+        abandon: Boolean | None = None,
+        reason: StopPipelineExecutionReason | None = None,
         **kwargs,
     ) -> StopPipelineExecutionOutput:
         """Stops the specified pipeline execution. You choose to either stop the

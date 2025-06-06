@@ -1,14 +1,21 @@
-import asyncio
-from copy import deepcopy
+from rich.progress import (
+    Progress,
+    TextColumn,
+    BarColumn,
+    TimeElapsedColumn,
+    TaskProgressColumn,
+)
 from typing import Callable, List, Optional, Union, Any, Awaitable
+from rich.console import Console
+from rich.theme import Theme
+from copy import deepcopy
+import inspect
+import asyncio
 import time
-from tqdm.asyncio import tqdm_asyncio
-from tqdm import tqdm
-
+import ast
 
 from deepeval.tracing.tracing import (
     Observer,
-    get_current_trace,
     trace_manager,
     Trace,
     BaseSpan,
@@ -19,6 +26,7 @@ from deepeval.tracing.tracing import (
     perf_counter_to_datetime,
     to_zod_compatible_iso,
 )
+from deepeval.tracing.context import current_trace_context
 from deepeval.tracing.api import (
     TraceApi,
     BaseApiSpan,
@@ -63,6 +71,7 @@ from deepeval.evaluate.utils import (
     create_api_test_case,
     count_metrics_in_trace,
 )
+from deepeval.utils import add_pbar, update_pbar, custom_console
 
 
 def execute_test_cases(
@@ -107,11 +116,18 @@ def execute_test_cases(
 
     test_results: List[TestResult] = []
 
-    def evaluate_test_cases(pbar: Optional[tqdm] = None):
+    def evaluate_test_cases(
+        progress: Optional[Progress] = None, pbar_id: Optional[str] = None
+    ):
         llm_test_case_count = -1
         conversational_test_case_count = -1
         show_metric_indicator = show_indicator and not _use_bar_indicator
-        for test_case in test_cases:
+        for i, test_case in enumerate(test_cases):
+            pbar_test_case_id = add_pbar(
+                progress,
+                f"    🎯 Evaluating test case #{i}",
+                total=len(metrics),
+            )
             with capture_evaluation_run("test case"):
                 for metric in metrics:
                     metric.error = None  # Reset metric error
@@ -202,6 +218,7 @@ def execute_test_cases(
                             new_cached_test_case.cached_metrics_data.append(
                                 updated_cached_metric_data
                             )
+                        update_pbar(progress, pbar_test_case_id)
 
                     test_end_time = time.perf_counter()
                     if read_all_metrics_from_cache:
@@ -276,6 +293,7 @@ def execute_test_cases(
                                 raise
                         metric_data = create_metric_data(metric)
                         api_test_case.update_metric_data(metric_data)
+                        update_pbar(progress, pbar_test_case_id)
 
                     test_end_time = time.perf_counter()
                     if len(mllm_metrics) > 0:
@@ -338,9 +356,9 @@ def execute_test_cases(
                                 metric.success = False
                             else:
                                 raise
-
                         metric_data = create_metric_data(metric)
                         api_test_case.update_metric_data(metric_data)
+                        update_pbar(progress, pbar_test_case_id)
 
                     test_end_time = time.perf_counter()
                     run_duration = test_end_time - test_start_time
@@ -351,18 +369,23 @@ def execute_test_cases(
 
                 test_result = create_test_result(api_test_case)
                 test_results.append(test_result)
-
-                if pbar is not None:
-                    pbar.update(1)
+                update_pbar(progress, pbar_id)
 
     if show_indicator and _use_bar_indicator:
-        with tqdm(
-            desc=f"Evaluating {len(test_cases)} test case(s) sequentially",
-            unit="test case",
-            total=len(test_cases),
-            bar_format="{desc}: |{bar}|{percentage:3.0f}% ({n_fmt}/{total_fmt}) [Time Taken: {elapsed}, {rate_fmt}{postfix}]",
-        ) as pbar:
-            evaluate_test_cases(pbar)
+        progress = Progress(
+            TextColumn("{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            TimeElapsedColumn(),
+            console=custom_console,
+        )
+        with progress:
+            pbar_id = add_pbar(
+                progress,
+                f"Evaluating {len(test_cases)} test case(s) sequentially",
+                total=len(test_cases),
+            )
+            evaluate_test_cases(progress=progress, pbar_id=pbar_id)
     else:
         evaluate_test_cases()
 
@@ -422,17 +445,24 @@ async def a_execute_test_cases(
     tasks = []
 
     if show_indicator and _use_bar_indicator:
-        with tqdm_asyncio(
-            desc=f"Evaluating {len(test_cases)} test case(s) in parallel",
-            unit="test case",
+        progress = Progress(
+            TextColumn("{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            TimeElapsedColumn(),
+            console=custom_console,
+        )
+        pbar_id = add_pbar(
+            progress,
+            f"Evaluating {len(test_cases)} test case(s) in parallel",
             total=len(test_cases),
-            bar_format="{desc}: |{bar}|{percentage:3.0f}% ({n_fmt}/{total_fmt}) [Time Taken: {elapsed}, {rate_fmt}{postfix}]",
-        ) as pbar:
+        )
+        with progress:
             for test_case in test_cases:
                 with capture_evaluation_run("test case"):
                     if isinstance(test_case, LLMTestCase):
                         if len(llm_metrics) == 0:
-                            pbar.update(1)
+                            update_pbar(progress, pbar_id)
                             continue
 
                         llm_test_case_counter += 1
@@ -453,7 +483,8 @@ async def a_execute_test_cases(
                             show_indicator=show_indicator,
                             _use_bar_indicator=_use_bar_indicator,
                             _is_assert_test=_is_assert_test,
-                            pbar=pbar,
+                            progress=progress,
+                            pbar_id=pbar_id,
                         )
                         tasks.append(asyncio.create_task(task))
 
@@ -474,7 +505,8 @@ async def a_execute_test_cases(
                             show_indicator=show_indicator,
                             _use_bar_indicator=_use_bar_indicator,
                             _is_assert_test=_is_assert_test,
-                            pbar=pbar,
+                            progress=progress,
+                            pbar_id=pbar_id,
                         )
                         tasks.append(asyncio.create_task(task))
 
@@ -493,7 +525,8 @@ async def a_execute_test_cases(
                             show_indicator=show_indicator,
                             _use_bar_indicator=_use_bar_indicator,
                             _is_assert_test=_is_assert_test,
-                            pbar=pbar,
+                            progress=progress,
+                            pbar_id=pbar_id,
                         )
                         tasks.append(asyncio.create_task(task))
 
@@ -589,8 +622,14 @@ async def a_execute_llm_test_cases(
     show_indicator: bool,
     _use_bar_indicator: bool,
     _is_assert_test: bool,
-    pbar: Optional[tqdm_asyncio] = None,
+    progress: Optional[Progress] = None,
+    pbar_id: Optional[int] = None,
 ):
+    pbar_test_case_id = add_pbar(
+        progress,
+        f"    🎯 Evaluating test case #{count}",
+        total=len(metrics),
+    )
     show_metrics_indicator = show_indicator and not _use_bar_indicator
 
     cached_test_case = None
@@ -618,6 +657,8 @@ async def a_execute_llm_test_cases(
         skip_on_missing_params=skip_on_missing_params,
         ignore_errors=ignore_errors,
         show_indicator=show_metrics_indicator,
+        pbar_eval_id=pbar_test_case_id,
+        progress=progress,
     )
 
     for metric in metrics:
@@ -664,9 +705,7 @@ async def a_execute_llm_test_cases(
     )
 
     test_results.append(create_test_result(api_test_case))
-
-    if pbar is not None:
-        pbar.update(1)
+    update_pbar(progress, pbar_id)
 
 
 async def a_execute_mllm_test_cases(
@@ -680,9 +719,15 @@ async def a_execute_mllm_test_cases(
     show_indicator: bool,
     _use_bar_indicator: bool,
     _is_assert_test: bool,
-    pbar: Optional[tqdm_asyncio] = None,
+    progress: Optional[Progress] = None,
+    pbar_id: Optional[int] = None,
 ):
     show_metrics_indicator = show_indicator and not _use_bar_indicator
+    pbar_test_case_id = add_pbar(
+        progress,
+        f"    🎯 Evaluating test case #{count}",
+        total=len(metrics),
+    )
 
     for metric in metrics:
         metric.skipped = False
@@ -699,6 +744,8 @@ async def a_execute_mllm_test_cases(
         skip_on_missing_params=skip_on_missing_params,
         ignore_errors=ignore_errors,
         show_indicator=show_metrics_indicator,
+        pbar_eval_id=pbar_test_case_id,
+        progress=progress,
     )
     for metric in metrics:
         if metric.skipped:
@@ -714,9 +761,7 @@ async def a_execute_mllm_test_cases(
     ### Update Test Run ###
     test_run_manager.update_test_run(api_test_case, test_case)
     test_results.append(create_test_result(api_test_case))
-
-    if pbar is not None:
-        pbar.update(1)
+    update_pbar(progress, pbar_id)
 
 
 async def a_execute_conversational_test_cases(
@@ -732,9 +777,15 @@ async def a_execute_conversational_test_cases(
     show_indicator: bool,
     _use_bar_indicator: bool,
     _is_assert_test: bool,
-    pbar: Optional[tqdm_asyncio] = None,
+    progress: Optional[Progress] = None,
+    pbar_id: Optional[int] = None,
 ):
     show_metrics_indicator = show_indicator and not _use_bar_indicator
+    pbar_test_case_id = add_pbar(
+        progress,
+        f"    🎯 Evaluating test case #{count}",
+        total=len(metrics),
+    )
 
     for metric in metrics:
         metric.skipped = False
@@ -752,6 +803,8 @@ async def a_execute_conversational_test_cases(
         skip_on_missing_params=skip_on_missing_params,
         ignore_errors=ignore_errors,
         show_indicator=show_metrics_indicator,
+        pbar_eval_id=pbar_test_case_id,
+        progress=progress,
     )
     for metric in metrics:
         if metric.skipped:
@@ -769,9 +822,7 @@ async def a_execute_conversational_test_cases(
     test_run_manager.update_test_run(api_test_case, test_case)
 
     test_results.append(create_test_result(api_test_case))
-
-    if pbar is not None:
-        pbar.update(1)
+    update_pbar(progress, pbar_id)
 
 
 def execute_agentic_test_cases(
@@ -799,7 +850,8 @@ def execute_agentic_test_cases(
     test_results: List[TestResult] = []
 
     def evaluate_test_cases(
-        pbar: Optional[tqdm] = None, pbar_callback: Optional[tqdm] = None
+        progress: Optional[Progress] = None,
+        pbar_id: Optional[int] = None,
     ):
         count = 0
         show_metric_indicator = show_indicator and not _use_bar_indicator
@@ -807,21 +859,30 @@ def execute_agentic_test_cases(
         for golden in goldens:
             with capture_evaluation_run("golden"):
                 count += 1
-                if pbar_callback is not None:
-                    pbar_callback.set_description(
-                        f"     ⚡ Invoking traceable callback (golden #{count})"
-                    )
+                total_tags = count_observe_decorators_in_module(
+                    observed_callback
+                )
+                pbar_tags_id = add_pbar(
+                    progress,
+                    f"     ⚡ Invoking observed callback (#{count})",
+                    total=total_tags,
+                )
 
-                with Observer("custom", func_name="Test Wrapper"):
+                with Observer(
+                    "custom",
+                    func_name="Test Wrapper",
+                    _progress=progress,
+                    _pbar_callback_id=pbar_tags_id,
+                ):
                     if asyncio.iscoroutinefunction(observed_callback):
                         loop = get_or_create_event_loop()
                         loop.run_until_complete(observed_callback(golden.input))
                     else:
                         observed_callback(golden.input)
-                    current_trace: Trace = get_current_trace()
+                    current_trace: Trace = current_trace_context.get()
 
-                if pbar_callback is not None:
-                    pbar_callback.update(1)
+                update_pbar(progress, pbar_tags_id, advance=total_tags)
+                update_pbar(progress, pbar_id)
 
                 # Create empty trace api for llm api test case
                 trace_api = TraceApi(
@@ -869,7 +930,11 @@ def execute_agentic_test_cases(
                 )
 
                 # Run DFS to calculate metrics synchronously
-                def dfs(span: BaseSpan, pbar_eval: Optional[tqdm] = None):
+                def dfs(
+                    span: BaseSpan,
+                    progress: Optional[Progress] = None,
+                    pbar_eval_id: Optional[int] = None,
+                ):
                     # Create API Span
                     metrics: List[BaseMetric] = span.metrics
                     test_case: LLMTestCase = span.llm_test_case
@@ -888,7 +953,7 @@ def execute_agentic_test_cases(
                         trace_api.base_spans.append(api_span)
 
                     for child in span.children:
-                        dfs(child, pbar_eval)
+                        dfs(child, progress, pbar_eval_id)
 
                     if span.metrics == None or span.llm_test_case == None:
                         return
@@ -946,21 +1011,16 @@ def execute_agentic_test_cases(
                         metric_data = create_metric_data(metric)
                         api_span.metrics_data.append(metric_data)
                         api_test_case.update_status(metric_data.success)
-                        if pbar_eval is not None:
-                            pbar_eval.update(1)
+                        update_pbar(progress, pbar_eval_id)
 
-                if pbar is not None:
-                    pbar_eval = tqdm(
-                        desc=f"     🎯 Evaluating span metrics (golden #{count})",
-                        total=count_metrics_in_trace(trace=current_trace),
-                        bar_format="{desc}: |{bar}|{percentage:3.0f}% ({n_fmt}/{total_fmt}) [Time Taken: {elapsed}, {rate_fmt}{postfix}]",
-                        leave=False,
-                    )
-                else:
-                    pbar_eval = None
+                pbar_eval_id = add_pbar(
+                    progress,
+                    f"     🎯 Evaluating component(s) (#{count})",
+                    total=count_metrics_in_trace(trace=current_trace),
+                )
 
                 start_time = time.perf_counter()
-                dfs(current_trace.root_spans[0], pbar_eval)
+                dfs(current_trace.root_spans[0], progress, pbar_eval_id)
                 end_time = time.perf_counter()
                 run_duration = end_time - start_time
 
@@ -969,26 +1029,23 @@ def execute_agentic_test_cases(
                 test_run_manager.update_test_run(api_test_case, test_case)
                 test_results.append(create_test_result(api_test_case))
 
-                if pbar is not None:
-                    pbar.update(1)
-                if pbar_eval is not None:
-                    pbar_eval.close()
+                update_pbar(progress, pbar_id)
 
     if show_indicator and _use_bar_indicator:
-        pbar = tqdm(
-            desc=f"Evaluating {len(goldens)} goldens(s) sequentially",
-            unit="golden",
-            position=0,
-            total=len(goldens),
-            bar_format="{desc}: |{bar}|{percentage:3.0f}% ({n_fmt}/{total_fmt}) [Time Taken: {elapsed}, {rate_fmt}{postfix}]",
+        progress = Progress(
+            TextColumn("{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            TimeElapsedColumn(),
+            console=custom_console,
         )
-        pbar_callback = tqdm(
-            desc="     ⚡ Invoking traceable callback",
-            total=len(goldens),
-            position=1,
-            bar_format="{desc}: |{bar}|{percentage:3.0f}% ({n_fmt}/{total_fmt}) [Time Taken: {elapsed}, {rate_fmt}{postfix}]",
-        )
-        evaluate_test_cases(pbar, pbar_callback)
+        with progress:
+            pbar_id = add_pbar(
+                progress,
+                f"Evaluating {len(goldens)} goldens(s) sequentially",
+                total=len(goldens) * 2,
+            )
+            evaluate_test_cases(progress=progress, pbar_id=pbar_id)
     else:
         evaluate_test_cases()
 
@@ -1029,45 +1086,42 @@ async def a_execute_agentic_test_cases(
     count = 0
 
     if show_indicator and _use_bar_indicator:
-
-        pbar = tqdm_asyncio(
-            desc="Evaluating goldens",
-            total=len(goldens),
-            position=0,
-            bar_format="{desc}: |{bar}|{percentage:3.0f}% ({n_fmt}/{total_fmt}) [Time Taken: {elapsed}, {rate_fmt}{postfix}]",
+        progress = Progress(
+            TextColumn("{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            TimeElapsedColumn(),
+            console=custom_console,
         )
+        with progress:
+            pbar_id = add_pbar(
+                progress,
+                "Running Component-Level Evals",
+                total=len(goldens) * 2,
+            )
+            for golden in goldens:
+                with capture_evaluation_run("golden"):
+                    count += 1
+                    task = execute_with_semaphore(
+                        func=a_execute_agentic_test_case,
+                        golden=golden,
+                        observed_callback=observed_callback,
+                        test_run_manager=test_run_manager,
+                        test_results=test_results,
+                        count=count,
+                        verbose_mode=verbose_mode,
+                        ignore_errors=ignore_errors,
+                        skip_on_missing_params=skip_on_missing_params,
+                        show_indicator=show_indicator,
+                        _use_bar_indicator=_use_bar_indicator,
+                        _is_assert_test=_is_assert_test,
+                        progress=progress,
+                        pbar_id=pbar_id,
+                    )
+                    tasks.append(asyncio.create_task(task))
+                    await asyncio.sleep(throttle_value)
 
-        pbar_callback = tqdm_asyncio(
-            desc="     ⚡ Invoking traceable callback",
-            total=len(goldens),
-            position=1,
-            bar_format="{desc}: |{bar}|{percentage:3.0f}% ({n_fmt}/{total_fmt}) [Time Taken: {elapsed}, {rate_fmt}{postfix}]",
-        )
-
-        for golden in goldens:
-            with capture_evaluation_run("golden"):
-                count += 1
-                task = execute_with_semaphore(
-                    func=a_execute_agentic_test_case,
-                    golden=golden,
-                    observed_callback=observed_callback,
-                    test_run_manager=test_run_manager,
-                    test_results=test_results,
-                    count=count,
-                    verbose_mode=verbose_mode,
-                    ignore_errors=ignore_errors,
-                    skip_on_missing_params=skip_on_missing_params,
-                    show_indicator=show_indicator,
-                    _use_bar_indicator=_use_bar_indicator,
-                    _is_assert_test=_is_assert_test,
-                    pbar=pbar,
-                    pbar_callback=pbar_callback,
-                )
-                tasks.append(asyncio.create_task(task))
-                await asyncio.sleep(throttle_value)
-        await asyncio.gather(*tasks)
-        pbar.close()
-        pbar_callback.close()
+            await asyncio.gather(*tasks)
     else:
         for golden in goldens:
             with capture_evaluation_run("golden"):
@@ -1085,7 +1139,6 @@ async def a_execute_agentic_test_cases(
                     show_indicator=show_indicator,
                     _use_bar_indicator=_use_bar_indicator,
                     _is_assert_test=_is_assert_test,
-                    pbar=None,
                 )
                 tasks.append(asyncio.create_task(task))
                 await asyncio.sleep(throttle_value)
@@ -1108,19 +1161,32 @@ async def a_execute_agentic_test_case(
     show_indicator: bool,
     _use_bar_indicator: bool,
     _is_assert_test: bool,
-    pbar: Optional[tqdm_asyncio] = None,
-    pbar_callback: Optional[tqdm_asyncio] = None,
+    progress: Optional[Progress] = None,
+    pbar_id: Optional[int] = None,
 ):
+    total_tags = count_observe_decorators_in_module(observed_callback)
+    pbar_tags_id = add_pbar(
+        progress,
+        f"     ⚡ Invoking observed callback (#{count})",
+        total=total_tags,
+    )
+
     # Call callback and extract trace
-    with Observer("custom", func_name="Test Wrapper"):
+    with Observer(
+        "custom",
+        func_name="Test Wrapper",
+        _progress=progress,
+        _pbar_callback_id=pbar_tags_id,
+    ):
         if asyncio.iscoroutinefunction(observed_callback):
             await observed_callback(golden.input)
         else:
             observed_callback(golden.input)
-        current_trace: Trace = get_current_trace()
+        current_trace: Trace = current_trace_context.get()
 
-    if pbar_callback is not None:
-        pbar_callback.update(1)
+    update_pbar(progress, pbar_tags_id, advance=total_tags)
+    update_pbar(progress, pbar_id)
+
     # run evals through DFS
     trace_api = TraceApi(
         uuid=current_trace.uuid,
@@ -1145,15 +1211,11 @@ async def a_execute_agentic_test_case(
         ),
     )
 
-    if pbar is not None:
-        pbar_eval = tqdm_asyncio(
-            desc=f"     🎯 Evaluating span metrics (golden #{count})",
-            total=count_metrics_in_trace(trace=current_trace),
-            bar_format="{desc}: |{bar}|{percentage:3.0f}% ({n_fmt}/{total_fmt}) [Time Taken: {elapsed}, {rate_fmt}{postfix}]",
-            leave=False,
-        )
-    else:
-        pbar_eval = None
+    pbar_eval_id = add_pbar(
+        progress,
+        f"     🎯 Evaluating component(s) (#{count})",
+        total=count_metrics_in_trace(trace=current_trace),
+    )
 
     test_case = LLMTestCase(
         input=golden.input,
@@ -1184,7 +1246,8 @@ async def a_execute_agentic_test_case(
             skip_on_missing_params=skip_on_missing_params,
             show_indicator=show_indicator,
             verbose_mode=verbose_mode,
-            pbar_eval=pbar_eval,
+            progress=progress,
+            pbar_eval_id=pbar_eval_id,
             _use_bar_indicator=_use_bar_indicator,
         )
         child_tasks = [dfs(child) for child in span.children]
@@ -1200,10 +1263,7 @@ async def a_execute_agentic_test_case(
     test_run_manager.update_test_run(api_test_case, test_case)
     test_results.append(create_test_result(api_test_case))
 
-    if pbar_eval is not None:
-        pbar_eval.close()
-    if pbar is not None:
-        pbar.update(1)
+    update_pbar(progress, pbar_id)
 
 
 async def a_execute_span_test_case(
@@ -1214,7 +1274,8 @@ async def a_execute_span_test_case(
     skip_on_missing_params: bool,
     show_indicator: bool,
     verbose_mode: Optional[bool],
-    pbar_eval: Optional[tqdm_asyncio],
+    progress: Optional[Progress],
+    pbar_eval_id: Optional[int],
     _use_bar_indicator: bool,
 ):
     api_span: BaseApiSpan = trace_manager._convert_span_to_api_span(span)
@@ -1253,7 +1314,8 @@ async def a_execute_span_test_case(
         skip_on_missing_params=skip_on_missing_params,
         ignore_errors=ignore_errors,
         show_indicator=show_metrics_indicator,
-        pbar_eval=pbar_eval,
+        progress=progress,
+        pbar_eval_id=pbar_eval_id,
         _in_component=True,
     )
 
@@ -1264,3 +1326,21 @@ async def a_execute_span_test_case(
         metric_data = create_metric_data(metric)
         api_span.metrics_data.append(metric_data)
         api_test_case.update_status(metric_data.success)
+
+
+def count_observe_decorators_in_module(func: Callable) -> int:
+    mod = inspect.getmodule(func)
+    if mod is None or not hasattr(mod, "__file__"):
+        raise RuntimeError("Cannot locate @observe function.")
+    module_source = inspect.getsource(mod)
+    tree = ast.parse(module_source)
+    count = 0
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            for deco in node.decorator_list:
+                if (
+                    isinstance(deco, ast.Call)
+                    and getattr(deco.func, "id", "") == "observe"
+                ):
+                    count += 1
+    return count

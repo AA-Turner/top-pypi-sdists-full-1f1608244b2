@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright © 2014 eNovance
 #
@@ -15,7 +14,7 @@
 # under the License.
 import logging
 
-from oslo_utils import encodeutils
+from oslo_utils import strutils
 import pymysql
 
 import tooz
@@ -33,7 +32,7 @@ class MySQLLock(locking.Lock):
     MYSQL_DEFAULT_PORT = 3306
 
     def __init__(self, name, parsed_url, options):
-        super(MySQLLock, self).__init__(name)
+        super().__init__(name)
         self.acquired = False
         self._conn = MySQLDriver.get_connection(parsed_url, options, True)
 
@@ -73,10 +72,7 @@ class MySQLLock(locking.Lock):
                     self.acquired = True
                     return True
             except pymysql.MySQLError as e:
-                utils.raise_with_cause(
-                    tooz.ToozError,
-                    encodeutils.exception_to_unicode(e),
-                    cause=e)
+                utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
 
             if blocking:
                 raise _retry.TryAgain
@@ -102,9 +98,7 @@ class MySQLLock(locking.Lock):
             self._conn.close()
             return True
         except pymysql.MySQLError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
 
     def __del__(self):
         if self.acquired:
@@ -155,7 +149,7 @@ class MySQLDriver(coordination.CoordinationDriver):
 
     def __init__(self, member_id, parsed_url, options):
         """Initialize the MySQL driver."""
-        super(MySQLDriver, self).__init__(member_id, parsed_url, options)
+        super().__init__(member_id, parsed_url, options)
         self._parsed_url = parsed_url
         self._options = utils.collapse(options)
 
@@ -215,12 +209,10 @@ class MySQLDriver(coordination.CoordinationDriver):
             if value:
                 ssl_args[o] = value
         check_hostname = options.get("ssl_check_hostname")
+        check_hostname = strutils.bool_from_string(check_hostname,
+                                                   default=None)
         if check_hostname is not None:
-            check_hostname = check_hostname.lower()
-            if check_hostname in ("true", "1", "yes"):
-                ssl_args["check_hostname"] = True
-            elif check_hostname in ("false", "0", "no"):
-                ssl_args["check_hostname"] = False
+            ssl_args['check_hostname'] = check_hostname
 
         try:
             if unix_socket:
@@ -241,5 +233,4 @@ class MySQLDriver(coordination.CoordinationDriver):
                                        defer_connect=defer_connect)
         except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
             utils.raise_with_cause(coordination.ToozConnectionError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)

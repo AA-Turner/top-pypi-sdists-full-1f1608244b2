@@ -49,8 +49,9 @@ def jordan_wigner_ladder_sparse(n_qubits, tensor_factor, ladder_type):
     r"""Make a matrix representation of a fermion ladder operator.
 
     Operators are mapped as follows:
-    a_j^\dagger -> Z_0 .. Z_{j-1} (X_j - iY_j) / 2
-    a_j -> Z_0 .. Z_{j-1} (X_j + iY_j) / 2
+
+        a_j^\dagger -> Z_0 .. Z_{j-1} (X_j - iY_j) / 2
+        a_j -> Z_0 .. Z_{j-1} (X_j + iY_j) / 2
 
     Args:
         index: This is a nonzero integer. The integer indicates the tensor
@@ -75,8 +76,9 @@ def jordan_wigner_sparse(fermion_operator, n_qubits=None):
     r"""Initialize a Scipy sparse matrix from a FermionOperator.
 
     Operators are mapped as follows:
-    a_j^\dagger -> Z_0 .. Z_{j-1} (X_j - iY_j) / 2
-    a_j -> Z_0 .. Z_{j-1} (X_j + iY_j) / 2
+
+        a_j^\dagger -> Z_0 .. Z_{j-1} (X_j - iY_j) / 2
+        a_j -> Z_0 .. Z_{j-1} (X_j + iY_j) / 2
 
     Args:
         fermion_operator(FermionOperator): instance of the FermionOperator
@@ -1160,6 +1162,8 @@ def single_quad_op_sparse(n_modes, mode, quadrature, hbar, trunc):
         op = numpy.sqrt(hbar / 2) * (b + b.conj().T)
     elif quadrature == 'p':
         op = -1j * numpy.sqrt(hbar / 2) * (b - b.conj().T)
+    else:
+        raise ValueError(f'Invalid value {quadrature} for quadrature parameter.')
 
     Id = [scipy.sparse.identity(trunc, dtype=complex, format='csc')]
     operator_list = Id * mode + [op] + Id * (n_modes - mode - 1)

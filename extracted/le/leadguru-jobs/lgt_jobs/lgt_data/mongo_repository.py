@@ -1,5 +1,4 @@
 import os
-import re
 from typing import List, Optional
 import pymongo
 from dateutil import tz
@@ -70,6 +69,23 @@ class UserMongoRepository(BaseMongoRepository):
     collection_name = 'users'
     model = UserModel
 
+    def get_inactive_users(self):
+        pipeline = [
+            {'$lookup': {'from': 'user_track_action', 'as': 'last_action', 'let': {'id': '$_id' }, 'pipeline':
+                [
+                    {'$match': {'$expr': {'$eq': ['$user_id', '$$id']}}},
+                    {'$sort': {'created_at': -1}},
+                    {'$project': {'created_at': 1}},
+                    {'$limit': 1}
+                ]}},
+            {'$addFields': {'last_action_date': {'$first': '$last_action.created_at'}}},
+            {'$lookup': {'as': 'subscription', 'from': 'subscriptions', 'foreignField': '_id', 'localField': 'subscription_id'}},
+            {'$addFields': {'period': {'$first': '$subscription.disable_bots_period'}}},
+            {'$match': {'$expr': {'$lte': ['$last_action_date', {'$dateSubtract': {'startDate': '$$NOW', 'unit': 'day', 'amount': '$period'}}]}}},
+            {'$project': {'_id': 1}}]
+
+        return {doc['_id']: None for doc in self.collection().aggregate(pipeline)}
+
     def get(self, _id):
         return UserModel.from_dic(self.collection().find_one({'_id': to_object_id(_id)}))
 
@@ -94,6 +110,7 @@ class UserMongoRepository(BaseMongoRepository):
         has_new_replies = kwargs.get('has_new_replies')
         has_new_reactions = kwargs.get('has_new_reactions')
         min_days = kwargs.get('min_days_soon_subscription_expiration', 3)
+        emails = kwargs.get('emails')
 
         if subscription_expired:
             pipeline['subscription_expired_at'] = {'$lte': datetime.now(UTC)}
@@ -128,6 +145,9 @@ class UserMongoRepository(BaseMongoRepository):
 
         if users_ids is not None:
             pipeline['_id'] = {'$in': [to_object_id(_id) for _id in users_ids]}
+
+        if emails is not None:
+            pipeline['email'] = {'$in': emails}
 
         if name is not None:
             pipeline['user_name'] = {"$regex": name, "$options": 'i'}
@@ -682,129 +702,11 @@ class LeadMongoRepository(BaseMongoRepository):
         update_dict = {k: v for k, v in kwargs.items() if v is not None}
         self.collection().update_one({'id': _id}, {'$set': update_dict}, upsert=False)
 
-    def get_list(self, skip, limit, **kwargs):
-        pipeline = self.__create_leads_filter(**kwargs)
-
-        sort_field = kwargs.get('sort_field', 'created_at')
-        sort_direction = kwargs.get('sort_direction', 'ASCENDING')
-        sort_direction = pymongo.ASCENDING if sort_direction == 'ASCENDING' else pymongo.DESCENDING
-
-        leads = self.collection().find(pipeline).sort([(sort_field, sort_direction)]).skip(skip).limit(limit)
-        return [LeadModel.from_dic(lead) for lead in leads]
-
-    def __create_leads_filter(self, **kwargs):
-        pipeline: dict = {"hidden": False}
-
-        from_date: datetime = kwargs.get('from_date')
-        to_date: datetime = kwargs.get('to_date')
-
-        country = kwargs.get('country')
-        user_id = kwargs.get('user_id')
-        tags = kwargs.get('tags')
-        text = kwargs.get('text')
-        stop_words = kwargs.get('stop_words')
-        exclude_leads = kwargs.get('exclude_leads')
-        exclude_senders = kwargs.get('exclude_senders')
-        sender_ids = kwargs.get('sender_ids')
-        configs = kwargs.get('config')
-        bots_names = kwargs.get('bots_names')
-        locations = kwargs.get('locations')
-        publication_text = kwargs.get('publication_text')
-
-        pipeline['message.profile.display_name'] = {
-            "$ne": "Slackbot"
-        }
-
-        if from_date or to_date:
-            pipeline['created_at'] = {}
-
-        if from_date:
-            start = from_date.astimezone(tz.tzutc())
-            pipeline['created_at']['$gte'] = start
-
-        if to_date:
-            end = to_date.astimezone(tz.tzutc())
-            pipeline['created_at']['$lte'] = end
-
-        if locations and len(locations) > 0:
-            pipeline['message.locations'] = {"$in": locations}
-
-        if country:
-            pipeline["message.slack_options.country"] = re.compile(country, re.IGNORECASE)
-
-        if user_id:
-            pipeline["$or"] = [
-                {"message.dedicated_slack_options": {"$exists": False}},
-                {"message.dedicated_slack_options": None},
-                {"message.dedicated_slack_options.user_id": f"{user_id}"},
-            ]
-        else:
-            pipeline["user_id"] = {'$exists': False}
-
-        if stop_words:
-            pipeline['full_message_text'] = {'$regex': f'^(?!.*({stop_words})).*$', '$options': 'i'}
-        elif text:
-            pipeline['$text'] = {'$search': text}
-
-        if publication_text:
-            pipeline['message.message'] = {'$regex': publication_text, '$options': 'i'}
-
-        if tags:
-            pipeline["tags"] = {"$elemMatch": {"$in": tags}}
-
-        if exclude_leads:
-            pipeline['id'] = {'$nin': exclude_leads}
-
-        if exclude_senders:
-            pipeline['message.sender_id'] = {'$nin': exclude_senders}
-
-        if sender_ids:
-            pipeline['message.sender_id'] = {'$in': sender_ids}
-
-        if configs:
-            pipeline["message.configs.id"] = {"$not": {"$elemMatch": {"$nin": configs}}}
-
-        if bots_names is not None:
-            pipeline['message.name'] = {'$in': bots_names}
-
-        pipeline['message.profile.real_name'] = {'$ne': 'Slackbot'}
-
-        return pipeline
-
     def get_per_day(self, date: datetime):
         start_day = datetime(date.year, date.month, date.day, 0, 0, 0, tzinfo=tz.tzutc())
         end_day = datetime(date.year, date.month, date.day, 23, 59, 59, tzinfo=tz.tzutc())
         docs = self.collection().find({'created_at': {'$gte': start_day, '$lte': end_day}}).sort('created_at', 1)
         return [LeadModel.from_dic(x) for x in docs]
-
-
-class SpamLeadsMongoRepository(LeadMongoRepository):
-    pass
-
-    def __init__(self):
-        self.collection_name = 'spam_leads'
-
-    def get_list(self, skip, limit, sort_field: str = 'created_at', sort_direction: str = 'ASCENDING', **kwargs):
-        pipeline = self.__create_leads_filter(**kwargs)
-        sort_direction = pymongo.ASCENDING if sort_direction == 'ASCENDING' else pymongo.DESCENDING
-        docs = self.collection().find(pipeline).sort([(sort_field, sort_direction)]).skip(skip).limit(limit)
-        leads = [ExtendedLeadModel.from_dic(doc) for doc in docs]
-        senders = [lead.message.sender_id for lead in leads]
-        contacts = SlackContactUserRepository().find(users=senders)
-        for lead in leads:
-            lead.contact = next(filter(lambda x: x.sender_id == lead.message.sender_id, contacts), None)
-        return leads
-
-    def __create_leads_filter(self, **kwargs):
-        pipeline = {"user_id": {'$exists': False}}
-        text = kwargs.get('text', None)
-        stop_words = kwargs.get('stop_words', None)
-        if stop_words:
-            pipeline['full_message_text'] = {'$regex': f'^(?!.*({stop_words})).*$', '$options': 'i'}
-        elif text:
-            pipeline['$text'] = {'$search': text}
-
-        return pipeline
 
 
 class SpamUserLeadsMongoRepository(UserLeadMongoRepository):
@@ -1023,6 +925,7 @@ class DedicatedBotRepository(BaseMongoRepository):
         invalid_creds = kwargs.get('invalid_creds')
         sort_by = kwargs.get('sort_by')
         deactivated_from = kwargs.get('deactivated_from')
+        user_ids = kwargs.get('user_ids')
 
         if deactivated_from:
             pipeline['deactivated_at'] = {'$gte': deactivated_from}
@@ -1065,6 +968,9 @@ class DedicatedBotRepository(BaseMongoRepository):
 
         if sort_by:
             pipeline[sort_by] = {'$exists': True}
+
+        if user_ids is not None:
+            pipeline["user_id"] = {'$in': [to_object_id(_id) for _id in user_ids]}
 
         return pipeline
 

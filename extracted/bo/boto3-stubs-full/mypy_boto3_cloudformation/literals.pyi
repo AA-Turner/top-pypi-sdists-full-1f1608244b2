@@ -388,7 +388,10 @@ TypeTestsStatusType = Literal["FAILED", "IN_PROGRESS", "NOT_TESTED", "PASSED"]
 VersionBumpType = Literal["MAJOR", "MINOR"]
 VisibilityType = Literal["PRIVATE", "PUBLIC"]
 WarningTypeType = Literal[
-    "MUTUALLY_EXCLUSIVE_PROPERTIES", "MUTUALLY_EXCLUSIVE_TYPES", "UNSUPPORTED_PROPERTIES"
+    "EXCLUDED_PROPERTIES",
+    "MUTUALLY_EXCLUSIVE_PROPERTIES",
+    "MUTUALLY_EXCLUSIVE_TYPES",
+    "UNSUPPORTED_PROPERTIES",
 ]
 CloudFormationServiceName = Literal["cloudformation"]
 ServiceName = Literal[

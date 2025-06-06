@@ -2099,18 +2099,18 @@ class Apigatewayv2Api:
         context: RequestContext,
         protocol_type: ProtocolType,
         name: StringWithLengthBetween1And128,
-        api_key_selection_expression: SelectionExpression = None,
-        cors_configuration: Cors = None,
-        credentials_arn: Arn = None,
-        description: StringWithLengthBetween0And1024 = None,
-        disable_schema_validation: _boolean = None,
-        disable_execute_api_endpoint: _boolean = None,
-        ip_address_type: IpAddressType = None,
-        route_key: SelectionKey = None,
-        route_selection_expression: SelectionExpression = None,
-        tags: Tags = None,
-        target: UriWithLengthBetween1And2048 = None,
-        version: StringWithLengthBetween1And64 = None,
+        api_key_selection_expression: SelectionExpression | None = None,
+        cors_configuration: Cors | None = None,
+        credentials_arn: Arn | None = None,
+        description: StringWithLengthBetween0And1024 | None = None,
+        disable_schema_validation: _boolean | None = None,
+        disable_execute_api_endpoint: _boolean | None = None,
+        ip_address_type: IpAddressType | None = None,
+        route_key: SelectionKey | None = None,
+        route_selection_expression: SelectionExpression | None = None,
+        tags: Tags | None = None,
+        target: UriWithLengthBetween1And2048 | None = None,
+        version: StringWithLengthBetween1And64 | None = None,
         **kwargs,
     ) -> CreateApiResponse:
         """Creates an Api resource.
@@ -2145,7 +2145,7 @@ class Apigatewayv2Api:
         domain_name: _string,
         stage: StringWithLengthBetween1And128,
         api_id: Id,
-        api_mapping_key: SelectionKey = None,
+        api_mapping_key: SelectionKey | None = None,
         **kwargs,
     ) -> CreateApiMappingResponse:
         """Creates an API mapping.
@@ -2170,13 +2170,13 @@ class Apigatewayv2Api:
         authorizer_type: AuthorizerType,
         identity_source: IdentitySourceList,
         name: StringWithLengthBetween1And128,
-        authorizer_credentials_arn: Arn = None,
-        authorizer_payload_format_version: StringWithLengthBetween1And64 = None,
-        authorizer_result_ttl_in_seconds: IntegerWithLengthBetween0And3600 = None,
-        authorizer_uri: UriWithLengthBetween1And2048 = None,
-        enable_simple_responses: _boolean = None,
-        identity_validation_expression: StringWithLengthBetween0And1024 = None,
-        jwt_configuration: JWTConfiguration = None,
+        authorizer_credentials_arn: Arn | None = None,
+        authorizer_payload_format_version: StringWithLengthBetween1And64 | None = None,
+        authorizer_result_ttl_in_seconds: IntegerWithLengthBetween0And3600 | None = None,
+        authorizer_uri: UriWithLengthBetween1And2048 | None = None,
+        enable_simple_responses: _boolean | None = None,
+        identity_validation_expression: StringWithLengthBetween0And1024 | None = None,
+        jwt_configuration: JWTConfiguration | None = None,
         **kwargs,
     ) -> CreateAuthorizerResponse:
         """Creates an Authorizer for an API.
@@ -2208,8 +2208,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         api_id: _string,
-        description: StringWithLengthBetween0And1024 = None,
-        stage_name: StringWithLengthBetween1And128 = None,
+        description: StringWithLengthBetween0And1024 | None = None,
+        stage_name: StringWithLengthBetween1And128 | None = None,
         **kwargs,
     ) -> CreateDeploymentResponse:
         """Creates a Deployment for an API.
@@ -2230,9 +2230,9 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         domain_name: StringWithLengthBetween1And512,
-        domain_name_configurations: DomainNameConfigurations = None,
-        mutual_tls_authentication: MutualTlsAuthenticationInput = None,
-        tags: Tags = None,
+        domain_name_configurations: DomainNameConfigurations | None = None,
+        mutual_tls_authentication: MutualTlsAuthenticationInput | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateDomainNameResponse:
         """Creates a domain name.
@@ -2256,22 +2256,22 @@ class Apigatewayv2Api:
         context: RequestContext,
         api_id: _string,
         integration_type: IntegrationType,
-        connection_id: StringWithLengthBetween1And1024 = None,
-        connection_type: ConnectionType = None,
-        content_handling_strategy: ContentHandlingStrategy = None,
-        credentials_arn: Arn = None,
-        description: StringWithLengthBetween0And1024 = None,
-        integration_method: StringWithLengthBetween1And64 = None,
-        integration_subtype: StringWithLengthBetween1And128 = None,
-        integration_uri: UriWithLengthBetween1And2048 = None,
-        passthrough_behavior: PassthroughBehavior = None,
-        payload_format_version: StringWithLengthBetween1And64 = None,
-        request_parameters: IntegrationParameters = None,
-        request_templates: TemplateMap = None,
-        response_parameters: ResponseParameters = None,
-        template_selection_expression: SelectionExpression = None,
-        timeout_in_millis: IntegerWithLengthBetween50And30000 = None,
-        tls_config: TlsConfigInput = None,
+        connection_id: StringWithLengthBetween1And1024 | None = None,
+        connection_type: ConnectionType | None = None,
+        content_handling_strategy: ContentHandlingStrategy | None = None,
+        credentials_arn: Arn | None = None,
+        description: StringWithLengthBetween0And1024 | None = None,
+        integration_method: StringWithLengthBetween1And64 | None = None,
+        integration_subtype: StringWithLengthBetween1And128 | None = None,
+        integration_uri: UriWithLengthBetween1And2048 | None = None,
+        passthrough_behavior: PassthroughBehavior | None = None,
+        payload_format_version: StringWithLengthBetween1And64 | None = None,
+        request_parameters: IntegrationParameters | None = None,
+        request_templates: TemplateMap | None = None,
+        response_parameters: ResponseParameters | None = None,
+        template_selection_expression: SelectionExpression | None = None,
+        timeout_in_millis: IntegerWithLengthBetween50And30000 | None = None,
+        tls_config: TlsConfigInput | None = None,
         **kwargs,
     ) -> CreateIntegrationResult:
         """Creates an Integration.
@@ -2315,10 +2315,10 @@ class Apigatewayv2Api:
         api_id: _string,
         integration_id: _string,
         integration_response_key: SelectionKey,
-        content_handling_strategy: ContentHandlingStrategy = None,
-        response_parameters: IntegrationParameters = None,
-        response_templates: TemplateMap = None,
-        template_selection_expression: SelectionExpression = None,
+        content_handling_strategy: ContentHandlingStrategy | None = None,
+        response_parameters: IntegrationParameters | None = None,
+        response_templates: TemplateMap | None = None,
+        template_selection_expression: SelectionExpression | None = None,
         **kwargs,
     ) -> CreateIntegrationResponseResponse:
         """Creates an IntegrationResponses.
@@ -2347,8 +2347,8 @@ class Apigatewayv2Api:
         api_id: _string,
         schema: StringWithLengthBetween0And32K,
         name: StringWithLengthBetween1And128,
-        content_type: StringWithLengthBetween1And256 = None,
-        description: StringWithLengthBetween0And1024 = None,
+        content_type: StringWithLengthBetween1And256 | None = None,
+        description: StringWithLengthBetween0And1024 | None = None,
         **kwargs,
     ) -> CreateModelResponse:
         """Creates a Model for an API.
@@ -2372,16 +2372,16 @@ class Apigatewayv2Api:
         context: RequestContext,
         api_id: _string,
         route_key: SelectionKey,
-        api_key_required: _boolean = None,
-        authorization_scopes: AuthorizationScopes = None,
-        authorization_type: AuthorizationType = None,
-        authorizer_id: Id = None,
-        model_selection_expression: SelectionExpression = None,
-        operation_name: StringWithLengthBetween1And64 = None,
-        request_models: RouteModels = None,
-        request_parameters: RouteParameters = None,
-        route_response_selection_expression: SelectionExpression = None,
-        target: StringWithLengthBetween1And128 = None,
+        api_key_required: _boolean | None = None,
+        authorization_scopes: AuthorizationScopes | None = None,
+        authorization_type: AuthorizationType | None = None,
+        authorizer_id: Id | None = None,
+        model_selection_expression: SelectionExpression | None = None,
+        operation_name: StringWithLengthBetween1And64 | None = None,
+        request_models: RouteModels | None = None,
+        request_parameters: RouteParameters | None = None,
+        route_response_selection_expression: SelectionExpression | None = None,
+        target: StringWithLengthBetween1And128 | None = None,
         **kwargs,
     ) -> CreateRouteResult:
         """Creates a Route for an API.
@@ -2414,9 +2414,9 @@ class Apigatewayv2Api:
         api_id: _string,
         route_id: _string,
         route_response_key: SelectionKey,
-        model_selection_expression: SelectionExpression = None,
-        response_models: RouteModels = None,
-        response_parameters: RouteParameters = None,
+        model_selection_expression: SelectionExpression | None = None,
+        response_models: RouteModels | None = None,
+        response_parameters: RouteParameters | None = None,
         **kwargs,
     ) -> CreateRouteResponseResponse:
         """Creates a RouteResponse for a Route.
@@ -2441,15 +2441,15 @@ class Apigatewayv2Api:
         context: RequestContext,
         api_id: _string,
         stage_name: StringWithLengthBetween1And128,
-        access_log_settings: AccessLogSettings = None,
-        auto_deploy: _boolean = None,
-        client_certificate_id: Id = None,
-        default_route_settings: RouteSettings = None,
-        deployment_id: Id = None,
-        description: StringWithLengthBetween0And1024 = None,
-        route_settings: RouteSettingsMap = None,
-        stage_variables: StageVariablesMap = None,
-        tags: Tags = None,
+        access_log_settings: AccessLogSettings | None = None,
+        auto_deploy: _boolean | None = None,
+        client_certificate_id: Id | None = None,
+        default_route_settings: RouteSettings | None = None,
+        deployment_id: Id | None = None,
+        description: StringWithLengthBetween0And1024 | None = None,
+        route_settings: RouteSettingsMap | None = None,
+        stage_variables: StageVariablesMap | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateStageResponse:
         """Creates a Stage for an API.
@@ -2480,8 +2480,8 @@ class Apigatewayv2Api:
         context: RequestContext,
         subnet_ids: SubnetIdList,
         name: StringWithLengthBetween1And128,
-        security_group_ids: SecurityGroupIdList = None,
-        tags: Tags = None,
+        security_group_ids: SecurityGroupIdList | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateVpcLinkResponse:
         """Creates a VPC link.
@@ -2728,9 +2728,9 @@ class Apigatewayv2Api:
         specification: _string,
         output_type: _string,
         api_id: _string,
-        export_version: _string = None,
-        include_extensions: _boolean = None,
-        stage_name: _string = None,
+        export_version: _string | None = None,
+        include_extensions: _boolean | None = None,
+        stage_name: _string | None = None,
         **kwargs,
     ) -> ExportApiResponse:
         """
@@ -2794,8 +2794,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         domain_name: _string,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetApiMappingsResponse:
         """Gets API mappings.
@@ -2814,8 +2814,8 @@ class Apigatewayv2Api:
     def get_apis(
         self,
         context: RequestContext,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetApisResponse:
         """Gets a collection of Api resources.
@@ -2848,8 +2848,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         api_id: _string,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetAuthorizersResponse:
         """Gets the Authorizers for an API.
@@ -2883,8 +2883,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         api_id: _string,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetDeploymentsResponse:
         """Gets the Deployments for an API.
@@ -2916,8 +2916,8 @@ class Apigatewayv2Api:
     def get_domain_names(
         self,
         context: RequestContext,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetDomainNamesResponse:
         """Gets the domain names for an AWS account.
@@ -2971,8 +2971,8 @@ class Apigatewayv2Api:
         context: RequestContext,
         integration_id: _string,
         api_id: _string,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetIntegrationResponsesResponse:
         """Gets the IntegrationResponses for an Integration.
@@ -2993,8 +2993,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         api_id: _string,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetIntegrationsResponse:
         """Gets the Integrations for an API.
@@ -3042,8 +3042,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         api_id: _string,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetModelsResponse:
         """Gets the Models for an API.
@@ -3098,8 +3098,8 @@ class Apigatewayv2Api:
         context: RequestContext,
         route_id: _string,
         api_id: _string,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetRouteResponsesResponse:
         """Gets the RouteResponses for a Route.
@@ -3120,8 +3120,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         api_id: _string,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetRoutesResponse:
         """Gets the Routes for an API.
@@ -3155,8 +3155,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         api_id: _string,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetStagesResponse:
         """Gets the Stages for an API.
@@ -3201,8 +3201,8 @@ class Apigatewayv2Api:
     def get_vpc_links(
         self,
         context: RequestContext,
-        max_results: _string = None,
-        next_token: _string = None,
+        max_results: _string | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> GetVpcLinksResponse:
         """Gets a collection of VPC links.
@@ -3220,8 +3220,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         body: _string,
-        basepath: _string = None,
-        fail_on_warnings: _boolean = None,
+        basepath: _string | None = None,
+        fail_on_warnings: _boolean | None = None,
         **kwargs,
     ) -> ImportApiResponse:
         """Imports an API.
@@ -3244,8 +3244,8 @@ class Apigatewayv2Api:
         context: RequestContext,
         api_id: _string,
         body: _string,
-        basepath: _string = None,
-        fail_on_warnings: _boolean = None,
+        basepath: _string | None = None,
+        fail_on_warnings: _boolean | None = None,
         **kwargs,
     ) -> ReimportApiResponse:
         """Puts an Api resource.
@@ -3265,7 +3265,7 @@ class Apigatewayv2Api:
 
     @handler("TagResource")
     def tag_resource(
-        self, context: RequestContext, resource_arn: _string, tags: Tags = None, **kwargs
+        self, context: RequestContext, resource_arn: _string, tags: Tags | None = None, **kwargs
     ) -> TagResourceResponse:
         """Creates a new Tag resource to represent a tag.
 
@@ -3299,18 +3299,18 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         api_id: _string,
-        api_key_selection_expression: SelectionExpression = None,
-        cors_configuration: Cors = None,
-        credentials_arn: Arn = None,
-        description: StringWithLengthBetween0And1024 = None,
-        disable_schema_validation: _boolean = None,
-        disable_execute_api_endpoint: _boolean = None,
-        ip_address_type: IpAddressType = None,
-        name: StringWithLengthBetween1And128 = None,
-        route_key: SelectionKey = None,
-        route_selection_expression: SelectionExpression = None,
-        target: UriWithLengthBetween1And2048 = None,
-        version: StringWithLengthBetween1And64 = None,
+        api_key_selection_expression: SelectionExpression | None = None,
+        cors_configuration: Cors | None = None,
+        credentials_arn: Arn | None = None,
+        description: StringWithLengthBetween0And1024 | None = None,
+        disable_schema_validation: _boolean | None = None,
+        disable_execute_api_endpoint: _boolean | None = None,
+        ip_address_type: IpAddressType | None = None,
+        name: StringWithLengthBetween1And128 | None = None,
+        route_key: SelectionKey | None = None,
+        route_selection_expression: SelectionExpression | None = None,
+        target: UriWithLengthBetween1And2048 | None = None,
+        version: StringWithLengthBetween1And64 | None = None,
         **kwargs,
     ) -> UpdateApiResponse:
         """Updates an Api resource.
@@ -3344,8 +3344,8 @@ class Apigatewayv2Api:
         api_mapping_id: _string,
         api_id: Id,
         domain_name: _string,
-        api_mapping_key: SelectionKey = None,
-        stage: StringWithLengthBetween1And128 = None,
+        api_mapping_key: SelectionKey | None = None,
+        stage: StringWithLengthBetween1And128 | None = None,
         **kwargs,
     ) -> UpdateApiMappingResponse:
         """The API mapping.
@@ -3369,16 +3369,16 @@ class Apigatewayv2Api:
         context: RequestContext,
         authorizer_id: _string,
         api_id: _string,
-        authorizer_credentials_arn: Arn = None,
-        authorizer_payload_format_version: StringWithLengthBetween1And64 = None,
-        authorizer_result_ttl_in_seconds: IntegerWithLengthBetween0And3600 = None,
-        authorizer_type: AuthorizerType = None,
-        authorizer_uri: UriWithLengthBetween1And2048 = None,
-        enable_simple_responses: _boolean = None,
-        identity_source: IdentitySourceList = None,
-        identity_validation_expression: StringWithLengthBetween0And1024 = None,
-        jwt_configuration: JWTConfiguration = None,
-        name: StringWithLengthBetween1And128 = None,
+        authorizer_credentials_arn: Arn | None = None,
+        authorizer_payload_format_version: StringWithLengthBetween1And64 | None = None,
+        authorizer_result_ttl_in_seconds: IntegerWithLengthBetween0And3600 | None = None,
+        authorizer_type: AuthorizerType | None = None,
+        authorizer_uri: UriWithLengthBetween1And2048 | None = None,
+        enable_simple_responses: _boolean | None = None,
+        identity_source: IdentitySourceList | None = None,
+        identity_validation_expression: StringWithLengthBetween0And1024 | None = None,
+        jwt_configuration: JWTConfiguration | None = None,
+        name: StringWithLengthBetween1And128 | None = None,
         **kwargs,
     ) -> UpdateAuthorizerResponse:
         """Updates an Authorizer.
@@ -3412,7 +3412,7 @@ class Apigatewayv2Api:
         context: RequestContext,
         api_id: _string,
         deployment_id: _string,
-        description: StringWithLengthBetween0And1024 = None,
+        description: StringWithLengthBetween0And1024 | None = None,
         **kwargs,
     ) -> UpdateDeploymentResponse:
         """Updates a Deployment.
@@ -3433,8 +3433,8 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         domain_name: _string,
-        domain_name_configurations: DomainNameConfigurations = None,
-        mutual_tls_authentication: MutualTlsAuthenticationInput = None,
+        domain_name_configurations: DomainNameConfigurations | None = None,
+        mutual_tls_authentication: MutualTlsAuthenticationInput | None = None,
         **kwargs,
     ) -> UpdateDomainNameResponse:
         """Updates a domain name.
@@ -3456,23 +3456,23 @@ class Apigatewayv2Api:
         context: RequestContext,
         api_id: _string,
         integration_id: _string,
-        connection_id: StringWithLengthBetween1And1024 = None,
-        connection_type: ConnectionType = None,
-        content_handling_strategy: ContentHandlingStrategy = None,
-        credentials_arn: Arn = None,
-        description: StringWithLengthBetween0And1024 = None,
-        integration_method: StringWithLengthBetween1And64 = None,
-        integration_subtype: StringWithLengthBetween1And128 = None,
-        integration_type: IntegrationType = None,
-        integration_uri: UriWithLengthBetween1And2048 = None,
-        passthrough_behavior: PassthroughBehavior = None,
-        payload_format_version: StringWithLengthBetween1And64 = None,
-        request_parameters: IntegrationParameters = None,
-        request_templates: TemplateMap = None,
-        response_parameters: ResponseParameters = None,
-        template_selection_expression: SelectionExpression = None,
-        timeout_in_millis: IntegerWithLengthBetween50And30000 = None,
-        tls_config: TlsConfigInput = None,
+        connection_id: StringWithLengthBetween1And1024 | None = None,
+        connection_type: ConnectionType | None = None,
+        content_handling_strategy: ContentHandlingStrategy | None = None,
+        credentials_arn: Arn | None = None,
+        description: StringWithLengthBetween0And1024 | None = None,
+        integration_method: StringWithLengthBetween1And64 | None = None,
+        integration_subtype: StringWithLengthBetween1And128 | None = None,
+        integration_type: IntegrationType | None = None,
+        integration_uri: UriWithLengthBetween1And2048 | None = None,
+        passthrough_behavior: PassthroughBehavior | None = None,
+        payload_format_version: StringWithLengthBetween1And64 | None = None,
+        request_parameters: IntegrationParameters | None = None,
+        request_templates: TemplateMap | None = None,
+        response_parameters: ResponseParameters | None = None,
+        template_selection_expression: SelectionExpression | None = None,
+        timeout_in_millis: IntegerWithLengthBetween50And30000 | None = None,
+        tls_config: TlsConfigInput | None = None,
         **kwargs,
     ) -> UpdateIntegrationResult:
         """Updates an Integration.
@@ -3517,11 +3517,11 @@ class Apigatewayv2Api:
         api_id: _string,
         integration_response_id: _string,
         integration_id: _string,
-        content_handling_strategy: ContentHandlingStrategy = None,
-        integration_response_key: SelectionKey = None,
-        response_parameters: IntegrationParameters = None,
-        response_templates: TemplateMap = None,
-        template_selection_expression: SelectionExpression = None,
+        content_handling_strategy: ContentHandlingStrategy | None = None,
+        integration_response_key: SelectionKey | None = None,
+        response_parameters: IntegrationParameters | None = None,
+        response_templates: TemplateMap | None = None,
+        template_selection_expression: SelectionExpression | None = None,
         **kwargs,
     ) -> UpdateIntegrationResponseResponse:
         """Updates an IntegrationResponses.
@@ -3550,10 +3550,10 @@ class Apigatewayv2Api:
         context: RequestContext,
         model_id: _string,
         api_id: _string,
-        content_type: StringWithLengthBetween1And256 = None,
-        description: StringWithLengthBetween0And1024 = None,
-        name: StringWithLengthBetween1And128 = None,
-        schema: StringWithLengthBetween0And32K = None,
+        content_type: StringWithLengthBetween1And256 | None = None,
+        description: StringWithLengthBetween0And1024 | None = None,
+        name: StringWithLengthBetween1And128 | None = None,
+        schema: StringWithLengthBetween0And32K | None = None,
         **kwargs,
     ) -> UpdateModelResponse:
         """Updates a Model.
@@ -3578,17 +3578,17 @@ class Apigatewayv2Api:
         context: RequestContext,
         api_id: _string,
         route_id: _string,
-        api_key_required: _boolean = None,
-        authorization_scopes: AuthorizationScopes = None,
-        authorization_type: AuthorizationType = None,
-        authorizer_id: Id = None,
-        model_selection_expression: SelectionExpression = None,
-        operation_name: StringWithLengthBetween1And64 = None,
-        request_models: RouteModels = None,
-        request_parameters: RouteParameters = None,
-        route_key: SelectionKey = None,
-        route_response_selection_expression: SelectionExpression = None,
-        target: StringWithLengthBetween1And128 = None,
+        api_key_required: _boolean | None = None,
+        authorization_scopes: AuthorizationScopes | None = None,
+        authorization_type: AuthorizationType | None = None,
+        authorizer_id: Id | None = None,
+        model_selection_expression: SelectionExpression | None = None,
+        operation_name: StringWithLengthBetween1And64 | None = None,
+        request_models: RouteModels | None = None,
+        request_parameters: RouteParameters | None = None,
+        route_key: SelectionKey | None = None,
+        route_response_selection_expression: SelectionExpression | None = None,
+        target: StringWithLengthBetween1And128 | None = None,
         **kwargs,
     ) -> UpdateRouteResult:
         """Updates a Route.
@@ -3622,10 +3622,10 @@ class Apigatewayv2Api:
         route_response_id: _string,
         api_id: _string,
         route_id: _string,
-        model_selection_expression: SelectionExpression = None,
-        response_models: RouteModels = None,
-        response_parameters: RouteParameters = None,
-        route_response_key: SelectionKey = None,
+        model_selection_expression: SelectionExpression | None = None,
+        response_models: RouteModels | None = None,
+        response_parameters: RouteParameters | None = None,
+        route_response_key: SelectionKey | None = None,
         **kwargs,
     ) -> UpdateRouteResponseResponse:
         """Updates a RouteResponse.
@@ -3651,14 +3651,14 @@ class Apigatewayv2Api:
         context: RequestContext,
         stage_name: _string,
         api_id: _string,
-        access_log_settings: AccessLogSettings = None,
-        auto_deploy: _boolean = None,
-        client_certificate_id: Id = None,
-        default_route_settings: RouteSettings = None,
-        deployment_id: Id = None,
-        description: StringWithLengthBetween0And1024 = None,
-        route_settings: RouteSettingsMap = None,
-        stage_variables: StageVariablesMap = None,
+        access_log_settings: AccessLogSettings | None = None,
+        auto_deploy: _boolean | None = None,
+        client_certificate_id: Id | None = None,
+        default_route_settings: RouteSettings | None = None,
+        deployment_id: Id | None = None,
+        description: StringWithLengthBetween0And1024 | None = None,
+        route_settings: RouteSettingsMap | None = None,
+        stage_variables: StageVariablesMap | None = None,
         **kwargs,
     ) -> UpdateStageResponse:
         """Updates a Stage.
@@ -3687,7 +3687,7 @@ class Apigatewayv2Api:
         self,
         context: RequestContext,
         vpc_link_id: _string,
-        name: StringWithLengthBetween1And128 = None,
+        name: StringWithLengthBetween1And128 | None = None,
         **kwargs,
     ) -> UpdateVpcLinkResponse:
         """Updates a VPC link.

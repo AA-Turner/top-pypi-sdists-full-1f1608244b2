@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #    Copyright (C) 2013-2014 eNovance Inc. All Rights Reserved.
 #
@@ -14,6 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import debtcollector
 from kazoo import client
 from kazoo import exceptions
 from kazoo import security
@@ -34,7 +34,7 @@ from tooz import utils
 
 class ZooKeeperLock(locking.Lock):
     def __init__(self, name, lock):
-        super(ZooKeeperLock, self).__init__(name)
+        super().__init__(name)
         self._lock = lock
         self._client = lock.client
 
@@ -144,7 +144,7 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
     """
 
     def __init__(self, member_id, parsed_url, options):
-        super(KazooDriver, self).__init__(member_id, parsed_url, options)
+        super().__init__(member_id, parsed_url, options)
         options = utils.collapse(options, exclude=['hosts'])
         self.timeout = int(options.get('timeout', '10'))
         self._namespace = options.get('namespace', self.TOOZ_NAMESPACE)
@@ -155,16 +155,14 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
         try:
             self._coord.start(timeout=self.timeout)
         except self._coord.handler.timeout_exception as e:
-            e_msg = encodeutils.exception_to_unicode(e)
             utils.raise_with_cause(coordination.ToozConnectionError,
-                                   "Operational error: %s" % e_msg,
+                                   "Operational error: %s" % e,
                                    cause=e)
         try:
             self._coord.ensure_path(self._paths_join("/", self._namespace))
         except exceptions.KazooException as e:
-            e_msg = encodeutils.exception_to_unicode(e)
             utils.raise_with_cause(tooz.ToozError,
-                                   "Operational error: %s" % e_msg,
+                                   "Operational error: %s" % e,
                                    cause=e)
         self._leader_locks = {}
 
@@ -185,8 +183,7 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             async_result.get(block=True, timeout=timeout)
         except timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NodeExistsError:
             raise coordination.GroupAlreadyExist(group_id)
         except exceptions.NoNodeError as e:
@@ -195,9 +192,7 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
                                    " been created" % self._namespace,
                                    cause=e)
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
 
     def create_group(self, group_id):
         group_path = self._path_group(group_id)
@@ -213,16 +208,13 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             async_result.get(block=True, timeout=timeout)
         except timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NoNodeError:
             raise coordination.GroupNotCreated(group_id)
         except exceptions.NotEmptyError:
             raise coordination.GroupNotEmpty(group_id)
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
 
     def delete_group(self, group_id):
         group_path = self._path_group(group_id)
@@ -238,16 +230,13 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             async_result.get(block=True, timeout=timeout)
         except timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NodeExistsError:
             raise coordination.MemberAlreadyExist(group_id, member_id)
         except exceptions.NoNodeError:
             raise coordination.GroupNotCreated(group_id)
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
 
     def join_group(self, group_id, capabilities=b""):
         member_path = self._path_member(group_id, self._member_id)
@@ -266,14 +255,11 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             async_result.get(block=True, timeout=timeout)
         except timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NoNodeError:
             raise coordination.MemberNotJoined(group_id, member_id)
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
 
     def heartbeat(self):
         # Just fetch the base path (and do nothing with it); this will
@@ -284,14 +270,11 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             self._coord.get(base_path)
         except self._timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NoNodeError:
             pass
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
         return self.timeout
 
     def leave_group(self, group_id):
@@ -308,16 +291,13 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             members_ids = async_result.get(block=True, timeout=timeout)
         except timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NoNodeError:
             raise coordination.GroupNotCreated(group_id)
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
         else:
-            return set(m.encode('ascii') for m in members_ids)
+            return {m.encode('ascii') for m in members_ids}
 
     def get_members(self, group_id):
         group_path = self._paths_join("/", self._namespace, group_id)
@@ -333,14 +313,11 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             async_result.get(block=True, timeout=timeout)
         except timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NoNodeError:
             raise coordination.MemberNotJoined(group_id, member_id)
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
 
     def update_capabilities(self, group_id, capabilities):
         member_path = self._path_member(group_id, self._member_id)
@@ -358,14 +335,11 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             capabilities = async_result.get(block=True, timeout=timeout)[0]
         except timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NoNodeError:
             raise coordination.MemberNotJoined(group_id, member_id)
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
         else:
             return cls._loads(capabilities)
 
@@ -386,14 +360,11 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
                                                          timeout=timeout)
         except timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NoNodeError:
             raise coordination.MemberNotJoined(group_id, member_id)
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
         else:
             member_info = {
                 'capabilities': cls._loads(capabilities),
@@ -415,19 +386,16 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             group_ids = async_result.get(block=True, timeout=timeout)
         except timeout_exception as e:
             utils.raise_with_cause(coordination.OperationTimedOut,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+                                   str(e), cause=e)
         except exceptions.NoNodeError as e:
             utils.raise_with_cause(tooz.ToozError,
                                    "Tooz namespace '%s' has not"
                                    " been created" % self._namespace,
                                    cause=e)
         except exceptions.ZookeeperError as e:
-            utils.raise_with_cause(tooz.ToozError,
-                                   encodeutils.exception_to_unicode(e),
-                                   cause=e)
+            utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
         else:
-            return set(g.encode('ascii') for g in group_ids)
+            return {g.encode('ascii') for g in group_ids}
 
     def get_groups(self):
         tooz_namespace = self._paths_join("/", self._namespace)
@@ -464,7 +432,7 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             username = parsed_url.username
             password = parsed_url.password
 
-            digest_auth = "%s:%s" % (username, password)
+            digest_auth = "{}:{}".format(username, password)
             digest_acl = security.make_digest_acl(username, password, all=True)
             default_acl = (digest_acl,)
             auth_data = [('digest', digest_auth)]
@@ -477,6 +445,8 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
         if not hosts:
             hosts = ['localhost:2181']
         randomize_hosts = options.get('randomize_hosts', True)
+        use_ssl = options.get('use_ssl', False)
+        verify_certs = options.get('verify_certs', True)
         client_kwargs = {
             'auth_data': auth_data,
             'ca': options.get('ca', None),
@@ -489,10 +459,14 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
             'keyfile_password': options.get('keyfile_password', None),
             'randomize_hosts': strutils.bool_from_string(randomize_hosts),
             'timeout': float(options.get('timeout', self.timeout)),
-            'use_ssl': bool(options.get('use_ssl', False)),
-            'verify_certs': bool(options.get('verify_certs', True)),
+            'use_ssl': strutils.bool_from_string(use_ssl),
+            'verify_certs': strutils.bool_from_string(verify_certs),
         }
         handler_kind = options.get('handler')
+        if handler_kind == "eventlet":
+            debtcollector.deprecate(
+                "Eventlet support is deprecated and will be removed. "
+                "Use threading handler instead.")
         if handler_kind:
             try:
                 handler_cls = self.HANDLERS[handler_kind]
@@ -545,7 +519,7 @@ class KazooDriver(coordination.CoordinationDriverCachedRunWatchers):
                         self._member_id))
 
     def run_watchers(self, timeout=None):
-        results = super(KazooDriver, self).run_watchers(timeout)
+        results = super().run_watchers(timeout)
         self.run_elect_coordinator()
         return results
 

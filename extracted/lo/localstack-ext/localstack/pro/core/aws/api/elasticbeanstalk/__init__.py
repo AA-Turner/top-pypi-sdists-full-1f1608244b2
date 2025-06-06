@@ -1747,8 +1747,8 @@ class ElasticbeanstalkApi:
     def abort_environment_update(
         self,
         context: RequestContext,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
         **kwargs,
     ) -> None:
         """Cancels in-progress environment configuration update or application
@@ -1767,8 +1767,8 @@ class ElasticbeanstalkApi:
         self,
         context: RequestContext,
         action_id: String,
-        environment_name: String = None,
-        environment_id: String = None,
+        environment_name: String | None = None,
+        environment_id: String | None = None,
         **kwargs,
     ) -> ApplyEnvironmentManagedActionResult:
         """Applies a scheduled managed action immediately. A managed action can be
@@ -1821,9 +1821,9 @@ class ElasticbeanstalkApi:
     def compose_environments(
         self,
         context: RequestContext,
-        application_name: ApplicationName = None,
-        group_name: GroupName = None,
-        version_labels: VersionLabels = None,
+        application_name: ApplicationName | None = None,
+        group_name: GroupName | None = None,
+        version_labels: VersionLabels | None = None,
         **kwargs,
     ) -> EnvironmentDescriptionsMessage:
         """Create or update a group of environments that each run a separate
@@ -1851,9 +1851,9 @@ class ElasticbeanstalkApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        description: Description = None,
-        resource_lifecycle_config: ApplicationResourceLifecycleConfig = None,
-        tags: Tags = None,
+        description: Description | None = None,
+        resource_lifecycle_config: ApplicationResourceLifecycleConfig | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> ApplicationDescriptionMessage:
         """Creates an application that has one configuration template named
@@ -1875,13 +1875,13 @@ class ElasticbeanstalkApi:
         context: RequestContext,
         application_name: ApplicationName,
         version_label: VersionLabel,
-        description: Description = None,
-        source_build_information: SourceBuildInformation = None,
-        source_bundle: S3Location = None,
-        build_configuration: BuildConfiguration = None,
-        auto_create_application: AutoCreateApplication = None,
-        process: ApplicationVersionProccess = None,
-        tags: Tags = None,
+        description: Description | None = None,
+        source_build_information: SourceBuildInformation | None = None,
+        source_bundle: S3Location | None = None,
+        build_configuration: BuildConfiguration | None = None,
+        auto_create_application: AutoCreateApplication | None = None,
+        process: ApplicationVersionProccess | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> ApplicationVersionDescriptionMessage:
         """Creates an application version for the specified application. You can
@@ -1932,13 +1932,13 @@ class ElasticbeanstalkApi:
         context: RequestContext,
         application_name: ApplicationName,
         template_name: ConfigurationTemplateName,
-        solution_stack_name: SolutionStackName = None,
-        platform_arn: PlatformArn = None,
-        source_configuration: SourceConfiguration = None,
-        environment_id: EnvironmentId = None,
-        description: Description = None,
-        option_settings: ConfigurationOptionSettingsList = None,
-        tags: Tags = None,
+        solution_stack_name: SolutionStackName | None = None,
+        platform_arn: PlatformArn | None = None,
+        source_configuration: SourceConfiguration | None = None,
+        environment_id: EnvironmentId | None = None,
+        description: Description | None = None,
+        option_settings: ConfigurationOptionSettingsList | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> ConfigurationSettingsDescription:
         """Creates an AWS Elastic Beanstalk configuration template, associated with
@@ -1983,19 +1983,19 @@ class ElasticbeanstalkApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        environment_name: EnvironmentName = None,
-        group_name: GroupName = None,
-        description: Description = None,
-        cname_prefix: DNSCnamePrefix = None,
-        tier: EnvironmentTier = None,
-        tags: Tags = None,
-        version_label: VersionLabel = None,
-        template_name: ConfigurationTemplateName = None,
-        solution_stack_name: SolutionStackName = None,
-        platform_arn: PlatformArn = None,
-        option_settings: ConfigurationOptionSettingsList = None,
-        options_to_remove: OptionsSpecifierList = None,
-        operations_role: OperationsRole = None,
+        environment_name: EnvironmentName | None = None,
+        group_name: GroupName | None = None,
+        description: Description | None = None,
+        cname_prefix: DNSCnamePrefix | None = None,
+        tier: EnvironmentTier | None = None,
+        tags: Tags | None = None,
+        version_label: VersionLabel | None = None,
+        template_name: ConfigurationTemplateName | None = None,
+        solution_stack_name: SolutionStackName | None = None,
+        platform_arn: PlatformArn | None = None,
+        option_settings: ConfigurationOptionSettingsList | None = None,
+        options_to_remove: OptionsSpecifierList | None = None,
+        operations_role: OperationsRole | None = None,
         **kwargs,
     ) -> EnvironmentDescription:
         """Launches an AWS Elastic Beanstalk environment for the specified
@@ -2036,9 +2036,9 @@ class ElasticbeanstalkApi:
         platform_name: PlatformName,
         platform_version: PlatformVersion,
         platform_definition_bundle: S3Location,
-        environment_name: EnvironmentName = None,
-        option_settings: ConfigurationOptionSettingsList = None,
-        tags: Tags = None,
+        environment_name: EnvironmentName | None = None,
+        option_settings: ConfigurationOptionSettingsList | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreatePlatformVersionResult:
         """Create a new version of your custom platform.
@@ -2079,7 +2079,7 @@ class ElasticbeanstalkApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        terminate_env_by_force: TerminateEnvForce = None,
+        terminate_env_by_force: TerminateEnvForce | None = None,
         **kwargs,
     ) -> None:
         """Deletes the specified application along with all associated versions and
@@ -2101,7 +2101,7 @@ class ElasticbeanstalkApi:
         context: RequestContext,
         application_name: ApplicationName,
         version_label: VersionLabel,
-        delete_source_bundle: DeleteSourceBundle = None,
+        delete_source_bundle: DeleteSourceBundle | None = None,
         **kwargs,
     ) -> None:
         """Deletes the specified version from the specified application.
@@ -2164,7 +2164,7 @@ class ElasticbeanstalkApi:
 
     @handler("DeletePlatformVersion")
     def delete_platform_version(
-        self, context: RequestContext, platform_arn: PlatformArn = None, **kwargs
+        self, context: RequestContext, platform_arn: PlatformArn | None = None, **kwargs
     ) -> DeletePlatformVersionResult:
         """Deletes the specified version of a custom platform.
 
@@ -2195,10 +2195,10 @@ class ElasticbeanstalkApi:
     def describe_application_versions(
         self,
         context: RequestContext,
-        application_name: ApplicationName = None,
-        version_labels: VersionLabelsList = None,
-        max_records: MaxRecords = None,
-        next_token: Token = None,
+        application_name: ApplicationName | None = None,
+        version_labels: VersionLabelsList | None = None,
+        max_records: MaxRecords | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ApplicationVersionDescriptionsMessage:
         """Retrieve a list of application versions.
@@ -2214,7 +2214,10 @@ class ElasticbeanstalkApi:
 
     @handler("DescribeApplications")
     def describe_applications(
-        self, context: RequestContext, application_names: ApplicationNamesList = None, **kwargs
+        self,
+        context: RequestContext,
+        application_names: ApplicationNamesList | None = None,
+        **kwargs,
     ) -> ApplicationDescriptionsMessage:
         """Returns the descriptions of existing applications.
 
@@ -2228,12 +2231,12 @@ class ElasticbeanstalkApi:
     def describe_configuration_options(
         self,
         context: RequestContext,
-        application_name: ApplicationName = None,
-        template_name: ConfigurationTemplateName = None,
-        environment_name: EnvironmentName = None,
-        solution_stack_name: SolutionStackName = None,
-        platform_arn: PlatformArn = None,
-        options: OptionsSpecifierList = None,
+        application_name: ApplicationName | None = None,
+        template_name: ConfigurationTemplateName | None = None,
+        environment_name: EnvironmentName | None = None,
+        solution_stack_name: SolutionStackName | None = None,
+        platform_arn: PlatformArn | None = None,
+        options: OptionsSpecifierList | None = None,
         **kwargs,
     ) -> ConfigurationOptionsDescription:
         """Describes the configuration options that are used in a particular
@@ -2262,8 +2265,8 @@ class ElasticbeanstalkApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        template_name: ConfigurationTemplateName = None,
-        environment_name: EnvironmentName = None,
+        template_name: ConfigurationTemplateName | None = None,
+        environment_name: EnvironmentName | None = None,
         **kwargs,
     ) -> ConfigurationSettingsDescriptions:
         """Returns a description of the settings for the specified configuration
@@ -2292,9 +2295,9 @@ class ElasticbeanstalkApi:
     def describe_environment_health(
         self,
         context: RequestContext,
-        environment_name: EnvironmentName = None,
-        environment_id: EnvironmentId = None,
-        attribute_names: EnvironmentHealthAttributes = None,
+        environment_name: EnvironmentName | None = None,
+        environment_id: EnvironmentId | None = None,
+        attribute_names: EnvironmentHealthAttributes | None = None,
         **kwargs,
     ) -> DescribeEnvironmentHealthResult:
         """Returns information about the overall health of the specified
@@ -2314,10 +2317,10 @@ class ElasticbeanstalkApi:
     def describe_environment_managed_action_history(
         self,
         context: RequestContext,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
-        next_token: String = None,
-        max_items: ManagedActionHistoryMaxItems = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
+        next_token: String | None = None,
+        max_items: ManagedActionHistoryMaxItems | None = None,
         **kwargs,
     ) -> DescribeEnvironmentManagedActionHistoryResult:
         """Lists an environment's completed and failed managed actions.
@@ -2335,9 +2338,9 @@ class ElasticbeanstalkApi:
     def describe_environment_managed_actions(
         self,
         context: RequestContext,
-        environment_name: String = None,
-        environment_id: String = None,
-        status: ActionStatus = None,
+        environment_name: String | None = None,
+        environment_id: String | None = None,
+        status: ActionStatus | None = None,
         **kwargs,
     ) -> DescribeEnvironmentManagedActionsResult:
         """Lists an environment's upcoming and in-progress managed actions.
@@ -2354,8 +2357,8 @@ class ElasticbeanstalkApi:
     def describe_environment_resources(
         self,
         context: RequestContext,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
         **kwargs,
     ) -> EnvironmentResourceDescriptionsMessage:
         """Returns AWS resources for this environment.
@@ -2371,14 +2374,14 @@ class ElasticbeanstalkApi:
     def describe_environments(
         self,
         context: RequestContext,
-        application_name: ApplicationName = None,
-        version_label: VersionLabel = None,
-        environment_ids: EnvironmentIdList = None,
-        environment_names: EnvironmentNamesList = None,
-        include_deleted: IncludeDeleted = None,
-        included_deleted_back_to: IncludeDeletedBackTo = None,
-        max_records: MaxRecords = None,
-        next_token: Token = None,
+        application_name: ApplicationName | None = None,
+        version_label: VersionLabel | None = None,
+        environment_ids: EnvironmentIdList | None = None,
+        environment_names: EnvironmentNamesList | None = None,
+        include_deleted: IncludeDeleted | None = None,
+        included_deleted_back_to: IncludeDeletedBackTo | None = None,
+        max_records: MaxRecords | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> EnvironmentDescriptionsMessage:
         """Returns descriptions for existing environments.
@@ -2407,18 +2410,18 @@ class ElasticbeanstalkApi:
     def describe_events(
         self,
         context: RequestContext,
-        application_name: ApplicationName = None,
-        version_label: VersionLabel = None,
-        template_name: ConfigurationTemplateName = None,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
-        platform_arn: PlatformArn = None,
-        request_id: RequestId = None,
-        severity: EventSeverity = None,
-        start_time: TimeFilterStart = None,
-        end_time: TimeFilterEnd = None,
-        max_records: MaxRecords = None,
-        next_token: Token = None,
+        application_name: ApplicationName | None = None,
+        version_label: VersionLabel | None = None,
+        template_name: ConfigurationTemplateName | None = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
+        platform_arn: PlatformArn | None = None,
+        request_id: RequestId | None = None,
+        severity: EventSeverity | None = None,
+        start_time: TimeFilterStart | None = None,
+        end_time: TimeFilterEnd | None = None,
+        max_records: MaxRecords | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> EventDescriptionsMessage:
         """Returns list of event descriptions matching criteria up to the last 6
@@ -2457,10 +2460,10 @@ class ElasticbeanstalkApi:
     def describe_instances_health(
         self,
         context: RequestContext,
-        environment_name: EnvironmentName = None,
-        environment_id: EnvironmentId = None,
-        attribute_names: InstancesHealthAttributes = None,
-        next_token: NextToken = None,
+        environment_name: EnvironmentName | None = None,
+        environment_id: EnvironmentId | None = None,
+        attribute_names: InstancesHealthAttributes | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeInstancesHealthResult:
         """Retrieves detailed information about the health of instances in your AWS
@@ -2479,7 +2482,7 @@ class ElasticbeanstalkApi:
 
     @handler("DescribePlatformVersion")
     def describe_platform_version(
-        self, context: RequestContext, platform_arn: PlatformArn = None, **kwargs
+        self, context: RequestContext, platform_arn: PlatformArn | None = None, **kwargs
     ) -> DescribePlatformVersionResult:
         """Describes a platform version. Provides full details. Compare to
         ListPlatformVersions, which provides summary information about a list of
@@ -2528,9 +2531,9 @@ class ElasticbeanstalkApi:
     def list_platform_branches(
         self,
         context: RequestContext,
-        filters: SearchFilters = None,
-        max_records: PlatformBranchMaxRecords = None,
-        next_token: Token = None,
+        filters: SearchFilters | None = None,
+        max_records: PlatformBranchMaxRecords | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListPlatformBranchesResult:
         """Lists the platform branches available for your account in an AWS Region.
@@ -2551,9 +2554,9 @@ class ElasticbeanstalkApi:
     def list_platform_versions(
         self,
         context: RequestContext,
-        filters: PlatformFilters = None,
-        max_records: PlatformMaxRecords = None,
-        next_token: Token = None,
+        filters: PlatformFilters | None = None,
+        max_records: PlatformMaxRecords | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListPlatformVersionsResult:
         """Lists the platform versions available for your account in an AWS Region.
@@ -2598,8 +2601,8 @@ class ElasticbeanstalkApi:
     def rebuild_environment(
         self,
         context: RequestContext,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
         **kwargs,
     ) -> None:
         """Deletes and recreates all of the AWS resources (for example: the Auto
@@ -2617,8 +2620,8 @@ class ElasticbeanstalkApi:
         self,
         context: RequestContext,
         info_type: EnvironmentInfoType,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
         **kwargs,
     ) -> None:
         """Initiates a request to compile the specified type of information of the
@@ -2648,8 +2651,8 @@ class ElasticbeanstalkApi:
     def restart_app_server(
         self,
         context: RequestContext,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
         **kwargs,
     ) -> None:
         """Causes the environment to restart the application container server
@@ -2665,8 +2668,8 @@ class ElasticbeanstalkApi:
         self,
         context: RequestContext,
         info_type: EnvironmentInfoType,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
         **kwargs,
     ) -> RetrieveEnvironmentInfoResultMessage:
         """Retrieves the compiled information from a RequestEnvironmentInfo
@@ -2687,10 +2690,10 @@ class ElasticbeanstalkApi:
     def swap_environment_cnam_es(
         self,
         context: RequestContext,
-        source_environment_id: EnvironmentId = None,
-        source_environment_name: EnvironmentName = None,
-        destination_environment_id: EnvironmentId = None,
-        destination_environment_name: EnvironmentName = None,
+        source_environment_id: EnvironmentId | None = None,
+        source_environment_name: EnvironmentName | None = None,
+        destination_environment_id: EnvironmentId | None = None,
+        destination_environment_name: EnvironmentName | None = None,
         **kwargs,
     ) -> None:
         """Swaps the CNAMEs of two environments.
@@ -2706,10 +2709,10 @@ class ElasticbeanstalkApi:
     def terminate_environment(
         self,
         context: RequestContext,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
-        terminate_resources: TerminateEnvironmentResources = None,
-        force_terminate: ForceTerminate = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
+        terminate_resources: TerminateEnvironmentResources | None = None,
+        force_terminate: ForceTerminate | None = None,
         **kwargs,
     ) -> EnvironmentDescription:
         """Terminates the specified environment.
@@ -2734,7 +2737,7 @@ class ElasticbeanstalkApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        description: Description = None,
+        description: Description | None = None,
         **kwargs,
     ) -> ApplicationDescriptionMessage:
         """Updates the specified application to have the specified properties.
@@ -2771,7 +2774,7 @@ class ElasticbeanstalkApi:
         context: RequestContext,
         application_name: ApplicationName,
         version_label: VersionLabel,
-        description: Description = None,
+        description: Description | None = None,
         **kwargs,
     ) -> ApplicationVersionDescriptionMessage:
         """Updates the specified application version to have the specified
@@ -2793,9 +2796,9 @@ class ElasticbeanstalkApi:
         context: RequestContext,
         application_name: ApplicationName,
         template_name: ConfigurationTemplateName,
-        description: Description = None,
-        option_settings: ConfigurationOptionSettingsList = None,
-        options_to_remove: OptionsSpecifierList = None,
+        description: Description | None = None,
+        option_settings: ConfigurationOptionSettingsList | None = None,
+        options_to_remove: OptionsSpecifierList | None = None,
         **kwargs,
     ) -> ConfigurationSettingsDescription:
         """Updates the specified configuration template to have the specified
@@ -2826,18 +2829,18 @@ class ElasticbeanstalkApi:
     def update_environment(
         self,
         context: RequestContext,
-        application_name: ApplicationName = None,
-        environment_id: EnvironmentId = None,
-        environment_name: EnvironmentName = None,
-        group_name: GroupName = None,
-        description: Description = None,
-        tier: EnvironmentTier = None,
-        version_label: VersionLabel = None,
-        template_name: ConfigurationTemplateName = None,
-        solution_stack_name: SolutionStackName = None,
-        platform_arn: PlatformArn = None,
-        option_settings: ConfigurationOptionSettingsList = None,
-        options_to_remove: OptionsSpecifierList = None,
+        application_name: ApplicationName | None = None,
+        environment_id: EnvironmentId | None = None,
+        environment_name: EnvironmentName | None = None,
+        group_name: GroupName | None = None,
+        description: Description | None = None,
+        tier: EnvironmentTier | None = None,
+        version_label: VersionLabel | None = None,
+        template_name: ConfigurationTemplateName | None = None,
+        solution_stack_name: SolutionStackName | None = None,
+        platform_arn: PlatformArn | None = None,
+        option_settings: ConfigurationOptionSettingsList | None = None,
+        options_to_remove: OptionsSpecifierList | None = None,
         **kwargs,
     ) -> EnvironmentDescription:
         """Updates the environment description, deploys a new application version,
@@ -2884,8 +2887,8 @@ class ElasticbeanstalkApi:
         self,
         context: RequestContext,
         resource_arn: ResourceArn,
-        tags_to_add: TagList = None,
-        tags_to_remove: TagKeyList = None,
+        tags_to_add: TagList | None = None,
+        tags_to_remove: TagKeyList | None = None,
         **kwargs,
     ) -> None:
         """Update the list of tags applied to an AWS Elastic Beanstalk resource.
@@ -2929,8 +2932,8 @@ class ElasticbeanstalkApi:
         context: RequestContext,
         application_name: ApplicationName,
         option_settings: ConfigurationOptionSettingsList,
-        template_name: ConfigurationTemplateName = None,
-        environment_name: EnvironmentName = None,
+        template_name: ConfigurationTemplateName | None = None,
+        environment_name: EnvironmentName | None = None,
         **kwargs,
     ) -> ConfigurationSettingsValidationMessages:
         """Takes a set of configuration settings and either a configuration

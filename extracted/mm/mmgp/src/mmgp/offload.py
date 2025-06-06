@@ -1,4 +1,4 @@
-# ------------------ Memory Management 3.4.7 for the GPU Poor by DeepBeepMeep (mmgp)------------------
+# ------------------ Memory Management 3.4.8 for the GPU Poor by DeepBeepMeep (mmgp)------------------
 #
 # This module contains multiples optimisations so that models such as Flux (and derived), Mochi, CogView, HunyuanVideo, ...  can run smoothly on a 24 GB GPU limited card. 
 # This a replacement for the accelerate library that should in theory manage offloading, but doesn't work properly with models that are loaded / unloaded several
@@ -448,9 +448,9 @@ def _pin_sd_to_memory(sd, sd_name, tied_weights = None, gig_tensor_size = BIG_TE
                 print(f"'{','.join(names_list)}' was partially pinned to reserved RAM: {last_big_tensor} large blocks spread across {total/ONE_MB:.2f} MB")
         else:
             if len(names_list) > 0:
-                print(f"'{','.join(names_list)}' was pinned entirely to reserved RAM: {last_big_tensor} large blocks spread across {total/ONE_MB:.2f} MB")
-            else:
                 print(f"'{','.join(names_list)}' were pinned entirely to reserved RAM: {last_big_tensor} large blocks spread across {total/ONE_MB:.2f} MB")
+            else:
+                print(f"'{','.join(names_list)}' was pinned entirely to reserved RAM: {last_big_tensor} large blocks spread across {total/ONE_MB:.2f} MB")
 
 
     return 
@@ -658,7 +658,7 @@ def _welcome():
     if welcome_displayed:
          return 
     welcome_displayed = True
-    print(f"{BOLD}{HEADER}************ Memory Management for the GPU Poor (mmgp 3.4.7) by DeepBeepMeep ************{ENDC}{UNBOLD}")
+    print(f"{BOLD}{HEADER}************ Memory Management for the GPU Poor (mmgp 3.4.8) by DeepBeepMeep ************{ENDC}{UNBOLD}")
 
 def change_dtype(model, new_dtype, exclude_buffers = False):
     for submodule_name, submodule in model.named_modules():  
@@ -1226,7 +1226,7 @@ def load_loras_into_model(model, lora_path, lora_multi = None, activate_all_lora
     
     model._loras_errors = errors
     if not check_only:
-        if pinnedLora:
+        if pinnedLora and len(pinned_sd_list) > 0:
             _pin_sd_to_memory(pinned_sd_list, pinned_names_list)
         model._loras_adapters = adapters
     if activate_all_loras:
@@ -1407,14 +1407,14 @@ def load_model_data(model, file_path: str, do_quantize = False, quantizationType
         if not (".safetensors" in file or ".sft" in file): 
             if pinToMemory:
                 raise Exception("Pinning to memory while loading only supported for safe tensors files")
-            state_dict = torch.load(file, weights_only=True)
+            state_dict = torch.load(file, weights_only=True, map_location="cpu")
             if "module" in state_dict:
                 state_dict = state_dict["module"]
             
         else:
             basename = os.path.basename(file)
 
-            if "model-0" in basename:
+            if "-of-" in basename:
                 metadata = None
                 file_parts= basename.split("-")
                 parts_max = int(file_parts[-1][:5])
@@ -1621,9 +1621,12 @@ class HfHook:
     def __init__(self):
         self.execution_device = "cuda"
 
-    def detach_hook(self, module):
-        pass
+    def init_hook(self, module):
+        return module
 
+    def detach_hook(self, module):
+        return module
+    
 last_offload_obj = None
 class offload:
     def __init__(self):
@@ -2028,7 +2031,9 @@ class offload:
                         continue
                     lora_A_weight, lora_B_weight, diff_b, alpha = data
                     scaling = self._get_lora_scaling(loras_scaling, model, active_adapter) * alpha
-                    weight.addmm_(lora_B_weight, lora_A_weight, alpha= scaling )
+                    if lora_A_weight != None:
+                        weight.addmm_(lora_B_weight, lora_A_weight, alpha= scaling )
+                    
                     if diff_b != None:
                         if bias == None:
                             bias = diff_b.clone()
@@ -2059,17 +2064,20 @@ class offload:
                     lora_A, lora_B, diff_b, alpha = data
                     # dropout = self.lora_dropout[active_adapter]
                     scaling = self._get_lora_scaling(loras_scaling, model, active_adapter) * alpha
-                    x = x.to(lora_A.dtype)
-
-                    if training:        
-                        pass                
-                        # y = lora_A(dropout(x))
+                    if lora_A == None:
+                        result.add_(diff_b, alpha=scaling)
                     else:
-                        y = torch.nn.functional.linear(x, lora_A, bias=None)
-                    y = torch.nn.functional.linear(y, lora_B, bias=diff_b)
-                    y*= scaling
-                    result+= y 
-                    del y
+                        x = x.to(lora_A.dtype)
+
+                        if training:        
+                            pass                
+                            # y = lora_A(dropout(x))
+                        else:
+                            y = torch.nn.functional.linear(x, lora_A, bias=None)
+                        y = torch.nn.functional.linear(y, lora_B, bias=diff_b)
+                        y*= scaling
+                        result+= y 
+                        del y
 
         return result
 
@@ -2405,7 +2413,6 @@ def all(pipe_or_dict_of_modules, pinnedMemory = False, pinnedPEFTLora = False, p
         model_dtype = getattr(current_model, "_model_dtype", None)
         # if model_dtype == None:
         #     model_dtype = getattr(current_model, "dtype", None)
-        
         for _ , m in current_model.named_modules():
             ignore_dtype = hasattr(m, "_lock_dtype")
             for n, p in m.named_parameters(recurse = False):

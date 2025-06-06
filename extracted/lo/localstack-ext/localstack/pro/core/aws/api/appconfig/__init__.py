@@ -900,8 +900,8 @@ class AppconfigApi:
         self,
         context: RequestContext,
         name: Name,
-        description: Description = None,
-        tags: TagMap = None,
+        description: Description | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> Application:
         """Creates an application. In AppConfig, an application is simply an
@@ -984,11 +984,11 @@ class AppconfigApi:
         name: Name,
         deployment_duration_in_minutes: MinutesBetween0And24Hours,
         growth_factor: GrowthFactor,
-        description: Description = None,
-        final_bake_time_in_minutes: MinutesBetween0And24Hours = None,
-        growth_type: GrowthType = None,
-        replicate_to: ReplicateTo = None,
-        tags: TagMap = None,
+        description: Description | None = None,
+        final_bake_time_in_minutes: MinutesBetween0And24Hours | None = None,
+        growth_type: GrowthType | None = None,
+        replicate_to: ReplicateTo | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> DeploymentStrategy:
         """Creates a deployment strategy that defines important criteria for
@@ -1021,9 +1021,9 @@ class AppconfigApi:
         context: RequestContext,
         application_id: Id,
         name: Name,
-        description: Description = None,
-        monitors: MonitorList = None,
-        tags: TagMap = None,
+        description: Description | None = None,
+        monitors: MonitorList | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> Environment:
         """Creates an environment. For each application, you define one or more
@@ -1054,10 +1054,10 @@ class AppconfigApi:
         context: RequestContext,
         name: ExtensionOrParameterName,
         actions: ActionsMap,
-        description: Description = None,
-        parameters: ParameterMap = None,
-        tags: TagMap = None,
-        latest_version_number: Integer = None,
+        description: Description | None = None,
+        parameters: ParameterMap | None = None,
+        tags: TagMap | None = None,
+        latest_version_number: Integer | None = None,
         **kwargs,
     ) -> Extension:
         """Creates an AppConfig extension. An extension augments your ability to
@@ -1105,9 +1105,9 @@ class AppconfigApi:
         context: RequestContext,
         extension_identifier: Identifier,
         resource_identifier: Identifier,
-        extension_version_number: Integer = None,
-        parameters: ParameterValueMap = None,
-        tags: TagMap = None,
+        extension_version_number: Integer | None = None,
+        parameters: ParameterValueMap | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> ExtensionAssociation:
         """When you create an extension or configure an Amazon Web Services
@@ -1145,9 +1145,9 @@ class AppconfigApi:
         configuration_profile_id: Id,
         content: IO[Blob],
         content_type: StringWithLengthBetween1And255,
-        description: Description = None,
-        latest_version_number: Integer = None,
-        version_label: VersionLabel = None,
+        description: Description | None = None,
+        latest_version_number: Integer | None = None,
+        version_label: VersionLabel | None = None,
         **kwargs,
     ) -> HostedConfigurationVersion:
         """Creates a new configuration in the AppConfig hosted configuration store.
@@ -1193,7 +1193,7 @@ class AppconfigApi:
         context: RequestContext,
         application_id: Id,
         configuration_profile_id: Id,
-        deletion_protection_check: DeletionProtectionCheck = None,
+        deletion_protection_check: DeletionProtectionCheck | None = None,
         **kwargs,
     ) -> None:
         """Deletes a configuration profile.
@@ -1232,7 +1232,7 @@ class AppconfigApi:
         context: RequestContext,
         environment_id: Id,
         application_id: Id,
-        deletion_protection_check: DeletionProtectionCheck = None,
+        deletion_protection_check: DeletionProtectionCheck | None = None,
         **kwargs,
     ) -> None:
         """Deletes an environment.
@@ -1257,7 +1257,7 @@ class AppconfigApi:
         self,
         context: RequestContext,
         extension_identifier: Identifier,
-        version_number: Integer = None,
+        version_number: Integer | None = None,
         **kwargs,
     ) -> None:
         """Deletes an AppConfig extension. You must delete all associations to an
@@ -1338,7 +1338,7 @@ class AppconfigApi:
         environment: StringWithLengthBetween1And64,
         configuration: StringWithLengthBetween1And64,
         client_id: StringWithLengthBetween1And64,
-        client_configuration_version: Version = None,
+        client_configuration_version: Version | None = None,
         **kwargs,
     ) -> Configuration:
         """(Deprecated) Retrieves the latest deployed configuration.
@@ -1449,7 +1449,7 @@ class AppconfigApi:
         self,
         context: RequestContext,
         extension_identifier: Identifier,
-        version_number: Integer = None,
+        version_number: Integer | None = None,
         **kwargs,
     ) -> Extension:
         """Returns information about an AppConfig extension.
@@ -1505,8 +1505,8 @@ class AppconfigApi:
     def list_applications(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> Applications:
         """Lists all applications in your Amazon Web Services account.
@@ -1541,8 +1541,8 @@ class AppconfigApi:
     def list_deployment_strategies(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DeploymentStrategies:
         """Lists deployment strategies.
@@ -1561,8 +1561,8 @@ class AppconfigApi:
         context: RequestContext,
         application_id: Id,
         environment_id: Id,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> Deployments:
         """Lists the deployments for an environment in descending deployment number
@@ -1585,8 +1585,8 @@ class AppconfigApi:
         self,
         context: RequestContext,
         application_id: Id,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> Environments:
         """Lists the environments for an application.
@@ -1605,11 +1605,11 @@ class AppconfigApi:
     def list_extension_associations(
         self,
         context: RequestContext,
-        resource_identifier: Arn = None,
-        extension_identifier: Identifier = None,
-        extension_version_number: Integer = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        resource_identifier: Arn | None = None,
+        extension_identifier: Identifier | None = None,
+        extension_version_number: Integer | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ExtensionAssociations:
         """Lists all AppConfig extension associations in the account. For more
@@ -1632,9 +1632,9 @@ class AppconfigApi:
     def list_extensions(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        name: QueryName = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        name: QueryName | None = None,
         **kwargs,
     ) -> Extensions:
         """Lists all custom and Amazon Web Services authored AppConfig extensions
@@ -1657,9 +1657,9 @@ class AppconfigApi:
         context: RequestContext,
         application_id: Id,
         configuration_profile_id: Id,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        version_label: QueryName = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        version_label: QueryName | None = None,
         **kwargs,
     ) -> HostedConfigurationVersions:
         """Lists configurations stored in the AppConfig hosted configuration store
@@ -1701,10 +1701,10 @@ class AppconfigApi:
         deployment_strategy_id: DeploymentStrategyId,
         configuration_profile_id: Id,
         configuration_version: Version,
-        description: Description = None,
-        tags: TagMap = None,
-        kms_key_identifier: KmsKeyIdentifier = None,
-        dynamic_extension_parameters: DynamicParameterMap = None,
+        description: Description | None = None,
+        tags: TagMap | None = None,
+        kms_key_identifier: KmsKeyIdentifier | None = None,
+        dynamic_extension_parameters: DynamicParameterMap | None = None,
         **kwargs,
     ) -> Deployment:
         """Starts a deployment.
@@ -1734,7 +1734,7 @@ class AppconfigApi:
         application_id: Id,
         environment_id: Id,
         deployment_number: Integer,
-        allow_revert: Boolean = None,
+        allow_revert: Boolean | None = None,
         **kwargs,
     ) -> Deployment:
         """Stops a deployment. This API action works only on deployments that have
@@ -1791,7 +1791,7 @@ class AppconfigApi:
     def update_account_settings(
         self,
         context: RequestContext,
-        deletion_protection: DeletionProtectionSettings = None,
+        deletion_protection: DeletionProtectionSettings | None = None,
         **kwargs,
     ) -> AccountSettings:
         """Updates the value of the ``DeletionProtection`` parameter.
@@ -1808,8 +1808,8 @@ class AppconfigApi:
         self,
         context: RequestContext,
         application_id: Id,
-        name: Name = None,
-        description: Description = None,
+        name: Name | None = None,
+        description: Description | None = None,
         **kwargs,
     ) -> Application:
         """Updates an application.
@@ -1830,11 +1830,11 @@ class AppconfigApi:
         context: RequestContext,
         application_id: Id,
         configuration_profile_id: Id,
-        name: LongName = None,
-        description: Description = None,
-        retrieval_role_arn: RoleArn = None,
-        validators: ValidatorList = None,
-        kms_key_identifier: KmsKeyIdentifierOrEmpty = None,
+        name: LongName | None = None,
+        description: Description | None = None,
+        retrieval_role_arn: RoleArn | None = None,
+        validators: ValidatorList | None = None,
+        kms_key_identifier: KmsKeyIdentifierOrEmpty | None = None,
         **kwargs,
     ) -> ConfigurationProfile:
         """Updates a configuration profile.
@@ -1860,11 +1860,11 @@ class AppconfigApi:
         self,
         context: RequestContext,
         deployment_strategy_id: DeploymentStrategyId,
-        description: Description = None,
-        deployment_duration_in_minutes: MinutesBetween0And24Hours = None,
-        final_bake_time_in_minutes: MinutesBetween0And24Hours = None,
-        growth_factor: GrowthFactor = None,
-        growth_type: GrowthType = None,
+        description: Description | None = None,
+        deployment_duration_in_minutes: MinutesBetween0And24Hours | None = None,
+        final_bake_time_in_minutes: MinutesBetween0And24Hours | None = None,
+        growth_factor: GrowthFactor | None = None,
+        growth_type: GrowthType | None = None,
         **kwargs,
     ) -> DeploymentStrategy:
         """Updates a deployment strategy.
@@ -1891,9 +1891,9 @@ class AppconfigApi:
         context: RequestContext,
         application_id: Id,
         environment_id: Id,
-        name: Name = None,
-        description: Description = None,
-        monitors: MonitorList = None,
+        name: Name | None = None,
+        description: Description | None = None,
+        monitors: MonitorList | None = None,
         **kwargs,
     ) -> Environment:
         """Updates an environment.
@@ -1915,10 +1915,10 @@ class AppconfigApi:
         self,
         context: RequestContext,
         extension_identifier: Identifier,
-        description: Description = None,
-        actions: ActionsMap = None,
-        parameters: ParameterMap = None,
-        version_number: Integer = None,
+        description: Description | None = None,
+        actions: ActionsMap | None = None,
+        parameters: ParameterMap | None = None,
+        version_number: Integer | None = None,
         **kwargs,
     ) -> Extension:
         """Updates an AppConfig extension. For more information about extensions,
@@ -1944,7 +1944,7 @@ class AppconfigApi:
         self,
         context: RequestContext,
         extension_association_id: Id,
-        parameters: ParameterValueMap = None,
+        parameters: ParameterValueMap | None = None,
         **kwargs,
     ) -> ExtensionAssociation:
         """Updates an association. For more information about extensions and

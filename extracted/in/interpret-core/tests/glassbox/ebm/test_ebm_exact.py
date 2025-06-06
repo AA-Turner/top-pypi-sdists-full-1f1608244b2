@@ -9,12 +9,14 @@ from interpret.utils import make_synthetic
 from interpret.develop import get_option, set_option
 from interpret.utils._native import Native
 
+from ...tutils import toy_regression, toy_binary, toy_multiclass
 
-def test_identical_classification():
+
+def test_identical_ebm():
     original = get_option("acceleration")
     set_option("acceleration", 0)
 
-    total = 0.0
+    fingerprint = 1.0
     seed = 0
     for n_classes in range(Native.Task_Regression, 4):
         if n_classes < 2 and n_classes != Native.Task_Regression:
@@ -23,26 +25,41 @@ def test_identical_classification():
         classes = None if n_classes == Native.Task_Regression else n_classes
 
         for iteration in range(2):
-            X, y, names, types = make_synthetic(
-                seed=seed, classes=classes, output_type="float", n_samples=257
+            test_type = (
+                "regression"
+                if n_classes == Native.Task_Regression
+                else str(n_classes) + " classes"
             )
+            print(f"Exact test for {test_type}, iteration {iteration}.")
+
+            if n_classes == -2:
+                X, y, names, types = toy_regression()
+            elif n_classes == 2:
+                X, y, names, types = toy_binary()
+            elif n_classes == 3:
+                X, y, names, types = toy_multiclass()
+            else:
+                raise Exception(f"unsupported number of classes {n_classes}")
 
             ebm_type = (
-                ExplainableBoostingClassifier
-                if 0 <= n_classes
-                else ExplainableBoostingRegressor
+                ExplainableBoostingRegressor
+                if n_classes == Native.Task_Regression
+                else ExplainableBoostingClassifier
             )
-            ebm = ebm_type(names, types, random_state=seed, max_rounds=10)
+            ebm = ebm_type(names, types, random_state=seed)
             ebm.fit(X, y)
 
-            pred = ebm._predict_score(X)
-            total += sum(pred.flat)
+            pred = (
+                ebm.predict(X)
+                if n_classes == Native.Task_Regression
+                else ebm.predict_proba(X)
+            )
+            fingerprint *= sum(pred.flat)  # do not use numpy since it can use SIMD.
 
             seed += 1
 
-    expected = 604.4169336846871
+    expected = 3.293830243001896e+19
 
-    if total != expected:
-        assert total == expected
+    assert fingerprint == expected
 
     set_option("acceleration", original)

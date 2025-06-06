@@ -2058,7 +2058,7 @@ class Elbv2Api:
         self,
         context: RequestContext,
         trust_store_arn: TrustStoreArn,
-        revocation_contents: RevocationContents = None,
+        revocation_contents: RevocationContents | None = None,
         **kwargs,
     ) -> AddTrustStoreRevocationsOutput:
         """Adds the specified revocation file to the specified trust store.
@@ -2079,13 +2079,13 @@ class Elbv2Api:
         context: RequestContext,
         load_balancer_arn: LoadBalancerArn,
         default_actions: Actions,
-        protocol: ProtocolEnum = None,
-        port: Port = None,
-        ssl_policy: SslPolicyName = None,
-        certificates: CertificateList = None,
-        alpn_policy: AlpnPolicyName = None,
-        tags: TagList = None,
-        mutual_authentication: MutualAuthenticationAttributes = None,
+        protocol: ProtocolEnum | None = None,
+        port: Port | None = None,
+        ssl_policy: SslPolicyName | None = None,
+        certificates: CertificateList | None = None,
+        alpn_policy: AlpnPolicyName | None = None,
+        tags: TagList | None = None,
+        mutual_authentication: MutualAuthenticationAttributes | None = None,
         **kwargs,
     ) -> CreateListenerOutput:
         """Creates a listener for the specified Application Load Balancer, Network
@@ -2203,7 +2203,7 @@ class Elbv2Api:
         conditions: RuleConditionList,
         priority: RulePriority,
         actions: Actions,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateRuleOutput:
         """Creates a rule for the specified listener. The listener must be
@@ -2247,22 +2247,22 @@ class Elbv2Api:
         self,
         context: RequestContext,
         name: TargetGroupName,
-        protocol: ProtocolEnum = None,
-        protocol_version: ProtocolVersion = None,
-        port: Port = None,
-        vpc_id: VpcId = None,
-        health_check_protocol: ProtocolEnum = None,
-        health_check_port: HealthCheckPort = None,
-        health_check_enabled: HealthCheckEnabled = None,
-        health_check_path: Path = None,
-        health_check_interval_seconds: HealthCheckIntervalSeconds = None,
-        health_check_timeout_seconds: HealthCheckTimeoutSeconds = None,
-        healthy_threshold_count: HealthCheckThresholdCount = None,
-        unhealthy_threshold_count: HealthCheckThresholdCount = None,
-        matcher: Matcher = None,
-        target_type: TargetTypeEnum = None,
-        tags: TagList = None,
-        ip_address_type: TargetGroupIpAddressTypeEnum = None,
+        protocol: ProtocolEnum | None = None,
+        protocol_version: ProtocolVersion | None = None,
+        port: Port | None = None,
+        vpc_id: VpcId | None = None,
+        health_check_protocol: ProtocolEnum | None = None,
+        health_check_port: HealthCheckPort | None = None,
+        health_check_enabled: HealthCheckEnabled | None = None,
+        health_check_path: Path | None = None,
+        health_check_interval_seconds: HealthCheckIntervalSeconds | None = None,
+        health_check_timeout_seconds: HealthCheckTimeoutSeconds | None = None,
+        healthy_threshold_count: HealthCheckThresholdCount | None = None,
+        unhealthy_threshold_count: HealthCheckThresholdCount | None = None,
+        matcher: Matcher | None = None,
+        target_type: TargetTypeEnum | None = None,
+        tags: TagList | None = None,
+        ip_address_type: TargetGroupIpAddressTypeEnum | None = None,
         **kwargs,
     ) -> CreateTargetGroupOutput:
         """Creates a target group.
@@ -2323,8 +2323,8 @@ class Elbv2Api:
         name: TrustStoreName,
         ca_certificates_bundle_s3_bucket: S3Bucket,
         ca_certificates_bundle_s3_key: S3Key,
-        ca_certificates_bundle_s3_object_version: S3ObjectVersion = None,
-        tags: TagList = None,
+        ca_certificates_bundle_s3_object_version: S3ObjectVersion | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateTrustStoreOutput:
         """Creates a trust store.
@@ -2492,7 +2492,11 @@ class Elbv2Api:
 
     @handler("DescribeAccountLimits")
     def describe_account_limits(
-        self, context: RequestContext, marker: Marker = None, page_size: PageSize = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
+        **kwargs,
     ) -> DescribeAccountLimitsOutput:
         """Describes the current Elastic Load Balancing resource limits for your
         Amazon Web Services account.
@@ -2544,8 +2548,8 @@ class Elbv2Api:
         self,
         context: RequestContext,
         listener_arn: ListenerArn,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> DescribeListenerCertificatesOutput:
         """Describes the default certificate and the certificate list for the
@@ -2573,10 +2577,10 @@ class Elbv2Api:
     def describe_listeners(
         self,
         context: RequestContext,
-        load_balancer_arn: LoadBalancerArn = None,
-        listener_arns: ListenerArns = None,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        load_balancer_arn: LoadBalancerArn | None = None,
+        listener_arns: ListenerArns | None = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> DescribeListenersOutput:
         """Describes the specified listeners or the listeners for the specified
@@ -2626,10 +2630,10 @@ class Elbv2Api:
     def describe_load_balancers(
         self,
         context: RequestContext,
-        load_balancer_arns: LoadBalancerArns = None,
-        names: LoadBalancerNames = None,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        load_balancer_arns: LoadBalancerArns | None = None,
+        names: LoadBalancerNames | None = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> DescribeLoadBalancersOutput:
         """Describes the specified load balancers or all of your load balancers.
@@ -2647,10 +2651,10 @@ class Elbv2Api:
     def describe_rules(
         self,
         context: RequestContext,
-        listener_arn: ListenerArn = None,
-        rule_arns: RuleArns = None,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        listener_arn: ListenerArn | None = None,
+        rule_arns: RuleArns | None = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> DescribeRulesOutput:
         """Describes the specified rules or the rules for the specified listener.
@@ -2671,10 +2675,10 @@ class Elbv2Api:
     def describe_ssl_policies(
         self,
         context: RequestContext,
-        names: SslPolicyNames = None,
-        marker: Marker = None,
-        page_size: PageSize = None,
-        load_balancer_type: LoadBalancerTypeEnum = None,
+        names: SslPolicyNames | None = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
+        load_balancer_type: LoadBalancerTypeEnum | None = None,
         **kwargs,
     ) -> DescribeSSLPoliciesOutput:
         """Describes the specified policies or all policies used for SSL
@@ -2744,11 +2748,11 @@ class Elbv2Api:
     def describe_target_groups(
         self,
         context: RequestContext,
-        load_balancer_arn: LoadBalancerArn = None,
-        target_group_arns: TargetGroupArns = None,
-        names: TargetGroupNames = None,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        load_balancer_arn: LoadBalancerArn | None = None,
+        target_group_arns: TargetGroupArns | None = None,
+        names: TargetGroupNames | None = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> DescribeTargetGroupsOutput:
         """Describes the specified target groups or all of your target groups. By
@@ -2773,8 +2777,8 @@ class Elbv2Api:
         self,
         context: RequestContext,
         target_group_arn: TargetGroupArn,
-        targets: TargetDescriptions = None,
-        include: ListOfDescribeTargetHealthIncludeOptions = None,
+        targets: TargetDescriptions | None = None,
+        include: ListOfDescribeTargetHealthIncludeOptions | None = None,
         **kwargs,
     ) -> DescribeTargetHealthOutput:
         """Describes the health of the specified targets or all of your targets.
@@ -2794,8 +2798,8 @@ class Elbv2Api:
         self,
         context: RequestContext,
         trust_store_arn: TrustStoreArn,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> DescribeTrustStoreAssociationsOutput:
         """Describes all resources associated with the specified trust store.
@@ -2813,9 +2817,9 @@ class Elbv2Api:
         self,
         context: RequestContext,
         trust_store_arn: TrustStoreArn,
-        revocation_ids: RevocationIds = None,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        revocation_ids: RevocationIds | None = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> DescribeTrustStoreRevocationsOutput:
         """Describes the revocation files in use by the specified trust store or
@@ -2835,10 +2839,10 @@ class Elbv2Api:
     def describe_trust_stores(
         self,
         context: RequestContext,
-        trust_store_arns: TrustStoreArns = None,
-        names: TrustStoreNames = None,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        trust_store_arns: TrustStoreArns | None = None,
+        names: TrustStoreNames | None = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> DescribeTrustStoresOutput:
         """Describes all trust stores for the specified account.
@@ -2903,8 +2907,8 @@ class Elbv2Api:
         self,
         context: RequestContext,
         load_balancer_arn: LoadBalancerArn,
-        minimum_load_balancer_capacity: MinimumLoadBalancerCapacity = None,
-        reset_capacity_reservation: ResetCapacityReservation = None,
+        minimum_load_balancer_capacity: MinimumLoadBalancerCapacity | None = None,
+        reset_capacity_reservation: ResetCapacityReservation | None = None,
         **kwargs,
     ) -> ModifyCapacityReservationOutput:
         """Modifies the capacity reservation of the specified load balancer.
@@ -2932,8 +2936,8 @@ class Elbv2Api:
         self,
         context: RequestContext,
         load_balancer_arn: LoadBalancerArn,
-        ipam_pools: IpamPools = None,
-        remove_ipam_pools: RemoveIpamPools = None,
+        ipam_pools: IpamPools | None = None,
+        remove_ipam_pools: RemoveIpamPools | None = None,
         **kwargs,
     ) -> ModifyIpPoolsOutput:
         """[Application Load Balancers] Modify the IP pool associated to a load
@@ -2952,13 +2956,13 @@ class Elbv2Api:
         self,
         context: RequestContext,
         listener_arn: ListenerArn,
-        port: Port = None,
-        protocol: ProtocolEnum = None,
-        ssl_policy: SslPolicyName = None,
-        certificates: CertificateList = None,
-        default_actions: Actions = None,
-        alpn_policy: AlpnPolicyName = None,
-        mutual_authentication: MutualAuthenticationAttributes = None,
+        port: Port | None = None,
+        protocol: ProtocolEnum | None = None,
+        ssl_policy: SslPolicyName | None = None,
+        certificates: CertificateList | None = None,
+        default_actions: Actions | None = None,
+        alpn_policy: AlpnPolicyName | None = None,
+        mutual_authentication: MutualAuthenticationAttributes | None = None,
         **kwargs,
     ) -> ModifyListenerOutput:
         """Replaces the specified properties of the specified listener. Any
@@ -3052,8 +3056,8 @@ class Elbv2Api:
         self,
         context: RequestContext,
         rule_arn: RuleArn,
-        conditions: RuleConditionList = None,
-        actions: Actions = None,
+        conditions: RuleConditionList | None = None,
+        actions: Actions | None = None,
         **kwargs,
     ) -> ModifyRuleOutput:
         """Replaces the specified properties of the specified rule. Any properties
@@ -3086,15 +3090,15 @@ class Elbv2Api:
         self,
         context: RequestContext,
         target_group_arn: TargetGroupArn,
-        health_check_protocol: ProtocolEnum = None,
-        health_check_port: HealthCheckPort = None,
-        health_check_path: Path = None,
-        health_check_enabled: HealthCheckEnabled = None,
-        health_check_interval_seconds: HealthCheckIntervalSeconds = None,
-        health_check_timeout_seconds: HealthCheckTimeoutSeconds = None,
-        healthy_threshold_count: HealthCheckThresholdCount = None,
-        unhealthy_threshold_count: HealthCheckThresholdCount = None,
-        matcher: Matcher = None,
+        health_check_protocol: ProtocolEnum | None = None,
+        health_check_port: HealthCheckPort | None = None,
+        health_check_path: Path | None = None,
+        health_check_enabled: HealthCheckEnabled | None = None,
+        health_check_interval_seconds: HealthCheckIntervalSeconds | None = None,
+        health_check_timeout_seconds: HealthCheckTimeoutSeconds | None = None,
+        healthy_threshold_count: HealthCheckThresholdCount | None = None,
+        unhealthy_threshold_count: HealthCheckThresholdCount | None = None,
+        matcher: Matcher | None = None,
         **kwargs,
     ) -> ModifyTargetGroupOutput:
         """Modifies the health checks used when evaluating the health state of the
@@ -3149,7 +3153,7 @@ class Elbv2Api:
         trust_store_arn: TrustStoreArn,
         ca_certificates_bundle_s3_bucket: S3Bucket,
         ca_certificates_bundle_s3_key: S3Key,
-        ca_certificates_bundle_s3_object_version: S3ObjectVersion = None,
+        ca_certificates_bundle_s3_object_version: S3ObjectVersion | None = None,
         **kwargs,
     ) -> ModifyTrustStoreOutput:
         """Update the ca certificate bundle for the specified trust store.
@@ -3301,7 +3305,8 @@ class Elbv2Api:
         context: RequestContext,
         load_balancer_arn: LoadBalancerArn,
         security_groups: SecurityGroups,
-        enforce_security_group_inbound_rules_on_private_link_traffic: EnforceSecurityGroupInboundRulesOnPrivateLinkTrafficEnum = None,
+        enforce_security_group_inbound_rules_on_private_link_traffic: EnforceSecurityGroupInboundRulesOnPrivateLinkTrafficEnum
+        | None = None,
         **kwargs,
     ) -> SetSecurityGroupsOutput:
         """Associates the specified security groups with the specified Application
@@ -3329,10 +3334,10 @@ class Elbv2Api:
         self,
         context: RequestContext,
         load_balancer_arn: LoadBalancerArn,
-        subnets: Subnets = None,
-        subnet_mappings: SubnetMappings = None,
-        ip_address_type: IpAddressType = None,
-        enable_prefix_for_ipv6_source_nat: EnablePrefixForIpv6SourceNatEnum = None,
+        subnets: Subnets | None = None,
+        subnet_mappings: SubnetMappings | None = None,
+        ip_address_type: IpAddressType | None = None,
+        enable_prefix_for_ipv6_source_nat: EnablePrefixForIpv6SourceNatEnum | None = None,
         **kwargs,
     ) -> SetSubnetsOutput:
         """Enables the Availability Zones for the specified public subnets for the

@@ -565,13 +565,13 @@ class CognitoIdentityApi:
         context: RequestContext,
         identity_pool_name: IdentityPoolName,
         allow_unauthenticated_identities: IdentityPoolUnauthenticated,
-        allow_classic_flow: ClassicFlow = None,
-        supported_login_providers: IdentityProviders = None,
-        developer_provider_name: DeveloperProviderName = None,
-        open_id_connect_provider_arns: OIDCProviderList = None,
-        cognito_identity_providers: CognitoIdentityProviderList = None,
-        saml_provider_arns: SAMLProviderList = None,
-        identity_pool_tags: IdentityPoolTagsType = None,
+        allow_classic_flow: ClassicFlow | None = None,
+        supported_login_providers: IdentityProviders | None = None,
+        developer_provider_name: DeveloperProviderName | None = None,
+        open_id_connect_provider_arns: OIDCProviderList | None = None,
+        cognito_identity_providers: CognitoIdentityProviderList | None = None,
+        saml_provider_arns: SAMLProviderList | None = None,
+        identity_pool_tags: IdentityPoolTagsType | None = None,
         **kwargs,
     ) -> IdentityPool:
         """Creates a new identity pool. The identity pool is a store of user
@@ -698,8 +698,8 @@ class CognitoIdentityApi:
         self,
         context: RequestContext,
         identity_id: IdentityId,
-        logins: LoginsMap = None,
-        custom_role_arn: ARNString = None,
+        logins: LoginsMap | None = None,
+        custom_role_arn: ARNString | None = None,
         **kwargs,
     ) -> GetCredentialsForIdentityResponse:
         """Returns credentials for the provided identity ID. Any provided logins
@@ -731,8 +731,8 @@ class CognitoIdentityApi:
         self,
         context: RequestContext,
         identity_pool_id: IdentityPoolId,
-        account_id: AccountId = None,
-        logins: LoginsMap = None,
+        account_id: AccountId | None = None,
+        logins: LoginsMap | None = None,
         **kwargs,
     ) -> GetIdResponse:
         """Generates (or retrieves) IdentityID. Supplying multiple logins will
@@ -778,7 +778,11 @@ class CognitoIdentityApi:
 
     @handler("GetOpenIdToken")
     def get_open_id_token(
-        self, context: RequestContext, identity_id: IdentityId, logins: LoginsMap = None, **kwargs
+        self,
+        context: RequestContext,
+        identity_id: IdentityId,
+        logins: LoginsMap | None = None,
+        **kwargs,
     ) -> GetOpenIdTokenResponse:
         """Gets an OpenID token, using a known Cognito ID. This known Cognito ID is
         returned by GetId. You can optionally add additional logins for the
@@ -808,9 +812,9 @@ class CognitoIdentityApi:
         context: RequestContext,
         identity_pool_id: IdentityPoolId,
         logins: LoginsMap,
-        identity_id: IdentityId = None,
-        principal_tags: PrincipalTags = None,
-        token_duration: TokenDuration = None,
+        identity_id: IdentityId | None = None,
+        principal_tags: PrincipalTags | None = None,
+        token_duration: TokenDuration | None = None,
         **kwargs,
     ) -> GetOpenIdTokenForDeveloperIdentityResponse:
         """Registers (or retrieves) a Cognito ``IdentityId`` and an OpenID Connect
@@ -878,8 +882,8 @@ class CognitoIdentityApi:
         context: RequestContext,
         identity_pool_id: IdentityPoolId,
         max_results: QueryLimit,
-        next_token: PaginationKey = None,
-        hide_disabled: HideDisabled = None,
+        next_token: PaginationKey | None = None,
+        hide_disabled: HideDisabled | None = None,
         **kwargs,
     ) -> ListIdentitiesResponse:
         """Lists the identities in an identity pool.
@@ -906,7 +910,7 @@ class CognitoIdentityApi:
         self,
         context: RequestContext,
         max_results: QueryLimit,
-        next_token: PaginationKey = None,
+        next_token: PaginationKey | None = None,
         **kwargs,
     ) -> ListIdentityPoolsResponse:
         """Lists all of the Cognito identity pools registered for your account.
@@ -953,10 +957,10 @@ class CognitoIdentityApi:
         self,
         context: RequestContext,
         identity_pool_id: IdentityPoolId,
-        identity_id: IdentityId = None,
-        developer_user_identifier: DeveloperUserIdentifier = None,
-        max_results: QueryLimit = None,
-        next_token: PaginationKey = None,
+        identity_id: IdentityId | None = None,
+        developer_user_identifier: DeveloperUserIdentifier | None = None,
+        max_results: QueryLimit | None = None,
+        next_token: PaginationKey | None = None,
         **kwargs,
     ) -> LookupDeveloperIdentityResponse:
         """Retrieves the ``IdentityID`` associated with a
@@ -1044,7 +1048,7 @@ class CognitoIdentityApi:
         context: RequestContext,
         identity_pool_id: IdentityPoolId,
         roles: RolesMap,
-        role_mappings: RoleMappingMap = None,
+        role_mappings: RoleMappingMap | None = None,
         **kwargs,
     ) -> None:
         """Sets the roles for an identity pool. These roles are used when making
@@ -1072,8 +1076,8 @@ class CognitoIdentityApi:
         context: RequestContext,
         identity_pool_id: IdentityPoolId,
         identity_provider_name: IdentityProviderName,
-        use_defaults: UseDefaults = None,
-        principal_tags: PrincipalTags = None,
+        use_defaults: UseDefaults | None = None,
+        principal_tags: PrincipalTags | None = None,
         **kwargs,
     ) -> SetPrincipalTagAttributeMapResponse:
         """You can use this operation to use default (username and clientID)
@@ -1220,13 +1224,13 @@ class CognitoIdentityApi:
         identity_pool_id: IdentityPoolId,
         identity_pool_name: IdentityPoolName,
         allow_unauthenticated_identities: IdentityPoolUnauthenticated,
-        allow_classic_flow: ClassicFlow = None,
-        supported_login_providers: IdentityProviders = None,
-        developer_provider_name: DeveloperProviderName = None,
-        open_id_connect_provider_arns: OIDCProviderList = None,
-        cognito_identity_providers: CognitoIdentityProviderList = None,
-        saml_provider_arns: SAMLProviderList = None,
-        identity_pool_tags: IdentityPoolTagsType = None,
+        allow_classic_flow: ClassicFlow | None = None,
+        supported_login_providers: IdentityProviders | None = None,
+        developer_provider_name: DeveloperProviderName | None = None,
+        open_id_connect_provider_arns: OIDCProviderList | None = None,
+        cognito_identity_providers: CognitoIdentityProviderList | None = None,
+        saml_provider_arns: SAMLProviderList | None = None,
+        identity_pool_tags: IdentityPoolTagsType | None = None,
         **kwargs,
     ) -> IdentityPool:
         """Updates the configuration of an identity pool.

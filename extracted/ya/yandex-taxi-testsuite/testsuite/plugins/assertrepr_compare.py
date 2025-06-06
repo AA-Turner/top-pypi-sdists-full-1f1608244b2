@@ -89,7 +89,7 @@ def pytest_addoption(parser: pytest.Parser):
     group = parser.getgroup('common')
     group.addoption(
         '--assert-mode',
-        choices=[i.name for i in list(AssertMode)],
+        choices=list(AssertMode),
         type=AssertMode,
         default=AssertMode.COMBINE,
         help='Assertion representation mode, combined by default',
@@ -102,8 +102,8 @@ def pytest_addoption(parser: pytest.Parser):
     )
     group.addoption(
         '--assert-transform-mode',
-        choices=['default', 'experimental'],
+        choices=list(compare_transform.TransformMode),
         type=compare_transform.TransformMode,
-        default='default',
+        default=compare_transform.TransformMode.DEFAULT,
         help='Transformation mode in assertion representation',
     )

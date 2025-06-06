@@ -3,7 +3,7 @@
 # *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import builtins
-import builtins
+import pulumi
 from enum import Enum
 
 __all__ = [
@@ -20,12 +20,15 @@ __all__ = [
     'GroupProfileStatus',
     'OwnerEntityType',
     'ProjectMembershipUserDesignation',
+    'ProjectProfileStatus',
+    'ProjectStatus',
     'UserProfileStatus',
     'UserProfileType',
     'UserProfileUserType',
 ]
 
 
+@pulumi.type_token("aws-native:datazone:ConnectionAuthenticationType")
 class ConnectionAuthenticationType(builtins.str, Enum):
     """
     Authentication Type
@@ -35,6 +38,7 @@ class ConnectionAuthenticationType(builtins.str, Enum):
     CUSTOM = "CUSTOM"
 
 
+@pulumi.type_token("aws-native:datazone:ConnectionOAuth2GrantType")
 class ConnectionOAuth2GrantType(builtins.str, Enum):
     """
     OAuth2 Grant Type
@@ -44,6 +48,7 @@ class ConnectionOAuth2GrantType(builtins.str, Enum):
     JWT_BEARER = "JWT_BEARER"
 
 
+@pulumi.type_token("aws-native:datazone:DataSourceEnableSetting")
 class DataSourceEnableSetting(builtins.str, Enum):
     """
     Specifies whether the data source is enabled.
@@ -52,6 +57,7 @@ class DataSourceEnableSetting(builtins.str, Enum):
     DISABLED = "DISABLED"
 
 
+@pulumi.type_token("aws-native:datazone:DataSourceFilterExpressionType")
 class DataSourceFilterExpressionType(builtins.str, Enum):
     """
     The search filter expression type.
@@ -60,6 +66,7 @@ class DataSourceFilterExpressionType(builtins.str, Enum):
     EXCLUDE = "EXCLUDE"
 
 
+@pulumi.type_token("aws-native:datazone:DataSourceStatus")
 class DataSourceStatus(builtins.str, Enum):
     """
     The status of the data source.
@@ -74,6 +81,7 @@ class DataSourceStatus(builtins.str, Enum):
     FAILED_DELETION = "FAILED_DELETION"
 
 
+@pulumi.type_token("aws-native:datazone:DomainAuthType")
 class DomainAuthType(builtins.str, Enum):
     """
     The type of single sign-on in Amazon DataZone.
@@ -82,6 +90,7 @@ class DomainAuthType(builtins.str, Enum):
     DISABLED = "DISABLED"
 
 
+@pulumi.type_token("aws-native:datazone:DomainStatus")
 class DomainStatus(builtins.str, Enum):
     """
     The status of the Amazon DataZone domain.
@@ -94,6 +103,7 @@ class DomainStatus(builtins.str, Enum):
     DELETION_FAILED = "DELETION_FAILED"
 
 
+@pulumi.type_token("aws-native:datazone:DomainUserAssignment")
 class DomainUserAssignment(builtins.str, Enum):
     """
     The single sign-on user assignment in Amazon DataZone.
@@ -102,6 +112,7 @@ class DomainUserAssignment(builtins.str, Enum):
     MANUAL = "MANUAL"
 
 
+@pulumi.type_token("aws-native:datazone:DomainVersion")
 class DomainVersion(builtins.str, Enum):
     """
     The version of the domain.
@@ -110,6 +121,7 @@ class DomainVersion(builtins.str, Enum):
     V2 = "V2"
 
 
+@pulumi.type_token("aws-native:datazone:EnvironmentStatus")
 class EnvironmentStatus(builtins.str, Enum):
     """
     The status of the Amazon DataZone environment.
@@ -129,6 +141,7 @@ class EnvironmentStatus(builtins.str, Enum):
     INACCESSIBLE = "INACCESSIBLE"
 
 
+@pulumi.type_token("aws-native:datazone:GroupProfileStatus")
 class GroupProfileStatus(builtins.str, Enum):
     """
     The status of the group profile.
@@ -137,6 +150,7 @@ class GroupProfileStatus(builtins.str, Enum):
     NOT_ASSIGNED = "NOT_ASSIGNED"
 
 
+@pulumi.type_token("aws-native:datazone:OwnerEntityType")
 class OwnerEntityType(builtins.str, Enum):
     """
     The type of an entity.
@@ -144,6 +158,7 @@ class OwnerEntityType(builtins.str, Enum):
     DOMAIN_UNIT = "DOMAIN_UNIT"
 
 
+@pulumi.type_token("aws-native:datazone:ProjectMembershipUserDesignation")
 class ProjectMembershipUserDesignation(builtins.str, Enum):
     PROJECT_OWNER = "PROJECT_OWNER"
     PROJECT_CONTRIBUTOR = "PROJECT_CONTRIBUTOR"
@@ -152,6 +167,23 @@ class ProjectMembershipUserDesignation(builtins.str, Enum):
     PROJECT_CATALOG_STEWARD = "PROJECT_CATALOG_STEWARD"
 
 
+@pulumi.type_token("aws-native:datazone:ProjectProfileStatus")
+class ProjectProfileStatus(builtins.str, Enum):
+    ENABLED = "ENABLED"
+    DISABLED = "DISABLED"
+
+
+@pulumi.type_token("aws-native:datazone:ProjectStatus")
+class ProjectStatus(builtins.str, Enum):
+    ACTIVE = "ACTIVE"
+    MOVING = "MOVING"
+    DELETING = "DELETING"
+    DELETE_FAILED = "DELETE_FAILED"
+    UPDATING = "UPDATING"
+    UPDATE_FAILED = "UPDATE_FAILED"
+
+
+@pulumi.type_token("aws-native:datazone:UserProfileStatus")
 class UserProfileStatus(builtins.str, Enum):
     """
     The status of the user profile.
@@ -162,6 +194,7 @@ class UserProfileStatus(builtins.str, Enum):
     DEACTIVATED = "DEACTIVATED"
 
 
+@pulumi.type_token("aws-native:datazone:UserProfileType")
 class UserProfileType(builtins.str, Enum):
     """
     The type of the user profile.
@@ -170,6 +203,7 @@ class UserProfileType(builtins.str, Enum):
     SSO = "SSO"
 
 
+@pulumi.type_token("aws-native:datazone:UserProfileUserType")
 class UserProfileUserType(builtins.str, Enum):
     """
     The type of the user.

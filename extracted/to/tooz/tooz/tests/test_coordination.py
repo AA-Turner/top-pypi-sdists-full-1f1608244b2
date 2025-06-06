@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #    Copyright © 2013-2015 eNovance Inc. All Rights Reserved.
 #
@@ -913,8 +912,8 @@ class TestAPI(tests.TestWithCoordinator):
         name = tests.get_random_uuid()
         blocking_value = 10.12
         lock = self._coord.get_lock(name)
-        with mock.patch.object(lock, 'acquire', wraps=True, autospec=True) as \
-                mock_acquire:
+        with mock.patch.object(lock, 'acquire', wraps=lock.acquire,
+                               autospec=True) as mock_acquire:
             with lock(blocking_value):
                 mock_acquire.assert_called_once_with(blocking_value)
 
@@ -988,7 +987,7 @@ class TestAPI(tests.TestWithCoordinator):
 
 class TestHook(testcase.TestCase):
     def setUp(self):
-        super(TestHook, self).setUp()
+        super().setUp()
         self.hooks = tooz.coordination.Hooks()
         self.triggered = False
 

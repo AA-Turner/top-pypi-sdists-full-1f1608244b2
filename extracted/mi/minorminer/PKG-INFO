@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: minorminer
-Version: 0.2.18
+Version: 0.2.19
 Summary: Heuristic algorithm to find graph minor embeddings.
 Author: Kelly Boothby
 Maintainer-email: "D-Wave Inc." <tools@dwavesys.com>

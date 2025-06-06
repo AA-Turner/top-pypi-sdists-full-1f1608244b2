@@ -43,6 +43,7 @@ from google.auth.exceptions import MutualTLSChannelError  # type: ignore
 from google.auth.transport import mtls  # type: ignore
 from google.auth.transport.grpc import SslCredentials  # type: ignore
 from google.oauth2 import service_account  # type: ignore
+import google.protobuf
 
 from google.cloud.discoveryengine_v1 import gapic_version as package_version
 
@@ -248,6 +249,32 @@ class ControlServiceClient(metaclass=ControlServiceClientMeta):
         """Parses a data_store path into its component segments."""
         m = re.match(
             r"^projects/(?P<project>.+?)/locations/(?P<location>.+?)/dataStores/(?P<data_store>.+?)$",
+            path,
+        )
+        return m.groupdict() if m else {}
+
+    @staticmethod
+    def document_path(
+        project: str,
+        location: str,
+        data_store: str,
+        branch: str,
+        document: str,
+    ) -> str:
+        """Returns a fully-qualified document string."""
+        return "projects/{project}/locations/{location}/dataStores/{data_store}/branches/{branch}/documents/{document}".format(
+            project=project,
+            location=location,
+            data_store=data_store,
+            branch=branch,
+            document=document,
+        )
+
+    @staticmethod
+    def parse_document_path(path: str) -> Dict[str, str]:
+        """Parses a document path into its component segments."""
+        m = re.match(
+            r"^projects/(?P<project>.+?)/locations/(?P<location>.+?)/dataStores/(?P<data_store>.+?)/branches/(?P<branch>.+?)/documents/(?P<document>.+?)$",
             path,
         )
         return m.groupdict() if m else {}
@@ -1557,5 +1584,7 @@ DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
     gapic_version=package_version.__version__
 )
 
+if hasattr(DEFAULT_CLIENT_INFO, "protobuf_runtime_version"):  # pragma: NO COVER
+    DEFAULT_CLIENT_INFO.protobuf_runtime_version = google.protobuf.__version__
 
 __all__ = ("ControlServiceClient",)

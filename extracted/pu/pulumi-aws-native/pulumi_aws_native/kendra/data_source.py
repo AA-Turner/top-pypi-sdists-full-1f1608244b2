@@ -204,10 +204,8 @@ class DataSourceArgs:
         pulumi.set(self, "tags", value)
 
 
+@pulumi.type_token("aws-native:kendra:DataSource")
 class DataSource(pulumi.CustomResource):
-
-    pulumi_type = "aws-native:kendra:DataSource"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -306,7 +304,7 @@ class DataSource(pulumi.CustomResource):
             __props__.__dict__["type"] = type
             __props__.__dict__["arn"] = None
             __props__.__dict__["aws_id"] = None
-        replace_on_changes = pulumi.ResourceOptions(replace_on_changes=["type"])
+        replace_on_changes = pulumi.ResourceOptions(replace_on_changes=["indexId", "type"])
         opts = pulumi.ResourceOptions.merge(opts, replace_on_changes)
         super(DataSource, __self__).__init__(
             'aws-native:kendra:DataSource',

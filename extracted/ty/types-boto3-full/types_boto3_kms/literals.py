@@ -34,10 +34,14 @@ __all__ = (
     "EncryptionAlgorithmSpecType",
     "ExpirationModelTypeType",
     "GrantOperationType",
+    "ImportStateType",
+    "ImportTypeType",
+    "IncludeKeyMaterialType",
     "KMSServiceName",
     "KeyAgreementAlgorithmSpecType",
     "KeyEncryptionMechanismType",
     "KeyManagerTypeType",
+    "KeyMaterialStateType",
     "KeySpecType",
     "KeyStateType",
     "KeyUsageTypeType",
@@ -145,9 +149,13 @@ GrantOperationType = Literal[
     "Verify",
     "VerifyMac",
 ]
+ImportStateType = Literal["IMPORTED", "PENDING_IMPORT"]
+ImportTypeType = Literal["EXISTING_KEY_MATERIAL", "NEW_KEY_MATERIAL"]
+IncludeKeyMaterialType = Literal["ALL_KEY_MATERIAL", "ROTATIONS_ONLY"]
 KeyAgreementAlgorithmSpecType = Literal["ECDH"]
 KeyEncryptionMechanismType = Literal["RSAES_OAEP_SHA_256"]
 KeyManagerTypeType = Literal["AWS", "CUSTOMER"]
+KeyMaterialStateType = Literal["CURRENT", "NON_CURRENT", "PENDING_ROTATION"]
 KeySpecType = Literal[
     "ECC_NIST_P256",
     "ECC_NIST_P384",

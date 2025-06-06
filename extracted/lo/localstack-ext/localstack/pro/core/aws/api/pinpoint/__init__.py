@@ -4608,7 +4608,11 @@ class PinpointApi:
 
     @handler("DeleteEmailTemplate")
     def delete_email_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> DeleteEmailTemplateResponse:
         """Deletes a message template for messages that were sent through the email
         channel.
@@ -4685,7 +4689,11 @@ class PinpointApi:
 
     @handler("DeleteInAppTemplate")
     def delete_in_app_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> DeleteInAppTemplateResponse:
         """Deletes a message template for messages sent using the in-app message
         channel.
@@ -4725,7 +4733,11 @@ class PinpointApi:
 
     @handler("DeletePushTemplate")
     def delete_push_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> DeletePushTemplateResponse:
         """Deletes a message template for messages that were sent through a push
         notification channel.
@@ -4802,7 +4814,11 @@ class PinpointApi:
 
     @handler("DeleteSmsTemplate")
     def delete_sms_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> DeleteSmsTemplateResponse:
         """Deletes a message template for messages that were sent through the SMS
         channel.
@@ -4861,7 +4877,11 @@ class PinpointApi:
 
     @handler("DeleteVoiceTemplate")
     def delete_voice_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> DeleteVoiceTemplateResponse:
         """Deletes a message template for messages that were sent through the voice
         channel.
@@ -4997,10 +5017,10 @@ class PinpointApi:
         context: RequestContext,
         application_id: _string,
         kpi_name: _string,
-        end_time: _timestampIso8601 = None,
-        next_token: _string = None,
-        page_size: _string = None,
-        start_time: _timestampIso8601 = None,
+        end_time: _timestampIso8601 | None = None,
+        next_token: _string | None = None,
+        page_size: _string | None = None,
+        start_time: _timestampIso8601 | None = None,
         **kwargs,
     ) -> GetApplicationDateRangeKpiResponse:
         """Retrieves (queries) pre-aggregated data for a standard metric that
@@ -5048,7 +5068,11 @@ class PinpointApi:
 
     @handler("GetApps")
     def get_apps(
-        self, context: RequestContext, page_size: _string = None, token: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        page_size: _string | None = None,
+        token: _string | None = None,
+        **kwargs,
     ) -> GetAppsResponse:
         """Retrieves information about all the applications that are associated
         with your Amazon Pinpoint account.
@@ -5113,8 +5137,8 @@ class PinpointApi:
         context: RequestContext,
         application_id: _string,
         campaign_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetCampaignActivitiesResponse:
         """Retrieves information about all the activities for a campaign.
@@ -5143,10 +5167,10 @@ class PinpointApi:
         application_id: _string,
         kpi_name: _string,
         campaign_id: _string,
-        end_time: _timestampIso8601 = None,
-        next_token: _string = None,
-        page_size: _string = None,
-        start_time: _timestampIso8601 = None,
+        end_time: _timestampIso8601 | None = None,
+        next_token: _string | None = None,
+        page_size: _string | None = None,
+        start_time: _timestampIso8601 | None = None,
         **kwargs,
     ) -> GetCampaignDateRangeKpiResponse:
         """Retrieves (queries) pre-aggregated data for a standard metric that
@@ -5207,8 +5231,8 @@ class PinpointApi:
         context: RequestContext,
         application_id: _string,
         campaign_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetCampaignVersionsResponse:
         """Retrieves information about the status, configuration, and other
@@ -5236,8 +5260,8 @@ class PinpointApi:
         self,
         context: RequestContext,
         application_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetCampaignsResponse:
         """Retrieves information about the status, configuration, and other
@@ -5299,7 +5323,11 @@ class PinpointApi:
 
     @handler("GetEmailTemplate")
     def get_email_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> GetEmailTemplateResponse:
         """Retrieves the content and settings of a message template for messages
         that are sent through the email channel.
@@ -5382,8 +5410,8 @@ class PinpointApi:
         self,
         context: RequestContext,
         application_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetExportJobsResponse:
         """Retrieves information about the status and settings of all the export
@@ -5449,8 +5477,8 @@ class PinpointApi:
         self,
         context: RequestContext,
         application_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetImportJobsResponse:
         """Retrieves information about the status and settings of all the import
@@ -5493,7 +5521,11 @@ class PinpointApi:
 
     @handler("GetInAppTemplate")
     def get_in_app_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> GetInAppTemplateResponse:
         """Retrieves the content and settings of a message template for messages
         sent through the in-app channel.
@@ -5539,10 +5571,10 @@ class PinpointApi:
         journey_id: _string,
         application_id: _string,
         kpi_name: _string,
-        end_time: _timestampIso8601 = None,
-        next_token: _string = None,
-        page_size: _string = None,
-        start_time: _timestampIso8601 = None,
+        end_time: _timestampIso8601 | None = None,
+        next_token: _string | None = None,
+        page_size: _string | None = None,
+        start_time: _timestampIso8601 | None = None,
         **kwargs,
     ) -> GetJourneyDateRangeKpiResponse:
         """Retrieves (queries) pre-aggregated data for a standard engagement metric
@@ -5578,8 +5610,8 @@ class PinpointApi:
         journey_activity_id: _string,
         application_id: _string,
         journey_id: _string,
-        next_token: _string = None,
-        page_size: _string = None,
+        next_token: _string | None = None,
+        page_size: _string | None = None,
         **kwargs,
     ) -> GetJourneyExecutionActivityMetricsResponse:
         """Retrieves (queries) pre-aggregated data for a standard execution metric
@@ -5609,8 +5641,8 @@ class PinpointApi:
         context: RequestContext,
         application_id: _string,
         journey_id: _string,
-        next_token: _string = None,
-        page_size: _string = None,
+        next_token: _string | None = None,
+        page_size: _string | None = None,
         **kwargs,
     ) -> GetJourneyExecutionMetricsResponse:
         """Retrieves (queries) pre-aggregated data for a standard execution metric
@@ -5641,8 +5673,8 @@ class PinpointApi:
         journey_activity_id: _string,
         journey_id: _string,
         application_id: _string,
-        next_token: _string = None,
-        page_size: _string = None,
+        next_token: _string | None = None,
+        page_size: _string | None = None,
         **kwargs,
     ) -> GetJourneyRunExecutionActivityMetricsResponse:
         """Retrieves (queries) pre-aggregated data for a standard run execution
@@ -5674,8 +5706,8 @@ class PinpointApi:
         run_id: _string,
         application_id: _string,
         journey_id: _string,
-        next_token: _string = None,
-        page_size: _string = None,
+        next_token: _string | None = None,
+        page_size: _string | None = None,
         **kwargs,
     ) -> GetJourneyRunExecutionMetricsResponse:
         """Retrieves (queries) pre-aggregated data for a standard run execution
@@ -5705,8 +5737,8 @@ class PinpointApi:
         context: RequestContext,
         application_id: _string,
         journey_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetJourneyRunsResponse:
         """Provides information about the runs of a journey.
@@ -5730,7 +5762,11 @@ class PinpointApi:
 
     @handler("GetPushTemplate")
     def get_push_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> GetPushTemplateResponse:
         """Retrieves the content and settings of a message template for messages
         that are sent through a push notification channel.
@@ -5770,7 +5806,11 @@ class PinpointApi:
 
     @handler("GetRecommenderConfigurations")
     def get_recommender_configurations(
-        self, context: RequestContext, page_size: _string = None, token: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        page_size: _string | None = None,
+        token: _string | None = None,
+        **kwargs,
     ) -> GetRecommenderConfigurationsResponse:
         """Retrieves information about all the recommender model configurations
         that are associated with your Amazon Pinpoint account.
@@ -5816,8 +5856,8 @@ class PinpointApi:
         context: RequestContext,
         segment_id: _string,
         application_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetSegmentExportJobsResponse:
         """Retrieves information about the status and settings of the export jobs
@@ -5846,8 +5886,8 @@ class PinpointApi:
         context: RequestContext,
         segment_id: _string,
         application_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetSegmentImportJobsResponse:
         """Retrieves information about the status and settings of the import jobs
@@ -5903,8 +5943,8 @@ class PinpointApi:
         context: RequestContext,
         segment_id: _string,
         application_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetSegmentVersionsResponse:
         """Retrieves information about the configuration, dimension, and other
@@ -5933,8 +5973,8 @@ class PinpointApi:
         self,
         context: RequestContext,
         application_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> GetSegmentsResponse:
         """Retrieves information about the configuration, dimension, and other
@@ -5977,7 +6017,11 @@ class PinpointApi:
 
     @handler("GetSmsTemplate")
     def get_sms_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> GetSmsTemplateResponse:
         """Retrieves the content and settings of a message template for messages
         that are sent through the SMS channel.
@@ -6037,7 +6081,11 @@ class PinpointApi:
 
     @handler("GetVoiceTemplate")
     def get_voice_template(
-        self, context: RequestContext, template_name: _string, version: _string = None, **kwargs
+        self,
+        context: RequestContext,
+        template_name: _string,
+        version: _string | None = None,
+        **kwargs,
     ) -> GetVoiceTemplateResponse:
         """Retrieves the content and settings of a message template for messages
         that are sent through the voice channel.
@@ -6061,8 +6109,8 @@ class PinpointApi:
         self,
         context: RequestContext,
         application_id: _string,
-        page_size: _string = None,
-        token: _string = None,
+        page_size: _string | None = None,
+        token: _string | None = None,
         **kwargs,
     ) -> ListJourneysResponse:
         """Retrieves information about the status, configuration, and other
@@ -6102,8 +6150,8 @@ class PinpointApi:
         context: RequestContext,
         template_name: _string,
         template_type: _string,
-        next_token: _string = None,
-        page_size: _string = None,
+        next_token: _string | None = None,
+        page_size: _string | None = None,
         **kwargs,
     ) -> ListTemplateVersionsResponse:
         """Retrieves information about all the versions of a specific message
@@ -6130,10 +6178,10 @@ class PinpointApi:
     def list_templates(
         self,
         context: RequestContext,
-        next_token: _string = None,
-        page_size: _string = None,
-        prefix: _string = None,
-        template_type: _string = None,
+        next_token: _string | None = None,
+        page_size: _string | None = None,
+        prefix: _string | None = None,
+        template_type: _string | None = None,
         **kwargs,
     ) -> ListTemplatesResponse:
         """Retrieves information about all the message templates that are
@@ -6575,8 +6623,8 @@ class PinpointApi:
         context: RequestContext,
         template_name: _string,
         email_template_request: EmailTemplateRequest,
-        create_new_version: _boolean = None,
-        version: _string = None,
+        create_new_version: _boolean | None = None,
+        version: _string | None = None,
         **kwargs,
     ) -> UpdateEmailTemplateResponse:
         """Updates an existing message template for messages that are sent through
@@ -6688,8 +6736,8 @@ class PinpointApi:
         context: RequestContext,
         template_name: _string,
         in_app_template_request: InAppTemplateRequest,
-        create_new_version: _boolean = None,
-        version: _string = None,
+        create_new_version: _boolean | None = None,
+        version: _string | None = None,
         **kwargs,
     ) -> UpdateInAppTemplateResponse:
         """Updates an existing message template for messages sent through the
@@ -6769,8 +6817,8 @@ class PinpointApi:
         context: RequestContext,
         template_name: _string,
         push_notification_template_request: PushNotificationTemplateRequest,
-        create_new_version: _boolean = None,
-        version: _string = None,
+        create_new_version: _boolean | None = None,
+        version: _string | None = None,
         **kwargs,
     ) -> UpdatePushTemplateResponse:
         """Updates an existing message template for messages that are sent through
@@ -6876,8 +6924,8 @@ class PinpointApi:
         context: RequestContext,
         template_name: _string,
         sms_template_request: SMSTemplateRequest,
-        create_new_version: _boolean = None,
-        version: _string = None,
+        create_new_version: _boolean | None = None,
+        version: _string | None = None,
         **kwargs,
     ) -> UpdateSmsTemplateResponse:
         """Updates an existing message template for messages that are sent through
@@ -6959,8 +7007,8 @@ class PinpointApi:
         context: RequestContext,
         template_name: _string,
         voice_template_request: VoiceTemplateRequest,
-        create_new_version: _boolean = None,
-        version: _string = None,
+        create_new_version: _boolean | None = None,
+        version: _string | None = None,
         **kwargs,
     ) -> UpdateVoiceTemplateResponse:
         """Updates an existing message template for messages that are sent through

@@ -12,9 +12,11 @@ AttributeType = str
 AttributeValue = str
 BillingViewArn = str
 CostAllocationTagsMaxResults = int
+CostAndUsageComparisonsMaxResults = int
 CostCategoryMaxResults = int
 CostCategoryName = str
 CostCategoryValue = str
+CostComparisonDriversMaxResults = int
 CoverageHoursPercentage = str
 CoverageNormalizedUnitsPercentage = str
 Entity = str
@@ -867,6 +869,21 @@ ApproximateUsageRecordsPerService = Dict[GenericString, NonNegativeLong]
 Attributes = Dict[AttributeType, AttributeValue]
 
 
+class ComparisonMetricValue(TypedDict, total=False):
+    """Contains cost or usage metric values for comparing two time periods.
+    Each value includes amounts for the baseline and comparison time
+    periods, their difference, and the unit of measurement.
+    """
+
+    BaselineTimePeriodAmount: Optional[GenericString]
+    ComparisonTimePeriodAmount: Optional[GenericString]
+    Difference: Optional[GenericString]
+    Unit: Optional[GenericString]
+
+
+ComparisonMetrics = Dict[MetricName, ComparisonMetricValue]
+
+
 class CostAllocationTag(TypedDict, total=False):
     """The cost allocation tag structure. This includes detailed metadata for
     the ``CostAllocationTag`` object.
@@ -906,6 +923,18 @@ class CostAllocationTagStatusEntry(TypedDict, total=False):
 
 
 CostAllocationTagStatusList = List[CostAllocationTagStatusEntry]
+
+
+class CostAndUsageComparison(TypedDict, total=False):
+    """Represents a comparison of cost and usage metrics between two time
+    periods.
+    """
+
+    CostAndUsageSelector: Optional[Expression]
+    Metrics: Optional[ComparisonMetrics]
+
+
+CostAndUsageComparisons = List[CostAndUsageComparison]
 
 
 class CostCategoryProcessingStatus(TypedDict, total=False):
@@ -1015,6 +1044,33 @@ class CostCategoryReference(TypedDict, total=False):
 
 
 CostCategoryReferencesList = List[CostCategoryReference]
+
+
+class CostDriver(TypedDict, total=False):
+    """Represents factors that contribute to cost variations between the
+    baseline and comparison time periods, including the type of driver, an
+    identifier of the driver, and associated metrics.
+    """
+
+    Type: Optional[GenericString]
+    Name: Optional[GenericString]
+    Metrics: Optional[ComparisonMetrics]
+
+
+CostDrivers = List[CostDriver]
+
+
+class CostComparisonDriver(TypedDict, total=False):
+    """Represents a collection of cost drivers and their associated metrics for
+    cost comparison analysis.
+    """
+
+    CostSelector: Optional[Expression]
+    Metrics: Optional[ComparisonMetrics]
+    CostDrivers: Optional[CostDrivers]
+
+
+CostComparisonDrivers = List[CostComparisonDriver]
 
 
 class CoverageCost(TypedDict, total=False):
@@ -1442,6 +1498,25 @@ class GroupDefinition(TypedDict, total=False):
 
 
 GroupDefinitions = List[GroupDefinition]
+
+
+class GetCostAndUsageComparisonsRequest(ServiceRequest):
+    BillingViewArn: Optional[BillingViewArn]
+    BaselineTimePeriod: DateInterval
+    ComparisonTimePeriod: DateInterval
+    MetricForComparison: MetricName
+    Filter: Optional[Expression]
+    GroupBy: Optional[GroupDefinitions]
+    MaxResults: Optional[CostAndUsageComparisonsMaxResults]
+    NextPageToken: Optional[NextPageToken]
+
+
+class GetCostAndUsageComparisonsResponse(TypedDict, total=False):
+    CostAndUsageComparisons: Optional[CostAndUsageComparisons]
+    TotalCostAndUsage: Optional[ComparisonMetrics]
+    NextPageToken: Optional[NextPageToken]
+
+
 MetricNames = List[MetricName]
 
 
@@ -1539,6 +1614,22 @@ class GetCostCategoriesResponse(TypedDict, total=False):
     CostCategoryValues: Optional[CostCategoryValuesList]
     ReturnSize: PageSize
     TotalSize: PageSize
+
+
+class GetCostComparisonDriversRequest(ServiceRequest):
+    BillingViewArn: Optional[BillingViewArn]
+    BaselineTimePeriod: DateInterval
+    ComparisonTimePeriod: DateInterval
+    MetricForComparison: MetricName
+    Filter: Optional[Expression]
+    GroupBy: Optional[GroupDefinitions]
+    MaxResults: Optional[CostComparisonDriversMaxResults]
+    NextPageToken: Optional[NextPageToken]
+
+
+class GetCostComparisonDriversResponse(TypedDict, total=False):
+    CostComparisonDrivers: Optional[CostComparisonDrivers]
+    NextPageToken: Optional[NextPageToken]
 
 
 class GetCostForecastRequest(ServiceRequest):
@@ -2404,7 +2495,7 @@ class CeApi:
         self,
         context: RequestContext,
         anomaly_monitor: AnomalyMonitor,
-        resource_tags: ResourceTagList = None,
+        resource_tags: ResourceTagList | None = None,
         **kwargs,
     ) -> CreateAnomalyMonitorResponse:
         """Creates a new cost anomaly detection monitor with the requested type and
@@ -2423,7 +2514,7 @@ class CeApi:
         self,
         context: RequestContext,
         anomaly_subscription: AnomalySubscription,
-        resource_tags: ResourceTagList = None,
+        resource_tags: ResourceTagList | None = None,
         **kwargs,
     ) -> CreateAnomalySubscriptionResponse:
         """Adds an alert subscription to a cost anomaly detection monitor. You can
@@ -2447,10 +2538,10 @@ class CeApi:
         name: CostCategoryName,
         rule_version: CostCategoryRuleVersion,
         rules: CostCategoryRulesList,
-        effective_start: ZonedDateTime = None,
-        default_value: CostCategoryValue = None,
-        split_charge_rules: CostCategorySplitChargeRulesList = None,
-        resource_tags: ResourceTagList = None,
+        effective_start: ZonedDateTime | None = None,
+        default_value: CostCategoryValue | None = None,
+        split_charge_rules: CostCategorySplitChargeRulesList | None = None,
+        resource_tags: ResourceTagList | None = None,
         **kwargs,
     ) -> CreateCostCategoryDefinitionResponse:
         """Creates a new Cost Category with the requested name and rules.
@@ -2517,7 +2608,7 @@ class CeApi:
         self,
         context: RequestContext,
         cost_category_arn: Arn,
-        effective_on: ZonedDateTime = None,
+        effective_on: ZonedDateTime | None = None,
         **kwargs,
     ) -> DescribeCostCategoryDefinitionResponse:
         """Returns the name, Amazon Resource Name (ARN), rules, definition, and
@@ -2542,11 +2633,11 @@ class CeApi:
         self,
         context: RequestContext,
         date_interval: AnomalyDateInterval,
-        monitor_arn: GenericString = None,
-        feedback: AnomalyFeedbackType = None,
-        total_impact: TotalImpactFilter = None,
-        next_page_token: NextPageToken = None,
-        max_results: PageSize = None,
+        monitor_arn: GenericString | None = None,
+        feedback: AnomalyFeedbackType | None = None,
+        total_impact: TotalImpactFilter | None = None,
+        next_page_token: NextPageToken | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> GetAnomaliesResponse:
         """Retrieves all of the cost anomalies detected on your account during the
@@ -2570,9 +2661,9 @@ class CeApi:
     def get_anomaly_monitors(
         self,
         context: RequestContext,
-        monitor_arn_list: Values = None,
-        next_page_token: NextPageToken = None,
-        max_results: PageSize = None,
+        monitor_arn_list: Values | None = None,
+        next_page_token: NextPageToken | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> GetAnomalyMonitorsResponse:
         """Retrieves the cost anomaly monitor definitions for your account. You can
@@ -2593,10 +2684,10 @@ class CeApi:
     def get_anomaly_subscriptions(
         self,
         context: RequestContext,
-        subscription_arn_list: Values = None,
-        monitor_arn: GenericString = None,
-        next_page_token: NextPageToken = None,
-        max_results: PageSize = None,
+        subscription_arn_list: Values | None = None,
+        monitor_arn: GenericString | None = None,
+        next_page_token: NextPageToken | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> GetAnomalySubscriptionsResponse:
         """Retrieves the cost anomaly subscription objects for your account. You
@@ -2620,7 +2711,7 @@ class CeApi:
         context: RequestContext,
         granularity: Granularity,
         approximation_dimension: ApproximationDimension,
-        services: UsageServices = None,
+        services: UsageServices | None = None,
         **kwargs,
     ) -> GetApproximateUsageRecordsResponse:
         """Retrieves estimated usage records for hourly granularity or
@@ -2657,10 +2748,10 @@ class CeApi:
         time_period: DateInterval,
         granularity: Granularity,
         metrics: MetricNames,
-        filter: Expression = None,
-        group_by: GroupDefinitions = None,
-        billing_view_arn: BillingViewArn = None,
-        next_page_token: NextPageToken = None,
+        filter: Expression | None = None,
+        group_by: GroupDefinitions | None = None,
+        billing_view_arn: BillingViewArn | None = None,
+        next_page_token: NextPageToken | None = None,
         **kwargs,
     ) -> GetCostAndUsageResponse:
         """Retrieves cost and usage metrics for your account. You can specify which
@@ -2699,6 +2790,42 @@ class CeApi:
         """
         raise NotImplementedError
 
+    @handler("GetCostAndUsageComparisons")
+    def get_cost_and_usage_comparisons(
+        self,
+        context: RequestContext,
+        baseline_time_period: DateInterval,
+        comparison_time_period: DateInterval,
+        metric_for_comparison: MetricName,
+        billing_view_arn: BillingViewArn | None = None,
+        filter: Expression | None = None,
+        group_by: GroupDefinitions | None = None,
+        max_results: CostAndUsageComparisonsMaxResults | None = None,
+        next_page_token: NextPageToken | None = None,
+        **kwargs,
+    ) -> GetCostAndUsageComparisonsResponse:
+        """Retrieves cost and usage comparisons for your account between two
+        periods within the last 13 months. If you have enabled multi-year data
+        at monthly granularity, you can go back up to 38 months.
+
+        :param baseline_time_period: The reference time period for comparison.
+        :param comparison_time_period: The comparison time period for analysis.
+        :param metric_for_comparison: The cost and usage metric to compare.
+        :param billing_view_arn: The Amazon Resource Name (ARN) that uniquely identifies a specific
+        billing view.
+        :param filter: Use ``Expression`` to filter in various Cost Explorer APIs.
+        :param group_by: You can group results using the attributes ``DIMENSION``, ``TAG``, and
+        ``COST_CATEGORY``.
+        :param max_results: The maximum number of results that are returned for the request.
+        :param next_page_token: The token to retrieve the next set of paginated results.
+        :returns: GetCostAndUsageComparisonsResponse
+        :raises DataUnavailableException:
+        :raises InvalidNextTokenException:
+        :raises LimitExceededException:
+        :raises ResourceNotFoundException:
+        """
+        raise NotImplementedError
+
     @handler("GetCostAndUsageWithResources")
     def get_cost_and_usage_with_resources(
         self,
@@ -2706,10 +2833,10 @@ class CeApi:
         time_period: DateInterval,
         granularity: Granularity,
         filter: Expression,
-        metrics: MetricNames = None,
-        group_by: GroupDefinitions = None,
-        billing_view_arn: BillingViewArn = None,
-        next_page_token: NextPageToken = None,
+        metrics: MetricNames | None = None,
+        group_by: GroupDefinitions | None = None,
+        billing_view_arn: BillingViewArn | None = None,
+        next_page_token: NextPageToken | None = None,
         **kwargs,
     ) -> GetCostAndUsageWithResourcesResponse:
         """Retrieves cost and usage metrics with resources for your account. You
@@ -2757,13 +2884,13 @@ class CeApi:
         self,
         context: RequestContext,
         time_period: DateInterval,
-        search_string: SearchString = None,
-        cost_category_name: CostCategoryName = None,
-        filter: Expression = None,
-        sort_by: SortDefinitions = None,
-        billing_view_arn: BillingViewArn = None,
-        max_results: MaxResults = None,
-        next_page_token: NextPageToken = None,
+        search_string: SearchString | None = None,
+        cost_category_name: CostCategoryName | None = None,
+        filter: Expression | None = None,
+        sort_by: SortDefinitions | None = None,
+        billing_view_arn: BillingViewArn | None = None,
+        max_results: MaxResults | None = None,
+        next_page_token: NextPageToken | None = None,
         **kwargs,
     ) -> GetCostCategoriesResponse:
         """Retrieves an array of Cost Category names and values incurred cost.
@@ -2793,6 +2920,43 @@ class CeApi:
         """
         raise NotImplementedError
 
+    @handler("GetCostComparisonDrivers")
+    def get_cost_comparison_drivers(
+        self,
+        context: RequestContext,
+        baseline_time_period: DateInterval,
+        comparison_time_period: DateInterval,
+        metric_for_comparison: MetricName,
+        billing_view_arn: BillingViewArn | None = None,
+        filter: Expression | None = None,
+        group_by: GroupDefinitions | None = None,
+        max_results: CostComparisonDriversMaxResults | None = None,
+        next_page_token: NextPageToken | None = None,
+        **kwargs,
+    ) -> GetCostComparisonDriversResponse:
+        """Retrieves key factors driving cost changes between two time periods
+        within the last 13 months, such as usage changes, discount changes, and
+        commitment-based savings. If you have enabled multi-year data at monthly
+        granularity, you can go back up to 38 months.
+
+        :param baseline_time_period: The reference time period for comparison.
+        :param comparison_time_period: The comparison time period for analysis.
+        :param metric_for_comparison: The cost and usage metric to compare.
+        :param billing_view_arn: The Amazon Resource Name (ARN) that uniquely identifies a specific
+        billing view.
+        :param filter: Use ``Expression`` to filter in various Cost Explorer APIs.
+        :param group_by: You can group results using the attributes ``DIMENSION``, ``TAG``, and
+        ``COST_CATEGORY``.
+        :param max_results: The maximum number of results that are returned for the request.
+        :param next_page_token: The token to retrieve the next set of paginated results.
+        :returns: GetCostComparisonDriversResponse
+        :raises DataUnavailableException:
+        :raises InvalidNextTokenException:
+        :raises LimitExceededException:
+        :raises ResourceNotFoundException:
+        """
+        raise NotImplementedError
+
     @handler("GetCostForecast")
     def get_cost_forecast(
         self,
@@ -2800,9 +2964,9 @@ class CeApi:
         time_period: DateInterval,
         metric: Metric,
         granularity: Granularity,
-        filter: Expression = None,
-        billing_view_arn: BillingViewArn = None,
-        prediction_interval_level: PredictionIntervalLevel = None,
+        filter: Expression | None = None,
+        billing_view_arn: BillingViewArn | None = None,
+        prediction_interval_level: PredictionIntervalLevel | None = None,
         **kwargs,
     ) -> GetCostForecastResponse:
         """Retrieves a forecast for how much Amazon Web Services predicts that you
@@ -2856,13 +3020,13 @@ class CeApi:
         self,
         context: RequestContext,
         time_period: DateInterval,
-        group_by: GroupDefinitions = None,
-        granularity: Granularity = None,
-        filter: Expression = None,
-        metrics: MetricNames = None,
-        next_page_token: NextPageToken = None,
-        sort_by: SortDefinition = None,
-        max_results: MaxResults = None,
+        group_by: GroupDefinitions | None = None,
+        granularity: Granularity | None = None,
+        filter: Expression | None = None,
+        metrics: MetricNames | None = None,
+        next_page_token: NextPageToken | None = None,
+        sort_by: SortDefinition | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> GetReservationCoverageResponse:
         """Retrieves the reservation coverage for your account, which you can use
@@ -2945,15 +3109,15 @@ class CeApi:
         self,
         context: RequestContext,
         service: GenericString,
-        account_id: GenericString = None,
-        filter: Expression = None,
-        account_scope: AccountScope = None,
-        lookback_period_in_days: LookbackPeriodInDays = None,
-        term_in_years: TermInYears = None,
-        payment_option: PaymentOption = None,
-        service_specification: ServiceSpecification = None,
-        page_size: NonNegativeInteger = None,
-        next_page_token: NextPageToken = None,
+        account_id: GenericString | None = None,
+        filter: Expression | None = None,
+        account_scope: AccountScope | None = None,
+        lookback_period_in_days: LookbackPeriodInDays | None = None,
+        term_in_years: TermInYears | None = None,
+        payment_option: PaymentOption | None = None,
+        service_specification: ServiceSpecification | None = None,
+        page_size: NonNegativeInteger | None = None,
+        next_page_token: NextPageToken | None = None,
         **kwargs,
     ) -> GetReservationPurchaseRecommendationResponse:
         """Gets recommendations for reservation purchases. These recommendations
@@ -3006,12 +3170,12 @@ class CeApi:
         self,
         context: RequestContext,
         time_period: DateInterval,
-        group_by: GroupDefinitions = None,
-        granularity: Granularity = None,
-        filter: Expression = None,
-        sort_by: SortDefinition = None,
-        next_page_token: NextPageToken = None,
-        max_results: MaxResults = None,
+        group_by: GroupDefinitions | None = None,
+        granularity: Granularity | None = None,
+        filter: Expression | None = None,
+        sort_by: SortDefinition | None = None,
+        next_page_token: NextPageToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> GetReservationUtilizationResponse:
         """Retrieves the reservation utilization for your account. Management
@@ -3040,10 +3204,10 @@ class CeApi:
         self,
         context: RequestContext,
         service: GenericString,
-        filter: Expression = None,
-        configuration: RightsizingRecommendationConfiguration = None,
-        page_size: NonNegativeInteger = None,
-        next_page_token: NextPageToken = None,
+        filter: Expression | None = None,
+        configuration: RightsizingRecommendationConfiguration | None = None,
+        page_size: NonNegativeInteger | None = None,
+        next_page_token: NextPageToken | None = None,
         **kwargs,
     ) -> GetRightsizingRecommendationResponse:
         """Creates recommendations that help you save cost by identifying idle and
@@ -3090,13 +3254,13 @@ class CeApi:
         self,
         context: RequestContext,
         time_period: DateInterval,
-        group_by: GroupDefinitions = None,
-        granularity: Granularity = None,
-        filter: Expression = None,
-        metrics: MetricNames = None,
-        next_token: NextPageToken = None,
-        max_results: MaxResults = None,
-        sort_by: SortDefinition = None,
+        group_by: GroupDefinitions | None = None,
+        granularity: Granularity | None = None,
+        filter: Expression | None = None,
+        metrics: MetricNames | None = None,
+        next_token: NextPageToken | None = None,
+        max_results: MaxResults | None = None,
+        sort_by: SortDefinition | None = None,
         **kwargs,
     ) -> GetSavingsPlansCoverageResponse:
         """Retrieves the Savings Plans covered for your account. This enables you
@@ -3142,10 +3306,10 @@ class CeApi:
         term_in_years: TermInYears,
         payment_option: PaymentOption,
         lookback_period_in_days: LookbackPeriodInDays,
-        account_scope: AccountScope = None,
-        next_page_token: NextPageToken = None,
-        page_size: NonNegativeInteger = None,
-        filter: Expression = None,
+        account_scope: AccountScope | None = None,
+        next_page_token: NextPageToken | None = None,
+        page_size: NonNegativeInteger | None = None,
+        filter: Expression | None = None,
         **kwargs,
     ) -> GetSavingsPlansPurchaseRecommendationResponse:
         """Retrieves the Savings Plans recommendations for your account. First use
@@ -3175,9 +3339,9 @@ class CeApi:
         self,
         context: RequestContext,
         time_period: DateInterval,
-        granularity: Granularity = None,
-        filter: Expression = None,
-        sort_by: SortDefinition = None,
+        granularity: Granularity | None = None,
+        filter: Expression | None = None,
+        sort_by: SortDefinition | None = None,
         **kwargs,
     ) -> GetSavingsPlansUtilizationResponse:
         """Retrieves the Savings Plans utilization for your account across date
@@ -3206,11 +3370,11 @@ class CeApi:
         self,
         context: RequestContext,
         time_period: DateInterval,
-        filter: Expression = None,
-        data_type: SavingsPlansDataTypes = None,
-        next_token: NextPageToken = None,
-        max_results: MaxResults = None,
-        sort_by: SortDefinition = None,
+        filter: Expression | None = None,
+        data_type: SavingsPlansDataTypes | None = None,
+        next_token: NextPageToken | None = None,
+        max_results: MaxResults | None = None,
+        sort_by: SortDefinition | None = None,
         **kwargs,
     ) -> GetSavingsPlansUtilizationDetailsResponse:
         """Retrieves attribute data along with aggregate utilization and savings
@@ -3244,13 +3408,13 @@ class CeApi:
         self,
         context: RequestContext,
         time_period: DateInterval,
-        search_string: SearchString = None,
-        tag_key: TagKey = None,
-        filter: Expression = None,
-        sort_by: SortDefinitions = None,
-        billing_view_arn: BillingViewArn = None,
-        max_results: MaxResults = None,
-        next_page_token: NextPageToken = None,
+        search_string: SearchString | None = None,
+        tag_key: TagKey | None = None,
+        filter: Expression | None = None,
+        sort_by: SortDefinitions | None = None,
+        billing_view_arn: BillingViewArn | None = None,
+        max_results: MaxResults | None = None,
+        next_page_token: NextPageToken | None = None,
         **kwargs,
     ) -> GetTagsResponse:
         """Queries for available tag keys and tag values for a specified period.
@@ -3282,9 +3446,9 @@ class CeApi:
         time_period: DateInterval,
         metric: Metric,
         granularity: Granularity,
-        filter: Expression = None,
-        billing_view_arn: BillingViewArn = None,
-        prediction_interval_level: PredictionIntervalLevel = None,
+        filter: Expression | None = None,
+        billing_view_arn: BillingViewArn | None = None,
+        prediction_interval_level: PredictionIntervalLevel | None = None,
         **kwargs,
     ) -> GetUsageForecastResponse:
         """Retrieves a forecast for how much Amazon Web Services predicts that you
@@ -3312,10 +3476,10 @@ class CeApi:
     def list_commitment_purchase_analyses(
         self,
         context: RequestContext,
-        analysis_status: AnalysisStatus = None,
-        next_page_token: NextPageToken = None,
-        page_size: NonNegativeInteger = None,
-        analysis_ids: AnalysisIds = None,
+        analysis_status: AnalysisStatus | None = None,
+        next_page_token: NextPageToken | None = None,
+        page_size: NonNegativeInteger | None = None,
+        analysis_ids: AnalysisIds | None = None,
         **kwargs,
     ) -> ListCommitmentPurchaseAnalysesResponse:
         """Lists the commitment purchase analyses for your account.
@@ -3336,8 +3500,8 @@ class CeApi:
     def list_cost_allocation_tag_backfill_history(
         self,
         context: RequestContext,
-        next_token: NextPageToken = None,
-        max_results: CostAllocationTagsMaxResults = None,
+        next_token: NextPageToken | None = None,
+        max_results: CostAllocationTagsMaxResults | None = None,
         **kwargs,
     ) -> ListCostAllocationTagBackfillHistoryResponse:
         """Retrieves a list of your historical cost allocation tag backfill
@@ -3375,9 +3539,9 @@ class CeApi:
     def list_cost_category_definitions(
         self,
         context: RequestContext,
-        effective_on: ZonedDateTime = None,
-        next_token: NextPageToken = None,
-        max_results: CostCategoryMaxResults = None,
+        effective_on: ZonedDateTime | None = None,
+        next_token: NextPageToken | None = None,
+        max_results: CostCategoryMaxResults | None = None,
         **kwargs,
     ) -> ListCostCategoryDefinitionsResponse:
         """Returns the name, Amazon Resource Name (ARN), ``NumberOfRules`` and
@@ -3401,10 +3565,10 @@ class CeApi:
     def list_savings_plans_purchase_recommendation_generation(
         self,
         context: RequestContext,
-        generation_status: GenerationStatus = None,
-        recommendation_ids: RecommendationIdList = None,
-        page_size: NonNegativeInteger = None,
-        next_page_token: NextPageToken = None,
+        generation_status: GenerationStatus | None = None,
+        recommendation_ids: RecommendationIdList | None = None,
+        page_size: NonNegativeInteger | None = None,
+        next_page_token: NextPageToken | None = None,
         **kwargs,
     ) -> ListSavingsPlansPurchaseRecommendationGenerationResponse:
         """Retrieves a list of your historical recommendation generations within
@@ -3562,7 +3726,7 @@ class CeApi:
         self,
         context: RequestContext,
         monitor_arn: GenericString,
-        monitor_name: GenericString = None,
+        monitor_name: GenericString | None = None,
         **kwargs,
     ) -> UpdateAnomalyMonitorResponse:
         """Updates an existing cost anomaly monitor. The changes made are applied
@@ -3581,12 +3745,12 @@ class CeApi:
         self,
         context: RequestContext,
         subscription_arn: GenericString,
-        threshold: NullableNonNegativeDouble = None,
-        frequency: AnomalySubscriptionFrequency = None,
-        monitor_arn_list: MonitorArnList = None,
-        subscribers: Subscribers = None,
-        subscription_name: GenericString = None,
-        threshold_expression: Expression = None,
+        threshold: NullableNonNegativeDouble | None = None,
+        frequency: AnomalySubscriptionFrequency | None = None,
+        monitor_arn_list: MonitorArnList | None = None,
+        subscribers: Subscribers | None = None,
+        subscription_name: GenericString | None = None,
+        threshold_expression: Expression | None = None,
         **kwargs,
     ) -> UpdateAnomalySubscriptionResponse:
         """Updates an existing cost anomaly subscription. Specify the fields that
@@ -3641,9 +3805,9 @@ class CeApi:
         cost_category_arn: Arn,
         rule_version: CostCategoryRuleVersion,
         rules: CostCategoryRulesList,
-        effective_start: ZonedDateTime = None,
-        default_value: CostCategoryValue = None,
-        split_charge_rules: CostCategorySplitChargeRulesList = None,
+        effective_start: ZonedDateTime | None = None,
+        default_value: CostCategoryValue | None = None,
+        split_charge_rules: CostCategorySplitChargeRulesList | None = None,
         **kwargs,
     ) -> UpdateCostCategoryDefinitionResponse:
         """Updates an existing Cost Category. Changes made to the Cost Category

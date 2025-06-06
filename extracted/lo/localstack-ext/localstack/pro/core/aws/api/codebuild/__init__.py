@@ -586,6 +586,21 @@ class LogsConfig(TypedDict, total=False):
     s3Logs: Optional[S3LogsConfig]
 
 
+class DockerServerStatus(TypedDict, total=False):
+    """Contains information about the status of the docker server."""
+
+    status: Optional[String]
+    message: Optional[String]
+
+
+class DockerServer(TypedDict, total=False):
+    """Contains docker server information."""
+
+    computeType: ComputeType
+    securityGroupIds: Optional[SecurityGroupIds]
+    status: Optional[DockerServerStatus]
+
+
 class RegistryCredential(TypedDict, total=False):
     """Information about credentials that provide access to a private Docker
     registry. When this is set:
@@ -650,6 +665,7 @@ ProjectEnvironment = TypedDict(
         "certificate": Optional[String],
         "registryCredential": Optional[RegistryCredential],
         "imagePullCredentialsType": Optional[ImagePullCredentialsType],
+        "dockerServer": Optional[DockerServer],
     },
     total=False,
 )
@@ -2270,14 +2286,14 @@ class CodebuildApi:
         base_capacity: FleetCapacity,
         environment_type: EnvironmentType,
         compute_type: ComputeType,
-        compute_configuration: ComputeConfiguration = None,
-        scaling_configuration: ScalingConfigurationInput = None,
-        overflow_behavior: FleetOverflowBehavior = None,
-        vpc_config: VpcConfig = None,
-        proxy_configuration: ProxyConfiguration = None,
-        image_id: NonEmptyString = None,
-        fleet_service_role: NonEmptyString = None,
-        tags: TagList = None,
+        compute_configuration: ComputeConfiguration | None = None,
+        scaling_configuration: ScalingConfigurationInput | None = None,
+        overflow_behavior: FleetOverflowBehavior | None = None,
+        vpc_config: VpcConfig | None = None,
+        proxy_configuration: ProxyConfiguration | None = None,
+        image_id: NonEmptyString | None = None,
+        fleet_service_role: NonEmptyString | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateFleetOutput:
         """Creates a compute fleet.
@@ -2311,23 +2327,23 @@ class CodebuildApi:
         artifacts: ProjectArtifacts,
         environment: ProjectEnvironment,
         service_role: NonEmptyString,
-        description: ProjectDescription = None,
-        secondary_sources: ProjectSources = None,
-        source_version: String = None,
-        secondary_source_versions: ProjectSecondarySourceVersions = None,
-        secondary_artifacts: ProjectArtifactsList = None,
-        cache: ProjectCache = None,
-        timeout_in_minutes: BuildTimeOut = None,
-        queued_timeout_in_minutes: TimeOut = None,
-        encryption_key: NonEmptyString = None,
-        tags: TagList = None,
-        vpc_config: VpcConfig = None,
-        badge_enabled: WrapperBoolean = None,
-        logs_config: LogsConfig = None,
-        file_system_locations: ProjectFileSystemLocations = None,
-        build_batch_config: ProjectBuildBatchConfig = None,
-        concurrent_build_limit: WrapperInt = None,
-        auto_retry_limit: WrapperInt = None,
+        description: ProjectDescription | None = None,
+        secondary_sources: ProjectSources | None = None,
+        source_version: String | None = None,
+        secondary_source_versions: ProjectSecondarySourceVersions | None = None,
+        secondary_artifacts: ProjectArtifactsList | None = None,
+        cache: ProjectCache | None = None,
+        timeout_in_minutes: BuildTimeOut | None = None,
+        queued_timeout_in_minutes: TimeOut | None = None,
+        encryption_key: NonEmptyString | None = None,
+        tags: TagList | None = None,
+        vpc_config: VpcConfig | None = None,
+        badge_enabled: WrapperBoolean | None = None,
+        logs_config: LogsConfig | None = None,
+        file_system_locations: ProjectFileSystemLocations | None = None,
+        build_batch_config: ProjectBuildBatchConfig | None = None,
+        concurrent_build_limit: WrapperInt | None = None,
+        auto_retry_limit: WrapperInt | None = None,
         **kwargs,
     ) -> CreateProjectOutput:
         """Creates a build project.
@@ -2394,11 +2410,11 @@ class CodebuildApi:
         self,
         context: RequestContext,
         project_name: ProjectName,
-        branch_filter: String = None,
-        filter_groups: FilterGroups = None,
-        build_type: WebhookBuildType = None,
-        manual_creation: WrapperBoolean = None,
-        scope_configuration: ScopeConfiguration = None,
+        branch_filter: String | None = None,
+        filter_groups: FilterGroups | None = None,
+        build_type: WebhookBuildType | None = None,
+        manual_creation: WrapperBoolean | None = None,
+        scope_configuration: ScopeConfiguration | None = None,
         **kwargs,
     ) -> CreateWebhookOutput:
         """For an existing CodeBuild build project that has its source code stored
@@ -2486,7 +2502,11 @@ class CodebuildApi:
 
     @handler("DeleteReportGroup")
     def delete_report_group(
-        self, context: RequestContext, arn: NonEmptyString, delete_reports: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        arn: NonEmptyString,
+        delete_reports: Boolean | None = None,
+        **kwargs,
     ) -> DeleteReportGroupOutput:
         """Deletes a report group. Before you delete a report group, you must
         delete its reports.
@@ -2546,12 +2566,12 @@ class CodebuildApi:
         self,
         context: RequestContext,
         report_arn: NonEmptyString,
-        next_token: String = None,
-        max_results: PageSize = None,
-        sort_order: SortOrderType = None,
-        sort_by: ReportCodeCoverageSortByType = None,
-        min_line_coverage_percentage: Percentage = None,
-        max_line_coverage_percentage: Percentage = None,
+        next_token: String | None = None,
+        max_results: PageSize | None = None,
+        sort_order: SortOrderType | None = None,
+        sort_by: ReportCodeCoverageSortByType | None = None,
+        min_line_coverage_percentage: Percentage | None = None,
+        max_line_coverage_percentage: Percentage | None = None,
         **kwargs,
     ) -> DescribeCodeCoveragesOutput:
         """Retrieves one or more code coverage reports.
@@ -2574,9 +2594,9 @@ class CodebuildApi:
         self,
         context: RequestContext,
         report_arn: String,
-        next_token: String = None,
-        max_results: PageSize = None,
-        filter: TestCaseFilter = None,
+        next_token: String | None = None,
+        max_results: PageSize | None = None,
+        filter: TestCaseFilter | None = None,
         **kwargs,
     ) -> DescribeTestCasesOutput:
         """Returns a list of details about test cases for a report.
@@ -2598,7 +2618,7 @@ class CodebuildApi:
         context: RequestContext,
         report_group_arn: NonEmptyString,
         trend_field: ReportGroupTrendFieldType,
-        num_of_reports: PageSize = None,
+        num_of_reports: PageSize | None = None,
         **kwargs,
     ) -> GetReportGroupTrendOutput:
         """Analyzes and accumulates test report values for the specified test
@@ -2633,8 +2653,8 @@ class CodebuildApi:
         token: SensitiveNonEmptyString,
         server_type: ServerType,
         auth_type: AuthType,
-        username: NonEmptyString = None,
-        should_overwrite: WrapperBoolean = None,
+        username: NonEmptyString | None = None,
+        should_overwrite: WrapperBoolean | None = None,
         **kwargs,
     ) -> ImportSourceCredentialsOutput:
         """Imports the source repository credentials for an CodeBuild project that
@@ -2672,10 +2692,10 @@ class CodebuildApi:
     def list_build_batches(
         self,
         context: RequestContext,
-        filter: BuildBatchFilter = None,
-        max_results: PageSize = None,
-        sort_order: SortOrderType = None,
-        next_token: String = None,
+        filter: BuildBatchFilter | None = None,
+        max_results: PageSize | None = None,
+        sort_order: SortOrderType | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListBuildBatchesOutput:
         """Retrieves the identifiers of your build batches in the current region.
@@ -2694,11 +2714,11 @@ class CodebuildApi:
     def list_build_batches_for_project(
         self,
         context: RequestContext,
-        project_name: NonEmptyString = None,
-        filter: BuildBatchFilter = None,
-        max_results: PageSize = None,
-        sort_order: SortOrderType = None,
-        next_token: String = None,
+        project_name: NonEmptyString | None = None,
+        filter: BuildBatchFilter | None = None,
+        max_results: PageSize | None = None,
+        sort_order: SortOrderType | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListBuildBatchesForProjectOutput:
         """Retrieves the identifiers of the build batches for a specific project.
@@ -2719,8 +2739,8 @@ class CodebuildApi:
     def list_builds(
         self,
         context: RequestContext,
-        sort_order: SortOrderType = None,
-        next_token: String = None,
+        sort_order: SortOrderType | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListBuildsOutput:
         """Gets a list of build IDs, with each build ID representing a single
@@ -2740,8 +2760,8 @@ class CodebuildApi:
         self,
         context: RequestContext,
         project_name: NonEmptyString,
-        sort_order: SortOrderType = None,
-        next_token: String = None,
+        sort_order: SortOrderType | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListBuildsForProjectOutput:
         """Gets a list of build identifiers for the specified build project, with
@@ -2763,9 +2783,9 @@ class CodebuildApi:
         self,
         context: RequestContext,
         sandbox_id: NonEmptyString,
-        max_results: PageSize = None,
-        sort_order: SortOrderType = None,
-        next_token: SensitiveString = None,
+        max_results: PageSize | None = None,
+        sort_order: SortOrderType | None = None,
+        next_token: SensitiveString | None = None,
         **kwargs,
     ) -> ListCommandExecutionsForSandboxOutput:
         """Gets a list of command executions for a sandbox.
@@ -2794,10 +2814,10 @@ class CodebuildApi:
     def list_fleets(
         self,
         context: RequestContext,
-        next_token: SensitiveString = None,
-        max_results: PageSize = None,
-        sort_order: SortOrderType = None,
-        sort_by: FleetSortByType = None,
+        next_token: SensitiveString | None = None,
+        max_results: PageSize | None = None,
+        sort_order: SortOrderType | None = None,
+        sort_by: FleetSortByType | None = None,
         **kwargs,
     ) -> ListFleetsOutput:
         """Gets a list of compute fleet names with each compute fleet name
@@ -2818,9 +2838,9 @@ class CodebuildApi:
     def list_projects(
         self,
         context: RequestContext,
-        sort_by: ProjectSortByType = None,
-        sort_order: SortOrderType = None,
-        next_token: NonEmptyString = None,
+        sort_by: ProjectSortByType | None = None,
+        sort_order: SortOrderType | None = None,
+        next_token: NonEmptyString | None = None,
         **kwargs,
     ) -> ListProjectsOutput:
         """Gets a list of build project names, with each build project name
@@ -2840,10 +2860,10 @@ class CodebuildApi:
     def list_report_groups(
         self,
         context: RequestContext,
-        sort_order: SortOrderType = None,
-        sort_by: ReportGroupSortByType = None,
-        next_token: String = None,
-        max_results: PageSize = None,
+        sort_order: SortOrderType | None = None,
+        sort_by: ReportGroupSortByType | None = None,
+        next_token: String | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> ListReportGroupsOutput:
         """Gets a list ARNs for the report groups in the current Amazon Web
@@ -2863,10 +2883,10 @@ class CodebuildApi:
     def list_reports(
         self,
         context: RequestContext,
-        sort_order: SortOrderType = None,
-        next_token: String = None,
-        max_results: PageSize = None,
-        filter: ReportFilter = None,
+        sort_order: SortOrderType | None = None,
+        next_token: String | None = None,
+        max_results: PageSize | None = None,
+        filter: ReportFilter | None = None,
         **kwargs,
     ) -> ListReportsOutput:
         """Returns a list of ARNs for the reports in the current Amazon Web
@@ -2887,10 +2907,10 @@ class CodebuildApi:
         self,
         context: RequestContext,
         report_group_arn: String,
-        next_token: String = None,
-        sort_order: SortOrderType = None,
-        max_results: PageSize = None,
-        filter: ReportFilter = None,
+        next_token: String | None = None,
+        sort_order: SortOrderType | None = None,
+        max_results: PageSize | None = None,
+        filter: ReportFilter | None = None,
         **kwargs,
     ) -> ListReportsForReportGroupOutput:
         """Returns a list of ARNs for the reports that belong to a ``ReportGroup``.
@@ -2913,9 +2933,9 @@ class CodebuildApi:
     def list_sandboxes(
         self,
         context: RequestContext,
-        max_results: PageSize = None,
-        sort_order: SortOrderType = None,
-        next_token: String = None,
+        max_results: PageSize | None = None,
+        sort_order: SortOrderType | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListSandboxesOutput:
         """Gets a list of sandboxes.
@@ -2933,9 +2953,9 @@ class CodebuildApi:
         self,
         context: RequestContext,
         project_name: NonEmptyString,
-        max_results: PageSize = None,
-        sort_order: SortOrderType = None,
-        next_token: SensitiveString = None,
+        max_results: PageSize | None = None,
+        sort_order: SortOrderType | None = None,
+        next_token: SensitiveString | None = None,
         **kwargs,
     ) -> ListSandboxesForProjectOutput:
         """Gets a list of sandboxes for a given project.
@@ -2954,10 +2974,10 @@ class CodebuildApi:
     def list_shared_projects(
         self,
         context: RequestContext,
-        sort_by: SharedResourceSortByType = None,
-        sort_order: SortOrderType = None,
-        max_results: PageSize = None,
-        next_token: NonEmptyString = None,
+        sort_by: SharedResourceSortByType | None = None,
+        sort_order: SortOrderType | None = None,
+        max_results: PageSize | None = None,
+        next_token: NonEmptyString | None = None,
         **kwargs,
     ) -> ListSharedProjectsOutput:
         """Gets a list of projects that are shared with other Amazon Web Services
@@ -2979,10 +2999,10 @@ class CodebuildApi:
     def list_shared_report_groups(
         self,
         context: RequestContext,
-        sort_order: SortOrderType = None,
-        sort_by: SharedResourceSortByType = None,
-        next_token: String = None,
-        max_results: PageSize = None,
+        sort_order: SortOrderType | None = None,
+        sort_by: SharedResourceSortByType | None = None,
+        next_token: String | None = None,
+        max_results: PageSize | None = None,
         **kwargs,
     ) -> ListSharedReportGroupsOutput:
         """Gets a list of report groups that are shared with other Amazon Web
@@ -3034,8 +3054,8 @@ class CodebuildApi:
     def retry_build(
         self,
         context: RequestContext,
-        id: NonEmptyString = None,
-        idempotency_token: String = None,
+        id: NonEmptyString | None = None,
+        idempotency_token: String | None = None,
         **kwargs,
     ) -> RetryBuildOutput:
         """Restarts a build.
@@ -3054,9 +3074,9 @@ class CodebuildApi:
     def retry_build_batch(
         self,
         context: RequestContext,
-        id: NonEmptyString = None,
-        idempotency_token: String = None,
-        retry_type: RetryBuildBatchType = None,
+        id: NonEmptyString | None = None,
+        idempotency_token: String | None = None,
+        retry_type: RetryBuildBatchType | None = None,
         **kwargs,
     ) -> RetryBuildBatchOutput:
         """Restarts a failed batch build. Only batch builds that have failed can be
@@ -3077,38 +3097,38 @@ class CodebuildApi:
         self,
         context: RequestContext,
         project_name: NonEmptyString,
-        secondary_sources_override: ProjectSources = None,
-        secondary_sources_version_override: ProjectSecondarySourceVersions = None,
-        source_version: String = None,
-        artifacts_override: ProjectArtifacts = None,
-        secondary_artifacts_override: ProjectArtifactsList = None,
-        environment_variables_override: EnvironmentVariables = None,
-        source_type_override: SourceType = None,
-        source_location_override: String = None,
-        source_auth_override: SourceAuth = None,
-        git_clone_depth_override: GitCloneDepth = None,
-        git_submodules_config_override: GitSubmodulesConfig = None,
-        buildspec_override: String = None,
-        insecure_ssl_override: WrapperBoolean = None,
-        report_build_status_override: WrapperBoolean = None,
-        build_status_config_override: BuildStatusConfig = None,
-        environment_type_override: EnvironmentType = None,
-        image_override: NonEmptyString = None,
-        compute_type_override: ComputeType = None,
-        certificate_override: String = None,
-        cache_override: ProjectCache = None,
-        service_role_override: NonEmptyString = None,
-        privileged_mode_override: WrapperBoolean = None,
-        timeout_in_minutes_override: BuildTimeOut = None,
-        queued_timeout_in_minutes_override: TimeOut = None,
-        encryption_key_override: NonEmptyString = None,
-        idempotency_token: String = None,
-        logs_config_override: LogsConfig = None,
-        registry_credential_override: RegistryCredential = None,
-        image_pull_credentials_type_override: ImagePullCredentialsType = None,
-        debug_session_enabled: WrapperBoolean = None,
-        fleet_override: ProjectFleet = None,
-        auto_retry_limit_override: WrapperInt = None,
+        secondary_sources_override: ProjectSources | None = None,
+        secondary_sources_version_override: ProjectSecondarySourceVersions | None = None,
+        source_version: String | None = None,
+        artifacts_override: ProjectArtifacts | None = None,
+        secondary_artifacts_override: ProjectArtifactsList | None = None,
+        environment_variables_override: EnvironmentVariables | None = None,
+        source_type_override: SourceType | None = None,
+        source_location_override: String | None = None,
+        source_auth_override: SourceAuth | None = None,
+        git_clone_depth_override: GitCloneDepth | None = None,
+        git_submodules_config_override: GitSubmodulesConfig | None = None,
+        buildspec_override: String | None = None,
+        insecure_ssl_override: WrapperBoolean | None = None,
+        report_build_status_override: WrapperBoolean | None = None,
+        build_status_config_override: BuildStatusConfig | None = None,
+        environment_type_override: EnvironmentType | None = None,
+        image_override: NonEmptyString | None = None,
+        compute_type_override: ComputeType | None = None,
+        certificate_override: String | None = None,
+        cache_override: ProjectCache | None = None,
+        service_role_override: NonEmptyString | None = None,
+        privileged_mode_override: WrapperBoolean | None = None,
+        timeout_in_minutes_override: BuildTimeOut | None = None,
+        queued_timeout_in_minutes_override: TimeOut | None = None,
+        encryption_key_override: NonEmptyString | None = None,
+        idempotency_token: String | None = None,
+        logs_config_override: LogsConfig | None = None,
+        registry_credential_override: RegistryCredential | None = None,
+        image_pull_credentials_type_override: ImagePullCredentialsType | None = None,
+        debug_session_enabled: WrapperBoolean | None = None,
+        fleet_override: ProjectFleet | None = None,
+        auto_retry_limit_override: WrapperInt | None = None,
         **kwargs,
     ) -> StartBuildOutput:
         """Starts running a build with the settings defined in the project. These
@@ -3192,36 +3212,36 @@ class CodebuildApi:
         self,
         context: RequestContext,
         project_name: NonEmptyString,
-        secondary_sources_override: ProjectSources = None,
-        secondary_sources_version_override: ProjectSecondarySourceVersions = None,
-        source_version: String = None,
-        artifacts_override: ProjectArtifacts = None,
-        secondary_artifacts_override: ProjectArtifactsList = None,
-        environment_variables_override: EnvironmentVariables = None,
-        source_type_override: SourceType = None,
-        source_location_override: String = None,
-        source_auth_override: SourceAuth = None,
-        git_clone_depth_override: GitCloneDepth = None,
-        git_submodules_config_override: GitSubmodulesConfig = None,
-        buildspec_override: String = None,
-        insecure_ssl_override: WrapperBoolean = None,
-        report_build_batch_status_override: WrapperBoolean = None,
-        environment_type_override: EnvironmentType = None,
-        image_override: NonEmptyString = None,
-        compute_type_override: ComputeType = None,
-        certificate_override: String = None,
-        cache_override: ProjectCache = None,
-        service_role_override: NonEmptyString = None,
-        privileged_mode_override: WrapperBoolean = None,
-        build_timeout_in_minutes_override: BuildTimeOut = None,
-        queued_timeout_in_minutes_override: TimeOut = None,
-        encryption_key_override: NonEmptyString = None,
-        idempotency_token: String = None,
-        logs_config_override: LogsConfig = None,
-        registry_credential_override: RegistryCredential = None,
-        image_pull_credentials_type_override: ImagePullCredentialsType = None,
-        build_batch_config_override: ProjectBuildBatchConfig = None,
-        debug_session_enabled: WrapperBoolean = None,
+        secondary_sources_override: ProjectSources | None = None,
+        secondary_sources_version_override: ProjectSecondarySourceVersions | None = None,
+        source_version: String | None = None,
+        artifacts_override: ProjectArtifacts | None = None,
+        secondary_artifacts_override: ProjectArtifactsList | None = None,
+        environment_variables_override: EnvironmentVariables | None = None,
+        source_type_override: SourceType | None = None,
+        source_location_override: String | None = None,
+        source_auth_override: SourceAuth | None = None,
+        git_clone_depth_override: GitCloneDepth | None = None,
+        git_submodules_config_override: GitSubmodulesConfig | None = None,
+        buildspec_override: String | None = None,
+        insecure_ssl_override: WrapperBoolean | None = None,
+        report_build_batch_status_override: WrapperBoolean | None = None,
+        environment_type_override: EnvironmentType | None = None,
+        image_override: NonEmptyString | None = None,
+        compute_type_override: ComputeType | None = None,
+        certificate_override: String | None = None,
+        cache_override: ProjectCache | None = None,
+        service_role_override: NonEmptyString | None = None,
+        privileged_mode_override: WrapperBoolean | None = None,
+        build_timeout_in_minutes_override: BuildTimeOut | None = None,
+        queued_timeout_in_minutes_override: TimeOut | None = None,
+        encryption_key_override: NonEmptyString | None = None,
+        idempotency_token: String | None = None,
+        logs_config_override: LogsConfig | None = None,
+        registry_credential_override: RegistryCredential | None = None,
+        image_pull_credentials_type_override: ImagePullCredentialsType | None = None,
+        build_batch_config_override: ProjectBuildBatchConfig | None = None,
+        debug_session_enabled: WrapperBoolean | None = None,
         **kwargs,
     ) -> StartBuildBatchOutput:
         """Starts a batch build for a project.
@@ -3308,8 +3328,8 @@ class CodebuildApi:
     def start_sandbox(
         self,
         context: RequestContext,
-        project_name: NonEmptyString = None,
-        idempotency_token: SensitiveString = None,
+        project_name: NonEmptyString | None = None,
+        idempotency_token: SensitiveString | None = None,
         **kwargs,
     ) -> StartSandboxOutput:
         """Starts a sandbox.
@@ -3378,17 +3398,17 @@ class CodebuildApi:
         self,
         context: RequestContext,
         arn: NonEmptyString,
-        base_capacity: FleetCapacity = None,
-        environment_type: EnvironmentType = None,
-        compute_type: ComputeType = None,
-        compute_configuration: ComputeConfiguration = None,
-        scaling_configuration: ScalingConfigurationInput = None,
-        overflow_behavior: FleetOverflowBehavior = None,
-        vpc_config: VpcConfig = None,
-        proxy_configuration: ProxyConfiguration = None,
-        image_id: NonEmptyString = None,
-        fleet_service_role: NonEmptyString = None,
-        tags: TagList = None,
+        base_capacity: FleetCapacity | None = None,
+        environment_type: EnvironmentType | None = None,
+        compute_type: ComputeType | None = None,
+        compute_configuration: ComputeConfiguration | None = None,
+        scaling_configuration: ScalingConfigurationInput | None = None,
+        overflow_behavior: FleetOverflowBehavior | None = None,
+        vpc_config: VpcConfig | None = None,
+        proxy_configuration: ProxyConfiguration | None = None,
+        image_id: NonEmptyString | None = None,
+        fleet_service_role: NonEmptyString | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> UpdateFleetOutput:
         """Updates a compute fleet.
@@ -3418,27 +3438,27 @@ class CodebuildApi:
         self,
         context: RequestContext,
         name: NonEmptyString,
-        description: ProjectDescription = None,
-        source: ProjectSource = None,
-        secondary_sources: ProjectSources = None,
-        source_version: String = None,
-        secondary_source_versions: ProjectSecondarySourceVersions = None,
-        artifacts: ProjectArtifacts = None,
-        secondary_artifacts: ProjectArtifactsList = None,
-        cache: ProjectCache = None,
-        environment: ProjectEnvironment = None,
-        service_role: NonEmptyString = None,
-        timeout_in_minutes: BuildTimeOut = None,
-        queued_timeout_in_minutes: TimeOut = None,
-        encryption_key: NonEmptyString = None,
-        tags: TagList = None,
-        vpc_config: VpcConfig = None,
-        badge_enabled: WrapperBoolean = None,
-        logs_config: LogsConfig = None,
-        file_system_locations: ProjectFileSystemLocations = None,
-        build_batch_config: ProjectBuildBatchConfig = None,
-        concurrent_build_limit: WrapperInt = None,
-        auto_retry_limit: WrapperInt = None,
+        description: ProjectDescription | None = None,
+        source: ProjectSource | None = None,
+        secondary_sources: ProjectSources | None = None,
+        source_version: String | None = None,
+        secondary_source_versions: ProjectSecondarySourceVersions | None = None,
+        artifacts: ProjectArtifacts | None = None,
+        secondary_artifacts: ProjectArtifactsList | None = None,
+        cache: ProjectCache | None = None,
+        environment: ProjectEnvironment | None = None,
+        service_role: NonEmptyString | None = None,
+        timeout_in_minutes: BuildTimeOut | None = None,
+        queued_timeout_in_minutes: TimeOut | None = None,
+        encryption_key: NonEmptyString | None = None,
+        tags: TagList | None = None,
+        vpc_config: VpcConfig | None = None,
+        badge_enabled: WrapperBoolean | None = None,
+        logs_config: LogsConfig | None = None,
+        file_system_locations: ProjectFileSystemLocations | None = None,
+        build_batch_config: ProjectBuildBatchConfig | None = None,
+        concurrent_build_limit: WrapperInt | None = None,
+        auto_retry_limit: WrapperInt | None = None,
         **kwargs,
     ) -> UpdateProjectOutput:
         """Changes the settings of a build project.
@@ -3491,7 +3511,7 @@ class CodebuildApi:
         context: RequestContext,
         project_arn: NonEmptyString,
         project_visibility: ProjectVisibilityType,
-        resource_access_role: NonEmptyString = None,
+        resource_access_role: NonEmptyString | None = None,
         **kwargs,
     ) -> UpdateProjectVisibilityOutput:
         """Changes the public visibility for a project. The project's build
@@ -3542,8 +3562,8 @@ class CodebuildApi:
         self,
         context: RequestContext,
         arn: NonEmptyString,
-        export_config: ReportExportConfig = None,
-        tags: TagList = None,
+        export_config: ReportExportConfig | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> UpdateReportGroupOutput:
         """Updates a report group.
@@ -3563,10 +3583,10 @@ class CodebuildApi:
         self,
         context: RequestContext,
         project_name: ProjectName,
-        branch_filter: String = None,
-        rotate_secret: Boolean = None,
-        filter_groups: FilterGroups = None,
-        build_type: WebhookBuildType = None,
+        branch_filter: String | None = None,
+        rotate_secret: Boolean | None = None,
+        filter_groups: FilterGroups | None = None,
+        build_type: WebhookBuildType | None = None,
         **kwargs,
     ) -> UpdateWebhookOutput:
         """Updates the webhook associated with an CodeBuild build project.

@@ -1,24 +1,42 @@
 import logging
+import warnings
 from copy import deepcopy
-from typing import List, Dict, Union, Tuple, Optional
+from typing import Any
 
-from .utils import conll_to_spans, find_overlap, list_to_spans
+import pandas as pd
+
+from .utils import conll_to_spans, find_overlap, list_to_spans, clean_entities
 
 logger = logging.getLogger(__name__)
 
 
 class Evaluator:  # pylint: disable=too-many-instance-attributes, too-few-public-methods
+    """
+    Evaluator class for evaluating named entity recognition (NER) models.
+    """
+
     def __init__(
         self,
-        true: Union[List[List[str]], List[str], List[Dict], str, List[List[Dict[str, Union[int, str]]]]],
-        pred: Union[List[List[str]], List[str], List[Dict], str, List[List[Dict[str, Union[int, str]]]]],
-        tags: List[str],
+        true: list[list[str]] | list[str] | list[dict] | str | list[list[dict[str, int | str]]],
+        pred: list[list[str]] | list[str] | list[dict] | str | list[list[dict[str, int | str]]],
+        tags: list[str],
         loader: str = "default",
     ) -> None:
+        """
+        Initialize the Evaluator class.
+
+        Args:
+            true: List of true named entities.
+            pred: List of predicted named entities.
+            tags: List of tags to be used.
+            loader: Loader to be used.
+
+        Raises:
+            ValueError: If the number of predicted documents does not equal the number of true documents.
+        """
         self.true = true
         self.pred = pred
         self.tags = tags
-        # self.list = []
 
         # Setup dict into which metrics will be stored.
         self.metrics_results = {
@@ -51,7 +69,7 @@ class Evaluator:  # pylint: disable=too-many-instance-attributes, too-few-public
 
         self.loader = loader
 
-        self.eval_indices: Dict[str, List[int]] = {
+        self.eval_indices: dict[str, list[int]] = {
             "correct_indices": [],
             "incorrect_indices": [],
             "partial_indices": [],
@@ -68,18 +86,25 @@ class Evaluator:  # pylint: disable=too-many-instance-attributes, too-few-public
         }
         self.evaluation_agg_indices = {e: deepcopy(self.evaluation_indices) for e in tags}
 
-    def evaluate(self) -> Tuple[Dict, Dict, Dict, Dict]:
+    def evaluate(self) -> tuple[dict, dict, dict, dict]:  # noqa: C901
+        warnings.warn(
+            "The current evaluation method is deprecated and it will the output change in the next release."
+            "The output will change to a dictionary with the following keys: overall, entities, entity_results, "
+            "overall_indices, entity_indices.",
+            DeprecationWarning,
+            stacklevel=2
+        )
         logging.debug("Imported %s predictions for %s true examples", len(self.pred), len(self.true))
 
         if self.loader != "default":
             loader = self.loaders[self.loader]
-            self.pred = loader(self.pred)
-            self.true = loader(self.true)
+            self.pred = loader(self.pred)  # type: ignore
+            self.true = loader(self.true)  # type: ignore
 
         if len(self.true) != len(self.pred):
             raise ValueError("Number of predicted documents does not equal true")
 
-        for index, (true_ents, pred_ents) in enumerate(zip(self.true, self.pred)):
+        for index, (true_ents, pred_ents) in enumerate(zip(self.true, self.pred, strict=False)):
             # Compute results for one message
             tmp_results, tmp_agg_results, tmp_results_indices, tmp_agg_results_indices = compute_metrics(
                 true_ents, pred_ents, self.tags, index
@@ -119,25 +144,74 @@ class Evaluator:  # pylint: disable=too-many-instance-attributes, too-few-public
 
         return self.results, self.evaluation_agg_entities_type, self.evaluation_indices, self.evaluation_agg_indices
 
+    #  Helper method to flatten a nested dictionary
+    def _flatten_dict(self, d: dict[str, Any], parent_key: str = "", sep: str = ".") -> dict[str, Any]:
+        """
+        Flattens a nested dictionary.
 
-# flake8: noqa: C901
-def compute_metrics(  # type: ignore
-    true_named_entities, pred_named_entities, tags: List[str], instance_index: int = 0
-):  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
+        Args:
+            d (dict): The dictionary to flatten.
+            parent_key (str): The base key string to prepend to each dictionary key.
+            sep (str): The separator to use when combining keys.
+
+        Returns:
+            dict: A flattened dictionary.
+        """
+        items: list[tuple[str, Any]] = []
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(self._flatten_dict(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+
+    # Modified results_to_dataframe method using the helper method
+    def results_to_dataframe(self) -> Any:
+        if not self.results:
+            raise ValueError("self.results should be defined.")
+
+        if not isinstance(self.results, dict) or not all(isinstance(v, dict) for v in self.results.values()):
+            raise ValueError("self.results must be a dictionary of dictionaries.")
+
+        # Flatten the nested results dictionary, including the 'entities' sub-dictionaries
+        flattened_results: dict[str, dict[str, Any]] = {}
+        for outer_key, inner_dict in self.results.items():
+            flattened_inner_dict = self._flatten_dict(inner_dict)
+            for inner_key, value in flattened_inner_dict.items():
+                if inner_key not in flattened_results:
+                    flattened_results[inner_key] = {}
+                flattened_results[inner_key][outer_key] = value
+
+        # Convert the flattened results to a pandas DataFrame
+        try:
+            return pd.DataFrame(flattened_results)
+        except Exception as e:
+            raise RuntimeError("Error converting flattened results to DataFrame") from e
+
+
+def compute_metrics(  # type: ignore # noqa: C901
+    # pylint: disable=too-many-locals,too-many-branches,too-many-statements,missing-type-doc
+    true_named_entities,
+    pred_named_entities,
+    tags: list[str],
+    instance_index: int = 0,
+) -> tuple[dict, dict, dict, dict]:
     """
     Compute metrics on the collected true and predicted named entities
 
-    :true_name_entities:
+    :param true_named_entities:
         collected true named entities output by collect_named_entities
 
-    :pred_name_entities:
+    :param pred_named_entities:
         collected predicted named entities output by collect_named_entities
 
-    :tags:
+    :param tags:
         list of tags to be used
 
-    :instance_index:
-        index of the example being evaluated. Used to record indices of correct/missing/spurious/exact/partial predictions.
+    :param instance_index:
+        index of the example being evaluated. Used to record indices of correct/missing/spurious/exact/partial
+        predictions.
     """
 
     eval_metrics = {
@@ -162,7 +236,7 @@ def compute_metrics(  # type: ignore
     # results by entity type
     evaluation_agg_entities_type = {e: deepcopy(evaluation) for e in tags}
 
-    eval_ent_indices: Dict[str, List[Tuple[int, int]]] = {
+    eval_ent_indices: dict[str, list[tuple[int, int]]] = {
         "correct_indices": [],
         "incorrect_indices": [],
         "partial_indices": [],
@@ -461,7 +535,7 @@ def compute_metrics(  # type: ignore
     return evaluation, evaluation_agg_entities_type, evaluation_ent_indices, evaluation_agg_ent_indices
 
 
-def compute_actual_possible(results: Dict) -> Dict:
+def compute_actual_possible(results: dict) -> dict:
     """
     Takes a result dict that has been output by compute metrics.
     Returns the results' dict with actual, possible populated.
@@ -490,7 +564,7 @@ def compute_actual_possible(results: Dict) -> Dict:
     return results
 
 
-def compute_precision_recall(results: Dict, partial_or_type: bool = False) -> Dict:
+def compute_precision_recall(results: dict, partial_or_type: bool = False) -> dict:
     """
     Takes a result dict that has been output by compute metrics.
     Returns the results' dict with precision and recall populated.
@@ -520,7 +594,7 @@ def compute_precision_recall(results: Dict, partial_or_type: bool = False) -> Di
     return results
 
 
-def compute_precision_recall_wrapper(results: Dict) -> Dict:
+def compute_precision_recall_wrapper(results: dict) -> dict:
     """
     Wraps the compute_precision_recall function and runs on a dict of results
     """
@@ -533,142 +607,3 @@ def compute_precision_recall_wrapper(results: Dict) -> Dict:
     results = {**results_a, **results_b}
 
     return results
-
-
-def clean_entities(ent: Dict) -> Dict:
-    """
-    Returns just the useful keys if additional keys are present in the entity
-    dict.
-
-    This may happen if passing a list of spans directly from prodigy, which
-    typically may include 'token_start' and 'token_end'.
-    """
-    return {"start": ent["start"], "end": ent["end"], "label": ent["label"]}
-
-
-def summary_report_ent(  # pylint: disable=too-many-locals
-    results_agg_entities_type: Dict, scenario: str = "strict", digits: int = 2
-) -> str:
-    if scenario not in {"strict", "ent_type", "partial", "exact"}:
-        raise Exception("Invalid scenario: must be one of 'strict', 'ent_type', 'partial', 'exact'")
-
-    target_names = sorted(results_agg_entities_type.keys())
-    headers = ["correct", "incorrect", "partial", "missed", "spurious", "precision", "recall", "f1-score"]
-    rows = [headers]
-
-    for ent_type, results in sorted(results_agg_entities_type.items()):
-        for k, v in results.items():
-            if k != scenario:
-                continue
-            rows.append(
-                [
-                    ent_type,
-                    v["correct"],
-                    v["incorrect"],
-                    v["partial"],
-                    v["missed"],
-                    v["spurious"],
-                    v["precision"],
-                    v["recall"],
-                    v["f1"],
-                ]
-            )
-
-    name_width = max(len(cn) for cn in target_names)
-    width = max(name_width, digits)
-    head_fmt = "{:>{width}s} " + " {:>11}" * len(headers)
-    report = head_fmt.format("", *headers, width=width)
-    report += "\n\n"
-    row_fmt = "{:>{width}s} " + " {:>11}" * 5 + " {:>11.{digits}f}" * 3 + "\n"
-
-    for row in rows[1:]:
-        report += row_fmt.format(*row, width=width, digits=digits)
-
-    return report
-
-
-def summary_report_overall(results: Dict, digits: int = 2) -> str:
-    headers = ["correct", "incorrect", "partial", "missed", "spurious", "precision", "recall", "f1-score"]
-    rows = [headers]
-
-    for k, v in results.items():
-        rows.append(
-            [
-                k,
-                v["correct"],
-                v["incorrect"],
-                v["partial"],
-                v["missed"],
-                v["spurious"],
-                v["precision"],
-                v["recall"],
-                v["f1"],
-            ]
-        )
-
-    target_names = sorted(results.keys())
-    name_width = max(len(cn) for cn in target_names)
-    width = max(name_width, digits)
-    head_fmt = "{:>{width}s} " + " {:>11}" * len(headers)
-    report = head_fmt.format("", *headers, width=width)
-    report += "\n\n"
-    row_fmt = "{:>{width}s} " + " {:>11}" * 5 + " {:>11.{digits}f}" * 3 + "\n"
-
-    for row in rows[1:]:
-        report += row_fmt.format(*row, width=width, digits=digits)
-
-    return report
-
-
-def summary_report_ents_indices(evaluation_agg_indices: Dict, error_schema: str, preds: Optional[List] = [[]]) -> str:
-    """
-    Usage: print(summary_report_ents_indices(evaluation_agg_indices, 'partial', preds))
-    """
-    report = ""
-    for entity_type, entity_results in evaluation_agg_indices.items():
-        report += f"\nEntity Type: {entity_type}\n"
-        error_data = entity_results[error_schema]
-        report += f"  Error Schema: '{error_schema}'\n"
-        for category, indices in error_data.items():
-            category_name = category.replace("_", " ").capitalize()
-            report += f"    ({entity_type}) {category_name}:\n"
-            if indices:
-                for instance_index, entity_index in indices:
-                    if preds is not [[]]:
-                        pred = preds[instance_index][entity_index]  # type: ignore
-                        prediction_info = f"Label={pred['label']}, Start={pred['start']}, End={pred['end']}"
-                        report += f"      - Instance {instance_index}, Entity {entity_index}: {prediction_info}\n"
-                    else:
-                        report += f"      - Instance {instance_index}, Entity {entity_index}\n"
-            else:
-                report += "      - None\n"
-    return report
-
-
-def summary_report_overall_indices(evaluation_indices: Dict, error_schema: str, preds: Optional[List] = [[]]) -> str:
-    """
-    Usage: print(summary_report_overall_indices(evaluation_indices, 'partial', preds))
-    """
-    report = ""
-    assert error_schema in evaluation_indices, f"Error schema '{error_schema}' not found in the results."
-
-    error_data = evaluation_indices[error_schema]
-    report += f"Indices for error schema '{error_schema}':\n\n"
-
-    for category, indices in error_data.items():
-        category_name = category.replace("_", " ").capitalize()
-        report += f"{category_name}:\n"
-        if indices:
-            for instance_index, entity_index in indices:
-                if preds is not [[]]:
-                    # Retrieve the corresponding prediction
-                    pred = preds[instance_index][entity_index]  # type: ignore
-                    prediction_info = f"Label={pred['label']}, Start={pred['start']}, End={pred['end']}"
-                    report += f"  - Instance {instance_index}, Entity {entity_index}: {prediction_info}\n"
-                else:
-                    report += f"  - Instance {instance_index}, Entity {entity_index}\n"
-        else:
-            report += "  - None\n"
-        report += "\n"
-
-    return report

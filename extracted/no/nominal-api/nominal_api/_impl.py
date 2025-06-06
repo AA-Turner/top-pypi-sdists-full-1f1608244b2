@@ -2873,7 +2873,7 @@ class comments_api_Comment(ConjureBeanType):
             'pinned_by': ConjureFieldDefinition('pinnedBy', OptionalTypeWrapper[str]),
             'pinned_at': ConjureFieldDefinition('pinnedAt', OptionalTypeWrapper[str]),
             'reactions': ConjureFieldDefinition('reactions', List[comments_api_Reaction]),
-            'attachments': ConjureFieldDefinition('attachments', List[str])
+            'attachments': ConjureFieldDefinition('attachments', List[api_rids_AttachmentRid])
         }
 
     __slots__: List[str] = ['_rid', '_parent', '_author_rid', '_created_at', '_edited_at', '_deleted_at', '_content', '_pinned_by', '_pinned_at', '_reactions', '_attachments']
@@ -3519,7 +3519,7 @@ class comments_api_CreateCommentRequest(ConjureBeanType):
         return {
             'parent': ConjureFieldDefinition('parent', comments_api_CommentParent),
             'content': ConjureFieldDefinition('content', str),
-            'attachments': ConjureFieldDefinition('attachments', List[str])
+            'attachments': ConjureFieldDefinition('attachments', List[api_rids_AttachmentRid])
         }
 
     __slots__: List[str] = ['_parent', '_content', '_attachments']
@@ -3557,7 +3557,7 @@ class comments_api_EditCommentRequest(ConjureBeanType):
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'content': ConjureFieldDefinition('content', str),
-            'attachments': ConjureFieldDefinition('attachments', List[str])
+            'attachments': ConjureFieldDefinition('attachments', List[api_rids_AttachmentRid])
         }
 
     __slots__: List[str] = ['_content', '_attachments']
@@ -9373,6 +9373,125 @@ ingest_api_IngestDetailsVisitor.__qualname__ = "IngestDetailsVisitor"
 ingest_api_IngestDetailsVisitor.__module__ = "nominal_api.ingest_api"
 
 
+class ingest_api_IngestJobRequest(ConjureUnionType):
+    _ingest_mcap: Optional["ingest_api_IngestMcapRequest"] = None
+    _trigger_file_ingest: Optional["ingest_api_TriggerFileIngest"] = None
+    _ingest_request: Optional["ingest_api_IngestRequest"] = None
+    _trigger_ingest: Optional["ingest_api_TriggerIngest"] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'ingest_mcap': ConjureFieldDefinition('ingestMcap', ingest_api_IngestMcapRequest),
+            'trigger_file_ingest': ConjureFieldDefinition('triggerFileIngest', ingest_api_TriggerFileIngest),
+            'ingest_request': ConjureFieldDefinition('ingestRequest', ingest_api_IngestRequest),
+            'trigger_ingest': ConjureFieldDefinition('triggerIngest', ingest_api_TriggerIngest)
+        }
+
+    def __init__(
+            self,
+            ingest_mcap: Optional["ingest_api_IngestMcapRequest"] = None,
+            trigger_file_ingest: Optional["ingest_api_TriggerFileIngest"] = None,
+            ingest_request: Optional["ingest_api_IngestRequest"] = None,
+            trigger_ingest: Optional["ingest_api_TriggerIngest"] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (ingest_mcap is not None) + (trigger_file_ingest is not None) + (ingest_request is not None) + (trigger_ingest is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if ingest_mcap is not None:
+                self._ingest_mcap = ingest_mcap
+                self._type = 'ingestMcap'
+            if trigger_file_ingest is not None:
+                self._trigger_file_ingest = trigger_file_ingest
+                self._type = 'triggerFileIngest'
+            if ingest_request is not None:
+                self._ingest_request = ingest_request
+                self._type = 'ingestRequest'
+            if trigger_ingest is not None:
+                self._trigger_ingest = trigger_ingest
+                self._type = 'triggerIngest'
+
+        elif type_of_union == 'ingestMcap':
+            if ingest_mcap is None:
+                raise ValueError('a union value must not be None')
+            self._ingest_mcap = ingest_mcap
+            self._type = 'ingestMcap'
+        elif type_of_union == 'triggerFileIngest':
+            if trigger_file_ingest is None:
+                raise ValueError('a union value must not be None')
+            self._trigger_file_ingest = trigger_file_ingest
+            self._type = 'triggerFileIngest'
+        elif type_of_union == 'ingestRequest':
+            if ingest_request is None:
+                raise ValueError('a union value must not be None')
+            self._ingest_request = ingest_request
+            self._type = 'ingestRequest'
+        elif type_of_union == 'triggerIngest':
+            if trigger_ingest is None:
+                raise ValueError('a union value must not be None')
+            self._trigger_ingest = trigger_ingest
+            self._type = 'triggerIngest'
+
+    @builtins.property
+    def ingest_mcap(self) -> Optional["ingest_api_IngestMcapRequest"]:
+        return self._ingest_mcap
+
+    @builtins.property
+    def trigger_file_ingest(self) -> Optional["ingest_api_TriggerFileIngest"]:
+        return self._trigger_file_ingest
+
+    @builtins.property
+    def ingest_request(self) -> Optional["ingest_api_IngestRequest"]:
+        return self._ingest_request
+
+    @builtins.property
+    def trigger_ingest(self) -> Optional["ingest_api_TriggerIngest"]:
+        return self._trigger_ingest
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, ingest_api_IngestJobRequestVisitor):
+            raise ValueError('{} is not an instance of ingest_api_IngestJobRequestVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'ingestMcap' and self.ingest_mcap is not None:
+            return visitor._ingest_mcap(self.ingest_mcap)
+        if self._type == 'triggerFileIngest' and self.trigger_file_ingest is not None:
+            return visitor._trigger_file_ingest(self.trigger_file_ingest)
+        if self._type == 'ingestRequest' and self.ingest_request is not None:
+            return visitor._ingest_request(self.ingest_request)
+        if self._type == 'triggerIngest' and self.trigger_ingest is not None:
+            return visitor._trigger_ingest(self.trigger_ingest)
+
+
+ingest_api_IngestJobRequest.__name__ = "IngestJobRequest"
+ingest_api_IngestJobRequest.__qualname__ = "IngestJobRequest"
+ingest_api_IngestJobRequest.__module__ = "nominal_api.ingest_api"
+
+
+class ingest_api_IngestJobRequestVisitor:
+
+    @abstractmethod
+    def _ingest_mcap(self, ingest_mcap: "ingest_api_IngestMcapRequest") -> Any:
+        pass
+
+    @abstractmethod
+    def _trigger_file_ingest(self, trigger_file_ingest: "ingest_api_TriggerFileIngest") -> Any:
+        pass
+
+    @abstractmethod
+    def _ingest_request(self, ingest_request: "ingest_api_IngestRequest") -> Any:
+        pass
+
+    @abstractmethod
+    def _trigger_ingest(self, trigger_ingest: "ingest_api_TriggerIngest") -> Any:
+        pass
+
+
+ingest_api_IngestJobRequestVisitor.__name__ = "IngestJobRequestVisitor"
+ingest_api_IngestJobRequestVisitor.__qualname__ = "IngestJobRequestVisitor"
+ingest_api_IngestJobRequestVisitor.__module__ = "nominal_api.ingest_api"
+
+
 class ingest_api_IngestMcapRequest(ConjureBeanType):
 
     @builtins.classmethod
@@ -14278,37 +14397,6 @@ persistent_compute_api_InvalidComputationType.__qualname__ = "InvalidComputation
 persistent_compute_api_InvalidComputationType.__module__ = "nominal_api.persistent_compute_api"
 
 
-class persistent_compute_api_PartialFullGroupedResult(ConjureBeanType):
-    """We send grouped results split by grouping so that message size doesn't get too large and prevent pings from being sent.
-    """
-
-    @builtins.classmethod
-    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
-        return {
-            'grouping': ConjureFieldDefinition('grouping', scout_compute_api_Grouping),
-            'response': ConjureFieldDefinition('response', scout_compute_api_ComputeNodeResponse)
-        }
-
-    __slots__: List[str] = ['_grouping', '_response']
-
-    def __init__(self, grouping: "scout_compute_api_Grouping", response: "scout_compute_api_ComputeNodeResponse") -> None:
-        self._grouping = grouping
-        self._response = response
-
-    @builtins.property
-    def grouping(self) -> "scout_compute_api_Grouping":
-        return self._grouping
-
-    @builtins.property
-    def response(self) -> "scout_compute_api_ComputeNodeResponse":
-        return self._response
-
-
-persistent_compute_api_PartialFullGroupedResult.__name__ = "PartialFullGroupedResult"
-persistent_compute_api_PartialFullGroupedResult.__qualname__ = "PartialFullGroupedResult"
-persistent_compute_api_PartialFullGroupedResult.__module__ = "nominal_api.persistent_compute_api"
-
-
 class persistent_compute_api_Ping(ConjureBeanType):
     """A ping can be sent by both client and server to keep the connection open and check that it is still working.
 The receiving end should send back a pong immediately.
@@ -14757,7 +14845,6 @@ persistent_compute_api_SubscriptionOptions.__module__ = "nominal_api.persistent_
 
 class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
     _full: Optional["persistent_compute_api_FullResult"] = None
-    _partial_full_grouped: Optional["persistent_compute_api_PartialFullGroupedResult"] = None
     _append: Optional["persistent_compute_api_AppendResult"] = None
     _error: Optional["persistent_compute_api_SubscriptionUpdateError"] = None
 
@@ -14765,7 +14852,6 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'full': ConjureFieldDefinition('full', persistent_compute_api_FullResult),
-            'partial_full_grouped': ConjureFieldDefinition('partialFullGrouped', persistent_compute_api_PartialFullGroupedResult),
             'append': ConjureFieldDefinition('append', persistent_compute_api_AppendResult),
             'error': ConjureFieldDefinition('error', persistent_compute_api_SubscriptionUpdateError)
         }
@@ -14773,21 +14859,17 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
     def __init__(
             self,
             full: Optional["persistent_compute_api_FullResult"] = None,
-            partial_full_grouped: Optional["persistent_compute_api_PartialFullGroupedResult"] = None,
             append: Optional["persistent_compute_api_AppendResult"] = None,
             error: Optional["persistent_compute_api_SubscriptionUpdateError"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (full is not None) + (partial_full_grouped is not None) + (append is not None) + (error is not None) != 1:
+            if (full is not None) + (append is not None) + (error is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if full is not None:
                 self._full = full
                 self._type = 'full'
-            if partial_full_grouped is not None:
-                self._partial_full_grouped = partial_full_grouped
-                self._type = 'partialFullGrouped'
             if append is not None:
                 self._append = append
                 self._type = 'append'
@@ -14800,11 +14882,6 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._full = full
             self._type = 'full'
-        elif type_of_union == 'partialFullGrouped':
-            if partial_full_grouped is None:
-                raise ValueError('a union value must not be None')
-            self._partial_full_grouped = partial_full_grouped
-            self._type = 'partialFullGrouped'
         elif type_of_union == 'append':
             if append is None:
                 raise ValueError('a union value must not be None')
@@ -14821,10 +14898,6 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
         return self._full
 
     @builtins.property
-    def partial_full_grouped(self) -> Optional["persistent_compute_api_PartialFullGroupedResult"]:
-        return self._partial_full_grouped
-
-    @builtins.property
     def append(self) -> Optional["persistent_compute_api_AppendResult"]:
         return self._append
 
@@ -14837,8 +14910,6 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
             raise ValueError('{} is not an instance of persistent_compute_api_SubscriptionUpdateVisitor'.format(visitor.__class__.__name__))
         if self._type == 'full' and self.full is not None:
             return visitor._full(self.full)
-        if self._type == 'partialFullGrouped' and self.partial_full_grouped is not None:
-            return visitor._partial_full_grouped(self.partial_full_grouped)
         if self._type == 'append' and self.append is not None:
             return visitor._append(self.append)
         if self._type == 'error' and self.error is not None:
@@ -14854,10 +14925,6 @@ class persistent_compute_api_SubscriptionUpdateVisitor:
 
     @abstractmethod
     def _full(self, full: "persistent_compute_api_FullResult") -> Any:
-        pass
-
-    @abstractmethod
-    def _partial_full_grouped(self, partial_full_grouped: "persistent_compute_api_PartialFullGroupedResult") -> Any:
         pass
 
     @abstractmethod
@@ -77133,6 +77200,10 @@ class storage_writer_api_NominalChannelWriterService(Service):
 
     def write_batches(self, auth_header: str, request: "storage_writer_api_WriteBatchesRequestExternal") -> None:
         """Synchronously writes batches of records to a Nominal data source.
+
+If the request is too large, either due to the number of individual batches (> 10) or the number of points
+across batches (> 500k), the request may be split up into multiple requests internally when writing to the
+Nominal data source. Generally, it's advisable to limit the number of points to 50k.
         """
         _conjure_encoder = ConjureEncoder()
 
@@ -82623,6 +82694,8 @@ storage_datasource_api_NominalDataSourceId = str
 api_rids_EventRid = str
 
 persistent_compute_api_Milliseconds = int
+
+ingest_api_IngestJobRid = str
 
 scout_compute_api_ErrorType = str
 

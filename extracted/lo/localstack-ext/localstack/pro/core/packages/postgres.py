@@ -6,7 +6,7 @@ from localstack.pro.core.packages import OSPackageInstaller
 from localstack.utils.files import new_tmp_file,rm_rf,save_file
 from localstack.utils.http import download
 from localstack.utils.run import run
-POSTGRES_MAJOR_VERSION_RANGE=['11','12','13','14','15','16']
+POSTGRES_MAJOR_VERSION_RANGE=['11','12','13','14','15','16','17']
 POSTGRES_RPM_REPOSITORY='https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm'
 class PostgresqlPackageInstaller(OSPackageInstaller):
 	def __init__(A,version):super().__init__('postgresql',version);A._debian_install_dir=os.path.join('/usr/lib/postgresql',A.version);A._debian_package_list=[f"postgresql-{A.version}"];A._debian_package_list.append(f"postgresql-{A.version}-postgis-3");A._redhat_install_dir=os.path.join(f"/usr/pgsql-{A.version}/");A._redhat_package_list=[f"postgresql{A.version}-devel",f"postgresql{A.version}-server",f"postgresql{A.version}-plpython3"]

@@ -757,9 +757,9 @@ class CodeconnectionsApi:
         self,
         context: RequestContext,
         connection_name: ConnectionName,
-        provider_type: ProviderType = None,
-        tags: TagList = None,
-        host_arn: HostArn = None,
+        provider_type: ProviderType | None = None,
+        tags: TagList | None = None,
+        host_arn: HostArn | None = None,
         **kwargs,
     ) -> CreateConnectionOutput:
         """Creates a connection that can then be given to other Amazon Web Services
@@ -787,8 +787,8 @@ class CodeconnectionsApi:
         name: HostName,
         provider_type: ProviderType,
         provider_endpoint: Url,
-        vpc_configuration: VpcConfiguration = None,
-        tags: TagList = None,
+        vpc_configuration: VpcConfiguration | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateHostOutput:
         """Creates a resource that represents the infrastructure where a
@@ -820,8 +820,8 @@ class CodeconnectionsApi:
         connection_arn: ConnectionArn,
         owner_id: OwnerId,
         repository_name: RepositoryName,
-        encryption_key_arn: KmsKeyArn = None,
-        tags: TagList = None,
+        encryption_key_arn: KmsKeyArn | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateRepositoryLinkOutput:
         """Creates a link to a specified external Git repository. A repository link
@@ -857,9 +857,9 @@ class CodeconnectionsApi:
         resource_name: ResourceName,
         role_arn: IamRoleArn,
         sync_type: SyncConfigurationType,
-        publish_deployment_status: PublishDeploymentStatus = None,
-        trigger_resource_update_on: TriggerResourceUpdateOn = None,
-        pull_request_comment: PullRequestComment = None,
+        publish_deployment_status: PublishDeploymentStatus | None = None,
+        trigger_resource_update_on: TriggerResourceUpdateOn | None = None,
+        pull_request_comment: PullRequestComment | None = None,
         **kwargs,
     ) -> CreateSyncConfigurationOutput:
         """Creates a sync configuration which allows Amazon Web Services to sync
@@ -1110,10 +1110,10 @@ class CodeconnectionsApi:
     def list_connections(
         self,
         context: RequestContext,
-        provider_type_filter: ProviderType = None,
-        host_arn_filter: HostArn = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        provider_type_filter: ProviderType | None = None,
+        host_arn_filter: HostArn | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListConnectionsOutput:
         """Lists the connections associated with your account.
@@ -1134,8 +1134,8 @@ class CodeconnectionsApi:
     def list_hosts(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListHostsOutput:
         """Lists the hosts associated with your account.
@@ -1151,8 +1151,8 @@ class CodeconnectionsApi:
     def list_repository_links(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: SharpNextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: SharpNextToken | None = None,
         **kwargs,
     ) -> ListRepositoryLinksOutput:
         """Lists the repository links created for connections in your account.
@@ -1201,8 +1201,8 @@ class CodeconnectionsApi:
         context: RequestContext,
         repository_link_id: RepositoryLinkId,
         sync_type: SyncConfigurationType,
-        max_results: MaxResults = None,
-        next_token: SharpNextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: SharpNextToken | None = None,
         **kwargs,
     ) -> ListSyncConfigurationsOutput:
         """Returns a list of sync configurations for a specified repository.
@@ -1275,8 +1275,8 @@ class CodeconnectionsApi:
         self,
         context: RequestContext,
         host_arn: HostArn,
-        provider_endpoint: Url = None,
-        vpc_configuration: VpcConfiguration = None,
+        provider_endpoint: Url | None = None,
+        vpc_configuration: VpcConfiguration | None = None,
         **kwargs,
     ) -> UpdateHostOutput:
         """Updates a specified host with the provided configurations.
@@ -1297,8 +1297,8 @@ class CodeconnectionsApi:
         self,
         context: RequestContext,
         repository_link_id: RepositoryLinkId,
-        connection_arn: ConnectionArn = None,
-        encryption_key_arn: KmsKeyArn = None,
+        connection_arn: ConnectionArn | None = None,
+        encryption_key_arn: KmsKeyArn | None = None,
         **kwargs,
     ) -> UpdateRepositoryLinkOutput:
         """Updates the association between your connection and a specified external
@@ -1355,13 +1355,13 @@ class CodeconnectionsApi:
         context: RequestContext,
         resource_name: ResourceName,
         sync_type: SyncConfigurationType,
-        branch: BranchName = None,
-        config_file: DeploymentFilePath = None,
-        repository_link_id: RepositoryLinkId = None,
-        role_arn: IamRoleArn = None,
-        publish_deployment_status: PublishDeploymentStatus = None,
-        trigger_resource_update_on: TriggerResourceUpdateOn = None,
-        pull_request_comment: PullRequestComment = None,
+        branch: BranchName | None = None,
+        config_file: DeploymentFilePath | None = None,
+        repository_link_id: RepositoryLinkId | None = None,
+        role_arn: IamRoleArn | None = None,
+        publish_deployment_status: PublishDeploymentStatus | None = None,
+        trigger_resource_update_on: TriggerResourceUpdateOn | None = None,
+        pull_request_comment: PullRequestComment | None = None,
         **kwargs,
     ) -> UpdateSyncConfigurationOutput:
         """Updates the sync configuration for your connection and a specified

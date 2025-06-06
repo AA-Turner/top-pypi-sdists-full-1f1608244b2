@@ -1,8 +1,11 @@
 """Traverse a project to identify appropriate inputs to FawltyDeps."""
 
 import logging
+import sys
+from collections.abc import Iterator
+from collections.abc import Set as AbstractSet
 from pathlib import Path
-from typing import AbstractSet, Iterator, Optional, Set, Tuple, Type, Union
+from typing import Optional, Union
 
 from fawltydeps.dir_traversal import DirectoryTraversal
 from fawltydeps.extract_deps import validate_deps_source
@@ -21,19 +24,19 @@ from fawltydeps.types import (
 logger = logging.getLogger(__name__)
 
 
-# When setting up the traversal, we .add() directories to be traverse and attach
-# information about what we're looking for during the traversal. These are the
-# types of data we're allowed to attach:
+# When setting up the traversal, we .add() directories to be traversed and we
+# attach information about what we're looking for during the traversal.
+# These are the types of data we're allowed to attach:
 AttachedData = Union[
-    Tuple[Type[CodeSource], Path],  # Look for Python code, with a base_dir
-    Type[DepsSource],  # Look for files with dependency declarations
-    Type[PyEnvSource],  # Look for Python environments
+    tuple[type[CodeSource], Path],  # Look for Python code, with a base_dir
+    type[DepsSource],  # Look for files with dependency declarations
+    type[PyEnvSource],  # Look for Python environments
 ]
 
 
 def find_sources(  # noqa: C901, PLR0912, PLR0915
     settings: Settings,
-    source_types: AbstractSet[Type[Source]] = frozenset(
+    source_types: AbstractSet[type[Source]] = frozenset(
         [CodeSource, DepsSource, PyEnvSource]
     ),
 ) -> Iterator[Source]:
@@ -102,15 +105,18 @@ def find_sources(  # noqa: C901, PLR0912, PLR0915
 
     for path_or_special in settings.code if CodeSource in source_types else []:
         # exceptions raised by validate_code_source() are propagated here
-        validated: Optional[Source] = validate_code_source(path_or_special)
+        validated: Optional[Source] = validate_code_source(
+            path_or_special, settings.base_dir
+        )
         if validated is not None:  # parse-able file given directly
             logger.debug(f"find_sources() Found {validated}")
             yield validated
         else:  # must traverse directory
             # sanity check: convince mypy that SpecialPath is already handled
             assert isinstance(path_or_special, Path)  # noqa: S101, sanity check
-            # record also base dir for later
-            traversal.add(path_or_special, (CodeSource, path_or_special))
+            # Use given directory as base dir, unless overridden by --base-dir.
+            base_dir = settings.base_dir or path_or_special
+            traversal.add(path_or_special, (CodeSource, base_dir))
 
     for path in settings.deps if DepsSource in source_types else []:
         # exceptions raised by validate_deps_source() are propagated here
@@ -125,11 +131,22 @@ def find_sources(  # noqa: C901, PLR0912, PLR0915
 
     for path in settings.pyenvs if PyEnvSource in source_types else []:
         # exceptions raised by validate_pyenv_source() are propagated here
-        package_dirs: Optional[Set[PyEnvSource]] = validate_pyenv_source(path)
+        package_dirs: Optional[set[PyEnvSource]] = validate_pyenv_source(path)
         if package_dirs is not None:  # Python environment dir given directly
             logger.debug(f"find_sources() Found {package_dirs}")
             yield from package_dirs
-            traversal.skip_dir(path)  # disable traversal of path below
+            if path in (settings.code | settings.deps):
+                # We are also searching this dir for code/deps, hence we should
+                # not skip it altogether, but rather only skip the parts of it
+                # that likely contain installed 3rd-party packages
+                for pyenv_src in package_dirs:
+                    traversal.skip_dir(pyenv_src.path)
+                if sys.platform.startswith("win"):  # Windows
+                    traversal.skip_dir(path / "Scripts")
+                else:  # Assume POSIX
+                    traversal.skip_dir(path / "bin")
+            else:
+                traversal.skip_dir(path)  # disable traversal of entire Python env
         else:  # must traverse directory to find Python environments
             traversal.add(path, PyEnvSource)
 
@@ -153,11 +170,8 @@ def find_sources(  # noqa: C901, PLR0912, PLR0915
         if CodeSource in types:
             # Retrieve base_dir from closest ancestor, i.e. last CodeSource in .attached:
             base_dir = next(
-                (t[1] for t in reversed(step.attached) if isinstance(t, tuple)),
-                None,
+                t[1] for t in reversed(step.attached) if isinstance(t, tuple)
             )
-            # Sanity check: No CodeSource w/o base_dir
-            assert base_dir is not None  # noqa: S101
             for path in step.files:
                 try:  # catch all exceptions while traversing dirs
                     validated = validate_code_source(path, base_dir)

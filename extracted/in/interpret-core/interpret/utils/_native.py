@@ -10,6 +10,7 @@ import struct
 import sys
 import math
 from contextlib import AbstractContextManager
+from math import prod
 
 import numpy as np
 
@@ -239,13 +240,32 @@ class Native:
         )
         return val_array[0]
 
+    def safe_sum(self, in_tensor, out_tensor, axis):
+        shape = in_tensor.shape
+        n_distant = prod(shape[:axis])
+        n_close = prod(shape[axis + 1 :])
+
+        if prod(out_tensor.shape) != n_distant * n_close:
+            msg = f"in {in_tensor.shape} and out {out_tensor.shape} tensors must have a reducible shape along axis {axis}."
+            raise Exception(msg)
+
+        return_code = self._unsafe.SafeSum(
+            n_distant,
+            shape[axis],
+            n_close,
+            Native._make_pointer(in_tensor, np.float64, None, False),
+            Native._make_pointer(out_tensor, np.float64, None, False),
+        )
+        if return_code:  # pragma: no cover
+            raise Native._get_native_exception(return_code, "SafeSum")
+
     def flat_mean(self, vals, weights=None):
         if weights is not None:
             if vals.shape != weights.shape:
                 msg = "vals and weights must have the same shape to call flat_mean."
                 raise Exception(msg)
 
-        n_tensor_bins = math.prod(vals.shape)
+        n_tensor_bins = prod(vals.shape)
 
         mean_result = ct.c_double(np.nan)
 
@@ -320,6 +340,18 @@ class Native:
             raise Native._get_native_exception(return_code, "SafeStandardDeviation")
 
         return stddev_result
+
+    def safe_exp(self, vals):
+        self._unsafe.SafeExp(
+            prod(vals.shape),
+            Native._make_pointer(vals, np.float64, None),
+        )
+
+    def safe_log(self, vals):
+        self._unsafe.SafeLog(
+            prod(vals.shape),
+            Native._make_pointer(vals, np.float64, None),
+        )
 
     def create_rng(self, random_state):
         if random_state is None:
@@ -1034,6 +1066,20 @@ class Native:
         ]
         self._unsafe.CleanFloats.restype = None
 
+        self._unsafe.SafeSum.argtypes = [
+            # int64_t countDistant
+            ct.c_int64,
+            # int64_t countAxis
+            ct.c_int64,
+            # int64_t countClose
+            ct.c_int64,
+            # double * in
+            ct.c_void_p,
+            # double * out
+            ct.c_void_p,
+        ]
+        self._unsafe.SafeSum.restype = ct.c_int32
+
         self._unsafe.SafeMean.argtypes = [
             # int64_t countBags
             ct.c_int64,
@@ -1061,6 +1107,22 @@ class Native:
             ct.c_void_p,
         ]
         self._unsafe.SafeStandardDeviation.restype = ct.c_int32
+
+        self._unsafe.SafeExp.argtypes = [
+            # int64_t count
+            ct.c_int64,
+            # double * inout
+            ct.c_void_p,
+        ]
+        self._unsafe.SafeExp.restype = None
+
+        self._unsafe.SafeLog.argtypes = [
+            # int64_t count
+            ct.c_int64,
+            # double * inout
+            ct.c_void_p,
+        ]
+        self._unsafe.SafeLog.restype = None
 
         self._unsafe.MeasureRNG.argtypes = []
         self._unsafe.MeasureRNG.restype = ct.c_int64

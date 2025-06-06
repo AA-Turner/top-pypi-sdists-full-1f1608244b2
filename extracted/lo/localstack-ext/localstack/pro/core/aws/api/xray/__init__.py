@@ -1454,7 +1454,11 @@ class XrayApi:
 
     @handler("BatchGetTraces")
     def batch_get_traces(
-        self, context: RequestContext, trace_ids: TraceIdList, next_token: String = None, **kwargs
+        self,
+        context: RequestContext,
+        trace_ids: TraceIdList,
+        next_token: String | None = None,
+        **kwargs,
     ) -> BatchGetTracesResult:
         """You cannot find traces through this API if Transaction Search is enabled
         since trace is not indexed in X-Ray.
@@ -1492,9 +1496,9 @@ class XrayApi:
         self,
         context: RequestContext,
         group_name: GroupName,
-        filter_expression: FilterExpression = None,
-        insights_configuration: InsightsConfiguration = None,
-        tags: TagList = None,
+        filter_expression: FilterExpression | None = None,
+        insights_configuration: InsightsConfiguration | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateGroupResult:
         """Creates a group resource with a name and a filter expression.
@@ -1512,7 +1516,11 @@ class XrayApi:
 
     @handler("CreateSamplingRule")
     def create_sampling_rule(
-        self, context: RequestContext, sampling_rule: SamplingRule, tags: TagList = None, **kwargs
+        self,
+        context: RequestContext,
+        sampling_rule: SamplingRule,
+        tags: TagList | None = None,
+        **kwargs,
     ) -> CreateSamplingRuleResult:
         """Creates a rule to control sampling behavior for instrumented
         applications. Services retrieve rules with
@@ -1540,8 +1548,8 @@ class XrayApi:
     def delete_group(
         self,
         context: RequestContext,
-        group_name: GroupName = None,
-        group_arn: GroupARN = None,
+        group_name: GroupName | None = None,
+        group_arn: GroupARN | None = None,
         **kwargs,
     ) -> DeleteGroupResult:
         """Deletes a group resource.
@@ -1559,7 +1567,7 @@ class XrayApi:
         self,
         context: RequestContext,
         policy_name: PolicyName,
-        policy_revision_id: PolicyRevisionId = None,
+        policy_revision_id: PolicyRevisionId | None = None,
         **kwargs,
     ) -> DeleteResourcePolicyResult:
         """Deletes a resource policy from the target Amazon Web Services account.
@@ -1575,7 +1583,11 @@ class XrayApi:
 
     @handler("DeleteSamplingRule")
     def delete_sampling_rule(
-        self, context: RequestContext, rule_name: String = None, rule_arn: String = None, **kwargs
+        self,
+        context: RequestContext,
+        rule_name: String | None = None,
+        rule_arn: String | None = None,
+        **kwargs,
     ) -> DeleteSamplingRuleResult:
         """Deletes a sampling rule.
 
@@ -1601,8 +1613,8 @@ class XrayApi:
     def get_group(
         self,
         context: RequestContext,
-        group_name: GroupName = None,
-        group_arn: GroupARN = None,
+        group_name: GroupName | None = None,
+        group_arn: GroupARN | None = None,
         **kwargs,
     ) -> GetGroupResult:
         """Retrieves group resource details.
@@ -1617,7 +1629,7 @@ class XrayApi:
 
     @handler("GetGroups")
     def get_groups(
-        self, context: RequestContext, next_token: GetGroupsNextToken = None, **kwargs
+        self, context: RequestContext, next_token: GetGroupsNextToken | None = None, **kwargs
     ) -> GetGroupsResult:
         """Retrieves all active group details.
 
@@ -1630,7 +1642,7 @@ class XrayApi:
 
     @handler("GetIndexingRules")
     def get_indexing_rules(
-        self, context: RequestContext, next_token: String = None, **kwargs
+        self, context: RequestContext, next_token: String | None = None, **kwargs
     ) -> GetIndexingRulesResult:
         """Retrieves all indexing rules.
 
@@ -1668,8 +1680,8 @@ class XrayApi:
         self,
         context: RequestContext,
         insight_id: InsightId,
-        max_results: GetInsightEventsMaxResults = None,
-        next_token: Token = None,
+        max_results: GetInsightEventsMaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> GetInsightEventsResult:
         """X-Ray reevaluates insights periodically until they're resolved, and
@@ -1693,7 +1705,7 @@ class XrayApi:
         insight_id: InsightId,
         start_time: Timestamp,
         end_time: Timestamp,
-        next_token: Token = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> GetInsightImpactGraphResult:
         """Retrieves a service graph structure filtered by the specified insight.
@@ -1717,11 +1729,11 @@ class XrayApi:
         context: RequestContext,
         start_time: Timestamp,
         end_time: Timestamp,
-        states: InsightStateList = None,
-        group_arn: GroupARN = None,
-        group_name: GroupName = None,
-        max_results: GetInsightSummariesMaxResults = None,
-        next_token: Token = None,
+        states: InsightStateList | None = None,
+        group_arn: GroupARN | None = None,
+        group_name: GroupName | None = None,
+        max_results: GetInsightSummariesMaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> GetInsightSummariesResult:
         """Retrieves the summaries of all insights in the specified group matching
@@ -1745,7 +1757,7 @@ class XrayApi:
         self,
         context: RequestContext,
         retrieval_token: RetrievalToken,
-        next_token: String = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> GetRetrievedTracesGraphResult:
         """Retrieves a service graph for traces based on the specified
@@ -1782,7 +1794,7 @@ class XrayApi:
 
     @handler("GetSamplingRules")
     def get_sampling_rules(
-        self, context: RequestContext, next_token: String = None, **kwargs
+        self, context: RequestContext, next_token: String | None = None, **kwargs
     ) -> GetSamplingRulesResult:
         """Retrieves all sampling rules.
 
@@ -1795,7 +1807,7 @@ class XrayApi:
 
     @handler("GetSamplingStatisticSummaries")
     def get_sampling_statistic_summaries(
-        self, context: RequestContext, next_token: String = None, **kwargs
+        self, context: RequestContext, next_token: String | None = None, **kwargs
     ) -> GetSamplingStatisticSummariesResult:
         """Retrieves information about recent sampling results for all sampling
         rules.
@@ -1830,9 +1842,9 @@ class XrayApi:
         context: RequestContext,
         start_time: Timestamp,
         end_time: Timestamp,
-        group_name: GroupName = None,
-        group_arn: GroupARN = None,
-        next_token: String = None,
+        group_name: GroupName | None = None,
+        group_arn: GroupARN | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> GetServiceGraphResult:
         """Retrieves a document that describes services that process incoming
@@ -1861,12 +1873,12 @@ class XrayApi:
         context: RequestContext,
         start_time: Timestamp,
         end_time: Timestamp,
-        group_name: GroupName = None,
-        group_arn: GroupARN = None,
-        entity_selector_expression: EntitySelectorExpression = None,
-        period: NullableInteger = None,
-        forecast_statistics: NullableBoolean = None,
-        next_token: String = None,
+        group_name: GroupName | None = None,
+        group_arn: GroupARN | None = None,
+        entity_selector_expression: EntitySelectorExpression | None = None,
+        period: NullableInteger | None = None,
+        forecast_statistics: NullableBoolean | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> GetTimeSeriesServiceStatisticsResult:
         """Get an aggregation of service statistics defined by a specific time
@@ -1890,7 +1902,11 @@ class XrayApi:
 
     @handler("GetTraceGraph")
     def get_trace_graph(
-        self, context: RequestContext, trace_ids: TraceIdList, next_token: String = None, **kwargs
+        self,
+        context: RequestContext,
+        trace_ids: TraceIdList,
+        next_token: String | None = None,
+        **kwargs,
     ) -> GetTraceGraphResult:
         """Retrieves a service graph for one or more specific trace IDs.
 
@@ -1925,11 +1941,11 @@ class XrayApi:
         context: RequestContext,
         start_time: Timestamp,
         end_time: Timestamp,
-        time_range_type: TimeRangeType = None,
-        sampling: NullableBoolean = None,
-        sampling_strategy: SamplingStrategy = None,
-        filter_expression: FilterExpression = None,
-        next_token: String = None,
+        time_range_type: TimeRangeType | None = None,
+        sampling: NullableBoolean | None = None,
+        sampling_strategy: SamplingStrategy | None = None,
+        filter_expression: FilterExpression | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> GetTraceSummariesResult:
         """Retrieves IDs and annotations for traces available for a specified time
@@ -1971,7 +1987,7 @@ class XrayApi:
 
     @handler("ListResourcePolicies")
     def list_resource_policies(
-        self, context: RequestContext, next_token: ResourcePolicyNextToken = None, **kwargs
+        self, context: RequestContext, next_token: ResourcePolicyNextToken | None = None, **kwargs
     ) -> ListResourcePoliciesResult:
         """Returns the list of resource policies in the target Amazon Web Services
         account.
@@ -1988,8 +2004,8 @@ class XrayApi:
         self,
         context: RequestContext,
         retrieval_token: RetrievalToken,
-        trace_format: TraceFormatType = None,
-        next_token: String = None,
+        trace_format: TraceFormatType | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListRetrievedTracesResult:
         """Retrieves a list of traces for a given ``RetrievalToken`` from the
@@ -2030,7 +2046,7 @@ class XrayApi:
         self,
         context: RequestContext,
         resource_arn: AmazonResourceName,
-        next_token: String = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListTagsForResourceResponse:
         """Returns a list of tags that are applied to the specified Amazon Web
@@ -2067,8 +2083,8 @@ class XrayApi:
         context: RequestContext,
         policy_name: PolicyName,
         policy_document: PolicyDocument,
-        policy_revision_id: PolicyRevisionId = None,
-        bypass_policy_lockout_check: Boolean = None,
+        policy_revision_id: PolicyRevisionId | None = None,
+        bypass_policy_lockout_check: Boolean | None = None,
         **kwargs,
     ) -> PutResourcePolicyResult:
         """Sets the resource policy to grant one or more Amazon Web Services
@@ -2099,9 +2115,9 @@ class XrayApi:
         self,
         context: RequestContext,
         telemetry_records: TelemetryRecordList,
-        ec2_instance_id: EC2InstanceId = None,
-        hostname: Hostname = None,
-        resource_arn: ResourceARN = None,
+        ec2_instance_id: EC2InstanceId | None = None,
+        hostname: Hostname | None = None,
+        resource_arn: ResourceARN | None = None,
         **kwargs,
     ) -> PutTelemetryRecordsResult:
         """Used by the Amazon Web Services X-Ray daemon to upload telemetry.
@@ -2269,10 +2285,10 @@ class XrayApi:
     def update_group(
         self,
         context: RequestContext,
-        group_name: GroupName = None,
-        group_arn: GroupARN = None,
-        filter_expression: FilterExpression = None,
-        insights_configuration: InsightsConfiguration = None,
+        group_name: GroupName | None = None,
+        group_arn: GroupARN | None = None,
+        filter_expression: FilterExpression | None = None,
+        insights_configuration: InsightsConfiguration | None = None,
         **kwargs,
     ) -> UpdateGroupResult:
         """Updates a group resource.
@@ -2322,7 +2338,7 @@ class XrayApi:
 
     @handler("UpdateTraceSegmentDestination")
     def update_trace_segment_destination(
-        self, context: RequestContext, destination: TraceSegmentDestination = None, **kwargs
+        self, context: RequestContext, destination: TraceSegmentDestination | None = None, **kwargs
     ) -> UpdateTraceSegmentDestinationResult:
         """Modifies the destination of data sent to ``PutTraceSegments``. The
         Transaction Search feature requires the CloudWatchLogs destination. For

@@ -2001,11 +2001,11 @@ class TransferApi:
         role: Role,
         server_id: ServerId,
         external_id: ExternalId,
-        home_directory: HomeDirectory = None,
-        home_directory_type: HomeDirectoryType = None,
-        home_directory_mappings: HomeDirectoryMappings = None,
-        policy: Policy = None,
-        posix_profile: PosixProfile = None,
+        home_directory: HomeDirectory | None = None,
+        home_directory_type: HomeDirectoryType | None = None,
+        home_directory_mappings: HomeDirectoryMappings | None = None,
+        policy: Policy | None = None,
+        posix_profile: PosixProfile | None = None,
         **kwargs,
     ) -> CreateAccessResponse:
         """Used by administrators to choose which groups in the directory should
@@ -2051,13 +2051,13 @@ class TransferApi:
         local_profile_id: ProfileId,
         partner_profile_id: ProfileId,
         access_role: Role,
-        description: Description = None,
-        base_directory: HomeDirectory = None,
-        status: AgreementStatusType = None,
-        tags: Tags = None,
-        preserve_filename: PreserveFilenameType = None,
-        enforce_message_signing: EnforceMessageSigningType = None,
-        custom_directories: CustomDirectoriesType = None,
+        description: Description | None = None,
+        base_directory: HomeDirectory | None = None,
+        status: AgreementStatusType | None = None,
+        tags: Tags | None = None,
+        preserve_filename: PreserveFilenameType | None = None,
+        enforce_message_signing: EnforceMessageSigningType | None = None,
+        custom_directories: CustomDirectoriesType | None = None,
         **kwargs,
     ) -> CreateAgreementResponse:
         """Creates an agreement. An agreement is a bilateral trading partner
@@ -2104,11 +2104,11 @@ class TransferApi:
         context: RequestContext,
         url: Url,
         access_role: Role,
-        as2_config: As2ConnectorConfig = None,
-        logging_role: Role = None,
-        tags: Tags = None,
-        sftp_config: SftpConnectorConfig = None,
-        security_policy_name: ConnectorSecurityPolicyName = None,
+        as2_config: As2ConnectorConfig | None = None,
+        logging_role: Role | None = None,
+        tags: Tags | None = None,
+        sftp_config: SftpConnectorConfig | None = None,
+        security_policy_name: ConnectorSecurityPolicyName | None = None,
         **kwargs,
     ) -> CreateConnectorResponse:
         """Creates the connector, which captures the parameters for a connection
@@ -2149,8 +2149,8 @@ class TransferApi:
         context: RequestContext,
         as2_id: As2Id,
         profile_type: ProfileType,
-        certificate_ids: CertificateIds = None,
-        tags: Tags = None,
+        certificate_ids: CertificateIds | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateProfileResponse:
         """Creates the local or partner profile to use for AS2 transfers.
@@ -2175,23 +2175,23 @@ class TransferApi:
     def create_server(
         self,
         context: RequestContext,
-        certificate: Certificate = None,
-        domain: Domain = None,
-        endpoint_details: EndpointDetails = None,
-        endpoint_type: EndpointType = None,
-        host_key: HostKey = None,
-        identity_provider_details: IdentityProviderDetails = None,
-        identity_provider_type: IdentityProviderType = None,
-        logging_role: NullableRole = None,
-        post_authentication_login_banner: PostAuthenticationLoginBanner = None,
-        pre_authentication_login_banner: PreAuthenticationLoginBanner = None,
-        protocols: Protocols = None,
-        protocol_details: ProtocolDetails = None,
-        security_policy_name: SecurityPolicyName = None,
-        tags: Tags = None,
-        workflow_details: WorkflowDetails = None,
-        structured_log_destinations: StructuredLogDestinations = None,
-        s3_storage_options: S3StorageOptions = None,
+        certificate: Certificate | None = None,
+        domain: Domain | None = None,
+        endpoint_details: EndpointDetails | None = None,
+        endpoint_type: EndpointType | None = None,
+        host_key: HostKey | None = None,
+        identity_provider_details: IdentityProviderDetails | None = None,
+        identity_provider_type: IdentityProviderType | None = None,
+        logging_role: NullableRole | None = None,
+        post_authentication_login_banner: PostAuthenticationLoginBanner | None = None,
+        pre_authentication_login_banner: PreAuthenticationLoginBanner | None = None,
+        protocols: Protocols | None = None,
+        protocol_details: ProtocolDetails | None = None,
+        security_policy_name: SecurityPolicyName | None = None,
+        tags: Tags | None = None,
+        workflow_details: WorkflowDetails | None = None,
+        structured_log_destinations: StructuredLogDestinations | None = None,
+        s3_storage_options: S3StorageOptions | None = None,
         **kwargs,
     ) -> CreateServerResponse:
         """Instantiates an auto-scaling virtual server based on the selected file
@@ -2245,13 +2245,13 @@ class TransferApi:
         role: Role,
         server_id: ServerId,
         user_name: UserName,
-        home_directory: HomeDirectory = None,
-        home_directory_type: HomeDirectoryType = None,
-        home_directory_mappings: HomeDirectoryMappings = None,
-        policy: Policy = None,
-        posix_profile: PosixProfile = None,
-        ssh_public_key_body: SshPublicKeyBody = None,
-        tags: Tags = None,
+        home_directory: HomeDirectory | None = None,
+        home_directory_type: HomeDirectoryType | None = None,
+        home_directory_mappings: HomeDirectoryMappings | None = None,
+        policy: Policy | None = None,
+        posix_profile: PosixProfile | None = None,
+        ssh_public_key_body: SshPublicKeyBody | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateUserResponse:
         """Creates a user and associates them with an existing file transfer
@@ -2298,10 +2298,10 @@ class TransferApi:
         self,
         context: RequestContext,
         identity_provider_details: WebAppIdentityProviderDetails,
-        access_endpoint: WebAppAccessEndpoint = None,
-        web_app_units: WebAppUnits = None,
-        tags: Tags = None,
-        web_app_endpoint_policy: WebAppEndpointPolicy = None,
+        access_endpoint: WebAppAccessEndpoint | None = None,
+        web_app_units: WebAppUnits | None = None,
+        tags: Tags | None = None,
+        web_app_endpoint_policy: WebAppEndpointPolicy | None = None,
         **kwargs,
     ) -> CreateWebAppResponse:
         """Creates a web app based on specified parameters, and returns the ID for
@@ -2329,9 +2329,9 @@ class TransferApi:
         self,
         context: RequestContext,
         steps: WorkflowSteps,
-        description: WorkflowDescription = None,
-        on_exception_steps: WorkflowSteps = None,
-        tags: Tags = None,
+        description: WorkflowDescription | None = None,
+        on_exception_steps: WorkflowSteps | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateWorkflowResponse:
         """Allows you to create a workflow with specified steps and step details
@@ -2795,12 +2795,12 @@ class TransferApi:
         context: RequestContext,
         usage: CertificateUsageType,
         certificate: CertificateBodyType,
-        certificate_chain: CertificateChainType = None,
-        private_key: PrivateKeyType = None,
-        active_date: CertDate = None,
-        inactive_date: CertDate = None,
-        description: Description = None,
-        tags: Tags = None,
+        certificate_chain: CertificateChainType | None = None,
+        private_key: PrivateKeyType | None = None,
+        active_date: CertDate | None = None,
+        inactive_date: CertDate | None = None,
+        description: Description | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> ImportCertificateResponse:
         """Imports the signing and encryption certificates that you need to create
@@ -2835,8 +2835,8 @@ class TransferApi:
         context: RequestContext,
         server_id: ServerId,
         host_key_body: HostKey,
-        description: HostKeyDescription = None,
-        tags: Tags = None,
+        description: HostKeyDescription | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> ImportHostKeyResponse:
         """Adds a host key to the server that's specified by the ``ServerId``
@@ -2892,8 +2892,8 @@ class TransferApi:
         self,
         context: RequestContext,
         server_id: ServerId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListAccessesResponse:
         """Lists the details for all the accesses you have on your server.
@@ -2917,8 +2917,8 @@ class TransferApi:
         self,
         context: RequestContext,
         server_id: ServerId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListAgreementsResponse:
         """Returns a list of the agreements for the server that's identified by the
@@ -2945,8 +2945,8 @@ class TransferApi:
     def list_certificates(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListCertificatesResponse:
         """Returns a list of the current certificates that have been imported into
@@ -2972,8 +2972,8 @@ class TransferApi:
     def list_connectors(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListConnectorsResponse:
         """Lists the connectors for the specified Region.
@@ -2995,8 +2995,8 @@ class TransferApi:
         self,
         context: RequestContext,
         workflow_id: WorkflowId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListExecutionsResponse:
         """Lists all in-progress executions for the specified workflow.
@@ -3022,8 +3022,8 @@ class TransferApi:
         context: RequestContext,
         connector_id: ConnectorId,
         transfer_id: TransferId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListFileTransferResultsResponse:
         """Returns real-time updates and detailed information on the status of each
@@ -3053,8 +3053,8 @@ class TransferApi:
         self,
         context: RequestContext,
         server_id: ServerId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListHostKeysResponse:
         """Returns a list of host keys for the server that's specified by the
@@ -3078,9 +3078,9 @@ class TransferApi:
     def list_profiles(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        profile_type: ProfileType = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        profile_type: ProfileType | None = None,
         **kwargs,
     ) -> ListProfilesResponse:
         """Returns a list of the profiles for your system. If you want to limit the
@@ -3107,8 +3107,8 @@ class TransferApi:
     def list_security_policies(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListSecurityPoliciesResponse:
         """Lists the security policies that are attached to your servers and SFTP
@@ -3134,8 +3134,8 @@ class TransferApi:
     def list_servers(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListServersResponse:
         """Lists the file transfer protocol-enabled servers that are associated
@@ -3158,8 +3158,8 @@ class TransferApi:
         self,
         context: RequestContext,
         arn: Arn,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTagsForResourceResponse:
         """Lists all of the tags associated with the Amazon Resource Name (ARN)
@@ -3184,8 +3184,8 @@ class TransferApi:
         self,
         context: RequestContext,
         server_id: ServerId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListUsersResponse:
         """Lists the users for a file transfer protocol-enabled server that you
@@ -3210,8 +3210,8 @@ class TransferApi:
     def list_web_apps(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListWebAppsResponse:
         """Lists all web apps associated with your Amazon Web Services account for
@@ -3231,8 +3231,8 @@ class TransferApi:
     def list_workflows(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListWorkflowsResponse:
         """Lists all workflows associated with your Amazon Web Services account for
@@ -3286,7 +3286,7 @@ class TransferApi:
         connector_id: ConnectorId,
         remote_directory_path: FilePath,
         output_directory_path: FilePath,
-        max_items: MaxItems = None,
+        max_items: MaxItems | None = None,
         **kwargs,
     ) -> StartDirectoryListingResponse:
         """Retrieves a list of the contents of a directory from a remote SFTP
@@ -3350,10 +3350,10 @@ class TransferApi:
         self,
         context: RequestContext,
         connector_id: ConnectorId,
-        send_file_paths: FilePaths = None,
-        retrieve_file_paths: FilePaths = None,
-        local_directory_path: FilePath = None,
-        remote_directory_path: FilePath = None,
+        send_file_paths: FilePaths | None = None,
+        retrieve_file_paths: FilePaths | None = None,
+        local_directory_path: FilePath | None = None,
+        remote_directory_path: FilePath | None = None,
         **kwargs,
     ) -> StartFileTransferResponse:
         """Begins a file transfer between local Amazon Web Services storage and a
@@ -3525,9 +3525,9 @@ class TransferApi:
         context: RequestContext,
         server_id: ServerId,
         user_name: UserName,
-        server_protocol: Protocol = None,
-        source_ip: SourceIp = None,
-        user_password: UserPassword = None,
+        server_protocol: Protocol | None = None,
+        source_ip: SourceIp | None = None,
+        user_password: UserPassword | None = None,
         **kwargs,
     ) -> TestIdentityProviderResponse:
         """If the ``IdentityProviderType`` of a file transfer protocol-enabled
@@ -3609,12 +3609,12 @@ class TransferApi:
         context: RequestContext,
         server_id: ServerId,
         external_id: ExternalId,
-        home_directory: HomeDirectory = None,
-        home_directory_type: HomeDirectoryType = None,
-        home_directory_mappings: HomeDirectoryMappings = None,
-        policy: Policy = None,
-        posix_profile: PosixProfile = None,
-        role: Role = None,
+        home_directory: HomeDirectory | None = None,
+        home_directory_type: HomeDirectoryType | None = None,
+        home_directory_mappings: HomeDirectoryMappings | None = None,
+        policy: Policy | None = None,
+        posix_profile: PosixProfile | None = None,
+        role: Role | None = None,
         **kwargs,
     ) -> UpdateAccessResponse:
         """Allows you to update parameters for the access specified in the
@@ -3654,15 +3654,15 @@ class TransferApi:
         context: RequestContext,
         agreement_id: AgreementId,
         server_id: ServerId,
-        description: Description = None,
-        status: AgreementStatusType = None,
-        local_profile_id: ProfileId = None,
-        partner_profile_id: ProfileId = None,
-        base_directory: HomeDirectory = None,
-        access_role: Role = None,
-        preserve_filename: PreserveFilenameType = None,
-        enforce_message_signing: EnforceMessageSigningType = None,
-        custom_directories: CustomDirectoriesType = None,
+        description: Description | None = None,
+        status: AgreementStatusType | None = None,
+        local_profile_id: ProfileId | None = None,
+        partner_profile_id: ProfileId | None = None,
+        base_directory: HomeDirectory | None = None,
+        access_role: Role | None = None,
+        preserve_filename: PreserveFilenameType | None = None,
+        enforce_message_signing: EnforceMessageSigningType | None = None,
+        custom_directories: CustomDirectoriesType | None = None,
         **kwargs,
     ) -> UpdateAgreementResponse:
         """Updates some of the parameters for an existing agreement. Provide the
@@ -3710,9 +3710,9 @@ class TransferApi:
         self,
         context: RequestContext,
         certificate_id: CertificateId,
-        active_date: CertDate = None,
-        inactive_date: CertDate = None,
-        description: Description = None,
+        active_date: CertDate | None = None,
+        inactive_date: CertDate | None = None,
+        description: Description | None = None,
         **kwargs,
     ) -> UpdateCertificateResponse:
         """Updates the active and inactive dates for a certificate.
@@ -3735,12 +3735,12 @@ class TransferApi:
         self,
         context: RequestContext,
         connector_id: ConnectorId,
-        url: Url = None,
-        as2_config: As2ConnectorConfig = None,
-        access_role: Role = None,
-        logging_role: Role = None,
-        sftp_config: SftpConnectorConfig = None,
-        security_policy_name: ConnectorSecurityPolicyName = None,
+        url: Url | None = None,
+        as2_config: As2ConnectorConfig | None = None,
+        access_role: Role | None = None,
+        logging_role: Role | None = None,
+        sftp_config: SftpConnectorConfig | None = None,
+        security_policy_name: ConnectorSecurityPolicyName | None = None,
         **kwargs,
     ) -> UpdateConnectorResponse:
         """Updates some of the parameters for an existing connector. Provide the
@@ -3796,7 +3796,7 @@ class TransferApi:
         self,
         context: RequestContext,
         profile_id: ProfileId,
-        certificate_ids: CertificateIds = None,
+        certificate_ids: CertificateIds | None = None,
         **kwargs,
     ) -> UpdateProfileResponse:
         """Updates some of the parameters for an existing profile. Provide the
@@ -3819,20 +3819,20 @@ class TransferApi:
         self,
         context: RequestContext,
         server_id: ServerId,
-        certificate: Certificate = None,
-        protocol_details: ProtocolDetails = None,
-        endpoint_details: EndpointDetails = None,
-        endpoint_type: EndpointType = None,
-        host_key: HostKey = None,
-        identity_provider_details: IdentityProviderDetails = None,
-        logging_role: NullableRole = None,
-        post_authentication_login_banner: PostAuthenticationLoginBanner = None,
-        pre_authentication_login_banner: PreAuthenticationLoginBanner = None,
-        protocols: Protocols = None,
-        security_policy_name: SecurityPolicyName = None,
-        workflow_details: WorkflowDetails = None,
-        structured_log_destinations: StructuredLogDestinations = None,
-        s3_storage_options: S3StorageOptions = None,
+        certificate: Certificate | None = None,
+        protocol_details: ProtocolDetails | None = None,
+        endpoint_details: EndpointDetails | None = None,
+        endpoint_type: EndpointType | None = None,
+        host_key: HostKey | None = None,
+        identity_provider_details: IdentityProviderDetails | None = None,
+        logging_role: NullableRole | None = None,
+        post_authentication_login_banner: PostAuthenticationLoginBanner | None = None,
+        pre_authentication_login_banner: PreAuthenticationLoginBanner | None = None,
+        protocols: Protocols | None = None,
+        security_policy_name: SecurityPolicyName | None = None,
+        workflow_details: WorkflowDetails | None = None,
+        structured_log_destinations: StructuredLogDestinations | None = None,
+        s3_storage_options: S3StorageOptions | None = None,
         **kwargs,
     ) -> UpdateServerResponse:
         """Updates the file transfer protocol-enabled server's properties after
@@ -3884,12 +3884,12 @@ class TransferApi:
         context: RequestContext,
         server_id: ServerId,
         user_name: UserName,
-        home_directory: HomeDirectory = None,
-        home_directory_type: HomeDirectoryType = None,
-        home_directory_mappings: HomeDirectoryMappings = None,
-        policy: Policy = None,
-        posix_profile: PosixProfile = None,
-        role: Role = None,
+        home_directory: HomeDirectory | None = None,
+        home_directory_type: HomeDirectoryType | None = None,
+        home_directory_mappings: HomeDirectoryMappings | None = None,
+        policy: Policy | None = None,
+        posix_profile: PosixProfile | None = None,
+        role: Role | None = None,
         **kwargs,
     ) -> UpdateUserResponse:
         """Assigns new properties to a user. Parameters you pass modify any or all
@@ -3946,9 +3946,9 @@ class TransferApi:
         self,
         context: RequestContext,
         web_app_id: WebAppId,
-        identity_provider_details: UpdateWebAppIdentityProviderDetails = None,
-        access_endpoint: WebAppAccessEndpoint = None,
-        web_app_units: WebAppUnits = None,
+        identity_provider_details: UpdateWebAppIdentityProviderDetails | None = None,
+        access_endpoint: WebAppAccessEndpoint | None = None,
+        web_app_units: WebAppUnits | None = None,
         **kwargs,
     ) -> UpdateWebAppResponse:
         """Assigns new properties to a web app. You can modify the access point,
@@ -3976,9 +3976,9 @@ class TransferApi:
         self,
         context: RequestContext,
         web_app_id: WebAppId,
-        title: WebAppTitle = None,
-        logo_file: WebAppLogoFile = None,
-        favicon_file: WebAppFaviconFile = None,
+        title: WebAppTitle | None = None,
+        logo_file: WebAppLogoFile | None = None,
+        favicon_file: WebAppFaviconFile | None = None,
         **kwargs,
     ) -> UpdateWebAppCustomizationResponse:
         """Assigns new customization properties to a web app. You can modify the

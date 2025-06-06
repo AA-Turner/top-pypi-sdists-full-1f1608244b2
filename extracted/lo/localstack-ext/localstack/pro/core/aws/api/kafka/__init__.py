@@ -1679,14 +1679,14 @@ class KafkaApi:
         kafka_version: _stringMin1Max128,
         number_of_broker_nodes: _integerMin1Max15,
         cluster_name: _stringMin1Max64,
-        client_authentication: ClientAuthentication = None,
-        configuration_info: ConfigurationInfo = None,
-        encryption_info: EncryptionInfo = None,
-        enhanced_monitoring: EnhancedMonitoring = None,
-        open_monitoring: OpenMonitoringInfo = None,
-        logging_info: LoggingInfo = None,
-        tags: _mapOf__string = None,
-        storage_mode: StorageMode = None,
+        client_authentication: ClientAuthentication | None = None,
+        configuration_info: ConfigurationInfo | None = None,
+        encryption_info: EncryptionInfo | None = None,
+        enhanced_monitoring: EnhancedMonitoring | None = None,
+        open_monitoring: OpenMonitoringInfo | None = None,
+        logging_info: LoggingInfo | None = None,
+        tags: _mapOf__string | None = None,
+        storage_mode: StorageMode | None = None,
         **kwargs,
     ) -> CreateClusterResponse:
         """Creates a new MSK cluster.
@@ -1720,9 +1720,9 @@ class KafkaApi:
         self,
         context: RequestContext,
         cluster_name: _stringMin1Max64,
-        tags: _mapOf__string = None,
-        provisioned: ProvisionedRequest = None,
-        serverless: ServerlessRequest = None,
+        tags: _mapOf__string | None = None,
+        provisioned: ProvisionedRequest | None = None,
+        serverless: ServerlessRequest | None = None,
         **kwargs,
     ) -> CreateClusterV2Response:
         """Creates a new MSK cluster.
@@ -1748,8 +1748,8 @@ class KafkaApi:
         context: RequestContext,
         server_properties: _blob,
         name: _string,
-        description: _string = None,
-        kafka_versions: _listOf__string = None,
+        description: _string | None = None,
+        kafka_versions: _listOf__string | None = None,
         **kwargs,
     ) -> CreateConfigurationResponse:
         """Creates a new MSK configuration.
@@ -1778,8 +1778,8 @@ class KafkaApi:
         replicator_name: _stringMin1Max128Pattern09AZaZ09AZaZ0,
         replication_info_list: _listOfReplicationInfo,
         kafka_clusters: _listOfKafkaCluster,
-        description: _stringMax1024 = None,
-        tags: _mapOf__string = None,
+        description: _stringMax1024 | None = None,
+        tags: _mapOf__string | None = None,
         **kwargs,
     ) -> CreateReplicatorResponse:
         """Creates the replicator.
@@ -1813,7 +1813,7 @@ class KafkaApi:
         vpc_id: _string,
         client_subnets: _listOf__string,
         security_groups: _listOf__string,
-        tags: _mapOf__string = None,
+        tags: _mapOf__string | None = None,
         **kwargs,
     ) -> CreateVpcConnectionResponse:
         """Creates a new MSK VPC connection.
@@ -1839,7 +1839,7 @@ class KafkaApi:
         self,
         context: RequestContext,
         cluster_arn: _string,
-        current_version: _string = None,
+        current_version: _string | None = None,
         **kwargs,
     ) -> DeleteClusterResponse:
         """Deletes the MSK cluster specified by the Amazon Resource Name (ARN) in
@@ -1892,7 +1892,7 @@ class KafkaApi:
         self,
         context: RequestContext,
         replicator_arn: _string,
-        current_version: _string = None,
+        current_version: _string | None = None,
         **kwargs,
     ) -> DeleteReplicatorResponse:
         """Deletes a replicator.
@@ -2114,7 +2114,7 @@ class KafkaApi:
 
     @handler("GetCompatibleKafkaVersions")
     def get_compatible_kafka_versions(
-        self, context: RequestContext, cluster_arn: _string = None, **kwargs
+        self, context: RequestContext, cluster_arn: _string | None = None, **kwargs
     ) -> GetCompatibleKafkaVersionsResponse:
         """Gets the Apache Kafka versions to which you can update the MSK cluster.
 
@@ -2151,8 +2151,8 @@ class KafkaApi:
         self,
         context: RequestContext,
         cluster_arn: _string,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListClusterOperationsResponse:
         """Returns a list of all the operations that have been performed on the
@@ -2174,8 +2174,8 @@ class KafkaApi:
         self,
         context: RequestContext,
         cluster_arn: _string,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListClusterOperationsV2Response:
         """Returns a list of all the operations that have been performed on the
@@ -2199,9 +2199,9 @@ class KafkaApi:
     def list_clusters(
         self,
         context: RequestContext,
-        cluster_name_filter: _string = None,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        cluster_name_filter: _string | None = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListClustersResponse:
         """Returns a list of all the MSK clusters in the current Region.
@@ -2221,10 +2221,10 @@ class KafkaApi:
     def list_clusters_v2(
         self,
         context: RequestContext,
-        cluster_name_filter: _string = None,
-        cluster_type_filter: _string = None,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        cluster_name_filter: _string | None = None,
+        cluster_type_filter: _string | None = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListClustersV2Response:
         """Returns a list of all the MSK clusters in the current Region.
@@ -2246,8 +2246,8 @@ class KafkaApi:
         self,
         context: RequestContext,
         arn: _string,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListConfigurationRevisionsResponse:
         """Returns a list of all the MSK configurations in this Region.
@@ -2270,8 +2270,8 @@ class KafkaApi:
     def list_configurations(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListConfigurationsResponse:
         """Returns a list of all the MSK configurations in this Region.
@@ -2291,8 +2291,8 @@ class KafkaApi:
     def list_kafka_versions(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListKafkaVersionsResponse:
         """Returns a list of Apache Kafka versions.
@@ -2312,8 +2312,8 @@ class KafkaApi:
         self,
         context: RequestContext,
         cluster_arn: _string,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListNodesResponse:
         """Returns a list of the broker nodes in the cluster.
@@ -2333,9 +2333,9 @@ class KafkaApi:
     def list_replicators(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: _string = None,
-        replicator_name_filter: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
+        replicator_name_filter: _string | None = None,
         **kwargs,
     ) -> ListReplicatorsResponse:
         """Lists the replicators.
@@ -2360,8 +2360,8 @@ class KafkaApi:
         self,
         context: RequestContext,
         cluster_arn: _string,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListScramSecretsResponse:
         """Returns a list of the Scram Secrets associated with an Amazon MSK
@@ -2401,8 +2401,8 @@ class KafkaApi:
         self,
         context: RequestContext,
         cluster_arn: _string,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListClientVpcConnectionsResponse:
         """Returns a list of all the VPC connections in this Region.
@@ -2423,8 +2423,8 @@ class KafkaApi:
     def list_vpc_connections(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListVpcConnectionsResponse:
         """Returns a list of all the VPC connections in this Region.
@@ -2463,7 +2463,7 @@ class KafkaApi:
         context: RequestContext,
         cluster_arn: _string,
         policy: _string,
-        current_version: _string = None,
+        current_version: _string | None = None,
         **kwargs,
     ) -> PutClusterPolicyResponse:
         """Creates or updates the MSK cluster policy specified by the cluster
@@ -2609,7 +2609,7 @@ class KafkaApi:
         context: RequestContext,
         arn: _string,
         server_properties: _blob,
-        description: _string = None,
+        description: _string | None = None,
         **kwargs,
     ) -> UpdateConfigurationResponse:
         """Updates an MSK configuration.
@@ -2684,7 +2684,7 @@ class KafkaApi:
         cluster_arn: _string,
         target_kafka_version: _string,
         current_version: _string,
-        configuration_info: ConfigurationInfo = None,
+        configuration_info: ConfigurationInfo | None = None,
         **kwargs,
     ) -> UpdateClusterKafkaVersionResponse:
         """Updates the Apache Kafka version for the cluster.
@@ -2711,9 +2711,9 @@ class KafkaApi:
         context: RequestContext,
         cluster_arn: _string,
         current_version: _string,
-        enhanced_monitoring: EnhancedMonitoring = None,
-        open_monitoring: OpenMonitoringInfo = None,
-        logging_info: LoggingInfo = None,
+        enhanced_monitoring: EnhancedMonitoring | None = None,
+        open_monitoring: OpenMonitoringInfo | None = None,
+        logging_info: LoggingInfo | None = None,
         **kwargs,
     ) -> UpdateMonitoringResponse:
         """Updates the monitoring settings for the cluster. You can use this
@@ -2744,8 +2744,8 @@ class KafkaApi:
         source_kafka_cluster_arn: _string,
         current_version: _string,
         target_kafka_cluster_arn: _string,
-        consumer_group_replication: ConsumerGroupReplicationUpdate = None,
-        topic_replication: TopicReplicationUpdate = None,
+        consumer_group_replication: ConsumerGroupReplicationUpdate | None = None,
+        topic_replication: TopicReplicationUpdate | None = None,
         **kwargs,
     ) -> UpdateReplicationInfoResponse:
         """Updates replication info of a replicator.
@@ -2773,8 +2773,8 @@ class KafkaApi:
         context: RequestContext,
         cluster_arn: _string,
         current_version: _string,
-        client_authentication: ClientAuthentication = None,
-        encryption_info: EncryptionInfo = None,
+        client_authentication: ClientAuthentication | None = None,
+        encryption_info: EncryptionInfo | None = None,
         **kwargs,
     ) -> UpdateSecurityResponse:
         """Updates the security settings for the cluster. You can use this
@@ -2801,9 +2801,9 @@ class KafkaApi:
         context: RequestContext,
         cluster_arn: _string,
         current_version: _string,
-        provisioned_throughput: ProvisionedThroughput = None,
-        storage_mode: StorageMode = None,
-        volume_size_gb: _integer = None,
+        provisioned_throughput: ProvisionedThroughput | None = None,
+        storage_mode: StorageMode | None = None,
+        volume_size_gb: _integer | None = None,
         **kwargs,
     ) -> UpdateStorageResponse:
         """Updates cluster broker volume size (or) sets cluster storage mode to

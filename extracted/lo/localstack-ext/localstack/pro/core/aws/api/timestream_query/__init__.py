@@ -881,10 +881,10 @@ class TimestreamQueryApi:
         notification_configuration: NotificationConfiguration,
         scheduled_query_execution_role_arn: AmazonResourceName,
         error_report_configuration: ErrorReportConfiguration,
-        target_configuration: TargetConfiguration = None,
-        client_token: ClientToken = None,
-        tags: TagList = None,
-        kms_key_id: StringValue2048 = None,
+        target_configuration: TargetConfiguration | None = None,
+        client_token: ClientToken | None = None,
+        tags: TagList | None = None,
+        kms_key_id: StringValue2048 | None = None,
         **kwargs,
     ) -> CreateScheduledQueryResponse:
         """Create a scheduled query that will be run on your behalf at the
@@ -1005,8 +1005,8 @@ class TimestreamQueryApi:
         context: RequestContext,
         scheduled_query_arn: AmazonResourceName,
         invocation_time: Time,
-        client_token: ClientToken = None,
-        query_insights: ScheduledQueryInsights = None,
+        client_token: ClientToken | None = None,
+        query_insights: ScheduledQueryInsights | None = None,
         **kwargs,
     ) -> None:
         """You can use this API to run a scheduled query manually.
@@ -1035,8 +1035,8 @@ class TimestreamQueryApi:
     def list_scheduled_queries(
         self,
         context: RequestContext,
-        max_results: MaxScheduledQueriesResults = None,
-        next_token: NextScheduledQueriesResultsToken = None,
+        max_results: MaxScheduledQueriesResults | None = None,
+        next_token: NextScheduledQueriesResultsToken | None = None,
         **kwargs,
     ) -> ListScheduledQueriesResponse:
         """Gets a list of all scheduled queries in the caller's Amazon account and
@@ -1058,8 +1058,8 @@ class TimestreamQueryApi:
         self,
         context: RequestContext,
         resource_arn: AmazonResourceName,
-        max_results: MaxTagsForResourceResult = None,
-        next_token: NextTagsForResourceResultsToken = None,
+        max_results: MaxTagsForResourceResult | None = None,
+        next_token: NextTagsForResourceResultsToken | None = None,
         **kwargs,
     ) -> ListTagsForResourceResponse:
         """List all tags on a Timestream query resource.
@@ -1080,7 +1080,7 @@ class TimestreamQueryApi:
         self,
         context: RequestContext,
         query_string: QueryString,
-        validate_only: NullableBoolean = None,
+        validate_only: NullableBoolean | None = None,
         **kwargs,
     ) -> PrepareQueryResponse:
         """A synchronous operation that allows you to submit a query with
@@ -1106,10 +1106,10 @@ class TimestreamQueryApi:
         self,
         context: RequestContext,
         query_string: QueryString,
-        client_token: ClientRequestToken = None,
-        next_token: PaginationToken = None,
-        max_rows: MaxQueryResults = None,
-        query_insights: QueryInsights = None,
+        client_token: ClientRequestToken | None = None,
+        next_token: PaginationToken | None = None,
+        max_rows: MaxQueryResults | None = None,
+        query_insights: QueryInsights | None = None,
         **kwargs,
     ) -> QueryResponse:
         """``Query`` is a synchronous operation that enables you to run a query
@@ -1209,9 +1209,9 @@ class TimestreamQueryApi:
     def update_account_settings(
         self,
         context: RequestContext,
-        max_query_tcu: MaxQueryCapacity = None,
-        query_pricing_model: QueryPricingModel = None,
-        query_compute: QueryComputeRequest = None,
+        max_query_tcu: MaxQueryCapacity | None = None,
+        query_pricing_model: QueryPricingModel | None = None,
+        query_compute: QueryComputeRequest | None = None,
         **kwargs,
     ) -> UpdateAccountSettingsResponse:
         """Transitions your account to use TCUs for query pricing and modifies the

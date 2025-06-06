@@ -39,7 +39,7 @@ setup(
     include_package_data=True,
     python_requires=">=3.9,<3.13",
     install_requires=[
-        "dagster==1.10.18",
+        "dagster==1.10.19",
         # Follow the version support constraints for dbt Core: https://docs.getdbt.com/docs/dbt-versions/core
         f"dbt-core>=1.7,<{DBT_CORE_VERSION_UPPER_BOUND}",
         "Jinja2",
@@ -65,7 +65,7 @@ setup(
             "dagster-dbt-cloud = dagster_dbt.cloud.cli:app",
             "dagster-dbt = dagster_dbt.cli.app:app",
         ],
-        "dagster_dg_cli.plugin": [
+        "dagster_dg_cli.registry_modules": [
             "dagster_dbt = dagster_dbt",
         ],
     },
