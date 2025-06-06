@@ -5504,6 +5504,10 @@ class AWSManagedPolicies(enum.Enum):
     '''
     :stability: experimental
     '''
+    AMAZONGUARDDUTYFULLACCESS_V2 = "AMAZONGUARDDUTYFULLACCESS_V2"
+    '''
+    :stability: experimental
+    '''
 
 
 class LambdaArmFunction(

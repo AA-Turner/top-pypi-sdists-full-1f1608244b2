@@ -523,10 +523,10 @@ class RdsDataApi:
         resource_arn: Arn,
         secret_arn: Arn,
         sql: SqlStatement,
-        database: DbName = None,
-        schema: DbName = None,
-        parameter_sets: SqlParameterSets = None,
-        transaction_id: Id = None,
+        database: DbName | None = None,
+        schema: DbName | None = None,
+        parameter_sets: SqlParameterSets | None = None,
+        transaction_id: Id | None = None,
         **kwargs,
     ) -> BatchExecuteStatementResponse:
         """Runs a batch SQL statement over an array of data.
@@ -585,8 +585,8 @@ class RdsDataApi:
         context: RequestContext,
         resource_arn: Arn,
         secret_arn: Arn,
-        database: DbName = None,
-        schema: DbName = None,
+        database: DbName | None = None,
+        schema: DbName | None = None,
         **kwargs,
     ) -> BeginTransactionResponse:
         """Starts a SQL transaction.
@@ -666,8 +666,8 @@ class RdsDataApi:
         db_cluster_or_instance_arn: Arn,
         aws_secret_store_arn: Arn,
         sql_statements: SqlStatement,
-        database: DbName = None,
-        schema: DbName = None,
+        database: DbName | None = None,
+        schema: DbName | None = None,
         **kwargs,
     ) -> ExecuteSqlResponse:
         """Runs one or more SQL statements.
@@ -699,14 +699,14 @@ class RdsDataApi:
         resource_arn: Arn,
         secret_arn: Arn,
         sql: SqlStatement,
-        database: DbName = None,
-        schema: DbName = None,
-        parameters: SqlParametersList = None,
-        transaction_id: Id = None,
-        include_result_metadata: Boolean = None,
-        continue_after_timeout: Boolean = None,
-        result_set_options: ResultSetOptions = None,
-        format_records_as: RecordsFormatType = None,
+        database: DbName | None = None,
+        schema: DbName | None = None,
+        parameters: SqlParametersList | None = None,
+        transaction_id: Id | None = None,
+        include_result_metadata: Boolean | None = None,
+        continue_after_timeout: Boolean | None = None,
+        result_set_options: ResultSetOptions | None = None,
+        format_records_as: RecordsFormatType | None = None,
         **kwargs,
     ) -> ExecuteStatementResponse:
         """Runs a SQL statement against a database.

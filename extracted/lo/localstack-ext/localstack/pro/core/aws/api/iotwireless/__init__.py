@@ -3173,8 +3173,8 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         sidewalk: SidewalkAccountInfo,
-        client_request_token: ClientRequestToken = None,
-        tags: TagList = None,
+        client_request_token: ClientRequestToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> AssociateAwsAccountWithPartnerAccountResponse:
         """Associates a partner account with your AWS account.
@@ -3341,9 +3341,9 @@ class IotwirelessApi:
         expression_type: ExpressionType,
         expression: Expression,
         role_arn: RoleArn,
-        description: Description = None,
-        tags: TagList = None,
-        client_request_token: ClientRequestToken = None,
+        description: Description | None = None,
+        tags: TagList | None = None,
+        client_request_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> CreateDestinationResponse:
         """Creates a new destination that maps a device message to an AWS IoT rule.
@@ -3369,11 +3369,11 @@ class IotwirelessApi:
     def create_device_profile(
         self,
         context: RequestContext,
-        name: DeviceProfileName = None,
-        lo_ra_wan: LoRaWANDeviceProfile = None,
-        tags: TagList = None,
-        client_request_token: ClientRequestToken = None,
-        sidewalk: SidewalkCreateDeviceProfile = None,
+        name: DeviceProfileName | None = None,
+        lo_ra_wan: LoRaWANDeviceProfile | None = None,
+        tags: TagList | None = None,
+        client_request_token: ClientRequestToken | None = None,
+        sidewalk: SidewalkCreateDeviceProfile | None = None,
         **kwargs,
     ) -> CreateDeviceProfileResponse:
         """Creates a new device profile.
@@ -3399,15 +3399,15 @@ class IotwirelessApi:
         context: RequestContext,
         firmware_update_image: FirmwareUpdateImage,
         firmware_update_role: FirmwareUpdateRole,
-        name: FuotaTaskName = None,
-        description: Description = None,
-        client_request_token: ClientRequestToken = None,
-        lo_ra_wan: LoRaWANFuotaTask = None,
-        tags: TagList = None,
-        redundancy_percent: RedundancyPercent = None,
-        fragment_size_bytes: FragmentSizeBytes = None,
-        fragment_interval_ms: FragmentIntervalMS = None,
-        descriptor: FileDescriptor = None,
+        name: FuotaTaskName | None = None,
+        description: Description | None = None,
+        client_request_token: ClientRequestToken | None = None,
+        lo_ra_wan: LoRaWANFuotaTask | None = None,
+        tags: TagList | None = None,
+        redundancy_percent: RedundancyPercent | None = None,
+        fragment_size_bytes: FragmentSizeBytes | None = None,
+        fragment_interval_ms: FragmentIntervalMS | None = None,
+        descriptor: FileDescriptor | None = None,
         **kwargs,
     ) -> CreateFuotaTaskResponse:
         """Creates a FUOTA task.
@@ -3441,10 +3441,10 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         lo_ra_wan: LoRaWANMulticast,
-        name: MulticastGroupName = None,
-        description: Description = None,
-        client_request_token: ClientRequestToken = None,
-        tags: TagList = None,
+        name: MulticastGroupName | None = None,
+        description: Description | None = None,
+        client_request_token: ClientRequestToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateMulticastGroupResponse:
         """Creates a multicast group.
@@ -3469,13 +3469,13 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         name: NetworkAnalyzerConfigurationName,
-        trace_content: TraceContent = None,
-        wireless_devices: WirelessDeviceList = None,
-        wireless_gateways: WirelessGatewayList = None,
-        description: Description = None,
-        tags: TagList = None,
-        client_request_token: ClientRequestToken = None,
-        multicast_groups: NetworkAnalyzerMulticastGroupList = None,
+        trace_content: TraceContent | None = None,
+        wireless_devices: WirelessDeviceList | None = None,
+        wireless_gateways: WirelessGatewayList | None = None,
+        description: Description | None = None,
+        tags: TagList | None = None,
+        client_request_token: ClientRequestToken | None = None,
+        multicast_groups: NetworkAnalyzerMulticastGroupList | None = None,
         **kwargs,
     ) -> CreateNetworkAnalyzerConfigurationResponse:
         """Creates a new network analyzer configuration.
@@ -3502,10 +3502,10 @@ class IotwirelessApi:
     def create_service_profile(
         self,
         context: RequestContext,
-        name: ServiceProfileName = None,
-        lo_ra_wan: LoRaWANServiceProfile = None,
-        tags: TagList = None,
-        client_request_token: ClientRequestToken = None,
+        name: ServiceProfileName | None = None,
+        lo_ra_wan: LoRaWANServiceProfile | None = None,
+        tags: TagList | None = None,
+        client_request_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> CreateServiceProfileResponse:
         """Creates a new service profile.
@@ -3556,10 +3556,10 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         lo_ra_wan: LoRaWANGateway,
-        name: WirelessGatewayName = None,
-        description: Description = None,
-        tags: TagList = None,
-        client_request_token: ClientRequestToken = None,
+        name: WirelessGatewayName | None = None,
+        description: Description | None = None,
+        tags: TagList | None = None,
+        client_request_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> CreateWirelessGatewayResponse:
         """Provisions a wireless gateway.
@@ -3617,10 +3617,10 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         auto_create_tasks: AutoCreateTasks,
-        name: WirelessGatewayTaskName = None,
-        update: UpdateWirelessGatewayTaskCreate = None,
-        client_request_token: ClientRequestToken = None,
-        tags: TagList = None,
+        name: WirelessGatewayTaskName | None = None,
+        update: UpdateWirelessGatewayTaskCreate | None = None,
+        client_request_token: ClientRequestToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateWirelessGatewayTaskDefinitionResponse:
         """Creates a gateway task definition.
@@ -3734,7 +3734,7 @@ class IotwirelessApi:
         context: RequestContext,
         id: WirelessDeviceId,
         message_id: MessageId,
-        wireless_device_type: WirelessDeviceType = None,
+        wireless_device_type: WirelessDeviceType | None = None,
         **kwargs,
     ) -> DeleteQueuedMessagesResponse:
         """Remove queued messages from the downlink queue.
@@ -3868,7 +3868,7 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         identifier: Identifier,
-        wireless_device_type: WirelessDeviceType = None,
+        wireless_device_type: WirelessDeviceType | None = None,
         **kwargs,
     ) -> DeregisterWirelessDeviceResponse:
         """Deregister a wireless device from AWS IoT Wireless.
@@ -4118,7 +4118,10 @@ class IotwirelessApi:
 
     @handler("GetMetrics")
     def get_metrics(
-        self, context: RequestContext, summary_metric_queries: SummaryMetricQueries = None, **kwargs
+        self,
+        context: RequestContext,
+        summary_metric_queries: SummaryMetricQueries | None = None,
+        **kwargs,
     ) -> GetMetricsResponse:
         """Get the summary metrics for this AWS account.
 
@@ -4263,11 +4266,11 @@ class IotwirelessApi:
     def get_position_estimate(
         self,
         context: RequestContext,
-        wi_fi_access_points: WiFiAccessPoints = None,
-        cell_towers: CellTowers = None,
-        ip: Ip = None,
-        gnss: Gnss = None,
-        timestamp: CreationDate = None,
+        wi_fi_access_points: WiFiAccessPoints | None = None,
+        cell_towers: CellTowers | None = None,
+        ip: Ip | None = None,
+        gnss: Gnss | None = None,
+        timestamp: CreationDate | None = None,
         **kwargs,
     ) -> GetPositionEstimateResponse:
         """Get estimated position information as a payload in GeoJSON format. The
@@ -4299,7 +4302,7 @@ class IotwirelessApi:
         context: RequestContext,
         identifier: Identifier,
         identifier_type: IdentifierType,
-        partner_type: EventNotificationPartnerType = None,
+        partner_type: EventNotificationPartnerType | None = None,
         **kwargs,
     ) -> GetResourceEventConfigurationResponse:
         """Get the event configuration for a particular resource identifier.
@@ -4370,7 +4373,10 @@ class IotwirelessApi:
 
     @handler("GetServiceEndpoint")
     def get_service_endpoint(
-        self, context: RequestContext, service_type: WirelessGatewayServiceType = None, **kwargs
+        self,
+        context: RequestContext,
+        service_type: WirelessGatewayServiceType | None = None,
+        **kwargs,
     ) -> GetServiceEndpointResponse:
         """Gets the account-specific endpoint for Configuration and Update Server
         (CUPS) protocol or LoRaWAN Network Server (LNS) connections.
@@ -4562,8 +4568,8 @@ class IotwirelessApi:
     def list_destinations(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListDestinationsResponse:
         """Lists the destinations registered to your AWS account.
@@ -4584,9 +4590,9 @@ class IotwirelessApi:
     def list_device_profiles(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        device_profile_type: DeviceProfileType = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        device_profile_type: DeviceProfileType | None = None,
         **kwargs,
     ) -> ListDeviceProfilesResponse:
         """Lists the device profiles registered to your AWS account.
@@ -4610,9 +4616,9 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: ImportTaskId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        status: OnboardStatus = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        status: OnboardStatus | None = None,
         **kwargs,
     ) -> ListDevicesForWirelessDeviceImportTaskResponse:
         """List the Sidewalk devices in an import task and their onboarding status.
@@ -4638,8 +4644,8 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         resource_type: EventNotificationResourceType,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListEventConfigurationsResponse:
         """List event configurations where at least one event topic has been
@@ -4662,8 +4668,8 @@ class IotwirelessApi:
     def list_fuota_tasks(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListFuotaTasksResponse:
         """Lists the FUOTA tasks registered to your AWS account.
@@ -4684,8 +4690,8 @@ class IotwirelessApi:
     def list_multicast_groups(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListMulticastGroupsResponse:
         """Lists the multicast groups registered to your AWS account.
@@ -4707,8 +4713,8 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: FuotaTaskId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListMulticastGroupsByFuotaTaskResponse:
         """List all multicast groups associated with a FUOTA task.
@@ -4731,8 +4737,8 @@ class IotwirelessApi:
     def list_network_analyzer_configurations(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListNetworkAnalyzerConfigurationsResponse:
         """Lists the network analyzer configurations.
@@ -4753,8 +4759,8 @@ class IotwirelessApi:
     def list_partner_accounts(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPartnerAccountsResponse:
         """Lists the partner accounts associated with your AWS account.
@@ -4775,9 +4781,9 @@ class IotwirelessApi:
     def list_position_configurations(
         self,
         context: RequestContext,
-        resource_type: PositionResourceType = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        resource_type: PositionResourceType | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListPositionConfigurationsResponse:
         """List position configurations for a given resource, such as positioning
@@ -4806,9 +4812,9 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: WirelessDeviceId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        wireless_device_type: WirelessDeviceType = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        wireless_device_type: WirelessDeviceType | None = None,
         **kwargs,
     ) -> ListQueuedMessagesResponse:
         """List queued messages in the downlink queue.
@@ -4833,8 +4839,8 @@ class IotwirelessApi:
     def list_service_profiles(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListServiceProfilesResponse:
         """Lists the service profiles registered to your AWS account.
@@ -4871,8 +4877,8 @@ class IotwirelessApi:
     def list_wireless_device_import_tasks(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListWirelessDeviceImportTasksResponse:
         """List wireless devices that have been added to an import task.
@@ -4895,14 +4901,14 @@ class IotwirelessApi:
     def list_wireless_devices(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        destination_name: DestinationName = None,
-        device_profile_id: DeviceProfileId = None,
-        service_profile_id: ServiceProfileId = None,
-        wireless_device_type: WirelessDeviceType = None,
-        fuota_task_id: FuotaTaskId = None,
-        multicast_group_id: MulticastGroupId = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        destination_name: DestinationName | None = None,
+        device_profile_id: DeviceProfileId | None = None,
+        service_profile_id: ServiceProfileId | None = None,
+        wireless_device_type: WirelessDeviceType | None = None,
+        fuota_task_id: FuotaTaskId | None = None,
+        multicast_group_id: MulticastGroupId | None = None,
         **kwargs,
     ) -> ListWirelessDevicesResponse:
         """Lists the wireless devices registered to your AWS account.
@@ -4931,9 +4937,9 @@ class IotwirelessApi:
     def list_wireless_gateway_task_definitions(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        task_definition_type: WirelessGatewayTaskDefinitionType = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        task_definition_type: WirelessGatewayTaskDefinitionType | None = None,
         **kwargs,
     ) -> ListWirelessGatewayTaskDefinitionsResponse:
         """List the wireless gateway tasks definitions registered to your AWS
@@ -4957,8 +4963,8 @@ class IotwirelessApi:
     def list_wireless_gateways(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListWirelessGatewaysResponse:
         """Lists the wireless gateways registered to your AWS account.
@@ -4981,8 +4987,8 @@ class IotwirelessApi:
         context: RequestContext,
         resource_identifier: PositionResourceIdentifier,
         resource_type: PositionResourceType,
-        solvers: PositionSolverConfigurations = None,
-        destination: DestinationName = None,
+        solvers: PositionSolverConfigurations | None = None,
+        destination: DestinationName | None = None,
         **kwargs,
     ) -> PutPositionConfigurationResponse:
         """Put position configuration for a given resource.
@@ -5107,7 +5113,7 @@ class IotwirelessApi:
         id: WirelessDeviceId,
         transmit_mode: TransmitMode,
         payload_data: PayloadData,
-        wireless_metadata: WirelessMetadata = None,
+        wireless_metadata: WirelessMetadata | None = None,
         **kwargs,
     ) -> SendDataToWirelessDeviceResponse:
         """Sends a decrypted application data frame to a device.
@@ -5129,8 +5135,8 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: MulticastGroupId,
-        query_string: QueryString = None,
-        tags: TagList = None,
+        query_string: QueryString | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> StartBulkAssociateWirelessDeviceWithMulticastGroupResponse:
         """Starts a bulk association of all qualifying wireless devices with a
@@ -5154,8 +5160,8 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: MulticastGroupId,
-        query_string: QueryString = None,
-        tags: TagList = None,
+        query_string: QueryString | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> StartBulkDisassociateWirelessDeviceFromMulticastGroupResponse:
         """Starts a bulk disassociatin of all qualifying wireless devices from a
@@ -5179,7 +5185,7 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: FuotaTaskId,
-        lo_ra_wan: LoRaWANStartFuotaTask = None,
+        lo_ra_wan: LoRaWANStartFuotaTask | None = None,
         **kwargs,
     ) -> StartFuotaTaskResponse:
         """Starts a FUOTA task.
@@ -5224,9 +5230,9 @@ class IotwirelessApi:
         context: RequestContext,
         destination_name: DestinationName,
         sidewalk: SidewalkSingleStartImportInfo,
-        client_request_token: ClientRequestToken = None,
-        device_name: DeviceName = None,
-        tags: TagList = None,
+        client_request_token: ClientRequestToken | None = None,
+        device_name: DeviceName | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> StartSingleWirelessDeviceImportTaskResponse:
         """Start import task for a single wireless device.
@@ -5255,8 +5261,8 @@ class IotwirelessApi:
         context: RequestContext,
         destination_name: DestinationName,
         sidewalk: SidewalkStartImportInfo,
-        client_request_token: ClientRequestToken = None,
-        tags: TagList = None,
+        client_request_token: ClientRequestToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> StartWirelessDeviceImportTaskResponse:
         """Start import task for provisioning Sidewalk devices in bulk using an S3
@@ -5339,10 +5345,10 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         name: DestinationName,
-        expression_type: ExpressionType = None,
-        expression: Expression = None,
-        description: Description = None,
-        role_arn: RoleArn = None,
+        expression_type: ExpressionType | None = None,
+        expression: Expression | None = None,
+        description: Description | None = None,
+        role_arn: RoleArn | None = None,
         **kwargs,
     ) -> UpdateDestinationResponse:
         """Updates properties of a destination.
@@ -5365,11 +5371,12 @@ class IotwirelessApi:
     def update_event_configuration_by_resource_types(
         self,
         context: RequestContext,
-        device_registration_state: DeviceRegistrationStateResourceTypeEventConfiguration = None,
-        proximity: ProximityResourceTypeEventConfiguration = None,
-        join: JoinResourceTypeEventConfiguration = None,
-        connection_status: ConnectionStatusResourceTypeEventConfiguration = None,
-        message_delivery_status: MessageDeliveryStatusResourceTypeEventConfiguration = None,
+        device_registration_state: DeviceRegistrationStateResourceTypeEventConfiguration
+        | None = None,
+        proximity: ProximityResourceTypeEventConfiguration | None = None,
+        join: JoinResourceTypeEventConfiguration | None = None,
+        connection_status: ConnectionStatusResourceTypeEventConfiguration | None = None,
+        message_delivery_status: MessageDeliveryStatusResourceTypeEventConfiguration | None = None,
         **kwargs,
     ) -> UpdateEventConfigurationByResourceTypesResponse:
         """Update the event configuration based on resource types.
@@ -5397,15 +5404,15 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: FuotaTaskId,
-        name: FuotaTaskName = None,
-        description: Description = None,
-        lo_ra_wan: LoRaWANFuotaTask = None,
-        firmware_update_image: FirmwareUpdateImage = None,
-        firmware_update_role: FirmwareUpdateRole = None,
-        redundancy_percent: RedundancyPercent = None,
-        fragment_size_bytes: FragmentSizeBytes = None,
-        fragment_interval_ms: FragmentIntervalMS = None,
-        descriptor: FileDescriptor = None,
+        name: FuotaTaskName | None = None,
+        description: Description | None = None,
+        lo_ra_wan: LoRaWANFuotaTask | None = None,
+        firmware_update_image: FirmwareUpdateImage | None = None,
+        firmware_update_role: FirmwareUpdateRole | None = None,
+        redundancy_percent: RedundancyPercent | None = None,
+        fragment_size_bytes: FragmentSizeBytes | None = None,
+        fragment_interval_ms: FragmentIntervalMS | None = None,
+        descriptor: FileDescriptor | None = None,
         **kwargs,
     ) -> UpdateFuotaTaskResponse:
         """Updates properties of a FUOTA task.
@@ -5437,10 +5444,10 @@ class IotwirelessApi:
     def update_log_levels_by_resource_types(
         self,
         context: RequestContext,
-        default_log_level: LogLevel = None,
-        fuota_task_log_options: FuotaTaskLogOptionList = None,
-        wireless_device_log_options: WirelessDeviceLogOptionList = None,
-        wireless_gateway_log_options: WirelessGatewayLogOptionList = None,
+        default_log_level: LogLevel | None = None,
+        fuota_task_log_options: FuotaTaskLogOptionList | None = None,
+        wireless_device_log_options: WirelessDeviceLogOptionList | None = None,
+        wireless_gateway_log_options: WirelessGatewayLogOptionList | None = None,
         **kwargs,
     ) -> UpdateLogLevelsByResourceTypesResponse:
         """Set default log level, or log levels by resource types. This can be for
@@ -5463,7 +5470,10 @@ class IotwirelessApi:
 
     @handler("UpdateMetricConfiguration")
     def update_metric_configuration(
-        self, context: RequestContext, summary_metric: SummaryMetricConfiguration = None, **kwargs
+        self,
+        context: RequestContext,
+        summary_metric: SummaryMetricConfiguration | None = None,
+        **kwargs,
     ) -> UpdateMetricConfigurationResponse:
         """Update the summary metric configuration.
 
@@ -5483,9 +5493,9 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: MulticastGroupId,
-        name: MulticastGroupName = None,
-        description: Description = None,
-        lo_ra_wan: LoRaWANMulticast = None,
+        name: MulticastGroupName | None = None,
+        description: Description | None = None,
+        lo_ra_wan: LoRaWANMulticast | None = None,
         **kwargs,
     ) -> UpdateMulticastGroupResponse:
         """Updates properties of a multicast group session.
@@ -5509,14 +5519,14 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         configuration_name: NetworkAnalyzerConfigurationName,
-        trace_content: TraceContent = None,
-        wireless_devices_to_add: WirelessDeviceList = None,
-        wireless_devices_to_remove: WirelessDeviceList = None,
-        wireless_gateways_to_add: WirelessGatewayList = None,
-        wireless_gateways_to_remove: WirelessGatewayList = None,
-        description: Description = None,
-        multicast_groups_to_add: NetworkAnalyzerMulticastGroupList = None,
-        multicast_groups_to_remove: NetworkAnalyzerMulticastGroupList = None,
+        trace_content: TraceContent | None = None,
+        wireless_devices_to_add: WirelessDeviceList | None = None,
+        wireless_devices_to_remove: WirelessDeviceList | None = None,
+        wireless_gateways_to_add: WirelessGatewayList | None = None,
+        wireless_gateways_to_remove: WirelessGatewayList | None = None,
+        description: Description | None = None,
+        multicast_groups_to_add: NetworkAnalyzerMulticastGroupList | None = None,
+        multicast_groups_to_remove: NetworkAnalyzerMulticastGroupList | None = None,
         **kwargs,
     ) -> UpdateNetworkAnalyzerConfigurationResponse:
         """Update network analyzer configuration.
@@ -5598,12 +5608,12 @@ class IotwirelessApi:
         context: RequestContext,
         identifier: Identifier,
         identifier_type: IdentifierType,
-        partner_type: EventNotificationPartnerType = None,
-        device_registration_state: DeviceRegistrationStateEventConfiguration = None,
-        proximity: ProximityEventConfiguration = None,
-        join: JoinEventConfiguration = None,
-        connection_status: ConnectionStatusEventConfiguration = None,
-        message_delivery_status: MessageDeliveryStatusEventConfiguration = None,
+        partner_type: EventNotificationPartnerType | None = None,
+        device_registration_state: DeviceRegistrationStateEventConfiguration | None = None,
+        proximity: ProximityEventConfiguration | None = None,
+        join: JoinEventConfiguration | None = None,
+        connection_status: ConnectionStatusEventConfiguration | None = None,
+        message_delivery_status: MessageDeliveryStatusEventConfiguration | None = None,
         **kwargs,
     ) -> UpdateResourceEventConfigurationResponse:
         """Update the event configuration for a particular resource identifier.
@@ -5634,7 +5644,7 @@ class IotwirelessApi:
         context: RequestContext,
         resource_identifier: PositionResourceIdentifier,
         resource_type: PositionResourceType,
-        geo_json_payload: IO[GeoJsonPayload] = None,
+        geo_json_payload: IO[GeoJsonPayload] | None = None,
         **kwargs,
     ) -> UpdateResourcePositionResponse:
         """Update the position information of a given wireless device or a wireless
@@ -5661,11 +5671,11 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: WirelessDeviceId,
-        destination_name: DestinationName = None,
-        name: WirelessDeviceName = None,
-        description: Description = None,
-        lo_ra_wan: LoRaWANUpdateDevice = None,
-        positioning: PositioningConfigStatus = None,
+        destination_name: DestinationName | None = None,
+        name: WirelessDeviceName | None = None,
+        description: Description | None = None,
+        lo_ra_wan: LoRaWANUpdateDevice | None = None,
+        positioning: PositioningConfigStatus | None = None,
         **kwargs,
     ) -> UpdateWirelessDeviceResponse:
         """Updates properties of a wireless device.
@@ -5713,11 +5723,11 @@ class IotwirelessApi:
         self,
         context: RequestContext,
         id: WirelessGatewayId,
-        name: WirelessGatewayName = None,
-        description: Description = None,
-        join_eui_filters: JoinEuiFilters = None,
-        net_id_filters: NetIdFilters = None,
-        max_eirp: GatewayMaxEirp = None,
+        name: WirelessGatewayName | None = None,
+        description: Description | None = None,
+        join_eui_filters: JoinEuiFilters | None = None,
+        net_id_filters: NetIdFilters | None = None,
+        max_eirp: GatewayMaxEirp | None = None,
         **kwargs,
     ) -> UpdateWirelessGatewayResponse:
         """Updates properties of a wireless gateway.

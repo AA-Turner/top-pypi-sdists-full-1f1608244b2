@@ -1114,7 +1114,7 @@ class ShieldApi:
         context: RequestContext,
         name: ProtectionName,
         resource_arn: ResourceArn,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateProtectionResponse:
         """Enables Shield Advanced for a specific Amazon Web Services resource. The
@@ -1156,9 +1156,9 @@ class ShieldApi:
         protection_group_id: ProtectionGroupId,
         aggregation: ProtectionGroupAggregation,
         pattern: ProtectionGroupPattern,
-        resource_type: ProtectedResourceType = None,
-        members: ProtectionGroupMembers = None,
-        tags: TagList = None,
+        resource_type: ProtectedResourceType | None = None,
+        members: ProtectionGroupMembers | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateProtectionGroupResponse:
         """Creates a grouping of protected resources so they can be handled as a
@@ -1311,8 +1311,8 @@ class ShieldApi:
     def describe_protection(
         self,
         context: RequestContext,
-        protection_id: ProtectionId = None,
-        resource_arn: ResourceArn = None,
+        protection_id: ProtectionId | None = None,
+        resource_arn: ResourceArn | None = None,
         **kwargs,
     ) -> DescribeProtectionResponse:
         """Lists the details of a Protection object.
@@ -1533,11 +1533,11 @@ class ShieldApi:
     def list_attacks(
         self,
         context: RequestContext,
-        resource_arns: ResourceArnFilterList = None,
-        start_time: TimeRange = None,
-        end_time: TimeRange = None,
-        next_token: Token = None,
-        max_results: MaxResults = None,
+        resource_arns: ResourceArnFilterList | None = None,
+        start_time: TimeRange | None = None,
+        end_time: TimeRange | None = None,
+        next_token: Token | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListAttacksResponse:
         """Returns all ongoing DDoS attacks or all DDoS attacks during a specified
@@ -1562,9 +1562,9 @@ class ShieldApi:
     def list_protection_groups(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: MaxResults = None,
-        inclusion_filters: InclusionProtectionGroupFilters = None,
+        next_token: Token | None = None,
+        max_results: MaxResults | None = None,
+        inclusion_filters: InclusionProtectionGroupFilters | None = None,
         **kwargs,
     ) -> ListProtectionGroupsResponse:
         """Retrieves ProtectionGroup objects for the account. You can retrieve all
@@ -1588,9 +1588,9 @@ class ShieldApi:
     def list_protections(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: MaxResults = None,
-        inclusion_filters: InclusionProtectionFilters = None,
+        next_token: Token | None = None,
+        max_results: MaxResults | None = None,
+        inclusion_filters: InclusionProtectionFilters | None = None,
         **kwargs,
     ) -> ListProtectionsResponse:
         """Retrieves Protection objects for the account. You can retrieve all
@@ -1615,8 +1615,8 @@ class ShieldApi:
         self,
         context: RequestContext,
         protection_group_id: ProtectionGroupId,
-        next_token: Token = None,
-        max_results: MaxResults = None,
+        next_token: Token | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListResourcesInProtectionGroupResponse:
         """Retrieves the resources that are included in the protection group.
@@ -1705,7 +1705,10 @@ class ShieldApi:
 
     @handler("UpdateEmergencyContactSettings")
     def update_emergency_contact_settings(
-        self, context: RequestContext, emergency_contact_list: EmergencyContactList = None, **kwargs
+        self,
+        context: RequestContext,
+        emergency_contact_list: EmergencyContactList | None = None,
+        **kwargs,
     ) -> UpdateEmergencyContactSettingsResponse:
         """Updates the details of the list of email addresses and phone numbers
         that the Shield Response Team (SRT) can use to contact you if you have
@@ -1731,8 +1734,8 @@ class ShieldApi:
         protection_group_id: ProtectionGroupId,
         aggregation: ProtectionGroupAggregation,
         pattern: ProtectionGroupPattern,
-        resource_type: ProtectedResourceType = None,
-        members: ProtectionGroupMembers = None,
+        resource_type: ProtectedResourceType | None = None,
+        members: ProtectionGroupMembers | None = None,
         **kwargs,
     ) -> UpdateProtectionGroupResponse:
         """Updates an existing protection group. A protection group is a grouping
@@ -1758,7 +1761,7 @@ class ShieldApi:
 
     @handler("UpdateSubscription")
     def update_subscription(
-        self, context: RequestContext, auto_renew: AutoRenew = None, **kwargs
+        self, context: RequestContext, auto_renew: AutoRenew | None = None, **kwargs
     ) -> UpdateSubscriptionResponse:
         """Updates the details of an existing subscription. Only enter values for
         parameters you want to change. Empty parameters are not updated.

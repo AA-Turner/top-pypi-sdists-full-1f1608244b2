@@ -244,14 +244,14 @@ class QldbSessionApi:
     def send_command(
         self,
         context: RequestContext,
-        session_token: SessionToken = None,
-        start_session: StartSessionRequest = None,
-        start_transaction: StartTransactionRequest = None,
-        end_session: EndSessionRequest = None,
-        commit_transaction: CommitTransactionRequest = None,
-        abort_transaction: AbortTransactionRequest = None,
-        execute_statement: ExecuteStatementRequest = None,
-        fetch_page: FetchPageRequest = None,
+        session_token: SessionToken | None = None,
+        start_session: StartSessionRequest | None = None,
+        start_transaction: StartTransactionRequest | None = None,
+        end_session: EndSessionRequest | None = None,
+        commit_transaction: CommitTransactionRequest | None = None,
+        abort_transaction: AbortTransactionRequest | None = None,
+        execute_statement: ExecuteStatementRequest | None = None,
+        fetch_page: FetchPageRequest | None = None,
         **kwargs,
     ) -> SendCommandResult:
         """Sends a command to an Amazon QLDB ledger.

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright © 2015 Yahoo! Inc.
 #
@@ -36,13 +35,10 @@ def _failure_translator():
         yield
     except (consul.Timeout, requests.exceptions.RequestException) as e:
         utils.raise_with_cause(coordination.ToozConnectionError,
-                               encodeutils.exception_to_unicode(e),
-                               cause=e)
+                               str(e), cause=e)
     except (consul.ConsulException, ValueError) as e:
         # ValueError = Typically json decoding failed for some reason.
-        utils.raise_with_cause(tooz.ToozError,
-                               encodeutils.exception_to_unicode(e),
-                               cause=e)
+        utils.raise_with_cause(tooz.ToozError, str(e), cause=e)
 
 
 def _translate_failures(func):
@@ -57,7 +53,7 @@ def _translate_failures(func):
 
 class ConsulLock(locking.Lock):
     def __init__(self, name, node, address, session_id, client, token=None):
-        super(ConsulLock, self).__init__(name)
+        super().__init__(name)
         self._name = name
         self._node = node
         self._address = address
@@ -218,7 +214,7 @@ class ConsulDriver(coordination.CoordinationDriverCachedRunWatchers,
     """
 
     def __init__(self, member_id, parsed_url, options):
-        super(ConsulDriver, self).__init__(member_id, parsed_url, options)
+        super().__init__(member_id, parsed_url, options)
         options = utils.collapse(options)
         self._host = parsed_url.hostname
         self._port = parsed_url.port or self.DEFAULT_PORT

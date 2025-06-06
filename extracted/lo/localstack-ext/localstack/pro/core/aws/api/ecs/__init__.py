@@ -466,14 +466,6 @@ class ClientException(ServiceException):
     might be using an action or resource on behalf of a user that doesn't
     have permissions to use the action or resource. Or, it might be
     specifying an identifier that isn't valid.
-
-    The following list includes additional causes for the error:
-
-    -  The ``RunTask`` could not be processed because you use managed
-       scaling and there is a capacity error because the quota of tasks in
-       the ``PROVISIONING`` per cluster has been reached. For information
-       about the service quotas, see `Amazon ECS service
-       quotas <https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-quotas.html>`__.
     """
 
     code: str = "ClientException"
@@ -1921,6 +1913,7 @@ class ServiceManagedEBSVolumeConfiguration(TypedDict, total=False):
     volumeType: Optional[EBSVolumeType]
     sizeInGiB: Optional[BoxedInteger]
     snapshotId: Optional[EBSSnapshotId]
+    volumeInitializationRate: Optional[BoxedInteger]
     iops: Optional[BoxedInteger]
     throughput: Optional[BoxedInteger]
     tagSpecifications: Optional[EBSTagSpecifications]
@@ -3362,6 +3355,7 @@ class TaskManagedEBSVolumeConfiguration(TypedDict, total=False):
     volumeType: Optional[EBSVolumeType]
     sizeInGiB: Optional[BoxedInteger]
     snapshotId: Optional[EBSSnapshotId]
+    volumeInitializationRate: Optional[BoxedInteger]
     iops: Optional[BoxedInteger]
     throughput: Optional[BoxedInteger]
     tagSpecifications: Optional[EBSTagSpecifications]
@@ -3631,7 +3625,7 @@ class EcsApi:
         context: RequestContext,
         name: String,
         auto_scaling_group_provider: AutoScalingGroupProvider,
-        tags: Tags = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateCapacityProviderResponse:
         """Creates a new capacity provider. Capacity providers are associated with
@@ -3660,13 +3654,13 @@ class EcsApi:
     def create_cluster(
         self,
         context: RequestContext,
-        cluster_name: String = None,
-        tags: Tags = None,
-        settings: ClusterSettings = None,
-        configuration: ClusterConfiguration = None,
-        capacity_providers: StringList = None,
-        default_capacity_provider_strategy: CapacityProviderStrategy = None,
-        service_connect_defaults: ClusterServiceConnectDefaultsRequest = None,
+        cluster_name: String | None = None,
+        tags: Tags | None = None,
+        settings: ClusterSettings | None = None,
+        configuration: ClusterConfiguration | None = None,
+        capacity_providers: StringList | None = None,
+        default_capacity_provider_strategy: CapacityProviderStrategy | None = None,
+        service_connect_defaults: ClusterServiceConnectDefaultsRequest | None = None,
         **kwargs,
     ) -> CreateClusterResponse:
         """Creates a new Amazon ECS cluster. By default, your account receives a
@@ -3706,31 +3700,31 @@ class EcsApi:
         self,
         context: RequestContext,
         service_name: String,
-        cluster: String = None,
-        task_definition: String = None,
-        availability_zone_rebalancing: AvailabilityZoneRebalancing = None,
-        load_balancers: LoadBalancers = None,
-        service_registries: ServiceRegistries = None,
-        desired_count: BoxedInteger = None,
-        client_token: String = None,
-        launch_type: LaunchType = None,
-        capacity_provider_strategy: CapacityProviderStrategy = None,
-        platform_version: String = None,
-        role: String = None,
-        deployment_configuration: DeploymentConfiguration = None,
-        placement_constraints: PlacementConstraints = None,
-        placement_strategy: PlacementStrategies = None,
-        network_configuration: NetworkConfiguration = None,
-        health_check_grace_period_seconds: BoxedInteger = None,
-        scheduling_strategy: SchedulingStrategy = None,
-        deployment_controller: DeploymentController = None,
-        tags: Tags = None,
-        enable_ecs_managed_tags: Boolean = None,
-        propagate_tags: PropagateTags = None,
-        enable_execute_command: Boolean = None,
-        service_connect_configuration: ServiceConnectConfiguration = None,
-        volume_configurations: ServiceVolumeConfigurations = None,
-        vpc_lattice_configurations: VpcLatticeConfigurations = None,
+        cluster: String | None = None,
+        task_definition: String | None = None,
+        availability_zone_rebalancing: AvailabilityZoneRebalancing | None = None,
+        load_balancers: LoadBalancers | None = None,
+        service_registries: ServiceRegistries | None = None,
+        desired_count: BoxedInteger | None = None,
+        client_token: String | None = None,
+        launch_type: LaunchType | None = None,
+        capacity_provider_strategy: CapacityProviderStrategy | None = None,
+        platform_version: String | None = None,
+        role: String | None = None,
+        deployment_configuration: DeploymentConfiguration | None = None,
+        placement_constraints: PlacementConstraints | None = None,
+        placement_strategy: PlacementStrategies | None = None,
+        network_configuration: NetworkConfiguration | None = None,
+        health_check_grace_period_seconds: BoxedInteger | None = None,
+        scheduling_strategy: SchedulingStrategy | None = None,
+        deployment_controller: DeploymentController | None = None,
+        tags: Tags | None = None,
+        enable_ecs_managed_tags: Boolean | None = None,
+        propagate_tags: PropagateTags | None = None,
+        enable_execute_command: Boolean | None = None,
+        service_connect_configuration: ServiceConnectConfiguration | None = None,
+        volume_configurations: ServiceVolumeConfigurations | None = None,
+        vpc_lattice_configurations: VpcLatticeConfigurations | None = None,
         **kwargs,
     ) -> CreateServiceResponse:
         """Runs and maintains your desired number of tasks from a specified task
@@ -3913,16 +3907,16 @@ class EcsApi:
         service: String,
         cluster: String,
         task_definition: String,
-        external_id: String = None,
-        network_configuration: NetworkConfiguration = None,
-        load_balancers: LoadBalancers = None,
-        service_registries: ServiceRegistries = None,
-        launch_type: LaunchType = None,
-        capacity_provider_strategy: CapacityProviderStrategy = None,
-        platform_version: String = None,
-        scale: Scale = None,
-        client_token: String = None,
-        tags: Tags = None,
+        external_id: String | None = None,
+        network_configuration: NetworkConfiguration | None = None,
+        load_balancers: LoadBalancers | None = None,
+        service_registries: ServiceRegistries | None = None,
+        launch_type: LaunchType | None = None,
+        capacity_provider_strategy: CapacityProviderStrategy | None = None,
+        platform_version: String | None = None,
+        scale: Scale | None = None,
+        client_token: String | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateTaskSetResponse:
         """Create a task set in the specified cluster and service. This is used
@@ -3978,7 +3972,11 @@ class EcsApi:
 
     @handler("DeleteAccountSetting")
     def delete_account_setting(
-        self, context: RequestContext, name: SettingName, principal_arn: String = None, **kwargs
+        self,
+        context: RequestContext,
+        name: SettingName,
+        principal_arn: String | None = None,
+        **kwargs,
     ) -> DeleteAccountSettingResponse:
         """Disables an account setting for a specified user, role, or the root user
         for an account.
@@ -3994,7 +3992,11 @@ class EcsApi:
 
     @handler("DeleteAttributes")
     def delete_attributes(
-        self, context: RequestContext, attributes: Attributes, cluster: String = None, **kwargs
+        self,
+        context: RequestContext,
+        attributes: Attributes,
+        cluster: String | None = None,
+        **kwargs,
     ) -> DeleteAttributesResponse:
         """Deletes one or more custom attributes from an Amazon ECS resource.
 
@@ -4076,8 +4078,8 @@ class EcsApi:
         self,
         context: RequestContext,
         service: String,
-        cluster: String = None,
-        force: BoxedBoolean = None,
+        cluster: String | None = None,
+        force: BoxedBoolean | None = None,
         **kwargs,
     ) -> DeleteServiceResponse:
         """Deletes a specified service within a cluster. You can delete a service
@@ -4169,7 +4171,7 @@ class EcsApi:
         cluster: String,
         service: String,
         task_set: String,
-        force: BoxedBoolean = None,
+        force: BoxedBoolean | None = None,
         **kwargs,
     ) -> DeleteTaskSetResponse:
         """Deletes a specified task set within a service. This is used when a
@@ -4204,8 +4206,8 @@ class EcsApi:
         self,
         context: RequestContext,
         container_instance: String,
-        cluster: String = None,
-        force: BoxedBoolean = None,
+        cluster: String | None = None,
+        force: BoxedBoolean | None = None,
         **kwargs,
     ) -> DeregisterContainerInstanceResponse:
         """Deregisters an Amazon ECS container instance from the specified cluster.
@@ -4280,10 +4282,10 @@ class EcsApi:
     def describe_capacity_providers(
         self,
         context: RequestContext,
-        capacity_providers: StringList = None,
-        include: CapacityProviderFieldList = None,
-        max_results: BoxedInteger = None,
-        next_token: String = None,
+        capacity_providers: StringList | None = None,
+        include: CapacityProviderFieldList | None = None,
+        max_results: BoxedInteger | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeCapacityProvidersResponse:
         """Describes one or more of your capacity providers.
@@ -4308,8 +4310,8 @@ class EcsApi:
     def describe_clusters(
         self,
         context: RequestContext,
-        clusters: StringList = None,
-        include: ClusterFieldList = None,
+        clusters: StringList | None = None,
+        include: ClusterFieldList | None = None,
         **kwargs,
     ) -> DescribeClustersResponse:
         """Describes one or more of your clusters.
@@ -4334,8 +4336,8 @@ class EcsApi:
         self,
         context: RequestContext,
         container_instances: StringList,
-        cluster: String = None,
-        include: ContainerInstanceFieldList = None,
+        cluster: String | None = None,
+        include: ContainerInstanceFieldList | None = None,
         **kwargs,
     ) -> DescribeContainerInstancesResponse:
         """Describes one or more container instances. Returns metadata about each
@@ -4410,8 +4412,8 @@ class EcsApi:
         self,
         context: RequestContext,
         services: StringList,
-        cluster: String = None,
-        include: ServiceFieldList = None,
+        cluster: String | None = None,
+        include: ServiceFieldList | None = None,
         **kwargs,
     ) -> DescribeServicesResponse:
         """Describes the specified services running in your cluster.
@@ -4433,7 +4435,7 @@ class EcsApi:
         self,
         context: RequestContext,
         task_definition: String,
-        include: TaskDefinitionFieldList = None,
+        include: TaskDefinitionFieldList | None = None,
         **kwargs,
     ) -> DescribeTaskDefinitionResponse:
         """Describes a task definition. You can specify a ``family`` and
@@ -4462,8 +4464,8 @@ class EcsApi:
         context: RequestContext,
         cluster: String,
         service: String,
-        task_sets: StringList = None,
-        include: TaskSetFieldList = None,
+        task_sets: StringList | None = None,
+        include: TaskSetFieldList | None = None,
         **kwargs,
     ) -> DescribeTaskSetsResponse:
         """Describes the task sets in the specified cluster and service. This is
@@ -4495,8 +4497,8 @@ class EcsApi:
         self,
         context: RequestContext,
         tasks: StringList,
-        cluster: String = None,
-        include: TaskFieldList = None,
+        cluster: String | None = None,
+        include: TaskFieldList | None = None,
         **kwargs,
     ) -> DescribeTasksResponse:
         """Describes a specified task or tasks.
@@ -4525,8 +4527,8 @@ class EcsApi:
     def discover_poll_endpoint(
         self,
         context: RequestContext,
-        container_instance: String = None,
-        cluster: String = None,
+        container_instance: String | None = None,
+        cluster: String | None = None,
         **kwargs,
     ) -> DiscoverPollEndpointResponse:
         """This action is only used by the Amazon ECS agent, and it is not intended
@@ -4550,8 +4552,8 @@ class EcsApi:
         command: String,
         interactive: Boolean,
         task: String,
-        cluster: String = None,
-        container: String = None,
+        cluster: String | None = None,
+        container: String | None = None,
         **kwargs,
     ) -> ExecuteCommandResponse:
         """Runs a command remotely on a container within a task.
@@ -4586,7 +4588,7 @@ class EcsApi:
 
     @handler("GetTaskProtection")
     def get_task_protection(
-        self, context: RequestContext, cluster: String, tasks: StringList = None, **kwargs
+        self, context: RequestContext, cluster: String, tasks: StringList | None = None, **kwargs
     ) -> GetTaskProtectionResponse:
         """Retrieves the protection status of tasks in an Amazon ECS service.
 
@@ -4608,12 +4610,12 @@ class EcsApi:
     def list_account_settings(
         self,
         context: RequestContext,
-        name: SettingName = None,
-        value: String = None,
-        principal_arn: String = None,
-        effective_settings: Boolean = None,
-        next_token: String = None,
-        max_results: Integer = None,
+        name: SettingName | None = None,
+        value: String | None = None,
+        principal_arn: String | None = None,
+        effective_settings: Boolean | None = None,
+        next_token: String | None = None,
+        max_results: Integer | None = None,
         **kwargs,
     ) -> ListAccountSettingsResponse:
         """Lists the account settings for a specified principal.
@@ -4639,11 +4641,11 @@ class EcsApi:
         self,
         context: RequestContext,
         target_type: TargetType,
-        cluster: String = None,
-        attribute_name: String = None,
-        attribute_value: String = None,
-        next_token: String = None,
-        max_results: BoxedInteger = None,
+        cluster: String | None = None,
+        attribute_name: String | None = None,
+        attribute_value: String | None = None,
+        next_token: String | None = None,
+        max_results: BoxedInteger | None = None,
         **kwargs,
     ) -> ListAttributesResponse:
         """Lists the attributes for Amazon ECS resources within a specified target
@@ -4675,8 +4677,8 @@ class EcsApi:
     def list_clusters(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: BoxedInteger = None,
+        next_token: String | None = None,
+        max_results: BoxedInteger | None = None,
         **kwargs,
     ) -> ListClustersResponse:
         """Returns a list of existing clusters.
@@ -4697,11 +4699,11 @@ class EcsApi:
     def list_container_instances(
         self,
         context: RequestContext,
-        cluster: String = None,
-        filter: String = None,
-        next_token: String = None,
-        max_results: BoxedInteger = None,
-        status: ContainerInstanceStatus = None,
+        cluster: String | None = None,
+        filter: String | None = None,
+        next_token: String | None = None,
+        max_results: BoxedInteger | None = None,
+        status: ContainerInstanceStatus | None = None,
         **kwargs,
     ) -> ListContainerInstancesResponse:
         """Returns a list of container instances in a specified cluster. You can
@@ -4734,11 +4736,11 @@ class EcsApi:
         self,
         context: RequestContext,
         service: String,
-        cluster: String = None,
-        status: ServiceDeploymentStatusList = None,
-        created_at: CreatedAt = None,
-        next_token: String = None,
-        max_results: BoxedInteger = None,
+        cluster: String | None = None,
+        status: ServiceDeploymentStatusList | None = None,
+        created_at: CreatedAt | None = None,
+        next_token: String | None = None,
+        max_results: BoxedInteger | None = None,
         **kwargs,
     ) -> ListServiceDeploymentsResponse:
         """This operation lists all the service deployments that meet the specified
@@ -4775,11 +4777,11 @@ class EcsApi:
     def list_services(
         self,
         context: RequestContext,
-        cluster: String = None,
-        next_token: String = None,
-        max_results: BoxedInteger = None,
-        launch_type: LaunchType = None,
-        scheduling_strategy: SchedulingStrategy = None,
+        cluster: String | None = None,
+        next_token: String | None = None,
+        max_results: BoxedInteger | None = None,
+        launch_type: LaunchType | None = None,
+        scheduling_strategy: SchedulingStrategy | None = None,
         **kwargs,
     ) -> ListServicesResponse:
         """Returns a list of services. You can filter the results by cluster,
@@ -4808,8 +4810,8 @@ class EcsApi:
         self,
         context: RequestContext,
         namespace: String,
-        next_token: String = None,
-        max_results: BoxedInteger = None,
+        next_token: String | None = None,
+        max_results: BoxedInteger | None = None,
         **kwargs,
     ) -> ListServicesByNamespaceResponse:
         """This operation lists all of the services that are associated with a
@@ -4855,10 +4857,10 @@ class EcsApi:
     def list_task_definition_families(
         self,
         context: RequestContext,
-        family_prefix: String = None,
-        status: TaskDefinitionFamilyStatus = None,
-        next_token: String = None,
-        max_results: BoxedInteger = None,
+        family_prefix: String | None = None,
+        status: TaskDefinitionFamilyStatus | None = None,
+        next_token: String | None = None,
+        max_results: BoxedInteger | None = None,
         **kwargs,
     ) -> ListTaskDefinitionFamiliesResponse:
         """Returns a list of task definition families that are registered to your
@@ -4890,11 +4892,11 @@ class EcsApi:
     def list_task_definitions(
         self,
         context: RequestContext,
-        family_prefix: String = None,
-        status: TaskDefinitionStatus = None,
-        sort: SortOrder = None,
-        next_token: String = None,
-        max_results: BoxedInteger = None,
+        family_prefix: String | None = None,
+        status: TaskDefinitionStatus | None = None,
+        sort: SortOrder | None = None,
+        next_token: String | None = None,
+        max_results: BoxedInteger | None = None,
         **kwargs,
     ) -> ListTaskDefinitionsResponse:
         """Returns a list of task definitions that are registered to your account.
@@ -4921,15 +4923,15 @@ class EcsApi:
     def list_tasks(
         self,
         context: RequestContext,
-        cluster: String = None,
-        container_instance: String = None,
-        family: String = None,
-        next_token: String = None,
-        max_results: BoxedInteger = None,
-        started_by: String = None,
-        service_name: String = None,
-        desired_status: DesiredStatus = None,
-        launch_type: LaunchType = None,
+        cluster: String | None = None,
+        container_instance: String | None = None,
+        family: String | None = None,
+        next_token: String | None = None,
+        max_results: BoxedInteger | None = None,
+        started_by: String | None = None,
+        service_name: String | None = None,
+        desired_status: DesiredStatus | None = None,
+        launch_type: LaunchType | None = None,
         **kwargs,
     ) -> ListTasksResponse:
         """Returns a list of tasks. You can filter the results by cluster, task
@@ -4968,7 +4970,7 @@ class EcsApi:
         context: RequestContext,
         name: SettingName,
         value: String,
-        principal_arn: String = None,
+        principal_arn: String | None = None,
         **kwargs,
     ) -> PutAccountSettingResponse:
         """Modifies an account setting. Account settings are set on a per-Region
@@ -5009,7 +5011,11 @@ class EcsApi:
 
     @handler("PutAttributes")
     def put_attributes(
-        self, context: RequestContext, attributes: Attributes, cluster: String = None, **kwargs
+        self,
+        context: RequestContext,
+        attributes: Attributes,
+        cluster: String | None = None,
+        **kwargs,
     ) -> PutAttributesResponse:
         """Create or update an attribute on an Amazon ECS resource. If the
         attribute doesn't exist, it's created. If the attribute exists, its
@@ -5078,15 +5084,15 @@ class EcsApi:
     def register_container_instance(
         self,
         context: RequestContext,
-        cluster: String = None,
-        instance_identity_document: String = None,
-        instance_identity_document_signature: String = None,
-        total_resources: Resources = None,
-        version_info: VersionInfo = None,
-        container_instance_arn: String = None,
-        attributes: Attributes = None,
-        platform_devices: PlatformDevices = None,
-        tags: Tags = None,
+        cluster: String | None = None,
+        instance_identity_document: String | None = None,
+        instance_identity_document_signature: String | None = None,
+        total_resources: Resources | None = None,
+        version_info: VersionInfo | None = None,
+        container_instance_arn: String | None = None,
+        attributes: Attributes | None = None,
+        platform_devices: PlatformDevices | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> RegisterContainerInstanceResponse:
         """This action is only used by the Amazon ECS agent, and it is not intended
@@ -5121,22 +5127,22 @@ class EcsApi:
         context: RequestContext,
         family: String,
         container_definitions: ContainerDefinitions,
-        task_role_arn: String = None,
-        execution_role_arn: String = None,
-        network_mode: NetworkMode = None,
-        volumes: VolumeList = None,
-        placement_constraints: TaskDefinitionPlacementConstraints = None,
-        requires_compatibilities: CompatibilityList = None,
-        cpu: String = None,
-        memory: String = None,
-        tags: Tags = None,
-        pid_mode: PidMode = None,
-        ipc_mode: IpcMode = None,
-        proxy_configuration: ProxyConfiguration = None,
-        inference_accelerators: InferenceAccelerators = None,
-        ephemeral_storage: EphemeralStorage = None,
-        runtime_platform: RuntimePlatform = None,
-        enable_fault_injection: BoxedBoolean = None,
+        task_role_arn: String | None = None,
+        execution_role_arn: String | None = None,
+        network_mode: NetworkMode | None = None,
+        volumes: VolumeList | None = None,
+        placement_constraints: TaskDefinitionPlacementConstraints | None = None,
+        requires_compatibilities: CompatibilityList | None = None,
+        cpu: String | None = None,
+        memory: String | None = None,
+        tags: Tags | None = None,
+        pid_mode: PidMode | None = None,
+        ipc_mode: IpcMode | None = None,
+        proxy_configuration: ProxyConfiguration | None = None,
+        inference_accelerators: InferenceAccelerators | None = None,
+        ephemeral_storage: EphemeralStorage | None = None,
+        runtime_platform: RuntimePlatform | None = None,
+        enable_fault_injection: BoxedBoolean | None = None,
         **kwargs,
     ) -> RegisterTaskDefinitionResponse:
         """Registers a new task definition from the supplied ``family`` and
@@ -5204,24 +5210,24 @@ class EcsApi:
         self,
         context: RequestContext,
         task_definition: String,
-        capacity_provider_strategy: CapacityProviderStrategy = None,
-        cluster: String = None,
-        count: BoxedInteger = None,
-        enable_ecs_managed_tags: Boolean = None,
-        enable_execute_command: Boolean = None,
-        group: String = None,
-        launch_type: LaunchType = None,
-        network_configuration: NetworkConfiguration = None,
-        overrides: TaskOverride = None,
-        placement_constraints: PlacementConstraints = None,
-        placement_strategy: PlacementStrategies = None,
-        platform_version: String = None,
-        propagate_tags: PropagateTags = None,
-        reference_id: String = None,
-        started_by: String = None,
-        tags: Tags = None,
-        client_token: String = None,
-        volume_configurations: TaskVolumeConfigurations = None,
+        capacity_provider_strategy: CapacityProviderStrategy | None = None,
+        cluster: String | None = None,
+        count: BoxedInteger | None = None,
+        enable_ecs_managed_tags: Boolean | None = None,
+        enable_execute_command: Boolean | None = None,
+        group: String | None = None,
+        launch_type: LaunchType | None = None,
+        network_configuration: NetworkConfiguration | None = None,
+        overrides: TaskOverride | None = None,
+        placement_constraints: PlacementConstraints | None = None,
+        placement_strategy: PlacementStrategies | None = None,
+        platform_version: String | None = None,
+        propagate_tags: PropagateTags | None = None,
+        reference_id: String | None = None,
+        started_by: String | None = None,
+        tags: Tags | None = None,
+        client_token: String | None = None,
+        volume_configurations: TaskVolumeConfigurations | None = None,
         **kwargs,
     ) -> RunTaskResponse:
         """Starts a new task using the specified task definition.
@@ -5283,6 +5289,13 @@ class EcsApi:
         -  Run ``RunTask`` with the ``clientToken`` and the original set of
            parameters
 
+        If you get a ``ClientException`` error, the ``RunTask`` could not be
+        processed because you use managed scaling and there is a capacity error
+        because the quota of tasks in the ``PROVISIONING`` per cluster has been
+        reached. For information about the service quotas, see `Amazon ECS
+        service
+        quotas <https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-quotas.html>`__.
+
         :param task_definition: The ``family`` and ``revision`` (``family:revision``) or full ARN of the
         task definition to run.
         :param capacity_provider_strategy: The capacity provider strategy to use for the task.
@@ -5330,17 +5343,17 @@ class EcsApi:
         context: RequestContext,
         container_instances: StringList,
         task_definition: String,
-        cluster: String = None,
-        enable_ecs_managed_tags: Boolean = None,
-        enable_execute_command: Boolean = None,
-        group: String = None,
-        network_configuration: NetworkConfiguration = None,
-        overrides: TaskOverride = None,
-        propagate_tags: PropagateTags = None,
-        reference_id: String = None,
-        started_by: String = None,
-        tags: Tags = None,
-        volume_configurations: TaskVolumeConfigurations = None,
+        cluster: String | None = None,
+        enable_ecs_managed_tags: Boolean | None = None,
+        enable_execute_command: Boolean | None = None,
+        group: String | None = None,
+        network_configuration: NetworkConfiguration | None = None,
+        overrides: TaskOverride | None = None,
+        propagate_tags: PropagateTags | None = None,
+        reference_id: String | None = None,
+        started_by: String | None = None,
+        tags: Tags | None = None,
+        volume_configurations: TaskVolumeConfigurations | None = None,
         **kwargs,
     ) -> StartTaskResponse:
         """Starts a new task from the specified task definition on the specified
@@ -5401,12 +5414,22 @@ class EcsApi:
         self,
         context: RequestContext,
         service_deployment_arn: String,
-        stop_type: StopServiceDeploymentStopType = None,
+        stop_type: StopServiceDeploymentStopType | None = None,
         **kwargs,
     ) -> StopServiceDeploymentResponse:
         """Stops an ongoing service deployment.
 
-        StopServiceDeployment isn't currently supported.
+        The following stop types are avaiable:
+
+        -  ROLLBACK - This option rolls back the service deployment to the
+           previous service revision.
+
+           You can use this option even if you didn't configure the service
+           deployment for the rollback option.
+
+        For more information, see `Stopping Amazon ECS service
+        deployments <https://docs.aws.amazon.com/AmazonECS/latest/developerguide/stop-service-deployment.html>`__
+        in the *Amazon Elastic Container Service Developer Guide*.
 
         :param service_deployment_arn: The ARN of the service deployment that you want to stop.
         :param stop_type: How you want Amazon ECS to stop the service.
@@ -5426,8 +5449,8 @@ class EcsApi:
         self,
         context: RequestContext,
         task: String,
-        cluster: String = None,
-        reason: String = None,
+        cluster: String | None = None,
+        reason: String | None = None,
         **kwargs,
     ) -> StopTaskResponse:
         """Stops a running task. Any tags associated with the task will be deleted.
@@ -5467,7 +5490,7 @@ class EcsApi:
         self,
         context: RequestContext,
         attachments: AttachmentStateChanges,
-        cluster: String = None,
+        cluster: String | None = None,
         **kwargs,
     ) -> SubmitAttachmentStateChangesResponse:
         """This action is only used by the Amazon ECS agent, and it is not intended
@@ -5490,14 +5513,14 @@ class EcsApi:
     def submit_container_state_change(
         self,
         context: RequestContext,
-        cluster: String = None,
-        task: String = None,
-        container_name: String = None,
-        runtime_id: String = None,
-        status: String = None,
-        exit_code: BoxedInteger = None,
-        reason: String = None,
-        network_bindings: NetworkBindings = None,
+        cluster: String | None = None,
+        task: String | None = None,
+        container_name: String | None = None,
+        runtime_id: String | None = None,
+        status: String | None = None,
+        exit_code: BoxedInteger | None = None,
+        reason: String | None = None,
+        network_bindings: NetworkBindings | None = None,
         **kwargs,
     ) -> SubmitContainerStateChangeResponse:
         """This action is only used by the Amazon ECS agent, and it is not intended
@@ -5525,16 +5548,16 @@ class EcsApi:
     def submit_task_state_change(
         self,
         context: RequestContext,
-        cluster: String = None,
-        task: String = None,
-        status: String = None,
-        reason: String = None,
-        containers: ContainerStateChanges = None,
-        attachments: AttachmentStateChanges = None,
-        managed_agents: ManagedAgentStateChanges = None,
-        pull_started_at: Timestamp = None,
-        pull_stopped_at: Timestamp = None,
-        execution_stopped_at: Timestamp = None,
+        cluster: String | None = None,
+        task: String | None = None,
+        status: String | None = None,
+        reason: String | None = None,
+        containers: ContainerStateChanges | None = None,
+        attachments: AttachmentStateChanges | None = None,
+        managed_agents: ManagedAgentStateChanges | None = None,
+        pull_started_at: Timestamp | None = None,
+        pull_stopped_at: Timestamp | None = None,
+        execution_stopped_at: Timestamp | None = None,
         **kwargs,
     ) -> SubmitTaskStateChangeResponse:
         """This action is only used by the Amazon ECS agent, and it is not intended
@@ -5623,9 +5646,9 @@ class EcsApi:
         self,
         context: RequestContext,
         cluster: String,
-        settings: ClusterSettings = None,
-        configuration: ClusterConfiguration = None,
-        service_connect_defaults: ClusterServiceConnectDefaultsRequest = None,
+        settings: ClusterSettings | None = None,
+        configuration: ClusterConfiguration | None = None,
+        service_connect_defaults: ClusterServiceConnectDefaultsRequest | None = None,
         **kwargs,
     ) -> UpdateClusterResponse:
         """Updates the cluster.
@@ -5661,7 +5684,11 @@ class EcsApi:
 
     @handler("UpdateContainerAgent")
     def update_container_agent(
-        self, context: RequestContext, container_instance: String, cluster: String = None, **kwargs
+        self,
+        context: RequestContext,
+        container_instance: String,
+        cluster: String | None = None,
+        **kwargs,
     ) -> UpdateContainerAgentResponse:
         """Updates the Amazon ECS container agent on a specified container
         instance. Updating the Amazon ECS container agent doesn't interrupt
@@ -5710,7 +5737,7 @@ class EcsApi:
         context: RequestContext,
         container_instances: StringList,
         status: ContainerInstanceStatus,
-        cluster: String = None,
+        cluster: String | None = None,
         **kwargs,
     ) -> UpdateContainerInstancesStateResponse:
         """Modifies the status of an Amazon ECS container instance.
@@ -5786,26 +5813,26 @@ class EcsApi:
         self,
         context: RequestContext,
         service: String,
-        cluster: String = None,
-        desired_count: BoxedInteger = None,
-        task_definition: String = None,
-        capacity_provider_strategy: CapacityProviderStrategy = None,
-        deployment_configuration: DeploymentConfiguration = None,
-        availability_zone_rebalancing: AvailabilityZoneRebalancing = None,
-        network_configuration: NetworkConfiguration = None,
-        placement_constraints: PlacementConstraints = None,
-        placement_strategy: PlacementStrategies = None,
-        platform_version: String = None,
-        force_new_deployment: Boolean = None,
-        health_check_grace_period_seconds: BoxedInteger = None,
-        enable_execute_command: BoxedBoolean = None,
-        enable_ecs_managed_tags: BoxedBoolean = None,
-        load_balancers: LoadBalancers = None,
-        propagate_tags: PropagateTags = None,
-        service_registries: ServiceRegistries = None,
-        service_connect_configuration: ServiceConnectConfiguration = None,
-        volume_configurations: ServiceVolumeConfigurations = None,
-        vpc_lattice_configurations: VpcLatticeConfigurations = None,
+        cluster: String | None = None,
+        desired_count: BoxedInteger | None = None,
+        task_definition: String | None = None,
+        capacity_provider_strategy: CapacityProviderStrategy | None = None,
+        deployment_configuration: DeploymentConfiguration | None = None,
+        availability_zone_rebalancing: AvailabilityZoneRebalancing | None = None,
+        network_configuration: NetworkConfiguration | None = None,
+        placement_constraints: PlacementConstraints | None = None,
+        placement_strategy: PlacementStrategies | None = None,
+        platform_version: String | None = None,
+        force_new_deployment: Boolean | None = None,
+        health_check_grace_period_seconds: BoxedInteger | None = None,
+        enable_execute_command: BoxedBoolean | None = None,
+        enable_ecs_managed_tags: BoxedBoolean | None = None,
+        load_balancers: LoadBalancers | None = None,
+        propagate_tags: PropagateTags | None = None,
+        service_registries: ServiceRegistries | None = None,
+        service_connect_configuration: ServiceConnectConfiguration | None = None,
+        volume_configurations: ServiceVolumeConfigurations | None = None,
+        vpc_lattice_configurations: VpcLatticeConfigurations | None = None,
         **kwargs,
     ) -> UpdateServiceResponse:
         """Modifies the parameters of a service.
@@ -6049,7 +6076,7 @@ class EcsApi:
         cluster: String,
         tasks: StringList,
         protection_enabled: Boolean,
-        expires_in_minutes: BoxedInteger = None,
+        expires_in_minutes: BoxedInteger | None = None,
         **kwargs,
     ) -> UpdateTaskProtectionResponse:
         """Updates the protection status of a task. You can set

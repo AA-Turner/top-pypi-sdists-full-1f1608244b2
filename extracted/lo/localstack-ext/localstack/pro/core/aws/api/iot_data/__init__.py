@@ -234,7 +234,7 @@ class IotDataApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        shadow_name: ShadowName = None,
+        shadow_name: ShadowName | None = None,
         **kwargs,
     ) -> DeleteThingShadowResponse:
         """Deletes the shadow for the specified thing.
@@ -297,7 +297,7 @@ class IotDataApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        shadow_name: ShadowName = None,
+        shadow_name: ShadowName | None = None,
         **kwargs,
     ) -> GetThingShadowResponse:
         """Gets the shadow for the specified thing.
@@ -329,8 +329,8 @@ class IotDataApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        next_token: NextToken = None,
-        page_size: PageSize = None,
+        next_token: NextToken | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> ListNamedShadowsForThingResponse:
         """Lists the shadows for the specified thing.
@@ -357,8 +357,8 @@ class IotDataApi:
     def list_retained_messages(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListRetainedMessagesResponse:
         """Lists summary information about the retained messages stored for the
@@ -399,15 +399,15 @@ class IotDataApi:
         self,
         context: RequestContext,
         topic: Topic,
-        qos: Qos = None,
-        retain: Retain = None,
-        payload: IO[Payload] = None,
-        user_properties: UserProperties = None,
-        payload_format_indicator: PayloadFormatIndicator = None,
-        content_type: ContentType = None,
-        response_topic: ResponseTopic = None,
-        correlation_data: CorrelationData = None,
-        message_expiry: MessageExpiry = None,
+        qos: Qos | None = None,
+        retain: Retain | None = None,
+        payload: IO[Payload] | None = None,
+        user_properties: UserProperties | None = None,
+        payload_format_indicator: PayloadFormatIndicator | None = None,
+        content_type: ContentType | None = None,
+        response_topic: ResponseTopic | None = None,
+        correlation_data: CorrelationData | None = None,
+        message_expiry: MessageExpiry | None = None,
         **kwargs,
     ) -> None:
         """Publishes an MQTT message.
@@ -455,7 +455,7 @@ class IotDataApi:
         context: RequestContext,
         thing_name: ThingName,
         payload: IO[JsonDocument],
-        shadow_name: ShadowName = None,
+        shadow_name: ShadowName | None = None,
         **kwargs,
     ) -> UpdateThingShadowResponse:
         """Updates the shadow for the specified thing.

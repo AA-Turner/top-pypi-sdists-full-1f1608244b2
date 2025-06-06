@@ -1326,9 +1326,9 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         channel_name: ChannelName,
-        channel_storage: ChannelStorage = None,
-        retention_period: RetentionPeriod = None,
-        tags: TagList = None,
+        channel_storage: ChannelStorage | None = None,
+        retention_period: RetentionPeriod | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateChannelResponse:
         """Used to create a channel. A channel collects data from an MQTT topic and
@@ -1355,12 +1355,12 @@ class IotanalyticsApi:
         context: RequestContext,
         dataset_name: DatasetName,
         actions: DatasetActions,
-        triggers: DatasetTriggers = None,
-        content_delivery_rules: DatasetContentDeliveryRules = None,
-        retention_period: RetentionPeriod = None,
-        versioning_configuration: VersioningConfiguration = None,
-        tags: TagList = None,
-        late_data_rules: LateDataRules = None,
+        triggers: DatasetTriggers | None = None,
+        content_delivery_rules: DatasetContentDeliveryRules | None = None,
+        retention_period: RetentionPeriod | None = None,
+        versioning_configuration: VersioningConfiguration | None = None,
+        tags: TagList | None = None,
+        late_data_rules: LateDataRules | None = None,
         **kwargs,
     ) -> CreateDatasetResponse:
         """Used to create a dataset. A dataset stores data retrieved from a data
@@ -1395,7 +1395,7 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         dataset_name: DatasetName,
-        version_id: DatasetContentVersion = None,
+        version_id: DatasetContentVersion | None = None,
         **kwargs,
     ) -> CreateDatasetContentResponse:
         """Creates the content of a dataset by applying a ``queryAction`` (a SQL
@@ -1417,11 +1417,11 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         datastore_name: DatastoreName,
-        datastore_storage: DatastoreStorage = None,
-        retention_period: RetentionPeriod = None,
-        tags: TagList = None,
-        file_format_configuration: FileFormatConfiguration = None,
-        datastore_partitions: DatastorePartitions = None,
+        datastore_storage: DatastoreStorage | None = None,
+        retention_period: RetentionPeriod | None = None,
+        tags: TagList | None = None,
+        file_format_configuration: FileFormatConfiguration | None = None,
+        datastore_partitions: DatastorePartitions | None = None,
         **kwargs,
     ) -> CreateDatastoreResponse:
         """Creates a data store, which is a repository for messages.
@@ -1448,7 +1448,7 @@ class IotanalyticsApi:
         context: RequestContext,
         pipeline_name: PipelineName,
         pipeline_activities: PipelineActivities,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreatePipelineResponse:
         """Creates a pipeline. A pipeline consumes messages from a channel and
@@ -1504,7 +1504,7 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         dataset_name: DatasetName,
-        version_id: DatasetContentVersion = None,
+        version_id: DatasetContentVersion | None = None,
         **kwargs,
     ) -> None:
         """Deletes the content of the specified dataset.
@@ -1554,7 +1554,7 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         channel_name: ChannelName,
-        include_statistics: IncludeStatisticsFlag = None,
+        include_statistics: IncludeStatisticsFlag | None = None,
         **kwargs,
     ) -> DescribeChannelResponse:
         """Retrieves information about a channel.
@@ -1592,7 +1592,7 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         datastore_name: DatastoreName,
-        include_statistics: IncludeStatisticsFlag = None,
+        include_statistics: IncludeStatisticsFlag | None = None,
         **kwargs,
     ) -> DescribeDatastoreResponse:
         """Retrieves information about a data store.
@@ -1645,7 +1645,7 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         dataset_name: DatasetName,
-        version_id: DatasetContentVersion = None,
+        version_id: DatasetContentVersion | None = None,
         **kwargs,
     ) -> GetDatasetContentResponse:
         """Retrieves the contents of a dataset as presigned URIs.
@@ -1665,8 +1665,8 @@ class IotanalyticsApi:
     def list_channels(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListChannelsResponse:
         """Retrieves a list of channels.
@@ -1686,10 +1686,10 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         dataset_name: DatasetName,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        scheduled_on_or_after: Timestamp = None,
-        scheduled_before: Timestamp = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        scheduled_on_or_after: Timestamp | None = None,
+        scheduled_before: Timestamp | None = None,
         **kwargs,
     ) -> ListDatasetContentsResponse:
         """Lists information about dataset contents that have been created.
@@ -1714,8 +1714,8 @@ class IotanalyticsApi:
     def list_datasets(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListDatasetsResponse:
         """Retrieves information about datasets.
@@ -1734,8 +1734,8 @@ class IotanalyticsApi:
     def list_datastores(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListDatastoresResponse:
         """Retrieves a list of data stores.
@@ -1754,8 +1754,8 @@ class IotanalyticsApi:
     def list_pipelines(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPipelinesResponse:
         """Retrieves a list of pipelines.
@@ -1833,9 +1833,9 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         channel_name: ChannelName,
-        max_messages: MaxMessages = None,
-        start_time: StartTime = None,
-        end_time: EndTime = None,
+        max_messages: MaxMessages | None = None,
+        start_time: StartTime | None = None,
+        end_time: EndTime | None = None,
         **kwargs,
     ) -> SampleChannelDataResponse:
         """Retrieves a sample of messages from the specified channel ingested
@@ -1859,9 +1859,9 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         pipeline_name: PipelineName,
-        start_time: StartTime = None,
-        end_time: EndTime = None,
-        channel_messages: ChannelMessages = None,
+        start_time: StartTime | None = None,
+        end_time: EndTime | None = None,
+        channel_messages: ChannelMessages | None = None,
         **kwargs,
     ) -> StartPipelineReprocessingResponse:
         """Starts the reprocessing of raw message data through the pipeline.
@@ -1923,8 +1923,8 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         channel_name: ChannelName,
-        channel_storage: ChannelStorage = None,
-        retention_period: RetentionPeriod = None,
+        channel_storage: ChannelStorage | None = None,
+        retention_period: RetentionPeriod | None = None,
         **kwargs,
     ) -> None:
         """Used to update the settings of a channel.
@@ -1946,11 +1946,11 @@ class IotanalyticsApi:
         context: RequestContext,
         dataset_name: DatasetName,
         actions: DatasetActions,
-        triggers: DatasetTriggers = None,
-        content_delivery_rules: DatasetContentDeliveryRules = None,
-        retention_period: RetentionPeriod = None,
-        versioning_configuration: VersioningConfiguration = None,
-        late_data_rules: LateDataRules = None,
+        triggers: DatasetTriggers | None = None,
+        content_delivery_rules: DatasetContentDeliveryRules | None = None,
+        retention_period: RetentionPeriod | None = None,
+        versioning_configuration: VersioningConfiguration | None = None,
+        late_data_rules: LateDataRules | None = None,
         **kwargs,
     ) -> None:
         """Updates the settings of a dataset.
@@ -1977,9 +1977,9 @@ class IotanalyticsApi:
         self,
         context: RequestContext,
         datastore_name: DatastoreName,
-        retention_period: RetentionPeriod = None,
-        datastore_storage: DatastoreStorage = None,
-        file_format_configuration: FileFormatConfiguration = None,
+        retention_period: RetentionPeriod | None = None,
+        datastore_storage: DatastoreStorage | None = None,
+        file_format_configuration: FileFormatConfiguration | None = None,
         **kwargs,
     ) -> None:
         """Used to update the settings of a data store.

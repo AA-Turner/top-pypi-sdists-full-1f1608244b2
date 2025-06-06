@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: quantecon
-Version: 0.8.0
+Version: 0.8.1
 Summary: Import the main names to top level.
 Keywords: quantitative,economics
 Author-email: QuantEcon Project <admin@quantecon.org>
@@ -13,6 +13,7 @@ Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.5
 Classifier: Topic :: Scientific/Engineering
+License-File: LICENSE
 Requires-Dist: numba>=0.49.0
 Requires-Dist: numpy>=1.17.0
 Requires-Dist: requests

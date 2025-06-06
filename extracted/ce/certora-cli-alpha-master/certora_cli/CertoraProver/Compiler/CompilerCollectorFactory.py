@@ -42,6 +42,12 @@ def get_relevant_compiler(contract_file_path: Path, context: CertoraContext) -> 
 
     if contract_file_path.is_absolute():
         contract_file_path = Path(os.path.relpath(contract_file_path, Path.cwd()))
+
+    # If the contract file is in the sources directory, we want to use the relative path from the "cwd" in the source tree.
+    if Util.get_certora_sources_dir() in contract_file_path.parents:
+        cwd_in_source = Util.get_certora_sources_dir() / context.cwd_rel_in_sources
+        contract_file_path = Path(os.path.relpath(contract_file_path, cwd_in_source))
+
     if context.compiler_map:
         match = match_path_to_mapping_key(contract_file_path, context.compiler_map)
         if match:

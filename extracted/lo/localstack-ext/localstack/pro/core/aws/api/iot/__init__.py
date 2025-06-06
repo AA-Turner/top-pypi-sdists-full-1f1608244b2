@@ -7247,7 +7247,7 @@ class IotApi:
         self,
         context: RequestContext,
         certificate_id: CertificateId,
-        set_as_active: SetAsActive = None,
+        set_as_active: SetAsActive | None = None,
         **kwargs,
     ) -> None:
         """Accepts a pending certificate transfer. The default state of the
@@ -7276,10 +7276,10 @@ class IotApi:
     def add_thing_to_billing_group(
         self,
         context: RequestContext,
-        billing_group_name: BillingGroupName = None,
-        billing_group_arn: BillingGroupArn = None,
-        thing_name: ThingName = None,
-        thing_arn: ThingArn = None,
+        billing_group_name: BillingGroupName | None = None,
+        billing_group_arn: BillingGroupArn | None = None,
+        thing_name: ThingName | None = None,
+        thing_arn: ThingArn | None = None,
         **kwargs,
     ) -> AddThingToBillingGroupResponse:
         """Adds a thing to a billing group.
@@ -7304,11 +7304,11 @@ class IotApi:
     def add_thing_to_thing_group(
         self,
         context: RequestContext,
-        thing_group_name: ThingGroupName = None,
-        thing_group_arn: ThingGroupArn = None,
-        thing_name: ThingName = None,
-        thing_arn: ThingArn = None,
-        override_dynamic_groups: OverrideDynamicGroups = None,
+        thing_group_name: ThingGroupName | None = None,
+        thing_group_arn: ThingGroupArn | None = None,
+        thing_name: ThingName | None = None,
+        thing_arn: ThingArn | None = None,
+        override_dynamic_groups: OverrideDynamicGroups | None = None,
         **kwargs,
     ) -> AddThingToThingGroupResponse:
         """Adds a thing to a thing group.
@@ -7338,7 +7338,7 @@ class IotApi:
         package_name: PackageName,
         version_name: VersionName,
         sbom: Sbom,
-        client_token: ClientToken = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> AssociateSbomWithPackageVersionResponse:
         """Associates the selected software bill of materials (SBOM) with a
@@ -7370,8 +7370,8 @@ class IotApi:
         context: RequestContext,
         targets: JobTargets,
         job_id: JobId,
-        comment: Comment = None,
-        namespace_id: NamespaceId = None,
+        comment: Comment | None = None,
+        namespace_id: NamespaceId | None = None,
         **kwargs,
     ) -> AssociateTargetsWithJobResponse:
         """Associates a group with a continuous job. The following criteria must be
@@ -7489,7 +7489,7 @@ class IotApi:
         context: RequestContext,
         thing_name: ThingName,
         principal: Principal,
-        thing_principal_type: ThingPrincipalType = None,
+        thing_principal_type: ThingPrincipalType | None = None,
         **kwargs,
     ) -> AttachThingPrincipalResponse:
         """Attaches the specified principal to the specified thing. A principal can
@@ -7611,9 +7611,9 @@ class IotApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        reason_code: ReasonCode = None,
-        comment: Comment = None,
-        force: ForceFlag = None,
+        reason_code: ReasonCode | None = None,
+        comment: Comment | None = None,
+        force: ForceFlag | None = None,
         **kwargs,
     ) -> CancelJobResponse:
         """Cancels a job.
@@ -7643,9 +7643,9 @@ class IotApi:
         context: RequestContext,
         job_id: JobId,
         thing_name: ThingName,
-        force: ForceFlag = None,
-        expected_version: ExpectedVersion = None,
-        status_details: DetailsMap = None,
+        force: ForceFlag | None = None,
+        expected_version: ExpectedVersion | None = None,
+        status_details: DetailsMap | None = None,
         **kwargs,
     ) -> None:
         """Cancels the execution of a job for a given thing.
@@ -7723,9 +7723,9 @@ class IotApi:
         check_name: AuditCheckName,
         resource_identifier: ResourceIdentifier,
         client_request_token: ClientRequestToken,
-        expiration_date: Timestamp = None,
-        suppress_indefinitely: SuppressIndefinitely = None,
-        description: AuditDescription = None,
+        expiration_date: Timestamp | None = None,
+        suppress_indefinitely: SuppressIndefinitely | None = None,
+        description: AuditDescription | None = None,
         **kwargs,
     ) -> CreateAuditSuppressionResponse:
         """Creates a Device Defender audit suppression.
@@ -7755,12 +7755,12 @@ class IotApi:
         context: RequestContext,
         authorizer_name: AuthorizerName,
         authorizer_function_arn: AuthorizerFunctionArn,
-        token_key_name: TokenKeyName = None,
-        token_signing_public_keys: PublicKeyMap = None,
-        status: AuthorizerStatus = None,
-        tags: TagList = None,
-        signing_disabled: BooleanKey = None,
-        enable_caching_for_http: EnableCachingForHttp = None,
+        token_key_name: TokenKeyName | None = None,
+        token_signing_public_keys: PublicKeyMap | None = None,
+        status: AuthorizerStatus | None = None,
+        tags: TagList | None = None,
+        signing_disabled: BooleanKey | None = None,
+        enable_caching_for_http: EnableCachingForHttp | None = None,
         **kwargs,
     ) -> CreateAuthorizerResponse:
         """Creates an authorizer.
@@ -7797,8 +7797,8 @@ class IotApi:
         self,
         context: RequestContext,
         billing_group_name: BillingGroupName,
-        billing_group_properties: BillingGroupProperties = None,
-        tags: TagList = None,
+        billing_group_properties: BillingGroupProperties | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateBillingGroupResponse:
         """Creates a billing group. If this call is made multiple times using the
@@ -7826,7 +7826,7 @@ class IotApi:
         self,
         context: RequestContext,
         certificate_signing_request: CertificateSigningRequest,
-        set_as_active: SetAsActive = None,
+        set_as_active: SetAsActive | None = None,
         **kwargs,
     ) -> CreateCertificateFromCsrResponse:
         """Creates an X.509 certificate using the specified certificate signing
@@ -7893,8 +7893,8 @@ class IotApi:
         certificate_provider_name: CertificateProviderName,
         lambda_function_arn: CertificateProviderFunctionArn,
         account_default_for_operations: CertificateProviderAccountDefaultForOperations,
-        client_token: ClientToken = None,
-        tags: TagList = None,
+        client_token: ClientToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateCertificateProviderResponse:
         """Creates an Amazon Web Services IoT Core certificate provider. You can
@@ -7941,13 +7941,13 @@ class IotApi:
         self,
         context: RequestContext,
         command_id: CommandId,
-        namespace: CommandNamespace = None,
-        display_name: DisplayName = None,
-        description: CommandDescription = None,
-        payload: CommandPayload = None,
-        mandatory_parameters: CommandParameterList = None,
-        role_arn: RoleArn = None,
-        tags: TagList = None,
+        namespace: CommandNamespace | None = None,
+        display_name: DisplayName | None = None,
+        description: CommandDescription | None = None,
+        payload: CommandPayload | None = None,
+        mandatory_parameters: CommandParameterList | None = None,
+        role_arn: RoleArn | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateCommandResponse:
         """Creates a command. A command contains reusable configurations that can
@@ -7979,8 +7979,8 @@ class IotApi:
         metric_name: MetricName,
         metric_type: CustomMetricType,
         client_request_token: ClientRequestToken,
-        display_name: CustomMetricDisplayName = None,
-        tags: TagList = None,
+        display_name: CustomMetricDisplayName | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateCustomMetricResponse:
         """Use this API to define a Custom Metric published by your devices to
@@ -8037,17 +8037,17 @@ class IotApi:
         self,
         context: RequestContext,
         domain_configuration_name: DomainConfigurationName,
-        domain_name: DomainName = None,
-        server_certificate_arns: ServerCertificateArns = None,
-        validation_certificate_arn: AcmCertificateArn = None,
-        authorizer_config: AuthorizerConfig = None,
-        service_type: ServiceType = None,
-        tags: TagList = None,
-        tls_config: TlsConfig = None,
-        server_certificate_config: ServerCertificateConfig = None,
-        authentication_type: AuthenticationType = None,
-        application_protocol: ApplicationProtocol = None,
-        client_certificate_config: ClientCertificateConfig = None,
+        domain_name: DomainName | None = None,
+        server_certificate_arns: ServerCertificateArns | None = None,
+        validation_certificate_arn: AcmCertificateArn | None = None,
+        authorizer_config: AuthorizerConfig | None = None,
+        service_type: ServiceType | None = None,
+        tags: TagList | None = None,
+        tls_config: TlsConfig | None = None,
+        server_certificate_config: ServerCertificateConfig | None = None,
+        authentication_type: AuthenticationType | None = None,
+        application_protocol: ApplicationProtocol | None = None,
+        client_certificate_config: ClientCertificateConfig | None = None,
         **kwargs,
     ) -> CreateDomainConfigurationResponse:
         """Creates a domain configuration.
@@ -8089,10 +8089,10 @@ class IotApi:
         context: RequestContext,
         thing_group_name: ThingGroupName,
         query_string: QueryString,
-        thing_group_properties: ThingGroupProperties = None,
-        index_name: IndexName = None,
-        query_version: QueryVersion = None,
-        tags: TagList = None,
+        thing_group_properties: ThingGroupProperties | None = None,
+        index_name: IndexName | None = None,
+        query_version: QueryVersion | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateDynamicThingGroupResponse:
         """Creates a dynamic thing group.
@@ -8127,11 +8127,11 @@ class IotApi:
         aggregation_type: AggregationType,
         period: FleetMetricPeriod,
         aggregation_field: AggregationField,
-        description: FleetMetricDescription = None,
-        query_version: QueryVersion = None,
-        index_name: IndexName = None,
-        unit: FleetMetricUnit = None,
-        tags: TagList = None,
+        description: FleetMetricDescription | None = None,
+        query_version: QueryVersion | None = None,
+        index_name: IndexName | None = None,
+        unit: FleetMetricUnit | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateFleetMetricResponse:
         """Creates a fleet metric.
@@ -8171,21 +8171,21 @@ class IotApi:
         context: RequestContext,
         job_id: JobId,
         targets: JobTargets,
-        document_source: JobDocumentSource = None,
-        document: JobDocument = None,
-        description: JobDescription = None,
-        presigned_url_config: PresignedUrlConfig = None,
-        target_selection: TargetSelection = None,
-        job_executions_rollout_config: JobExecutionsRolloutConfig = None,
-        abort_config: AbortConfig = None,
-        timeout_config: TimeoutConfig = None,
-        tags: TagList = None,
-        namespace_id: NamespaceId = None,
-        job_template_arn: JobTemplateArn = None,
-        job_executions_retry_config: JobExecutionsRetryConfig = None,
-        document_parameters: ParameterMap = None,
-        scheduling_config: SchedulingConfig = None,
-        destination_package_versions: DestinationPackageVersions = None,
+        document_source: JobDocumentSource | None = None,
+        document: JobDocument | None = None,
+        description: JobDescription | None = None,
+        presigned_url_config: PresignedUrlConfig | None = None,
+        target_selection: TargetSelection | None = None,
+        job_executions_rollout_config: JobExecutionsRolloutConfig | None = None,
+        abort_config: AbortConfig | None = None,
+        timeout_config: TimeoutConfig | None = None,
+        tags: TagList | None = None,
+        namespace_id: NamespaceId | None = None,
+        job_template_arn: JobTemplateArn | None = None,
+        job_executions_retry_config: JobExecutionsRetryConfig | None = None,
+        document_parameters: ParameterMap | None = None,
+        scheduling_config: SchedulingConfig | None = None,
+        destination_package_versions: DestinationPackageVersions | None = None,
         **kwargs,
     ) -> CreateJobResponse:
         """Creates a job.
@@ -8234,17 +8234,17 @@ class IotApi:
         context: RequestContext,
         job_template_id: JobTemplateId,
         description: JobDescription,
-        job_arn: JobArn = None,
-        document_source: JobDocumentSource = None,
-        document: JobDocument = None,
-        presigned_url_config: PresignedUrlConfig = None,
-        job_executions_rollout_config: JobExecutionsRolloutConfig = None,
-        abort_config: AbortConfig = None,
-        timeout_config: TimeoutConfig = None,
-        tags: TagList = None,
-        job_executions_retry_config: JobExecutionsRetryConfig = None,
-        maintenance_windows: MaintenanceWindows = None,
-        destination_package_versions: DestinationPackageVersions = None,
+        job_arn: JobArn | None = None,
+        document_source: JobDocumentSource | None = None,
+        document: JobDocument | None = None,
+        presigned_url_config: PresignedUrlConfig | None = None,
+        job_executions_rollout_config: JobExecutionsRolloutConfig | None = None,
+        abort_config: AbortConfig | None = None,
+        timeout_config: TimeoutConfig | None = None,
+        tags: TagList | None = None,
+        job_executions_retry_config: JobExecutionsRetryConfig | None = None,
+        maintenance_windows: MaintenanceWindows | None = None,
+        destination_package_versions: DestinationPackageVersions | None = None,
         **kwargs,
     ) -> CreateJobTemplateResponse:
         """Creates a job template.
@@ -8281,7 +8281,7 @@ class IotApi:
 
     @handler("CreateKeysAndCertificate")
     def create_keys_and_certificate(
-        self, context: RequestContext, set_as_active: SetAsActive = None, **kwargs
+        self, context: RequestContext, set_as_active: SetAsActive | None = None, **kwargs
     ) -> CreateKeysAndCertificateResponse:
         """Creates a 2048-bit RSA key pair and issues an X.509 certificate using
         the issued public key. You can also call ``CreateKeysAndCertificate``
@@ -8312,7 +8312,7 @@ class IotApi:
         action_name: MitigationActionName,
         role_arn: RoleArn,
         action_params: MitigationActionParams,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateMitigationActionResponse:
         """Defines an action that can be applied to audit findings by using
@@ -8347,15 +8347,15 @@ class IotApi:
         targets: Targets,
         files: OTAUpdateFiles,
         role_arn: RoleArn,
-        description: OTAUpdateDescription = None,
-        protocols: Protocols = None,
-        target_selection: TargetSelection = None,
-        aws_job_executions_rollout_config: AwsJobExecutionsRolloutConfig = None,
-        aws_job_presigned_url_config: AwsJobPresignedUrlConfig = None,
-        aws_job_abort_config: AwsJobAbortConfig = None,
-        aws_job_timeout_config: AwsJobTimeoutConfig = None,
-        additional_parameters: AdditionalParameterMap = None,
-        tags: TagList = None,
+        description: OTAUpdateDescription | None = None,
+        protocols: Protocols | None = None,
+        target_selection: TargetSelection | None = None,
+        aws_job_executions_rollout_config: AwsJobExecutionsRolloutConfig | None = None,
+        aws_job_presigned_url_config: AwsJobPresignedUrlConfig | None = None,
+        aws_job_abort_config: AwsJobAbortConfig | None = None,
+        aws_job_timeout_config: AwsJobTimeoutConfig | None = None,
+        additional_parameters: AdditionalParameterMap | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateOTAUpdateResponse:
         """Creates an IoT OTA update on a target group of things or groups.
@@ -8399,9 +8399,9 @@ class IotApi:
         self,
         context: RequestContext,
         package_name: PackageName,
-        description: ResourceDescription = None,
-        tags: TagMap = None,
-        client_token: ClientToken = None,
+        description: ResourceDescription | None = None,
+        tags: TagMap | None = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> CreatePackageResponse:
         """Creates an IoT software package that can be deployed to your fleet.
@@ -8432,12 +8432,12 @@ class IotApi:
         context: RequestContext,
         package_name: PackageName,
         version_name: VersionName,
-        description: ResourceDescription = None,
-        attributes: ResourceAttributes = None,
-        artifact: PackageVersionArtifact = None,
-        recipe: PackageVersionRecipe = None,
-        tags: TagMap = None,
-        client_token: ClientToken = None,
+        description: ResourceDescription | None = None,
+        attributes: ResourceAttributes | None = None,
+        artifact: PackageVersionArtifact | None = None,
+        recipe: PackageVersionRecipe | None = None,
+        tags: TagMap | None = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> CreatePackageVersionResponse:
         """Creates a new version for an existing IoT software package.
@@ -8475,7 +8475,7 @@ class IotApi:
         context: RequestContext,
         policy_name: PolicyName,
         policy_document: PolicyDocument,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreatePolicyResponse:
         """Creates an IoT policy.
@@ -8508,7 +8508,7 @@ class IotApi:
         context: RequestContext,
         policy_name: PolicyName,
         policy_document: PolicyDocument,
-        set_as_default: SetAsDefault = None,
+        set_as_default: SetAsDefault | None = None,
         **kwargs,
     ) -> CreatePolicyVersionResponse:
         """Creates a new version of the specified IoT policy. To update a policy,
@@ -8595,7 +8595,7 @@ class IotApi:
         context: RequestContext,
         template_name: TemplateName,
         template_body: TemplateBody,
-        set_as_default: SetAsDefault = None,
+        set_as_default: SetAsDefault | None = None,
         **kwargs,
     ) -> CreateProvisioningTemplateVersionResponse:
         """Creates a new version of a provisioning template.
@@ -8624,8 +8624,8 @@ class IotApi:
         context: RequestContext,
         role_alias: RoleAlias,
         role_arn: RoleArn,
-        credential_duration_seconds: CredentialDurationSeconds = None,
-        tags: TagList = None,
+        credential_duration_seconds: CredentialDurationSeconds | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateRoleAliasResponse:
         """Creates a role alias.
@@ -8664,9 +8664,9 @@ class IotApi:
         frequency: AuditFrequency,
         target_check_names: TargetAuditCheckNames,
         scheduled_audit_name: ScheduledAuditName,
-        day_of_month: DayOfMonth = None,
-        day_of_week: DayOfWeek = None,
-        tags: TagList = None,
+        day_of_month: DayOfMonth | None = None,
+        day_of_week: DayOfWeek | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateScheduledAuditResponse:
         """Creates a scheduled audit that is run at a specified time interval.
@@ -8697,13 +8697,13 @@ class IotApi:
         self,
         context: RequestContext,
         security_profile_name: SecurityProfileName,
-        security_profile_description: SecurityProfileDescription = None,
-        behaviors: Behaviors = None,
-        alert_targets: AlertTargets = None,
-        additional_metrics_to_retain: AdditionalMetricsToRetainList = None,
-        additional_metrics_to_retain_v2: AdditionalMetricsToRetainV2List = None,
-        tags: TagList = None,
-        metrics_export_config: MetricsExportConfig = None,
+        security_profile_description: SecurityProfileDescription | None = None,
+        behaviors: Behaviors | None = None,
+        alert_targets: AlertTargets | None = None,
+        additional_metrics_to_retain: AdditionalMetricsToRetainList | None = None,
+        additional_metrics_to_retain_v2: AdditionalMetricsToRetainV2List | None = None,
+        tags: TagList | None = None,
+        metrics_export_config: MetricsExportConfig | None = None,
         **kwargs,
     ) -> CreateSecurityProfileResponse:
         """Creates a Device Defender security profile.
@@ -8737,8 +8737,8 @@ class IotApi:
         stream_id: StreamId,
         files: StreamFiles,
         role_arn: RoleArn,
-        description: StreamDescription = None,
-        tags: TagList = None,
+        description: StreamDescription | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateStreamResponse:
         """Creates a stream for delivering one or more large files in chunks over
@@ -8773,9 +8773,9 @@ class IotApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        thing_type_name: ThingTypeName = None,
-        attribute_payload: AttributePayload = None,
-        billing_group_name: BillingGroupName = None,
+        thing_type_name: ThingTypeName | None = None,
+        attribute_payload: AttributePayload | None = None,
+        billing_group_name: BillingGroupName | None = None,
         **kwargs,
     ) -> CreateThingResponse:
         """Creates a thing record in the registry. If this call is made multiple
@@ -8812,9 +8812,9 @@ class IotApi:
         self,
         context: RequestContext,
         thing_group_name: ThingGroupName,
-        parent_group_name: ThingGroupName = None,
-        thing_group_properties: ThingGroupProperties = None,
-        tags: TagList = None,
+        parent_group_name: ThingGroupName | None = None,
+        thing_group_properties: ThingGroupProperties | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateThingGroupResponse:
         """Create a thing group.
@@ -8847,8 +8847,8 @@ class IotApi:
         self,
         context: RequestContext,
         thing_type_name: ThingTypeName,
-        thing_type_properties: ThingTypeProperties = None,
-        tags: TagList = None,
+        thing_type_properties: ThingTypeProperties | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateThingTypeResponse:
         """Creates a new thing type. If this call is made multiple times using the
@@ -8879,7 +8879,7 @@ class IotApi:
         context: RequestContext,
         rule_name: RuleName,
         topic_rule_payload: TopicRulePayload,
-        tags: String = None,
+        tags: String | None = None,
         **kwargs,
     ) -> None:
         """Creates a rule. Creating rules is an administrator-level action. Any
@@ -8930,7 +8930,7 @@ class IotApi:
     def delete_account_audit_configuration(
         self,
         context: RequestContext,
-        delete_scheduled_audits: DeleteScheduledAudits = None,
+        delete_scheduled_audits: DeleteScheduledAudits | None = None,
         **kwargs,
     ) -> DeleteAccountAuditConfigurationResponse:
         """Restores the default settings for Device Defender audits for this
@@ -9000,7 +9000,7 @@ class IotApi:
         self,
         context: RequestContext,
         billing_group_name: BillingGroupName,
-        expected_version: OptionalVersion = None,
+        expected_version: OptionalVersion | None = None,
         **kwargs,
     ) -> DeleteBillingGroupResponse:
         """Deletes the billing group.
@@ -9046,7 +9046,7 @@ class IotApi:
         self,
         context: RequestContext,
         certificate_id: CertificateId,
-        force_delete: ForceDelete = None,
+        force_delete: ForceDelete | None = None,
         **kwargs,
     ) -> None:
         """Deletes the specified certificate.
@@ -9208,7 +9208,7 @@ class IotApi:
         self,
         context: RequestContext,
         thing_group_name: ThingGroupName,
-        expected_version: OptionalVersion = None,
+        expected_version: OptionalVersion | None = None,
         **kwargs,
     ) -> DeleteDynamicThingGroupResponse:
         """Deletes a dynamic thing group.
@@ -9232,7 +9232,7 @@ class IotApi:
         self,
         context: RequestContext,
         metric_name: FleetMetricName,
-        expected_version: OptionalVersion = None,
+        expected_version: OptionalVersion | None = None,
         **kwargs,
     ) -> None:
         """Deletes the specified fleet metric. Returns successfully with no error
@@ -9259,8 +9259,8 @@ class IotApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        force: ForceFlag = None,
-        namespace_id: NamespaceId = None,
+        force: ForceFlag | None = None,
+        namespace_id: NamespaceId | None = None,
         **kwargs,
     ) -> None:
         """Deletes a job and its related job executions.
@@ -9297,8 +9297,8 @@ class IotApi:
         job_id: JobId,
         thing_name: ThingName,
         execution_number: ExecutionNumber,
-        force: ForceFlag = None,
-        namespace_id: NamespaceId = None,
+        force: ForceFlag | None = None,
+        namespace_id: NamespaceId | None = None,
         **kwargs,
     ) -> None:
         """Deletes a job execution.
@@ -9360,8 +9360,8 @@ class IotApi:
         self,
         context: RequestContext,
         ota_update_id: OTAUpdateId,
-        delete_stream: DeleteStream = None,
-        force_delete_aws_job: ForceDeleteAWSJob = None,
+        delete_stream: DeleteStream | None = None,
+        force_delete_aws_job: ForceDeleteAWSJob | None = None,
         **kwargs,
     ) -> DeleteOTAUpdateResponse:
         """Delete an OTA update.
@@ -9391,7 +9391,7 @@ class IotApi:
         self,
         context: RequestContext,
         package_name: PackageName,
-        client_token: ClientToken = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> DeletePackageResponse:
         """Deletes a specific version from a software package.
@@ -9419,7 +9419,7 @@ class IotApi:
         context: RequestContext,
         package_name: PackageName,
         version_name: VersionName,
-        client_token: ClientToken = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> DeletePackageVersionResponse:
         """Deletes a specific version from a software package.
@@ -9616,7 +9616,7 @@ class IotApi:
         self,
         context: RequestContext,
         security_profile_name: SecurityProfileName,
-        expected_version: OptionalVersion = None,
+        expected_version: OptionalVersion | None = None,
         **kwargs,
     ) -> DeleteSecurityProfileResponse:
         """Deletes a Device Defender security profile.
@@ -9662,7 +9662,7 @@ class IotApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        expected_version: OptionalVersion = None,
+        expected_version: OptionalVersion | None = None,
         **kwargs,
     ) -> DeleteThingResponse:
         """Deletes the specified thing. Returns successfully with no error if the
@@ -9690,7 +9690,7 @@ class IotApi:
         self,
         context: RequestContext,
         thing_group_name: ThingGroupName,
-        expected_version: OptionalVersion = None,
+        expected_version: OptionalVersion | None = None,
         **kwargs,
     ) -> DeleteThingGroupResponse:
         """Deletes a thing group.
@@ -9798,7 +9798,7 @@ class IotApi:
         self,
         context: RequestContext,
         thing_type_name: ThingTypeName,
-        undo_deprecate: UndoDeprecate = None,
+        undo_deprecate: UndoDeprecate | None = None,
         **kwargs,
     ) -> DeprecateThingTypeResponse:
         """Deprecates a thing type. You can not associate new things with
@@ -10123,7 +10123,7 @@ class IotApi:
 
     @handler("DescribeEndpoint")
     def describe_endpoint(
-        self, context: RequestContext, endpoint_type: EndpointType = None, **kwargs
+        self, context: RequestContext, endpoint_type: EndpointType | None = None, **kwargs
     ) -> DescribeEndpointResponse:
         """Returns or creates a unique endpoint specific to the Amazon Web Services
         account making the call.
@@ -10207,7 +10207,7 @@ class IotApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        before_substitution: BeforeSubstitutionFlag = None,
+        before_substitution: BeforeSubstitutionFlag | None = None,
         **kwargs,
     ) -> DescribeJobResponse:
         """Describes a job.
@@ -10233,7 +10233,7 @@ class IotApi:
         context: RequestContext,
         job_id: JobId,
         thing_name: ThingName,
-        execution_number: ExecutionNumber = None,
+        execution_number: ExecutionNumber | None = None,
         **kwargs,
     ) -> DescribeJobExecutionResponse:
         """Describes a job execution.
@@ -10274,7 +10274,7 @@ class IotApi:
         self,
         context: RequestContext,
         template_name: ManagedJobTemplateName,
-        template_version: ManagedTemplateVersion = None,
+        template_version: ManagedTemplateVersion | None = None,
         **kwargs,
     ) -> DescribeManagedJobTemplateResponse:
         """View details of a managed job template.
@@ -10639,7 +10639,7 @@ class IotApi:
         context: RequestContext,
         package_name: PackageName,
         version_name: VersionName,
-        client_token: ClientToken = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> DisassociateSbomFromPackageVersionResponse:
         """Disassociates the selected software bill of materials (SBOM) from a
@@ -10683,9 +10683,9 @@ class IotApi:
     def get_behavior_model_training_summaries(
         self,
         context: RequestContext,
-        security_profile_name: SecurityProfileName = None,
-        max_results: TinyMaxResults = None,
-        next_token: NextToken = None,
+        security_profile_name: SecurityProfileName | None = None,
+        max_results: TinyMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> GetBehaviorModelTrainingSummariesResponse:
         """Returns a Device Defender's ML Detect Security Profile training model's
@@ -10713,8 +10713,8 @@ class IotApi:
         query_string: QueryString,
         aggregation_field: AggregationField,
         buckets_aggregation_type: BucketsAggregationType,
-        index_name: IndexName = None,
-        query_version: QueryVersion = None,
+        index_name: IndexName | None = None,
+        query_version: QueryVersion | None = None,
         **kwargs,
     ) -> GetBucketsAggregationResponse:
         """Aggregates on indexed data with search queries pertaining to particular
@@ -10748,9 +10748,9 @@ class IotApi:
         self,
         context: RequestContext,
         query_string: QueryString,
-        index_name: IndexName = None,
-        aggregation_field: AggregationField = None,
-        query_version: QueryVersion = None,
+        index_name: IndexName | None = None,
+        aggregation_field: AggregationField | None = None,
+        query_version: QueryVersion | None = None,
         **kwargs,
     ) -> GetCardinalityResponse:
         """Returns the approximate count of unique values that match the query.
@@ -10798,7 +10798,7 @@ class IotApi:
         context: RequestContext,
         execution_id: CommandExecutionId,
         target_arn: TargetArn,
-        include_result: BooleanWrapperObject = None,
+        include_result: BooleanWrapperObject | None = None,
         **kwargs,
     ) -> GetCommandExecutionResponse:
         """Gets information about the specific command execution on a single
@@ -10821,9 +10821,9 @@ class IotApi:
     def get_effective_policies(
         self,
         context: RequestContext,
-        principal: Principal = None,
-        cognito_identity_pool_id: CognitoIdentityPoolId = None,
-        thing_name: ThingName = None,
+        principal: Principal | None = None,
+        cognito_identity_pool_id: CognitoIdentityPoolId | None = None,
+        thing_name: ThingName | None = None,
         **kwargs,
     ) -> GetEffectivePoliciesResponse:
         """Gets a list of the policies that have an effect on the authorization
@@ -10872,7 +10872,7 @@ class IotApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        before_substitution: BeforeSubstitutionFlag = None,
+        before_substitution: BeforeSubstitutionFlag | None = None,
         **kwargs,
     ) -> GetJobDocumentResponse:
         """Gets a job document.
@@ -10995,10 +10995,10 @@ class IotApi:
         self,
         context: RequestContext,
         query_string: QueryString,
-        index_name: IndexName = None,
-        aggregation_field: AggregationField = None,
-        query_version: QueryVersion = None,
-        percents: PercentList = None,
+        index_name: IndexName | None = None,
+        aggregation_field: AggregationField | None = None,
+        query_version: QueryVersion | None = None,
+        percents: PercentList | None = None,
         **kwargs,
     ) -> GetPercentilesResponse:
         """Groups the aggregated values that match the query into percentile
@@ -11112,9 +11112,9 @@ class IotApi:
         self,
         context: RequestContext,
         query_string: QueryString,
-        index_name: IndexName = None,
-        aggregation_field: AggregationField = None,
-        query_version: QueryVersion = None,
+        index_name: IndexName | None = None,
+        aggregation_field: AggregationField | None = None,
+        query_version: QueryVersion | None = None,
         **kwargs,
     ) -> GetStatisticsResponse:
         """Returns the count, average, sum, minimum, maximum, sum of squares,
@@ -11220,13 +11220,13 @@ class IotApi:
     def list_active_violations(
         self,
         context: RequestContext,
-        thing_name: DeviceDefenderThingName = None,
-        security_profile_name: SecurityProfileName = None,
-        behavior_criteria_type: BehaviorCriteriaType = None,
-        list_suppressed_alerts: ListSuppressedAlerts = None,
-        verification_state: VerificationState = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        thing_name: DeviceDefenderThingName | None = None,
+        security_profile_name: SecurityProfileName | None = None,
+        behavior_criteria_type: BehaviorCriteriaType | None = None,
+        list_suppressed_alerts: ListSuppressedAlerts | None = None,
+        verification_state: VerificationState | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListActiveViolationsResponse:
         """Lists the active violations for a given Device Defender security
@@ -11257,9 +11257,9 @@ class IotApi:
         self,
         context: RequestContext,
         target: PolicyTarget,
-        recursive: Recursive = None,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        recursive: Recursive | None = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> ListAttachedPoliciesResponse:
         """Lists the policies attached to the specified thing group.
@@ -11287,14 +11287,14 @@ class IotApi:
     def list_audit_findings(
         self,
         context: RequestContext,
-        task_id: AuditTaskId = None,
-        check_name: AuditCheckName = None,
-        resource_identifier: ResourceIdentifier = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        start_time: Timestamp = None,
-        end_time: Timestamp = None,
-        list_suppressed_findings: ListSuppressedFindings = None,
+        task_id: AuditTaskId | None = None,
+        check_name: AuditCheckName | None = None,
+        resource_identifier: ResourceIdentifier | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        start_time: Timestamp | None = None,
+        end_time: Timestamp | None = None,
+        list_suppressed_findings: ListSuppressedFindings | None = None,
         **kwargs,
     ) -> ListAuditFindingsResponse:
         """Lists the findings (results) of a Device Defender audit or of the audits
@@ -11327,9 +11327,9 @@ class IotApi:
         context: RequestContext,
         task_id: MitigationActionsTaskId,
         finding_id: FindingId,
-        action_status: AuditMitigationActionsExecutionStatus = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        action_status: AuditMitigationActionsExecutionStatus | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListAuditMitigationActionsExecutionsResponse:
         """Gets the status of audit mitigation action tasks that were executed.
@@ -11358,11 +11358,11 @@ class IotApi:
         context: RequestContext,
         start_time: Timestamp,
         end_time: Timestamp,
-        audit_task_id: AuditTaskId = None,
-        finding_id: FindingId = None,
-        task_status: AuditMitigationActionsTaskStatus = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        audit_task_id: AuditTaskId | None = None,
+        finding_id: FindingId | None = None,
+        task_status: AuditMitigationActionsTaskStatus | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListAuditMitigationActionsTasksResponse:
         """Gets a list of audit mitigation action tasks that match the specified
@@ -11395,11 +11395,11 @@ class IotApi:
     def list_audit_suppressions(
         self,
         context: RequestContext,
-        check_name: AuditCheckName = None,
-        resource_identifier: ResourceIdentifier = None,
-        ascending_order: AscendingOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        check_name: AuditCheckName | None = None,
+        resource_identifier: ResourceIdentifier | None = None,
+        ascending_order: AscendingOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListAuditSuppressionsResponse:
         """Lists your Device Defender audit listings.
@@ -11427,10 +11427,10 @@ class IotApi:
         context: RequestContext,
         start_time: Timestamp,
         end_time: Timestamp,
-        task_type: AuditTaskType = None,
-        task_status: AuditTaskStatus = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        task_type: AuditTaskType | None = None,
+        task_status: AuditTaskStatus | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListAuditTasksResponse:
         """Lists the Device Defender audits that have been performed during a given
@@ -11460,10 +11460,10 @@ class IotApi:
     def list_authorizers(
         self,
         context: RequestContext,
-        page_size: PageSize = None,
-        marker: Marker = None,
-        ascending_order: AscendingOrder = None,
-        status: AuthorizerStatus = None,
+        page_size: PageSize | None = None,
+        marker: Marker | None = None,
+        ascending_order: AscendingOrder | None = None,
+        status: AuthorizerStatus | None = None,
         **kwargs,
     ) -> ListAuthorizersResponse:
         """Lists the authorizers registered in your account.
@@ -11489,9 +11489,9 @@ class IotApi:
     def list_billing_groups(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
-        name_prefix_filter: BillingGroupName = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
+        name_prefix_filter: BillingGroupName | None = None,
         **kwargs,
     ) -> ListBillingGroupsResponse:
         """Lists the billing groups you have created.
@@ -11517,10 +11517,10 @@ class IotApi:
     def list_ca_certificates(
         self,
         context: RequestContext,
-        page_size: PageSize = None,
-        marker: Marker = None,
-        ascending_order: AscendingOrder = None,
-        template_name: TemplateName = None,
+        page_size: PageSize | None = None,
+        marker: Marker | None = None,
+        ascending_order: AscendingOrder | None = None,
+        template_name: TemplateName | None = None,
         **kwargs,
     ) -> ListCACertificatesResponse:
         """Lists the CA certificates registered for your Amazon Web Services
@@ -11550,8 +11550,8 @@ class IotApi:
     def list_certificate_providers(
         self,
         context: RequestContext,
-        next_token: Marker = None,
-        ascending_order: AscendingOrder = None,
+        next_token: Marker | None = None,
+        ascending_order: AscendingOrder | None = None,
         **kwargs,
     ) -> ListCertificateProvidersResponse:
         """Lists all your certificate providers in your Amazon Web Services
@@ -11578,9 +11578,9 @@ class IotApi:
     def list_certificates(
         self,
         context: RequestContext,
-        page_size: PageSize = None,
-        marker: Marker = None,
-        ascending_order: AscendingOrder = None,
+        page_size: PageSize | None = None,
+        marker: Marker | None = None,
+        ascending_order: AscendingOrder | None = None,
         **kwargs,
     ) -> ListCertificatesResponse:
         """Lists the certificates registered in your Amazon Web Services account.
@@ -11609,9 +11609,9 @@ class IotApi:
         self,
         context: RequestContext,
         ca_certificate_id: CertificateId,
-        page_size: PageSize = None,
-        marker: Marker = None,
-        ascending_order: AscendingOrder = None,
+        page_size: PageSize | None = None,
+        marker: Marker | None = None,
+        ascending_order: AscendingOrder | None = None,
         **kwargs,
     ) -> ListCertificatesByCAResponse:
         """List the device certificates signed by the specified CA certificate.
@@ -11637,15 +11637,15 @@ class IotApi:
     def list_command_executions(
         self,
         context: RequestContext,
-        max_results: CommandMaxResults = None,
-        next_token: NextToken = None,
-        namespace: CommandNamespace = None,
-        status: CommandExecutionStatus = None,
-        sort_order: SortOrder = None,
-        started_time_filter: TimeFilter = None,
-        completed_time_filter: TimeFilter = None,
-        target_arn: TargetArn = None,
-        command_arn: CommandArn = None,
+        max_results: CommandMaxResults | None = None,
+        next_token: NextToken | None = None,
+        namespace: CommandNamespace | None = None,
+        status: CommandExecutionStatus | None = None,
+        sort_order: SortOrder | None = None,
+        started_time_filter: TimeFilter | None = None,
+        completed_time_filter: TimeFilter | None = None,
+        target_arn: TargetArn | None = None,
+        command_arn: CommandArn | None = None,
         **kwargs,
     ) -> ListCommandExecutionsResponse:
         """List all command executions.
@@ -11691,11 +11691,11 @@ class IotApi:
     def list_commands(
         self,
         context: RequestContext,
-        max_results: CommandMaxResults = None,
-        next_token: NextToken = None,
-        namespace: CommandNamespace = None,
-        command_parameter_name: CommandParameterName = None,
-        sort_order: SortOrder = None,
+        max_results: CommandMaxResults | None = None,
+        next_token: NextToken | None = None,
+        namespace: CommandNamespace | None = None,
+        command_parameter_name: CommandParameterName | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListCommandsResponse:
         """List all commands in your account.
@@ -11720,8 +11720,8 @@ class IotApi:
     def list_custom_metrics(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListCustomMetricsResponse:
         """Lists your Device Defender detect custom metrics.
@@ -11743,13 +11743,13 @@ class IotApi:
     def list_detect_mitigation_actions_executions(
         self,
         context: RequestContext,
-        task_id: MitigationActionsTaskId = None,
-        violation_id: ViolationId = None,
-        thing_name: DeviceDefenderThingName = None,
-        start_time: Timestamp = None,
-        end_time: Timestamp = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        task_id: MitigationActionsTaskId | None = None,
+        violation_id: ViolationId | None = None,
+        thing_name: DeviceDefenderThingName | None = None,
+        start_time: Timestamp | None = None,
+        end_time: Timestamp | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListDetectMitigationActionsExecutionsResponse:
         """Lists mitigation actions executions for a Device Defender ML Detect
@@ -11780,8 +11780,8 @@ class IotApi:
         context: RequestContext,
         start_time: Timestamp,
         end_time: Timestamp,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListDetectMitigationActionsTasksResponse:
         """List of Device Defender ML Detect mitigation actions tasks.
@@ -11806,8 +11806,8 @@ class IotApi:
     def list_dimensions(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListDimensionsResponse:
         """List the set of dimensions that are defined for your Amazon Web Services
@@ -11830,9 +11830,9 @@ class IotApi:
     def list_domain_configurations(
         self,
         context: RequestContext,
-        marker: Marker = None,
-        page_size: PageSize = None,
-        service_type: ServiceType = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
+        service_type: ServiceType | None = None,
         **kwargs,
     ) -> ListDomainConfigurationsResponse:
         """Gets a list of domain configurations for the user. This list is sorted
@@ -11858,8 +11858,8 @@ class IotApi:
     def list_fleet_metrics(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListFleetMetricsResponse:
         """Lists all your fleet metrics.
@@ -11885,8 +11885,8 @@ class IotApi:
     def list_indices(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: QueryMaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: QueryMaxResults | None = None,
         **kwargs,
     ) -> ListIndicesResponse:
         """Lists the search indices.
@@ -11912,9 +11912,9 @@ class IotApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        status: JobExecutionStatus = None,
-        max_results: LaserMaxResults = None,
-        next_token: NextToken = None,
+        status: JobExecutionStatus | None = None,
+        max_results: LaserMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListJobExecutionsForJobResponse:
         """Lists the job executions for a job.
@@ -11940,11 +11940,11 @@ class IotApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        status: JobExecutionStatus = None,
-        namespace_id: NamespaceId = None,
-        max_results: LaserMaxResults = None,
-        next_token: NextToken = None,
-        job_id: JobId = None,
+        status: JobExecutionStatus | None = None,
+        namespace_id: NamespaceId | None = None,
+        max_results: LaserMaxResults | None = None,
+        next_token: NextToken | None = None,
+        job_id: JobId | None = None,
         **kwargs,
     ) -> ListJobExecutionsForThingResponse:
         """Lists the job executions for the specified thing.
@@ -11972,8 +11972,8 @@ class IotApi:
     def list_job_templates(
         self,
         context: RequestContext,
-        max_results: LaserMaxResults = None,
-        next_token: NextToken = None,
+        max_results: LaserMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListJobTemplatesResponse:
         """Returns a list of job templates.
@@ -11995,13 +11995,13 @@ class IotApi:
     def list_jobs(
         self,
         context: RequestContext,
-        status: JobStatus = None,
-        target_selection: TargetSelection = None,
-        max_results: LaserMaxResults = None,
-        next_token: NextToken = None,
-        thing_group_name: ThingGroupName = None,
-        thing_group_id: ThingGroupId = None,
-        namespace_id: NamespaceId = None,
+        status: JobStatus | None = None,
+        target_selection: TargetSelection | None = None,
+        max_results: LaserMaxResults | None = None,
+        next_token: NextToken | None = None,
+        thing_group_name: ThingGroupName | None = None,
+        thing_group_id: ThingGroupId | None = None,
+        namespace_id: NamespaceId | None = None,
         **kwargs,
     ) -> ListJobsResponse:
         """Lists jobs.
@@ -12032,9 +12032,9 @@ class IotApi:
     def list_managed_job_templates(
         self,
         context: RequestContext,
-        template_name: ManagedJobTemplateName = None,
-        max_results: LaserMaxResults = None,
-        next_token: NextToken = None,
+        template_name: ManagedJobTemplateName | None = None,
+        max_results: LaserMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListManagedJobTemplatesResponse:
         """Returns a list of managed job templates.
@@ -12058,10 +12058,10 @@ class IotApi:
         metric_name: BehaviorMetric,
         start_time: Timestamp,
         end_time: Timestamp,
-        dimension_name: DimensionName = None,
-        dimension_value_operator: DimensionValueOperator = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        dimension_name: DimensionName | None = None,
+        dimension_value_operator: DimensionValueOperator | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListMetricValuesResponse:
         """Lists the values reported for an IoT Device Defender metric (device-side
@@ -12089,9 +12089,9 @@ class IotApi:
     def list_mitigation_actions(
         self,
         context: RequestContext,
-        action_type: MitigationActionType = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        action_type: MitigationActionType | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListMitigationActionsResponse:
         """Gets a list of all mitigation actions that match the specified filter
@@ -12116,9 +12116,9 @@ class IotApi:
     def list_ota_updates(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        ota_update_status: OTAUpdateStatus = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        ota_update_status: OTAUpdateStatus | None = None,
         **kwargs,
     ) -> ListOTAUpdatesResponse:
         """Lists OTA updates.
@@ -12143,9 +12143,9 @@ class IotApi:
     def list_outgoing_certificates(
         self,
         context: RequestContext,
-        page_size: PageSize = None,
-        marker: Marker = None,
-        ascending_order: AscendingOrder = None,
+        page_size: PageSize | None = None,
+        marker: Marker | None = None,
+        ascending_order: AscendingOrder | None = None,
         **kwargs,
     ) -> ListOutgoingCertificatesResponse:
         """Lists certificates that are being transferred but not yet accepted.
@@ -12171,9 +12171,9 @@ class IotApi:
         self,
         context: RequestContext,
         package_name: PackageName,
-        status: PackageVersionStatus = None,
-        max_results: PackageCatalogMaxResults = None,
-        next_token: NextToken = None,
+        status: PackageVersionStatus | None = None,
+        max_results: PackageCatalogMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListPackageVersionsResponse:
         """Lists the software package versions associated to the account.
@@ -12197,8 +12197,8 @@ class IotApi:
     def list_packages(
         self,
         context: RequestContext,
-        max_results: PackageCatalogMaxResults = None,
-        next_token: NextToken = None,
+        max_results: PackageCatalogMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListPackagesResponse:
         """Lists the software packages associated to the account.
@@ -12220,9 +12220,9 @@ class IotApi:
     def list_policies(
         self,
         context: RequestContext,
-        marker: Marker = None,
-        page_size: PageSize = None,
-        ascending_order: AscendingOrder = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
+        ascending_order: AscendingOrder | None = None,
         **kwargs,
     ) -> ListPoliciesResponse:
         """Lists your policies.
@@ -12248,9 +12248,9 @@ class IotApi:
         self,
         context: RequestContext,
         policy_name: PolicyName,
-        marker: Marker = None,
-        page_size: PageSize = None,
-        ascending_order: AscendingOrder = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
+        ascending_order: AscendingOrder | None = None,
         **kwargs,
     ) -> ListPolicyPrincipalsResponse:
         """Lists the principals associated with the specified policy.
@@ -12304,9 +12304,9 @@ class IotApi:
         self,
         context: RequestContext,
         principal: Principal,
-        marker: Marker = None,
-        page_size: PageSize = None,
-        ascending_order: AscendingOrder = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
+        ascending_order: AscendingOrder | None = None,
         **kwargs,
     ) -> ListPrincipalPoliciesResponse:
         """Lists the policies attached to the specified principal. If you use an
@@ -12340,8 +12340,8 @@ class IotApi:
         self,
         context: RequestContext,
         principal: Principal,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
         **kwargs,
     ) -> ListPrincipalThingsResponse:
         """Lists the things associated with the specified principal. A principal
@@ -12372,9 +12372,9 @@ class IotApi:
         self,
         context: RequestContext,
         principal: Principal,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
-        thing_principal_type: ThingPrincipalType = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
+        thing_principal_type: ThingPrincipalType | None = None,
         **kwargs,
     ) -> ListPrincipalThingsV2Response:
         """Lists the things associated with the specified principal. A principal
@@ -12405,8 +12405,8 @@ class IotApi:
         self,
         context: RequestContext,
         template_name: TemplateName,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListProvisioningTemplateVersionsResponse:
         """A list of provisioning template versions.
@@ -12431,8 +12431,8 @@ class IotApi:
     def list_provisioning_templates(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListProvisioningTemplatesResponse:
         """Lists the provisioning templates in your Amazon Web Services account.
@@ -12456,8 +12456,8 @@ class IotApi:
         self,
         context: RequestContext,
         finding_id: FindingId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListRelatedResourcesForAuditFindingResponse:
         """The related resources of an Audit finding. The following resources can
@@ -12505,9 +12505,9 @@ class IotApi:
     def list_role_aliases(
         self,
         context: RequestContext,
-        page_size: PageSize = None,
-        marker: Marker = None,
-        ascending_order: AscendingOrder = None,
+        page_size: PageSize | None = None,
+        marker: Marker | None = None,
+        ascending_order: AscendingOrder | None = None,
         **kwargs,
     ) -> ListRoleAliasesResponse:
         """Lists the role aliases registered in your account.
@@ -12534,9 +12534,9 @@ class IotApi:
         context: RequestContext,
         package_name: PackageName,
         version_name: VersionName,
-        validation_result: SbomValidationResult = None,
-        max_results: PackageCatalogMaxResults = None,
-        next_token: NextToken = None,
+        validation_result: SbomValidationResult | None = None,
+        max_results: PackageCatalogMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListSbomValidationResultsResponse:
         """The validation results for all software bill of materials (SBOM)
@@ -12564,8 +12564,8 @@ class IotApi:
     def list_scheduled_audits(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListScheduledAuditsResponse:
         """Lists all of your scheduled audits.
@@ -12587,10 +12587,10 @@ class IotApi:
     def list_security_profiles(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        dimension_name: DimensionName = None,
-        metric_name: MetricName = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        dimension_name: DimensionName | None = None,
+        metric_name: MetricName | None = None,
         **kwargs,
     ) -> ListSecurityProfilesResponse:
         """Lists the Device Defender security profiles you've created. You can
@@ -12620,9 +12620,9 @@ class IotApi:
         self,
         context: RequestContext,
         security_profile_target_arn: SecurityProfileTargetArn,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        recursive: Recursive = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        recursive: Recursive | None = None,
         **kwargs,
     ) -> ListSecurityProfilesForTargetResponse:
         """Lists the Device Defender security profiles attached to a target (thing
@@ -12649,9 +12649,9 @@ class IotApi:
     def list_streams(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        ascending_order: AscendingOrder = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        ascending_order: AscendingOrder | None = None,
         **kwargs,
     ) -> ListStreamsResponse:
         """Lists all of the streams in your Amazon Web Services account.
@@ -12677,7 +12677,7 @@ class IotApi:
         self,
         context: RequestContext,
         resource_arn: ResourceArn,
-        next_token: NextToken = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTagsForResourceResponse:
         """Lists the tags (metadata) you have assigned to the resource.
@@ -12703,8 +12703,8 @@ class IotApi:
         self,
         context: RequestContext,
         policy_name: PolicyName,
-        marker: Marker = None,
-        page_size: PageSize = None,
+        marker: Marker | None = None,
+        page_size: PageSize | None = None,
         **kwargs,
     ) -> ListTargetsForPolicyResponse:
         """List targets for the specified policy.
@@ -12732,8 +12732,8 @@ class IotApi:
         self,
         context: RequestContext,
         security_profile_name: SecurityProfileName,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListTargetsForSecurityProfileResponse:
         """Lists the targets (thing groups) associated with a given Device Defender
@@ -12758,11 +12758,11 @@ class IotApi:
     def list_thing_groups(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
-        parent_group: ThingGroupName = None,
-        name_prefix_filter: ThingGroupName = None,
-        recursive: RecursiveWithoutDefault = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
+        parent_group: ThingGroupName | None = None,
+        name_prefix_filter: ThingGroupName | None = None,
+        recursive: RecursiveWithoutDefault | None = None,
         **kwargs,
     ) -> ListThingGroupsResponse:
         """List the thing groups in your account.
@@ -12793,8 +12793,8 @@ class IotApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
         **kwargs,
     ) -> ListThingGroupsForThingResponse:
         """List the thing groups to which the specified thing belongs.
@@ -12821,8 +12821,8 @@ class IotApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
         **kwargs,
     ) -> ListThingPrincipalsResponse:
         """Lists the principals associated with the specified thing. A principal
@@ -12853,9 +12853,9 @@ class IotApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
-        thing_principal_type: ThingPrincipalType = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
+        thing_principal_type: ThingPrincipalType | None = None,
         **kwargs,
     ) -> ListThingPrincipalsV2Response:
         """Lists the principals associated with the specified thing. A principal
@@ -12887,8 +12887,8 @@ class IotApi:
         context: RequestContext,
         task_id: TaskId,
         report_type: ReportType,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
         **kwargs,
     ) -> ListThingRegistrationTaskReportsResponse:
         """Information about the thing registration tasks.
@@ -12911,9 +12911,9 @@ class IotApi:
     def list_thing_registration_tasks(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
-        status: Status = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
+        status: Status | None = None,
         **kwargs,
     ) -> ListThingRegistrationTasksResponse:
         """List bulk thing provisioning tasks.
@@ -12939,9 +12939,9 @@ class IotApi:
     def list_thing_types(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
-        thing_type_name: ThingTypeName = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
+        thing_type_name: ThingTypeName | None = None,
         **kwargs,
     ) -> ListThingTypesResponse:
         """Lists the existing thing types.
@@ -12968,12 +12968,12 @@ class IotApi:
     def list_things(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
-        attribute_name: AttributeName = None,
-        attribute_value: AttributeValue = None,
-        thing_type_name: ThingTypeName = None,
-        use_prefix_attribute_value: usePrefixAttributeValue = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
+        attribute_name: AttributeName | None = None,
+        attribute_value: AttributeValue | None = None,
+        thing_type_name: ThingTypeName | None = None,
+        use_prefix_attribute_value: usePrefixAttributeValue | None = None,
         **kwargs,
     ) -> ListThingsResponse:
         """Lists your things. Use the **attributeName** and **attributeValue**
@@ -13016,8 +13016,8 @@ class IotApi:
         self,
         context: RequestContext,
         billing_group_name: BillingGroupName,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
         **kwargs,
     ) -> ListThingsInBillingGroupResponse:
         """Lists the things you have added to the given billing group.
@@ -13044,9 +13044,9 @@ class IotApi:
         self,
         context: RequestContext,
         thing_group_name: ThingGroupName,
-        recursive: Recursive = None,
-        next_token: NextToken = None,
-        max_results: RegistryMaxResults = None,
+        recursive: Recursive | None = None,
+        next_token: NextToken | None = None,
+        max_results: RegistryMaxResults | None = None,
         **kwargs,
     ) -> ListThingsInThingGroupResponse:
         """Lists the things in the specified group.
@@ -13074,8 +13074,8 @@ class IotApi:
     def list_topic_rule_destinations(
         self,
         context: RequestContext,
-        max_results: TopicRuleDestinationMaxResults = None,
-        next_token: NextToken = None,
+        max_results: TopicRuleDestinationMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTopicRuleDestinationsResponse:
         """Lists all the topic rule destinations in your Amazon Web Services
@@ -13101,10 +13101,10 @@ class IotApi:
     def list_topic_rules(
         self,
         context: RequestContext,
-        topic: Topic = None,
-        max_results: TopicRuleMaxResults = None,
-        next_token: NextToken = None,
-        rule_disabled: IsDisabled = None,
+        topic: Topic | None = None,
+        max_results: TopicRuleMaxResults | None = None,
+        next_token: NextToken | None = None,
+        rule_disabled: IsDisabled | None = None,
         **kwargs,
     ) -> ListTopicRulesResponse:
         """Lists the rules for the specific topic.
@@ -13130,9 +13130,9 @@ class IotApi:
     def list_v2_logging_levels(
         self,
         context: RequestContext,
-        target_type: LogTargetType = None,
-        next_token: NextToken = None,
-        max_results: SkyfallMaxResults = None,
+        target_type: LogTargetType | None = None,
+        next_token: NextToken | None = None,
+        max_results: SkyfallMaxResults | None = None,
         **kwargs,
     ) -> ListV2LoggingLevelsResponse:
         """Lists logging levels.
@@ -13160,13 +13160,13 @@ class IotApi:
         context: RequestContext,
         start_time: Timestamp,
         end_time: Timestamp,
-        thing_name: DeviceDefenderThingName = None,
-        security_profile_name: SecurityProfileName = None,
-        behavior_criteria_type: BehaviorCriteriaType = None,
-        list_suppressed_alerts: ListSuppressedAlerts = None,
-        verification_state: VerificationState = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        thing_name: DeviceDefenderThingName | None = None,
+        security_profile_name: SecurityProfileName | None = None,
+        behavior_criteria_type: BehaviorCriteriaType | None = None,
+        list_suppressed_alerts: ListSuppressedAlerts | None = None,
+        verification_state: VerificationState | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListViolationEventsResponse:
         """Lists the Device Defender security profile violations discovered during
@@ -13201,7 +13201,7 @@ class IotApi:
         context: RequestContext,
         violation_id: ViolationId,
         verification_state: VerificationState,
-        verification_state_description: VerificationStateDescription = None,
+        verification_state_description: VerificationStateDescription | None = None,
         **kwargs,
     ) -> PutVerificationStateOnViolationResponse:
         """Set a verification state and provide a description of that verification
@@ -13223,12 +13223,12 @@ class IotApi:
         self,
         context: RequestContext,
         ca_certificate: CertificatePem,
-        verification_certificate: CertificatePem = None,
-        set_as_active: SetAsActive = None,
-        allow_auto_registration: AllowAutoRegistration = None,
-        registration_config: RegistrationConfig = None,
-        tags: TagList = None,
-        certificate_mode: CertificateMode = None,
+        verification_certificate: CertificatePem | None = None,
+        set_as_active: SetAsActive | None = None,
+        allow_auto_registration: AllowAutoRegistration | None = None,
+        registration_config: RegistrationConfig | None = None,
+        tags: TagList | None = None,
+        certificate_mode: CertificateMode | None = None,
         **kwargs,
     ) -> RegisterCACertificateResponse:
         """Registers a CA certificate with Amazon Web Services IoT Core. There is
@@ -13268,9 +13268,9 @@ class IotApi:
         self,
         context: RequestContext,
         certificate_pem: CertificatePem,
-        ca_certificate_pem: CertificatePem = None,
-        set_as_active: SetAsActiveFlag = None,
-        status: CertificateStatus = None,
+        ca_certificate_pem: CertificatePem | None = None,
+        set_as_active: SetAsActiveFlag | None = None,
+        status: CertificateStatus | None = None,
         **kwargs,
     ) -> RegisterCertificateResponse:
         """Registers a device certificate with IoT in the same `certificate
@@ -13305,7 +13305,7 @@ class IotApi:
         self,
         context: RequestContext,
         certificate_pem: CertificatePem,
-        status: CertificateStatus = None,
+        status: CertificateStatus | None = None,
         **kwargs,
     ) -> RegisterCertificateWithoutCAResponse:
         """Register a certificate that does not have a certificate authority (CA).
@@ -13332,7 +13332,7 @@ class IotApi:
         self,
         context: RequestContext,
         template_body: TemplateBody,
-        parameters: Parameters = None,
+        parameters: Parameters | None = None,
         **kwargs,
     ) -> RegisterThingResponse:
         """Provisions a thing in the device registry. RegisterThing calls other IoT
@@ -13365,7 +13365,7 @@ class IotApi:
         self,
         context: RequestContext,
         certificate_id: CertificateId,
-        reject_reason: Message = None,
+        reject_reason: Message | None = None,
         **kwargs,
     ) -> None:
         """Rejects a pending certificate transfer. After IoT rejects a certificate
@@ -13399,10 +13399,10 @@ class IotApi:
     def remove_thing_from_billing_group(
         self,
         context: RequestContext,
-        billing_group_name: BillingGroupName = None,
-        billing_group_arn: BillingGroupArn = None,
-        thing_name: ThingName = None,
-        thing_arn: ThingArn = None,
+        billing_group_name: BillingGroupName | None = None,
+        billing_group_arn: BillingGroupArn | None = None,
+        thing_name: ThingName | None = None,
+        thing_arn: ThingArn | None = None,
         **kwargs,
     ) -> RemoveThingFromBillingGroupResponse:
         """Removes the given thing from the billing group.
@@ -13430,10 +13430,10 @@ class IotApi:
     def remove_thing_from_thing_group(
         self,
         context: RequestContext,
-        thing_group_name: ThingGroupName = None,
-        thing_group_arn: ThingGroupArn = None,
-        thing_name: ThingName = None,
-        thing_arn: ThingArn = None,
+        thing_group_name: ThingGroupName | None = None,
+        thing_group_arn: ThingGroupArn | None = None,
+        thing_name: ThingName | None = None,
+        thing_arn: ThingArn | None = None,
         **kwargs,
     ) -> RemoveThingFromThingGroupResponse:
         """Remove the specified thing from the specified group.
@@ -13491,10 +13491,10 @@ class IotApi:
         self,
         context: RequestContext,
         query_string: QueryString,
-        index_name: IndexName = None,
-        next_token: NextToken = None,
-        max_results: SearchQueryMaxResults = None,
-        query_version: QueryVersion = None,
+        index_name: IndexName | None = None,
+        next_token: NextToken | None = None,
+        max_results: SearchQueryMaxResults | None = None,
+        query_version: QueryVersion | None = None,
         **kwargs,
     ) -> SearchIndexResponse:
         """The query search index.
@@ -13616,9 +13616,9 @@ class IotApi:
     def set_v2_logging_options(
         self,
         context: RequestContext,
-        role_arn: AwsArn = None,
-        default_log_level: LogLevel = None,
-        disable_all_logs: DisableAllLogs = None,
+        role_arn: AwsArn | None = None,
+        default_log_level: LogLevel | None = None,
+        disable_all_logs: DisableAllLogs | None = None,
         **kwargs,
     ) -> None:
         """Sets the logging options for the V2 logging service.
@@ -13675,9 +13675,9 @@ class IotApi:
         target: DetectMitigationActionsTaskTarget,
         actions: DetectMitigationActionsToExecuteList,
         client_request_token: ClientRequestToken,
-        violation_event_occurrence_range: ViolationEventOccurrenceRange = None,
-        include_only_active_violations: NullableBoolean = None,
-        include_suppressed_alerts: NullableBoolean = None,
+        violation_event_occurrence_range: ViolationEventOccurrenceRange | None = None,
+        include_only_active_violations: NullableBoolean | None = None,
+        include_suppressed_alerts: NullableBoolean | None = None,
         **kwargs,
     ) -> StartDetectMitigationActionsTaskResponse:
         """Starts a Device Defender ML Detect mitigation actions task.
@@ -13797,11 +13797,11 @@ class IotApi:
         self,
         context: RequestContext,
         auth_infos: AuthInfos,
-        principal: Principal = None,
-        cognito_identity_pool_id: CognitoIdentityPoolId = None,
-        client_id: ClientId = None,
-        policy_names_to_add: PolicyNames = None,
-        policy_names_to_skip: PolicyNames = None,
+        principal: Principal | None = None,
+        cognito_identity_pool_id: CognitoIdentityPoolId | None = None,
+        client_id: ClientId | None = None,
+        policy_names_to_add: PolicyNames | None = None,
+        policy_names_to_skip: PolicyNames | None = None,
         **kwargs,
     ) -> TestAuthorizationResponse:
         """Tests if a specified principal is authorized to perform an IoT action on
@@ -13836,11 +13836,11 @@ class IotApi:
         self,
         context: RequestContext,
         authorizer_name: AuthorizerName,
-        token: Token = None,
-        token_signature: TokenSignature = None,
-        http_context: HttpContext = None,
-        mqtt_context: MqttContext = None,
-        tls_context: TlsContext = None,
+        token: Token | None = None,
+        token_signature: TokenSignature | None = None,
+        http_context: HttpContext | None = None,
+        mqtt_context: MqttContext | None = None,
+        tls_context: TlsContext | None = None,
         **kwargs,
     ) -> TestInvokeAuthorizerResponse:
         """Tests a custom authorization behavior by invoking a specified custom
@@ -13875,7 +13875,7 @@ class IotApi:
         context: RequestContext,
         certificate_id: CertificateId,
         target_aws_account: AwsAccountId,
-        transfer_message: Message = None,
+        transfer_message: Message | None = None,
         **kwargs,
     ) -> TransferCertificateResponse:
         """Transfers the specified certificate to the specified Amazon Web Services
@@ -13935,9 +13935,10 @@ class IotApi:
     def update_account_audit_configuration(
         self,
         context: RequestContext,
-        role_arn: RoleArn = None,
-        audit_notification_target_configurations: AuditNotificationTargetConfigurations = None,
-        audit_check_configurations: AuditCheckConfigurations = None,
+        role_arn: RoleArn | None = None,
+        audit_notification_target_configurations: AuditNotificationTargetConfigurations
+        | None = None,
+        audit_check_configurations: AuditCheckConfigurations | None = None,
         **kwargs,
     ) -> UpdateAccountAuditConfigurationResponse:
         """Configures or reconfigures the Device Defender audit settings for this
@@ -13966,9 +13967,9 @@ class IotApi:
         context: RequestContext,
         check_name: AuditCheckName,
         resource_identifier: ResourceIdentifier,
-        expiration_date: Timestamp = None,
-        suppress_indefinitely: SuppressIndefinitely = None,
-        description: AuditDescription = None,
+        expiration_date: Timestamp | None = None,
+        suppress_indefinitely: SuppressIndefinitely | None = None,
+        description: AuditDescription | None = None,
         **kwargs,
     ) -> UpdateAuditSuppressionResponse:
         """Updates a Device Defender audit suppression.
@@ -13992,11 +13993,11 @@ class IotApi:
         self,
         context: RequestContext,
         authorizer_name: AuthorizerName,
-        authorizer_function_arn: AuthorizerFunctionArn = None,
-        token_key_name: TokenKeyName = None,
-        token_signing_public_keys: PublicKeyMap = None,
-        status: AuthorizerStatus = None,
-        enable_caching_for_http: EnableCachingForHttp = None,
+        authorizer_function_arn: AuthorizerFunctionArn | None = None,
+        token_key_name: TokenKeyName | None = None,
+        token_signing_public_keys: PublicKeyMap | None = None,
+        status: AuthorizerStatus | None = None,
+        enable_caching_for_http: EnableCachingForHttp | None = None,
         **kwargs,
     ) -> UpdateAuthorizerResponse:
         """Updates an authorizer.
@@ -14029,7 +14030,7 @@ class IotApi:
         context: RequestContext,
         billing_group_name: BillingGroupName,
         billing_group_properties: BillingGroupProperties,
-        expected_version: OptionalVersion = None,
+        expected_version: OptionalVersion | None = None,
         **kwargs,
     ) -> UpdateBillingGroupResponse:
         """Updates information about the billing group.
@@ -14055,10 +14056,10 @@ class IotApi:
         self,
         context: RequestContext,
         certificate_id: CertificateId,
-        new_status: CACertificateStatus = None,
-        new_auto_registration_status: AutoRegistrationStatus = None,
-        registration_config: RegistrationConfig = None,
-        remove_auto_registration: RemoveAutoRegistration = None,
+        new_status: CACertificateStatus | None = None,
+        new_auto_registration_status: AutoRegistrationStatus | None = None,
+        registration_config: RegistrationConfig | None = None,
+        remove_auto_registration: RemoveAutoRegistration | None = None,
         **kwargs,
     ) -> None:
         """Updates a registered CA certificate.
@@ -14121,8 +14122,9 @@ class IotApi:
         self,
         context: RequestContext,
         certificate_provider_name: CertificateProviderName,
-        lambda_function_arn: CertificateProviderFunctionArn = None,
-        account_default_for_operations: CertificateProviderAccountDefaultForOperations = None,
+        lambda_function_arn: CertificateProviderFunctionArn | None = None,
+        account_default_for_operations: CertificateProviderAccountDefaultForOperations
+        | None = None,
         **kwargs,
     ) -> UpdateCertificateProviderResponse:
         """Updates a certificate provider.
@@ -14150,9 +14152,9 @@ class IotApi:
         self,
         context: RequestContext,
         command_id: CommandId,
-        display_name: DisplayName = None,
-        description: CommandDescription = None,
-        deprecated: DeprecationFlag = None,
+        display_name: DisplayName | None = None,
+        description: CommandDescription | None = None,
+        deprecated: DeprecationFlag | None = None,
         **kwargs,
     ) -> UpdateCommandResponse:
         """Update information about a command or mark a command for deprecation.
@@ -14225,14 +14227,14 @@ class IotApi:
         self,
         context: RequestContext,
         domain_configuration_name: ReservedDomainConfigurationName,
-        authorizer_config: AuthorizerConfig = None,
-        domain_configuration_status: DomainConfigurationStatus = None,
-        remove_authorizer_config: RemoveAuthorizerConfig = None,
-        tls_config: TlsConfig = None,
-        server_certificate_config: ServerCertificateConfig = None,
-        authentication_type: AuthenticationType = None,
-        application_protocol: ApplicationProtocol = None,
-        client_certificate_config: ClientCertificateConfig = None,
+        authorizer_config: AuthorizerConfig | None = None,
+        domain_configuration_status: DomainConfigurationStatus | None = None,
+        remove_authorizer_config: RemoveAuthorizerConfig | None = None,
+        tls_config: TlsConfig | None = None,
+        server_certificate_config: ServerCertificateConfig | None = None,
+        authentication_type: AuthenticationType | None = None,
+        application_protocol: ApplicationProtocol | None = None,
+        client_certificate_config: ClientCertificateConfig | None = None,
         **kwargs,
     ) -> UpdateDomainConfigurationResponse:
         """Updates values stored in the domain configuration. Domain configurations
@@ -14269,10 +14271,10 @@ class IotApi:
         context: RequestContext,
         thing_group_name: ThingGroupName,
         thing_group_properties: ThingGroupProperties,
-        expected_version: OptionalVersion = None,
-        index_name: IndexName = None,
-        query_string: QueryString = None,
-        query_version: QueryVersion = None,
+        expected_version: OptionalVersion | None = None,
+        index_name: IndexName | None = None,
+        query_string: QueryString | None = None,
+        query_version: QueryVersion | None = None,
         **kwargs,
     ) -> UpdateDynamicThingGroupResponse:
         """Updates a dynamic thing group.
@@ -14299,7 +14301,10 @@ class IotApi:
 
     @handler("UpdateEventConfigurations")
     def update_event_configurations(
-        self, context: RequestContext, event_configurations: EventConfigurations = None, **kwargs
+        self,
+        context: RequestContext,
+        event_configurations: EventConfigurations | None = None,
+        **kwargs,
     ) -> UpdateEventConfigurationsResponse:
         """Updates the event configurations.
 
@@ -14321,14 +14326,14 @@ class IotApi:
         context: RequestContext,
         metric_name: FleetMetricName,
         index_name: IndexName,
-        query_string: QueryString = None,
-        aggregation_type: AggregationType = None,
-        period: FleetMetricPeriod = None,
-        aggregation_field: AggregationField = None,
-        description: FleetMetricDescription = None,
-        query_version: QueryVersion = None,
-        unit: FleetMetricUnit = None,
-        expected_version: OptionalVersion = None,
+        query_string: QueryString | None = None,
+        aggregation_type: AggregationType | None = None,
+        period: FleetMetricPeriod | None = None,
+        aggregation_field: AggregationField | None = None,
+        description: FleetMetricDescription | None = None,
+        query_version: QueryVersion | None = None,
+        unit: FleetMetricUnit | None = None,
+        expected_version: OptionalVersion | None = None,
         **kwargs,
     ) -> None:
         """Updates the data for a fleet metric.
@@ -14364,8 +14369,8 @@ class IotApi:
     def update_indexing_configuration(
         self,
         context: RequestContext,
-        thing_indexing_configuration: ThingIndexingConfiguration = None,
-        thing_group_indexing_configuration: ThingGroupIndexingConfiguration = None,
+        thing_indexing_configuration: ThingIndexingConfiguration | None = None,
+        thing_group_indexing_configuration: ThingGroupIndexingConfiguration | None = None,
         **kwargs,
     ) -> UpdateIndexingConfigurationResponse:
         """Updates the search configuration.
@@ -14390,13 +14395,13 @@ class IotApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        description: JobDescription = None,
-        presigned_url_config: PresignedUrlConfig = None,
-        job_executions_rollout_config: JobExecutionsRolloutConfig = None,
-        abort_config: AbortConfig = None,
-        timeout_config: TimeoutConfig = None,
-        namespace_id: NamespaceId = None,
-        job_executions_retry_config: JobExecutionsRetryConfig = None,
+        description: JobDescription | None = None,
+        presigned_url_config: PresignedUrlConfig | None = None,
+        job_executions_rollout_config: JobExecutionsRolloutConfig | None = None,
+        abort_config: AbortConfig | None = None,
+        timeout_config: TimeoutConfig | None = None,
+        namespace_id: NamespaceId | None = None,
+        job_executions_retry_config: JobExecutionsRetryConfig | None = None,
         **kwargs,
     ) -> None:
         """Updates supported fields of the specified job.
@@ -14426,8 +14431,8 @@ class IotApi:
         self,
         context: RequestContext,
         action_name: MitigationActionName,
-        role_arn: RoleArn = None,
-        action_params: MitigationActionParams = None,
+        role_arn: RoleArn | None = None,
+        action_params: MitigationActionParams | None = None,
         **kwargs,
     ) -> UpdateMitigationActionResponse:
         """Updates the definition for the specified mitigation action.
@@ -14452,10 +14457,10 @@ class IotApi:
         self,
         context: RequestContext,
         package_name: PackageName,
-        description: ResourceDescription = None,
-        default_version_name: VersionName = None,
-        unset_default_version: UnsetDefaultVersion = None,
-        client_token: ClientToken = None,
+        description: ResourceDescription | None = None,
+        default_version_name: VersionName | None = None,
+        unset_default_version: UnsetDefaultVersion | None = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> UpdatePackageResponse:
         """Updates the supported fields for a specific software package.
@@ -14486,8 +14491,8 @@ class IotApi:
     def update_package_configuration(
         self,
         context: RequestContext,
-        version_update_by_jobs_config: VersionUpdateByJobsConfig = None,
-        client_token: ClientToken = None,
+        version_update_by_jobs_config: VersionUpdateByJobsConfig | None = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> UpdatePackageConfigurationResponse:
         """Updates the software package configuration.
@@ -14515,12 +14520,12 @@ class IotApi:
         context: RequestContext,
         package_name: PackageName,
         version_name: VersionName,
-        description: ResourceDescription = None,
-        attributes: ResourceAttributes = None,
-        artifact: PackageVersionArtifact = None,
-        action: PackageVersionAction = None,
-        recipe: PackageVersionRecipe = None,
-        client_token: ClientToken = None,
+        description: ResourceDescription | None = None,
+        attributes: ResourceAttributes | None = None,
+        artifact: PackageVersionArtifact | None = None,
+        action: PackageVersionAction | None = None,
+        recipe: PackageVersionRecipe | None = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> UpdatePackageVersionResponse:
         """Updates the supported fields for a specific package version.
@@ -14555,12 +14560,12 @@ class IotApi:
         self,
         context: RequestContext,
         template_name: TemplateName,
-        description: TemplateDescription = None,
-        enabled: Enabled = None,
-        default_version_id: TemplateVersionId = None,
-        provisioning_role_arn: RoleArn = None,
-        pre_provisioning_hook: ProvisioningHook = None,
-        remove_pre_provisioning_hook: RemoveHook = None,
+        description: TemplateDescription | None = None,
+        enabled: Enabled | None = None,
+        default_version_id: TemplateVersionId | None = None,
+        provisioning_role_arn: RoleArn | None = None,
+        pre_provisioning_hook: ProvisioningHook | None = None,
+        remove_pre_provisioning_hook: RemoveHook | None = None,
         **kwargs,
     ) -> UpdateProvisioningTemplateResponse:
         """Updates a provisioning template.
@@ -14590,8 +14595,8 @@ class IotApi:
         self,
         context: RequestContext,
         role_alias: RoleAlias,
-        role_arn: RoleArn = None,
-        credential_duration_seconds: CredentialDurationSeconds = None,
+        role_arn: RoleArn | None = None,
+        credential_duration_seconds: CredentialDurationSeconds | None = None,
         **kwargs,
     ) -> UpdateRoleAliasResponse:
         """Updates a role alias.
@@ -14626,10 +14631,10 @@ class IotApi:
         self,
         context: RequestContext,
         scheduled_audit_name: ScheduledAuditName,
-        frequency: AuditFrequency = None,
-        day_of_month: DayOfMonth = None,
-        day_of_week: DayOfWeek = None,
-        target_check_names: TargetAuditCheckNames = None,
+        frequency: AuditFrequency | None = None,
+        day_of_month: DayOfMonth | None = None,
+        day_of_week: DayOfWeek | None = None,
+        target_check_names: TargetAuditCheckNames | None = None,
         **kwargs,
     ) -> UpdateScheduledAuditResponse:
         """Updates a scheduled audit, including which checks are performed and how
@@ -14658,17 +14663,17 @@ class IotApi:
         self,
         context: RequestContext,
         security_profile_name: SecurityProfileName,
-        security_profile_description: SecurityProfileDescription = None,
-        behaviors: Behaviors = None,
-        alert_targets: AlertTargets = None,
-        additional_metrics_to_retain: AdditionalMetricsToRetainList = None,
-        additional_metrics_to_retain_v2: AdditionalMetricsToRetainV2List = None,
-        delete_behaviors: DeleteBehaviors = None,
-        delete_alert_targets: DeleteAlertTargets = None,
-        delete_additional_metrics_to_retain: DeleteAdditionalMetricsToRetain = None,
-        expected_version: OptionalVersion = None,
-        metrics_export_config: MetricsExportConfig = None,
-        delete_metrics_export_config: DeleteMetricsExportConfig = None,
+        security_profile_description: SecurityProfileDescription | None = None,
+        behaviors: Behaviors | None = None,
+        alert_targets: AlertTargets | None = None,
+        additional_metrics_to_retain: AdditionalMetricsToRetainList | None = None,
+        additional_metrics_to_retain_v2: AdditionalMetricsToRetainV2List | None = None,
+        delete_behaviors: DeleteBehaviors | None = None,
+        delete_alert_targets: DeleteAlertTargets | None = None,
+        delete_additional_metrics_to_retain: DeleteAdditionalMetricsToRetain | None = None,
+        expected_version: OptionalVersion | None = None,
+        metrics_export_config: MetricsExportConfig | None = None,
+        delete_metrics_export_config: DeleteMetricsExportConfig | None = None,
         **kwargs,
     ) -> UpdateSecurityProfileResponse:
         """Updates a Device Defender security profile.
@@ -14706,9 +14711,9 @@ class IotApi:
         self,
         context: RequestContext,
         stream_id: StreamId,
-        description: StreamDescription = None,
-        files: StreamFiles = None,
-        role_arn: RoleArn = None,
+        description: StreamDescription | None = None,
+        files: StreamFiles | None = None,
+        role_arn: RoleArn | None = None,
         **kwargs,
     ) -> UpdateStreamResponse:
         """Updates an existing stream. The stream version will be incremented by
@@ -14739,10 +14744,10 @@ class IotApi:
         self,
         context: RequestContext,
         thing_name: ThingName,
-        thing_type_name: ThingTypeName = None,
-        attribute_payload: AttributePayload = None,
-        expected_version: OptionalVersion = None,
-        remove_thing_type: RemoveThingType = None,
+        thing_type_name: ThingTypeName | None = None,
+        attribute_payload: AttributePayload | None = None,
+        expected_version: OptionalVersion | None = None,
+        remove_thing_type: RemoveThingType | None = None,
         **kwargs,
     ) -> UpdateThingResponse:
         """Updates the data for a thing.
@@ -14773,7 +14778,7 @@ class IotApi:
         context: RequestContext,
         thing_group_name: ThingGroupName,
         thing_group_properties: ThingGroupProperties,
-        expected_version: OptionalVersion = None,
+        expected_version: OptionalVersion | None = None,
         **kwargs,
     ) -> UpdateThingGroupResponse:
         """Update a thing group.
@@ -14798,10 +14803,10 @@ class IotApi:
     def update_thing_groups_for_thing(
         self,
         context: RequestContext,
-        thing_name: ThingName = None,
-        thing_groups_to_add: ThingGroupList = None,
-        thing_groups_to_remove: ThingGroupList = None,
-        override_dynamic_groups: OverrideDynamicGroups = None,
+        thing_name: ThingName | None = None,
+        thing_groups_to_add: ThingGroupList | None = None,
+        thing_groups_to_remove: ThingGroupList | None = None,
+        override_dynamic_groups: OverrideDynamicGroups | None = None,
         **kwargs,
     ) -> UpdateThingGroupsForThingResponse:
         """Updates the groups to which the thing belongs.
@@ -14828,7 +14833,7 @@ class IotApi:
         self,
         context: RequestContext,
         thing_type_name: ThingTypeName,
-        thing_type_properties: ThingTypeProperties = None,
+        thing_type_properties: ThingTypeProperties | None = None,
         **kwargs,
     ) -> UpdateThingTypeResponse:
         """Updates a thing type.

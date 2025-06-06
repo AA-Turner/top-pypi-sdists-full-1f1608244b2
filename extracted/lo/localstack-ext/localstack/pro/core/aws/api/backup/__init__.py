@@ -2362,7 +2362,7 @@ class BackupApi:
         context: RequestContext,
         legal_hold_id: string,
         cancel_description: string,
-        retain_record_in_days: Long = None,
+        retain_record_in_days: Long | None = None,
         **kwargs,
     ) -> CancelLegalHoldOutput:
         """Removes the specified legal hold on a recovery point. This action can
@@ -2385,8 +2385,8 @@ class BackupApi:
         self,
         context: RequestContext,
         backup_plan: BackupPlanInput,
-        backup_plan_tags: Tags = None,
-        creator_request_id: string = None,
+        backup_plan_tags: Tags | None = None,
+        creator_request_id: string | None = None,
         **kwargs,
     ) -> CreateBackupPlanOutput:
         """Creates a backup plan using a backup plan name and backup rules. A
@@ -2415,7 +2415,7 @@ class BackupApi:
         context: RequestContext,
         backup_plan_id: string,
         backup_selection: BackupSelection,
-        creator_request_id: string = None,
+        creator_request_id: string | None = None,
         **kwargs,
     ) -> CreateBackupSelectionOutput:
         """Creates a JSON document that specifies a set of resources to assign to a
@@ -2440,9 +2440,9 @@ class BackupApi:
         self,
         context: RequestContext,
         backup_vault_name: BackupVaultName,
-        backup_vault_tags: Tags = None,
-        encryption_key_arn: ARN = None,
-        creator_request_id: string = None,
+        backup_vault_tags: Tags | None = None,
+        encryption_key_arn: ARN | None = None,
+        creator_request_id: string | None = None,
         **kwargs,
     ) -> CreateBackupVaultOutput:
         """Creates a logical container where backups are stored. A
@@ -2474,9 +2474,9 @@ class BackupApi:
         context: RequestContext,
         framework_name: FrameworkName,
         framework_controls: FrameworkControls,
-        framework_description: FrameworkDescription = None,
-        idempotency_token: string = None,
-        framework_tags: stringMap = None,
+        framework_description: FrameworkDescription | None = None,
+        idempotency_token: string | None = None,
+        framework_tags: stringMap | None = None,
         **kwargs,
     ) -> CreateFrameworkOutput:
         """Creates a framework with one or more controls. A framework is a
@@ -2507,9 +2507,9 @@ class BackupApi:
         context: RequestContext,
         title: string,
         description: string,
-        idempotency_token: string = None,
-        recovery_point_selection: RecoveryPointSelection = None,
-        tags: Tags = None,
+        idempotency_token: string | None = None,
+        recovery_point_selection: RecoveryPointSelection | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateLegalHoldOutput:
         """Creates a legal hold on a recovery point (backup). A legal hold is a
@@ -2540,8 +2540,8 @@ class BackupApi:
         backup_vault_name: BackupVaultName,
         min_retention_days: Long,
         max_retention_days: Long,
-        backup_vault_tags: Tags = None,
-        creator_request_id: string = None,
+        backup_vault_tags: Tags | None = None,
+        creator_request_id: string | None = None,
         **kwargs,
     ) -> CreateLogicallyAirGappedBackupVaultOutput:
         """Creates a logical container to where backups may be copied.
@@ -2576,9 +2576,9 @@ class BackupApi:
         report_plan_name: ReportPlanName,
         report_delivery_channel: ReportDeliveryChannel,
         report_setting: ReportSetting,
-        report_plan_description: ReportPlanDescription = None,
-        report_plan_tags: stringMap = None,
-        idempotency_token: string = None,
+        report_plan_description: ReportPlanDescription | None = None,
+        report_plan_tags: stringMap | None = None,
+        idempotency_token: string | None = None,
         **kwargs,
     ) -> CreateReportPlanOutput:
         """Creates a report plan. A report plan is a document that contains
@@ -2612,8 +2612,8 @@ class BackupApi:
         self,
         context: RequestContext,
         restore_testing_plan: RestoreTestingPlanForCreate,
-        creator_request_id: String = None,
-        tags: SensitiveStringMap = None,
+        creator_request_id: String | None = None,
+        tags: SensitiveStringMap | None = None,
         **kwargs,
     ) -> CreateRestoreTestingPlanOutput:
         """Creates a restore testing plan.
@@ -2643,7 +2643,7 @@ class BackupApi:
         context: RequestContext,
         restore_testing_plan_name: String,
         restore_testing_selection: RestoreTestingSelectionForCreate,
-        creator_request_id: String = None,
+        creator_request_id: String | None = None,
         **kwargs,
     ) -> CreateRestoreTestingSelectionOutput:
         """This request can be sent after CreateRestoreTestingPlan request returns
@@ -2921,7 +2921,7 @@ class BackupApi:
         self,
         context: RequestContext,
         backup_vault_name: string,
-        backup_vault_account_id: string = None,
+        backup_vault_account_id: string | None = None,
         **kwargs,
     ) -> DescribeBackupVaultOutput:
         """Returns metadata about a backup vault specified by its name.
@@ -3004,7 +3004,7 @@ class BackupApi:
         context: RequestContext,
         backup_vault_name: BackupVaultName,
         recovery_point_arn: ARN,
-        backup_vault_account_id: AccountId = None,
+        backup_vault_account_id: AccountId | None = None,
         **kwargs,
     ) -> DescribeRecoveryPointOutput:
         """Returns metadata associated with a recovery point, including ID, status,
@@ -3157,7 +3157,11 @@ class BackupApi:
 
     @handler("GetBackupPlan")
     def get_backup_plan(
-        self, context: RequestContext, backup_plan_id: string, version_id: string = None, **kwargs
+        self,
+        context: RequestContext,
+        backup_plan_id: string,
+        version_id: string | None = None,
+        **kwargs,
     ) -> GetBackupPlanOutput:
         """Returns ``BackupPlan`` details for the specified ``BackupPlanId``. The
         details are the body of a backup plan in JSON format, in addition to
@@ -3298,7 +3302,7 @@ class BackupApi:
         context: RequestContext,
         backup_vault_name: BackupVaultName,
         recovery_point_arn: ARN,
-        backup_vault_account_id: AccountId = None,
+        backup_vault_account_id: AccountId | None = None,
         **kwargs,
     ) -> GetRecoveryPointRestoreMetadataOutput:
         """Returns a set of metadata key-value pairs that were used to create the
@@ -3338,7 +3342,7 @@ class BackupApi:
         context: RequestContext,
         backup_vault_name: String,
         recovery_point_arn: String,
-        backup_vault_account_id: String = None,
+        backup_vault_account_id: String | None = None,
         **kwargs,
     ) -> GetRestoreTestingInferredMetadataOutput:
         """This request returns the minimal required set of metadata needed to
@@ -3408,13 +3412,13 @@ class BackupApi:
     def list_backup_job_summaries(
         self,
         context: RequestContext,
-        account_id: AccountId = None,
-        state: BackupJobStatus = None,
-        resource_type: ResourceType = None,
-        message_category: MessageCategory = None,
-        aggregation_period: AggregationPeriod = None,
-        max_results: MaxResults = None,
-        next_token: string = None,
+        account_id: AccountId | None = None,
+        state: BackupJobStatus | None = None,
+        resource_type: ResourceType | None = None,
+        message_category: MessageCategory | None = None,
+        aggregation_period: AggregationPeriod | None = None,
+        max_results: MaxResults | None = None,
+        next_token: string | None = None,
         **kwargs,
     ) -> ListBackupJobSummariesOutput:
         """This is a request for a summary of backup jobs created or running within
@@ -3443,19 +3447,19 @@ class BackupApi:
     def list_backup_jobs(
         self,
         context: RequestContext,
-        next_token: string = None,
-        max_results: MaxResults = None,
-        by_resource_arn: ARN = None,
-        by_state: BackupJobState = None,
-        by_backup_vault_name: BackupVaultName = None,
-        by_created_before: timestamp = None,
-        by_created_after: timestamp = None,
-        by_resource_type: ResourceType = None,
-        by_account_id: AccountId = None,
-        by_complete_after: timestamp = None,
-        by_complete_before: timestamp = None,
-        by_parent_job_id: string = None,
-        by_message_category: string = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
+        by_resource_arn: ARN | None = None,
+        by_state: BackupJobState | None = None,
+        by_backup_vault_name: BackupVaultName | None = None,
+        by_created_before: timestamp | None = None,
+        by_created_after: timestamp | None = None,
+        by_resource_type: ResourceType | None = None,
+        by_account_id: AccountId | None = None,
+        by_complete_after: timestamp | None = None,
+        by_complete_before: timestamp | None = None,
+        by_parent_job_id: string | None = None,
+        by_message_category: string | None = None,
         **kwargs,
     ) -> ListBackupJobsOutput:
         """Returns a list of existing backup jobs for an authenticated account for
@@ -3524,8 +3528,8 @@ class BackupApi:
     def list_backup_plan_templates(
         self,
         context: RequestContext,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListBackupPlanTemplatesOutput:
         """Lists the backup plan templates.
@@ -3545,8 +3549,8 @@ class BackupApi:
         self,
         context: RequestContext,
         backup_plan_id: string,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListBackupPlanVersionsOutput:
         """Returns version metadata of your backup plans, including Amazon Resource
@@ -3568,9 +3572,9 @@ class BackupApi:
     def list_backup_plans(
         self,
         context: RequestContext,
-        next_token: string = None,
-        max_results: MaxResults = None,
-        include_deleted: Boolean = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
+        include_deleted: Boolean | None = None,
         **kwargs,
     ) -> ListBackupPlansOutput:
         """Lists the active backup plans for the account.
@@ -3592,8 +3596,8 @@ class BackupApi:
         self,
         context: RequestContext,
         backup_plan_id: string,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListBackupSelectionsOutput:
         """Returns an array containing metadata of the resources associated with
@@ -3614,10 +3618,10 @@ class BackupApi:
     def list_backup_vaults(
         self,
         context: RequestContext,
-        by_vault_type: VaultType = None,
-        by_shared: boolean = None,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        by_vault_type: VaultType | None = None,
+        by_shared: boolean | None = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListBackupVaultsOutput:
         """Returns a list of recovery point storage containers along with
@@ -3639,13 +3643,13 @@ class BackupApi:
     def list_copy_job_summaries(
         self,
         context: RequestContext,
-        account_id: AccountId = None,
-        state: CopyJobStatus = None,
-        resource_type: ResourceType = None,
-        message_category: MessageCategory = None,
-        aggregation_period: AggregationPeriod = None,
-        max_results: MaxResults = None,
-        next_token: string = None,
+        account_id: AccountId | None = None,
+        state: CopyJobStatus | None = None,
+        resource_type: ResourceType | None = None,
+        message_category: MessageCategory | None = None,
+        aggregation_period: AggregationPeriod | None = None,
+        max_results: MaxResults | None = None,
+        next_token: string | None = None,
         **kwargs,
     ) -> ListCopyJobSummariesOutput:
         """This request obtains a list of copy jobs created or running within the
@@ -3674,19 +3678,19 @@ class BackupApi:
     def list_copy_jobs(
         self,
         context: RequestContext,
-        next_token: string = None,
-        max_results: MaxResults = None,
-        by_resource_arn: ARN = None,
-        by_state: CopyJobState = None,
-        by_created_before: timestamp = None,
-        by_created_after: timestamp = None,
-        by_resource_type: ResourceType = None,
-        by_destination_vault_arn: string = None,
-        by_account_id: AccountId = None,
-        by_complete_before: timestamp = None,
-        by_complete_after: timestamp = None,
-        by_parent_job_id: string = None,
-        by_message_category: string = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
+        by_resource_arn: ARN | None = None,
+        by_state: CopyJobState | None = None,
+        by_created_before: timestamp | None = None,
+        by_created_after: timestamp | None = None,
+        by_resource_type: ResourceType | None = None,
+        by_destination_vault_arn: string | None = None,
+        by_account_id: AccountId | None = None,
+        by_complete_before: timestamp | None = None,
+        by_complete_after: timestamp | None = None,
+        by_parent_job_id: string | None = None,
+        by_message_category: string | None = None,
         **kwargs,
     ) -> ListCopyJobsOutput:
         """Returns metadata about your copy jobs.
@@ -3753,8 +3757,8 @@ class BackupApi:
     def list_frameworks(
         self,
         context: RequestContext,
-        max_results: MaxFrameworkInputs = None,
-        next_token: string = None,
+        max_results: MaxFrameworkInputs | None = None,
+        next_token: string | None = None,
         **kwargs,
     ) -> ListFrameworksOutput:
         """Returns a list of all frameworks for an Amazon Web Services account and
@@ -3774,13 +3778,13 @@ class BackupApi:
     def list_indexed_recovery_points(
         self,
         context: RequestContext,
-        next_token: string = None,
-        max_results: MaxResults = None,
-        source_resource_arn: ARN = None,
-        created_before: timestamp = None,
-        created_after: timestamp = None,
-        resource_type: ResourceType = None,
-        index_status: IndexStatus = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
+        source_resource_arn: ARN | None = None,
+        created_before: timestamp | None = None,
+        created_after: timestamp | None = None,
+        resource_type: ResourceType | None = None,
+        index_status: IndexStatus | None = None,
         **kwargs,
     ) -> ListIndexedRecoveryPointsOutput:
         """This operation returns a list of recovery points that have an associated
@@ -3812,8 +3816,8 @@ class BackupApi:
     def list_legal_holds(
         self,
         context: RequestContext,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListLegalHoldsOutput:
         """This action returns metadata about active and previous legal holds.
@@ -3830,8 +3834,8 @@ class BackupApi:
     def list_protected_resources(
         self,
         context: RequestContext,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListProtectedResourcesOutput:
         """Returns an array of resources successfully backed up by Backup,
@@ -3851,9 +3855,9 @@ class BackupApi:
         self,
         context: RequestContext,
         backup_vault_name: BackupVaultName,
-        backup_vault_account_id: AccountId = None,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        backup_vault_account_id: AccountId | None = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListProtectedResourcesByBackupVaultOutput:
         """This request lists the protected resources corresponding to each backup
@@ -3877,15 +3881,15 @@ class BackupApi:
         self,
         context: RequestContext,
         backup_vault_name: BackupVaultName,
-        backup_vault_account_id: AccountId = None,
-        next_token: string = None,
-        max_results: MaxResults = None,
-        by_resource_arn: ARN = None,
-        by_resource_type: ResourceType = None,
-        by_backup_plan_id: string = None,
-        by_created_before: timestamp = None,
-        by_created_after: timestamp = None,
-        by_parent_recovery_point_arn: ARN = None,
+        backup_vault_account_id: AccountId | None = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
+        by_resource_arn: ARN | None = None,
+        by_resource_type: ResourceType | None = None,
+        by_backup_plan_id: string | None = None,
+        by_created_before: timestamp | None = None,
+        by_created_after: timestamp | None = None,
+        by_parent_recovery_point_arn: ARN | None = None,
         **kwargs,
     ) -> ListRecoveryPointsByBackupVaultOutput:
         """Returns detailed information about the recovery points stored in a
@@ -3951,8 +3955,8 @@ class BackupApi:
         self,
         context: RequestContext,
         legal_hold_id: string,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListRecoveryPointsByLegalHoldOutput:
         """This action returns recovery point ARNs (Amazon Resource Names) of the
@@ -3973,9 +3977,9 @@ class BackupApi:
         self,
         context: RequestContext,
         resource_arn: ARN,
-        next_token: string = None,
-        max_results: MaxResults = None,
-        managed_by_aws_backup_only: boolean = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
+        managed_by_aws_backup_only: boolean | None = None,
         **kwargs,
     ) -> ListRecoveryPointsByResourceOutput:
         """The information about the recovery points of the type specified by a
@@ -4000,12 +4004,12 @@ class BackupApi:
     def list_report_jobs(
         self,
         context: RequestContext,
-        by_report_plan_name: ReportPlanName = None,
-        by_creation_before: timestamp = None,
-        by_creation_after: timestamp = None,
-        by_status: string = None,
-        max_results: MaxResults = None,
-        next_token: string = None,
+        by_report_plan_name: ReportPlanName | None = None,
+        by_creation_before: timestamp | None = None,
+        by_creation_after: timestamp | None = None,
+        by_status: string | None = None,
+        max_results: MaxResults | None = None,
+        next_token: string | None = None,
         **kwargs,
     ) -> ListReportJobsOutput:
         """Returns details about your report jobs.
@@ -4031,8 +4035,8 @@ class BackupApi:
     def list_report_plans(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: string = None,
+        max_results: MaxResults | None = None,
+        next_token: string | None = None,
         **kwargs,
     ) -> ListReportPlansOutput:
         """Returns a list of your report plans. For detailed information about a
@@ -4052,12 +4056,12 @@ class BackupApi:
     def list_restore_job_summaries(
         self,
         context: RequestContext,
-        account_id: AccountId = None,
-        state: RestoreJobState = None,
-        resource_type: ResourceType = None,
-        aggregation_period: AggregationPeriod = None,
-        max_results: MaxResults = None,
-        next_token: string = None,
+        account_id: AccountId | None = None,
+        state: RestoreJobState | None = None,
+        resource_type: ResourceType | None = None,
+        aggregation_period: AggregationPeriod | None = None,
+        max_results: MaxResults | None = None,
+        next_token: string | None = None,
         **kwargs,
     ) -> ListRestoreJobSummariesOutput:
         """This request obtains a summary of restore jobs created or running within
@@ -4085,16 +4089,16 @@ class BackupApi:
     def list_restore_jobs(
         self,
         context: RequestContext,
-        next_token: string = None,
-        max_results: MaxResults = None,
-        by_account_id: AccountId = None,
-        by_resource_type: ResourceType = None,
-        by_created_before: timestamp = None,
-        by_created_after: timestamp = None,
-        by_status: RestoreJobStatus = None,
-        by_complete_before: timestamp = None,
-        by_complete_after: timestamp = None,
-        by_restore_testing_plan_arn: ARN = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
+        by_account_id: AccountId | None = None,
+        by_resource_type: ResourceType | None = None,
+        by_created_before: timestamp | None = None,
+        by_created_after: timestamp | None = None,
+        by_status: RestoreJobStatus | None = None,
+        by_complete_before: timestamp | None = None,
+        by_complete_after: timestamp | None = None,
+        by_restore_testing_plan_arn: ARN | None = None,
         **kwargs,
     ) -> ListRestoreJobsOutput:
         """Returns a list of jobs that Backup initiated to restore a saved
@@ -4160,11 +4164,11 @@ class BackupApi:
         self,
         context: RequestContext,
         resource_arn: ARN,
-        by_status: RestoreJobStatus = None,
-        by_recovery_point_creation_date_after: timestamp = None,
-        by_recovery_point_creation_date_before: timestamp = None,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        by_status: RestoreJobStatus | None = None,
+        by_recovery_point_creation_date_after: timestamp | None = None,
+        by_recovery_point_creation_date_before: timestamp | None = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListRestoreJobsByProtectedResourceOutput:
         """This returns restore jobs that contain the specified protected resource.
@@ -4195,8 +4199,8 @@ class BackupApi:
     def list_restore_testing_plans(
         self,
         context: RequestContext,
-        max_results: ListRestoreTestingPlansInputMaxResultsInteger = None,
-        next_token: String = None,
+        max_results: ListRestoreTestingPlansInputMaxResultsInteger | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListRestoreTestingPlansOutput:
         """Returns a list of restore testing plans.
@@ -4214,8 +4218,8 @@ class BackupApi:
         self,
         context: RequestContext,
         restore_testing_plan_name: String,
-        max_results: ListRestoreTestingSelectionsInputMaxResultsInteger = None,
-        next_token: String = None,
+        max_results: ListRestoreTestingSelectionsInputMaxResultsInteger | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListRestoreTestingSelectionsOutput:
         """Returns a list of restore testing selections. Can be filtered by
@@ -4237,8 +4241,8 @@ class BackupApi:
         self,
         context: RequestContext,
         resource_arn: ARN,
-        next_token: string = None,
-        max_results: MaxResults = None,
+        next_token: string | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListTagsOutput:
         """Returns the tags assigned to the resource, such as a target recovery
@@ -4260,7 +4264,7 @@ class BackupApi:
         self,
         context: RequestContext,
         backup_vault_name: BackupVaultName,
-        policy: IAMPolicy = None,
+        policy: IAMPolicy | None = None,
         **kwargs,
     ) -> None:
         """Sets a resource-based policy that is used to manage access permissions
@@ -4281,9 +4285,9 @@ class BackupApi:
         self,
         context: RequestContext,
         backup_vault_name: BackupVaultName,
-        min_retention_days: Long = None,
-        max_retention_days: Long = None,
-        changeable_for_days: Long = None,
+        min_retention_days: Long | None = None,
+        max_retention_days: Long | None = None,
+        changeable_for_days: Long | None = None,
         **kwargs,
     ) -> None:
         """Applies Backup Vault Lock to a backup vault, preventing attempts to
@@ -4349,7 +4353,7 @@ class BackupApi:
         context: RequestContext,
         restore_job_id: RestoreJobId,
         validation_status: RestoreValidationStatus,
-        validation_status_message: string = None,
+        validation_status_message: string | None = None,
         **kwargs,
     ) -> None:
         """This request allows you to send your independent self-run restore test
@@ -4375,13 +4379,13 @@ class BackupApi:
         backup_vault_name: BackupVaultName,
         resource_arn: ARN,
         iam_role_arn: IAMRoleArn,
-        idempotency_token: string = None,
-        start_window_minutes: WindowMinutes = None,
-        complete_window_minutes: WindowMinutes = None,
-        lifecycle: Lifecycle = None,
-        recovery_point_tags: Tags = None,
-        backup_options: BackupOptions = None,
-        index: Index = None,
+        idempotency_token: string | None = None,
+        start_window_minutes: WindowMinutes | None = None,
+        complete_window_minutes: WindowMinutes | None = None,
+        lifecycle: Lifecycle | None = None,
+        recovery_point_tags: Tags | None = None,
+        backup_options: BackupOptions | None = None,
+        index: Index | None = None,
         **kwargs,
     ) -> StartBackupJobOutput:
         """Starts an on-demand backup job for the specified resource.
@@ -4420,8 +4424,8 @@ class BackupApi:
         source_backup_vault_name: BackupVaultName,
         destination_backup_vault_arn: ARN,
         iam_role_arn: IAMRoleArn,
-        idempotency_token: string = None,
-        lifecycle: Lifecycle = None,
+        idempotency_token: string | None = None,
+        lifecycle: Lifecycle | None = None,
         **kwargs,
     ) -> StartCopyJobOutput:
         """Starts a job to create a one-time copy of the specified resource.
@@ -4456,7 +4460,7 @@ class BackupApi:
         self,
         context: RequestContext,
         report_plan_name: ReportPlanName,
-        idempotency_token: string = None,
+        idempotency_token: string | None = None,
         **kwargs,
     ) -> StartReportJobOutput:
         """Starts an on-demand report job for the specified report plan.
@@ -4478,10 +4482,10 @@ class BackupApi:
         context: RequestContext,
         recovery_point_arn: ARN,
         metadata: Metadata,
-        iam_role_arn: IAMRoleArn = None,
-        idempotency_token: string = None,
-        resource_type: ResourceType = None,
-        copy_source_tags_to_restored_resource: boolean = None,
+        iam_role_arn: IAMRoleArn | None = None,
+        idempotency_token: string | None = None,
+        resource_type: ResourceType | None = None,
+        copy_source_tags_to_restored_resource: boolean | None = None,
         **kwargs,
     ) -> StartRestoreJobOutput:
         """Recovers the saved resource identified by an Amazon Resource Name (ARN).
@@ -4621,9 +4625,9 @@ class BackupApi:
         self,
         context: RequestContext,
         framework_name: FrameworkName,
-        framework_description: FrameworkDescription = None,
-        framework_controls: FrameworkControls = None,
-        idempotency_token: string = None,
+        framework_description: FrameworkDescription | None = None,
+        framework_controls: FrameworkControls | None = None,
+        idempotency_token: string | None = None,
         **kwargs,
     ) -> UpdateFrameworkOutput:
         """Updates the specified framework.
@@ -4647,7 +4651,7 @@ class BackupApi:
 
     @handler("UpdateGlobalSettings")
     def update_global_settings(
-        self, context: RequestContext, global_settings: GlobalSettings = None, **kwargs
+        self, context: RequestContext, global_settings: GlobalSettings | None = None, **kwargs
     ) -> None:
         """Updates whether the Amazon Web Services account is opted in to
         cross-account backup. Returns an error if the account is not an
@@ -4669,7 +4673,7 @@ class BackupApi:
         backup_vault_name: BackupVaultName,
         recovery_point_arn: ARN,
         index: Index,
-        iam_role_arn: IAMRoleArn = None,
+        iam_role_arn: IAMRoleArn | None = None,
         **kwargs,
     ) -> UpdateRecoveryPointIndexSettingsOutput:
         """This operation updates the settings of a recovery point index.
@@ -4697,7 +4701,7 @@ class BackupApi:
         context: RequestContext,
         backup_vault_name: BackupVaultName,
         recovery_point_arn: ARN,
-        lifecycle: Lifecycle = None,
+        lifecycle: Lifecycle | None = None,
         **kwargs,
     ) -> UpdateRecoveryPointLifecycleOutput:
         """Sets the transition lifecycle of a recovery point.
@@ -4743,8 +4747,8 @@ class BackupApi:
     def update_region_settings(
         self,
         context: RequestContext,
-        resource_type_opt_in_preference: ResourceTypeOptInPreference = None,
-        resource_type_management_preference: ResourceTypeManagementPreference = None,
+        resource_type_opt_in_preference: ResourceTypeOptInPreference | None = None,
+        resource_type_management_preference: ResourceTypeManagementPreference | None = None,
         **kwargs,
     ) -> None:
         """Updates the current service opt-in settings for the Region.
@@ -4767,10 +4771,10 @@ class BackupApi:
         self,
         context: RequestContext,
         report_plan_name: ReportPlanName,
-        report_plan_description: ReportPlanDescription = None,
-        report_delivery_channel: ReportDeliveryChannel = None,
-        report_setting: ReportSetting = None,
-        idempotency_token: string = None,
+        report_plan_description: ReportPlanDescription | None = None,
+        report_delivery_channel: ReportDeliveryChannel | None = None,
+        report_setting: ReportSetting | None = None,
+        idempotency_token: string | None = None,
         **kwargs,
     ) -> UpdateReportPlanOutput:
         """Updates the specified report plan.

@@ -3406,14 +3406,14 @@ class Sesv2Api:
         self,
         context: RequestContext,
         configuration_set_name: ConfigurationSetName,
-        tracking_options: TrackingOptions = None,
-        delivery_options: DeliveryOptions = None,
-        reputation_options: ReputationOptions = None,
-        sending_options: SendingOptions = None,
-        tags: TagList = None,
-        suppression_options: SuppressionOptions = None,
-        vdm_options: VdmOptions = None,
-        archiving_options: ArchivingOptions = None,
+        tracking_options: TrackingOptions | None = None,
+        delivery_options: DeliveryOptions | None = None,
+        reputation_options: ReputationOptions | None = None,
+        sending_options: SendingOptions | None = None,
+        tags: TagList | None = None,
+        suppression_options: SuppressionOptions | None = None,
+        vdm_options: VdmOptions | None = None,
+        archiving_options: ArchivingOptions | None = None,
         **kwargs,
     ) -> CreateConfigurationSetResponse:
         """Create a configuration set. *Configuration sets* are groups of rules
@@ -3486,9 +3486,9 @@ class Sesv2Api:
         context: RequestContext,
         contact_list_name: ContactListName,
         email_address: EmailAddress,
-        topic_preferences: TopicPreferenceList = None,
-        unsubscribe_all: UnsubscribeAll = None,
-        attributes_data: AttributesData = None,
+        topic_preferences: TopicPreferenceList | None = None,
+        unsubscribe_all: UnsubscribeAll | None = None,
+        attributes_data: AttributesData | None = None,
         **kwargs,
     ) -> CreateContactResponse:
         """Creates a contact, which is an end-user who is receiving the email, and
@@ -3513,9 +3513,9 @@ class Sesv2Api:
         self,
         context: RequestContext,
         contact_list_name: ContactListName,
-        topics: Topics = None,
-        description: Description = None,
-        tags: TagList = None,
+        topics: Topics | None = None,
+        description: Description | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateContactListResponse:
         """Creates a contact list.
@@ -3575,8 +3575,8 @@ class Sesv2Api:
         self,
         context: RequestContext,
         pool_name: PoolName,
-        tags: TagList = None,
-        scaling_mode: ScalingMode = None,
+        tags: TagList | None = None,
+        scaling_mode: ScalingMode | None = None,
         **kwargs,
     ) -> CreateDedicatedIpPoolResponse:
         """Create a new pool of dedicated IP addresses. A pool can include one or
@@ -3604,8 +3604,8 @@ class Sesv2Api:
         context: RequestContext,
         from_email_address: EmailAddress,
         content: EmailContent,
-        report_name: ReportName = None,
-        tags: TagList = None,
+        report_name: ReportName | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateDeliverabilityTestReportResponse:
         """Create a new predictive inbox placement test. Predictive inbox placement
@@ -3644,9 +3644,9 @@ class Sesv2Api:
         self,
         context: RequestContext,
         email_identity: Identity,
-        tags: TagList = None,
-        dkim_signing_attributes: DkimSigningAttributes = None,
-        configuration_set_name: ConfigurationSetName = None,
+        tags: TagList | None = None,
+        dkim_signing_attributes: DkimSigningAttributes | None = None,
+        configuration_set_name: ConfigurationSetName | None = None,
         **kwargs,
     ) -> CreateEmailIdentityResponse:
         """Starts the process of verifying an email identity. An *identity* is an
@@ -3811,7 +3811,7 @@ class Sesv2Api:
         context: RequestContext,
         endpoint_name: EndpointName,
         details: Details,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateMultiRegionEndpointResponse:
         """Creates a multi-region endpoint (global-endpoint).
@@ -4205,9 +4205,9 @@ class Sesv2Api:
     def get_dedicated_ips(
         self,
         context: RequestContext,
-        pool_name: PoolName = None,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        pool_name: PoolName | None = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> GetDedicatedIpsResponse:
         """List the dedicated IP addresses that are associated with your Amazon Web
@@ -4447,8 +4447,8 @@ class Sesv2Api:
     def list_configuration_sets(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListConfigurationSetsResponse:
         """List all of the configuration sets associated with your account in the
@@ -4474,8 +4474,8 @@ class Sesv2Api:
     def list_contact_lists(
         self,
         context: RequestContext,
-        page_size: MaxItems = None,
-        next_token: NextToken = None,
+        page_size: MaxItems | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListContactListsResponse:
         """Lists all of the contact lists available.
@@ -4498,9 +4498,9 @@ class Sesv2Api:
         self,
         context: RequestContext,
         contact_list_name: ContactListName,
-        filter: ListContactsFilter = None,
-        page_size: MaxItems = None,
-        next_token: NextToken = None,
+        filter: ListContactsFilter | None = None,
+        page_size: MaxItems | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListContactsResponse:
         """Lists the contacts present in a specific contact list.
@@ -4522,8 +4522,8 @@ class Sesv2Api:
     def list_custom_verification_email_templates(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListCustomVerificationEmailTemplatesResponse:
         """Lists the existing custom verification email templates for your account
@@ -4551,8 +4551,8 @@ class Sesv2Api:
     def list_dedicated_ip_pools(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListDedicatedIpPoolsResponse:
         """List all of the dedicated IP pools that exist in your Amazon Web
@@ -4572,8 +4572,8 @@ class Sesv2Api:
     def list_deliverability_test_reports(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListDeliverabilityTestReportsResponse:
         """Show a list of the predictive inbox placement tests that you've
@@ -4600,8 +4600,8 @@ class Sesv2Api:
         start_date: Timestamp,
         end_date: Timestamp,
         subscribed_domain: Domain,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListDomainDeliverabilityCampaignsResponse:
         """Retrieve deliverability data for all the campaigns that used a specific
@@ -4627,8 +4627,8 @@ class Sesv2Api:
     def list_email_identities(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListEmailIdentitiesResponse:
         """Returns a list of all of the email identities that are associated with
@@ -4651,8 +4651,8 @@ class Sesv2Api:
     def list_email_templates(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListEmailTemplatesResponse:
         """Lists the email templates present in your Amazon SES account in the
@@ -4674,10 +4674,10 @@ class Sesv2Api:
     def list_export_jobs(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
-        export_source_type: ExportSourceType = None,
-        job_status: JobStatus = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
+        export_source_type: ExportSourceType | None = None,
+        job_status: JobStatus | None = None,
         **kwargs,
     ) -> ListExportJobsResponse:
         """Lists all of the export jobs.
@@ -4698,9 +4698,9 @@ class Sesv2Api:
     def list_import_jobs(
         self,
         context: RequestContext,
-        import_destination_type: ImportDestinationType = None,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        import_destination_type: ImportDestinationType | None = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListImportJobsResponse:
         """Lists all of the import jobs.
@@ -4720,8 +4720,8 @@ class Sesv2Api:
     def list_multi_region_endpoints(
         self,
         context: RequestContext,
-        next_token: NextTokenV2 = None,
-        page_size: PageSizeV2 = None,
+        next_token: NextTokenV2 | None = None,
+        page_size: PageSizeV2 | None = None,
         **kwargs,
     ) -> ListMultiRegionEndpointsResponse:
         """List the multi-region endpoints (global-endpoints).
@@ -4744,9 +4744,9 @@ class Sesv2Api:
     def list_recommendations(
         self,
         context: RequestContext,
-        filter: ListRecommendationsFilter = None,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        filter: ListRecommendationsFilter | None = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListRecommendationsResponse:
         """Lists the recommendations present in your Amazon SES account in the
@@ -4770,11 +4770,11 @@ class Sesv2Api:
     def list_suppressed_destinations(
         self,
         context: RequestContext,
-        reasons: SuppressionListReasons = None,
-        start_date: Timestamp = None,
-        end_date: Timestamp = None,
-        next_token: NextToken = None,
-        page_size: MaxItems = None,
+        reasons: SuppressionListReasons | None = None,
+        start_date: Timestamp | None = None,
+        end_date: Timestamp | None = None,
+        next_token: NextToken | None = None,
+        page_size: MaxItems | None = None,
         **kwargs,
     ) -> ListSuppressedDestinationsResponse:
         """Retrieves a list of email addresses that are on the suppression list for
@@ -4818,7 +4818,7 @@ class Sesv2Api:
 
     @handler("PutAccountDedicatedIpWarmupAttributes")
     def put_account_dedicated_ip_warmup_attributes(
-        self, context: RequestContext, auto_warmup_enabled: Enabled = None, **kwargs
+        self, context: RequestContext, auto_warmup_enabled: Enabled | None = None, **kwargs
     ) -> PutAccountDedicatedIpWarmupAttributesResponse:
         """Enable or disable the automatic warm-up feature for dedicated IP
         addresses.
@@ -4838,10 +4838,10 @@ class Sesv2Api:
         context: RequestContext,
         mail_type: MailType,
         website_url: WebsiteURL,
-        contact_language: ContactLanguage = None,
-        use_case_description: UseCaseDescription = None,
-        additional_contact_email_addresses: AdditionalContactEmailAddresses = None,
-        production_access_enabled: EnabledWrapper = None,
+        contact_language: ContactLanguage | None = None,
+        use_case_description: UseCaseDescription | None = None,
+        additional_contact_email_addresses: AdditionalContactEmailAddresses | None = None,
+        production_access_enabled: EnabledWrapper | None = None,
         **kwargs,
     ) -> PutAccountDetailsResponse:
         """Update your Amazon SES account details.
@@ -4863,7 +4863,7 @@ class Sesv2Api:
 
     @handler("PutAccountSendingAttributes")
     def put_account_sending_attributes(
-        self, context: RequestContext, sending_enabled: Enabled = None, **kwargs
+        self, context: RequestContext, sending_enabled: Enabled | None = None, **kwargs
     ) -> PutAccountSendingAttributesResponse:
         """Enable or disable the ability of your account to send email.
 
@@ -4876,7 +4876,10 @@ class Sesv2Api:
 
     @handler("PutAccountSuppressionAttributes")
     def put_account_suppression_attributes(
-        self, context: RequestContext, suppressed_reasons: SuppressionListReasons = None, **kwargs
+        self,
+        context: RequestContext,
+        suppressed_reasons: SuppressionListReasons | None = None,
+        **kwargs,
     ) -> PutAccountSuppressionAttributesResponse:
         """Change the settings for the account-level suppression list.
 
@@ -4908,7 +4911,7 @@ class Sesv2Api:
         self,
         context: RequestContext,
         configuration_set_name: ConfigurationSetName,
-        archive_arn: ArchiveArn = None,
+        archive_arn: ArchiveArn | None = None,
         **kwargs,
     ) -> PutConfigurationSetArchivingOptionsResponse:
         """Associate the configuration set with a MailManager archive. When you
@@ -4932,9 +4935,9 @@ class Sesv2Api:
         self,
         context: RequestContext,
         configuration_set_name: ConfigurationSetName,
-        tls_policy: TlsPolicy = None,
-        sending_pool_name: SendingPoolName = None,
-        max_delivery_seconds: MaxDeliverySeconds = None,
+        tls_policy: TlsPolicy | None = None,
+        sending_pool_name: SendingPoolName | None = None,
+        max_delivery_seconds: MaxDeliverySeconds | None = None,
         **kwargs,
     ) -> PutConfigurationSetDeliveryOptionsResponse:
         """Associate a configuration set with a dedicated IP pool. You can use
@@ -4960,7 +4963,7 @@ class Sesv2Api:
         self,
         context: RequestContext,
         configuration_set_name: ConfigurationSetName,
-        reputation_metrics_enabled: Enabled = None,
+        reputation_metrics_enabled: Enabled | None = None,
         **kwargs,
     ) -> PutConfigurationSetReputationOptionsResponse:
         """Enable or disable collection of reputation metrics for emails that you
@@ -4982,7 +4985,7 @@ class Sesv2Api:
         self,
         context: RequestContext,
         configuration_set_name: ConfigurationSetName,
-        sending_enabled: Enabled = None,
+        sending_enabled: Enabled | None = None,
         **kwargs,
     ) -> PutConfigurationSetSendingOptionsResponse:
         """Enable or disable email sending for messages that use a particular
@@ -5003,7 +5006,7 @@ class Sesv2Api:
         self,
         context: RequestContext,
         configuration_set_name: ConfigurationSetName,
-        suppressed_reasons: SuppressionListReasons = None,
+        suppressed_reasons: SuppressionListReasons | None = None,
         **kwargs,
     ) -> PutConfigurationSetSuppressionOptionsResponse:
         """Specify the account suppression list preferences for a configuration
@@ -5025,8 +5028,8 @@ class Sesv2Api:
         self,
         context: RequestContext,
         configuration_set_name: ConfigurationSetName,
-        custom_redirect_domain: CustomRedirectDomain = None,
-        https_policy: HttpsPolicy = None,
+        custom_redirect_domain: CustomRedirectDomain | None = None,
+        https_policy: HttpsPolicy | None = None,
         **kwargs,
     ) -> PutConfigurationSetTrackingOptionsResponse:
         """Specify a custom domain to use for open and click tracking elements in
@@ -5047,7 +5050,7 @@ class Sesv2Api:
         self,
         context: RequestContext,
         configuration_set_name: ConfigurationSetName,
-        vdm_options: VdmOptions = None,
+        vdm_options: VdmOptions | None = None,
         **kwargs,
     ) -> PutConfigurationSetVdmOptionsResponse:
         """Specify VDM preferences for email that you send using the configuration
@@ -5126,7 +5129,7 @@ class Sesv2Api:
         self,
         context: RequestContext,
         dashboard_enabled: Enabled,
-        subscribed_domains: DomainDeliverabilityTrackingOptions = None,
+        subscribed_domains: DomainDeliverabilityTrackingOptions | None = None,
         **kwargs,
     ) -> PutDeliverabilityDashboardOptionResponse:
         """Enable or disable the Deliverability dashboard. When you enable the
@@ -5158,7 +5161,7 @@ class Sesv2Api:
         self,
         context: RequestContext,
         email_identity: Identity,
-        configuration_set_name: ConfigurationSetName = None,
+        configuration_set_name: ConfigurationSetName | None = None,
         **kwargs,
     ) -> PutEmailIdentityConfigurationSetAttributesResponse:
         """Used to associate a configuration set with an email identity.
@@ -5177,7 +5180,7 @@ class Sesv2Api:
         self,
         context: RequestContext,
         email_identity: Identity,
-        signing_enabled: Enabled = None,
+        signing_enabled: Enabled | None = None,
         **kwargs,
     ) -> PutEmailIdentityDkimAttributesResponse:
         """Used to enable or disable DKIM authentication for an email identity.
@@ -5197,7 +5200,7 @@ class Sesv2Api:
         context: RequestContext,
         email_identity: Identity,
         signing_attributes_origin: DkimSigningAttributesOrigin,
-        signing_attributes: DkimSigningAttributes = None,
+        signing_attributes: DkimSigningAttributes | None = None,
         **kwargs,
     ) -> PutEmailIdentityDkimSigningAttributesResponse:
         """Used to configure or change the DKIM authentication settings for an
@@ -5236,7 +5239,7 @@ class Sesv2Api:
         self,
         context: RequestContext,
         email_identity: Identity,
-        email_forwarding_enabled: Enabled = None,
+        email_forwarding_enabled: Enabled | None = None,
         **kwargs,
     ) -> PutEmailIdentityFeedbackAttributesResponse:
         """Used to enable or disable feedback forwarding for an identity. This
@@ -5267,8 +5270,8 @@ class Sesv2Api:
         self,
         context: RequestContext,
         email_identity: Identity,
-        mail_from_domain: MailFromDomainName = None,
-        behavior_on_mx_failure: BehaviorOnMxFailure = None,
+        mail_from_domain: MailFromDomainName | None = None,
+        behavior_on_mx_failure: BehaviorOnMxFailure | None = None,
         **kwargs,
     ) -> PutEmailIdentityMailFromAttributesResponse:
         """Used to enable or disable the custom Mail-From domain configuration for
@@ -5311,14 +5314,14 @@ class Sesv2Api:
         context: RequestContext,
         default_content: BulkEmailContent,
         bulk_email_entries: BulkEmailEntryList,
-        from_email_address: EmailAddress = None,
-        from_email_address_identity_arn: AmazonResourceName = None,
-        reply_to_addresses: EmailAddressList = None,
-        feedback_forwarding_email_address: EmailAddress = None,
-        feedback_forwarding_email_address_identity_arn: AmazonResourceName = None,
-        default_email_tags: MessageTagList = None,
-        configuration_set_name: ConfigurationSetName = None,
-        endpoint_id: EndpointId = None,
+        from_email_address: EmailAddress | None = None,
+        from_email_address_identity_arn: AmazonResourceName | None = None,
+        reply_to_addresses: EmailAddressList | None = None,
+        feedback_forwarding_email_address: EmailAddress | None = None,
+        feedback_forwarding_email_address_identity_arn: AmazonResourceName | None = None,
+        default_email_tags: MessageTagList | None = None,
+        configuration_set_name: ConfigurationSetName | None = None,
+        endpoint_id: EndpointId | None = None,
         **kwargs,
     ) -> SendBulkEmailResponse:
         """Composes an email message to multiple destinations.
@@ -5353,7 +5356,7 @@ class Sesv2Api:
         context: RequestContext,
         email_address: EmailAddress,
         template_name: EmailTemplateName,
-        configuration_set_name: ConfigurationSetName = None,
+        configuration_set_name: ConfigurationSetName | None = None,
         **kwargs,
     ) -> SendCustomVerificationEmailResponse:
         """Adds an email address to the list of identities for your Amazon SES
@@ -5389,16 +5392,16 @@ class Sesv2Api:
         self,
         context: RequestContext,
         content: EmailContent,
-        from_email_address: EmailAddress = None,
-        from_email_address_identity_arn: AmazonResourceName = None,
-        destination: Destination = None,
-        reply_to_addresses: EmailAddressList = None,
-        feedback_forwarding_email_address: EmailAddress = None,
-        feedback_forwarding_email_address_identity_arn: AmazonResourceName = None,
-        email_tags: MessageTagList = None,
-        configuration_set_name: ConfigurationSetName = None,
-        endpoint_id: EndpointId = None,
-        list_management_options: ListManagementOptions = None,
+        from_email_address: EmailAddress | None = None,
+        from_email_address_identity_arn: AmazonResourceName | None = None,
+        destination: Destination | None = None,
+        reply_to_addresses: EmailAddressList | None = None,
+        feedback_forwarding_email_address: EmailAddress | None = None,
+        feedback_forwarding_email_address_identity_arn: AmazonResourceName | None = None,
+        email_tags: MessageTagList | None = None,
+        configuration_set_name: ConfigurationSetName | None = None,
+        endpoint_id: EndpointId | None = None,
+        list_management_options: ListManagementOptions | None = None,
         **kwargs,
     ) -> SendEmailResponse:
         """Sends an email message. You can use the Amazon SES API v2 to send the
@@ -5548,9 +5551,9 @@ class Sesv2Api:
         context: RequestContext,
         contact_list_name: ContactListName,
         email_address: EmailAddress,
-        topic_preferences: TopicPreferenceList = None,
-        unsubscribe_all: UnsubscribeAll = None,
-        attributes_data: AttributesData = None,
+        topic_preferences: TopicPreferenceList | None = None,
+        unsubscribe_all: UnsubscribeAll | None = None,
+        attributes_data: AttributesData | None = None,
         **kwargs,
     ) -> UpdateContactResponse:
         """Updates a contact's preferences for a list.
@@ -5578,8 +5581,8 @@ class Sesv2Api:
         self,
         context: RequestContext,
         contact_list_name: ContactListName,
-        topics: Topics = None,
-        description: Description = None,
+        topics: Topics | None = None,
+        description: Description | None = None,
         **kwargs,
     ) -> UpdateContactListResponse:
         """Updates contact list metadata. This operation does a complete

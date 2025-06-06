@@ -31,12 +31,6 @@ class HashRingTestCase(testcase.TestCase):
     #                fake -> foo, bar, baz
     #                fake-again -> bar, baz, foo
 
-    try:
-        _ = hashlib.md5(usedforsecurity=False)
-        _fips_enabled = True
-    except TypeError:
-        _fips_enabled = False
-
     @mock.patch.object(hashlib, 'md5', autospec=True)
     def test_hash2int_returns_int(self, mock_md5):
         r1 = 32 * 'a'
@@ -50,10 +44,7 @@ class HashRingTestCase(testcase.TestCase):
 
         self.assertIn(int(r1, 16), ring._ring)
         self.assertIn(int(r2, 16), ring._ring)
-        if self._fips_enabled:
-            mock_md5.assert_called_with(mock.ANY, usedforsecurity=False)
-        else:
-            mock_md5.assert_called_with(mock.ANY)
+        mock_md5.assert_called_with(mock.ANY, usedforsecurity=False)
 
     def test_create_ring(self):
         nodes = {'foo', 'bar'}
@@ -92,8 +83,8 @@ class HashRingTestCase(testcase.TestCase):
         ring = hashring.HashRing(nodes)
         self.assertEqual(nodes, set(ring.nodes.keys()))
         self.assertEqual(2 ** 5 * len(nodes), len(ring))
-        nodes.add(u'\u0634\u0628\u06a9\u0647')
-        ring.add_node(u'\u0634\u0628\u06a9\u0647')
+        nodes.add('\u0634\u0628\u06a9\u0647')
+        ring.add_node('\u0634\u0628\u06a9\u0647')
         self.assertEqual(nodes, set(ring.nodes.keys()))
         self.assertEqual(2 ** 5 * len(nodes), len(ring))
 
@@ -114,7 +105,7 @@ class HashRingTestCase(testcase.TestCase):
         self.assertEqual(2 ** 5 * len(nodes), len(ring))
         nodes.add('baz')
         nodes.add('baz2')
-        ring.add_nodes(set(['baz', 'baz2']), weight=10)
+        ring.add_nodes({'baz', 'baz2'}, weight=10)
         self.assertEqual(nodes, set(ring.nodes.keys()))
         self.assertEqual(2 ** 5 * 22, len(ring))
 

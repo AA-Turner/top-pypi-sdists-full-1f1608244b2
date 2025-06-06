@@ -21,7 +21,7 @@ The available features are:
 import mdutils.tools.Table
 import mdutils.tools.TableOfContents
 from mdutils.fileutils.fileutils import MarkDownFile
-from mdutils.tools.Header import Header
+from mdutils.tools.Header import Header, HeaderStyle
 from mdutils.tools.Image import Image
 from mdutils.tools.Link import Inline, Reference
 from mdutils.tools.TextUtils import TextUtils
@@ -40,12 +40,12 @@ class MdUtils:
     - **author:** it is the author fo the Markdown file.
     - **header:** it is an instance of Header Class.
     - **textUtils:** it is an instance of TextUtils Class.
-    - **title:** it is the title of the Markdown file. It is written with Setext-style.
+    - **title:** it is the title of the Markdown file. It is written with Setext-style unless otherwise specified.
     - **table_of_contents:** it is the table of contents, it can be optionally created.
     - **file_data_text:** contains all the file data that will be written on the markdown file.
     """
 
-    def __init__(self, file_name: str, title: str = "", author: str = ""):
+    def __init__(self, file_name: str, title: str = "", author: str = "", title_header_style: str = "setext"):
         """
 
         :param file_name: it is the name of the Markdown file.
@@ -57,9 +57,8 @@ class MdUtils:
         """
         self.file_name = file_name
         self.author = author
-        self.header = Header()
         self.textUtils = TextUtils
-        self.title = self.header.choose_header(level=1, title=title, style="setext")
+        self.title = str(Header(level=1, title=title, style=HeaderStyle[title_header_style.upper()]))
         self.table_of_contents = ""
         self.file_data_text = ""
         self._table_titles = []
@@ -136,9 +135,9 @@ class MdUtils:
         if add_table_of_contents == "y":
             self.__add_new_item_table_of_content(level, title)
         self.___update_file_data(
-            self.header.choose_header(level, title, style, header_id)
+            str(Header(level, title, HeaderStyle[style.upper()], header_id))
         )
-        return self.header.choose_header(level, title, style, header_id)
+        return str(Header(level, title, HeaderStyle[style.upper()], header_id))
 
     def __add_new_item_table_of_content(self, level: int, item: Union[List[str], str]):
         """Automatically add new atx headers to the table of contents.
@@ -182,9 +181,9 @@ class MdUtils:
 
         if marker:
             self.table_of_contents = ""
-            marker_table_of_contents = self.header.choose_header(
-                level=1, title=table_title, style="setext"
-            )
+            marker_table_of_contents = str(Header(
+                level=1, title=table_title, style=HeaderStyle.SETEXT
+            ))
             marker_table_of_contents += mdutils.tools.TableOfContents.TableOfContents().create_table_of_contents(
                 self._table_titles, depth
             )
@@ -193,9 +192,9 @@ class MdUtils:
             )
         else:
             marker_table_of_contents = ""
-            self.table_of_contents += self.header.choose_header(
-                level=1, title=table_title, style="setext"
-            )
+            self.table_of_contents += str(Header(
+                level=1, title=table_title, style=HeaderStyle.SETEXT
+            ))
             self.table_of_contents += mdutils.tools.TableOfContents.TableOfContents().create_table_of_contents(
                 self._table_titles, depth
             )
@@ -207,7 +206,7 @@ class MdUtils:
         columns: int,
         rows: int,
         text: List[str],
-        text_align: str = "center",
+        text_align: Optional[Union[str, list]] = "center",
         marker: str = "",
     ) -> str:
         """This method takes a list of strings and creates a table.
@@ -339,11 +338,11 @@ class MdUtils:
 
         if bold_italics_code or color != "black" or align:
             self.___update_file_data(
-                "  \n"
+                "\n"
                 + self.textUtils.text_format(text, bold_italics_code, color, align)
             )
         else:
-            self.___update_file_data("  \n" + text)
+            self.___update_file_data("\n" + text)
 
         return self.file_data_text
 

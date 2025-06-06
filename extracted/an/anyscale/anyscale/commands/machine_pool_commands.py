@@ -113,8 +113,9 @@ def describe(name: str, format_: str) -> None:
             "PARTITION",
             "STATE",
             "WORKLOAD DETAILS",
-            "WORKLOAD SCORE",
             "WORKLOAD START TIME",
+            "WORKLOAD CREATOR",
+            "WORKLOAD SCORE",
             "CLOUD INSTANCE ID",
         ]
         for row in scheduler_info.machines:
@@ -124,13 +125,16 @@ def describe(name: str, format_: str) -> None:
                     row.machine_type,
                     row.partition,
                     row.allocation_state,
-                    f"{row.workload_info.workload_type}/{row.workload_info.workload_name}/{row.workload_info.workload_cloud}"
+                    f"{row.workload_info.workload_type}/{row.workload_info.workload_name}/{row.workload_info.workload_project}/{row.workload_info.workload_cloud}"
                     if row.workload_info.workload_name
                     else "",
-                    row.workload_score,
                     format_time(row.workload_info.workload_start_time)
                     if row.workload_info.workload_name
                     else "",
+                    row.workload_info.workload_creator
+                    if row.workload_info.workload_name
+                    else "",
+                    row.workload_score,
                     row.cloud_instance_id,
                 ]
             )
@@ -151,7 +155,7 @@ def describe(name: str, format_: str) -> None:
             "MACHINE TYPE",
             "WORKLOAD DETAILS",
             "WORKLOAD START TIME",
-            "WORKLOAD CLOUD",
+            "WORKLOAD CREATOR",
             "PARTITION SCORES",
         ]
         for row in scheduler_info.requests:
@@ -159,11 +163,9 @@ def describe(name: str, format_: str) -> None:
                 [
                     row.size,
                     row.machine_type,
-                    f"{row.workload_info.workload_type}/{row.workload_info.workload_name}",
-                    format_time(row.workload_info.workload_start_time)
-                    if row.workload_info.workload_name
-                    else "",
-                    row.workload_info.workload_cloud,
+                    f"{row.workload_info.workload_type}/{row.workload_info.workload_name}/{row.workload_info.workload_project}/{row.workload_info.workload_cloud}",
+                    format_time(row.workload_info.workload_start_time),
+                    row.workload_info.workload_creator,
                     row.partition_scores,
                 ]
             )

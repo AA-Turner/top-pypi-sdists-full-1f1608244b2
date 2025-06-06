@@ -1,5 +1,4 @@
-""" Utilities for cog.
-"""
+"""Utilities for cog."""
 
 import contextlib
 import functools
@@ -8,24 +7,19 @@ import os
 import sys
 
 
-# Support FIPS mode where possible (Python >= 3.9). We don't use MD5 for security.
-md5 = (
-    functools.partial(hashlib.md5, usedforsecurity=False)
-    if sys.version_info >= (3, 9)
-    else hashlib.md5
-)
+# Support FIPS mode. We don't use MD5 for security.
+md5 = functools.partial(hashlib.md5, usedforsecurity=False)
 
 
 class Redirectable:
-    """ An object with its own stdout and stderr files.
-    """
+    """An object with its own stdout and stderr files."""
+
     def __init__(self):
         self.stdout = sys.stdout
         self.stderr = sys.stderr
 
-    def setOutput(self, stdout=None, stderr=None):
-        """ Assign new files for standard out and/or standard error.
-        """
+    def set_output(self, stdout=None, stderr=None):
+        """Assign new files for standard out and/or standard error."""
         if stdout:
             self.stdout = stdout
         if stderr:
@@ -39,17 +33,17 @@ class Redirectable:
 
 
 class NumberedFileReader:
-    """ A decorator for files that counts the readline()'s called.
-    """
+    """A decorator for files that counts the readline()'s called."""
+
     def __init__(self, f):
         self.f = f
         self.n = 0
 
     def readline(self):
-        l = self.f.readline()
-        if l:
+        line = self.f.readline()
+        if line:
             self.n += 1
-        return l
+        return line
 
     def linenumber(self):
         return self.n

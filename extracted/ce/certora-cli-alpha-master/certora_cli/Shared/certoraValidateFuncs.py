@@ -18,6 +18,8 @@ import sys
 import argparse
 import json
 import logging
+from collections import OrderedDict
+
 import json5
 import re
 import urllib3.util
@@ -938,7 +940,7 @@ def validate_on_off(value: str) -> str:
     return __validate_enum_value(value, OnOffValue)
 
 
-def parse_dict(conf_key: str, input_string: str, value_type: Type = str) -> Dict[str, Union[str, bool]]:
+def parse_ordered_dict(conf_key: str, input_string: str, value_type: Type = str) -> OrderedDict[str, Union[str, bool]]:
     """
     convert CLI flag value string of the form <key>=<value>,<key>=<value>,.. to a Dict.
     Keys with different values raise an exception
@@ -971,7 +973,7 @@ def parse_dict(conf_key: str, input_string: str, value_type: Type = str) -> Dict
         raise argparse.ArgumentTypeError(f"{conf_key} argument {input_string} is of wrong format. Must be of format:"
                                          f"<key>=<value>[,..]")
 
-    return_dict = {}  # type: Dict[str, Union[str, bool]]
+    return_dict = OrderedDict()  # type: OrderedDict[str, Union[str, bool]]
 
     for match in input_string.split(','):
         key, value = match.split('=')

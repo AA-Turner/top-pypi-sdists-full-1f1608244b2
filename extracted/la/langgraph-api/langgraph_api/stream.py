@@ -1,5 +1,5 @@
 from collections.abc import AsyncIterator, Callable
-from contextlib import AsyncExitStack, aclosing
+from contextlib import AsyncExitStack, aclosing, asynccontextmanager
 from functools import lru_cache
 from typing import Any, cast
 
@@ -20,6 +20,7 @@ from langgraph.errors import (
     InvalidUpdateError,
 )
 from langgraph.pregel.debug import CheckpointPayload, TaskResultPayload
+from langsmith.utils import get_tracer_project
 from pydantic import ValidationError
 from pydantic.v1 import ValidationError as ValidationErrorLegacy
 
@@ -69,6 +70,12 @@ def _preprocess_debug_checkpoint(payload: CheckpointPayload | None) -> dict[str,
 
     # TODO: deprecate the `config`` and `parent_config`` fields
     return payload
+
+
+@asynccontextmanager
+async def async_tracing_context(*args, **kwargs):
+    with langsmith.tracing_context(*args, **kwargs):
+        yield
 
 
 async def astream_state(
@@ -131,6 +138,25 @@ async def astream_state(
     use_astream_events = "events" in stream_mode or isinstance(graph, BaseRemotePregel)
     # yield metadata chunk
     yield "metadata", {"run_id": run_id, "attempt": attempt}
+
+    #  is a langsmith tracing project is specified, additionally pass that in to tracing context
+    if ls_project := config["configurable"].get("__langsmith_project__"):
+        updates = None
+        if example_id := config["configurable"].get("__langsmith_example_id__"):
+            updates = {"reference_example_id": example_id}
+
+        await stack.enter_async_context(
+            async_tracing_context(
+                replicas=[
+                    (
+                        ls_project,
+                        updates,
+                    ),
+                    (get_tracer_project(), None),
+                ]
+            )
+        )
+
     # stream run
     if use_astream_events:
         async with (
@@ -269,7 +295,7 @@ async def astream_state(
                         yield mode, chunk
                 # --- end shared logic with astream_events ---
     if is_remote_pregel:
-        # increament the remote runs
+        # increment the remote runs
         try:
             nodes_executed = await graph.fetch_nodes_executed()
             incr_nodes(None, incr=nodes_executed)

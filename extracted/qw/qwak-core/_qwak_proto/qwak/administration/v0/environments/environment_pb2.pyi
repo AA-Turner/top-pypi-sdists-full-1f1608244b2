@@ -7,6 +7,8 @@ import google.protobuf.descriptor
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import google.protobuf.timestamp_pb2
+import qwak.administration.account.v1.account_pb2
+import qwak.administration.cluster.v2.cluster_pb2
 import qwak.administration.v0.environments.configuration_pb2
 import qwak.administration.v0.environments.personalization_pb2
 import sys
@@ -90,6 +92,8 @@ class QwakEnvironment(google.protobuf.message.Message):
     CREATED_AT_FIELD_NUMBER: builtins.int
     LAST_MODIFIED_AT_FIELD_NUMBER: builtins.int
     JFROG_TENANT_ID_FIELD_NUMBER: builtins.int
+    ACCOUNT_FIELD_NUMBER: builtins.int
+    CLUSTER_BRIEF_FIELD_NUMBER: builtins.int
     id: builtins.str
     """Assigned environment ID"""
     name: builtins.str
@@ -118,6 +122,12 @@ class QwakEnvironment(google.protobuf.message.Message):
         """Last modification date"""
     jfrog_tenant_id: builtins.str
     """The Environment's JFrog Tenant ID"""
+    @property
+    def account(self) -> qwak.administration.account.v1.account_pb2.Account:
+        """The environment's account"""
+    @property
+    def cluster_brief(self) -> qwak.administration.cluster.v2.cluster_pb2.ClusterBrief:
+        """The environment's hosting cluster brief"""
     def __init__(
         self,
         *,
@@ -133,9 +143,11 @@ class QwakEnvironment(google.protobuf.message.Message):
         created_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
         last_modified_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
         jfrog_tenant_id: builtins.str = ...,
+        account: qwak.administration.account.v1.account_pb2.Account | None = ...,
+        cluster_brief: qwak.administration.cluster.v2.cluster_pb2.ClusterBrief | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["configuration", b"configuration", "created_at", b"created_at", "jfrog_tenant_id", b"jfrog_tenant_id", "last_modified_at", b"last_modified_at", "optional_jfrog_tenant_id", b"optional_jfrog_tenant_id", "personalization", b"personalization"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["account_id", b"account_id", "account_tier", b"account_tier", "cluster_id", b"cluster_id", "configuration", b"configuration", "created_at", b"created_at", "id", b"id", "jfrog_tenant_id", b"jfrog_tenant_id", "last_modified_at", b"last_modified_at", "name", b"name", "optional_jfrog_tenant_id", b"optional_jfrog_tenant_id", "personalization", b"personalization", "status", b"status", "tenant_id", b"tenant_id"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["account", b"account", "cluster_brief", b"cluster_brief", "configuration", b"configuration", "created_at", b"created_at", "jfrog_tenant_id", b"jfrog_tenant_id", "last_modified_at", b"last_modified_at", "optional_jfrog_tenant_id", b"optional_jfrog_tenant_id", "personalization", b"personalization"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["account", b"account", "account_id", b"account_id", "account_tier", b"account_tier", "cluster_brief", b"cluster_brief", "cluster_id", b"cluster_id", "configuration", b"configuration", "created_at", b"created_at", "id", b"id", "jfrog_tenant_id", b"jfrog_tenant_id", "last_modified_at", b"last_modified_at", "name", b"name", "optional_jfrog_tenant_id", b"optional_jfrog_tenant_id", "personalization", b"personalization", "status", b"status", "tenant_id", b"tenant_id"]) -> None: ...
     def WhichOneof(self, oneof_group: typing_extensions.Literal["optional_jfrog_tenant_id", b"optional_jfrog_tenant_id"]) -> typing_extensions.Literal["jfrog_tenant_id"] | None: ...
 
 global___QwakEnvironment = QwakEnvironment

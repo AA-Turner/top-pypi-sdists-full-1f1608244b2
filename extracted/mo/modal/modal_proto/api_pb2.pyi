@@ -676,6 +676,23 @@ TASK_STATE_PREEMPTED: TaskState.ValueType  # 10
 TASK_STATE_LOADING_CHECKPOINT_IMAGE: TaskState.ValueType  # 11
 global___TaskState = TaskState
 
+class _TunnelType:
+    ValueType = typing.NewType("ValueType", builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+
+class _TunnelTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_TunnelType.ValueType], builtins.type):  # noqa: F821
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    TUNNEL_TYPE_UNSPECIFIED: _TunnelType.ValueType  # 0
+    TUNNEL_TYPE_H2: _TunnelType.ValueType  # 1
+    """HTTP/2 tunnel"""
+
+class TunnelType(_TunnelType, metaclass=_TunnelTypeEnumTypeWrapper): ...
+
+TUNNEL_TYPE_UNSPECIFIED: TunnelType.ValueType  # 0
+TUNNEL_TYPE_H2: TunnelType.ValueType  # 1
+"""HTTP/2 tunnel"""
+global___TunnelType = TunnelType
+
 class _VolumeFsVersion:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
@@ -3986,12 +4003,16 @@ class FileEntry(google.protobuf.message.Message):
         FILE: FileEntry._FileType.ValueType  # 1
         DIRECTORY: FileEntry._FileType.ValueType  # 2
         SYMLINK: FileEntry._FileType.ValueType  # 3
+        FIFO: FileEntry._FileType.ValueType  # 4
+        SOCKET: FileEntry._FileType.ValueType  # 5
 
     class FileType(_FileType, metaclass=_FileTypeEnumTypeWrapper): ...
     UNSPECIFIED: FileEntry.FileType.ValueType  # 0
     FILE: FileEntry.FileType.ValueType  # 1
     DIRECTORY: FileEntry.FileType.ValueType  # 2
     SYMLINK: FileEntry.FileType.ValueType  # 3
+    FIFO: FileEntry.FileType.ValueType  # 4
+    SOCKET: FileEntry.FileType.ValueType  # 5
 
     PATH_FIELD_NUMBER: builtins.int
     TYPE_FIELD_NUMBER: builtins.int
@@ -6292,9 +6313,14 @@ class ImageMetadata(google.protobuf.message.Message):
         package name -> version. Empty if missing
         """
     workdir: builtins.str
-    """The work directory of the image, defaulting to "/". Not set if missing"""
+    """The working directory of the image, as an absolute file path.
+
+    For most images, this is not set, which means to use the default workdir:
+    - On function runners, the default is `/root` (home directory).
+    - For image builds and sandbox environments, it is `/`.
+    """
     libc_version_info: builtins.str
-    """The image's libc version"""
+    """The version of glibc in this image, if any."""
     image_builder_version: builtins.str
     """The builder version for/with which the image was created."""
     def __init__(
@@ -6941,13 +6967,13 @@ class PortSpec(google.protobuf.message.Message):
     TUNNEL_TYPE_FIELD_NUMBER: builtins.int
     port: builtins.int
     unencrypted: builtins.bool
-    tunnel_type: builtins.str
+    tunnel_type: global___TunnelType.ValueType
     def __init__(
         self,
         *,
         port: builtins.int = ...,
         unencrypted: builtins.bool = ...,
-        tunnel_type: builtins.str | None = ...,
+        tunnel_type: global___TunnelType.ValueType | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["_tunnel_type", b"_tunnel_type", "tunnel_type", b"tunnel_type"]) -> builtins.bool: ...
     def ClearField(self, field_name: typing_extensions.Literal["_tunnel_type", b"_tunnel_type", "port", b"port", "tunnel_type", b"tunnel_type", "unencrypted", b"unencrypted"]) -> None: ...
@@ -9379,13 +9405,13 @@ class TunnelStartRequest(google.protobuf.message.Message):
     TUNNEL_TYPE_FIELD_NUMBER: builtins.int
     port: builtins.int
     unencrypted: builtins.bool
-    tunnel_type: builtins.str
+    tunnel_type: global___TunnelType.ValueType
     def __init__(
         self,
         *,
         port: builtins.int = ...,
         unencrypted: builtins.bool = ...,
-        tunnel_type: builtins.str | None = ...,
+        tunnel_type: global___TunnelType.ValueType | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["_tunnel_type", b"_tunnel_type", "tunnel_type", b"tunnel_type"]) -> builtins.bool: ...
     def ClearField(self, field_name: typing_extensions.Literal["_tunnel_type", b"_tunnel_type", "port", b"port", "tunnel_type", b"tunnel_type", "unencrypted", b"unencrypted"]) -> None: ...

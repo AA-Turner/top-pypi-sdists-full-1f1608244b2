@@ -1,12 +1,12 @@
 Metadata-Version: 2.4
 Name: jupyterlite-core
-Version: 0.6.0
+Version: 0.6.1
 Dynamic: Summary
 Project-URL: Source, https://github.com/jupyterlite/jupyterlite
 Author: JupyterLite Contributors
 License: BSD 3-Clause License
         
-        Copyright (c) 2022, JupyterLite Contributors
+        Copyright (c) 2021-, JupyterLite Contributors
         All rights reserved.
         
         Redistribution and use in source and binary forms, with or without

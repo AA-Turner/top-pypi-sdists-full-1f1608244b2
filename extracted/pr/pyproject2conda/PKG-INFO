@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pyproject2conda
-Version: 0.19.1
+Version: 0.21.0
 Summary: A script to convert a Python project declared on a pyproject.toml to a conda environment.
 Project-URL: Documentation, https://pages.nist.gov/pyproject2conda/
 Project-URL: Homepage, https://github.com/usnistgov/pyproject2conda
@@ -10,18 +10,16 @@ License-File: LICENSE
 Keywords: pyproject2conda
 Classifier: Development Status :: 2 - Pre-Alpha
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: Public Domain
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.8
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Scientific/Engineering
-Requires-Python: >=3.8
+Requires-Python: >=3.10
+Requires-Dist: dependency-groups
 Requires-Dist: packaging
 Requires-Dist: tomli; python_version < '3.11'
 Requires-Dist: typer
@@ -30,11 +28,14 @@ Description-Content-Type: text/markdown
 
 <!-- markdownlint-disable MD041 -->
 
-[![Repo][repo-badge]][repo-link] [![Docs][docs-badge]][docs-link]
+<!-- prettier-ignore-start -->
+[![Repo][repo-badge]][repo-link]
+[![Docs][docs-badge]][docs-link]
 [![PyPI license][license-badge]][license-link]
 [![PyPI version][pypi-badge]][pypi-link]
 [![Conda (channel only)][conda-badge]][conda-link]
-[![Code style: black][black-badge]][black-link]
+[![Code style: ruff][ruff-badge]][ruff-link]
+[![uv][uv-badge]][uv-link]
 
 <!--
   For more badges, see
@@ -43,8 +44,10 @@ Description-Content-Type: text/markdown
   [pypi-badge]: https://badge.fury.io/py/pyproject2conda
 -->
 
-[black-badge]: https://img.shields.io/badge/code%20style-black-000000.svg
-[black-link]: https://github.com/psf/black
+[ruff-badge]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json
+[ruff-link]: https://github.com/astral-sh/ruff
+[uv-badge]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json
+[uv-link]: https://github.com/astral-sh/uv
 [pypi-badge]: https://img.shields.io/pypi/v/pyproject2conda
 [pypi-link]: https://pypi.org/project/pyproject2conda
 [docs-badge]: https://img.shields.io/badge/docs-sphinx-informational
@@ -53,13 +56,15 @@ Description-Content-Type: text/markdown
 [repo-link]: https://github.com/usnistgov/pyproject2conda
 [conda-badge]: https://img.shields.io/conda/v/conda-forge/pyproject2conda
 [conda-link]: https://anaconda.org/conda-forge/pyproject2conda
-[license-badge]: https://img.shields.io/pypi/l/cmomy?color=informational
+[license-badge]: https://img.shields.io/pypi/l/pyproject2conda?color=informational
 [license-link]: https://github.com/usnistgov/pyproject2conda/blob/main/LICENSE
 [pre-commit]: https://pre-commit.com/
 
 <!-- other links -->
 
 [poetry2conda]: https://github.com/dojeda/poetry2conda
+
+<!-- prettier-ignore-end -->
 
 # `pyproject2conda`
 
@@ -118,7 +123,7 @@ Note that if called from pre-commit (detected by the presence of `PRE_COMMIT`
 environment variable), the default is to set `--custom-command="pre-commit"`.
 You can explicitly pass in `--custom-command` to override this.
 
-## Quick start
+## Installation
 
 <!-- start-installation -->
 
@@ -625,21 +630,21 @@ dependencies:
 [tool.pyproject2conda]
 channels = ['conda-forge']
 # these are the same as the default values of `p2c project`
-template_python = "py{py}-{env}"
+template-python = "py{py}-{env}"
 template = "{env}"
 style = "yaml"
 # options
 python = ["3.10"]
 # Note that this is relative to the location of pyproject.toml
-user_config = "config/userconfig.toml"
+user-config = "config/userconfig.toml"
 # These environments will be created with the package, package dependencies, and
 # dependencies from groups or extras with environment name so the below is the
 # same as
 #
 # [tool.pyproject2conda.envs.test]
-# extras_or_groups = "test"
+# extras-or-groups = "test"
 #
-default_envs = ["test", "dev", "dist-pypi"]
+default-envs = ["test", "dev", "dist-pypi"]
 
 [tool.pyproject2conda.envs.base]
 style = ["requirements"]
@@ -647,14 +652,14 @@ style = ["requirements"]
 # This will have no extras or groups
 #
 # A value of `extras = true` will would be equivalent to
-# passing extras_or_groups = <env-name>
+# passing extras-or-groups = <env-name>
 [tool.pyproject2conda.envs."test-extras"]
 extras = ["test"]
 style = ["yaml", "requirements"]
 
 [[tool.pyproject2conda.overrides]]
 envs = ['test-extras', "dist-pypi"]
-skip_package = true
+skip-package = true
 
 [[tool.pyproject2conda.overrides]]
 envs = ["test", "test-extras"]
@@ -753,21 +758,21 @@ in the `[tool.pyproject2conda]` section. For example, example the configuration:
 [tool.pyproject2conda]
 channels = ['conda-forge']
 # these are the same as the default values of `p2c project`
-template_python = "py{py}-{env}"
+template-python = "py{py}-{env}"
 template = "{env}"
 style = "yaml"
 # options
 python = ["3.10"]
 # Note that this is relative to the location of pyproject.toml
-user_config = "config/userconfig.toml"
+user-config = "config/userconfig.toml"
 # These environments will be created with the package, package dependencies, and
 # dependencies from groups or extras with environment name so the below is the
 # same as
 #
 # [tool.pyproject2conda.envs.test]
-# extras_or_groups = "test"
+# extras-or-groups = "test"
 #
-default_envs = ["test", "dev", "dist-pypi"]
+default-envs = ["test", "dev", "dist-pypi"]
 
 [tool.pyproject2conda.envs.base]
 style = ["requirements"]
@@ -775,14 +780,14 @@ style = ["requirements"]
 # This will have no extras or groups
 #
 # A value of `extras = true` will would be equivalent to
-# passing extras_or_groups = <env-name>
+# passing extras-or-groups = <env-name>
 [tool.pyproject2conda.envs."test-extras"]
 extras = ["test"]
 style = ["yaml", "requirements"]
 
 [[tool.pyproject2conda.overrides]]
 envs = ['test-extras', "dist-pypi"]
-skip_package = true
+skip-package = true
 
 [[tool.pyproject2conda.overrides]]
 envs = ["test", "test-extras"]
@@ -854,11 +859,14 @@ Note that here, we have used the `--dry` option to just print the output. In
 production, you'd omit this flag, and files according to `--template` and
 `--template-python` would be used.
 
-The options under `[tool.pyproject2conda]` follow the command line options
-(replace `-` with `_`). To specify an environment, you can either use the
-`[tool.pyproject.envs."environment-name"]` method, or, if the environment is the
-same as an `project.optional-dependencies` or `dependency-grroups`, you can just
-specify it under `tool.pyproject2conda.default_envs`:
+The options under `[tool.pyproject2conda]` follow the command line options. For
+example, specify `template-python = ...` in the config file instead of passing
+`--template-python`. You can optionally replace all dashes with underscores in
+config file option names if you wish. To specify an environment, you can either
+use the `[tool.pyproject.envs."environment-name"]` method, or, if the
+environment is the same as an `project.optional-dependencies` or
+`dependency-groups`, you can just specify it under
+`tool.pyproject2conda.default_envs`:
 
 ```toml
 [tool.pyproject2conda]
@@ -915,7 +923,7 @@ environment definition, and finally, from the default options.
 You can also define "user defined" configurations. This can be done through the
 option `--user-config`. This allows you to define your own environments outside
 of the (most likely source controlled) `pyproject.toml` file. For example, we
-have the option `user_config=config/userconfig.toml`.
+have the option `user-config=config/userconfig.toml`.
 
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable-next-line MD013 -->
@@ -932,7 +940,7 @@ name = "hello"
 <!-- [[[end]]] -->
 <!-- prettier-ignore-end -->
 
-Note that the full path of this file is note that the path of the `user_config`
+Note that the full path of this file is note that the path of the `user-config`
 file is relative to them`pyproject.toml` file. So, if the `pyproject.toml` file
 is at `a/path/pyproject.toml`, the path of user configuration files will be
 `a/path/config/userconfig.toml`. We then can run the following:
@@ -1053,6 +1061,31 @@ See the fragment files in [changelog.d]
 <!-- markdownlint-enable MD013 -->
 
 <!-- scriv-insert-here -->
+
+## v0.21.0 — 2025-06-05
+
+### Changed
+
+- The config file version of command line options now accept either dashes or
+  underscores. For example, the command line option `--template-python` now
+  respects either `template-python` or `template_python` in the
+  `tool.pyproject2conda` table of `pyproject.toml`. Note that you have to use
+  either all dashes or all underscores, not a mix. The parser first looks for
+  options with dashes, then falls back to underscores, so if they are both
+  present, the dashed version will win.
+
+## v0.20.0 — 2025-06-05
+
+### Changed
+
+- `--name` option (i.e., the `name` field in an environment.yaml file) now
+  accepts the follinging fields:
+  - `{py_version}`: the full python version passed in with `--python-version`,
+    or specified in `pyproject.toml`
+  - `{py}`: the python version without `"."` (so, for example, if
+    `--python-version=3.8`, `{py}` will expand to `"38"`).
+  - `{env}`: the environment name. Only applicable with the `project`
+    subcommand.
 
 ## v0.19.1 — 2025-02-19
 

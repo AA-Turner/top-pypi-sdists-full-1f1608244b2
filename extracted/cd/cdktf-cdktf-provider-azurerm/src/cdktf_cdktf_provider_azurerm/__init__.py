@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/azurerm provider version 4.31.0
+# CDKTF prebuilt bindings for hashicorp/azurerm provider version 4.32.0
 
-This repo builds and publishes the [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform azurerm provider version 1
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0)
+* [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -462,6 +462,8 @@ __all__ = [
     "data_azurerm_dedicated_host",
     "data_azurerm_dedicated_host_group",
     "data_azurerm_dev_center",
+    "data_azurerm_dev_center_project",
+    "data_azurerm_dev_center_project_environment_type",
     "data_azurerm_dev_test_lab",
     "data_azurerm_dev_test_virtual_network",
     "data_azurerm_digital_twins_instance",
@@ -1260,6 +1262,7 @@ __all__ = [
     "public_ip",
     "public_ip_prefix",
     "purview_account",
+    "qumulo_file_system",
     "recovery_services_vault",
     "recovery_services_vault_resource_guard_association",
     "redhat_openshift_cluster",
@@ -1938,6 +1941,8 @@ from . import data_azurerm_databricks_workspace_private_endpoint_connection
 from . import data_azurerm_dedicated_host
 from . import data_azurerm_dedicated_host_group
 from . import data_azurerm_dev_center
+from . import data_azurerm_dev_center_project
+from . import data_azurerm_dev_center_project_environment_type
 from . import data_azurerm_dev_test_lab
 from . import data_azurerm_dev_test_virtual_network
 from . import data_azurerm_digital_twins_instance
@@ -2736,6 +2741,7 @@ from . import proximity_placement_group
 from . import public_ip
 from . import public_ip_prefix
 from . import purview_account
+from . import qumulo_file_system
 from . import recovery_services_vault
 from . import recovery_services_vault_resource_guard_association
 from . import redhat_openshift_cluster

@@ -366,7 +366,11 @@ class MediastoreApi:
 
     @handler("CreateContainer")
     def create_container(
-        self, context: RequestContext, container_name: ContainerName, tags: TagList = None, **kwargs
+        self,
+        context: RequestContext,
+        container_name: ContainerName,
+        tags: TagList | None = None,
+        **kwargs,
     ) -> CreateContainerOutput:
         """Creates a storage container to hold objects. A container is similar to a
         bucket in the Amazon S3 service.
@@ -468,7 +472,7 @@ class MediastoreApi:
 
     @handler("DescribeContainer")
     def describe_container(
-        self, context: RequestContext, container_name: ContainerName = None, **kwargs
+        self, context: RequestContext, container_name: ContainerName | None = None, **kwargs
     ) -> DescribeContainerOutput:
         """Retrieves the properties of the requested container. This request is
         commonly used to retrieve the endpoint of a container. An endpoint is a
@@ -558,8 +562,8 @@ class MediastoreApi:
     def list_containers(
         self,
         context: RequestContext,
-        next_token: PaginationToken = None,
-        max_results: ContainerListLimit = None,
+        next_token: PaginationToken | None = None,
+        max_results: ContainerListLimit | None = None,
         **kwargs,
     ) -> ListContainersOutput:
         """Lists the properties of all containers in AWS Elemental MediaStore.

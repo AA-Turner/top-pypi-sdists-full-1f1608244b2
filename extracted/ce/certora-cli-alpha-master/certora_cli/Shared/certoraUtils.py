@@ -14,7 +14,6 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import csv
-import fnmatch
 import json
 import os
 import subprocess
@@ -31,7 +30,7 @@ import urllib3.util
 from collections import defaultdict
 from types import SimpleNamespace
 
-from typing import Any, Callable, Dict, List, Optional, Set, Union, Generator, Tuple, Iterable, Sequence, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Set, Union, Generator, Tuple, Iterable, Sequence, TypeVar, OrderedDict
 from pathlib import Path
 
 scripts_dir_path = Path(__file__).parent.parent.resolve()  # containing directory
@@ -1176,20 +1175,30 @@ class AbstractAndSingleton(Singleton, ABCMeta):
     pass
 
 
-def match_path_to_mapping_key(path: Path, m: Dict[str, str]) -> Optional[str]:
+def match_path_to_mapping_key(path: Path, m: OrderedDict[str, str]) -> Optional[str]:
     """
-    Matches the path to the best match in the dictionary's keys.
-    For example, given an absolute path `/Users/JohnDoe/Path/ToSolc/a.sol`, if the map contains
-    `b/a.sol` and `ToSolc/a.sol`, it will match on `ToSolc/a.sol`.
+    Matches the path to the first key in the map that matches the path.
+    paths may include wildcards
+
+    For example, if the ordered dictionary in compiler_map has the mapping:
+
+    dir/a.sol -> solc7.1
+    dir/*.sol -> solc6.3
+    **/*.sol -> 8.10
+
+    dir/a.sol will be matched by the first rule
+    dir/b.sol by the second rule
+    and
+    a.sol by the third rule
+
     @param path: the path to match against
     @param m: the map whose keys we're searching
     @return: the value from the map that best matches the path, None if not found.
     """
     for k, v in m.items():
-        if fnmatch.fnmatch(str(path), k):
+        if match_pattern_to_source(k, path):
             return v
-    return None
-
+    return None  # No match
 
 def find_in(dir_path: Path, file_to_find: Path) -> Optional[Path]:
     """
@@ -1452,3 +1461,31 @@ def eq_by(f: Callable[[T, T], bool], a: Sequence[T], b: Sequence[T]) -> bool:
     check if Sequences a and b are equal according to function f.
     """
     return len(a) == len(b) and all(map(f, a, b))
+
+def file_in_source_tree(file_path: Path) -> bool:
+    # if the file is under .certora_source, return True
+    file_path = Path(file_path).absolute()
+    parent_dir = get_certora_sources_dir().absolute()
+
+    try:
+        file_path.relative_to(parent_dir)
+        return True
+    except ValueError:
+        return False
+
+def match_pattern_to_source(pattern: str, file_path: Path) -> bool:
+
+    if file_in_source_tree(file_path):
+        base_dir = get_certora_sources_dir()
+    else:
+        base_dir = Path.cwd()
+
+    # Search for matches under base_dir
+    for candidate in base_dir.rglob(pattern):
+        try:
+            if os.path.samefile(candidate, file_path):
+                return True
+        except FileNotFoundError:
+            # candidate or file_path may not exist; skip safely
+            continue
+    return False

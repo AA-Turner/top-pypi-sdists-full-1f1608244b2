@@ -939,7 +939,7 @@ class GlacierApi:
         context: RequestContext,
         account_id: string,
         vault_name: string,
-        tags: TagMap = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> None:
         """This operation adds the specified tags to a vault. Each tag is composed
@@ -970,8 +970,8 @@ class GlacierApi:
         account_id: string,
         vault_name: string,
         upload_id: string,
-        archive_size: string = None,
-        checksum: string = None,
+        archive_size: string | None = None,
+        checksum: string | None = None,
         **kwargs,
     ) -> ArchiveCreationOutput:
         """You call this operation to inform Amazon S3 Glacier (Glacier) that all
@@ -1383,7 +1383,7 @@ class GlacierApi:
         account_id: string,
         vault_name: string,
         job_id: string,
-        range: string = None,
+        range: string | None = None,
         **kwargs,
     ) -> GetJobOutputOutput:
         """This operation downloads the output of the job you initiated using
@@ -1560,7 +1560,7 @@ class GlacierApi:
         context: RequestContext,
         account_id: string,
         vault_name: string,
-        job_parameters: JobParameters = None,
+        job_parameters: JobParameters | None = None,
         **kwargs,
     ) -> InitiateJobOutput:
         """This operation initiates a job of the specified type, which can be a
@@ -1589,8 +1589,8 @@ class GlacierApi:
         context: RequestContext,
         account_id: string,
         vault_name: string,
-        archive_description: string = None,
-        part_size: string = None,
+        archive_description: string | None = None,
+        part_size: string | None = None,
         **kwargs,
     ) -> InitiateMultipartUploadOutput:
         """This operation initiates a multipart upload. Amazon S3 Glacier creates a
@@ -1652,7 +1652,7 @@ class GlacierApi:
         context: RequestContext,
         account_id: string,
         vault_name: string,
-        policy: VaultLockPolicy = None,
+        policy: VaultLockPolicy | None = None,
         **kwargs,
     ) -> InitiateVaultLockOutput:
         """This operation initiates the vault locking process by doing the
@@ -1708,10 +1708,10 @@ class GlacierApi:
         context: RequestContext,
         account_id: string,
         vault_name: string,
-        limit: string = None,
-        marker: string = None,
-        statuscode: string = None,
-        completed: string = None,
+        limit: string | None = None,
+        marker: string | None = None,
+        statuscode: string | None = None,
+        completed: string | None = None,
         **kwargs,
     ) -> ListJobsOutput:
         """This operation lists jobs for a vault, including jobs that are
@@ -1775,8 +1775,8 @@ class GlacierApi:
         context: RequestContext,
         account_id: string,
         vault_name: string,
-        marker: string = None,
-        limit: string = None,
+        marker: string | None = None,
+        limit: string | None = None,
         **kwargs,
     ) -> ListMultipartUploadsOutput:
         """This operation lists in-progress multipart uploads for the specified
@@ -1835,8 +1835,8 @@ class GlacierApi:
         account_id: string,
         vault_name: string,
         upload_id: string,
-        marker: string = None,
-        limit: string = None,
+        marker: string | None = None,
+        limit: string | None = None,
         **kwargs,
     ) -> ListPartsOutput:
         """This operation lists the parts of an archive that have been uploaded in
@@ -1923,8 +1923,8 @@ class GlacierApi:
         self,
         context: RequestContext,
         account_id: string,
-        marker: string = None,
-        limit: string = None,
+        marker: string | None = None,
+        limit: string | None = None,
         **kwargs,
     ) -> ListVaultsOutput:
         """This operation lists all vaults owned by the calling user's account. The
@@ -1985,7 +1985,7 @@ class GlacierApi:
         context: RequestContext,
         account_id: string,
         vault_name: string,
-        tag_keys: TagKeyList = None,
+        tag_keys: TagKeyList | None = None,
         **kwargs,
     ) -> None:
         """This operation removes one or more tags from the set of tags attached to
@@ -2010,7 +2010,7 @@ class GlacierApi:
         self,
         context: RequestContext,
         account_id: string,
-        policy: DataRetrievalPolicy = None,
+        policy: DataRetrievalPolicy | None = None,
         **kwargs,
     ) -> None:
         """This operation sets and then enacts a data retrieval policy in the
@@ -2037,7 +2037,7 @@ class GlacierApi:
         context: RequestContext,
         account_id: string,
         vault_name: string,
-        policy: VaultAccessPolicy = None,
+        policy: VaultAccessPolicy | None = None,
         **kwargs,
     ) -> None:
         """This operation configures an access policy for a vault and will
@@ -2066,7 +2066,7 @@ class GlacierApi:
         context: RequestContext,
         account_id: string,
         vault_name: string,
-        vault_notification_config: VaultNotificationConfig = None,
+        vault_notification_config: VaultNotificationConfig | None = None,
         **kwargs,
     ) -> None:
         """This operation configures notifications that will be sent when specific
@@ -2125,9 +2125,9 @@ class GlacierApi:
         context: RequestContext,
         vault_name: string,
         account_id: string,
-        archive_description: string = None,
-        checksum: string = None,
-        body: IO[Stream] = None,
+        archive_description: string | None = None,
+        checksum: string | None = None,
+        body: IO[Stream] | None = None,
         **kwargs,
     ) -> ArchiveCreationOutput:
         """This operation adds an archive to a vault. This is a synchronous
@@ -2196,9 +2196,9 @@ class GlacierApi:
         account_id: string,
         vault_name: string,
         upload_id: string,
-        checksum: string = None,
-        range: string = None,
-        body: IO[Stream] = None,
+        checksum: string | None = None,
+        range: string | None = None,
+        body: IO[Stream] | None = None,
         **kwargs,
     ) -> UploadMultipartPartOutput:
         """This operation uploads a part of an archive. You can upload archive

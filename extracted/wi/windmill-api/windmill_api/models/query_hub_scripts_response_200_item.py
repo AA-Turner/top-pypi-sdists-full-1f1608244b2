@@ -3,6 +3,8 @@ from typing import Any, Dict, List, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
+from ..models.query_hub_scripts_response_200_item_kind import QueryHubScriptsResponse200ItemKind
+
 T = TypeVar("T", bound="QueryHubScriptsResponse200Item")
 
 
@@ -15,7 +17,7 @@ class QueryHubScriptsResponse200Item:
         version_id (float):
         summary (str):
         app (str):
-        kind (Any):
+        kind (QueryHubScriptsResponse200ItemKind):
         score (float):
     """
 
@@ -24,7 +26,7 @@ class QueryHubScriptsResponse200Item:
     version_id: float
     summary: str
     app: str
-    kind: Any
+    kind: QueryHubScriptsResponse200ItemKind
     score: float
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -34,7 +36,8 @@ class QueryHubScriptsResponse200Item:
         version_id = self.version_id
         summary = self.summary
         app = self.app
-        kind = self.kind
+        kind = self.kind.value
+
         score = self.score
 
         field_dict: Dict[str, Any] = {}
@@ -66,7 +69,7 @@ class QueryHubScriptsResponse200Item:
 
         app = d.pop("app")
 
-        kind = d.pop("kind")
+        kind = QueryHubScriptsResponse200ItemKind(d.pop("kind"))
 
         score = d.pop("score")
 

@@ -29,6 +29,13 @@ from langgraph_api.utils import AsyncConnectionProto, get_auth_ctx
 from langgraph_runtime.ops import Runs, logger
 
 
+class LangSmithTracer(TypedDict, total=False):
+    """Configuration for LangSmith tracing."""
+
+    example_id: str | None
+    project_name: str | None
+
+
 class RunCreateDict(TypedDict):
     """Payload for creating a run."""
 
@@ -87,6 +94,8 @@ class RunCreateDict(TypedDict):
     """Start the run after this many seconds. Defaults to 0."""
     if_not_exists: IfNotExists
     """Create the thread if it doesn't exist. If False, reply with 404."""
+    langsmith_tracer: LangSmithTracer | None
+    """Configuration for additional tracing with LangSmith."""
 
 
 def ensure_ids(
@@ -295,6 +304,9 @@ async def create_valid_run(
         user_id = None
     if not configurable.get("langgraph_request_id"):
         configurable["langgraph_request_id"] = request_id
+    if ls_tracing := payload.get("langsmith_tracer"):
+        configurable["__langsmith_project__"] = ls_tracing.get("project_name")
+        configurable["__langsmith_example_id__"] = ls_tracing.get("example_id")
     if request_start_time:
         configurable["__request_start_time_ms__"] = request_start_time
     after_seconds = payload.get("after_seconds", 0)

@@ -225,6 +225,15 @@ class NotebookExecutionStatus(StrEnum):
     STOPPED = "STOPPED"
 
 
+class OnClusterAppUIType(StrEnum):
+    SparkHistoryServer = "SparkHistoryServer"
+    YarnTimelineService = "YarnTimelineService"
+    TezUI = "TezUI"
+    ApplicationMaster = "ApplicationMaster"
+    JobHistoryServer = "JobHistoryServer"
+    ResourceManager = "ResourceManager"
+
+
 class OnDemandCapacityReservationPreference(StrEnum):
     open = "open"
     none = "none"
@@ -243,11 +252,23 @@ class OutputNotebookFormat(StrEnum):
     HTML = "HTML"
 
 
+class PersistentAppUIType(StrEnum):
+    SHS = "SHS"
+    TEZ = "TEZ"
+    YTS = "YTS"
+
+
 class PlacementGroupStrategy(StrEnum):
     SPREAD = "SPREAD"
     PARTITION = "PARTITION"
     CLUSTER = "CLUSTER"
     NONE = "NONE"
+
+
+class ProfilerType(StrEnum):
+    SHS = "SHS"
+    TEZUI = "TEZUI"
+    YTS = "YTS"
 
 
 class ReconfigurationType(StrEnum):
@@ -1127,6 +1148,25 @@ class ComputeLimits(TypedDict, total=False):
     MaximumCoreCapacityUnits: Optional[Integer]
 
 
+class EMRContainersConfig(TypedDict, total=False):
+    """The EMR container configuration."""
+
+    JobRunId: Optional[XmlStringMaxLen256]
+
+
+class CreatePersistentAppUIInput(ServiceRequest):
+    TargetResourceArn: ArnType
+    EMRContainersConfig: Optional[EMRContainersConfig]
+    Tags: Optional[TagList]
+    XReferer: Optional[String]
+    ProfilerType: Optional[ProfilerType]
+
+
+class CreatePersistentAppUIOutput(TypedDict, total=False):
+    PersistentAppUIId: Optional[XmlStringMaxLen256]
+    RuntimeRoleEnabledCluster: Optional[Boolean]
+
+
 class CreateSecurityConfigurationInput(ServiceRequest):
     Name: XmlString
     SecurityConfiguration: String
@@ -1407,6 +1447,33 @@ class DescribeNotebookExecutionOutput(TypedDict, total=False):
     NotebookExecution: Optional[NotebookExecution]
 
 
+class DescribePersistentAppUIInput(ServiceRequest):
+    PersistentAppUIId: XmlStringMaxLen256
+
+
+PersistentAppUITypeList = List[PersistentAppUIType]
+
+
+class PersistentAppUI(TypedDict, total=False):
+    """Holds persistent application user interface information. Applications
+    installed on the Amazon EMR cluster publish user interfaces as web sites
+    to monitor cluster activity.
+    """
+
+    PersistentAppUIId: Optional[XmlStringMaxLen256]
+    PersistentAppUITypeList: Optional[PersistentAppUITypeList]
+    PersistentAppUIStatus: Optional[XmlStringMaxLen256]
+    AuthorId: Optional[XmlStringMaxLen256]
+    CreationTime: Optional[Date]
+    LastModifiedTime: Optional[Date]
+    LastStateChangeReason: Optional[XmlString]
+    Tags: Optional[TagList]
+
+
+class DescribePersistentAppUIOutput(TypedDict, total=False):
+    PersistentAppUI: Optional[PersistentAppUI]
+
+
 class DescribeReleaseLabelInput(ServiceRequest):
     ReleaseLabel: Optional[String]
     NextToken: Optional[String]
@@ -1628,6 +1695,32 @@ class ManagedScalingPolicy(TypedDict, total=False):
 
 class GetManagedScalingPolicyOutput(TypedDict, total=False):
     ManagedScalingPolicy: Optional[ManagedScalingPolicy]
+
+
+class GetOnClusterAppUIPresignedURLInput(ServiceRequest):
+    ClusterId: XmlStringMaxLen256
+    OnClusterAppUIType: Optional[OnClusterAppUIType]
+    ApplicationId: Optional[XmlStringMaxLen256]
+    DryRun: Optional[BooleanObject]
+    ExecutionRoleArn: Optional[ArnType]
+
+
+class GetOnClusterAppUIPresignedURLOutput(TypedDict, total=False):
+    PresignedURLReady: Optional[Boolean]
+    PresignedURL: Optional[XmlString]
+
+
+class GetPersistentAppUIPresignedURLInput(ServiceRequest):
+    PersistentAppUIId: XmlStringMaxLen256
+    PersistentAppUIType: Optional[PersistentAppUIType]
+    ApplicationId: Optional[XmlStringMaxLen256]
+    AuthProxyCall: Optional[BooleanObject]
+    ExecutionRoleArn: Optional[ArnType]
+
+
+class GetPersistentAppUIPresignedURLOutput(TypedDict, total=False):
+    PresignedURLReady: Optional[Boolean]
+    PresignedURL: Optional[XmlString]
 
 
 class GetStudioSessionMappingInput(ServiceRequest):
@@ -2466,7 +2559,7 @@ class EmrApi:
         context: RequestContext,
         job_flow_id: XmlStringMaxLen256,
         steps: StepConfigList,
-        execution_role_arn: ArnType = None,
+        execution_role_arn: ArnType | None = None,
         **kwargs,
     ) -> AddJobFlowStepsOutput:
         """AddJobFlowSteps adds new steps to a running cluster. A maximum of 256
@@ -2528,7 +2621,7 @@ class EmrApi:
         context: RequestContext,
         cluster_id: XmlStringMaxLen256,
         step_ids: StepIdsList,
-        step_cancellation_option: StepCancellationOption = None,
+        step_cancellation_option: StepCancellationOption | None = None,
         **kwargs,
     ) -> CancelStepsOutput:
         """Cancels a pending step or steps in a running cluster. Available only in
@@ -2545,6 +2638,30 @@ class EmrApi:
         :param step_cancellation_option: The option to choose to cancel ``RUNNING`` steps.
         :returns: CancelStepsOutput
         :raises InternalServerError:
+        :raises InvalidRequestException:
+        """
+        raise NotImplementedError
+
+    @handler("CreatePersistentAppUI")
+    def create_persistent_app_ui(
+        self,
+        context: RequestContext,
+        target_resource_arn: ArnType,
+        emr_containers_config: EMRContainersConfig | None = None,
+        tags: TagList | None = None,
+        x_referer: String | None = None,
+        profiler_type: ProfilerType | None = None,
+        **kwargs,
+    ) -> CreatePersistentAppUIOutput:
+        """Creates a persistent application user interface.
+
+        :param target_resource_arn: The unique Amazon Resource Name (ARN) of the target resource.
+        :param emr_containers_config: The EMR containers configuration.
+        :param tags: Tags for the persistent application user interface.
+        :param x_referer: The cross reference for the persistent application user interface.
+        :param profiler_type: The profiler type for the persistent application user interface.
+        :returns: CreatePersistentAppUIOutput
+        :raises InternalServerException:
         :raises InvalidRequestException:
         """
         raise NotImplementedError
@@ -2576,15 +2693,15 @@ class EmrApi:
         workspace_security_group_id: XmlStringMaxLen256,
         engine_security_group_id: XmlStringMaxLen256,
         default_s3_location: XmlString,
-        description: XmlStringMaxLen256 = None,
-        user_role: XmlString = None,
-        idp_auth_url: XmlString = None,
-        idp_relay_state_parameter_name: XmlStringMaxLen256 = None,
-        tags: TagList = None,
-        trusted_identity_propagation_enabled: BooleanObject = None,
-        idc_user_assignment: IdcUserAssignment = None,
-        idc_instance_arn: ArnType = None,
-        encryption_key_arn: XmlString = None,
+        description: XmlStringMaxLen256 | None = None,
+        user_role: XmlString | None = None,
+        idp_auth_url: XmlString | None = None,
+        idp_relay_state_parameter_name: XmlStringMaxLen256 | None = None,
+        tags: TagList | None = None,
+        trusted_identity_propagation_enabled: BooleanObject | None = None,
+        idc_user_assignment: IdcUserAssignment | None = None,
+        idc_instance_arn: ArnType | None = None,
+        encryption_key_arn: XmlString | None = None,
         **kwargs,
     ) -> CreateStudioOutput:
         """Creates a new Amazon EMR Studio.
@@ -2628,8 +2745,8 @@ class EmrApi:
         studio_id: XmlStringMaxLen256,
         identity_type: IdentityType,
         session_policy_arn: XmlStringMaxLen256,
-        identity_id: XmlStringMaxLen256 = None,
-        identity_name: XmlStringMaxLen256 = None,
+        identity_id: XmlStringMaxLen256 | None = None,
+        identity_name: XmlStringMaxLen256 | None = None,
         **kwargs,
     ) -> None:
         """Maps a user or group to the Amazon EMR Studio specified by ``StudioId``,
@@ -2685,8 +2802,8 @@ class EmrApi:
         context: RequestContext,
         studio_id: XmlStringMaxLen256,
         identity_type: IdentityType,
-        identity_id: XmlStringMaxLen256 = None,
-        identity_name: XmlStringMaxLen256 = None,
+        identity_id: XmlStringMaxLen256 | None = None,
+        identity_name: XmlStringMaxLen256 | None = None,
         **kwargs,
     ) -> None:
         """Removes a user or group from an Amazon EMR Studio.
@@ -2720,10 +2837,10 @@ class EmrApi:
     def describe_job_flows(
         self,
         context: RequestContext,
-        created_after: Date = None,
-        created_before: Date = None,
-        job_flow_ids: XmlStringList = None,
-        job_flow_states: JobFlowExecutionStateList = None,
+        created_after: Date | None = None,
+        created_before: Date | None = None,
+        job_flow_ids: XmlStringList | None = None,
+        job_flow_states: JobFlowExecutionStateList | None = None,
         **kwargs,
     ) -> DescribeJobFlowsOutput:
         """This API is no longer supported and will eventually be removed. We
@@ -2770,13 +2887,26 @@ class EmrApi:
         """
         raise NotImplementedError
 
+    @handler("DescribePersistentAppUI")
+    def describe_persistent_app_ui(
+        self, context: RequestContext, persistent_app_ui_id: XmlStringMaxLen256, **kwargs
+    ) -> DescribePersistentAppUIOutput:
+        """Describes a persistent application user interface.
+
+        :param persistent_app_ui_id: The identifier for the persistent application user interface.
+        :returns: DescribePersistentAppUIOutput
+        :raises InternalServerException:
+        :raises InvalidRequestException:
+        """
+        raise NotImplementedError
+
     @handler("DescribeReleaseLabel")
     def describe_release_label(
         self,
         context: RequestContext,
-        release_label: String = None,
-        next_token: String = None,
-        max_results: MaxResultsNumber = None,
+        release_label: String | None = None,
+        next_token: String | None = None,
+        max_results: MaxResultsNumber | None = None,
         **kwargs,
     ) -> DescribeReleaseLabelOutput:
         """Provides Amazon EMR release label details, such as the releases
@@ -2868,7 +2998,7 @@ class EmrApi:
         self,
         context: RequestContext,
         cluster_id: XmlStringMaxLen256,
-        execution_role_arn: ArnType = None,
+        execution_role_arn: ArnType | None = None,
         **kwargs,
     ) -> GetClusterSessionCredentialsOutput:
         """Provides temporary, HTTP basic credentials that are associated with a
@@ -2897,14 +3027,70 @@ class EmrApi:
         """
         raise NotImplementedError
 
+    @handler("GetOnClusterAppUIPresignedURL")
+    def get_on_cluster_app_ui_presigned_url(
+        self,
+        context: RequestContext,
+        cluster_id: XmlStringMaxLen256,
+        on_cluster_app_ui_type: OnClusterAppUIType | None = None,
+        application_id: XmlStringMaxLen256 | None = None,
+        dry_run: BooleanObject | None = None,
+        execution_role_arn: ArnType | None = None,
+        **kwargs,
+    ) -> GetOnClusterAppUIPresignedURLOutput:
+        """The presigned URL properties for the cluster's application user
+        interface.
+
+        :param cluster_id: The cluster ID associated with the cluster's application user interface
+        presigned URL.
+        :param on_cluster_app_ui_type: The application UI type associated with the cluster's application user
+        interface presigned URL.
+        :param application_id: The application ID associated with the cluster's application user
+        interface presigned URL.
+        :param dry_run: Determines if the user interface presigned URL is for a dry run.
+        :param execution_role_arn: The execution role ARN associated with the cluster's application user
+        interface presigned URL.
+        :returns: GetOnClusterAppUIPresignedURLOutput
+        :raises InternalServerError:
+        :raises InvalidRequestException:
+        """
+        raise NotImplementedError
+
+    @handler("GetPersistentAppUIPresignedURL")
+    def get_persistent_app_ui_presigned_url(
+        self,
+        context: RequestContext,
+        persistent_app_ui_id: XmlStringMaxLen256,
+        persistent_app_ui_type: PersistentAppUIType | None = None,
+        application_id: XmlStringMaxLen256 | None = None,
+        auth_proxy_call: BooleanObject | None = None,
+        execution_role_arn: ArnType | None = None,
+        **kwargs,
+    ) -> GetPersistentAppUIPresignedURLOutput:
+        """The presigned URL properties for the cluster's application user
+        interface.
+
+        :param persistent_app_ui_id: The persistent application user interface ID associated with the
+        presigned URL.
+        :param persistent_app_ui_type: The persistent application user interface type associated with the
+        presigned URL.
+        :param application_id: The application ID associated with the presigned URL.
+        :param auth_proxy_call: A boolean that represents if the caller is an authentication proxy call.
+        :param execution_role_arn: The execution role ARN associated with the presigned URL.
+        :returns: GetPersistentAppUIPresignedURLOutput
+        :raises InternalServerError:
+        :raises InvalidRequestException:
+        """
+        raise NotImplementedError
+
     @handler("GetStudioSessionMapping")
     def get_studio_session_mapping(
         self,
         context: RequestContext,
         studio_id: XmlStringMaxLen256,
         identity_type: IdentityType,
-        identity_id: XmlStringMaxLen256 = None,
-        identity_name: XmlStringMaxLen256 = None,
+        identity_id: XmlStringMaxLen256 | None = None,
+        identity_name: XmlStringMaxLen256 | None = None,
         **kwargs,
     ) -> GetStudioSessionMappingOutput:
         """Fetches mapping details for the specified Amazon EMR Studio and identity
@@ -2922,7 +3108,7 @@ class EmrApi:
 
     @handler("ListBootstrapActions")
     def list_bootstrap_actions(
-        self, context: RequestContext, cluster_id: ClusterId, marker: Marker = None, **kwargs
+        self, context: RequestContext, cluster_id: ClusterId, marker: Marker | None = None, **kwargs
     ) -> ListBootstrapActionsOutput:
         """Provides information about the bootstrap actions associated with a
         cluster.
@@ -2939,10 +3125,10 @@ class EmrApi:
     def list_clusters(
         self,
         context: RequestContext,
-        created_after: Date = None,
-        created_before: Date = None,
-        cluster_states: ClusterStateList = None,
-        marker: Marker = None,
+        created_after: Date | None = None,
+        created_before: Date | None = None,
+        cluster_states: ClusterStateList | None = None,
+        marker: Marker | None = None,
         **kwargs,
     ) -> ListClustersOutput:
         """Provides the status of all clusters visible to this Amazon Web Services
@@ -2964,7 +3150,7 @@ class EmrApi:
 
     @handler("ListInstanceFleets")
     def list_instance_fleets(
-        self, context: RequestContext, cluster_id: ClusterId, marker: Marker = None, **kwargs
+        self, context: RequestContext, cluster_id: ClusterId, marker: Marker | None = None, **kwargs
     ) -> ListInstanceFleetsOutput:
         """Lists all available details about the instance fleets in a cluster.
 
@@ -2981,7 +3167,7 @@ class EmrApi:
 
     @handler("ListInstanceGroups")
     def list_instance_groups(
-        self, context: RequestContext, cluster_id: ClusterId, marker: Marker = None, **kwargs
+        self, context: RequestContext, cluster_id: ClusterId, marker: Marker | None = None, **kwargs
     ) -> ListInstanceGroupsOutput:
         """Provides all available details about the instance groups in a cluster.
 
@@ -2998,12 +3184,12 @@ class EmrApi:
         self,
         context: RequestContext,
         cluster_id: ClusterId,
-        instance_group_id: InstanceGroupId = None,
-        instance_group_types: InstanceGroupTypeList = None,
-        instance_fleet_id: InstanceFleetId = None,
-        instance_fleet_type: InstanceFleetType = None,
-        instance_states: InstanceStateList = None,
-        marker: Marker = None,
+        instance_group_id: InstanceGroupId | None = None,
+        instance_group_types: InstanceGroupTypeList | None = None,
+        instance_fleet_id: InstanceFleetId | None = None,
+        instance_fleet_type: InstanceFleetType | None = None,
+        instance_states: InstanceStateList | None = None,
+        marker: Marker | None = None,
         **kwargs,
     ) -> ListInstancesOutput:
         """Provides information for all active Amazon EC2 instances and Amazon EC2
@@ -3053,9 +3239,9 @@ class EmrApi:
     def list_release_labels(
         self,
         context: RequestContext,
-        filters: ReleaseLabelFilter = None,
-        next_token: String = None,
-        max_results: MaxResultsNumber = None,
+        filters: ReleaseLabelFilter | None = None,
+        next_token: String | None = None,
+        max_results: MaxResultsNumber | None = None,
         **kwargs,
     ) -> ListReleaseLabelsOutput:
         """Retrieves release labels of Amazon EMR services in the Region where the
@@ -3073,7 +3259,7 @@ class EmrApi:
 
     @handler("ListSecurityConfigurations")
     def list_security_configurations(
-        self, context: RequestContext, marker: Marker = None, **kwargs
+        self, context: RequestContext, marker: Marker | None = None, **kwargs
     ) -> ListSecurityConfigurationsOutput:
         """Lists all the security configurations visible to this account, providing
         their creation dates and times, and their names. This call returns a
@@ -3093,9 +3279,9 @@ class EmrApi:
         self,
         context: RequestContext,
         cluster_id: ClusterId,
-        step_states: StepStateList = None,
-        step_ids: XmlStringList = None,
-        marker: Marker = None,
+        step_states: StepStateList | None = None,
+        step_ids: XmlStringList | None = None,
+        marker: Marker | None = None,
         **kwargs,
     ) -> ListStepsOutput:
         """Provides a list of steps for the cluster in reverse order unless you
@@ -3120,9 +3306,9 @@ class EmrApi:
     def list_studio_session_mappings(
         self,
         context: RequestContext,
-        studio_id: XmlStringMaxLen256 = None,
-        identity_type: IdentityType = None,
-        marker: Marker = None,
+        studio_id: XmlStringMaxLen256 | None = None,
+        identity_type: IdentityType | None = None,
+        marker: Marker | None = None,
         **kwargs,
     ) -> ListStudioSessionMappingsOutput:
         """Returns a list of all user or group session mappings for the Amazon EMR
@@ -3139,7 +3325,7 @@ class EmrApi:
 
     @handler("ListStudios")
     def list_studios(
-        self, context: RequestContext, marker: Marker = None, **kwargs
+        self, context: RequestContext, marker: Marker | None = None, **kwargs
     ) -> ListStudiosOutput:
         """Returns a list of all Amazon EMR Studios associated with the Amazon Web
         Services account. The list includes details such as ID, Studio Access
@@ -3154,7 +3340,7 @@ class EmrApi:
 
     @handler("ListSupportedInstanceTypes")
     def list_supported_instance_types(
-        self, context: RequestContext, release_label: String, marker: String = None, **kwargs
+        self, context: RequestContext, release_label: String, marker: String | None = None, **kwargs
     ) -> ListSupportedInstanceTypesOutput:
         """A list of the instance types that Amazon EMR supports. You can filter
         the list by Amazon Web Services Region and Amazon EMR release.
@@ -3174,7 +3360,7 @@ class EmrApi:
         self,
         context: RequestContext,
         cluster_id: String,
-        step_concurrency_level: Integer = None,
+        step_concurrency_level: Integer | None = None,
         **kwargs,
     ) -> ModifyClusterOutput:
         """Modifies the number of steps that can be executed concurrently for the
@@ -3214,8 +3400,8 @@ class EmrApi:
     def modify_instance_groups(
         self,
         context: RequestContext,
-        cluster_id: ClusterId = None,
-        instance_groups: InstanceGroupModifyConfigList = None,
+        cluster_id: ClusterId | None = None,
+        instance_groups: InstanceGroupModifyConfigList | None = None,
         **kwargs,
     ) -> None:
         """ModifyInstanceGroups modifies the number of nodes and configuration
@@ -3256,7 +3442,7 @@ class EmrApi:
         self,
         context: RequestContext,
         cluster_id: ClusterId,
-        auto_termination_policy: AutoTerminationPolicy = None,
+        auto_termination_policy: AutoTerminationPolicy | None = None,
         **kwargs,
     ) -> PutAutoTerminationPolicyOutput:
         """Auto-termination is supported in Amazon EMR releases 5.30.0 and 6.1.0
@@ -3386,35 +3572,35 @@ class EmrApi:
         context: RequestContext,
         name: XmlStringMaxLen256,
         instances: JobFlowInstancesConfig,
-        log_uri: XmlString = None,
-        log_encryption_kms_key_id: XmlString = None,
-        additional_info: XmlString = None,
-        ami_version: XmlStringMaxLen256 = None,
-        release_label: XmlStringMaxLen256 = None,
-        steps: StepConfigList = None,
-        bootstrap_actions: BootstrapActionConfigList = None,
-        supported_products: SupportedProductsList = None,
-        new_supported_products: NewSupportedProductsList = None,
-        applications: ApplicationList = None,
-        configurations: ConfigurationList = None,
-        visible_to_all_users: Boolean = None,
-        job_flow_role: XmlString = None,
-        service_role: XmlString = None,
-        tags: TagList = None,
-        security_configuration: XmlString = None,
-        auto_scaling_role: XmlString = None,
-        scale_down_behavior: ScaleDownBehavior = None,
-        custom_ami_id: XmlStringMaxLen256 = None,
-        ebs_root_volume_size: Integer = None,
-        repo_upgrade_on_boot: RepoUpgradeOnBoot = None,
-        kerberos_attributes: KerberosAttributes = None,
-        step_concurrency_level: Integer = None,
-        managed_scaling_policy: ManagedScalingPolicy = None,
-        placement_group_configs: PlacementGroupConfigList = None,
-        auto_termination_policy: AutoTerminationPolicy = None,
-        os_release_label: XmlStringMaxLen256 = None,
-        ebs_root_volume_iops: Integer = None,
-        ebs_root_volume_throughput: Integer = None,
+        log_uri: XmlString | None = None,
+        log_encryption_kms_key_id: XmlString | None = None,
+        additional_info: XmlString | None = None,
+        ami_version: XmlStringMaxLen256 | None = None,
+        release_label: XmlStringMaxLen256 | None = None,
+        steps: StepConfigList | None = None,
+        bootstrap_actions: BootstrapActionConfigList | None = None,
+        supported_products: SupportedProductsList | None = None,
+        new_supported_products: NewSupportedProductsList | None = None,
+        applications: ApplicationList | None = None,
+        configurations: ConfigurationList | None = None,
+        visible_to_all_users: Boolean | None = None,
+        job_flow_role: XmlString | None = None,
+        service_role: XmlString | None = None,
+        tags: TagList | None = None,
+        security_configuration: XmlString | None = None,
+        auto_scaling_role: XmlString | None = None,
+        scale_down_behavior: ScaleDownBehavior | None = None,
+        custom_ami_id: XmlStringMaxLen256 | None = None,
+        ebs_root_volume_size: Integer | None = None,
+        repo_upgrade_on_boot: RepoUpgradeOnBoot | None = None,
+        kerberos_attributes: KerberosAttributes | None = None,
+        step_concurrency_level: Integer | None = None,
+        managed_scaling_policy: ManagedScalingPolicy | None = None,
+        placement_group_configs: PlacementGroupConfigList | None = None,
+        auto_termination_policy: AutoTerminationPolicy | None = None,
+        os_release_label: XmlStringMaxLen256 | None = None,
+        ebs_root_volume_iops: Integer | None = None,
+        ebs_root_volume_throughput: Integer | None = None,
         **kwargs,
     ) -> RunJobFlowOutput:
         """RunJobFlow creates and starts running a new cluster (job flow). The
@@ -3633,16 +3819,16 @@ class EmrApi:
         context: RequestContext,
         execution_engine: ExecutionEngineConfig,
         service_role: XmlString,
-        editor_id: XmlStringMaxLen256 = None,
-        relative_path: XmlString = None,
-        notebook_execution_name: XmlStringMaxLen256 = None,
-        notebook_params: XmlString = None,
-        notebook_instance_security_group_id: XmlStringMaxLen256 = None,
-        tags: TagList = None,
-        notebook_s3_location: NotebookS3LocationFromInput = None,
-        output_notebook_s3_location: OutputNotebookS3LocationFromInput = None,
-        output_notebook_format: OutputNotebookFormat = None,
-        environment_variables: EnvironmentVariablesMap = None,
+        editor_id: XmlStringMaxLen256 | None = None,
+        relative_path: XmlString | None = None,
+        notebook_execution_name: XmlStringMaxLen256 | None = None,
+        notebook_params: XmlString | None = None,
+        notebook_instance_security_group_id: XmlStringMaxLen256 | None = None,
+        tags: TagList | None = None,
+        notebook_s3_location: NotebookS3LocationFromInput | None = None,
+        output_notebook_s3_location: OutputNotebookS3LocationFromInput | None = None,
+        output_notebook_format: OutputNotebookFormat | None = None,
+        environment_variables: EnvironmentVariablesMap | None = None,
         **kwargs,
     ) -> StartNotebookExecutionOutput:
         """Starts a notebook execution.
@@ -3708,11 +3894,11 @@ class EmrApi:
         self,
         context: RequestContext,
         studio_id: XmlStringMaxLen256,
-        name: XmlStringMaxLen256 = None,
-        description: XmlStringMaxLen256 = None,
-        subnet_ids: SubnetIdList = None,
-        default_s3_location: XmlString = None,
-        encryption_key_arn: XmlString = None,
+        name: XmlStringMaxLen256 | None = None,
+        description: XmlStringMaxLen256 | None = None,
+        subnet_ids: SubnetIdList | None = None,
+        default_s3_location: XmlString | None = None,
+        encryption_key_arn: XmlString | None = None,
         **kwargs,
     ) -> None:
         """Updates an Amazon EMR Studio configuration, including attributes such as
@@ -3738,8 +3924,8 @@ class EmrApi:
         studio_id: XmlStringMaxLen256,
         identity_type: IdentityType,
         session_policy_arn: XmlStringMaxLen256,
-        identity_id: XmlStringMaxLen256 = None,
-        identity_name: XmlStringMaxLen256 = None,
+        identity_id: XmlStringMaxLen256 | None = None,
+        identity_name: XmlStringMaxLen256 | None = None,
         **kwargs,
     ) -> None:
         """Updates the session policy attached to the user or group for the

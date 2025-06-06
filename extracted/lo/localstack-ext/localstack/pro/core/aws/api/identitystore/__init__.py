@@ -534,8 +534,8 @@ class IdentitystoreApi:
         self,
         context: RequestContext,
         identity_store_id: IdentityStoreId,
-        display_name: GroupDisplayName = None,
-        description: SensitiveStringType = None,
+        display_name: GroupDisplayName | None = None,
+        description: SensitiveStringType | None = None,
         **kwargs,
     ) -> CreateGroupResponse:
         """Creates a group within the specified identity store.
@@ -586,19 +586,19 @@ class IdentitystoreApi:
         self,
         context: RequestContext,
         identity_store_id: IdentityStoreId,
-        user_name: UserName = None,
-        name: Name = None,
-        display_name: SensitiveStringType = None,
-        nick_name: SensitiveStringType = None,
-        profile_url: SensitiveStringType = None,
-        emails: Emails = None,
-        addresses: Addresses = None,
-        phone_numbers: PhoneNumbers = None,
-        user_type: SensitiveStringType = None,
-        title: SensitiveStringType = None,
-        preferred_language: SensitiveStringType = None,
-        locale: SensitiveStringType = None,
-        timezone: SensitiveStringType = None,
+        user_name: UserName | None = None,
+        name: Name | None = None,
+        display_name: SensitiveStringType | None = None,
+        nick_name: SensitiveStringType | None = None,
+        profile_url: SensitiveStringType | None = None,
+        emails: Emails | None = None,
+        addresses: Addresses | None = None,
+        phone_numbers: PhoneNumbers | None = None,
+        user_type: SensitiveStringType | None = None,
+        title: SensitiveStringType | None = None,
+        preferred_language: SensitiveStringType | None = None,
+        locale: SensitiveStringType | None = None,
+        timezone: SensitiveStringType | None = None,
         **kwargs,
     ) -> CreateUserResponse:
         """Creates a user within the specified identity store.
@@ -897,8 +897,8 @@ class IdentitystoreApi:
         context: RequestContext,
         identity_store_id: IdentityStoreId,
         group_id: ResourceId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListGroupMembershipsResponse:
         """For the specified group in the specified identity store, returns the
@@ -930,8 +930,8 @@ class IdentitystoreApi:
         context: RequestContext,
         identity_store_id: IdentityStoreId,
         member_id: MemberId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListGroupMembershipsForMemberResponse:
         """For the specified member in the specified identity store, returns the
@@ -962,9 +962,9 @@ class IdentitystoreApi:
         self,
         context: RequestContext,
         identity_store_id: IdentityStoreId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        filters: Filters = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: Filters | None = None,
         **kwargs,
     ) -> ListGroupsResponse:
         """Lists all groups in the identity store. Returns a paginated list of
@@ -998,9 +998,9 @@ class IdentitystoreApi:
         self,
         context: RequestContext,
         identity_store_id: IdentityStoreId,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        filters: Filters = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: Filters | None = None,
         **kwargs,
     ) -> ListUsersResponse:
         """Lists all users in the identity store. Returns a paginated list of

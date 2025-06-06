@@ -3809,7 +3809,7 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         username: UsernameType,
-        client_metadata: ClientMetadataType = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> AdminConfirmSignUpResponse:
         """Confirms user sign-up as an administrator.
@@ -3864,13 +3864,13 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         username: UsernameType,
-        user_attributes: AttributeListType = None,
-        validation_data: AttributeListType = None,
-        temporary_password: PasswordType = None,
-        force_alias_creation: ForceAliasCreation = None,
-        message_action: MessageActionType = None,
-        desired_delivery_mediums: DeliveryMediumListType = None,
-        client_metadata: ClientMetadataType = None,
+        user_attributes: AttributeListType | None = None,
+        validation_data: AttributeListType | None = None,
+        temporary_password: PasswordType | None = None,
+        force_alias_creation: ForceAliasCreation | None = None,
+        message_action: MessageActionType | None = None,
+        desired_delivery_mediums: DeliveryMediumListType | None = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> AdminCreateUserResponse:
         """Creates a new user in the specified user pool.
@@ -4302,11 +4302,11 @@ class CognitoIdpApi:
         user_pool_id: UserPoolIdType,
         client_id: ClientIdType,
         auth_flow: AuthFlowType,
-        auth_parameters: AuthParametersType = None,
-        client_metadata: ClientMetadataType = None,
-        analytics_metadata: AnalyticsMetadataType = None,
-        context_data: ContextDataType = None,
-        session: SessionType = None,
+        auth_parameters: AuthParametersType | None = None,
+        client_metadata: ClientMetadataType | None = None,
+        analytics_metadata: AnalyticsMetadataType | None = None,
+        context_data: ContextDataType | None = None,
+        session: SessionType | None = None,
         **kwargs,
     ) -> AdminInitiateAuthResponse:
         """Starts sign-in for applications with a server-side component, for
@@ -4444,8 +4444,8 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         username: UsernameType,
-        limit: QueryLimitType = None,
-        pagination_token: SearchPaginationTokenType = None,
+        limit: QueryLimitType | None = None,
+        pagination_token: SearchPaginationTokenType | None = None,
         **kwargs,
     ) -> AdminListDevicesResponse:
         """Lists a user's registered devices. Remembered devices are used in
@@ -4489,8 +4489,8 @@ class CognitoIdpApi:
         context: RequestContext,
         username: UsernameType,
         user_pool_id: UserPoolIdType,
-        limit: QueryLimitType = None,
-        next_token: PaginationKey = None,
+        limit: QueryLimitType | None = None,
+        next_token: PaginationKey | None = None,
         **kwargs,
     ) -> AdminListGroupsForUserResponse:
         """Lists the groups that a user belongs to. User pool groups are
@@ -4533,8 +4533,8 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         username: UsernameType,
-        max_results: QueryLimitType = None,
-        next_token: PaginationKey = None,
+        max_results: QueryLimitType | None = None,
+        next_token: PaginationKey | None = None,
         **kwargs,
     ) -> AdminListUserAuthEventsResponse:
         """Requests a history of user activity and any risks detected as part of
@@ -4619,7 +4619,7 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         username: UsernameType,
-        client_metadata: ClientMetadataType = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> AdminResetUserPasswordResponse:
         """Resets the specified user's password in a user pool. This operation
@@ -4689,11 +4689,11 @@ class CognitoIdpApi:
         user_pool_id: UserPoolIdType,
         client_id: ClientIdType,
         challenge_name: ChallengeNameType,
-        challenge_responses: ChallengeResponsesType = None,
-        session: SessionType = None,
-        analytics_metadata: AnalyticsMetadataType = None,
-        context_data: ContextDataType = None,
-        client_metadata: ClientMetadataType = None,
+        challenge_responses: ChallengeResponsesType | None = None,
+        session: SessionType | None = None,
+        analytics_metadata: AnalyticsMetadataType | None = None,
+        context_data: ContextDataType | None = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> AdminRespondToAuthChallengeResponse:
         """Some API operations in a user pool generate a challenge, like a prompt
@@ -4786,9 +4786,9 @@ class CognitoIdpApi:
         context: RequestContext,
         username: UsernameType,
         user_pool_id: UserPoolIdType,
-        sms_mfa_settings: SMSMfaSettingsType = None,
-        software_token_mfa_settings: SoftwareTokenMfaSettingsType = None,
-        email_mfa_settings: EmailMfaSettingsType = None,
+        sms_mfa_settings: SMSMfaSettingsType | None = None,
+        software_token_mfa_settings: SoftwareTokenMfaSettingsType | None = None,
+        email_mfa_settings: EmailMfaSettingsType | None = None,
         **kwargs,
     ) -> AdminSetUserMFAPreferenceResponse:
         """Sets the user's multi-factor authentication (MFA) preference, including
@@ -4834,7 +4834,7 @@ class CognitoIdpApi:
         user_pool_id: UserPoolIdType,
         username: UsernameType,
         password: PasswordType,
-        permanent: BooleanType = None,
+        permanent: BooleanType | None = None,
         **kwargs,
     ) -> AdminSetUserPasswordResponse:
         """Sets the specified user's password in a user pool. This operation
@@ -5002,7 +5002,7 @@ class CognitoIdpApi:
         user_pool_id: UserPoolIdType,
         username: UsernameType,
         device_key: DeviceKeyType,
-        device_remembered_status: DeviceRememberedStatusType = None,
+        device_remembered_status: DeviceRememberedStatusType | None = None,
         **kwargs,
     ) -> AdminUpdateDeviceStatusResponse:
         """Updates the status of a user's device so that it is marked as remembered
@@ -5051,7 +5051,7 @@ class CognitoIdpApi:
         user_pool_id: UserPoolIdType,
         username: UsernameType,
         user_attributes: AttributeListType,
-        client_metadata: ClientMetadataType = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> AdminUpdateUserAttributesResponse:
         """Updates the specified user's attributes. To delete an attribute from
@@ -5190,8 +5190,8 @@ class CognitoIdpApi:
     def associate_software_token(
         self,
         context: RequestContext,
-        access_token: TokenModelType = None,
-        session: SessionType = None,
+        access_token: TokenModelType | None = None,
+        session: SessionType | None = None,
         **kwargs,
     ) -> AssociateSoftwareTokenResponse:
         """Begins setup of time-based one-time password (TOTP) multi-factor
@@ -5233,7 +5233,7 @@ class CognitoIdpApi:
         context: RequestContext,
         proposed_password: PasswordType,
         access_token: TokenModelType,
-        previous_password: PasswordType = None,
+        previous_password: PasswordType | None = None,
         **kwargs,
     ) -> ChangePasswordResponse:
         """Changes the password for the currently signed-in user.
@@ -5305,8 +5305,8 @@ class CognitoIdpApi:
         context: RequestContext,
         access_token: TokenModelType,
         device_key: DeviceKeyType,
-        device_secret_verifier_config: DeviceSecretVerifierConfigType = None,
-        device_name: DeviceNameType = None,
+        device_secret_verifier_config: DeviceSecretVerifierConfigType | None = None,
+        device_name: DeviceNameType | None = None,
         **kwargs,
     ) -> ConfirmDeviceResponse:
         """Confirms a device that a user wants to remember. A remembered device is
@@ -5359,10 +5359,10 @@ class CognitoIdpApi:
         username: UsernameType,
         confirmation_code: ConfirmationCodeType,
         password: PasswordType,
-        secret_hash: SecretHashType = None,
-        analytics_metadata: AnalyticsMetadataType = None,
-        user_context_data: UserContextDataType = None,
-        client_metadata: ClientMetadataType = None,
+        secret_hash: SecretHashType | None = None,
+        analytics_metadata: AnalyticsMetadataType | None = None,
+        user_context_data: UserContextDataType | None = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> ConfirmForgotPasswordResponse:
         """This public API operation accepts a confirmation code that Amazon
@@ -5418,12 +5418,12 @@ class CognitoIdpApi:
         client_id: ClientIdType,
         username: UsernameType,
         confirmation_code: ConfirmationCodeType,
-        secret_hash: SecretHashType = None,
-        force_alias_creation: ForceAliasCreation = None,
-        analytics_metadata: AnalyticsMetadataType = None,
-        user_context_data: UserContextDataType = None,
-        client_metadata: ClientMetadataType = None,
-        session: SessionType = None,
+        secret_hash: SecretHashType | None = None,
+        force_alias_creation: ForceAliasCreation | None = None,
+        analytics_metadata: AnalyticsMetadataType | None = None,
+        user_context_data: UserContextDataType | None = None,
+        client_metadata: ClientMetadataType | None = None,
+        session: SessionType | None = None,
         **kwargs,
     ) -> ConfirmSignUpResponse:
         """Confirms the account of a new user. This public API operation submits a
@@ -5486,9 +5486,9 @@ class CognitoIdpApi:
         context: RequestContext,
         group_name: GroupNameType,
         user_pool_id: UserPoolIdType,
-        description: DescriptionType = None,
-        role_arn: ArnType = None,
-        precedence: PrecedenceType = None,
+        description: DescriptionType | None = None,
+        role_arn: ArnType | None = None,
+        precedence: PrecedenceType | None = None,
         **kwargs,
     ) -> CreateGroupResponse:
         """Creates a new group in the specified user pool. For more information
@@ -5534,8 +5534,8 @@ class CognitoIdpApi:
         provider_name: ProviderNameTypeV2,
         provider_type: IdentityProviderTypeType,
         provider_details: ProviderDetailsType,
-        attribute_mapping: AttributeMappingType = None,
-        idp_identifiers: IdpIdentifiersListType = None,
+        attribute_mapping: AttributeMappingType | None = None,
+        idp_identifiers: IdpIdentifiersListType | None = None,
         **kwargs,
     ) -> CreateIdentityProviderResponse:
         """Adds a configuration and trust relationship between a third-party
@@ -5581,9 +5581,9 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         client_id: ClientIdType,
-        use_cognito_provided_values: BooleanType = None,
-        settings: Document = None,
-        assets: AssetListType = None,
+        use_cognito_provided_values: BooleanType | None = None,
+        settings: Document | None = None,
+        assets: AssetListType | None = None,
         **kwargs,
     ) -> CreateManagedLoginBrandingResponse:
         """Creates a new set of branding settings for a user pool style and
@@ -5643,7 +5643,7 @@ class CognitoIdpApi:
         user_pool_id: UserPoolIdType,
         identifier: ResourceServerIdentifierType,
         name: ResourceServerNameType,
-        scopes: ResourceServerScopeListType = None,
+        scopes: ResourceServerScopeListType | None = None,
         **kwargs,
     ) -> CreateResourceServerResponse:
         """Creates a new OAuth2.0 resource server and defines custom scopes within
@@ -5725,29 +5725,29 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         pool_name: UserPoolNameType,
-        policies: UserPoolPolicyType = None,
-        deletion_protection: DeletionProtectionType = None,
-        lambda_config: LambdaConfigType = None,
-        auto_verified_attributes: VerifiedAttributesListType = None,
-        alias_attributes: AliasAttributesListType = None,
-        username_attributes: UsernameAttributesListType = None,
-        sms_verification_message: SmsVerificationMessageType = None,
-        email_verification_message: EmailVerificationMessageType = None,
-        email_verification_subject: EmailVerificationSubjectType = None,
-        verification_message_template: VerificationMessageTemplateType = None,
-        sms_authentication_message: SmsVerificationMessageType = None,
-        mfa_configuration: UserPoolMfaType = None,
-        user_attribute_update_settings: UserAttributeUpdateSettingsType = None,
-        device_configuration: DeviceConfigurationType = None,
-        email_configuration: EmailConfigurationType = None,
-        sms_configuration: SmsConfigurationType = None,
-        user_pool_tags: UserPoolTagsType = None,
-        admin_create_user_config: AdminCreateUserConfigType = None,
-        schema: SchemaAttributesListType = None,
-        user_pool_add_ons: UserPoolAddOnsType = None,
-        username_configuration: UsernameConfigurationType = None,
-        account_recovery_setting: AccountRecoverySettingType = None,
-        user_pool_tier: UserPoolTierType = None,
+        policies: UserPoolPolicyType | None = None,
+        deletion_protection: DeletionProtectionType | None = None,
+        lambda_config: LambdaConfigType | None = None,
+        auto_verified_attributes: VerifiedAttributesListType | None = None,
+        alias_attributes: AliasAttributesListType | None = None,
+        username_attributes: UsernameAttributesListType | None = None,
+        sms_verification_message: SmsVerificationMessageType | None = None,
+        email_verification_message: EmailVerificationMessageType | None = None,
+        email_verification_subject: EmailVerificationSubjectType | None = None,
+        verification_message_template: VerificationMessageTemplateType | None = None,
+        sms_authentication_message: SmsVerificationMessageType | None = None,
+        mfa_configuration: UserPoolMfaType | None = None,
+        user_attribute_update_settings: UserAttributeUpdateSettingsType | None = None,
+        device_configuration: DeviceConfigurationType | None = None,
+        email_configuration: EmailConfigurationType | None = None,
+        sms_configuration: SmsConfigurationType | None = None,
+        user_pool_tags: UserPoolTagsType | None = None,
+        admin_create_user_config: AdminCreateUserConfigType | None = None,
+        schema: SchemaAttributesListType | None = None,
+        user_pool_add_ons: UserPoolAddOnsType | None = None,
+        username_configuration: UsernameConfigurationType | None = None,
+        account_recovery_setting: AccountRecoverySettingType | None = None,
+        user_pool_tier: UserPoolTierType | None = None,
         **kwargs,
     ) -> CreateUserPoolResponse:
         """Creates a new Amazon Cognito user pool. This operation sets basic and
@@ -5842,27 +5842,27 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         client_name: ClientNameType,
-        generate_secret: GenerateSecret = None,
-        refresh_token_validity: RefreshTokenValidityType = None,
-        access_token_validity: AccessTokenValidityType = None,
-        id_token_validity: IdTokenValidityType = None,
-        token_validity_units: TokenValidityUnitsType = None,
-        read_attributes: ClientPermissionListType = None,
-        write_attributes: ClientPermissionListType = None,
-        explicit_auth_flows: ExplicitAuthFlowsListType = None,
-        supported_identity_providers: SupportedIdentityProvidersListType = None,
-        callback_urls: CallbackURLsListType = None,
-        logout_urls: LogoutURLsListType = None,
-        default_redirect_uri: RedirectUrlType = None,
-        allowed_o_auth_flows: OAuthFlowsType = None,
-        allowed_o_auth_scopes: ScopeListType = None,
-        allowed_o_auth_flows_user_pool_client: BooleanType = None,
-        analytics_configuration: AnalyticsConfigurationType = None,
-        prevent_user_existence_errors: PreventUserExistenceErrorTypes = None,
-        enable_token_revocation: WrappedBooleanType = None,
-        enable_propagate_additional_user_context_data: WrappedBooleanType = None,
-        auth_session_validity: AuthSessionValidityType = None,
-        refresh_token_rotation: RefreshTokenRotationType = None,
+        generate_secret: GenerateSecret | None = None,
+        refresh_token_validity: RefreshTokenValidityType | None = None,
+        access_token_validity: AccessTokenValidityType | None = None,
+        id_token_validity: IdTokenValidityType | None = None,
+        token_validity_units: TokenValidityUnitsType | None = None,
+        read_attributes: ClientPermissionListType | None = None,
+        write_attributes: ClientPermissionListType | None = None,
+        explicit_auth_flows: ExplicitAuthFlowsListType | None = None,
+        supported_identity_providers: SupportedIdentityProvidersListType | None = None,
+        callback_urls: CallbackURLsListType | None = None,
+        logout_urls: LogoutURLsListType | None = None,
+        default_redirect_uri: RedirectUrlType | None = None,
+        allowed_o_auth_flows: OAuthFlowsType | None = None,
+        allowed_o_auth_scopes: ScopeListType | None = None,
+        allowed_o_auth_flows_user_pool_client: BooleanType | None = None,
+        analytics_configuration: AnalyticsConfigurationType | None = None,
+        prevent_user_existence_errors: PreventUserExistenceErrorTypes | None = None,
+        enable_token_revocation: WrappedBooleanType | None = None,
+        enable_propagate_additional_user_context_data: WrappedBooleanType | None = None,
+        auth_session_validity: AuthSessionValidityType | None = None,
+        refresh_token_rotation: RefreshTokenRotationType | None = None,
         **kwargs,
     ) -> CreateUserPoolClientResponse:
         """Creates an app client in a user pool. This operation sets basic and
@@ -5943,8 +5943,8 @@ class CognitoIdpApi:
         context: RequestContext,
         domain: DomainType,
         user_pool_id: UserPoolIdType,
-        managed_login_version: WrappedIntegerType = None,
-        custom_domain_config: CustomDomainConfigType = None,
+        managed_login_version: WrappedIntegerType | None = None,
+        custom_domain_config: CustomDomainConfigType | None = None,
         **kwargs,
     ) -> CreateUserPoolDomainResponse:
         """A user pool domain hosts managed login, an authorization server and web
@@ -6316,6 +6316,8 @@ class CognitoIdpApi:
         :raises ForbiddenException:
         :raises InternalErrorException:
         :raises InvalidParameterException:
+        :raises TooManyRequestsException:
+        :raises LimitExceededException:
         :raises NotAuthorizedException:
         :raises ResourceNotFoundException:
         """
@@ -6349,7 +6351,7 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         managed_login_branding_id: ManagedLoginBrandingIdType,
-        return_merged_resources: BooleanType = None,
+        return_merged_resources: BooleanType | None = None,
         **kwargs,
     ) -> DescribeManagedLoginBrandingResponse:
         """Given the ID of a managed login branding style, returns detailed
@@ -6376,7 +6378,7 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         client_id: ClientIdType,
-        return_merged_resources: BooleanType = None,
+        return_merged_resources: BooleanType | None = None,
         **kwargs,
     ) -> DescribeManagedLoginBrandingByClientResponse:
         """Given the ID of a user pool app client, returns detailed information
@@ -6425,7 +6427,7 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        client_id: ClientIdType = None,
+        client_id: ClientIdType | None = None,
         **kwargs,
     ) -> DescribeRiskConfigurationResponse:
         """Given an app client or user pool ID where threat protection is
@@ -6577,7 +6579,7 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         device_key: DeviceKeyType,
-        access_token: TokenModelType = None,
+        access_token: TokenModelType | None = None,
         **kwargs,
     ) -> None:
         """Given a device key, deletes a remembered device as the currently
@@ -6619,10 +6621,10 @@ class CognitoIdpApi:
         context: RequestContext,
         client_id: ClientIdType,
         username: UsernameType,
-        secret_hash: SecretHashType = None,
-        user_context_data: UserContextDataType = None,
-        analytics_metadata: AnalyticsMetadataType = None,
-        client_metadata: ClientMetadataType = None,
+        secret_hash: SecretHashType | None = None,
+        user_context_data: UserContextDataType | None = None,
+        analytics_metadata: AnalyticsMetadataType | None = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> ForgotPasswordResponse:
         """Sends a password-reset confirmation code for the currently signed-in
@@ -6735,7 +6737,7 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         device_key: DeviceKeyType,
-        access_token: TokenModelType = None,
+        access_token: TokenModelType | None = None,
         **kwargs,
     ) -> GetDeviceResponse:
         """Given a device key, returns information about a remembered device for
@@ -6911,9 +6913,9 @@ class CognitoIdpApi:
         context: RequestContext,
         refresh_token: TokenModelType,
         client_id: ClientIdType,
-        client_secret: ClientSecretType = None,
-        device_key: DeviceKeyType = None,
-        client_metadata: ClientMetadataType = None,
+        client_secret: ClientSecretType | None = None,
+        device_key: DeviceKeyType | None = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> GetTokensFromRefreshTokenResponse:
         """Given a refresh token, issues new ID, access, and optionally refresh
@@ -6952,7 +6954,7 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        client_id: ClientIdType = None,
+        client_id: ClientIdType | None = None,
         **kwargs,
     ) -> GetUICustomizationResponse:
         """Given a user pool ID or app client, returns information about classic
@@ -7013,7 +7015,7 @@ class CognitoIdpApi:
         context: RequestContext,
         access_token: TokenModelType,
         attribute_name: AttributeNameType,
-        client_metadata: ClientMetadataType = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> GetUserAttributeVerificationCodeResponse:
         """Given an attribute name, sends a user attribute verification code for
@@ -7224,11 +7226,11 @@ class CognitoIdpApi:
         context: RequestContext,
         auth_flow: AuthFlowType,
         client_id: ClientIdType,
-        auth_parameters: AuthParametersType = None,
-        client_metadata: ClientMetadataType = None,
-        analytics_metadata: AnalyticsMetadataType = None,
-        user_context_data: UserContextDataType = None,
-        session: SessionType = None,
+        auth_parameters: AuthParametersType | None = None,
+        client_metadata: ClientMetadataType | None = None,
+        analytics_metadata: AnalyticsMetadataType | None = None,
+        user_context_data: UserContextDataType | None = None,
+        session: SessionType | None = None,
         **kwargs,
     ) -> InitiateAuthResponse:
         """Declares an authentication flow and initiates sign-in for a user in the
@@ -7302,8 +7304,8 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         access_token: TokenModelType,
-        limit: QueryLimitType = None,
-        pagination_token: SearchPaginationTokenType = None,
+        limit: QueryLimitType | None = None,
+        pagination_token: SearchPaginationTokenType | None = None,
         **kwargs,
     ) -> ListDevicesResponse:
         """Lists the devices that Amazon Cognito has registered to the currently
@@ -7346,8 +7348,8 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        limit: QueryLimitType = None,
-        next_token: PaginationKey = None,
+        limit: QueryLimitType | None = None,
+        next_token: PaginationKey | None = None,
         **kwargs,
     ) -> ListGroupsResponse:
         """Given a user pool ID, returns user pool groups and their details.
@@ -7383,8 +7385,8 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        max_results: ListProvidersLimitType = None,
-        next_token: PaginationKeyType = None,
+        max_results: ListProvidersLimitType | None = None,
+        next_token: PaginationKeyType | None = None,
         **kwargs,
     ) -> ListIdentityProvidersResponse:
         """Given a user pool ID, returns information about configured identity
@@ -7422,8 +7424,8 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        max_results: ListResourceServersLimitType = None,
-        next_token: PaginationKeyType = None,
+        max_results: ListResourceServersLimitType | None = None,
+        next_token: PaginationKeyType | None = None,
         **kwargs,
     ) -> ListResourceServersResponse:
         """Given a user pool ID, returns all resource servers and their details.
@@ -7482,7 +7484,7 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         max_results: PoolQueryLimitType,
-        pagination_token: PaginationKeyType = None,
+        pagination_token: PaginationKeyType | None = None,
         **kwargs,
     ) -> ListUserImportJobsResponse:
         """Given a user pool ID, returns user import jobs and their details. Import
@@ -7522,8 +7524,8 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        max_results: QueryLimit = None,
-        next_token: PaginationKey = None,
+        max_results: QueryLimit | None = None,
+        next_token: PaginationKey | None = None,
         **kwargs,
     ) -> ListUserPoolClientsResponse:
         """Given a user pool ID, lists app clients. App clients are sets of rules
@@ -7562,7 +7564,7 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         max_results: PoolQueryLimitType,
-        next_token: PaginationKeyType = None,
+        next_token: PaginationKeyType | None = None,
         **kwargs,
     ) -> ListUserPoolsResponse:
         """Lists user pools and their details in the current Amazon Web Services
@@ -7597,10 +7599,10 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        attributes_to_get: SearchedAttributeNamesListType = None,
-        limit: QueryLimitType = None,
-        pagination_token: SearchPaginationTokenType = None,
-        filter: UserFilterType = None,
+        attributes_to_get: SearchedAttributeNamesListType | None = None,
+        limit: QueryLimitType | None = None,
+        pagination_token: SearchPaginationTokenType | None = None,
+        filter: UserFilterType | None = None,
         **kwargs,
     ) -> ListUsersResponse:
         """Given a user pool ID, returns a list of users and their basic details in
@@ -7642,8 +7644,8 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         group_name: GroupNameType,
-        limit: QueryLimitType = None,
-        next_token: PaginationKey = None,
+        limit: QueryLimitType | None = None,
+        next_token: PaginationKey | None = None,
         **kwargs,
     ) -> ListUsersInGroupResponse:
         """Given a user pool ID and a group name, returns a list of users in the
@@ -7684,8 +7686,8 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         access_token: TokenModelType,
-        next_token: PaginationKey = None,
-        max_results: WebAuthnCredentialsQueryLimitType = None,
+        next_token: PaginationKey | None = None,
+        max_results: WebAuthnCredentialsQueryLimitType | None = None,
         **kwargs,
     ) -> ListWebAuthnCredentialsResponse:
         """Generates a list of the currently signed-in user's registered passkey,
@@ -7711,6 +7713,8 @@ class CognitoIdpApi:
         :raises ForbiddenException:
         :raises InternalErrorException:
         :raises InvalidParameterException:
+        :raises TooManyRequestsException:
+        :raises LimitExceededException:
         :raises NotAuthorizedException:
         """
         raise NotImplementedError
@@ -7721,10 +7725,10 @@ class CognitoIdpApi:
         context: RequestContext,
         client_id: ClientIdType,
         username: UsernameType,
-        secret_hash: SecretHashType = None,
-        user_context_data: UserContextDataType = None,
-        analytics_metadata: AnalyticsMetadataType = None,
-        client_metadata: ClientMetadataType = None,
+        secret_hash: SecretHashType | None = None,
+        user_context_data: UserContextDataType | None = None,
+        analytics_metadata: AnalyticsMetadataType | None = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> ResendConfirmationCodeResponse:
         """Resends the code that confirms a new account for a user who has signed
@@ -7797,11 +7801,11 @@ class CognitoIdpApi:
         context: RequestContext,
         client_id: ClientIdType,
         challenge_name: ChallengeNameType,
-        session: SessionType = None,
-        challenge_responses: ChallengeResponsesType = None,
-        analytics_metadata: AnalyticsMetadataType = None,
-        user_context_data: UserContextDataType = None,
-        client_metadata: ClientMetadataType = None,
+        session: SessionType | None = None,
+        challenge_responses: ChallengeResponsesType | None = None,
+        analytics_metadata: AnalyticsMetadataType | None = None,
+        user_context_data: UserContextDataType | None = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> RespondToAuthChallengeResponse:
         """Some API operations in a user pool generate a challenge, like a prompt
@@ -7888,7 +7892,7 @@ class CognitoIdpApi:
         context: RequestContext,
         token: TokenModelType,
         client_id: ClientIdType,
-        client_secret: ClientSecretType = None,
+        client_secret: ClientSecretType | None = None,
         **kwargs,
     ) -> RevokeTokenResponse:
         """Revokes all of the access tokens generated by, and at the same time as,
@@ -7950,10 +7954,11 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        client_id: ClientIdType = None,
-        compromised_credentials_risk_configuration: CompromisedCredentialsRiskConfigurationType = None,
-        account_takeover_risk_configuration: AccountTakeoverRiskConfigurationType = None,
-        risk_exception_configuration: RiskExceptionConfigurationType = None,
+        client_id: ClientIdType | None = None,
+        compromised_credentials_risk_configuration: CompromisedCredentialsRiskConfigurationType
+        | None = None,
+        account_takeover_risk_configuration: AccountTakeoverRiskConfigurationType | None = None,
+        risk_exception_configuration: RiskExceptionConfigurationType | None = None,
         **kwargs,
     ) -> SetRiskConfigurationResponse:
         """Configures threat protection for a user pool or app client. Sets
@@ -8001,9 +8006,9 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        client_id: ClientIdType = None,
-        css: CSSType = None,
-        image_file: ImageFileType = None,
+        client_id: ClientIdType | None = None,
+        css: CSSType | None = None,
+        image_file: ImageFileType | None = None,
         **kwargs,
     ) -> SetUICustomizationResponse:
         """Configures UI branding settings for domains with the hosted UI (classic)
@@ -8049,9 +8054,9 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         access_token: TokenModelType,
-        sms_mfa_settings: SMSMfaSettingsType = None,
-        software_token_mfa_settings: SoftwareTokenMfaSettingsType = None,
-        email_mfa_settings: EmailMfaSettingsType = None,
+        sms_mfa_settings: SMSMfaSettingsType | None = None,
+        software_token_mfa_settings: SoftwareTokenMfaSettingsType | None = None,
+        email_mfa_settings: EmailMfaSettingsType | None = None,
         **kwargs,
     ) -> SetUserMFAPreferenceResponse:
         """Set the user's multi-factor authentication (MFA) method preference,
@@ -8099,11 +8104,11 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        sms_mfa_configuration: SmsMfaConfigType = None,
-        software_token_mfa_configuration: SoftwareTokenMfaConfigType = None,
-        email_mfa_configuration: EmailMfaConfigType = None,
-        mfa_configuration: UserPoolMfaType = None,
-        web_authn_configuration: WebAuthnConfigurationType = None,
+        sms_mfa_configuration: SmsMfaConfigType | None = None,
+        software_token_mfa_configuration: SoftwareTokenMfaConfigType | None = None,
+        email_mfa_configuration: EmailMfaConfigType | None = None,
+        mfa_configuration: UserPoolMfaType | None = None,
+        web_authn_configuration: WebAuthnConfigurationType | None = None,
         **kwargs,
     ) -> SetUserPoolMfaConfigResponse:
         """Sets user pool multi-factor authentication (MFA) and passkey
@@ -8198,13 +8203,13 @@ class CognitoIdpApi:
         context: RequestContext,
         client_id: ClientIdType,
         username: UsernameType,
-        secret_hash: SecretHashType = None,
-        password: PasswordType = None,
-        user_attributes: AttributeListType = None,
-        validation_data: AttributeListType = None,
-        analytics_metadata: AnalyticsMetadataType = None,
-        user_context_data: UserContextDataType = None,
-        client_metadata: ClientMetadataType = None,
+        secret_hash: SecretHashType | None = None,
+        password: PasswordType | None = None,
+        user_attributes: AttributeListType | None = None,
+        validation_data: AttributeListType | None = None,
+        analytics_metadata: AnalyticsMetadataType | None = None,
+        user_context_data: UserContextDataType | None = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> SignUpResponse:
         """Registers a user with an app client and requests a user name, password,
@@ -8474,7 +8479,7 @@ class CognitoIdpApi:
         context: RequestContext,
         access_token: TokenModelType,
         device_key: DeviceKeyType,
-        device_remembered_status: DeviceRememberedStatusType = None,
+        device_remembered_status: DeviceRememberedStatusType | None = None,
         **kwargs,
     ) -> UpdateDeviceStatusResponse:
         """Updates the status of a the currently signed-in user's device so that it
@@ -8523,9 +8528,9 @@ class CognitoIdpApi:
         context: RequestContext,
         group_name: GroupNameType,
         user_pool_id: UserPoolIdType,
-        description: DescriptionType = None,
-        role_arn: ArnType = None,
-        precedence: PrecedenceType = None,
+        description: DescriptionType | None = None,
+        role_arn: ArnType | None = None,
+        precedence: PrecedenceType | None = None,
         **kwargs,
     ) -> UpdateGroupResponse:
         """Given the name of a user pool group, updates any of the properties for
@@ -8568,9 +8573,9 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         provider_name: ProviderNameType,
-        provider_details: ProviderDetailsType = None,
-        attribute_mapping: AttributeMappingType = None,
-        idp_identifiers: IdpIdentifiersListType = None,
+        provider_details: ProviderDetailsType | None = None,
+        attribute_mapping: AttributeMappingType | None = None,
+        idp_identifiers: IdpIdentifiersListType | None = None,
         **kwargs,
     ) -> UpdateIdentityProviderResponse:
         """Modifies the configuration and trust relationship between a third-party
@@ -8613,11 +8618,11 @@ class CognitoIdpApi:
     def update_managed_login_branding(
         self,
         context: RequestContext,
-        user_pool_id: UserPoolIdType = None,
-        managed_login_branding_id: ManagedLoginBrandingIdType = None,
-        use_cognito_provided_values: BooleanType = None,
-        settings: Document = None,
-        assets: AssetListType = None,
+        user_pool_id: UserPoolIdType | None = None,
+        managed_login_branding_id: ManagedLoginBrandingIdType | None = None,
+        use_cognito_provided_values: BooleanType | None = None,
+        settings: Document | None = None,
+        assets: AssetListType | None = None,
         **kwargs,
     ) -> UpdateManagedLoginBrandingResponse:
         """Configures the branding settings for a user pool style. This operation
@@ -8672,7 +8677,7 @@ class CognitoIdpApi:
         user_pool_id: UserPoolIdType,
         identifier: ResourceServerIdentifierType,
         name: ResourceServerNameType,
-        scopes: ResourceServerScopeListType = None,
+        scopes: ResourceServerScopeListType | None = None,
         **kwargs,
     ) -> UpdateResourceServerResponse:
         """Updates the name and scopes of a resource server. All other fields are
@@ -8717,7 +8722,7 @@ class CognitoIdpApi:
         context: RequestContext,
         user_attributes: AttributeListType,
         access_token: TokenModelType,
-        client_metadata: ClientMetadataType = None,
+        client_metadata: ClientMetadataType | None = None,
         **kwargs,
     ) -> UpdateUserAttributesResponse:
         """Updates the currently signed-in user's attributes. To delete an
@@ -8791,26 +8796,26 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_pool_id: UserPoolIdType,
-        policies: UserPoolPolicyType = None,
-        deletion_protection: DeletionProtectionType = None,
-        lambda_config: LambdaConfigType = None,
-        auto_verified_attributes: VerifiedAttributesListType = None,
-        sms_verification_message: SmsVerificationMessageType = None,
-        email_verification_message: EmailVerificationMessageType = None,
-        email_verification_subject: EmailVerificationSubjectType = None,
-        verification_message_template: VerificationMessageTemplateType = None,
-        sms_authentication_message: SmsVerificationMessageType = None,
-        user_attribute_update_settings: UserAttributeUpdateSettingsType = None,
-        mfa_configuration: UserPoolMfaType = None,
-        device_configuration: DeviceConfigurationType = None,
-        email_configuration: EmailConfigurationType = None,
-        sms_configuration: SmsConfigurationType = None,
-        user_pool_tags: UserPoolTagsType = None,
-        admin_create_user_config: AdminCreateUserConfigType = None,
-        user_pool_add_ons: UserPoolAddOnsType = None,
-        account_recovery_setting: AccountRecoverySettingType = None,
-        pool_name: UserPoolNameType = None,
-        user_pool_tier: UserPoolTierType = None,
+        policies: UserPoolPolicyType | None = None,
+        deletion_protection: DeletionProtectionType | None = None,
+        lambda_config: LambdaConfigType | None = None,
+        auto_verified_attributes: VerifiedAttributesListType | None = None,
+        sms_verification_message: SmsVerificationMessageType | None = None,
+        email_verification_message: EmailVerificationMessageType | None = None,
+        email_verification_subject: EmailVerificationSubjectType | None = None,
+        verification_message_template: VerificationMessageTemplateType | None = None,
+        sms_authentication_message: SmsVerificationMessageType | None = None,
+        user_attribute_update_settings: UserAttributeUpdateSettingsType | None = None,
+        mfa_configuration: UserPoolMfaType | None = None,
+        device_configuration: DeviceConfigurationType | None = None,
+        email_configuration: EmailConfigurationType | None = None,
+        sms_configuration: SmsConfigurationType | None = None,
+        user_pool_tags: UserPoolTagsType | None = None,
+        admin_create_user_config: AdminCreateUserConfigType | None = None,
+        user_pool_add_ons: UserPoolAddOnsType | None = None,
+        account_recovery_setting: AccountRecoverySettingType | None = None,
+        pool_name: UserPoolNameType | None = None,
+        user_pool_tier: UserPoolTierType | None = None,
         **kwargs,
     ) -> UpdateUserPoolResponse:
         """Updates the configuration of a user pool. To avoid setting parameters to
@@ -8905,27 +8910,27 @@ class CognitoIdpApi:
         context: RequestContext,
         user_pool_id: UserPoolIdType,
         client_id: ClientIdType,
-        client_name: ClientNameType = None,
-        refresh_token_validity: RefreshTokenValidityType = None,
-        access_token_validity: AccessTokenValidityType = None,
-        id_token_validity: IdTokenValidityType = None,
-        token_validity_units: TokenValidityUnitsType = None,
-        read_attributes: ClientPermissionListType = None,
-        write_attributes: ClientPermissionListType = None,
-        explicit_auth_flows: ExplicitAuthFlowsListType = None,
-        supported_identity_providers: SupportedIdentityProvidersListType = None,
-        callback_urls: CallbackURLsListType = None,
-        logout_urls: LogoutURLsListType = None,
-        default_redirect_uri: RedirectUrlType = None,
-        allowed_o_auth_flows: OAuthFlowsType = None,
-        allowed_o_auth_scopes: ScopeListType = None,
-        allowed_o_auth_flows_user_pool_client: BooleanType = None,
-        analytics_configuration: AnalyticsConfigurationType = None,
-        prevent_user_existence_errors: PreventUserExistenceErrorTypes = None,
-        enable_token_revocation: WrappedBooleanType = None,
-        enable_propagate_additional_user_context_data: WrappedBooleanType = None,
-        auth_session_validity: AuthSessionValidityType = None,
-        refresh_token_rotation: RefreshTokenRotationType = None,
+        client_name: ClientNameType | None = None,
+        refresh_token_validity: RefreshTokenValidityType | None = None,
+        access_token_validity: AccessTokenValidityType | None = None,
+        id_token_validity: IdTokenValidityType | None = None,
+        token_validity_units: TokenValidityUnitsType | None = None,
+        read_attributes: ClientPermissionListType | None = None,
+        write_attributes: ClientPermissionListType | None = None,
+        explicit_auth_flows: ExplicitAuthFlowsListType | None = None,
+        supported_identity_providers: SupportedIdentityProvidersListType | None = None,
+        callback_urls: CallbackURLsListType | None = None,
+        logout_urls: LogoutURLsListType | None = None,
+        default_redirect_uri: RedirectUrlType | None = None,
+        allowed_o_auth_flows: OAuthFlowsType | None = None,
+        allowed_o_auth_scopes: ScopeListType | None = None,
+        allowed_o_auth_flows_user_pool_client: BooleanType | None = None,
+        analytics_configuration: AnalyticsConfigurationType | None = None,
+        prevent_user_existence_errors: PreventUserExistenceErrorTypes | None = None,
+        enable_token_revocation: WrappedBooleanType | None = None,
+        enable_propagate_additional_user_context_data: WrappedBooleanType | None = None,
+        auth_session_validity: AuthSessionValidityType | None = None,
+        refresh_token_rotation: RefreshTokenRotationType | None = None,
         **kwargs,
     ) -> UpdateUserPoolClientResponse:
         """Given a user pool app client ID, updates the configuration. To avoid
@@ -9007,8 +9012,8 @@ class CognitoIdpApi:
         context: RequestContext,
         domain: DomainType,
         user_pool_id: UserPoolIdType,
-        managed_login_version: WrappedIntegerType = None,
-        custom_domain_config: CustomDomainConfigType = None,
+        managed_login_version: WrappedIntegerType | None = None,
+        custom_domain_config: CustomDomainConfigType | None = None,
         **kwargs,
     ) -> UpdateUserPoolDomainResponse:
         """A user pool domain hosts managed login, an authorization server and web
@@ -9075,9 +9080,9 @@ class CognitoIdpApi:
         self,
         context: RequestContext,
         user_code: SoftwareTokenMFAUserCodeType,
-        access_token: TokenModelType = None,
-        session: SessionType = None,
-        friendly_device_name: StringType = None,
+        access_token: TokenModelType | None = None,
+        session: SessionType | None = None,
+        friendly_device_name: StringType | None = None,
         **kwargs,
     ) -> VerifySoftwareTokenResponse:
         """Registers the current user's time-based one-time password (TOTP)

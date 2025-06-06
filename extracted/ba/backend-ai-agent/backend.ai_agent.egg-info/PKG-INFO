@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: backend.ai-agent
-Version: 25.9.0
+Version: 25.9.1
 Summary: Backend.AI Agent
 Home-page: https://github.com/lablup/backend.ai
 Author: Lablup Inc. and contributors
@@ -28,14 +28,14 @@ Requires-Dist: aiomonitor~=0.7.0
 Requires-Dist: aiotools~=1.8.2
 Requires-Dist: async_timeout~=4.0
 Requires-Dist: attrs>=25.3
-Requires-Dist: backend.ai-cli==25.9.0
-Requires-Dist: backend.ai-common==25.9.0
-Requires-Dist: backend.ai-kernel-binary==25.9.0
-Requires-Dist: backend.ai-kernel-helper==25.9.0
-Requires-Dist: backend.ai-kernel==25.9.0
+Requires-Dist: backend.ai-cli==25.9.1
+Requires-Dist: backend.ai-common==25.9.1
+Requires-Dist: backend.ai-kernel-binary==25.9.1
+Requires-Dist: backend.ai-kernel-helper==25.9.1
+Requires-Dist: backend.ai-kernel==25.9.1
 Requires-Dist: backend.ai-krunner-static-gnu==4.4.0
-Requires-Dist: backend.ai-logging==25.9.0
-Requires-Dist: backend.ai-plugin==25.9.0
+Requires-Dist: backend.ai-logging==25.9.1
+Requires-Dist: backend.ai-plugin==25.9.1
 Requires-Dist: cachetools~=5.5.0
 Requires-Dist: callosum~=1.0.3
 Requires-Dist: cattrs~=24.1.1

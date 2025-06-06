@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: openfermion
-Version: 1.7.0
+Version: 1.7.1
 Summary: The electronic structure package for quantum computers.
 Home-page: https://quantumai.google/openfermion
 Author: The OpenFermion Developers
@@ -28,11 +28,11 @@ Requires-Python: >=3.10.0
 License-File: LICENSE
 License-File: NOTICE
 License-File: AUTHORS
-Requires-Dist: cirq-core
+Requires-Dist: cirq-core>=1.4.1
 Requires-Dist: deprecation
 Requires-Dist: h5py>=3.10.0
 Requires-Dist: networkx
-Requires-Dist: numpy<2.0,>=1.24
+Requires-Dist: numpy>=1.26
 Requires-Dist: pubchempy
 Requires-Dist: requests~=2.32.2
 Requires-Dist: scipy~=1.15
@@ -49,6 +49,7 @@ Dynamic: description
 Dynamic: home-page
 Dynamic: keywords
 Dynamic: license
+Dynamic: license-file
 Dynamic: maintainer
 Dynamic: maintainer-email
 Dynamic: provides-extra
@@ -65,10 +66,6 @@ OpenFermion
    :width: 75%
    :align: center
 
-.. |ci| image:: https://img.shields.io/github/actions/workflow/status/quantumlib/openfermion/ci.yml?style=flat-square&logo=GitHub&label=Continous%20integration
-   :alt: Continuous integration status badge
-   :target: https://github.com/quantumlib/OpenFermion/workflows/Continuous%20Integration/badge.svg
-
 .. |python| image:: https://img.shields.io/badge/Python-3.10+-fcbc2c.svg?style=flat-square&logo=python&logoColor=white
    :alt: Compatible with Python versions 3.10 and higher
    :target: https://www.python.org/downloads/
@@ -81,7 +78,7 @@ OpenFermion
    :alt: OpenFermion project on PyPI
    :target: https://pypi.org/project/OpenFermion
 
-.. |downloads| image:: https://img.shields.io/pypi/dm/openfermion?logo=PyPI&logoColor=white&style=flat-square&label=Downloads
+.. |downloads| image:: https://img.shields.io/pypi/dm/openfermion?logo=PyPI&color=d56420&logoColor=white&style=flat-square&label=Downloads
    :alt: OpenFermion downloads per month from PyPI
    :target: https://img.shields.io/pypi/dm/OpenFermion
 
@@ -89,16 +86,16 @@ OpenFermion
 .. class:: centered
 
 |
-| |ci| |python| |license| |version| |downloads|
+| |python| |license| |version| |downloads|
 
 .. |vertspace| image:: https://upload.wikimedia.org/wikipedia/commons/archive/c/ca/20200404084254%211x1.png
    :alt: Blank space
    :width: 1px
    :height: 30px
 
-|vertspace| OpenFermion is an open source library for compiling and analyzing quantum
+|vertspace| OpenFermion is an open-source library for compiling and analyzing quantum
 algorithms to simulate fermionic systems, including quantum chemistry. Among
-other functionalities, it features data structures and tools for obtaining and
+other features, it includes data structures and tools for obtaining and
 manipulating representations of fermionic and qubit Hamiltonians. For more
 information, see our `release paper <https://arxiv.org/abs/1710.07629>`__.
 
@@ -128,11 +125,11 @@ Documentation can be found at `quantumai.google/openfermion <https://quantumai.g
 Currently, OpenFermion is tested on Mac, Windows, and Linux. We recommend using Mac or Linux because
 the electronic structure plugins are only compatible on these platforms. However,
 for those who would like to use Windows, or for anyone having other difficulties
-with installing OpenFermion or its plugins, we have provided a Docker image
+with installing OpenFermion or its plugins, we provide a Docker image
 and usage instructions in the
 `docker folder <https://github.com/quantumlib/OpenFermion/tree/master/docker>`__.
 The Docker image provides a virtual environment with OpenFermion and select plugins pre-installed.
-The Docker installation should run on any operating system.
+The Docker installation should run on any operating system where Docker can be used.
 
 Developer install
 -----------------
@@ -267,6 +264,7 @@ Authors
 
 How to cite
 ===========
+
 When using OpenFermion for research projects, please cite:
 
     Jarrod R McClean, Nicholas C Rubin, Kevin J Sung, Ian D Kivlichan, Xavier Bonet-Monroig,

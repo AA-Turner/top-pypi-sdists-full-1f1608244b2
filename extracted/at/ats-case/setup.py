@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="ats_case",
-    version="2.1.73",
+    version="2.1.76",
     py_modules=['ats_case'],
     author="zhangyue",
     author_email="zhangyue@techen.cn",

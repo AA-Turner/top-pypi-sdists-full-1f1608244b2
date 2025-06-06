@@ -5891,9 +5891,9 @@ class CloudfrontApi:
         :param alias: The alias (also known as a CNAME) to add to the target distribution.
         :raises NoSuchDistribution:
         :raises AccessDenied:
+        :raises IllegalUpdate:
         :raises InvalidArgument:
         :raises TooManyDistributionCNAMEs:
-        :raises IllegalUpdate:
         """
         raise NotImplementedError
 
@@ -5903,7 +5903,7 @@ class CloudfrontApi:
         context: RequestContext,
         id: string,
         web_acl_arn: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> AssociateDistributionTenantWebACLResult:
         """Associates the WAF web ACL with a distribution tenant.
@@ -5913,8 +5913,8 @@ class CloudfrontApi:
         :param if_match: The current ``ETag`` of the distribution tenant.
         :returns: AssociateDistributionTenantWebACLResult
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
@@ -5926,7 +5926,7 @@ class CloudfrontApi:
         context: RequestContext,
         id: string,
         web_acl_arn: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> AssociateDistributionWebACLResult:
         """Associates the WAF web ACL with a distribution.
@@ -5937,8 +5937,8 @@ class CloudfrontApi:
         distribution that you're associating with the WAF web ACL.
         :returns: AssociateDistributionWebACLResult
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
@@ -5950,9 +5950,9 @@ class CloudfrontApi:
         context: RequestContext,
         primary_distribution_id: string,
         caller_reference: string,
-        staging: boolean = None,
-        if_match: string = None,
-        enabled: boolean = None,
+        staging: boolean | None = None,
+        if_match: string | None = None,
+        enabled: boolean | None = None,
         **kwargs,
     ) -> CopyDistributionResult:
         """Creates a staging distribution using the configuration of the provided
@@ -6056,7 +6056,7 @@ class CloudfrontApi:
         context: RequestContext,
         name: AnycastIpListName,
         ip_count: integer,
-        tags: Tags = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateAnycastIpListResult:
         """Creates an Anycast static IP list.
@@ -6070,8 +6070,8 @@ class CloudfrontApi:
         :raises UnsupportedOperation:
         :raises EntityAlreadyExists:
         :raises InvalidTagging:
-        :raises InvalidArgument:
         :raises EntityLimitExceeded:
+        :raises InvalidArgument:
         """
         raise NotImplementedError
 
@@ -6137,8 +6137,8 @@ class CloudfrontApi:
         :raises MissingBody:
         :raises TooManyCloudFrontOriginAccessIdentities:
         :raises InconsistentQuantities:
-        :raises InvalidArgument:
         :raises CloudFrontOriginAccessIdentityAlreadyExists:
+        :raises InvalidArgument:
         """
         raise NotImplementedError
 
@@ -6147,10 +6147,10 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         name: string,
-        ipv6_enabled: boolean = None,
-        tags: Tags = None,
-        anycast_ip_list_id: string = None,
-        enabled: boolean = None,
+        ipv6_enabled: boolean | None = None,
+        tags: Tags | None = None,
+        anycast_ip_list_id: string | None = None,
+        enabled: boolean | None = None,
         **kwargs,
     ) -> CreateConnectionGroupResult:
         """Creates a connection group.
@@ -6161,12 +6161,12 @@ class CloudfrontApi:
         :param anycast_ip_list_id: The ID of the Anycast static IP list.
         :param enabled: Enable the connection group.
         :returns: CreateConnectionGroupResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises EntityAlreadyExists:
         :raises InvalidTagging:
-        :raises InvalidArgument:
         :raises EntityLimitExceeded:
+        :raises InvalidArgument:
         """
         raise NotImplementedError
 
@@ -6286,12 +6286,12 @@ class CloudfrontApi:
         distribution_id: string,
         name: CreateDistributionTenantRequestNameString,
         domains: DomainList,
-        tags: Tags = None,
-        customizations: Customizations = None,
-        parameters: Parameters = None,
-        connection_group_id: string = None,
-        managed_certificate_request: ManagedCertificateRequest = None,
-        enabled: boolean = None,
+        tags: Tags | None = None,
+        customizations: Customizations | None = None,
+        parameters: Parameters | None = None,
+        connection_group_id: string | None = None,
+        managed_certificate_request: ManagedCertificateRequest | None = None,
+        enabled: boolean | None = None,
         **kwargs,
     ) -> CreateDistributionTenantResult:
         """Creates a distribution tenant.
@@ -6309,14 +6309,14 @@ class CloudfrontApi:
         :param enabled: Indicates whether the distribution tenant should be enabled when
         created.
         :returns: CreateDistributionTenantResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises EntityAlreadyExists:
         :raises CNAMEAlreadyExists:
-        :raises InvalidAssociation:
         :raises InvalidTagging:
-        :raises InvalidArgument:
+        :raises InvalidAssociation:
         :raises EntityLimitExceeded:
+        :raises InvalidArgument:
         """
         raise NotImplementedError
 
@@ -6418,8 +6418,8 @@ class CloudfrontApi:
         :param field_level_encryption_config: The request to create a new field-level encryption configuration.
         :returns: CreateFieldLevelEncryptionConfigResult
         :raises QueryArgProfileEmpty:
-        :raises TooManyFieldLevelEncryptionQueryArgProfiles:
         :raises TooManyFieldLevelEncryptionContentTypeProfiles:
+        :raises TooManyFieldLevelEncryptionQueryArgProfiles:
         :raises FieldLevelEncryptionConfigAlreadyExists:
         :raises InconsistentQuantities:
         :raises TooManyFieldLevelEncryptionConfigs:
@@ -6507,8 +6507,8 @@ class CloudfrontApi:
         :raises TooManyInvalidationsInProgress:
         :raises MissingBody:
         :raises InconsistentQuantities:
-        :raises InvalidArgument:
         :raises BatchTooLarge:
+        :raises InvalidArgument:
         """
         raise NotImplementedError
 
@@ -6524,13 +6524,13 @@ class CloudfrontApi:
         :param id: The ID of the distribution tenant.
         :param invalidation_batch: An invalidation batch.
         :returns: CreateInvalidationForDistributionTenantResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises TooManyInvalidationsInProgress:
         :raises MissingBody:
         :raises InconsistentQuantities:
-        :raises InvalidArgument:
         :raises BatchTooLarge:
+        :raises InvalidArgument:
         """
         raise NotImplementedError
 
@@ -6568,8 +6568,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         name: KeyValueStoreName,
-        comment: KeyValueStoreComment = None,
-        import_source: ImportSource = None,
+        comment: KeyValueStoreComment | None = None,
+        import_source: ImportSource | None = None,
         **kwargs,
     ) -> CreateKeyValueStoreResult:
         """Specifies the key value store resource to add to your account. In your
@@ -6584,8 +6584,8 @@ class CloudfrontApi:
         :raises AccessDenied:
         :raises UnsupportedOperation:
         :raises EntityAlreadyExists:
-        :raises InvalidArgument:
         :raises EntityLimitExceeded:
+        :raises InvalidArgument:
         :raises EntitySizeLimitExceeded:
         """
         raise NotImplementedError
@@ -6849,7 +6849,7 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         vpc_origin_endpoint_config: VpcOriginEndpointConfig,
-        tags: Tags = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateVpcOriginResult:
         """Create an Amazon CloudFront VPC origin.
@@ -6859,11 +6859,11 @@ class CloudfrontApi:
         :returns: CreateVpcOriginResult
         :raises AccessDenied:
         :raises UnsupportedOperation:
-        :raises InconsistentQuantities:
         :raises EntityAlreadyExists:
+        :raises InconsistentQuantities:
         :raises InvalidTagging:
-        :raises InvalidArgument:
         :raises EntityLimitExceeded:
+        :raises InvalidArgument:
         """
         raise NotImplementedError
 
@@ -6878,8 +6878,8 @@ class CloudfrontApi:
         you are deleting.
         :raises CannotDeleteEntityWhileInUse:
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises IllegalDelete:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
@@ -6889,7 +6889,7 @@ class CloudfrontApi:
 
     @handler("DeleteCachePolicy")
     def delete_cache_policy(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Deletes a cache policy.
 
@@ -6914,7 +6914,7 @@ class CloudfrontApi:
 
     @handler("DeleteCloudFrontOriginAccessIdentity")
     def delete_cloud_front_origin_access_identity(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Delete an origin access identity.
 
@@ -6923,9 +6923,9 @@ class CloudfrontApi:
         ``PUT`` request.
         :raises PreconditionFailed:
         :raises AccessDenied:
+        :raises CloudFrontOriginAccessIdentityInUse:
         :raises InvalidIfMatchVersion:
         :raises NoSuchCloudFrontOriginAccessIdentity:
-        :raises CloudFrontOriginAccessIdentityInUse:
         """
         raise NotImplementedError
 
@@ -6940,8 +6940,8 @@ class CloudfrontApi:
         connection group to delete.
         :raises CannotDeleteEntityWhileInUse:
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises ResourceNotDisabled:
         :raises InvalidIfMatchVersion:
         """
@@ -6949,7 +6949,7 @@ class CloudfrontApi:
 
     @handler("DeleteContinuousDeploymentPolicy")
     def delete_continuous_deployment_policy(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Deletes a continuous deployment policy.
 
@@ -6972,7 +6972,7 @@ class CloudfrontApi:
 
     @handler("DeleteDistribution")
     def delete_distribution(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Delete a distribution.
 
@@ -7002,8 +7002,8 @@ class CloudfrontApi:
         :param if_match: The value of the ``ETag`` header that you received when retrieving the
         distribution tenant.
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises ResourceNotDisabled:
         :raises InvalidIfMatchVersion:
         """
@@ -7011,7 +7011,7 @@ class CloudfrontApi:
 
     @handler("DeleteFieldLevelEncryptionConfig")
     def delete_field_level_encryption_config(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Remove a field-level encryption configuration.
 
@@ -7028,7 +7028,7 @@ class CloudfrontApi:
 
     @handler("DeleteFieldLevelEncryptionProfile")
     def delete_field_level_encryption_profile(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Remove a field-level encryption profile.
 
@@ -7070,7 +7070,7 @@ class CloudfrontApi:
 
     @handler("DeleteKeyGroup")
     def delete_key_group(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Deletes a key group.
 
@@ -7084,8 +7084,8 @@ class CloudfrontApi:
 
         :param id: The identifier of the key group that you are deleting.
         :param if_match: The version of the key group that you are deleting.
-        :raises ResourceInUse:
         :raises PreconditionFailed:
+        :raises ResourceInUse:
         :raises NoSuchResource:
         :raises InvalidIfMatchVersion:
         """
@@ -7101,8 +7101,8 @@ class CloudfrontApi:
         :param if_match: The key value store to delete, if a match occurs.
         :raises CannotDeleteEntityWhileInUse:
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
         :raises InvalidIfMatchVersion:
         """
@@ -7126,7 +7126,7 @@ class CloudfrontApi:
 
     @handler("DeleteOriginAccessControl")
     def delete_origin_access_control(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Deletes a CloudFront origin access control.
 
@@ -7148,7 +7148,7 @@ class CloudfrontApi:
 
     @handler("DeleteOriginRequestPolicy")
     def delete_origin_request_policy(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Deletes an origin request policy.
 
@@ -7174,7 +7174,7 @@ class CloudfrontApi:
 
     @handler("DeletePublicKey")
     def delete_public_key(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Remove a public key you previously added to CloudFront.
 
@@ -7191,7 +7191,11 @@ class CloudfrontApi:
 
     @handler("DeleteRealtimeLogConfig")
     def delete_realtime_log_config(
-        self, context: RequestContext, name: string = None, arn: string = None, **kwargs
+        self,
+        context: RequestContext,
+        name: string | None = None,
+        arn: string | None = None,
+        **kwargs,
     ) -> None:
         """Deletes a real-time log configuration.
 
@@ -7210,14 +7214,14 @@ class CloudfrontApi:
         delete.
         :raises AccessDenied:
         :raises InvalidArgument:
-        :raises RealtimeLogConfigInUse:
         :raises NoSuchRealtimeLogConfig:
+        :raises RealtimeLogConfigInUse:
         """
         raise NotImplementedError
 
     @handler("DeleteResponseHeadersPolicy")
     def delete_response_headers_policy(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Deletes a response headers policy.
 
@@ -7232,8 +7236,8 @@ class CloudfrontApi:
 
         :param id: The identifier for the response headers policy that you are deleting.
         :param if_match: The version of the response headers policy that you are deleting.
-        :raises ResponseHeadersPolicyInUse:
         :raises PreconditionFailed:
+        :raises ResponseHeadersPolicyInUse:
         :raises AccessDenied:
         :raises IllegalDelete:
         :raises NoSuchResponseHeadersPolicy:
@@ -7243,7 +7247,7 @@ class CloudfrontApi:
 
     @handler("DeleteStreamingDistribution")
     def delete_streaming_distribution(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> None:
         """Delete a streaming distribution. To delete an RTMP distribution using
         the CloudFront API, perform the following steps.
@@ -7291,8 +7295,8 @@ class CloudfrontApi:
         streaming distribution.
         :raises PreconditionFailed:
         :raises AccessDenied:
-        :raises StreamingDistributionNotDisabled:
         :raises NoSuchStreamingDistribution:
+        :raises StreamingDistributionNotDisabled:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -7308,8 +7312,8 @@ class CloudfrontApi:
         :returns: DeleteVpcOriginResult
         :raises CannotDeleteEntityWhileInUse:
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises IllegalDelete:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
@@ -7319,7 +7323,7 @@ class CloudfrontApi:
 
     @handler("DescribeFunction")
     def describe_function(
-        self, context: RequestContext, name: string, stage: FunctionStage = None, **kwargs
+        self, context: RequestContext, name: string, stage: FunctionStage | None = None, **kwargs
     ) -> DescribeFunctionResult:
         """Gets configuration information and metadata about a CloudFront function,
         but not the function's code. To get a function's code, use
@@ -7345,8 +7349,8 @@ class CloudfrontApi:
 
         :param name: The name of the key value store.
         :returns: DescribeKeyValueStoreResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
         """
@@ -7354,7 +7358,7 @@ class CloudfrontApi:
 
     @handler("DisassociateDistributionTenantWebACL")
     def disassociate_distribution_tenant_web_acl(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> DisassociateDistributionTenantWebACLResult:
         """Disassociates a distribution tenant from the WAF web ACL.
 
@@ -7363,8 +7367,8 @@ class CloudfrontApi:
         disassociating from the WAF web ACL.
         :returns: DisassociateDistributionTenantWebACLResult
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
@@ -7372,7 +7376,7 @@ class CloudfrontApi:
 
     @handler("DisassociateDistributionWebACL")
     def disassociate_distribution_web_acl(
-        self, context: RequestContext, id: string, if_match: string = None, **kwargs
+        self, context: RequestContext, id: string, if_match: string | None = None, **kwargs
     ) -> DisassociateDistributionWebACLResult:
         """Disassociates a distribution from the WAF web ACL.
 
@@ -7381,8 +7385,8 @@ class CloudfrontApi:
         distribution that you're disassociating from the WAF web ACL.
         :returns: DisassociateDistributionWebACLResult
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
@@ -7396,8 +7400,8 @@ class CloudfrontApi:
 
         :param id: The ID of the Anycast static IP list.
         :returns: GetAnycastIpListResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
         """
@@ -7480,8 +7484,8 @@ class CloudfrontApi:
 
         :param identifier: The ID, name, or Amazon Resource Name (ARN) of the connection group.
         :returns: GetConnectionGroupResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         """
         raise NotImplementedError
 
@@ -7495,8 +7499,8 @@ class CloudfrontApi:
         :param routing_endpoint: The routing endpoint for the target connection group, such as
         d111111abcdef8.
         :returns: GetConnectionGroupByRoutingEndpointResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         """
         raise NotImplementedError
 
@@ -7560,10 +7564,10 @@ class CloudfrontApi:
     ) -> GetDistributionTenantResult:
         """Gets information about a distribution tenant.
 
-        :param identifier: The ID of the distribution tenant.
+        :param identifier: The identifier of the distribution tenant.
         :returns: GetDistributionTenantResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         """
         raise NotImplementedError
 
@@ -7575,8 +7579,8 @@ class CloudfrontApi:
 
         :param domain: A domain name associated with the target distribution tenant.
         :returns: GetDistributionTenantByDomainResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         """
         raise NotImplementedError
 
@@ -7635,7 +7639,7 @@ class CloudfrontApi:
 
     @handler("GetFunction")
     def get_function(
-        self, context: RequestContext, name: string, stage: FunctionStage = None, **kwargs
+        self, context: RequestContext, name: string, stage: FunctionStage | None = None, **kwargs
     ) -> GetFunctionResult:
         """Gets the code of a CloudFront function. To get configuration information
         and metadata about a function, use ``DescribeFunction``.
@@ -7677,8 +7681,8 @@ class CloudfrontApi:
         :param distribution_tenant_id: The ID of the distribution tenant.
         :param id: The ID of the invalidation to retrieve.
         :returns: GetInvalidationForDistributionTenantResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises NoSuchInvalidation:
         """
         raise NotImplementedError
@@ -7725,10 +7729,10 @@ class CloudfrontApi:
     ) -> GetManagedCertificateDetailsResult:
         """Gets details about the CloudFront managed ACM certificate.
 
-        :param identifier: The identifier of the multi-tenant distribution.
+        :param identifier: The identifier of the distribution tenant.
         :returns: GetManagedCertificateDetailsResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         """
         raise NotImplementedError
 
@@ -7845,7 +7849,11 @@ class CloudfrontApi:
 
     @handler("GetRealtimeLogConfig")
     def get_realtime_log_config(
-        self, context: RequestContext, name: string = None, arn: string = None, **kwargs
+        self,
+        context: RequestContext,
+        name: string | None = None,
+        arn: string | None = None,
+        **kwargs,
     ) -> GetRealtimeLogConfigResult:
         """Gets a real-time log configuration.
 
@@ -7938,8 +7946,8 @@ class CloudfrontApi:
 
         :param id: The VPC origin ID.
         :returns: GetVpcOriginResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
         """
@@ -7947,7 +7955,11 @@ class CloudfrontApi:
 
     @handler("ListAnycastIpLists")
     def list_anycast_ip_lists(
-        self, context: RequestContext, marker: string = None, max_items: integer = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: integer | None = None,
+        **kwargs,
     ) -> ListAnycastIpListsResult:
         """Lists your Anycast static IP lists.
 
@@ -7956,8 +7968,8 @@ class CloudfrontApi:
         :param max_items: The maximum number of Anycast static IP lists that you want returned in
         the response.
         :returns: ListAnycastIpListsResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
         """
@@ -7993,7 +8005,11 @@ class CloudfrontApi:
 
     @handler("ListCloudFrontOriginAccessIdentities")
     def list_cloud_front_origin_access_identities(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListCloudFrontOriginAccessIdentitiesResult:
         """Lists origin access identities.
 
@@ -8012,8 +8028,8 @@ class CloudfrontApi:
         context: RequestContext,
         distribution_id: distributionIdString,
         alias: aliasString,
-        marker: string = None,
-        max_items: listConflictingAliasesMaxItemsInteger = None,
+        marker: string | None = None,
+        max_items: listConflictingAliasesMaxItemsInteger | None = None,
         **kwargs,
     ) -> ListConflictingAliasesResult:
         """Gets a list of aliases (also called CNAMEs or alternate domain names)
@@ -8064,9 +8080,9 @@ class CloudfrontApi:
     def list_connection_groups(
         self,
         context: RequestContext,
-        association_filter: ConnectionGroupAssociationFilter = None,
-        marker: string = None,
-        max_items: integer = None,
+        association_filter: ConnectionGroupAssociationFilter | None = None,
+        marker: string | None = None,
+        max_items: integer | None = None,
         **kwargs,
     ) -> ListConnectionGroupsResult:
         """Lists the connection groups in your Amazon Web Services account.
@@ -8075,15 +8091,19 @@ class CloudfrontApi:
         :param marker: The marker for the next set of connection groups to retrieve.
         :param max_items: The maximum number of connection groups to return.
         :returns: ListConnectionGroupsResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         """
         raise NotImplementedError
 
     @handler("ListContinuousDeploymentPolicies")
     def list_continuous_deployment_policies(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListContinuousDeploymentPoliciesResult:
         """Gets a list of the continuous deployment policies in your Amazon Web
         Services account.
@@ -8110,9 +8130,9 @@ class CloudfrontApi:
     def list_distribution_tenants(
         self,
         context: RequestContext,
-        association_filter: DistributionTenantAssociationFilter = None,
-        marker: string = None,
-        max_items: integer = None,
+        association_filter: DistributionTenantAssociationFilter | None = None,
+        marker: string | None = None,
+        max_items: integer | None = None,
         **kwargs,
     ) -> ListDistributionTenantsResult:
         """Lists the distribution tenants in your Amazon Web Services account.
@@ -8121,8 +8141,8 @@ class CloudfrontApi:
         :param marker: The marker for the next set of results.
         :param max_items: The maximum number of distribution tenants to return.
         :returns: ListDistributionTenantsResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         """
         raise NotImplementedError
@@ -8131,10 +8151,10 @@ class CloudfrontApi:
     def list_distribution_tenants_by_customization(
         self,
         context: RequestContext,
-        web_acl_arn: string = None,
-        certificate_arn: string = None,
-        marker: string = None,
-        max_items: integer = None,
+        web_acl_arn: string | None = None,
+        certificate_arn: string | None = None,
+        marker: string | None = None,
+        max_items: integer | None = None,
         **kwargs,
     ) -> ListDistributionTenantsByCustomizationResult:
         """Lists distribution tenants by the customization that you specify.
@@ -8148,15 +8168,19 @@ class CloudfrontApi:
         :param max_items: The maximum number of distribution tenants to return by the specified
         customization.
         :returns: ListDistributionTenantsByCustomizationResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         """
         raise NotImplementedError
 
     @handler("ListDistributions")
     def list_distributions(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListDistributionsResult:
         """List CloudFront distributions.
 
@@ -8173,8 +8197,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         anycast_ip_list_id: string,
-        marker: string = None,
-        max_items: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
         **kwargs,
     ) -> ListDistributionsByAnycastIpListIdResult:
         """Lists the distributions in your account that are associated with the
@@ -8186,8 +8210,8 @@ class CloudfrontApi:
         :param max_items: The maximum number of distributions that you want returned in the
         response.
         :returns: ListDistributionsByAnycastIpListIdResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
         """
@@ -8198,8 +8222,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         cache_policy_id: string,
-        marker: string = None,
-        max_items: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
         **kwargs,
     ) -> ListDistributionsByCachePolicyIdResult:
         """Gets a list of distribution IDs for distributions that have a cache
@@ -8229,8 +8253,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         connection_mode: ConnectionMode,
-        marker: string = None,
-        max_items: integer = None,
+        marker: string | None = None,
+        max_items: integer | None = None,
         **kwargs,
     ) -> ListDistributionsByConnectionModeResult:
         """Lists the distributions by the connection mode that you specify.
@@ -8249,8 +8273,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         key_group_id: string,
-        marker: string = None,
-        max_items: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
         **kwargs,
     ) -> ListDistributionsByKeyGroupResult:
         """Gets a list of distribution IDs for distributions that have a cache
@@ -8279,8 +8303,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         origin_request_policy_id: string,
-        marker: string = None,
-        max_items: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
         **kwargs,
     ) -> ListDistributionsByOriginRequestPolicyIdResult:
         """Gets a list of distribution IDs for distributions that have a cache
@@ -8309,10 +8333,10 @@ class CloudfrontApi:
     def list_distributions_by_realtime_log_config(
         self,
         context: RequestContext,
-        marker: string = None,
-        max_items: string = None,
-        realtime_log_config_name: string = None,
-        realtime_log_config_arn: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
+        realtime_log_config_name: string | None = None,
+        realtime_log_config_arn: string | None = None,
         **kwargs,
     ) -> ListDistributionsByRealtimeLogConfigResult:
         """Gets a list of distributions that have a cache behavior that's
@@ -8347,8 +8371,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         response_headers_policy_id: string,
-        marker: string = None,
-        max_items: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
         **kwargs,
     ) -> ListDistributionsByResponseHeadersPolicyIdResult:
         """Gets a list of distribution IDs for distributions that have a cache
@@ -8379,8 +8403,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         vpc_origin_id: string,
-        marker: string = None,
-        max_items: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
         **kwargs,
     ) -> ListDistributionsByVpcOriginIdResult:
         """List CloudFront distributions by their VPC origin ID.
@@ -8389,8 +8413,8 @@ class CloudfrontApi:
         :param marker: The marker associated with the VPC origin distributions list.
         :param max_items: The maximum number of items included in the list.
         :returns: ListDistributionsByVpcOriginIdResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
         """
@@ -8401,8 +8425,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         web_acl_id: string,
-        marker: string = None,
-        max_items: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
         **kwargs,
     ) -> ListDistributionsByWebACLIdResult:
         """List the distributions that are associated with a specified WAF web ACL.
@@ -8424,8 +8448,8 @@ class CloudfrontApi:
         context: RequestContext,
         domain: string,
         domain_control_validation_resource: DistributionResourceId,
-        max_items: integer = None,
-        marker: string = None,
+        max_items: integer | None = None,
+        marker: string | None = None,
         **kwargs,
     ) -> ListDomainConflictsResult:
         """Lists existing domain associations that conflict with the domain that
@@ -8440,15 +8464,19 @@ class CloudfrontApi:
         :param max_items: The maximum number of domain conflicts to return.
         :param marker: The marker for the next set of domain conflicts.
         :returns: ListDomainConflictsResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         """
         raise NotImplementedError
 
     @handler("ListFieldLevelEncryptionConfigs")
     def list_field_level_encryption_configs(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListFieldLevelEncryptionConfigsResult:
         """List all field-level encryption configurations that have been created in
         CloudFront for this account.
@@ -8464,7 +8492,11 @@ class CloudfrontApi:
 
     @handler("ListFieldLevelEncryptionProfiles")
     def list_field_level_encryption_profiles(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListFieldLevelEncryptionProfilesResult:
         """Request a list of field-level encryption profiles that have been created
         in CloudFront for this account.
@@ -8482,9 +8514,9 @@ class CloudfrontApi:
     def list_functions(
         self,
         context: RequestContext,
-        marker: string = None,
-        max_items: string = None,
-        stage: FunctionStage = None,
+        marker: string | None = None,
+        max_items: string | None = None,
+        stage: FunctionStage | None = None,
         **kwargs,
     ) -> ListFunctionsResult:
         """Gets a list of all CloudFront functions in your Amazon Web Services
@@ -8516,8 +8548,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         distribution_id: string,
-        marker: string = None,
-        max_items: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
         **kwargs,
     ) -> ListInvalidationsResult:
         """Lists invalidation batches.
@@ -8539,8 +8571,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         id: string,
-        marker: string = None,
-        max_items: integer = None,
+        marker: string | None = None,
+        max_items: integer | None = None,
         **kwargs,
     ) -> ListInvalidationsForDistributionTenantResult:
         """Lists the invalidations for a distribution tenant.
@@ -8551,15 +8583,19 @@ class CloudfrontApi:
         :param max_items: The maximum number of invalidations to return for the distribution
         tenant.
         :returns: ListInvalidationsForDistributionTenantResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         """
         raise NotImplementedError
 
     @handler("ListKeyGroups")
     def list_key_groups(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListKeyGroupsResult:
         """Gets a list of key groups.
 
@@ -8582,9 +8618,9 @@ class CloudfrontApi:
     def list_key_value_stores(
         self,
         context: RequestContext,
-        marker: string = None,
-        max_items: string = None,
-        status: string = None,
+        marker: string | None = None,
+        max_items: string | None = None,
+        status: string | None = None,
         **kwargs,
     ) -> ListKeyValueStoresResult:
         """Specifies the key value stores to list.
@@ -8601,7 +8637,11 @@ class CloudfrontApi:
 
     @handler("ListOriginAccessControls")
     def list_origin_access_controls(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListOriginAccessControlsResult:
         """Gets the list of CloudFront origin access controls (OACs) in this Amazon
         Web Services account.
@@ -8657,7 +8697,11 @@ class CloudfrontApi:
 
     @handler("ListPublicKeys")
     def list_public_keys(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListPublicKeysResult:
         """List all public keys that have been added to CloudFront for this
         account.
@@ -8672,7 +8716,11 @@ class CloudfrontApi:
 
     @handler("ListRealtimeLogConfigs")
     def list_realtime_log_configs(
-        self, context: RequestContext, max_items: string = None, marker: string = None, **kwargs
+        self,
+        context: RequestContext,
+        max_items: string | None = None,
+        marker: string | None = None,
+        **kwargs,
     ) -> ListRealtimeLogConfigsResult:
         """Gets a list of real-time log configurations.
 
@@ -8725,7 +8773,11 @@ class CloudfrontApi:
 
     @handler("ListStreamingDistributions")
     def list_streaming_distributions(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListStreamingDistributionsResult:
         """List streaming distributions.
 
@@ -8756,15 +8808,19 @@ class CloudfrontApi:
 
     @handler("ListVpcOrigins")
     def list_vpc_origins(
-        self, context: RequestContext, marker: string = None, max_items: string = None, **kwargs
+        self,
+        context: RequestContext,
+        marker: string | None = None,
+        max_items: string | None = None,
+        **kwargs,
     ) -> ListVpcOriginsResult:
         """List the CloudFront VPC origins in your account.
 
         :param marker: The marker associated with the VPC origins list.
         :param max_items: The maximum number of items included in the list.
         :returns: ListVpcOriginsResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
         """
@@ -8823,7 +8879,7 @@ class CloudfrontApi:
         name: string,
         if_match: string,
         event_object: FunctionEventObject,
-        stage: FunctionStage = None,
+        stage: FunctionStage | None = None,
         **kwargs,
     ) -> TestFunctionResult:
         """Tests a CloudFront function.
@@ -8881,7 +8937,7 @@ class CloudfrontApi:
         context: RequestContext,
         cache_policy_config: CachePolicyConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateCachePolicyResult:
         """Updates a cache policy configuration.
@@ -8910,8 +8966,8 @@ class CloudfrontApi:
         :raises CachePolicyAlreadyExists:
         :raises TooManyCookiesInCachePolicy:
         :raises InconsistentQuantities:
-        :raises InvalidArgument:
         :raises IllegalUpdate:
+        :raises InvalidArgument:
         :raises TooManyQueryStringsInCachePolicy:
         :raises InvalidIfMatchVersion:
         """
@@ -8923,7 +8979,7 @@ class CloudfrontApi:
         context: RequestContext,
         cloud_front_origin_access_identity_config: CloudFrontOriginAccessIdentityConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateCloudFrontOriginAccessIdentityResult:
         """Update an origin access identity.
@@ -8937,8 +8993,8 @@ class CloudfrontApi:
         :raises AccessDenied:
         :raises MissingBody:
         :raises InconsistentQuantities:
-        :raises InvalidArgument:
         :raises IllegalUpdate:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         :raises NoSuchCloudFrontOriginAccessIdentity:
         """
@@ -8950,9 +9006,9 @@ class CloudfrontApi:
         context: RequestContext,
         id: string,
         if_match: string,
-        ipv6_enabled: boolean = None,
-        anycast_ip_list_id: string = None,
-        enabled: boolean = None,
+        ipv6_enabled: boolean | None = None,
+        anycast_ip_list_id: string | None = None,
+        enabled: boolean | None = None,
         **kwargs,
     ) -> UpdateConnectionGroupResult:
         """Updates a connection group.
@@ -8964,13 +9020,13 @@ class CloudfrontApi:
         :param anycast_ip_list_id: The ID of the Anycast static IP list.
         :param enabled: Whether the connection group is enabled.
         :returns: UpdateConnectionGroupResult
-        :raises ResourceInUse:
         :raises PreconditionFailed:
-        :raises EntityNotFound:
+        :raises ResourceInUse:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises EntityAlreadyExists:
-        :raises InvalidArgument:
         :raises EntityLimitExceeded:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -8981,7 +9037,7 @@ class CloudfrontApi:
         context: RequestContext,
         continuous_deployment_policy_config: ContinuousDeploymentPolicyConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateContinuousDeploymentPolicyResult:
         """Updates a continuous deployment policy. You can update a continuous
@@ -9026,7 +9082,7 @@ class CloudfrontApi:
         context: RequestContext,
         distribution_config: DistributionConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateDistributionResult:
         """Updates the configuration for a CloudFront distribution.
@@ -9137,13 +9193,13 @@ class CloudfrontApi:
         context: RequestContext,
         id: string,
         if_match: string,
-        distribution_id: string = None,
-        domains: DomainList = None,
-        customizations: Customizations = None,
-        parameters: Parameters = None,
-        connection_group_id: string = None,
-        managed_certificate_request: ManagedCertificateRequest = None,
-        enabled: boolean = None,
+        distribution_id: string | None = None,
+        domains: DomainList | None = None,
+        customizations: Customizations | None = None,
+        parameters: Parameters | None = None,
+        connection_group_id: string | None = None,
+        managed_certificate_request: ManagedCertificateRequest | None = None,
+        enabled: boolean | None = None,
         **kwargs,
     ) -> UpdateDistributionTenantResult:
         """Updates a distribution tenant.
@@ -9161,13 +9217,13 @@ class CloudfrontApi:
         enabled state.
         :returns: UpdateDistributionTenantResult
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises EntityAlreadyExists:
         :raises CNAMEAlreadyExists:
         :raises InvalidAssociation:
-        :raises InvalidArgument:
         :raises EntityLimitExceeded:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -9177,8 +9233,8 @@ class CloudfrontApi:
         self,
         context: RequestContext,
         id: string,
-        staging_distribution_id: string = None,
-        if_match: string = None,
+        staging_distribution_id: string | None = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateDistributionWithStagingConfigResult:
         """Copies the staging distribution's configuration to its corresponding
@@ -9230,9 +9286,9 @@ class CloudfrontApi:
         :raises InvalidTTLOrder:
         :raises IllegalFieldLevelEncryptionConfigAssociationWithCacheBehavior:
         :raises InvalidOriginKeepaliveTimeout:
+        :raises IllegalUpdate:
         :raises InvalidArgument:
         :raises InvalidOriginReadTimeout:
-        :raises IllegalUpdate:
         :raises InvalidOriginAccessControl:
         :raises EntityNotFound:
         :raises InvalidHeadersForS3Origin:
@@ -9251,21 +9307,21 @@ class CloudfrontApi:
         :raises InvalidIfMatchVersion:
         :raises TooManyDistributionsAssociatedToOriginRequestPolicy:
         :raises TooManyQueryStringParameters:
-        :raises RealtimeLogConfigOwnerMismatch:
         :raises PreconditionFailed:
+        :raises RealtimeLogConfigOwnerMismatch:
         :raises MissingBody:
         :raises TooManyHeadersInForwardedValues:
         :raises InvalidLambdaFunctionAssociation:
         :raises CNAMEAlreadyExists:
         :raises TooManyCertificates:
-        :raises TrustedKeyGroupDoesNotExist:
         :raises TooManyDistributionsAssociatedToResponseHeadersPolicy:
+        :raises TrustedKeyGroupDoesNotExist:
         :raises NoSuchResponseHeadersPolicy:
-        :raises NoSuchRealtimeLogConfig:
         :raises InvalidResponseCode:
+        :raises NoSuchRealtimeLogConfig:
         :raises InvalidGeoRestrictionParameter:
-        :raises TooManyOrigins:
         :raises InvalidViewerCertificate:
+        :raises TooManyOrigins:
         :raises InvalidFunctionAssociation:
         :raises TooManyDistributionsWithLambdaAssociations:
         :raises TooManyDistributionsAssociatedToKeyGroup:
@@ -9280,7 +9336,7 @@ class CloudfrontApi:
         context: RequestContext,
         domain: string,
         target_resource: DistributionResourceId,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateDomainAssociationResult:
         """Moves a domain from its current distribution or distribution tenant to
@@ -9292,10 +9348,10 @@ class CloudfrontApi:
         distribution tenant that will be associated with the domain.
         :returns: UpdateDomainAssociationResult
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
-        :raises InvalidArgument:
+        :raises EntityNotFound:
         :raises IllegalUpdate:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -9306,7 +9362,7 @@ class CloudfrontApi:
         context: RequestContext,
         field_level_encryption_config: FieldLevelEncryptionConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateFieldLevelEncryptionConfigResult:
         """Update a field-level encryption configuration.
@@ -9316,16 +9372,16 @@ class CloudfrontApi:
         :param if_match: The value of the ``ETag`` header that you received when retrieving the
         configuration identity to update.
         :returns: UpdateFieldLevelEncryptionConfigResult
-        :raises QueryArgProfileEmpty:
         :raises PreconditionFailed:
+        :raises QueryArgProfileEmpty:
         :raises AccessDenied:
-        :raises TooManyFieldLevelEncryptionQueryArgProfiles:
         :raises NoSuchFieldLevelEncryptionConfig:
         :raises TooManyFieldLevelEncryptionContentTypeProfiles:
+        :raises TooManyFieldLevelEncryptionQueryArgProfiles:
         :raises InconsistentQuantities:
         :raises NoSuchFieldLevelEncryptionProfile:
-        :raises InvalidArgument:
         :raises IllegalUpdate:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -9336,7 +9392,7 @@ class CloudfrontApi:
         context: RequestContext,
         field_level_encryption_profile_config: FieldLevelEncryptionProfileConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateFieldLevelEncryptionProfileResult:
         """Update a field-level encryption profile.
@@ -9355,8 +9411,8 @@ class CloudfrontApi:
         :raises InconsistentQuantities:
         :raises NoSuchFieldLevelEncryptionProfile:
         :raises TooManyFieldLevelEncryptionEncryptionEntities:
-        :raises InvalidArgument:
         :raises IllegalUpdate:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -9401,7 +9457,7 @@ class CloudfrontApi:
         context: RequestContext,
         key_group_config: KeyGroupConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateKeyGroupResult:
         """Updates a key group.
@@ -9448,8 +9504,8 @@ class CloudfrontApi:
         :param if_match: The key value store to update, if a match occurs.
         :returns: UpdateKeyValueStoreResult
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
         :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
@@ -9462,7 +9518,7 @@ class CloudfrontApi:
         context: RequestContext,
         origin_access_control_config: OriginAccessControlConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateOriginAccessControlResult:
         """Updates a CloudFront origin access control.
@@ -9474,11 +9530,11 @@ class CloudfrontApi:
         you are updating.
         :returns: UpdateOriginAccessControlResult
         :raises PreconditionFailed:
-        :raises OriginAccessControlAlreadyExists:
         :raises AccessDenied:
+        :raises OriginAccessControlAlreadyExists:
         :raises NoSuchOriginAccessControl:
-        :raises InvalidArgument:
         :raises IllegalUpdate:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -9489,7 +9545,7 @@ class CloudfrontApi:
         context: RequestContext,
         origin_request_policy_config: OriginRequestPolicyConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateOriginRequestPolicyResult:
         """Updates an origin request policy configuration.
@@ -9522,8 +9578,8 @@ class CloudfrontApi:
         :raises InconsistentQuantities:
         :raises OriginRequestPolicyAlreadyExists:
         :raises TooManyQueryStringsInOriginRequestPolicy:
-        :raises InvalidArgument:
         :raises IllegalUpdate:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -9534,7 +9590,7 @@ class CloudfrontApi:
         context: RequestContext,
         public_key_config: PublicKeyConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdatePublicKeyResult:
         """Update public key information. Note that the only value you can change
@@ -9549,8 +9605,8 @@ class CloudfrontApi:
         :raises AccessDenied:
         :raises NoSuchPublicKey:
         :raises CannotChangeImmutablePublicKeyFields:
-        :raises InvalidArgument:
         :raises IllegalUpdate:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -9559,11 +9615,11 @@ class CloudfrontApi:
     def update_realtime_log_config(
         self,
         context: RequestContext,
-        end_points: EndPointList = None,
-        fields: FieldList = None,
-        name: string = None,
-        arn: string = None,
-        sampling_rate: long = None,
+        end_points: EndPointList | None = None,
+        fields: FieldList | None = None,
+        name: string | None = None,
+        arn: string | None = None,
+        sampling_rate: long | None = None,
         **kwargs,
     ) -> UpdateRealtimeLogConfigResult:
         """Updates a real-time log configuration.
@@ -9604,7 +9660,7 @@ class CloudfrontApi:
         context: RequestContext,
         response_headers_policy_config: ResponseHeadersPolicyConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateResponseHeadersPolicyResult:
         """Updates a response headers policy.
@@ -9632,11 +9688,11 @@ class CloudfrontApi:
         :raises TooManyCustomHeadersInResponseHeadersPolicy:
         :raises ResponseHeadersPolicyAlreadyExists:
         :raises InconsistentQuantities:
-        :raises TooLongCSPInResponseHeadersPolicy:
         :raises NoSuchResponseHeadersPolicy:
+        :raises TooLongCSPInResponseHeadersPolicy:
+        :raises IllegalUpdate:
         :raises InvalidArgument:
         :raises TooManyRemoveHeadersInResponseHeadersPolicy:
-        :raises IllegalUpdate:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
@@ -9647,7 +9703,7 @@ class CloudfrontApi:
         context: RequestContext,
         streaming_distribution_config: StreamingDistributionConfig,
         id: string,
-        if_match: string = None,
+        if_match: string | None = None,
         **kwargs,
     ) -> UpdateStreamingDistributionResult:
         """Update a streaming distribution.
@@ -9690,22 +9746,22 @@ class CloudfrontApi:
         :param if_match: The VPC origin to update, if a match occurs.
         :returns: UpdateVpcOriginResult
         :raises PreconditionFailed:
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises UnsupportedOperation:
-        :raises InconsistentQuantities:
         :raises EntityAlreadyExists:
+        :raises InconsistentQuantities:
         :raises CannotUpdateEntityWhileInUse:
-        :raises InvalidArgument:
         :raises EntityLimitExceeded:
         :raises IllegalUpdate:
+        :raises InvalidArgument:
         :raises InvalidIfMatchVersion:
         """
         raise NotImplementedError
 
     @handler("VerifyDnsConfiguration")
     def verify_dns_configuration(
-        self, context: RequestContext, identifier: string, domain: string = None, **kwargs
+        self, context: RequestContext, identifier: string, domain: string | None = None, **kwargs
     ) -> VerifyDnsConfigurationResult:
         """Verify the DNS configuration for your domain names. This API operation
         checks whether your domain name points to the correct routing endpoint
@@ -9713,11 +9769,11 @@ class CloudfrontApi:
         use this API operation to troubleshoot and resolve DNS configuration
         issues.
 
-        :param identifier: The ID of the distribution tenant.
+        :param identifier: The identifier of the distribution tenant.
         :param domain: The domain name that you're verifying.
         :returns: VerifyDnsConfigurationResult
-        :raises EntityNotFound:
         :raises AccessDenied:
+        :raises EntityNotFound:
         :raises InvalidArgument:
         """
         raise NotImplementedError

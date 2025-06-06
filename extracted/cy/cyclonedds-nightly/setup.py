@@ -25,7 +25,7 @@ from build_ext import build_ext, Library
 from bdist_wheel import bdist_wheel
 
 
-__version__ = "2025.05.29"
+__version__ = "2025.06.06"
 package = "cyclonedds-nightly"
 
 

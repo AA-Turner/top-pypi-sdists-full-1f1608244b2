@@ -1020,9 +1020,9 @@ class EfsApi:
         context: RequestContext,
         client_token: ClientToken,
         file_system_id: FileSystemId,
-        tags: Tags = None,
-        posix_user: PosixUser = None,
-        root_directory: RootDirectory = None,
+        tags: Tags | None = None,
+        posix_user: PosixUser | None = None,
+        root_directory: RootDirectory | None = None,
         **kwargs,
     ) -> AccessPointDescription:
         """Creates an EFS access point. An access point is an application-specific
@@ -1078,14 +1078,14 @@ class EfsApi:
         self,
         context: RequestContext,
         creation_token: CreationToken,
-        performance_mode: PerformanceMode = None,
-        encrypted: Encrypted = None,
-        kms_key_id: KmsKeyId = None,
-        throughput_mode: ThroughputMode = None,
-        provisioned_throughput_in_mibps: ProvisionedThroughputInMibps = None,
-        availability_zone_name: AvailabilityZoneName = None,
-        backup: Backup = None,
-        tags: Tags = None,
+        performance_mode: PerformanceMode | None = None,
+        encrypted: Encrypted | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        throughput_mode: ThroughputMode | None = None,
+        provisioned_throughput_in_mibps: ProvisionedThroughputInMibps | None = None,
+        availability_zone_name: AvailabilityZoneName | None = None,
+        backup: Backup | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> FileSystemDescription:
         """Creates a new, empty file system. The operation requires a creation
@@ -1188,8 +1188,8 @@ class EfsApi:
         context: RequestContext,
         file_system_id: FileSystemId,
         subnet_id: SubnetId,
-        ip_address: IpAddress = None,
-        security_groups: SecurityGroups = None,
+        ip_address: IpAddress | None = None,
+        security_groups: SecurityGroups | None = None,
         **kwargs,
     ) -> MountTargetDescription:
         """Creates a mount target for a file system. You can then mount the file
@@ -1533,7 +1533,7 @@ class EfsApi:
         self,
         context: RequestContext,
         source_file_system_id: FileSystemId,
-        deletion_mode: DeletionMode = None,
+        deletion_mode: DeletionMode | None = None,
         **kwargs,
     ) -> None:
         """Deletes a replication configuration. Deleting a replication
@@ -1587,10 +1587,10 @@ class EfsApi:
     def describe_access_points(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: Token = None,
-        access_point_id: AccessPointId = None,
-        file_system_id: FileSystemId = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
+        access_point_id: AccessPointId | None = None,
+        file_system_id: FileSystemId | None = None,
         **kwargs,
     ) -> DescribeAccessPointsResponse:
         """Returns the description of a specific Amazon EFS access point if the
@@ -1622,8 +1622,8 @@ class EfsApi:
     def describe_account_preferences(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: MaxResults = None,
+        next_token: Token | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> DescribeAccountPreferencesResponse:
         """Returns the account preferences settings for the Amazon Web Services
@@ -1681,10 +1681,10 @@ class EfsApi:
     def describe_file_systems(
         self,
         context: RequestContext,
-        max_items: MaxItems = None,
-        marker: Marker = None,
-        creation_token: CreationToken = None,
-        file_system_id: FileSystemId = None,
+        max_items: MaxItems | None = None,
+        marker: Marker | None = None,
+        creation_token: CreationToken | None = None,
+        file_system_id: FileSystemId | None = None,
         **kwargs,
     ) -> DescribeFileSystemsResponse:
         """Returns the description of a specific Amazon EFS file system if either
@@ -1781,11 +1781,11 @@ class EfsApi:
     def describe_mount_targets(
         self,
         context: RequestContext,
-        max_items: MaxItems = None,
-        marker: Marker = None,
-        file_system_id: FileSystemId = None,
-        mount_target_id: MountTargetId = None,
-        access_point_id: AccessPointId = None,
+        max_items: MaxItems | None = None,
+        marker: Marker | None = None,
+        file_system_id: FileSystemId | None = None,
+        mount_target_id: MountTargetId | None = None,
+        access_point_id: AccessPointId | None = None,
         **kwargs,
     ) -> DescribeMountTargetsResponse:
         """Returns the descriptions of all the current mount targets, or a specific
@@ -1820,9 +1820,9 @@ class EfsApi:
     def describe_replication_configurations(
         self,
         context: RequestContext,
-        file_system_id: FileSystemId = None,
-        next_token: Token = None,
-        max_results: MaxResults = None,
+        file_system_id: FileSystemId | None = None,
+        next_token: Token | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> DescribeReplicationConfigurationsResponse:
         """Retrieves the replication configuration for a specific file system. If a
@@ -1849,8 +1849,8 @@ class EfsApi:
         self,
         context: RequestContext,
         file_system_id: FileSystemId,
-        max_items: MaxItems = None,
-        marker: Marker = None,
+        max_items: MaxItems | None = None,
+        marker: Marker | None = None,
         **kwargs,
     ) -> DescribeTagsResponse:
         """DEPRECATED - The ``DescribeTags`` action is deprecated and not
@@ -1882,8 +1882,8 @@ class EfsApi:
         self,
         context: RequestContext,
         resource_id: ResourceId,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListTagsForResourceResponse:
         """Lists all tags for a top-level EFS resource. You must provide the ID of
@@ -1911,7 +1911,7 @@ class EfsApi:
         self,
         context: RequestContext,
         mount_target_id: MountTargetId,
-        security_groups: SecurityGroups = None,
+        security_groups: SecurityGroups | None = None,
         **kwargs,
     ) -> None:
         """Modifies the set of security groups in effect for a mount target.
@@ -1998,7 +1998,7 @@ class EfsApi:
         context: RequestContext,
         file_system_id: FileSystemId,
         policy: Policy,
-        bypass_policy_lockout_safety_check: BypassPolicyLockoutSafetyCheck = None,
+        bypass_policy_lockout_safety_check: BypassPolicyLockoutSafetyCheck | None = None,
         **kwargs,
     ) -> FileSystemPolicyDescription:
         """Applies an Amazon EFS ``FileSystemPolicy`` to an Amazon EFS file system.
@@ -2147,8 +2147,8 @@ class EfsApi:
         self,
         context: RequestContext,
         file_system_id: FileSystemId,
-        throughput_mode: ThroughputMode = None,
-        provisioned_throughput_in_mibps: ProvisionedThroughputInMibps = None,
+        throughput_mode: ThroughputMode | None = None,
+        provisioned_throughput_in_mibps: ProvisionedThroughputInMibps | None = None,
         **kwargs,
     ) -> FileSystemDescription:
         """Updates the throughput mode or the amount of provisioned throughput of
@@ -2174,7 +2174,7 @@ class EfsApi:
         self,
         context: RequestContext,
         file_system_id: FileSystemId,
-        replication_overwrite_protection: ReplicationOverwriteProtection = None,
+        replication_overwrite_protection: ReplicationOverwriteProtection | None = None,
         **kwargs,
     ) -> FileSystemProtectionDescription:
         """Updates protection on the file system.

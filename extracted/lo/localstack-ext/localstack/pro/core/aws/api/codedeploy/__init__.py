@@ -2849,8 +2849,8 @@ class CodedeployApi:
     def continue_deployment(
         self,
         context: RequestContext,
-        deployment_id: DeploymentId = None,
-        deployment_wait_type: DeploymentWaitType = None,
+        deployment_id: DeploymentId | None = None,
+        deployment_wait_type: DeploymentWaitType | None = None,
         **kwargs,
     ) -> None:
         """For a blue/green deployment, starts the process of rerouting traffic
@@ -2879,8 +2879,8 @@ class CodedeployApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        compute_platform: ComputePlatform = None,
-        tags: TagList = None,
+        compute_platform: ComputePlatform | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateApplicationOutput:
         """Creates an application.
@@ -2905,16 +2905,16 @@ class CodedeployApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        deployment_group_name: DeploymentGroupName = None,
-        revision: RevisionLocation = None,
-        deployment_config_name: DeploymentConfigName = None,
-        description: Description = None,
-        ignore_application_stop_failures: Boolean = None,
-        target_instances: TargetInstances = None,
-        auto_rollback_configuration: AutoRollbackConfiguration = None,
-        update_outdated_instances_only: Boolean = None,
-        file_exists_behavior: FileExistsBehavior = None,
-        override_alarm_configuration: AlarmConfiguration = None,
+        deployment_group_name: DeploymentGroupName | None = None,
+        revision: RevisionLocation | None = None,
+        deployment_config_name: DeploymentConfigName | None = None,
+        description: Description | None = None,
+        ignore_application_stop_failures: Boolean | None = None,
+        target_instances: TargetInstances | None = None,
+        auto_rollback_configuration: AutoRollbackConfiguration | None = None,
+        update_outdated_instances_only: Boolean | None = None,
+        file_exists_behavior: FileExistsBehavior | None = None,
+        override_alarm_configuration: AlarmConfiguration | None = None,
         **kwargs,
     ) -> CreateDeploymentOutput:
         """Deploys an application revision through the specified deployment group.
@@ -2975,10 +2975,10 @@ class CodedeployApi:
         self,
         context: RequestContext,
         deployment_config_name: DeploymentConfigName,
-        minimum_healthy_hosts: MinimumHealthyHosts = None,
-        traffic_routing_config: TrafficRoutingConfig = None,
-        compute_platform: ComputePlatform = None,
-        zonal_config: ZonalConfig = None,
+        minimum_healthy_hosts: MinimumHealthyHosts | None = None,
+        traffic_routing_config: TrafficRoutingConfig | None = None,
+        compute_platform: ComputePlatform | None = None,
+        zonal_config: ZonalConfig | None = None,
         **kwargs,
     ) -> CreateDeploymentConfigOutput:
         """Creates a deployment configuration.
@@ -3011,22 +3011,22 @@ class CodedeployApi:
         application_name: ApplicationName,
         deployment_group_name: DeploymentGroupName,
         service_role_arn: Role,
-        deployment_config_name: DeploymentConfigName = None,
-        ec2_tag_filters: EC2TagFilterList = None,
-        on_premises_instance_tag_filters: TagFilterList = None,
-        auto_scaling_groups: AutoScalingGroupNameList = None,
-        trigger_configurations: TriggerConfigList = None,
-        alarm_configuration: AlarmConfiguration = None,
-        auto_rollback_configuration: AutoRollbackConfiguration = None,
-        outdated_instances_strategy: OutdatedInstancesStrategy = None,
-        deployment_style: DeploymentStyle = None,
-        blue_green_deployment_configuration: BlueGreenDeploymentConfiguration = None,
-        load_balancer_info: LoadBalancerInfo = None,
-        ec2_tag_set: EC2TagSet = None,
-        ecs_services: ECSServiceList = None,
-        on_premises_tag_set: OnPremisesTagSet = None,
-        tags: TagList = None,
-        termination_hook_enabled: NullableBoolean = None,
+        deployment_config_name: DeploymentConfigName | None = None,
+        ec2_tag_filters: EC2TagFilterList | None = None,
+        on_premises_instance_tag_filters: TagFilterList | None = None,
+        auto_scaling_groups: AutoScalingGroupNameList | None = None,
+        trigger_configurations: TriggerConfigList | None = None,
+        alarm_configuration: AlarmConfiguration | None = None,
+        auto_rollback_configuration: AutoRollbackConfiguration | None = None,
+        outdated_instances_strategy: OutdatedInstancesStrategy | None = None,
+        deployment_style: DeploymentStyle | None = None,
+        blue_green_deployment_configuration: BlueGreenDeploymentConfiguration | None = None,
+        load_balancer_info: LoadBalancerInfo | None = None,
+        ec2_tag_set: EC2TagSet | None = None,
+        ecs_services: ECSServiceList | None = None,
+        on_premises_tag_set: OnPremisesTagSet | None = None,
+        tags: TagList | None = None,
+        termination_hook_enabled: NullableBoolean | None = None,
         **kwargs,
     ) -> CreateDeploymentGroupOutput:
         """Creates a deployment group to which application revisions are deployed.
@@ -3156,7 +3156,7 @@ class CodedeployApi:
 
     @handler("DeleteGitHubAccountToken")
     def delete_git_hub_account_token(
-        self, context: RequestContext, token_name: GitHubAccountTokenName = None, **kwargs
+        self, context: RequestContext, token_name: GitHubAccountTokenName | None = None, **kwargs
     ) -> DeleteGitHubAccountTokenOutput:
         """Deletes a GitHub account connection.
 
@@ -3172,7 +3172,7 @@ class CodedeployApi:
 
     @handler("DeleteResourcesByExternalId")
     def delete_resources_by_external_id(
-        self, context: RequestContext, external_id: ExternalId = None, **kwargs
+        self, context: RequestContext, external_id: ExternalId | None = None, **kwargs
     ) -> DeleteResourcesByExternalIdOutput:
         """Deletes resources linked to an external ID. This action only applies if
         you have configured blue/green deployments through CloudFormation.
@@ -3360,12 +3360,12 @@ class CodedeployApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        sort_by: ApplicationRevisionSortBy = None,
-        sort_order: SortOrder = None,
-        s3_bucket: S3Bucket = None,
-        s3_key_prefix: S3Key = None,
-        deployed: ListStateFilterAction = None,
-        next_token: NextToken = None,
+        sort_by: ApplicationRevisionSortBy | None = None,
+        sort_order: SortOrder | None = None,
+        s3_bucket: S3Bucket | None = None,
+        s3_key_prefix: S3Key | None = None,
+        deployed: ListStateFilterAction | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListApplicationRevisionsOutput:
         """Lists information about revisions for an application.
@@ -3405,7 +3405,7 @@ class CodedeployApi:
 
     @handler("ListApplications")
     def list_applications(
-        self, context: RequestContext, next_token: NextToken = None, **kwargs
+        self, context: RequestContext, next_token: NextToken | None = None, **kwargs
     ) -> ListApplicationsOutput:
         """Lists the applications registered with the user or Amazon Web Services
         account.
@@ -3418,7 +3418,7 @@ class CodedeployApi:
 
     @handler("ListDeploymentConfigs")
     def list_deployment_configs(
-        self, context: RequestContext, next_token: NextToken = None, **kwargs
+        self, context: RequestContext, next_token: NextToken | None = None, **kwargs
     ) -> ListDeploymentConfigsOutput:
         """Lists the deployment configurations with the user or Amazon Web Services
         account.
@@ -3434,7 +3434,7 @@ class CodedeployApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        next_token: NextToken = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListDeploymentGroupsOutput:
         """Lists the deployment groups for an application registered with the
@@ -3456,9 +3456,9 @@ class CodedeployApi:
         self,
         context: RequestContext,
         deployment_id: DeploymentId,
-        next_token: NextToken = None,
-        instance_status_filter: InstanceStatusList = None,
-        instance_type_filter: InstanceTypeList = None,
+        next_token: NextToken | None = None,
+        instance_status_filter: InstanceStatusList | None = None,
+        instance_type_filter: InstanceTypeList | None = None,
         **kwargs,
     ) -> ListDeploymentInstancesOutput:
         """The newer ``BatchGetDeploymentTargets`` should be used instead because
@@ -3496,8 +3496,8 @@ class CodedeployApi:
         self,
         context: RequestContext,
         deployment_id: DeploymentId,
-        next_token: NextToken = None,
-        target_filters: TargetFilters = None,
+        next_token: NextToken | None = None,
+        target_filters: TargetFilters | None = None,
         **kwargs,
     ) -> ListDeploymentTargetsOutput:
         """Returns an array of target IDs that are associated a deployment.
@@ -3523,12 +3523,12 @@ class CodedeployApi:
     def list_deployments(
         self,
         context: RequestContext,
-        application_name: ApplicationName = None,
-        deployment_group_name: DeploymentGroupName = None,
-        external_id: ExternalId = None,
-        include_only_statuses: DeploymentStatusList = None,
-        create_time_range: TimeRange = None,
-        next_token: NextToken = None,
+        application_name: ApplicationName | None = None,
+        deployment_group_name: DeploymentGroupName | None = None,
+        external_id: ExternalId | None = None,
+        include_only_statuses: DeploymentStatusList | None = None,
+        create_time_range: TimeRange | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListDeploymentsOutput:
         """Lists the deployments in a deployment group for an application
@@ -3562,7 +3562,7 @@ class CodedeployApi:
 
     @handler("ListGitHubAccountTokenNames")
     def list_git_hub_account_token_names(
-        self, context: RequestContext, next_token: NextToken = None, **kwargs
+        self, context: RequestContext, next_token: NextToken | None = None, **kwargs
     ) -> ListGitHubAccountTokenNamesOutput:
         """Lists the names of stored connections to GitHub accounts.
 
@@ -3579,9 +3579,9 @@ class CodedeployApi:
     def list_on_premises_instances(
         self,
         context: RequestContext,
-        registration_status: RegistrationStatus = None,
-        tag_filters: TagFilterList = None,
-        next_token: NextToken = None,
+        registration_status: RegistrationStatus | None = None,
+        tag_filters: TagFilterList | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListOnPremisesInstancesOutput:
         """Gets a list of names for one or more on-premises instances.
@@ -3607,7 +3607,11 @@ class CodedeployApi:
 
     @handler("ListTagsForResource")
     def list_tags_for_resource(
-        self, context: RequestContext, resource_arn: Arn, next_token: NextToken = None, **kwargs
+        self,
+        context: RequestContext,
+        resource_arn: Arn,
+        next_token: NextToken | None = None,
+        **kwargs,
     ) -> ListTagsForResourceOutput:
         """Returns a list of tags for the resource identified by a specified Amazon
         Resource Name (ARN). Tags are used to organize and categorize your
@@ -3626,9 +3630,9 @@ class CodedeployApi:
     def put_lifecycle_event_hook_execution_status(
         self,
         context: RequestContext,
-        deployment_id: DeploymentId = None,
-        lifecycle_event_hook_execution_id: LifecycleEventHookExecutionId = None,
-        status: LifecycleEventStatus = None,
+        deployment_id: DeploymentId | None = None,
+        lifecycle_event_hook_execution_id: LifecycleEventHookExecutionId | None = None,
+        status: LifecycleEventStatus | None = None,
         **kwargs,
     ) -> PutLifecycleEventHookExecutionStatusOutput:
         """Sets the result of a Lambda validation function. The function validates
@@ -3665,7 +3669,7 @@ class CodedeployApi:
         context: RequestContext,
         application_name: ApplicationName,
         revision: RevisionLocation,
-        description: Description = None,
+        description: Description | None = None,
         **kwargs,
     ) -> None:
         """Registers with CodeDeploy a revision for the specified application.
@@ -3689,8 +3693,8 @@ class CodedeployApi:
         self,
         context: RequestContext,
         instance_name: InstanceName,
-        iam_session_arn: IamSessionArn = None,
-        iam_user_arn: IamUserArn = None,
+        iam_session_arn: IamSessionArn | None = None,
+        iam_user_arn: IamUserArn | None = None,
         **kwargs,
     ) -> None:
         """Registers an on-premises instance.
@@ -3734,7 +3738,7 @@ class CodedeployApi:
 
     @handler("SkipWaitTimeForInstanceTermination")
     def skip_wait_time_for_instance_termination(
-        self, context: RequestContext, deployment_id: DeploymentId = None, **kwargs
+        self, context: RequestContext, deployment_id: DeploymentId | None = None, **kwargs
     ) -> None:
         """In a blue/green deployment, overrides any specified wait time and starts
         terminating instances immediately after the traffic routing is complete.
@@ -3755,7 +3759,7 @@ class CodedeployApi:
         self,
         context: RequestContext,
         deployment_id: DeploymentId,
-        auto_rollback_enabled: NullableBoolean = None,
+        auto_rollback_enabled: NullableBoolean | None = None,
         **kwargs,
     ) -> StopDeploymentOutput:
         """Attempts to stop an ongoing deployment.
@@ -3823,8 +3827,8 @@ class CodedeployApi:
     def update_application(
         self,
         context: RequestContext,
-        application_name: ApplicationName = None,
-        new_application_name: ApplicationName = None,
+        application_name: ApplicationName | None = None,
+        new_application_name: ApplicationName | None = None,
         **kwargs,
     ) -> None:
         """Changes the name of an application.
@@ -3844,23 +3848,23 @@ class CodedeployApi:
         context: RequestContext,
         application_name: ApplicationName,
         current_deployment_group_name: DeploymentGroupName,
-        new_deployment_group_name: DeploymentGroupName = None,
-        deployment_config_name: DeploymentConfigName = None,
-        ec2_tag_filters: EC2TagFilterList = None,
-        on_premises_instance_tag_filters: TagFilterList = None,
-        auto_scaling_groups: AutoScalingGroupNameList = None,
-        service_role_arn: Role = None,
-        trigger_configurations: TriggerConfigList = None,
-        alarm_configuration: AlarmConfiguration = None,
-        auto_rollback_configuration: AutoRollbackConfiguration = None,
-        outdated_instances_strategy: OutdatedInstancesStrategy = None,
-        deployment_style: DeploymentStyle = None,
-        blue_green_deployment_configuration: BlueGreenDeploymentConfiguration = None,
-        load_balancer_info: LoadBalancerInfo = None,
-        ec2_tag_set: EC2TagSet = None,
-        ecs_services: ECSServiceList = None,
-        on_premises_tag_set: OnPremisesTagSet = None,
-        termination_hook_enabled: NullableBoolean = None,
+        new_deployment_group_name: DeploymentGroupName | None = None,
+        deployment_config_name: DeploymentConfigName | None = None,
+        ec2_tag_filters: EC2TagFilterList | None = None,
+        on_premises_instance_tag_filters: TagFilterList | None = None,
+        auto_scaling_groups: AutoScalingGroupNameList | None = None,
+        service_role_arn: Role | None = None,
+        trigger_configurations: TriggerConfigList | None = None,
+        alarm_configuration: AlarmConfiguration | None = None,
+        auto_rollback_configuration: AutoRollbackConfiguration | None = None,
+        outdated_instances_strategy: OutdatedInstancesStrategy | None = None,
+        deployment_style: DeploymentStyle | None = None,
+        blue_green_deployment_configuration: BlueGreenDeploymentConfiguration | None = None,
+        load_balancer_info: LoadBalancerInfo | None = None,
+        ec2_tag_set: EC2TagSet | None = None,
+        ecs_services: ECSServiceList | None = None,
+        on_premises_tag_set: OnPremisesTagSet | None = None,
+        termination_hook_enabled: NullableBoolean | None = None,
         **kwargs,
     ) -> UpdateDeploymentGroupOutput:
         """Changes information about a deployment group.

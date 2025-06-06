@@ -153,7 +153,7 @@ class AppconfigdataApi:
         application_identifier: Identifier,
         environment_identifier: Identifier,
         configuration_profile_identifier: Identifier,
-        required_minimum_poll_interval_in_seconds: OptionalPollSeconds = None,
+        required_minimum_poll_interval_in_seconds: OptionalPollSeconds | None = None,
         **kwargs,
     ) -> StartConfigurationSessionResponse:
         """Starts a configuration session used to retrieve a deployed

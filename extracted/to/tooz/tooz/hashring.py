@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 #    Copyright (C) 2016 Red Hat, Inc.
 #
@@ -16,8 +15,6 @@
 import bisect
 import hashlib
 
-from oslo_utils.secretutils import md5
-
 import tooz
 from tooz import utils
 
@@ -25,11 +22,11 @@ from tooz import utils
 class UnknownNode(tooz.ToozError):
     """Node is unknown."""
     def __init__(self, node):
-        super(UnknownNode, self).__init__("Unknown node `%s'" % node)
+        super().__init__("Unknown node `%s'" % node)
         self.node = node
 
 
-class HashRing(object):
+class HashRing:
     """Map objects onto nodes based on their consistent hash."""
 
     DEFAULT_PARTITION_NUMBER = 2**5
@@ -83,7 +80,7 @@ class HashRing(object):
         for node in nodes:
             key = utils.to_binary(node, 'utf-8')
             if self._hash_function == 'md5':
-                key_hash = md5(key, usedforsecurity=False)
+                key_hash = hashlib.md5(key, usedforsecurity=False)
             else:
                 key_hash = hashlib.new(self._hash_function, key)
             for r in range(self._partition_number * weight):
@@ -108,7 +105,7 @@ class HashRing(object):
 
         key = utils.to_binary(node, 'utf-8')
         if self._hash_function == 'md5':
-            key_hash = md5(key, usedforsecurity=False)
+            key_hash = hashlib.md5(key, usedforsecurity=False)
         else:
             key_hash = hashlib.new(self._hash_function, key)
         for r in range(self._partition_number * weight):
@@ -123,7 +120,8 @@ class HashRing(object):
 
     def _get_partition(self, data):
         if self._hash_function == 'md5':
-            hashed_key = self._hash2int(md5(data, usedforsecurity=False))
+            hashed_key = self._hash2int(
+                hashlib.md5(data, usedforsecurity=False))
         else:
             hashed_key = self._hash2int(
                 hashlib.new(self._hash_function, data))

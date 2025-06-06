@@ -1,18 +1,22 @@
 Metadata-Version: 2.1
 Name: langchain-tests
-Version: 0.3.19
+Version: 0.3.20
 Summary: Standard tests for LangChain implementations
 Author-Email: Erick Friis <erick@langchain.dev>
 License: MIT
 Project-URL: Source Code, https://github.com/langchain-ai/langchain/tree/master/libs/standard-tests
 Project-URL: repository, https://github.com/langchain-ai/langchain
-Requires-Python: <4.0,>=3.9
-Requires-Dist: langchain-core<1.0.0,>=0.3.53
+Requires-Python: >=3.9
+Requires-Dist: langchain-core<1.0.0,>=0.3.63
 Requires-Dist: pytest<9,>=7
 Requires-Dist: pytest-asyncio<1,>=0.20
 Requires-Dist: httpx<1,>=0.25.0
 Requires-Dist: syrupy<5,>=4
 Requires-Dist: pytest-socket<1,>=0.6.0
+Requires-Dist: pytest-benchmark
+Requires-Dist: pytest-codspeed
+Requires-Dist: pytest-recording
+Requires-Dist: vcrpy>=7.0
 Requires-Dist: numpy>=1.26.2; python_version < "3.13"
 Requires-Dist: numpy>=2.1.0; python_version >= "3.13"
 Description-Content-Type: text/markdown

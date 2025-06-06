@@ -3,16 +3,40 @@
 # *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import builtins
-import builtins
+import pulumi
 from enum import Enum
 
 __all__ = [
+    'AccessPointNetworkOrigin',
+    'AccessPointScopePermissionsItem',
     'DirectoryBucketDataRedundancy',
     'DirectoryBucketRuleStatus',
     'DirectoryBucketServerSideEncryptionByDefaultSseAlgorithm',
 ]
 
 
+@pulumi.type_token("aws-native:s3express:AccessPointNetworkOrigin")
+class AccessPointNetworkOrigin(builtins.str, Enum):
+    """
+    Indicates whether this Access Point allows access from the public Internet. If VpcConfiguration is specified for this Access Point, then NetworkOrigin is VPC, and the Access Point doesn't allow access from the public Internet. Otherwise, NetworkOrigin is Internet, and the Access Point allows access from the public Internet, subject to the Access Point and bucket access policies.
+    """
+    INTERNET = "Internet"
+    VPC = "VPC"
+
+
+@pulumi.type_token("aws-native:s3express:AccessPointScopePermissionsItem")
+class AccessPointScopePermissionsItem(builtins.str, Enum):
+    GET_OBJECT = "GetObject"
+    GET_OBJECT_ATTRIBUTES = "GetObjectAttributes"
+    LIST_MULTIPART_UPLOAD_PARTS = "ListMultipartUploadParts"
+    LIST_BUCKET = "ListBucket"
+    LIST_BUCKET_MULTIPART_UPLOADS = "ListBucketMultipartUploads"
+    PUT_OBJECT = "PutObject"
+    DELETE_OBJECT = "DeleteObject"
+    ABORT_MULTIPART_UPLOAD = "AbortMultipartUpload"
+
+
+@pulumi.type_token("aws-native:s3express:DirectoryBucketDataRedundancy")
 class DirectoryBucketDataRedundancy(builtins.str, Enum):
     """
     Specifies the number of Availability Zone or Local Zone that's used for redundancy for the bucket.
@@ -21,6 +45,7 @@ class DirectoryBucketDataRedundancy(builtins.str, Enum):
     SINGLE_LOCAL_ZONE = "SingleLocalZone"
 
 
+@pulumi.type_token("aws-native:s3express:DirectoryBucketRuleStatus")
 class DirectoryBucketRuleStatus(builtins.str, Enum):
     """
     If `Enabled` , the rule is currently being applied. If `Disabled` , the rule is not currently being applied.
@@ -29,6 +54,7 @@ class DirectoryBucketRuleStatus(builtins.str, Enum):
     DISABLED = "Disabled"
 
 
+@pulumi.type_token("aws-native:s3express:DirectoryBucketServerSideEncryptionByDefaultSseAlgorithm")
 class DirectoryBucketServerSideEncryptionByDefaultSseAlgorithm(builtins.str, Enum):
     """
     Server-side encryption algorithm to use for the default encryption.

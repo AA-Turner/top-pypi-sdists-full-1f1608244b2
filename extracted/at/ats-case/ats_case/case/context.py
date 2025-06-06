@@ -381,7 +381,12 @@ class Context(object):
             # 加载全局变量
             g = self._parent.case.control.get('global')
             if isinstance(g, dict) and len(g) > 0:
-                self._glo = g
+                for key, value in g.items():
+                    try:
+                        self._glo[key] = eval(value)
+                    except:
+                        self._glo[key] = value
+                # self._glo = g
 
         def _logic_control(self):
             # if集合

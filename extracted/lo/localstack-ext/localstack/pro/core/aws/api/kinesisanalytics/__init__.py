@@ -1262,12 +1262,12 @@ class KinesisanalyticsApi:
         self,
         context: RequestContext,
         application_name: ApplicationName,
-        application_description: ApplicationDescription = None,
-        inputs: Inputs = None,
-        outputs: Outputs = None,
-        cloud_watch_logging_options: CloudWatchLoggingOptions = None,
-        application_code: ApplicationCode = None,
-        tags: Tags = None,
+        application_description: ApplicationDescription | None = None,
+        inputs: Inputs | None = None,
+        outputs: Outputs | None = None,
+        cloud_watch_logging_options: CloudWatchLoggingOptions | None = None,
+        application_code: ApplicationCode | None = None,
+        tags: Tags | None = None,
         **kwargs,
     ) -> CreateApplicationResponse:
         """This documentation is for version 1 of the Amazon Kinesis Data Analytics
@@ -1532,11 +1532,11 @@ class KinesisanalyticsApi:
     def discover_input_schema(
         self,
         context: RequestContext,
-        resource_arn: ResourceARN = None,
-        role_arn: RoleARN = None,
-        input_starting_position_configuration: InputStartingPositionConfiguration = None,
-        s3_configuration: S3Configuration = None,
-        input_processing_configuration: InputProcessingConfiguration = None,
+        resource_arn: ResourceARN | None = None,
+        role_arn: RoleARN | None = None,
+        input_starting_position_configuration: InputStartingPositionConfiguration | None = None,
+        s3_configuration: S3Configuration | None = None,
+        input_processing_configuration: InputProcessingConfiguration | None = None,
         **kwargs,
     ) -> DiscoverInputSchemaResponse:
         """This documentation is for version 1 of the Amazon Kinesis Data Analytics
@@ -1583,8 +1583,8 @@ class KinesisanalyticsApi:
     def list_applications(
         self,
         context: RequestContext,
-        limit: ListApplicationsInputLimit = None,
-        exclusive_start_application_name: ApplicationName = None,
+        limit: ListApplicationsInputLimit | None = None,
+        exclusive_start_application_name: ApplicationName | None = None,
         **kwargs,
     ) -> ListApplicationsResponse:
         """This documentation is for version 1 of the Amazon Kinesis Data Analytics

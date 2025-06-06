@@ -93,6 +93,12 @@ WebhookId = str
 WebhookUrl = str
 
 
+class BuildComputeType(StrEnum):
+    STANDARD_8GB = "STANDARD_8GB"
+    LARGE_16GB = "LARGE_16GB"
+    XLARGE_72GB = "XLARGE_72GB"
+
+
 class CacheConfigType(StrEnum):
     AMPLIFY_MANAGED = "AMPLIFY_MANAGED"
     AMPLIFY_MANAGED_NO_COOKIES = "AMPLIFY_MANAGED_NO_COOKIES"
@@ -233,6 +239,20 @@ class UnauthorizedException(ServiceException):
     status_code: int = 401
 
 
+class JobConfig(TypedDict, total=False):
+    """Describes the configuration details that apply to the jobs for an
+    Amplify app.
+
+    Use ``JobConfig`` to apply configuration to jobs, such as customizing
+    the build instance size when you create or update an Amplify app. For
+    more information about customizable build instances, see `Custom build
+    instances <https://docs.aws.amazon.com/amplify/latest/userguide/custom-build-instance.html>`__
+    in the *Amplify User Guide*.
+    """
+
+    buildComputeType: BuildComputeType
+
+
 class WafConfiguration(TypedDict, total=False):
     """Describes the Firewall configuration for a hosted Amplify application.
     Firewall support enables you to protect your web applications with a
@@ -334,6 +354,7 @@ class App(TypedDict, total=False):
     cacheConfig: Optional[CacheConfig]
     webhookCreateTime: Optional[webhookCreateTime]
     wafConfiguration: Optional[WafConfiguration]
+    jobConfig: Optional[JobConfig]
 
 
 Apps = List[App]
@@ -461,6 +482,7 @@ class CreateAppRequest(ServiceRequest):
     enableAutoBranchCreation: Optional[EnableAutoBranchCreation]
     autoBranchCreationPatterns: Optional[AutoBranchCreationPatterns]
     autoBranchCreationConfig: Optional[AutoBranchCreationConfig]
+    jobConfig: Optional[JobConfig]
     cacheConfig: Optional[CacheConfig]
 
 
@@ -1072,6 +1094,7 @@ class UpdateAppRequest(ServiceRequest):
     repository: Optional[Repository]
     oauthToken: Optional[OauthToken]
     accessToken: Optional[AccessToken]
+    jobConfig: Optional[JobConfig]
     cacheConfig: Optional[CacheConfig]
 
 
@@ -1153,26 +1176,27 @@ class AmplifyApi:
         self,
         context: RequestContext,
         name: Name,
-        description: Description = None,
-        repository: Repository = None,
-        platform: Platform = None,
-        compute_role_arn: ComputeRoleArn = None,
-        iam_service_role_arn: ServiceRoleArn = None,
-        oauth_token: OauthToken = None,
-        access_token: AccessToken = None,
-        environment_variables: EnvironmentVariables = None,
-        enable_branch_auto_build: EnableBranchAutoBuild = None,
-        enable_branch_auto_deletion: EnableBranchAutoDeletion = None,
-        enable_basic_auth: EnableBasicAuth = None,
-        basic_auth_credentials: BasicAuthCredentials = None,
-        custom_rules: CustomRules = None,
-        tags: TagMap = None,
-        build_spec: BuildSpec = None,
-        custom_headers: CustomHeaders = None,
-        enable_auto_branch_creation: EnableAutoBranchCreation = None,
-        auto_branch_creation_patterns: AutoBranchCreationPatterns = None,
-        auto_branch_creation_config: AutoBranchCreationConfig = None,
-        cache_config: CacheConfig = None,
+        description: Description | None = None,
+        repository: Repository | None = None,
+        platform: Platform | None = None,
+        compute_role_arn: ComputeRoleArn | None = None,
+        iam_service_role_arn: ServiceRoleArn | None = None,
+        oauth_token: OauthToken | None = None,
+        access_token: AccessToken | None = None,
+        environment_variables: EnvironmentVariables | None = None,
+        enable_branch_auto_build: EnableBranchAutoBuild | None = None,
+        enable_branch_auto_deletion: EnableBranchAutoDeletion | None = None,
+        enable_basic_auth: EnableBasicAuth | None = None,
+        basic_auth_credentials: BasicAuthCredentials | None = None,
+        custom_rules: CustomRules | None = None,
+        tags: TagMap | None = None,
+        build_spec: BuildSpec | None = None,
+        custom_headers: CustomHeaders | None = None,
+        enable_auto_branch_creation: EnableAutoBranchCreation | None = None,
+        auto_branch_creation_patterns: AutoBranchCreationPatterns | None = None,
+        auto_branch_creation_config: AutoBranchCreationConfig | None = None,
+        job_config: JobConfig | None = None,
+        cache_config: CacheConfig | None = None,
         **kwargs,
     ) -> CreateAppResult:
         """Creates a new Amplify app.
@@ -1200,6 +1224,8 @@ class AmplifyApi:
         :param enable_auto_branch_creation: Enables automated branch creation for an Amplify app.
         :param auto_branch_creation_patterns: The automated branch creation glob patterns for an Amplify app.
         :param auto_branch_creation_config: The automated branch creation configuration for an Amplify app.
+        :param job_config: Describes the configuration details that apply to the jobs for an
+        Amplify app.
         :param cache_config: The cache configuration for the Amplify app.
         :returns: CreateAppResult
         :raises BadRequestException:
@@ -1216,8 +1242,8 @@ class AmplifyApi:
         context: RequestContext,
         app_id: AppId,
         environment_name: EnvironmentName,
-        stack_name: StackName = None,
-        deployment_artifacts: DeploymentArtifacts = None,
+        stack_name: StackName | None = None,
+        deployment_artifacts: DeploymentArtifacts | None = None,
         **kwargs,
     ) -> CreateBackendEnvironmentResult:
         """Creates a new backend environment for an Amplify app.
@@ -1247,25 +1273,25 @@ class AmplifyApi:
         context: RequestContext,
         app_id: AppId,
         branch_name: BranchName,
-        description: Description = None,
-        stage: Stage = None,
-        framework: Framework = None,
-        enable_notification: EnableNotification = None,
-        enable_auto_build: EnableAutoBuild = None,
-        enable_skew_protection: EnableSkewProtection = None,
-        environment_variables: EnvironmentVariables = None,
-        basic_auth_credentials: BasicAuthCredentials = None,
-        enable_basic_auth: EnableBasicAuth = None,
-        enable_performance_mode: EnablePerformanceMode = None,
-        tags: TagMap = None,
-        build_spec: BuildSpec = None,
-        ttl: TTL = None,
-        display_name: DisplayName = None,
-        enable_pull_request_preview: EnablePullRequestPreview = None,
-        pull_request_environment_name: PullRequestEnvironmentName = None,
-        backend_environment_arn: BackendEnvironmentArn = None,
-        backend: Backend = None,
-        compute_role_arn: ComputeRoleArn = None,
+        description: Description | None = None,
+        stage: Stage | None = None,
+        framework: Framework | None = None,
+        enable_notification: EnableNotification | None = None,
+        enable_auto_build: EnableAutoBuild | None = None,
+        enable_skew_protection: EnableSkewProtection | None = None,
+        environment_variables: EnvironmentVariables | None = None,
+        basic_auth_credentials: BasicAuthCredentials | None = None,
+        enable_basic_auth: EnableBasicAuth | None = None,
+        enable_performance_mode: EnablePerformanceMode | None = None,
+        tags: TagMap | None = None,
+        build_spec: BuildSpec | None = None,
+        ttl: TTL | None = None,
+        display_name: DisplayName | None = None,
+        enable_pull_request_preview: EnablePullRequestPreview | None = None,
+        pull_request_environment_name: PullRequestEnvironmentName | None = None,
+        backend_environment_arn: BackendEnvironmentArn | None = None,
+        backend: Backend | None = None,
+        compute_role_arn: ComputeRoleArn | None = None,
         **kwargs,
     ) -> CreateBranchResult:
         """Creates a new branch for an Amplify app.
@@ -1309,7 +1335,7 @@ class AmplifyApi:
         context: RequestContext,
         app_id: AppId,
         branch_name: BranchName,
-        file_map: FileMap = None,
+        file_map: FileMap | None = None,
         **kwargs,
     ) -> CreateDeploymentResult:
         """Creates a deployment for a manually deployed Amplify app. Manually
@@ -1339,10 +1365,10 @@ class AmplifyApi:
         app_id: AppId,
         domain_name: DomainName,
         sub_domain_settings: SubDomainSettings,
-        enable_auto_sub_domain: EnableAutoSubDomain = None,
-        auto_sub_domain_creation_patterns: AutoSubDomainCreationPatterns = None,
-        auto_sub_domain_iam_role: AutoSubDomainIAMRole = None,
-        certificate_settings: CertificateSettings = None,
+        enable_auto_sub_domain: EnableAutoSubDomain | None = None,
+        auto_sub_domain_creation_patterns: AutoSubDomainCreationPatterns | None = None,
+        auto_sub_domain_iam_role: AutoSubDomainIAMRole | None = None,
+        certificate_settings: CertificateSettings | None = None,
         **kwargs,
     ) -> CreateDomainAssociationResult:
         """Creates a new domain association for an Amplify app. This action
@@ -1372,7 +1398,7 @@ class AmplifyApi:
         context: RequestContext,
         app_id: AppId,
         branch_name: BranchName,
-        description: Description = None,
+        description: Description | None = None,
         **kwargs,
     ) -> CreateWebhookResult:
         """Creates a new webhook on an Amplify app.
@@ -1506,8 +1532,8 @@ class AmplifyApi:
         context: RequestContext,
         domain_name: DomainName,
         app_id: AppId,
-        start_time: StartTime = None,
-        end_time: EndTime = None,
+        start_time: StartTime | None = None,
+        end_time: EndTime | None = None,
         **kwargs,
     ) -> GenerateAccessLogsResult:
         """Returns the website access logs for a specific time range using a
@@ -1652,8 +1678,8 @@ class AmplifyApi:
     def list_apps(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResultsForListApps = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResultsForListApps | None = None,
         **kwargs,
     ) -> ListAppsResult:
         """Returns a list of the existing Amplify apps.
@@ -1674,8 +1700,8 @@ class AmplifyApi:
         app_id: AppId,
         branch_name: BranchName,
         job_id: JobId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListArtifactsResult:
         """Returns a list of end-to-end testing artifacts for a specified app,
@@ -1708,9 +1734,9 @@ class AmplifyApi:
         self,
         context: RequestContext,
         app_id: AppId,
-        environment_name: EnvironmentName = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        environment_name: EnvironmentName | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListBackendEnvironmentsResult:
         """Lists the backend environments for an Amplify app.
@@ -1737,8 +1763,8 @@ class AmplifyApi:
         self,
         context: RequestContext,
         app_id: AppId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListBranchesResult:
         """Lists the branches of an Amplify app.
@@ -1758,8 +1784,8 @@ class AmplifyApi:
         self,
         context: RequestContext,
         app_id: AppId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListDomainAssociationsResult:
         """Returns the domain associations for an Amplify app.
@@ -1780,8 +1806,8 @@ class AmplifyApi:
         context: RequestContext,
         app_id: AppId,
         branch_name: BranchName,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListJobsResult:
         """Lists the jobs for a branch of an Amplify app.
@@ -1817,8 +1843,8 @@ class AmplifyApi:
         self,
         context: RequestContext,
         app_id: AppId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListWebhooksResult:
         """Returns a list of webhooks for an Amplify app.
@@ -1840,9 +1866,9 @@ class AmplifyApi:
         context: RequestContext,
         app_id: AppId,
         branch_name: BranchName,
-        job_id: JobId = None,
-        source_url: SourceUrl = None,
-        source_url_type: SourceUrlType = None,
+        job_id: JobId | None = None,
+        source_url: SourceUrl | None = None,
+        source_url_type: SourceUrlType | None = None,
         **kwargs,
     ) -> StartDeploymentResult:
         """Starts a deployment for a manually deployed app. Manually deployed apps
@@ -1876,11 +1902,11 @@ class AmplifyApi:
         app_id: AppId,
         branch_name: BranchName,
         job_type: JobType,
-        job_id: JobId = None,
-        job_reason: JobReason = None,
-        commit_id: CommitId = None,
-        commit_message: CommitMessage = None,
-        commit_time: CommitTime = None,
+        job_id: JobId | None = None,
+        job_reason: JobReason | None = None,
+        commit_id: CommitId | None = None,
+        commit_message: CommitMessage | None = None,
+        commit_time: CommitTime | None = None,
         **kwargs,
     ) -> StartJobResult:
         """Starts a new job for a branch of an Amplify app.
@@ -1960,26 +1986,27 @@ class AmplifyApi:
         self,
         context: RequestContext,
         app_id: AppId,
-        name: Name = None,
-        description: Description = None,
-        platform: Platform = None,
-        compute_role_arn: ComputeRoleArn = None,
-        iam_service_role_arn: ServiceRoleArn = None,
-        environment_variables: EnvironmentVariables = None,
-        enable_branch_auto_build: EnableAutoBuild = None,
-        enable_branch_auto_deletion: EnableBranchAutoDeletion = None,
-        enable_basic_auth: EnableBasicAuth = None,
-        basic_auth_credentials: BasicAuthCredentials = None,
-        custom_rules: CustomRules = None,
-        build_spec: BuildSpec = None,
-        custom_headers: CustomHeaders = None,
-        enable_auto_branch_creation: EnableAutoBranchCreation = None,
-        auto_branch_creation_patterns: AutoBranchCreationPatterns = None,
-        auto_branch_creation_config: AutoBranchCreationConfig = None,
-        repository: Repository = None,
-        oauth_token: OauthToken = None,
-        access_token: AccessToken = None,
-        cache_config: CacheConfig = None,
+        name: Name | None = None,
+        description: Description | None = None,
+        platform: Platform | None = None,
+        compute_role_arn: ComputeRoleArn | None = None,
+        iam_service_role_arn: ServiceRoleArn | None = None,
+        environment_variables: EnvironmentVariables | None = None,
+        enable_branch_auto_build: EnableAutoBuild | None = None,
+        enable_branch_auto_deletion: EnableBranchAutoDeletion | None = None,
+        enable_basic_auth: EnableBasicAuth | None = None,
+        basic_auth_credentials: BasicAuthCredentials | None = None,
+        custom_rules: CustomRules | None = None,
+        build_spec: BuildSpec | None = None,
+        custom_headers: CustomHeaders | None = None,
+        enable_auto_branch_creation: EnableAutoBranchCreation | None = None,
+        auto_branch_creation_patterns: AutoBranchCreationPatterns | None = None,
+        auto_branch_creation_config: AutoBranchCreationConfig | None = None,
+        repository: Repository | None = None,
+        oauth_token: OauthToken | None = None,
+        access_token: AccessToken | None = None,
+        job_config: JobConfig | None = None,
+        cache_config: CacheConfig | None = None,
         **kwargs,
     ) -> UpdateAppResult:
         """Updates an existing Amplify app.
@@ -2008,6 +2035,8 @@ class AmplifyApi:
         :param oauth_token: The OAuth token for a third-party source control system for an Amplify
         app.
         :param access_token: The personal access token for a GitHub repository for an Amplify app.
+        :param job_config: Describes the configuration details that apply to the jobs for an
+        Amplify app.
         :param cache_config: The cache configuration for the Amplify app.
         :returns: UpdateAppResult
         :raises BadRequestException:
@@ -2023,24 +2052,24 @@ class AmplifyApi:
         context: RequestContext,
         app_id: AppId,
         branch_name: BranchName,
-        description: Description = None,
-        framework: Framework = None,
-        stage: Stage = None,
-        enable_notification: EnableNotification = None,
-        enable_auto_build: EnableAutoBuild = None,
-        enable_skew_protection: EnableSkewProtection = None,
-        environment_variables: EnvironmentVariables = None,
-        basic_auth_credentials: BasicAuthCredentials = None,
-        enable_basic_auth: EnableBasicAuth = None,
-        enable_performance_mode: EnablePerformanceMode = None,
-        build_spec: BuildSpec = None,
-        ttl: TTL = None,
-        display_name: DisplayName = None,
-        enable_pull_request_preview: EnablePullRequestPreview = None,
-        pull_request_environment_name: PullRequestEnvironmentName = None,
-        backend_environment_arn: BackendEnvironmentArn = None,
-        backend: Backend = None,
-        compute_role_arn: ComputeRoleArn = None,
+        description: Description | None = None,
+        framework: Framework | None = None,
+        stage: Stage | None = None,
+        enable_notification: EnableNotification | None = None,
+        enable_auto_build: EnableAutoBuild | None = None,
+        enable_skew_protection: EnableSkewProtection | None = None,
+        environment_variables: EnvironmentVariables | None = None,
+        basic_auth_credentials: BasicAuthCredentials | None = None,
+        enable_basic_auth: EnableBasicAuth | None = None,
+        enable_performance_mode: EnablePerformanceMode | None = None,
+        build_spec: BuildSpec | None = None,
+        ttl: TTL | None = None,
+        display_name: DisplayName | None = None,
+        enable_pull_request_preview: EnablePullRequestPreview | None = None,
+        pull_request_environment_name: PullRequestEnvironmentName | None = None,
+        backend_environment_arn: BackendEnvironmentArn | None = None,
+        backend: Backend | None = None,
+        compute_role_arn: ComputeRoleArn | None = None,
         **kwargs,
     ) -> UpdateBranchResult:
         """Updates a branch for an Amplify app.
@@ -2082,11 +2111,11 @@ class AmplifyApi:
         context: RequestContext,
         app_id: AppId,
         domain_name: DomainName,
-        enable_auto_sub_domain: EnableAutoSubDomain = None,
-        sub_domain_settings: SubDomainSettings = None,
-        auto_sub_domain_creation_patterns: AutoSubDomainCreationPatterns = None,
-        auto_sub_domain_iam_role: AutoSubDomainIAMRole = None,
-        certificate_settings: CertificateSettings = None,
+        enable_auto_sub_domain: EnableAutoSubDomain | None = None,
+        sub_domain_settings: SubDomainSettings | None = None,
+        auto_sub_domain_creation_patterns: AutoSubDomainCreationPatterns | None = None,
+        auto_sub_domain_iam_role: AutoSubDomainIAMRole | None = None,
+        certificate_settings: CertificateSettings | None = None,
         **kwargs,
     ) -> UpdateDomainAssociationResult:
         """Creates a new domain association for an Amplify app.
@@ -2113,8 +2142,8 @@ class AmplifyApi:
         self,
         context: RequestContext,
         webhook_id: WebhookId,
-        branch_name: BranchName = None,
-        description: Description = None,
+        branch_name: BranchName | None = None,
+        description: Description | None = None,
         **kwargs,
     ) -> UpdateWebhookResult:
         """Updates a webhook.

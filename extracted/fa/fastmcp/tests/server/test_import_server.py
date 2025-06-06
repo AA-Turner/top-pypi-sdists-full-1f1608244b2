@@ -3,6 +3,7 @@ from urllib.parse import quote
 
 from fastmcp.client.client import Client
 from fastmcp.server.server import FastMCP
+from fastmcp.tools.tool import FunctionTool, Tool
 
 
 async def test_import_basic_functionality():
@@ -12,7 +13,7 @@ async def test_import_basic_functionality():
     sub_app = FastMCP("SubApp")
 
     # Add a tool to the sub-app
-    @sub_app.tool()
+    @sub_app.tool
     def sub_tool() -> str:
         return "This is from the sub app"
 
@@ -27,6 +28,7 @@ async def test_import_basic_functionality():
     tool = main_app._tool_manager.get_tool("sub_sub_tool")
     assert tool is not None
     assert tool.name == "sub_tool"
+    assert isinstance(tool, FunctionTool)
     assert callable(tool.fn)
 
 
@@ -38,11 +40,11 @@ async def test_import_multiple_apps():
     news_app = FastMCP("NewsApp")
 
     # Add tools to each sub-app
-    @weather_app.tool()
+    @weather_app.tool
     def get_forecast() -> str:
         return "Weather forecast"
 
-    @news_app.tool()
+    @news_app.tool
     def get_headlines() -> str:
         return "News headlines"
 
@@ -63,11 +65,11 @@ async def test_import_combines_tools():
     second_app = FastMCP("SecondApp")
 
     # Add tools to each sub-app
-    @first_app.tool()
+    @first_app.tool
     def first_tool() -> str:
         return "First app tool"
 
-    @second_app.tool()
+    @second_app.tool
     def second_tool() -> str:
         return "Second app tool"
 
@@ -128,7 +130,7 @@ async def test_import_with_prompts():
     assistant_app = FastMCP("AssistantApp")
 
     # Add a prompt to the assistant app
-    @assistant_app.prompt()
+    @assistant_app.prompt
     def greeting(name: str) -> str:
         return f"Hello, {name}!"
 
@@ -172,11 +174,11 @@ async def test_import_multiple_prompts():
     sql_app = FastMCP("SQLApp")
 
     # Add prompts to each app
-    @python_app.prompt()
+    @python_app.prompt
     def review_python(code: str) -> str:
         return f"Reviewing Python code:\n{code}"
 
-    @sql_app.prompt()
+    @sql_app.prompt
     def explain_sql(query: str) -> str:
         return f"Explaining SQL query:\n{query}"
 
@@ -197,7 +199,7 @@ async def test_tool_custom_name_preserved_when_imported():
     def fetch_data(query: str) -> str:
         return f"Data for query: {query}"
 
-    api_app.add_tool(fetch_data, name="get_data")
+    api_app.add_tool(Tool.from_function(fetch_data, name="get_data"))
     await main_app.import_server("api", api_app)
 
     # Check that the tool is accessible by its prefixed name
@@ -205,6 +207,7 @@ async def test_tool_custom_name_preserved_when_imported():
     assert tool is not None
 
     # Check that the function name is preserved
+    assert isinstance(tool, FunctionTool)
     assert tool.fn.__name__ == "fetch_data"
 
 
@@ -216,7 +219,7 @@ async def test_call_imported_custom_named_tool():
     def fetch_data(query: str) -> str:
         return f"Data for query: {query}"
 
-    api_app.add_tool(fetch_data, name="get_data")
+    api_app.add_tool(Tool.from_function(fetch_data, name="get_data"))
     await main_app.import_server("api", api_app)
 
     async with Client(main_app) as client:
@@ -232,12 +235,13 @@ async def test_first_level_importing_with_custom_name():
     def calculate_value(input: int) -> int:
         return input * 2
 
-    provider_app.add_tool(calculate_value, name="compute")
+    provider_app.add_tool(Tool.from_function(calculate_value, name="compute"))
     await service_app.import_server("provider", provider_app)
 
     # Tool is accessible in the service app with the first prefix
     tool = service_app._tool_manager.get_tool("provider_compute")
     assert tool is not None
+    assert isinstance(tool, FunctionTool)
     assert tool.fn.__name__ == "calculate_value"
 
 
@@ -250,7 +254,7 @@ async def test_nested_importing_preserves_prefixes():
     def calculate_value(input: int) -> int:
         return input * 2
 
-    provider_app.add_tool(calculate_value, name="compute")
+    provider_app.add_tool(Tool.from_function(calculate_value, name="compute"))
     await service_app.import_server("provider", provider_app)
     await main_app.import_server("service", service_app)
 
@@ -268,7 +272,7 @@ async def test_call_nested_imported_tool():
     def calculate_value(input: int) -> int:
         return input * 2
 
-    provider_app.add_tool(calculate_value, name="compute")
+    provider_app.add_tool(Tool.from_function(calculate_value, name="compute"))
     await service_app.import_server("provider", provider_app)
     await main_app.import_server("service", service_app)
 
@@ -290,7 +294,7 @@ async def test_import_with_proxy_tools():
     main_app = FastMCP("MainApp")
     api_app = FastMCP("APIApp")
 
-    @api_app.tool()
+    @api_app.tool
     def get_data(query: str) -> str:
         return f"Data for query: {query}"
 
@@ -312,7 +316,7 @@ async def test_import_with_proxy_prompts():
     main_app = FastMCP("MainApp")
     api_app = FastMCP("APIApp")
 
-    @api_app.prompt()
+    @api_app.prompt
     def greeting(name: str) -> str:
         """Example greeting prompt."""
         return f"Hello, {name} from API!"

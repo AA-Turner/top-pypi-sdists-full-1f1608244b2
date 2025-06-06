@@ -744,9 +744,9 @@ class TimestreamWriteApi:
         report_configuration: ReportConfiguration,
         target_database_name: ResourceCreateAPIName,
         target_table_name: ResourceCreateAPIName,
-        client_token: ClientRequestToken = None,
-        data_model_configuration: DataModelConfiguration = None,
-        record_version: RecordVersion = None,
+        client_token: ClientRequestToken | None = None,
+        data_model_configuration: DataModelConfiguration | None = None,
+        record_version: RecordVersion | None = None,
         **kwargs,
     ) -> CreateBatchLoadTaskResponse:
         """Creates a new Timestream batch load task. A batch load task processes
@@ -787,8 +787,8 @@ class TimestreamWriteApi:
         self,
         context: RequestContext,
         database_name: ResourceCreateAPIName,
-        kms_key_id: StringValue2048 = None,
-        tags: TagList = None,
+        kms_key_id: StringValue2048 | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateDatabaseResponse:
         """Creates a new Timestream database. If the KMS key is not specified, the
@@ -821,10 +821,10 @@ class TimestreamWriteApi:
         context: RequestContext,
         database_name: ResourceCreateAPIName,
         table_name: ResourceCreateAPIName,
-        retention_properties: RetentionProperties = None,
-        tags: TagList = None,
-        magnetic_store_write_properties: MagneticStoreWriteProperties = None,
-        schema: Schema = None,
+        retention_properties: RetentionProperties | None = None,
+        tags: TagList | None = None,
+        magnetic_store_write_properties: MagneticStoreWriteProperties | None = None,
+        schema: Schema | None = None,
         **kwargs,
     ) -> CreateTableResponse:
         """Adds a new table to an existing database in your account. In an Amazon
@@ -1025,9 +1025,9 @@ class TimestreamWriteApi:
     def list_batch_load_tasks(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: PageLimit = None,
-        task_status: BatchLoadStatus = None,
+        next_token: String | None = None,
+        max_results: PageLimit | None = None,
+        task_status: BatchLoadStatus | None = None,
         **kwargs,
     ) -> ListBatchLoadTasksResponse:
         """Provides a list of batch load tasks, along with the name, status, when
@@ -1051,8 +1051,8 @@ class TimestreamWriteApi:
     def list_databases(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: PaginationLimit = None,
+        next_token: String | None = None,
+        max_results: PaginationLimit | None = None,
         **kwargs,
     ) -> ListDatabasesResponse:
         """Returns a list of your Timestream databases. `Service quotas
@@ -1076,9 +1076,9 @@ class TimestreamWriteApi:
     def list_tables(
         self,
         context: RequestContext,
-        database_name: ResourceName = None,
-        next_token: String = None,
-        max_results: PaginationLimit = None,
+        database_name: ResourceName | None = None,
+        next_token: String | None = None,
+        max_results: PaginationLimit | None = None,
         **kwargs,
     ) -> ListTablesResponse:
         """Provides a list of tables, along with the name, status, and retention
@@ -1208,9 +1208,9 @@ class TimestreamWriteApi:
         context: RequestContext,
         database_name: ResourceName,
         table_name: ResourceName,
-        retention_properties: RetentionProperties = None,
-        magnetic_store_write_properties: MagneticStoreWriteProperties = None,
-        schema: Schema = None,
+        retention_properties: RetentionProperties | None = None,
+        magnetic_store_write_properties: MagneticStoreWriteProperties | None = None,
+        schema: Schema | None = None,
         **kwargs,
     ) -> UpdateTableResponse:
         """Modifies the retention duration of the memory store and magnetic store
@@ -1249,7 +1249,7 @@ class TimestreamWriteApi:
         database_name: ResourceName,
         table_name: ResourceName,
         records: Records,
-        common_attributes: Record = None,
+        common_attributes: Record | None = None,
         **kwargs,
     ) -> WriteRecordsResponse:
         """Enables you to write your time-series data into Timestream. You can

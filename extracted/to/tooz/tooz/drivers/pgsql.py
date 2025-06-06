@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright © 2014 eNovance
 #
@@ -15,10 +14,9 @@
 # under the License.
 
 import contextlib
+import hashlib
 import logging
 
-from oslo_utils import encodeutils
-from oslo_utils.secretutils import md5
 import psycopg2
 
 import tooz
@@ -55,8 +53,7 @@ _DIAGNOSTICS_ATTRS = tuple([
 
 def _format_exception(e):
     lines = [
-        "%s: %s" % (type(e).__name__,
-                    encodeutils.exception_to_unicode(e).strip()),
+        "{}: {}".format(type(e).__name__, str(e).strip()),
     ]
     if hasattr(e, 'pgcode') and e.pgcode is not None:
         lines.append("Error code: %s" % e.pgcode)
@@ -71,7 +68,7 @@ def _format_exception(e):
             attr_value = getattr(e.diag, attr_name)
             if attr_value is None:
                 continue
-            diagnostic_lines.append("  %s = %s" % (attr_name, attr_value))
+            diagnostic_lines.append("  {} = {}".format(attr_name, attr_value))
         if diagnostic_lines:
             lines.append('Diagnostics:')
             lines.extend(diagnostic_lines)
@@ -93,12 +90,12 @@ class PostgresLock(locking.Lock):
     """A PostgreSQL based lock."""
 
     def __init__(self, name, parsed_url, options):
-        super(PostgresLock, self).__init__(name)
+        super().__init__(name)
         self.acquired = False
         self._conn = None
         self._parsed_url = parsed_url
         self._options = options
-        h = md5(usedforsecurity=False)
+        h = hashlib.md5(usedforsecurity=False)
         h.update(name)
         self.key = h.digest()[0:2]
 
@@ -192,7 +189,7 @@ class PostgresDriver(coordination.CoordinationDriver):
 
     def __init__(self, member_id, parsed_url, options):
         """Initialize the PostgreSQL driver."""
-        super(PostgresDriver, self).__init__(member_id, parsed_url, options)
+        super().__init__(member_id, parsed_url, options)
         self._parsed_url = parsed_url
         self._options = utils.collapse(options)
 

@@ -2051,8 +2051,8 @@ class AppsyncApi:
         context: RequestContext,
         source_api_identifier: String,
         merged_api_identifier: String,
-        description: String = None,
-        source_api_association_config: SourceApiAssociationConfig = None,
+        description: String | None = None,
+        source_api_association_config: SourceApiAssociationConfig | None = None,
         **kwargs,
     ) -> AssociateMergedGraphqlApiResponse:
         """Creates an association between a Merged API and source API using the
@@ -2078,8 +2078,8 @@ class AppsyncApi:
         context: RequestContext,
         merged_api_identifier: String,
         source_api_identifier: String,
-        description: String = None,
-        source_api_association_config: SourceApiAssociationConfig = None,
+        description: String | None = None,
+        source_api_association_config: SourceApiAssociationConfig | None = None,
         **kwargs,
     ) -> AssociateSourceGraphqlApiResponse:
         """Creates an association between a Merged API and source API using the
@@ -2104,9 +2104,9 @@ class AppsyncApi:
         self,
         context: RequestContext,
         name: ApiName,
-        owner_contact: String = None,
-        tags: TagMap = None,
-        event_config: EventConfig = None,
+        owner_contact: String | None = None,
+        tags: TagMap | None = None,
+        event_config: EventConfig | None = None,
         **kwargs,
     ) -> CreateApiResponse:
         """Creates an ``Api`` object. Use this operation to create an AppSync API
@@ -2154,8 +2154,8 @@ class AppsyncApi:
         self,
         context: RequestContext,
         api_id: String,
-        description: String = None,
-        expires: Long = None,
+        description: String | None = None,
+        expires: Long | None = None,
         **kwargs,
     ) -> CreateApiKeyResponse:
         """Creates a unique key that you can distribute to clients who invoke your
@@ -2182,11 +2182,11 @@ class AppsyncApi:
         context: RequestContext,
         api_id: String,
         name: Namespace,
-        subscribe_auth_modes: AuthModes = None,
-        publish_auth_modes: AuthModes = None,
-        code_handlers: Code = None,
-        tags: TagMap = None,
-        handler_configs: HandlerConfigs = None,
+        subscribe_auth_modes: AuthModes | None = None,
+        publish_auth_modes: AuthModes | None = None,
+        code_handlers: Code | None = None,
+        tags: TagMap | None = None,
+        handler_configs: HandlerConfigs | None = None,
         **kwargs,
     ) -> CreateChannelNamespaceResponse:
         """Creates a ``ChannelNamespace`` for an ``Api``.
@@ -2249,8 +2249,8 @@ class AppsyncApi:
         context: RequestContext,
         domain_name: DomainName,
         certificate_arn: CertificateArn,
-        description: Description = None,
-        tags: TagMap = None,
+        description: Description | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> CreateDomainNameResponse:
         """Creates a custom ``DomainName`` object.
@@ -2274,14 +2274,14 @@ class AppsyncApi:
         api_id: String,
         name: ResourceName,
         data_source_name: ResourceName,
-        description: String = None,
-        request_mapping_template: MappingTemplate = None,
-        response_mapping_template: MappingTemplate = None,
-        function_version: String = None,
-        sync_config: SyncConfig = None,
-        max_batch_size: MaxBatchSize = None,
-        runtime: AppSyncRuntime = None,
-        code: Code = None,
+        description: String | None = None,
+        request_mapping_template: MappingTemplate | None = None,
+        response_mapping_template: MappingTemplate | None = None,
+        function_version: String | None = None,
+        sync_config: SyncConfig | None = None,
+        max_batch_size: MaxBatchSize | None = None,
+        runtime: AppSyncRuntime | None = None,
+        code: Code | None = None,
         **kwargs,
     ) -> CreateFunctionResponse:
         """Creates a ``Function`` object.
@@ -2316,21 +2316,21 @@ class AppsyncApi:
         context: RequestContext,
         name: String,
         authentication_type: AuthenticationType,
-        log_config: LogConfig = None,
-        user_pool_config: UserPoolConfig = None,
-        open_id_connect_config: OpenIDConnectConfig = None,
-        tags: TagMap = None,
-        additional_authentication_providers: AdditionalAuthenticationProviders = None,
-        xray_enabled: Boolean = None,
-        lambda_authorizer_config: LambdaAuthorizerConfig = None,
-        api_type: GraphQLApiType = None,
-        merged_api_execution_role_arn: String = None,
-        visibility: GraphQLApiVisibility = None,
-        owner_contact: String = None,
-        introspection_config: GraphQLApiIntrospectionConfig = None,
-        query_depth_limit: QueryDepthLimit = None,
-        resolver_count_limit: ResolverCountLimit = None,
-        enhanced_metrics_config: EnhancedMetricsConfig = None,
+        log_config: LogConfig | None = None,
+        user_pool_config: UserPoolConfig | None = None,
+        open_id_connect_config: OpenIDConnectConfig | None = None,
+        tags: TagMap | None = None,
+        additional_authentication_providers: AdditionalAuthenticationProviders | None = None,
+        xray_enabled: Boolean | None = None,
+        lambda_authorizer_config: LambdaAuthorizerConfig | None = None,
+        api_type: GraphQLApiType | None = None,
+        merged_api_execution_role_arn: String | None = None,
+        visibility: GraphQLApiVisibility | None = None,
+        owner_contact: String | None = None,
+        introspection_config: GraphQLApiIntrospectionConfig | None = None,
+        query_depth_limit: QueryDepthLimit | None = None,
+        resolver_count_limit: ResolverCountLimit | None = None,
+        enhanced_metrics_config: EnhancedMetricsConfig | None = None,
         **kwargs,
     ) -> CreateGraphqlApiResponse:
         """Creates a ``GraphqlApi`` object.
@@ -2374,17 +2374,17 @@ class AppsyncApi:
         api_id: String,
         type_name: ResourceName,
         field_name: ResourceName,
-        data_source_name: ResourceName = None,
-        request_mapping_template: MappingTemplate = None,
-        response_mapping_template: MappingTemplate = None,
-        kind: ResolverKind = None,
-        pipeline_config: PipelineConfig = None,
-        sync_config: SyncConfig = None,
-        caching_config: CachingConfig = None,
-        max_batch_size: MaxBatchSize = None,
-        runtime: AppSyncRuntime = None,
-        code: Code = None,
-        metrics_config: ResolverLevelMetricsConfig = None,
+        data_source_name: ResourceName | None = None,
+        request_mapping_template: MappingTemplate | None = None,
+        response_mapping_template: MappingTemplate | None = None,
+        kind: ResolverKind | None = None,
+        pipeline_config: PipelineConfig | None = None,
+        sync_config: SyncConfig | None = None,
+        caching_config: CachingConfig | None = None,
+        max_batch_size: MaxBatchSize | None = None,
+        runtime: AppSyncRuntime | None = None,
+        code: Code | None = None,
+        metrics_config: ResolverLevelMetricsConfig | None = None,
         **kwargs,
     ) -> CreateResolverResponse:
         """Creates a ``Resolver`` object.
@@ -2821,9 +2821,9 @@ class AppsyncApi:
         self,
         context: RequestContext,
         introspection_id: String,
-        include_models_sdl: Boolean = None,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        include_models_sdl: Boolean | None = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> GetDataSourceIntrospectionResponse:
         """Retrieves the record of an existing introspection. If the retrieval is
@@ -2915,7 +2915,7 @@ class AppsyncApi:
         context: RequestContext,
         api_id: String,
         format: OutputType,
-        include_directives: BooleanValue = None,
+        include_directives: BooleanValue | None = None,
         **kwargs,
     ) -> GetIntrospectionSchemaResponse:
         """Retrieves the introspection schema for a GraphQL API.
@@ -3016,8 +3016,8 @@ class AppsyncApi:
         self,
         context: RequestContext,
         api_id: String,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListApiKeysResponse:
         """Lists the API keys for a given API.
@@ -3044,8 +3044,8 @@ class AppsyncApi:
     def list_apis(
         self,
         context: RequestContext,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListApisResponse:
         """Lists the APIs in your AppSync account.
@@ -3069,8 +3069,8 @@ class AppsyncApi:
         self,
         context: RequestContext,
         api_id: String,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListChannelNamespacesResponse:
         """Lists the channel namespaces for a specified ``Api``.
@@ -3097,8 +3097,8 @@ class AppsyncApi:
         self,
         context: RequestContext,
         api_id: String,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListDataSourcesResponse:
         """Lists the data sources for a given API.
@@ -3120,8 +3120,8 @@ class AppsyncApi:
     def list_domain_names(
         self,
         context: RequestContext,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListDomainNamesResponse:
         """Lists multiple custom domain names.
@@ -3142,8 +3142,8 @@ class AppsyncApi:
         self,
         context: RequestContext,
         api_id: String,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListFunctionsResponse:
         """List multiple functions.
@@ -3165,10 +3165,10 @@ class AppsyncApi:
     def list_graphql_apis(
         self,
         context: RequestContext,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
-        api_type: GraphQLApiType = None,
-        owner: Ownership = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
+        api_type: GraphQLApiType | None = None,
+        owner: Ownership | None = None,
         **kwargs,
     ) -> ListGraphqlApisResponse:
         """Lists your GraphQL APIs.
@@ -3193,8 +3193,8 @@ class AppsyncApi:
         context: RequestContext,
         api_id: String,
         type_name: String,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListResolversResponse:
         """Lists the resolvers for a given API and type.
@@ -3219,8 +3219,8 @@ class AppsyncApi:
         context: RequestContext,
         api_id: String,
         function_id: String,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListResolversByFunctionResponse:
         """List the resolvers that are associated with a specific function.
@@ -3244,8 +3244,8 @@ class AppsyncApi:
         self,
         context: RequestContext,
         api_id: String,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListSourceApiAssociationsResponse:
         """Lists the ``SourceApiAssociationSummary`` data.
@@ -3286,8 +3286,8 @@ class AppsyncApi:
         context: RequestContext,
         api_id: String,
         format: TypeDefinitionFormat,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListTypesResponse:
         """Lists the types for a given API.
@@ -3314,8 +3314,8 @@ class AppsyncApi:
         merged_api_identifier: String,
         association_id: String,
         format: TypeDefinitionFormat,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListTypesByAssociationResponse:
         """Lists ``Type`` objects by the source API association ID.
@@ -3399,7 +3399,7 @@ class AppsyncApi:
 
     @handler("StartDataSourceIntrospection")
     def start_data_source_introspection(
-        self, context: RequestContext, rds_data_api_config: RdsDataApiConfig = None, **kwargs
+        self, context: RequestContext, rds_data_api_config: RdsDataApiConfig | None = None, **kwargs
     ) -> StartDataSourceIntrospectionResponse:
         """Creates a new introspection. Returns the ``introspectionId`` of the new
         introspection after its creation.
@@ -3496,8 +3496,8 @@ class AppsyncApi:
         context: RequestContext,
         api_id: String,
         name: ApiName,
-        owner_contact: String = None,
-        event_config: EventConfig = None,
+        owner_contact: String | None = None,
+        event_config: EventConfig | None = None,
         **kwargs,
     ) -> UpdateApiResponse:
         """Updates an ``Api``.
@@ -3542,8 +3542,8 @@ class AppsyncApi:
         context: RequestContext,
         api_id: String,
         id: String,
-        description: String = None,
-        expires: Long = None,
+        description: String | None = None,
+        expires: Long | None = None,
         **kwargs,
     ) -> UpdateApiKeyResponse:
         """Updates an API key. You can update the key as long as it's not deleted.
@@ -3568,10 +3568,10 @@ class AppsyncApi:
         context: RequestContext,
         api_id: String,
         name: Namespace,
-        subscribe_auth_modes: AuthModes = None,
-        publish_auth_modes: AuthModes = None,
-        code_handlers: Code = None,
-        handler_configs: HandlerConfigs = None,
+        subscribe_auth_modes: AuthModes | None = None,
+        publish_auth_modes: AuthModes | None = None,
+        code_handlers: Code | None = None,
+        handler_configs: HandlerConfigs | None = None,
         **kwargs,
     ) -> UpdateChannelNamespaceResponse:
         """Updates a ``ChannelNamespace`` associated with an ``Api``.
@@ -3629,7 +3629,7 @@ class AppsyncApi:
         self,
         context: RequestContext,
         domain_name: DomainName,
-        description: Description = None,
+        description: Description | None = None,
         **kwargs,
     ) -> UpdateDomainNameResponse:
         """Updates a custom ``DomainName`` object.
@@ -3653,14 +3653,14 @@ class AppsyncApi:
         name: ResourceName,
         function_id: ResourceName,
         data_source_name: ResourceName,
-        description: String = None,
-        request_mapping_template: MappingTemplate = None,
-        response_mapping_template: MappingTemplate = None,
-        function_version: String = None,
-        sync_config: SyncConfig = None,
-        max_batch_size: MaxBatchSize = None,
-        runtime: AppSyncRuntime = None,
-        code: Code = None,
+        description: String | None = None,
+        request_mapping_template: MappingTemplate | None = None,
+        response_mapping_template: MappingTemplate | None = None,
+        function_version: String | None = None,
+        sync_config: SyncConfig | None = None,
+        max_batch_size: MaxBatchSize | None = None,
+        runtime: AppSyncRuntime | None = None,
+        code: Code | None = None,
         **kwargs,
     ) -> UpdateFunctionResponse:
         """Updates a ``Function`` object.
@@ -3694,18 +3694,18 @@ class AppsyncApi:
         api_id: String,
         name: String,
         authentication_type: AuthenticationType,
-        log_config: LogConfig = None,
-        user_pool_config: UserPoolConfig = None,
-        open_id_connect_config: OpenIDConnectConfig = None,
-        additional_authentication_providers: AdditionalAuthenticationProviders = None,
-        xray_enabled: Boolean = None,
-        lambda_authorizer_config: LambdaAuthorizerConfig = None,
-        merged_api_execution_role_arn: String = None,
-        owner_contact: String = None,
-        introspection_config: GraphQLApiIntrospectionConfig = None,
-        query_depth_limit: QueryDepthLimit = None,
-        resolver_count_limit: ResolverCountLimit = None,
-        enhanced_metrics_config: EnhancedMetricsConfig = None,
+        log_config: LogConfig | None = None,
+        user_pool_config: UserPoolConfig | None = None,
+        open_id_connect_config: OpenIDConnectConfig | None = None,
+        additional_authentication_providers: AdditionalAuthenticationProviders | None = None,
+        xray_enabled: Boolean | None = None,
+        lambda_authorizer_config: LambdaAuthorizerConfig | None = None,
+        merged_api_execution_role_arn: String | None = None,
+        owner_contact: String | None = None,
+        introspection_config: GraphQLApiIntrospectionConfig | None = None,
+        query_depth_limit: QueryDepthLimit | None = None,
+        resolver_count_limit: ResolverCountLimit | None = None,
+        enhanced_metrics_config: EnhancedMetricsConfig | None = None,
         **kwargs,
     ) -> UpdateGraphqlApiResponse:
         """Updates a ``GraphqlApi`` object.
@@ -3745,17 +3745,17 @@ class AppsyncApi:
         api_id: String,
         type_name: ResourceName,
         field_name: ResourceName,
-        data_source_name: ResourceName = None,
-        request_mapping_template: MappingTemplate = None,
-        response_mapping_template: MappingTemplate = None,
-        kind: ResolverKind = None,
-        pipeline_config: PipelineConfig = None,
-        sync_config: SyncConfig = None,
-        caching_config: CachingConfig = None,
-        max_batch_size: MaxBatchSize = None,
-        runtime: AppSyncRuntime = None,
-        code: Code = None,
-        metrics_config: ResolverLevelMetricsConfig = None,
+        data_source_name: ResourceName | None = None,
+        request_mapping_template: MappingTemplate | None = None,
+        response_mapping_template: MappingTemplate | None = None,
+        kind: ResolverKind | None = None,
+        pipeline_config: PipelineConfig | None = None,
+        sync_config: SyncConfig | None = None,
+        caching_config: CachingConfig | None = None,
+        max_batch_size: MaxBatchSize | None = None,
+        runtime: AppSyncRuntime | None = None,
+        code: Code | None = None,
+        metrics_config: ResolverLevelMetricsConfig | None = None,
         **kwargs,
     ) -> UpdateResolverResponse:
         """Updates a ``Resolver`` object.
@@ -3790,8 +3790,8 @@ class AppsyncApi:
         context: RequestContext,
         association_id: String,
         merged_api_identifier: String,
-        description: String = None,
-        source_api_association_config: SourceApiAssociationConfig = None,
+        description: String | None = None,
+        source_api_association_config: SourceApiAssociationConfig | None = None,
         **kwargs,
     ) -> UpdateSourceApiAssociationResponse:
         """Updates some of the configuration choices of a particular source API
@@ -3817,7 +3817,7 @@ class AppsyncApi:
         api_id: String,
         type_name: ResourceName,
         format: TypeDefinitionFormat,
-        definition: String = None,
+        definition: String | None = None,
         **kwargs,
     ) -> UpdateTypeResponse:
         """Updates a ``Type`` object.

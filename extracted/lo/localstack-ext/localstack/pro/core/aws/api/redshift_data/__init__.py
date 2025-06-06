@@ -465,17 +465,17 @@ class RedshiftDataApi:
         self,
         context: RequestContext,
         sqls: SqlList,
-        client_token: ClientToken = None,
-        cluster_identifier: ClusterIdentifierString = None,
-        database: String = None,
-        db_user: String = None,
-        result_format: ResultFormatString = None,
-        secret_arn: SecretArn = None,
-        session_id: UUID = None,
-        session_keep_alive_seconds: SessionAliveSeconds = None,
-        statement_name: StatementNameString = None,
-        with_event: Boolean = None,
-        workgroup_name: WorkgroupNameString = None,
+        client_token: ClientToken | None = None,
+        cluster_identifier: ClusterIdentifierString | None = None,
+        database: String | None = None,
+        db_user: String | None = None,
+        result_format: ResultFormatString | None = None,
+        secret_arn: SecretArn | None = None,
+        session_id: UUID | None = None,
+        session_keep_alive_seconds: SessionAliveSeconds | None = None,
+        statement_name: StatementNameString | None = None,
+        with_event: Boolean | None = None,
+        workgroup_name: WorkgroupNameString | None = None,
         **kwargs,
     ) -> BatchExecuteStatementOutput:
         """Runs one or more SQL statements, which can be data manipulation language
@@ -588,15 +588,15 @@ class RedshiftDataApi:
         self,
         context: RequestContext,
         database: String,
-        cluster_identifier: ClusterIdentifierString = None,
-        connected_database: String = None,
-        db_user: String = None,
-        max_results: PageSize = None,
-        next_token: String = None,
-        schema: String = None,
-        secret_arn: SecretArn = None,
-        table: String = None,
-        workgroup_name: WorkgroupNameString = None,
+        cluster_identifier: ClusterIdentifierString | None = None,
+        connected_database: String | None = None,
+        db_user: String | None = None,
+        max_results: PageSize | None = None,
+        next_token: String | None = None,
+        schema: String | None = None,
+        secret_arn: SecretArn | None = None,
+        table: String | None = None,
+        workgroup_name: WorkgroupNameString | None = None,
         **kwargs,
     ) -> DescribeTableResponse:
         """Describes the detailed information about a table from metadata in the
@@ -663,18 +663,18 @@ class RedshiftDataApi:
         self,
         context: RequestContext,
         sql: StatementString,
-        client_token: ClientToken = None,
-        cluster_identifier: ClusterIdentifierString = None,
-        database: String = None,
-        db_user: String = None,
-        parameters: SqlParametersList = None,
-        result_format: ResultFormatString = None,
-        secret_arn: SecretArn = None,
-        session_id: UUID = None,
-        session_keep_alive_seconds: SessionAliveSeconds = None,
-        statement_name: StatementNameString = None,
-        with_event: Boolean = None,
-        workgroup_name: WorkgroupNameString = None,
+        client_token: ClientToken | None = None,
+        cluster_identifier: ClusterIdentifierString | None = None,
+        database: String | None = None,
+        db_user: String | None = None,
+        parameters: SqlParametersList | None = None,
+        result_format: ResultFormatString | None = None,
+        secret_arn: SecretArn | None = None,
+        session_id: UUID | None = None,
+        session_keep_alive_seconds: SessionAliveSeconds | None = None,
+        statement_name: StatementNameString | None = None,
+        with_event: Boolean | None = None,
+        workgroup_name: WorkgroupNameString | None = None,
         **kwargs,
     ) -> ExecuteStatementOutput:
         """Runs an SQL statement, which can be data manipulation language (DML) or
@@ -744,7 +744,7 @@ class RedshiftDataApi:
 
     @handler("GetStatementResult")
     def get_statement_result(
-        self, context: RequestContext, id: UUID, next_token: String = None, **kwargs
+        self, context: RequestContext, id: UUID, next_token: String | None = None, **kwargs
     ) -> GetStatementResultResponse:
         """Fetches the temporarily cached result of an SQL statement in JSON
         format. The ``ExecuteStatement`` or ``BatchExecuteStatement`` operation
@@ -769,7 +769,7 @@ class RedshiftDataApi:
 
     @handler("GetStatementResultV2")
     def get_statement_result_v2(
-        self, context: RequestContext, id: UUID, next_token: String = None, **kwargs
+        self, context: RequestContext, id: UUID, next_token: String | None = None, **kwargs
     ) -> GetStatementResultV2Response:
         """Fetches the temporarily cached result of an SQL statement in CSV format.
         The ``ExecuteStatement`` or ``BatchExecuteStatement`` operation that ran
@@ -796,12 +796,12 @@ class RedshiftDataApi:
         self,
         context: RequestContext,
         database: String,
-        cluster_identifier: ClusterIdentifierString = None,
-        db_user: String = None,
-        max_results: PageSize = None,
-        next_token: String = None,
-        secret_arn: SecretArn = None,
-        workgroup_name: WorkgroupNameString = None,
+        cluster_identifier: ClusterIdentifierString | None = None,
+        db_user: String | None = None,
+        max_results: PageSize | None = None,
+        next_token: String | None = None,
+        secret_arn: SecretArn | None = None,
+        workgroup_name: WorkgroupNameString | None = None,
         **kwargs,
     ) -> ListDatabasesResponse:
         """List the databases in a cluster. A token is returned to page through the
@@ -864,14 +864,14 @@ class RedshiftDataApi:
         self,
         context: RequestContext,
         database: String,
-        cluster_identifier: ClusterIdentifierString = None,
-        connected_database: String = None,
-        db_user: String = None,
-        max_results: PageSize = None,
-        next_token: String = None,
-        schema_pattern: String = None,
-        secret_arn: SecretArn = None,
-        workgroup_name: WorkgroupNameString = None,
+        cluster_identifier: ClusterIdentifierString | None = None,
+        connected_database: String | None = None,
+        db_user: String | None = None,
+        max_results: PageSize | None = None,
+        next_token: String | None = None,
+        schema_pattern: String | None = None,
+        secret_arn: SecretArn | None = None,
+        workgroup_name: WorkgroupNameString | None = None,
         **kwargs,
     ) -> ListSchemasResponse:
         """Lists the schemas in a database. A token is returned to page through the
@@ -935,14 +935,14 @@ class RedshiftDataApi:
     def list_statements(
         self,
         context: RequestContext,
-        cluster_identifier: ClusterIdentifierString = None,
-        database: String = None,
-        max_results: ListStatementsLimit = None,
-        next_token: String = None,
-        role_level: Boolean = None,
-        statement_name: StatementNameString = None,
-        status: StatusString = None,
-        workgroup_name: WorkgroupNameString = None,
+        cluster_identifier: ClusterIdentifierString | None = None,
+        database: String | None = None,
+        max_results: ListStatementsLimit | None = None,
+        next_token: String | None = None,
+        role_level: Boolean | None = None,
+        statement_name: StatementNameString | None = None,
+        status: StatusString | None = None,
+        workgroup_name: WorkgroupNameString | None = None,
         **kwargs,
     ) -> ListStatementsResponse:
         """List of SQL statements. By default, only finished statements are shown.
@@ -982,15 +982,15 @@ class RedshiftDataApi:
         self,
         context: RequestContext,
         database: String,
-        cluster_identifier: ClusterIdentifierString = None,
-        connected_database: String = None,
-        db_user: String = None,
-        max_results: PageSize = None,
-        next_token: String = None,
-        schema_pattern: String = None,
-        secret_arn: SecretArn = None,
-        table_pattern: String = None,
-        workgroup_name: WorkgroupNameString = None,
+        cluster_identifier: ClusterIdentifierString | None = None,
+        connected_database: String | None = None,
+        db_user: String | None = None,
+        max_results: PageSize | None = None,
+        next_token: String | None = None,
+        schema_pattern: String | None = None,
+        secret_arn: SecretArn | None = None,
+        table_pattern: String | None = None,
+        workgroup_name: WorkgroupNameString | None = None,
         **kwargs,
     ) -> ListTablesResponse:
         """List the tables in a database. If neither ``SchemaPattern`` nor

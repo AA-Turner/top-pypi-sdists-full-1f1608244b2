@@ -951,8 +951,8 @@ class ManagedblockchainApi:
         context: RequestContext,
         client_request_token: ClientRequestTokenString,
         accessor_type: AccessorType,
-        tags: InputTagMap = None,
-        network_type: AccessorNetworkType = None,
+        tags: InputTagMap | None = None,
+        network_type: AccessorNetworkType | None = None,
         **kwargs,
     ) -> CreateAccessorOutput:
         """Creates a new accessor for use with Amazon Managed Blockchain service
@@ -1018,9 +1018,9 @@ class ManagedblockchainApi:
         framework_version: FrameworkVersionString,
         voting_policy: VotingPolicy,
         member_configuration: MemberConfiguration,
-        description: DescriptionString = None,
-        framework_configuration: NetworkFrameworkConfiguration = None,
-        tags: InputTagMap = None,
+        description: DescriptionString | None = None,
+        framework_configuration: NetworkFrameworkConfiguration | None = None,
+        tags: InputTagMap | None = None,
         **kwargs,
     ) -> CreateNetworkOutput:
         """Creates a new blockchain network using Amazon Managed Blockchain.
@@ -1057,8 +1057,8 @@ class ManagedblockchainApi:
         client_request_token: ClientRequestTokenString,
         network_id: ResourceIdString,
         node_configuration: NodeConfiguration,
-        member_id: ResourceIdString = None,
-        tags: InputTagMap = None,
+        member_id: ResourceIdString | None = None,
+        tags: InputTagMap | None = None,
         **kwargs,
     ) -> CreateNodeOutput:
         """Creates a node on the specified blockchain network.
@@ -1092,8 +1092,8 @@ class ManagedblockchainApi:
         network_id: ResourceIdString,
         member_id: ResourceIdString,
         actions: ProposalActions,
-        description: DescriptionString = None,
-        tags: InputTagMap = None,
+        description: DescriptionString | None = None,
+        tags: InputTagMap | None = None,
         **kwargs,
     ) -> CreateProposalOutput:
         """Creates a proposal for a change to the network that other members of the
@@ -1183,7 +1183,7 @@ class ManagedblockchainApi:
         context: RequestContext,
         network_id: ResourceIdString,
         node_id: ResourceIdString,
-        member_id: ResourceIdString = None,
+        member_id: ResourceIdString | None = None,
         **kwargs,
     ) -> DeleteNodeOutput:
         """Deletes a node that your Amazon Web Services account owns. All data on
@@ -1269,7 +1269,7 @@ class ManagedblockchainApi:
         context: RequestContext,
         network_id: ResourceIdString,
         node_id: ResourceIdString,
-        member_id: ResourceIdString = None,
+        member_id: ResourceIdString | None = None,
         **kwargs,
     ) -> GetNodeOutput:
         """Returns detailed information about a node.
@@ -1315,9 +1315,9 @@ class ManagedblockchainApi:
     def list_accessors(
         self,
         context: RequestContext,
-        max_results: AccessorListMaxResults = None,
-        next_token: PaginationToken = None,
-        network_type: AccessorNetworkType = None,
+        max_results: AccessorListMaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        network_type: AccessorNetworkType | None = None,
         **kwargs,
     ) -> ListAccessorsOutput:
         """Returns a list of the accessors and their properties. Accessor objects
@@ -1339,8 +1339,8 @@ class ManagedblockchainApi:
     def list_invitations(
         self,
         context: RequestContext,
-        max_results: ProposalListMaxResults = None,
-        next_token: PaginationToken = None,
+        max_results: ProposalListMaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListInvitationsOutput:
         """Returns a list of all invitations for the current Amazon Web Services
@@ -1365,11 +1365,11 @@ class ManagedblockchainApi:
         self,
         context: RequestContext,
         network_id: ResourceIdString,
-        name: String = None,
-        status: MemberStatus = None,
-        is_owned: IsOwned = None,
-        max_results: MemberListMaxResults = None,
-        next_token: PaginationToken = None,
+        name: String | None = None,
+        status: MemberStatus | None = None,
+        is_owned: IsOwned | None = None,
+        max_results: MemberListMaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListMembersOutput:
         """Returns a list of the members in a network and properties of their
@@ -1395,11 +1395,11 @@ class ManagedblockchainApi:
     def list_networks(
         self,
         context: RequestContext,
-        name: String = None,
-        framework: Framework = None,
-        status: NetworkStatus = None,
-        max_results: NetworkListMaxResults = None,
-        next_token: PaginationToken = None,
+        name: String | None = None,
+        framework: Framework | None = None,
+        status: NetworkStatus | None = None,
+        max_results: NetworkListMaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListNetworksOutput:
         """Returns information about the networks in which the current Amazon Web
@@ -1425,10 +1425,10 @@ class ManagedblockchainApi:
         self,
         context: RequestContext,
         network_id: ResourceIdString,
-        member_id: ResourceIdString = None,
-        status: NodeStatus = None,
-        max_results: NodeListMaxResults = None,
-        next_token: PaginationToken = None,
+        member_id: ResourceIdString | None = None,
+        status: NodeStatus | None = None,
+        max_results: NodeListMaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListNodesOutput:
         """Returns information about the nodes within a network.
@@ -1454,8 +1454,8 @@ class ManagedblockchainApi:
         context: RequestContext,
         network_id: ResourceIdString,
         proposal_id: ResourceIdString,
-        max_results: ProposalListMaxResults = None,
-        next_token: PaginationToken = None,
+        max_results: ProposalListMaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListProposalVotesOutput:
         """Returns the list of votes for a specified proposal, including the value
@@ -1480,8 +1480,8 @@ class ManagedblockchainApi:
         self,
         context: RequestContext,
         network_id: ResourceIdString,
-        max_results: ProposalListMaxResults = None,
-        next_token: PaginationToken = None,
+        max_results: ProposalListMaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListProposalsOutput:
         """Returns a list of proposals for the network.
@@ -1602,7 +1602,7 @@ class ManagedblockchainApi:
         context: RequestContext,
         network_id: ResourceIdString,
         member_id: ResourceIdString,
-        log_publishing_configuration: MemberLogPublishingConfiguration = None,
+        log_publishing_configuration: MemberLogPublishingConfiguration | None = None,
         **kwargs,
     ) -> UpdateMemberOutput:
         """Updates a member configuration with new parameters.
@@ -1628,8 +1628,8 @@ class ManagedblockchainApi:
         context: RequestContext,
         network_id: ResourceIdString,
         node_id: ResourceIdString,
-        member_id: ResourceIdString = None,
-        log_publishing_configuration: NodeLogPublishingConfiguration = None,
+        member_id: ResourceIdString | None = None,
+        log_publishing_configuration: NodeLogPublishingConfiguration | None = None,
         **kwargs,
     ) -> UpdateNodeOutput:
         """Updates a node configuration with new parameters.

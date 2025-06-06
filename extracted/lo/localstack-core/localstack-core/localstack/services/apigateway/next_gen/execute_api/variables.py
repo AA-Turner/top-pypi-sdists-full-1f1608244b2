@@ -75,6 +75,11 @@ class ContextVarsResponseOverride(TypedDict):
     status: int
 
 
+class ContextVariableOverrides(TypedDict):
+    requestOverride: ContextVarsRequestOverride
+    responseOverride: ContextVarsResponseOverride
+
+
 class GatewayResponseContextVarsError(TypedDict, total=False):
     # This variable can only be used for simple variable substitution in a GatewayResponse body-mapping template,
     # which is not processed by the Velocity Template Language engine, and in access logging.
@@ -107,7 +112,7 @@ class ContextVariables(TypedDict, total=False):
     httpMethod: str
     """The HTTP method used"""
     identity: Optional[ContextVarsIdentity]
-    isCanaryRequest: Optional[bool | str]  # TODO: verify type
+    isCanaryRequest: Optional[bool]
     """Indicates if the request was directed to the canary"""
     path: str
     """The request path."""

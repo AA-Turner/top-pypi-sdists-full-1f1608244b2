@@ -1075,9 +1075,9 @@ class ServicediscoveryApi:
         self,
         context: RequestContext,
         name: NamespaceNameHttp,
-        creator_request_id: ResourceId = None,
-        description: ResourceDescription = None,
-        tags: TagList = None,
+        creator_request_id: ResourceId | None = None,
+        description: ResourceDescription | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateHttpNamespaceResponse:
         """Creates an HTTP namespace. Service instances registered using an HTTP
@@ -1110,10 +1110,10 @@ class ServicediscoveryApi:
         context: RequestContext,
         name: NamespaceNamePrivate,
         vpc: ResourceId,
-        creator_request_id: ResourceId = None,
-        description: ResourceDescription = None,
-        tags: TagList = None,
-        properties: PrivateDnsNamespaceProperties = None,
+        creator_request_id: ResourceId | None = None,
+        description: ResourceDescription | None = None,
+        tags: TagList | None = None,
+        properties: PrivateDnsNamespaceProperties | None = None,
         **kwargs,
     ) -> CreatePrivateDnsNamespaceResponse:
         """Creates a private namespace based on DNS, which is visible only inside a
@@ -1150,10 +1150,10 @@ class ServicediscoveryApi:
         self,
         context: RequestContext,
         name: NamespaceNamePublic,
-        creator_request_id: ResourceId = None,
-        description: ResourceDescription = None,
-        tags: TagList = None,
-        properties: PublicDnsNamespaceProperties = None,
+        creator_request_id: ResourceId | None = None,
+        description: ResourceDescription | None = None,
+        tags: TagList | None = None,
+        properties: PublicDnsNamespaceProperties | None = None,
         **kwargs,
     ) -> CreatePublicDnsNamespaceResponse:
         """Creates a public namespace based on DNS, which is visible on the
@@ -1317,10 +1317,10 @@ class ServicediscoveryApi:
         context: RequestContext,
         namespace_name: NamespaceName,
         service_name: ServiceName,
-        max_results: DiscoverMaxResults = None,
-        query_parameters: Attributes = None,
-        optional_parameters: Attributes = None,
-        health_status: HealthStatusFilter = None,
+        max_results: DiscoverMaxResults | None = None,
+        query_parameters: Attributes | None = None,
+        optional_parameters: Attributes | None = None,
+        health_status: HealthStatusFilter | None = None,
         **kwargs,
     ) -> DiscoverInstancesResponse:
         """Discovers registered instances for a specified namespace and service.
@@ -1388,9 +1388,9 @@ class ServicediscoveryApi:
         self,
         context: RequestContext,
         service_id: ResourceId,
-        instances: InstanceIdList = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        instances: InstanceIdList | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> GetInstancesHealthStatusResponse:
         """Gets the current health status (``Healthy``, ``Unhealthy``, or
@@ -1472,8 +1472,8 @@ class ServicediscoveryApi:
         self,
         context: RequestContext,
         service_id: ResourceId,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListInstancesResponse:
         """Lists summary information about the instances that you registered by
@@ -1493,9 +1493,9 @@ class ServicediscoveryApi:
     def list_namespaces(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        filters: NamespaceFilters = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        filters: NamespaceFilters | None = None,
         **kwargs,
     ) -> ListNamespacesResponse:
         """Lists summary information about the namespaces that were created by the
@@ -1515,9 +1515,9 @@ class ServicediscoveryApi:
     def list_operations(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        filters: OperationFilters = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        filters: OperationFilters | None = None,
         **kwargs,
     ) -> ListOperationsResponse:
         """Lists operations that match the criteria that you specify.
@@ -1537,9 +1537,9 @@ class ServicediscoveryApi:
     def list_services(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        filters: ServiceFilters = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        filters: ServiceFilters | None = None,
         **kwargs,
     ) -> ListServicesResponse:
         """Lists summary information for all the services that are associated with
@@ -1576,7 +1576,7 @@ class ServicediscoveryApi:
         service_id: ResourceId,
         instance_id: InstanceId,
         attributes: Attributes,
-        creator_request_id: ResourceId = None,
+        creator_request_id: ResourceId | None = None,
         **kwargs,
     ) -> RegisterInstanceResponse:
         """Creates or updates one or more records and, optionally, creates a health
@@ -1676,7 +1676,7 @@ class ServicediscoveryApi:
         context: RequestContext,
         id: ResourceId,
         namespace: HttpNamespaceChange,
-        updater_request_id: ResourceId = None,
+        updater_request_id: ResourceId | None = None,
         **kwargs,
     ) -> UpdateHttpNamespaceResponse:
         """Updates an HTTP namespace.
@@ -1732,7 +1732,7 @@ class ServicediscoveryApi:
         context: RequestContext,
         id: ResourceId,
         namespace: PrivateDnsNamespaceChange,
-        updater_request_id: ResourceId = None,
+        updater_request_id: ResourceId | None = None,
         **kwargs,
     ) -> UpdatePrivateDnsNamespaceResponse:
         """Updates a private DNS namespace.
@@ -1756,7 +1756,7 @@ class ServicediscoveryApi:
         context: RequestContext,
         id: ResourceId,
         namespace: PublicDnsNamespaceChange,
-        updater_request_id: ResourceId = None,
+        updater_request_id: ResourceId | None = None,
         **kwargs,
     ) -> UpdatePublicDnsNamespaceResponse:
         """Updates a public DNS namespace.

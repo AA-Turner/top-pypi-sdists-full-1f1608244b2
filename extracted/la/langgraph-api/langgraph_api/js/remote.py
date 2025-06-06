@@ -452,27 +452,27 @@ async def run_js_http_process(paths_str: str, http_config: dict, watch: bool = F
                 attempt += 1
 
 
+class PassthroughSerialiser(SerializerProtocol):
+    def dumps(self, obj: Any) -> bytes:
+        return json_dumpb(obj)
+
+    def dumps_typed(self, obj: Any) -> tuple[str, bytes]:
+        return "json", json_dumpb(obj)
+
+    def loads(self, data: bytes) -> Any:
+        return orjson.loads(data)
+
+    def loads_typed(self, data: tuple[str, bytes]) -> Any:
+        type, payload = data
+        if type != "json":
+            raise ValueError(f"Unsupported type {type}")
+        return orjson.loads(payload)
+
+
 def _get_passthrough_checkpointer(conn: AsyncConnectionProto):
     from langgraph_runtime.checkpoint import Checkpointer
 
-    class PassthroughSerialiser(SerializerProtocol):
-        def dumps(self, obj: Any) -> bytes:
-            return json_dumpb(obj)
-
-        def dumps_typed(self, obj: Any) -> tuple[str, bytes]:
-            return "json", json_dumpb(obj)
-
-        def loads(self, data: bytes) -> Any:
-            return orjson.loads(data)
-
-        def loads_typed(self, data: tuple[str, bytes]) -> Any:
-            type, payload = data
-            if type != "json":
-                raise ValueError(f"Unsupported type {type}")
-            return orjson.loads(payload)
-
     checkpointer = Checkpointer(conn)
-
     # This checkpointer does not attempt to revive LC-objects.
     # Instead, it will pass through the JSON values as-is.
     checkpointer.serde = PassthroughSerialiser()
@@ -687,7 +687,11 @@ async def run_remote_checkpointer():
                 payload = orjson.loads(await request.body())
                 return ApiResponse(await cb(payload))
             except ValueError as exc:
+                await logger.error(exc)
                 return ApiResponse({"error": str(exc)}, status_code=400)
+            except Exception as exc:
+                await logger.error(exc)
+                return ApiResponse({"error": str(exc)}, status_code=500)
 
         return wrapped
 
@@ -800,15 +804,18 @@ async def js_healthcheck():
                 transport=httpx.AsyncHTTPTransport(verify=SSL),
             ) as checkpointer_client,
         ):
+            graph_passed = False
             try:
                 res = await graph_client.get("/ok")
                 res.raise_for_status()
+                graph_passed = True
                 res = await checkpointer_client.get("/ok")
                 res.raise_for_status()
                 return True
             except httpx.HTTPError as exc:
                 logger.warning(
                     "JS healthcheck failed. Either the JS server is not running or the event loop is blocked by a CPU-intensive task.",
+                    graph_passed=graph_passed,
                     error=exc,
                 )
                 raise HTTPException(

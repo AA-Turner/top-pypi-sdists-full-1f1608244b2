@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: aiotools
-Version: 1.8.2
+Version: 1.9.0
 Summary: Idiomatic asyncio utilities
 Home-page: https://github.com/achimnol/aiotools
 Author: Joongi Kim
@@ -50,6 +50,7 @@ Requires-Dist: mypy~=1.14.1; extra == "typecheck"
 Provides-Extra: docs
 Requires-Dist: sphinx~=7.4.7; extra == "docs"
 Requires-Dist: sphinx-rtd-theme~=3.0.2; extra == "docs"
+Dynamic: license-file
 
 aiotools
 ========
@@ -59,9 +60,7 @@ aiotools
 ![Test Status](https://github.com/achimnol/aiotools/workflows/Test%20with%20pytest/badge.svg)
 [![Code Coverage](https://codecov.io/gh/achimnol/aiotools/branch/master/graph/badge.svg)](https://codecov.io/gh/achimnol/aiotools)
 
-Idiomatic asyncio utilties
-
-*NOTE:* This project is under early stage of development. The public APIs may break version by version.
+Idiomatic asyncio utilities
 
 
 Modules
@@ -75,11 +74,12 @@ Modules
 * [Async TaskGroup](http://aiotools.readthedocs.io/en/latest/aiotools.taskgroup.html)
 * [Async Timer](http://aiotools.readthedocs.io/en/latest/aiotools.timer.html)
 
-I also recommend to try the following asyncio libraries for your happier life.
 
-* [async_timeout](https://github.com/aio-libs/async-timeout): Provides a light-weight timeout wrapper that does not spawn subtasks.
-* [aiojobs](https://github.com/aio-libs/aiojobs): Provides a concurrency-limited scheduler for asyncio tasks with graceful shutdown.
-* [trio](https://github.com/python-trio/trio): An alternative implementation of asynchronous IO stack for Python, with focus on cancellation scopes and task groups called "nursery".
+See also
+--------
+
+* [aiojobs](https://github.com/aio-libs/aiojobs): A concurrency-limiting, task-shielding scheduler for asyncio tasks for graceful shutdown
+* [trio](https://github.com/python-trio/trio): An alternative implementation of asyncio focusing on structured concurrency
 
 
 Examples
@@ -167,8 +167,7 @@ async def echo(reader, writer):
 
 @aiotools.server
 async def myworker(loop, pidx, args):
-   server = await asyncio.start_server(echo, '0.0.0.0', 8888,
-       reuse_port=True, loop=loop)
+   server = await asyncio.start_server(echo, '0.0.0.0', 8888, reuse_port=True)
    print(f'[{pidx}] started')
    yield  # wait until terminated
    server.close()
@@ -293,6 +292,14 @@ Changelog
 -->
 
 <!-- towncrier release notes start -->
+
+1.9.0 (2025-06-06)
+------------------
+
+### Fixes
+* Replace manual `os.fork()` with `multiprocessing` to use platform-specific recommended subprocess mechanisms (e.g., "spawn" in macOS to avoid undefined behavior of native frameworks) ([#79](https://github.com/achimnol/aiotools/issues/79))
+* Explicitly override `loop._clock_resolution` with a coarse-grained value to prevent getting stuck when using VirtualClock with a realistic timestamp due to the floating point precision issue ([#81](https://github.com/achimnol/aiotools/issues/81))
+
 
 1.8.2 (2025-01-23)
 ------------------

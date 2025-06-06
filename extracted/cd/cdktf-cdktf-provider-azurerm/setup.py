@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-azurerm",
-    "version": "14.0.0",
+    "version": "14.1.0",
     "description": "Prebuilt azurerm Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-azurerm.git",
@@ -359,6 +359,8 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_azurerm.data_azurerm_dedicated_host",
         "cdktf_cdktf_provider_azurerm.data_azurerm_dedicated_host_group",
         "cdktf_cdktf_provider_azurerm.data_azurerm_dev_center",
+        "cdktf_cdktf_provider_azurerm.data_azurerm_dev_center_project",
+        "cdktf_cdktf_provider_azurerm.data_azurerm_dev_center_project_environment_type",
         "cdktf_cdktf_provider_azurerm.data_azurerm_dev_test_lab",
         "cdktf_cdktf_provider_azurerm.data_azurerm_dev_test_virtual_network",
         "cdktf_cdktf_provider_azurerm.data_azurerm_digital_twins_instance",
@@ -1157,6 +1159,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_azurerm.public_ip",
         "cdktf_cdktf_provider_azurerm.public_ip_prefix",
         "cdktf_cdktf_provider_azurerm.purview_account",
+        "cdktf_cdktf_provider_azurerm.qumulo_file_system",
         "cdktf_cdktf_provider_azurerm.recovery_services_vault",
         "cdktf_cdktf_provider_azurerm.recovery_services_vault_resource_guard_association",
         "cdktf_cdktf_provider_azurerm.redhat_openshift_cluster",
@@ -1497,7 +1500,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_azurerm._jsii": [
-            "provider-azurerm@14.0.0.jsii.tgz"
+            "provider-azurerm@14.1.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_azurerm": [
             "py.typed"

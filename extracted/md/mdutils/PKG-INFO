@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: mdutils
-Version: 1.6.0
+Version: 1.7.0
 Summary: Useful package for creating Markdown files while executing python code.
 Home-page: https://github.com/didix21/mdutils
 Author: Didac Coll
@@ -25,6 +25,18 @@ Classifier: Topic :: Software Development :: Documentation
 Classifier: Topic :: Text Processing :: Markup
 Classifier: License :: OSI Approved :: MIT License
 License-File: LICENSE.txt
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: platform
+Dynamic: project-url
+Dynamic: summary
 
 =======
 mdutils

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: backend.ai-common
-Version: 25.9.0
+Version: 25.9.1
 Summary: Backend.AI commons library
 Home-page: https://github.com/lablup/backend.ai
 Author: Lablup Inc. and contributors
@@ -30,8 +30,8 @@ Requires-Dist: async_timeout~=4.0
 Requires-Dist: asynctest>=0.13.0
 Requires-Dist: asyncudp>=0.11
 Requires-Dist: attrs>=25.3
-Requires-Dist: backend.ai-logging==25.9.0
-Requires-Dist: backend.ai-plugin==25.9.0
+Requires-Dist: backend.ai-logging==25.9.1
+Requires-Dist: backend.ai-plugin==25.9.1
 Requires-Dist: callosum~=1.0.3
 Requires-Dist: click~=8.1.7
 Requires-Dist: etcd-client-py~=0.4.0

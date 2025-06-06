@@ -1,6 +1,6 @@
 [project]
 name = "curl_cffi"
-version = "0.11.1"
+version = "0.11.2"
 authors = [{ name = "lexiforest", email = "infinitesheldon@gmail.com" }]
 description = "libcurl ffi bindings for Python, with impersonation support."
 license = { text = "MIT License" }
@@ -83,7 +83,7 @@ build = [
     "cp39-macosx_x86_64",
     "cp39-macosx_arm64",
     "cp39-win_amd64",
-    "cp39-win32",
+    # "cp39-win32",
     "cp39-manylinux_x86_64",
     "cp39-manylinux_aarch64",
     "cp39-manylinux_i686",

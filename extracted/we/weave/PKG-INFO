@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: weave
-Version: 0.51.50
+Version: 0.51.51
 Summary: A toolkit for building composable interactive data driven applications.
 Project-URL: Company, https://wandb.com
 Project-URL: Documentation, https://docs.wandb.com/
@@ -287,8 +287,11 @@ Requires-Dist: instructor<1.7.0,>=1.4.3; (python_version <= '3.9') and extra == 
 Requires-Dist: instructor>=1.4.3; (python_version > '3.9') and extra == 'instructor'
 Provides-Extra: langchain
 Requires-Dist: chromadb>=0.5.0; extra == 'langchain'
+Requires-Dist: langchain-anthropic>=0.3.15; extra == 'langchain'
 Requires-Dist: langchain-community>=0.2.1; extra == 'langchain'
 Requires-Dist: langchain-core>=0.2.1; extra == 'langchain'
+Requires-Dist: langchain-google-genai>=2.1.5; extra == 'langchain'
+Requires-Dist: langchain-google-vertexai>=2.0.24; extra == 'langchain'
 Requires-Dist: langchain-openai>=0.1.7; extra == 'langchain'
 Requires-Dist: opentelemetry-exporter-otlp; extra == 'langchain'
 Requires-Dist: pysqlite3; extra == 'langchain'

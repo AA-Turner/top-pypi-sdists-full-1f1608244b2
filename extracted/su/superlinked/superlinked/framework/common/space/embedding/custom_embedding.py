@@ -21,11 +21,16 @@ from superlinked.framework.common.space.config.embedding.custom_embedding_config
     CustomEmbeddingConfig,
 )
 from superlinked.framework.common.space.embedding.embedding import Embedding
+from superlinked.framework.common.space.embedding.model_based.embedding_engine_manager import (
+    EmbeddingEngineManager,
+)
 
 
 class CustomEmbedding(Embedding[Vector, CustomEmbeddingConfig]):
-    def __init__(self, embedding_config: CustomEmbeddingConfig) -> None:
-        super().__init__(embedding_config)
+    def __init__(
+        self, embedding_config: CustomEmbeddingConfig, embedding_engine_manager: EmbeddingEngineManager
+    ) -> None:
+        super().__init__(embedding_config, embedding_engine_manager)
 
     @property
     @override

@@ -613,6 +613,26 @@ class PredictiveScalingPredefinedLoadMetricSpecification(TypedDict, total=False)
     When returned in the output of ``DescribePolicies``, it indicates that a
     predictive scaling policy uses individually specified load and scaling
     metrics instead of a metric pair.
+
+    The following predefined metrics are available for predictive scaling:
+
+    -  ``ECSServiceAverageCPUUtilization``
+
+    -  ``ECSServiceAverageMemoryUtilization``
+
+    -  ``ECSServiceCPUUtilization``
+
+    -  ``ECSServiceMemoryUtilization``
+
+    -  ``ECSServiceTotalCPUUtilization``
+
+    -  ``ECSServiceTotalMemoryUtilization``
+
+    -  ``ALBRequestCount``
+
+    -  ``ALBRequestCountPerTarget``
+
+    -  ``TotalALBRequestCount``
     """
 
     PredefinedMetricType: PredictiveScalingMetricType
@@ -625,6 +645,26 @@ class PredictiveScalingPredefinedScalingMetricSpecification(TypedDict, total=Fal
     When returned in the output of ``DescribePolicies``, it indicates that a
     predictive scaling policy uses individually specified load and scaling
     metrics instead of a metric pair.
+
+    The following predefined metrics are available for predictive scaling:
+
+    -  ``ECSServiceAverageCPUUtilization``
+
+    -  ``ECSServiceAverageMemoryUtilization``
+
+    -  ``ECSServiceCPUUtilization``
+
+    -  ``ECSServiceMemoryUtilization``
+
+    -  ``ECSServiceTotalCPUUtilization``
+
+    -  ``ECSServiceTotalMemoryUtilization``
+
+    -  ``ALBRequestCount``
+
+    -  ``ALBRequestCountPerTarget``
+
+    -  ``TotalALBRequestCount``
     """
 
     PredefinedMetricType: PredictiveScalingMetricType
@@ -632,7 +672,28 @@ class PredictiveScalingPredefinedScalingMetricSpecification(TypedDict, total=Fal
 
 
 class PredictiveScalingPredefinedMetricPairSpecification(TypedDict, total=False):
-    """Represents a metric pair for a predictive scaling policy."""
+    """Represents a metric pair for a predictive scaling policy.
+
+    The following predefined metrics are available for predictive scaling:
+
+    -  ``ECSServiceAverageCPUUtilization``
+
+    -  ``ECSServiceAverageMemoryUtilization``
+
+    -  ``ECSServiceCPUUtilization``
+
+    -  ``ECSServiceMemoryUtilization``
+
+    -  ``ECSServiceTotalCPUUtilization``
+
+    -  ``ECSServiceTotalMemoryUtilization``
+
+    -  ``ALBRequestCount``
+
+    -  ``ALBRequestCountPerTarget``
+
+    -  ``TotalALBRequestCount``
+    """
 
     PredefinedMetricType: PredictiveScalingMetricType
     ResourceLabel: Optional[ResourceLabel]
@@ -1046,10 +1107,10 @@ class ApplicationAutoscalingApi:
         self,
         context: RequestContext,
         service_namespace: ServiceNamespace,
-        resource_ids: ResourceIdsMaxLen1600 = None,
-        scalable_dimension: ScalableDimension = None,
-        max_results: MaxResults = None,
-        next_token: XmlString = None,
+        resource_ids: ResourceIdsMaxLen1600 | None = None,
+        scalable_dimension: ScalableDimension | None = None,
+        max_results: MaxResults | None = None,
+        next_token: XmlString | None = None,
         **kwargs,
     ) -> DescribeScalableTargetsResponse:
         """Gets information about the scalable targets in the specified namespace.
@@ -1076,11 +1137,11 @@ class ApplicationAutoscalingApi:
         self,
         context: RequestContext,
         service_namespace: ServiceNamespace,
-        resource_id: ResourceIdMaxLen1600 = None,
-        scalable_dimension: ScalableDimension = None,
-        max_results: MaxResults = None,
-        next_token: XmlString = None,
-        include_not_scaled_activities: IncludeNotScaledActivities = None,
+        resource_id: ResourceIdMaxLen1600 | None = None,
+        scalable_dimension: ScalableDimension | None = None,
+        max_results: MaxResults | None = None,
+        next_token: XmlString | None = None,
+        include_not_scaled_activities: IncludeNotScaledActivities | None = None,
         **kwargs,
     ) -> DescribeScalingActivitiesResponse:
         """Provides descriptive information about the scaling activities in the
@@ -1114,11 +1175,11 @@ class ApplicationAutoscalingApi:
         self,
         context: RequestContext,
         service_namespace: ServiceNamespace,
-        policy_names: ResourceIdsMaxLen1600 = None,
-        resource_id: ResourceIdMaxLen1600 = None,
-        scalable_dimension: ScalableDimension = None,
-        max_results: MaxResults = None,
-        next_token: XmlString = None,
+        policy_names: ResourceIdsMaxLen1600 | None = None,
+        resource_id: ResourceIdMaxLen1600 | None = None,
+        scalable_dimension: ScalableDimension | None = None,
+        max_results: MaxResults | None = None,
+        next_token: XmlString | None = None,
         **kwargs,
     ) -> DescribeScalingPoliciesResponse:
         """Describes the Application Auto Scaling scaling policies for the
@@ -1154,11 +1215,11 @@ class ApplicationAutoscalingApi:
         self,
         context: RequestContext,
         service_namespace: ServiceNamespace,
-        scheduled_action_names: ResourceIdsMaxLen1600 = None,
-        resource_id: ResourceIdMaxLen1600 = None,
-        scalable_dimension: ScalableDimension = None,
-        max_results: MaxResults = None,
-        next_token: XmlString = None,
+        scheduled_action_names: ResourceIdsMaxLen1600 | None = None,
+        resource_id: ResourceIdMaxLen1600 | None = None,
+        scalable_dimension: ScalableDimension | None = None,
+        max_results: MaxResults | None = None,
+        next_token: XmlString | None = None,
         **kwargs,
     ) -> DescribeScheduledActionsResponse:
         """Describes the Application Auto Scaling scheduled actions for the
@@ -1249,10 +1310,11 @@ class ApplicationAutoscalingApi:
         service_namespace: ServiceNamespace,
         resource_id: ResourceIdMaxLen1600,
         scalable_dimension: ScalableDimension,
-        policy_type: PolicyType = None,
-        step_scaling_policy_configuration: StepScalingPolicyConfiguration = None,
-        target_tracking_scaling_policy_configuration: TargetTrackingScalingPolicyConfiguration = None,
-        predictive_scaling_policy_configuration: PredictiveScalingPolicyConfiguration = None,
+        policy_type: PolicyType | None = None,
+        step_scaling_policy_configuration: StepScalingPolicyConfiguration | None = None,
+        target_tracking_scaling_policy_configuration: TargetTrackingScalingPolicyConfiguration
+        | None = None,
+        predictive_scaling_policy_configuration: PredictiveScalingPolicyConfiguration | None = None,
         **kwargs,
     ) -> PutScalingPolicyResponse:
         """Creates or updates a scaling policy for an Application Auto Scaling
@@ -1321,11 +1383,11 @@ class ApplicationAutoscalingApi:
         scheduled_action_name: ScheduledActionName,
         resource_id: ResourceIdMaxLen1600,
         scalable_dimension: ScalableDimension,
-        schedule: ResourceIdMaxLen1600 = None,
-        timezone: ResourceIdMaxLen1600 = None,
-        start_time: TimestampType = None,
-        end_time: TimestampType = None,
-        scalable_target_action: ScalableTargetAction = None,
+        schedule: ResourceIdMaxLen1600 | None = None,
+        timezone: ResourceIdMaxLen1600 | None = None,
+        start_time: TimestampType | None = None,
+        end_time: TimestampType | None = None,
+        scalable_target_action: ScalableTargetAction | None = None,
         **kwargs,
     ) -> PutScheduledActionResponse:
         """Creates or updates a scheduled action for an Application Auto Scaling
@@ -1380,11 +1442,11 @@ class ApplicationAutoscalingApi:
         service_namespace: ServiceNamespace,
         resource_id: ResourceIdMaxLen1600,
         scalable_dimension: ScalableDimension,
-        min_capacity: ResourceCapacity = None,
-        max_capacity: ResourceCapacity = None,
-        role_arn: ResourceIdMaxLen1600 = None,
-        suspended_state: SuspendedState = None,
-        tags: TagMap = None,
+        min_capacity: ResourceCapacity | None = None,
+        max_capacity: ResourceCapacity | None = None,
+        role_arn: ResourceIdMaxLen1600 | None = None,
+        suspended_state: SuspendedState | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> RegisterScalableTargetResponse:
         """Registers or updates a scalable target, which is the resource that you

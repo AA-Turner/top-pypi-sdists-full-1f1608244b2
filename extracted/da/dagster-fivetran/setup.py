@@ -33,19 +33,19 @@ setup(
     packages=find_packages(exclude=["dagster_fivetran_tests*"]),
     include_package_data=True,
     python_requires=">=3.9,<3.13",
-    install_requires=["dagster==1.10.18"],
+    install_requires=["dagster==1.10.19"],
     zip_safe=False,
     entry_points={
         "console_scripts": [
             "dagster-fivetran = dagster_fivetran.cli:main",
         ],
-        "dagster_dg_cli.plugin": [
+        "dagster_dg_cli.registry_modules": [
             "dagster_fivetran = dagster_fivetran",
         ],
     },
     extras_require={
         "managed": [
-            "dagster-managed-elements==0.26.18",
+            "dagster-managed-elements==0.26.19",
         ],
         "test": [
             "pytest-order",

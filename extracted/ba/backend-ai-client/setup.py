@@ -31,13 +31,13 @@ setup(**{
         'appdirs~=1.4.4',
         'async_timeout~=4.0',
         'attrs>=25.3',
-        """backend.ai-cli==25.9.0
+        """backend.ai-cli==25.9.1
 """,
-        """backend.ai-common==25.9.0
+        """backend.ai-common==25.9.1
 """,
-        """backend.ai-logging==25.9.0
+        """backend.ai-logging==25.9.1
 """,
-        """backend.ai-plugin==25.9.0
+        """backend.ai-plugin==25.9.1
 """,
         'click~=8.1.7',
         'faker~=24.7.1',
@@ -287,7 +287,7 @@ Troubleshooting (FAQ)
     },
     'python_requires': '>=3.13,<3.14',
     'url': 'https://github.com/lablup/backend.ai',
-    'version': """25.9.0
+    'version': """25.9.1
 """,
     'zip_safe': False,
 })

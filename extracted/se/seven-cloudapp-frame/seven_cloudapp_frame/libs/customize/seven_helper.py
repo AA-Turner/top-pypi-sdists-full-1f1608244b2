@@ -44,19 +44,33 @@ class SevenHelper:
         :return: bool true-代表连续请求进行限制，false-代表跳过限制
         :last_editors: HuangJianYi
         """
-        if share_config.get_value("is_pressure_test",False): #是否进行压力测试
+        if share_config.get_value("is_pressure_test", False): #是否进行压力测试
             return False
         if not config_dict:
             config_dict = config.get_value("redis_safe")
         redis_init = self.redis_init(config_dict=config_dict)
-        post_value = redis_init.incr(cache_key,1)
+        post_value = redis_init.incr(cache_key, 1)
         if post_value > 1:
             return True
-        redis_init.pexpire(cache_key,expire)
+        redis_init.pexpire(cache_key, expire)
         return False
 
     @classmethod
-    def redis_check_llen(self,queue_name,queue_lenth=100):
+    def delete_continue_request(self, cache_key, config_dict=None):
+        """
+        :description: 删除请求频繁校验值
+        :param cache_key：自定义cache_key
+        :param config_dict：redis配置
+        :return:
+        :last_editors: HuangJianYi
+        """
+        if not config_dict:
+            config_dict = config.get_value("redis_safe")
+        redis_init = self.redis_init(config_dict=config_dict)
+        return redis_init.delete(cache_key)
+
+    @classmethod
+    def redis_check_llen(self, queue_name, queue_lenth=100):
         """
          :description: 校验队列长度
          :param queue_name：自定义队列名称

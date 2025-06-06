@@ -3727,12 +3727,12 @@ class CodecommitApi:
         destination_commit_specifier: CommitName,
         source_commit_specifier: CommitName,
         merge_option: MergeOptionTypeEnum,
-        max_merge_hunks: MaxResults = None,
-        max_conflict_files: MaxResults = None,
-        file_paths: FilePaths = None,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
-        next_token: NextToken = None,
+        max_merge_hunks: MaxResults | None = None,
+        max_conflict_files: MaxResults | None = None,
+        file_paths: FilePaths | None = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> BatchDescribeMergeConflictsOutput:
         """Returns information about one or more merge conflicts in the attempted
@@ -3867,7 +3867,7 @@ class CodecommitApi:
         context: RequestContext,
         approval_rule_template_name: ApprovalRuleTemplateName,
         approval_rule_template_content: ApprovalRuleTemplateContent,
-        approval_rule_template_description: ApprovalRuleTemplateDescription = None,
+        approval_rule_template_description: ApprovalRuleTemplateDescription | None = None,
         **kwargs,
     ) -> CreateApprovalRuleTemplateOutput:
         """Creates a template for approval rules that can then be associated with
@@ -3932,14 +3932,14 @@ class CodecommitApi:
         context: RequestContext,
         repository_name: RepositoryName,
         branch_name: BranchName,
-        parent_commit_id: CommitId = None,
-        author_name: Name = None,
-        email: Email = None,
-        commit_message: Message = None,
-        keep_empty_folders: KeepEmptyFolders = None,
-        put_files: PutFileEntries = None,
-        delete_files: DeleteFileEntries = None,
-        set_file_modes: SetFileModeEntries = None,
+        parent_commit_id: CommitId | None = None,
+        author_name: Name | None = None,
+        email: Email | None = None,
+        commit_message: Message | None = None,
+        keep_empty_folders: KeepEmptyFolders | None = None,
+        put_files: PutFileEntries | None = None,
+        delete_files: DeleteFileEntries | None = None,
+        set_file_modes: SetFileModeEntries | None = None,
         **kwargs,
     ) -> CreateCommitOutput:
         """Creates a commit for a repository on the tip of a specified branch.
@@ -4003,8 +4003,8 @@ class CodecommitApi:
         context: RequestContext,
         title: Title,
         targets: TargetList,
-        description: Description = None,
-        client_request_token: ClientRequestToken = None,
+        description: Description | None = None,
+        client_request_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> CreatePullRequestOutput:
         """Creates a pull request in the specified repository.
@@ -4088,9 +4088,9 @@ class CodecommitApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        repository_description: RepositoryDescription = None,
-        tags: TagsMap = None,
-        kms_key_id: KmsKeyId = None,
+        repository_description: RepositoryDescription | None = None,
+        tags: TagsMap | None = None,
+        kms_key_id: KmsKeyId | None = None,
         **kwargs,
     ) -> CreateRepositoryOutput:
         """Creates a new, empty repository.
@@ -4128,13 +4128,13 @@ class CodecommitApi:
         source_commit_specifier: CommitName,
         destination_commit_specifier: CommitName,
         merge_option: MergeOptionTypeEnum,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
-        author_name: Name = None,
-        email: Email = None,
-        commit_message: Message = None,
-        keep_empty_folders: KeepEmptyFolders = None,
-        conflict_resolution: ConflictResolution = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
+        author_name: Name | None = None,
+        email: Email | None = None,
+        commit_message: Message | None = None,
+        keep_empty_folders: KeepEmptyFolders | None = None,
+        conflict_resolution: ConflictResolution | None = None,
         **kwargs,
     ) -> CreateUnreferencedMergeCommitOutput:
         """Creates an unreferenced commit that represents the result of merging two
@@ -4275,10 +4275,10 @@ class CodecommitApi:
         branch_name: BranchName,
         file_path: Path,
         parent_commit_id: CommitId,
-        keep_empty_folders: KeepEmptyFolders = None,
-        commit_message: Message = None,
-        name: Name = None,
-        email: Email = None,
+        keep_empty_folders: KeepEmptyFolders | None = None,
+        commit_message: Message | None = None,
+        name: Name | None = None,
+        email: Email | None = None,
         **kwargs,
     ) -> DeleteFileOutput:
         """Deletes a specified file from a specified branch. A commit is created on
@@ -4388,10 +4388,10 @@ class CodecommitApi:
         source_commit_specifier: CommitName,
         merge_option: MergeOptionTypeEnum,
         file_path: Path,
-        max_merge_hunks: MaxResults = None,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
-        next_token: NextToken = None,
+        max_merge_hunks: MaxResults | None = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeMergeConflictsOutput:
         """Returns information about one or more merge conflicts in the attempted
@@ -4445,10 +4445,10 @@ class CodecommitApi:
         self,
         context: RequestContext,
         pull_request_id: PullRequestId,
-        pull_request_event_type: PullRequestEventType = None,
-        actor_arn: Arn = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        pull_request_event_type: PullRequestEventType | None = None,
+        actor_arn: Arn | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> DescribePullRequestEventsOutput:
         """Returns information about one or more pull request events.
@@ -4584,8 +4584,8 @@ class CodecommitApi:
     def get_branch(
         self,
         context: RequestContext,
-        repository_name: RepositoryName = None,
-        branch_name: BranchName = None,
+        repository_name: RepositoryName | None = None,
+        branch_name: BranchName | None = None,
         **kwargs,
     ) -> GetBranchOutput:
         """Returns information about a repository branch, including its name and
@@ -4639,9 +4639,9 @@ class CodecommitApi:
         self,
         context: RequestContext,
         comment_id: CommentId,
-        reaction_user_arn: Arn = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        reaction_user_arn: Arn | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> GetCommentReactionsOutput:
         """Returns information about reactions to a specified comment ID. Reactions
@@ -4670,9 +4670,9 @@ class CodecommitApi:
         context: RequestContext,
         repository_name: RepositoryName,
         after_commit_id: CommitId,
-        before_commit_id: CommitId = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        before_commit_id: CommitId | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> GetCommentsForComparedCommitOutput:
         """Returns information about comments made on the comparison between two
@@ -4713,11 +4713,11 @@ class CodecommitApi:
         self,
         context: RequestContext,
         pull_request_id: PullRequestId,
-        repository_name: RepositoryName = None,
-        before_commit_id: CommitId = None,
-        after_commit_id: CommitId = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        repository_name: RepositoryName | None = None,
+        before_commit_id: CommitId | None = None,
+        after_commit_id: CommitId | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> GetCommentsForPullRequestOutput:
         """Returns comments made on a pull request.
@@ -4791,11 +4791,11 @@ class CodecommitApi:
         context: RequestContext,
         repository_name: RepositoryName,
         after_commit_specifier: CommitName,
-        before_commit_specifier: CommitName = None,
-        before_path: Path = None,
-        after_path: Path = None,
-        max_results: Limit = None,
-        next_token: NextToken = None,
+        before_commit_specifier: CommitName | None = None,
+        before_path: Path | None = None,
+        after_path: Path | None = None,
+        max_results: Limit | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> GetDifferencesOutput:
         """Returns information about the differences in a valid commit specifier
@@ -4839,7 +4839,7 @@ class CodecommitApi:
         context: RequestContext,
         repository_name: RepositoryName,
         file_path: Path,
-        commit_specifier: CommitName = None,
+        commit_specifier: CommitName | None = None,
         **kwargs,
     ) -> GetFileOutput:
         """Returns the base-64 encoded contents of a specified file and its
@@ -4874,7 +4874,7 @@ class CodecommitApi:
         context: RequestContext,
         repository_name: RepositoryName,
         folder_path: Path,
-        commit_specifier: CommitName = None,
+        commit_specifier: CommitName | None = None,
         **kwargs,
     ) -> GetFolderOutput:
         """Returns the contents of a specified folder in a repository.
@@ -4908,8 +4908,8 @@ class CodecommitApi:
         repository_name: RepositoryName,
         source_commit_specifier: CommitName,
         destination_commit_specifier: CommitName,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
         **kwargs,
     ) -> GetMergeCommitOutput:
         """Returns information about a specified merge commit.
@@ -4948,10 +4948,10 @@ class CodecommitApi:
         destination_commit_specifier: CommitName,
         source_commit_specifier: CommitName,
         merge_option: MergeOptionTypeEnum,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        max_conflict_files: MaxResults = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
-        next_token: NextToken = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        max_conflict_files: MaxResults | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> GetMergeConflictsOutput:
         """Returns information about merge conflicts between the before and after
@@ -5002,8 +5002,8 @@ class CodecommitApi:
         repository_name: RepositoryName,
         source_commit_specifier: CommitName,
         destination_commit_specifier: CommitName,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
         **kwargs,
     ) -> GetMergeOptionsOutput:
         """Returns information about the merge options available for merging two
@@ -5165,8 +5165,8 @@ class CodecommitApi:
     def list_approval_rule_templates(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListApprovalRuleTemplatesOutput:
         """Lists all approval rule templates in the specified Amazon Web Services
@@ -5189,8 +5189,8 @@ class CodecommitApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListAssociatedApprovalRuleTemplatesForRepositoryOutput:
         """Lists all approval rule templates that are associated with a specified
@@ -5221,7 +5221,7 @@ class CodecommitApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        next_token: NextToken = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListBranchesOutput:
         """Gets information about one or more branches in a repository.
@@ -5247,9 +5247,9 @@ class CodecommitApi:
         context: RequestContext,
         repository_name: RepositoryName,
         file_path: Path,
-        commit_specifier: CommitName = None,
-        max_results: Limit = None,
-        next_token: NextToken = None,
+        commit_specifier: CommitName | None = None,
+        max_results: Limit | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListFileCommitHistoryResponse:
         """Retrieves a list of commits and changes to a specified file.
@@ -5285,10 +5285,10 @@ class CodecommitApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        author_arn: Arn = None,
-        pull_request_status: PullRequestStatusEnum = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        author_arn: Arn | None = None,
+        pull_request_status: PullRequestStatusEnum | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPullRequestsOutput:
         """Returns a list of pull requests for a specified repository. The return
@@ -5322,9 +5322,9 @@ class CodecommitApi:
     def list_repositories(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        sort_by: SortByEnum = None,
-        order: OrderEnum = None,
+        next_token: NextToken | None = None,
+        sort_by: SortByEnum | None = None,
+        order: OrderEnum | None = None,
         **kwargs,
     ) -> ListRepositoriesOutput:
         """Gets information about one or more repositories.
@@ -5345,8 +5345,8 @@ class CodecommitApi:
         self,
         context: RequestContext,
         approval_rule_template_name: ApprovalRuleTemplateName,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListRepositoriesForApprovalRuleTemplateOutput:
         """Lists all repositories associated with the specified approval rule
@@ -5377,7 +5377,7 @@ class CodecommitApi:
         self,
         context: RequestContext,
         resource_arn: ResourceArn,
-        next_token: NextToken = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTagsForResourceOutput:
         """Gets information about Amazon Web Servicestags for a specified Amazon
@@ -5405,7 +5405,7 @@ class CodecommitApi:
         repository_name: RepositoryName,
         source_commit_specifier: CommitName,
         destination_commit_specifier: CommitName,
-        target_branch: BranchName = None,
+        target_branch: BranchName | None = None,
         **kwargs,
     ) -> MergeBranchesByFastForwardOutput:
         """Merges two branches using the fast-forward merge strategy.
@@ -5446,14 +5446,14 @@ class CodecommitApi:
         repository_name: RepositoryName,
         source_commit_specifier: CommitName,
         destination_commit_specifier: CommitName,
-        target_branch: BranchName = None,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
-        author_name: Name = None,
-        email: Email = None,
-        commit_message: Message = None,
-        keep_empty_folders: KeepEmptyFolders = None,
-        conflict_resolution: ConflictResolution = None,
+        target_branch: BranchName | None = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
+        author_name: Name | None = None,
+        email: Email | None = None,
+        commit_message: Message | None = None,
+        keep_empty_folders: KeepEmptyFolders | None = None,
+        conflict_resolution: ConflictResolution | None = None,
         **kwargs,
     ) -> MergeBranchesBySquashOutput:
         """Merges two branches using the squash merge strategy.
@@ -5524,14 +5524,14 @@ class CodecommitApi:
         repository_name: RepositoryName,
         source_commit_specifier: CommitName,
         destination_commit_specifier: CommitName,
-        target_branch: BranchName = None,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
-        author_name: Name = None,
-        email: Email = None,
-        commit_message: Message = None,
-        keep_empty_folders: KeepEmptyFolders = None,
-        conflict_resolution: ConflictResolution = None,
+        target_branch: BranchName | None = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
+        author_name: Name | None = None,
+        email: Email | None = None,
+        commit_message: Message | None = None,
+        keep_empty_folders: KeepEmptyFolders | None = None,
+        conflict_resolution: ConflictResolution | None = None,
         **kwargs,
     ) -> MergeBranchesByThreeWayOutput:
         """Merges two specified branches using the three-way merge strategy.
@@ -5601,7 +5601,7 @@ class CodecommitApi:
         context: RequestContext,
         pull_request_id: PullRequestId,
         repository_name: RepositoryName,
-        source_commit_id: ObjectId = None,
+        source_commit_id: ObjectId | None = None,
         **kwargs,
     ) -> MergePullRequestByFastForwardOutput:
         """Attempts to merge the source commit of a pull request into the specified
@@ -5642,14 +5642,14 @@ class CodecommitApi:
         context: RequestContext,
         pull_request_id: PullRequestId,
         repository_name: RepositoryName,
-        source_commit_id: ObjectId = None,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
-        commit_message: Message = None,
-        author_name: Name = None,
-        email: Email = None,
-        keep_empty_folders: KeepEmptyFolders = None,
-        conflict_resolution: ConflictResolution = None,
+        source_commit_id: ObjectId | None = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
+        commit_message: Message | None = None,
+        author_name: Name | None = None,
+        email: Email | None = None,
+        keep_empty_folders: KeepEmptyFolders | None = None,
+        conflict_resolution: ConflictResolution | None = None,
         **kwargs,
     ) -> MergePullRequestBySquashOutput:
         """Attempts to merge the source commit of a pull request into the specified
@@ -5719,14 +5719,14 @@ class CodecommitApi:
         context: RequestContext,
         pull_request_id: PullRequestId,
         repository_name: RepositoryName,
-        source_commit_id: ObjectId = None,
-        conflict_detail_level: ConflictDetailLevelTypeEnum = None,
-        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum = None,
-        commit_message: Message = None,
-        author_name: Name = None,
-        email: Email = None,
-        keep_empty_folders: KeepEmptyFolders = None,
-        conflict_resolution: ConflictResolution = None,
+        source_commit_id: ObjectId | None = None,
+        conflict_detail_level: ConflictDetailLevelTypeEnum | None = None,
+        conflict_resolution_strategy: ConflictResolutionStrategyTypeEnum | None = None,
+        commit_message: Message | None = None,
+        author_name: Name | None = None,
+        email: Email | None = None,
+        keep_empty_folders: KeepEmptyFolders | None = None,
+        conflict_resolution: ConflictResolution | None = None,
         **kwargs,
     ) -> MergePullRequestByThreeWayOutput:
         """Attempts to merge the source commit of a pull request into the specified
@@ -5833,9 +5833,9 @@ class CodecommitApi:
         repository_name: RepositoryName,
         after_commit_id: CommitId,
         content: Content,
-        before_commit_id: CommitId = None,
-        location: Location = None,
-        client_request_token: ClientRequestToken = None,
+        before_commit_id: CommitId | None = None,
+        location: Location | None = None,
+        client_request_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> PostCommentForComparedCommitOutput:
         """Posts a comment on the comparison between two commits.
@@ -5888,8 +5888,8 @@ class CodecommitApi:
         before_commit_id: CommitId,
         after_commit_id: CommitId,
         content: Content,
-        location: Location = None,
-        client_request_token: ClientRequestToken = None,
+        location: Location | None = None,
+        client_request_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> PostCommentForPullRequestOutput:
         """Posts a comment on a pull request.
@@ -5945,7 +5945,7 @@ class CodecommitApi:
         context: RequestContext,
         in_reply_to: CommentId,
         content: Content,
-        client_request_token: ClientRequestToken = None,
+        client_request_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> PostCommentReplyOutput:
         """Posts a comment in reply to an existing comment on a comparison between
@@ -6001,11 +6001,11 @@ class CodecommitApi:
         branch_name: BranchName,
         file_content: FileContent,
         file_path: Path,
-        file_mode: FileModeTypeEnum = None,
-        parent_commit_id: CommitId = None,
-        commit_message: Message = None,
-        name: Name = None,
-        email: Email = None,
+        file_mode: FileModeTypeEnum | None = None,
+        parent_commit_id: CommitId | None = None,
+        commit_message: Message | None = None,
+        name: Name | None = None,
+        email: Email | None = None,
         **kwargs,
     ) -> PutFileOutput:
         """Adds or updates a file in a branch in an CodeCommit repository, and
@@ -6189,7 +6189,7 @@ class CodecommitApi:
         context: RequestContext,
         approval_rule_template_name: ApprovalRuleTemplateName,
         new_rule_content: ApprovalRuleTemplateContent,
-        existing_rule_content_sha256: RuleContentSha256 = None,
+        existing_rule_content_sha256: RuleContentSha256 | None = None,
         **kwargs,
     ) -> UpdateApprovalRuleTemplateContentOutput:
         """Updates the content of an approval rule template. You can change the
@@ -6307,7 +6307,7 @@ class CodecommitApi:
         pull_request_id: PullRequestId,
         approval_rule_name: ApprovalRuleName,
         new_rule_content: ApprovalRuleContent,
-        existing_rule_content_sha256: RuleContentSha256 = None,
+        existing_rule_content_sha256: RuleContentSha256 | None = None,
         **kwargs,
     ) -> UpdatePullRequestApprovalRuleContentOutput:
         """Updates the structure of an approval rule created specifically for a
@@ -6443,7 +6443,7 @@ class CodecommitApi:
         self,
         context: RequestContext,
         repository_name: RepositoryName,
-        repository_description: RepositoryDescription = None,
+        repository_description: RepositoryDescription | None = None,
         **kwargs,
     ) -> None:
         """Sets or changes the comment or description for a repository.

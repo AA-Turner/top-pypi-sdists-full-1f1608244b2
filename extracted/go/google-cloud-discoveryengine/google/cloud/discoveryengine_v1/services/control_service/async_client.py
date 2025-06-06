@@ -35,6 +35,7 @@ from google.api_core import retry_async as retries
 from google.api_core.client_options import ClientOptions
 from google.auth import credentials as ga_credentials  # type: ignore
 from google.oauth2 import service_account  # type: ignore
+import google.protobuf
 
 from google.cloud.discoveryengine_v1 import gapic_version as package_version
 
@@ -87,6 +88,8 @@ class ControlServiceAsyncClient:
     parse_control_path = staticmethod(ControlServiceClient.parse_control_path)
     data_store_path = staticmethod(ControlServiceClient.data_store_path)
     parse_data_store_path = staticmethod(ControlServiceClient.parse_data_store_path)
+    document_path = staticmethod(ControlServiceClient.document_path)
+    parse_document_path = staticmethod(ControlServiceClient.parse_document_path)
     common_billing_account_path = staticmethod(
         ControlServiceClient.common_billing_account_path
     )
@@ -1111,6 +1114,9 @@ class ControlServiceAsyncClient:
 DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
     gapic_version=package_version.__version__
 )
+
+if hasattr(DEFAULT_CLIENT_INFO, "protobuf_runtime_version"):  # pragma: NO COVER
+    DEFAULT_CLIENT_INFO.protobuf_runtime_version = google.protobuf.__version__
 
 
 __all__ = ("ControlServiceAsyncClient",)

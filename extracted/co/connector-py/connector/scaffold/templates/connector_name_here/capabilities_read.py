@@ -20,8 +20,7 @@ from connector.generated import (
 )
 
 from {name}.client import {pascal}Client
-from {name}.pagination import DEFAULT_PAGE_SIZE, NextPageToken, Pagination
-
+from {name}.pagination import DEFAULT_PAGE_SIZE, NextPageToken, Pagination, paginations_from_args
 
 async def validate_credentials(
     args: ValidateCredentialsRequest,
@@ -38,13 +37,10 @@ async def validate_credentials(
 
 
 async def list_accounts(args: ListAccountsRequest) -> ListAccountsResponse:
-    endpoint = "/users"
-    try:
-        current_pagination = NextPageToken(get_page(args).token).paginations()[0]
-    except IndexError:
-        current_pagination = Pagination.default(endpoint)
+    paginations, current_pagination, page_size = paginations_from_args(
+        args, default_endpoints=["/users"]
+    )
 
-    page_size = get_page(args).size or DEFAULT_PAGE_SIZE
     async with {pascal}Client(args) as client:
         response = await client.get_users(
             limit=page_size,
@@ -52,24 +48,18 @@ async def list_accounts(args: ListAccountsRequest) -> ListAccountsResponse:
         )
         accounts: list[FoundAccountData] = response.to_accounts()
 
-        next_pagination = []
         if True:
-            next_pagination.append(
+            paginations.append(
                 Pagination(
-                    endpoint=endpoint,
+                    endpoint=current_pagination.endpoint,
                     offset=current_pagination.offset + len(accounts),
                 )
             )
 
-        next_page_token = NextPageToken.from_paginations(next_pagination).token
-
     return ListAccountsResponse(
         response=accounts,
-        page=Page(
-            token=next_page_token,
-            size=page_size,
-        )
-        if next_page_token
+        page=NextPageToken.from_paginations(paginations).to_page(page_size)
+        if paginations
         else None,
     )
 

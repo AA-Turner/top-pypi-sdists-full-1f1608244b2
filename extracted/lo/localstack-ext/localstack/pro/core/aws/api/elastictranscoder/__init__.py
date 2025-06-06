@@ -918,13 +918,13 @@ class ElastictranscoderApi:
         self,
         context: RequestContext,
         pipeline_id: Id,
-        input: JobInput = None,
-        inputs: JobInputs = None,
-        output: CreateJobOutput = None,
-        outputs: CreateJobOutputs = None,
-        output_key_prefix: Key = None,
-        playlists: CreateJobPlaylists = None,
-        user_metadata: UserMetadata = None,
+        input: JobInput | None = None,
+        inputs: JobInputs | None = None,
+        output: CreateJobOutput | None = None,
+        outputs: CreateJobOutputs | None = None,
+        output_key_prefix: Key | None = None,
+        playlists: CreateJobPlaylists | None = None,
+        user_metadata: UserMetadata | None = None,
         **kwargs,
     ) -> CreateJobResponse:
         """When you create a job, Elastic Transcoder returns JSON data that
@@ -972,11 +972,11 @@ class ElastictranscoderApi:
         name: Name,
         input_bucket: BucketName,
         role: Role,
-        output_bucket: BucketName = None,
-        aws_kms_key_arn: KeyArn = None,
-        notifications: Notifications = None,
-        content_config: PipelineOutputConfig = None,
-        thumbnail_config: PipelineOutputConfig = None,
+        output_bucket: BucketName | None = None,
+        aws_kms_key_arn: KeyArn | None = None,
+        notifications: Notifications | None = None,
+        content_config: PipelineOutputConfig | None = None,
+        thumbnail_config: PipelineOutputConfig | None = None,
         **kwargs,
     ) -> CreatePipelineResponse:
         """The CreatePipeline operation creates a pipeline with settings that you
@@ -1019,10 +1019,10 @@ class ElastictranscoderApi:
         context: RequestContext,
         name: Name,
         container: PresetContainer,
-        description: Description = None,
-        video: VideoParameters = None,
-        audio: AudioParameters = None,
-        thumbnails: Thumbnails = None,
+        description: Description | None = None,
+        video: VideoParameters | None = None,
+        audio: AudioParameters | None = None,
+        thumbnails: Thumbnails | None = None,
         **kwargs,
     ) -> CreatePresetResponse:
         """The CreatePreset operation creates a preset with settings that you
@@ -1104,8 +1104,8 @@ class ElastictranscoderApi:
         self,
         context: RequestContext,
         pipeline_id: Id,
-        ascending: Ascending = None,
-        page_token: Id = None,
+        ascending: Ascending | None = None,
+        page_token: Id | None = None,
         **kwargs,
     ) -> ListJobsByPipelineResponse:
         """The ListJobsByPipeline operation gets a list of the jobs currently in a
@@ -1135,8 +1135,8 @@ class ElastictranscoderApi:
         self,
         context: RequestContext,
         status: JobStatus,
-        ascending: Ascending = None,
-        page_token: Id = None,
+        ascending: Ascending | None = None,
+        page_token: Id | None = None,
         **kwargs,
     ) -> ListJobsByStatusResponse:
         """The ListJobsByStatus operation gets a list of jobs that have a specified
@@ -1163,7 +1163,11 @@ class ElastictranscoderApi:
 
     @handler("ListPipelines")
     def list_pipelines(
-        self, context: RequestContext, ascending: Ascending = None, page_token: Id = None, **kwargs
+        self,
+        context: RequestContext,
+        ascending: Ascending | None = None,
+        page_token: Id | None = None,
+        **kwargs,
     ) -> ListPipelinesResponse:
         """The ListPipelines operation gets a list of the pipelines associated with
         the current AWS account.
@@ -1183,7 +1187,11 @@ class ElastictranscoderApi:
 
     @handler("ListPresets")
     def list_presets(
-        self, context: RequestContext, ascending: Ascending = None, page_token: Id = None, **kwargs
+        self,
+        context: RequestContext,
+        ascending: Ascending | None = None,
+        page_token: Id | None = None,
+        **kwargs,
     ) -> ListPresetsResponse:
         """The ListPresets operation gets a list of the default presets included
         with Elastic Transcoder and the presets that you've added in an AWS
@@ -1286,13 +1294,13 @@ class ElastictranscoderApi:
         self,
         context: RequestContext,
         id: Id,
-        name: Name = None,
-        input_bucket: BucketName = None,
-        role: Role = None,
-        aws_kms_key_arn: KeyArn = None,
-        notifications: Notifications = None,
-        content_config: PipelineOutputConfig = None,
-        thumbnail_config: PipelineOutputConfig = None,
+        name: Name | None = None,
+        input_bucket: BucketName | None = None,
+        role: Role | None = None,
+        aws_kms_key_arn: KeyArn | None = None,
+        notifications: Notifications | None = None,
+        content_config: PipelineOutputConfig | None = None,
+        thumbnail_config: PipelineOutputConfig | None = None,
         **kwargs,
     ) -> UpdatePipelineResponse:
         """Use the ``UpdatePipeline`` operation to update settings for a pipeline.

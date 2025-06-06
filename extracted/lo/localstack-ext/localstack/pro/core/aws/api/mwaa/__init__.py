@@ -122,6 +122,11 @@ class WebserverAccessMode(StrEnum):
     PUBLIC_ONLY = "PUBLIC_ONLY"
 
 
+class WorkerReplacementStrategy(StrEnum):
+    FORCED = "FORCED"
+    GRACEFUL = "GRACEFUL"
+
+
 class AccessDeniedException(ServiceException):
     """Access to the Apache Airflow Web UI or CLI has been denied due to
     insufficient permissions. To learn more, see `Accessing an Amazon MWAA
@@ -334,6 +339,7 @@ class LastUpdate(TypedDict, total=False):
     CreatedAt: Optional[UpdateCreatedAt]
     Error: Optional[UpdateError]
     Source: Optional[UpdateSource]
+    WorkerReplacementStrategy: Optional[WorkerReplacementStrategy]
 
 
 class ModuleLoggingConfiguration(TypedDict, total=False):
@@ -522,26 +528,27 @@ class UpdateNetworkConfigurationInput(TypedDict, total=False):
 class UpdateEnvironmentInput(ServiceRequest):
     Name: EnvironmentName
     ExecutionRoleArn: Optional[IamRoleArn]
+    AirflowConfigurationOptions: Optional[AirflowConfigurationOptions]
     AirflowVersion: Optional[AirflowVersion]
-    SourceBucketArn: Optional[S3BucketArn]
     DagS3Path: Optional[RelativePath]
+    EnvironmentClass: Optional[EnvironmentClass]
+    LoggingConfiguration: Optional[LoggingConfigurationInput]
+    MaxWorkers: Optional[MaxWorkers]
+    MinWorkers: Optional[MinWorkers]
+    MaxWebservers: Optional[MaxWebservers]
+    MinWebservers: Optional[MinWebservers]
+    WorkerReplacementStrategy: Optional[WorkerReplacementStrategy]
+    NetworkConfiguration: Optional[UpdateNetworkConfigurationInput]
     PluginsS3Path: Optional[RelativePath]
     PluginsS3ObjectVersion: Optional[S3ObjectVersion]
     RequirementsS3Path: Optional[RelativePath]
     RequirementsS3ObjectVersion: Optional[S3ObjectVersion]
+    Schedulers: Optional[Schedulers]
+    SourceBucketArn: Optional[S3BucketArn]
     StartupScriptS3Path: Optional[RelativePath]
     StartupScriptS3ObjectVersion: Optional[S3ObjectVersion]
-    AirflowConfigurationOptions: Optional[AirflowConfigurationOptions]
-    EnvironmentClass: Optional[EnvironmentClass]
-    MaxWorkers: Optional[MaxWorkers]
-    NetworkConfiguration: Optional[UpdateNetworkConfigurationInput]
-    LoggingConfiguration: Optional[LoggingConfigurationInput]
-    WeeklyMaintenanceWindowStart: Optional[WeeklyMaintenanceWindowStart]
     WebserverAccessMode: Optional[WebserverAccessMode]
-    MinWorkers: Optional[MinWorkers]
-    Schedulers: Optional[Schedulers]
-    MinWebservers: Optional[MinWebservers]
-    MaxWebservers: Optional[MaxWebservers]
+    WeeklyMaintenanceWindowStart: Optional[WeeklyMaintenanceWindowStart]
 
 
 class UpdateEnvironmentOutput(TypedDict, total=False):
@@ -575,26 +582,26 @@ class MwaaApi:
         source_bucket_arn: S3BucketArn,
         dag_s3_path: RelativePath,
         network_configuration: NetworkConfiguration,
-        plugins_s3_path: RelativePath = None,
-        plugins_s3_object_version: S3ObjectVersion = None,
-        requirements_s3_path: RelativePath = None,
-        requirements_s3_object_version: S3ObjectVersion = None,
-        startup_script_s3_path: RelativePath = None,
-        startup_script_s3_object_version: S3ObjectVersion = None,
-        airflow_configuration_options: AirflowConfigurationOptions = None,
-        environment_class: EnvironmentClass = None,
-        max_workers: MaxWorkers = None,
-        kms_key: KmsKey = None,
-        airflow_version: AirflowVersion = None,
-        logging_configuration: LoggingConfigurationInput = None,
-        weekly_maintenance_window_start: WeeklyMaintenanceWindowStart = None,
-        tags: TagMap = None,
-        webserver_access_mode: WebserverAccessMode = None,
-        min_workers: MinWorkers = None,
-        schedulers: Schedulers = None,
-        endpoint_management: EndpointManagement = None,
-        min_webservers: MinWebservers = None,
-        max_webservers: MaxWebservers = None,
+        plugins_s3_path: RelativePath | None = None,
+        plugins_s3_object_version: S3ObjectVersion | None = None,
+        requirements_s3_path: RelativePath | None = None,
+        requirements_s3_object_version: S3ObjectVersion | None = None,
+        startup_script_s3_path: RelativePath | None = None,
+        startup_script_s3_object_version: S3ObjectVersion | None = None,
+        airflow_configuration_options: AirflowConfigurationOptions | None = None,
+        environment_class: EnvironmentClass | None = None,
+        max_workers: MaxWorkers | None = None,
+        kms_key: KmsKey | None = None,
+        airflow_version: AirflowVersion | None = None,
+        logging_configuration: LoggingConfigurationInput | None = None,
+        weekly_maintenance_window_start: WeeklyMaintenanceWindowStart | None = None,
+        tags: TagMap | None = None,
+        webserver_access_mode: WebserverAccessMode | None = None,
+        min_workers: MinWorkers | None = None,
+        schedulers: Schedulers | None = None,
+        endpoint_management: EndpointManagement | None = None,
+        min_webservers: MinWebservers | None = None,
+        max_webservers: MaxWebservers | None = None,
         **kwargs,
     ) -> CreateEnvironmentOutput:
         """Creates an Amazon Managed Workflows for Apache Airflow (Amazon MWAA)
@@ -695,8 +702,8 @@ class MwaaApi:
         name: EnvironmentName,
         path: RestApiPath,
         method: RestApiMethod,
-        query_parameters: Document = None,
-        body: RestApiRequestBody = None,
+        query_parameters: Document | None = None,
+        body: RestApiRequestBody | None = None,
         **kwargs,
     ) -> InvokeRestApiResponse:
         """Invokes the Apache Airflow REST API on the webserver with the specified
@@ -724,8 +731,8 @@ class MwaaApi:
     def list_environments(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: ListEnvironmentsInputMaxResultsInteger = None,
+        next_token: NextToken | None = None,
+        max_results: ListEnvironmentsInputMaxResultsInteger | None = None,
         **kwargs,
     ) -> ListEnvironmentsOutput:
         """Lists the Amazon Managed Workflows for Apache Airflow (MWAA)
@@ -812,27 +819,28 @@ class MwaaApi:
         self,
         context: RequestContext,
         name: EnvironmentName,
-        execution_role_arn: IamRoleArn = None,
-        airflow_version: AirflowVersion = None,
-        source_bucket_arn: S3BucketArn = None,
-        dag_s3_path: RelativePath = None,
-        plugins_s3_path: RelativePath = None,
-        plugins_s3_object_version: S3ObjectVersion = None,
-        requirements_s3_path: RelativePath = None,
-        requirements_s3_object_version: S3ObjectVersion = None,
-        startup_script_s3_path: RelativePath = None,
-        startup_script_s3_object_version: S3ObjectVersion = None,
-        airflow_configuration_options: AirflowConfigurationOptions = None,
-        environment_class: EnvironmentClass = None,
-        max_workers: MaxWorkers = None,
-        network_configuration: UpdateNetworkConfigurationInput = None,
-        logging_configuration: LoggingConfigurationInput = None,
-        weekly_maintenance_window_start: WeeklyMaintenanceWindowStart = None,
-        webserver_access_mode: WebserverAccessMode = None,
-        min_workers: MinWorkers = None,
-        schedulers: Schedulers = None,
-        min_webservers: MinWebservers = None,
-        max_webservers: MaxWebservers = None,
+        execution_role_arn: IamRoleArn | None = None,
+        airflow_configuration_options: AirflowConfigurationOptions | None = None,
+        airflow_version: AirflowVersion | None = None,
+        dag_s3_path: RelativePath | None = None,
+        environment_class: EnvironmentClass | None = None,
+        logging_configuration: LoggingConfigurationInput | None = None,
+        max_workers: MaxWorkers | None = None,
+        min_workers: MinWorkers | None = None,
+        max_webservers: MaxWebservers | None = None,
+        min_webservers: MinWebservers | None = None,
+        worker_replacement_strategy: WorkerReplacementStrategy | None = None,
+        network_configuration: UpdateNetworkConfigurationInput | None = None,
+        plugins_s3_path: RelativePath | None = None,
+        plugins_s3_object_version: S3ObjectVersion | None = None,
+        requirements_s3_path: RelativePath | None = None,
+        requirements_s3_object_version: S3ObjectVersion | None = None,
+        schedulers: Schedulers | None = None,
+        source_bucket_arn: S3BucketArn | None = None,
+        startup_script_s3_path: RelativePath | None = None,
+        startup_script_s3_object_version: S3ObjectVersion | None = None,
+        webserver_access_mode: WebserverAccessMode | None = None,
+        weekly_maintenance_window_start: WeeklyMaintenanceWindowStart | None = None,
         **kwargs,
     ) -> UpdateEnvironmentOutput:
         """Updates an Amazon Managed Workflows for Apache Airflow (MWAA)
@@ -841,34 +849,35 @@ class MwaaApi:
         :param name: The name of your Amazon MWAA environment.
         :param execution_role_arn: The Amazon Resource Name (ARN) of the execution role in IAM that allows
         MWAA to access Amazon Web Services resources in your environment.
+        :param airflow_configuration_options: A list of key-value pairs containing the Apache Airflow configuration
+        options you want to attach to your environment.
         :param airflow_version: The Apache Airflow version for your environment.
-        :param source_bucket_arn: The Amazon Resource Name (ARN) of the Amazon S3 bucket where your DAG
-        code and supporting files are stored.
         :param dag_s3_path: The relative path to the DAGs folder on your Amazon S3 bucket.
+        :param environment_class: The environment class type.
+        :param logging_configuration: The Apache Airflow log types to send to CloudWatch Logs.
+        :param max_workers: The maximum number of workers that you want to run in your environment.
+        :param min_workers: The minimum number of workers that you want to run in your environment.
+        :param max_webservers: The maximum number of web servers that you want to run in your
+        environment.
+        :param min_webservers: The minimum number of web servers that you want to run in your
+        environment.
+        :param worker_replacement_strategy: The worker replacement strategy to use when updating the environment.
+        :param network_configuration: The VPC networking components used to secure and enable network traffic
+        between the Amazon Web Services resources for your environment.
         :param plugins_s3_path: The relative path to the ``plugins.
         :param plugins_s3_object_version: The version of the plugins.
         :param requirements_s3_path: The relative path to the ``requirements.
         :param requirements_s3_object_version: The version of the requirements.
+        :param schedulers: The number of Apache Airflow schedulers to run in your Amazon MWAA
+        environment.
+        :param source_bucket_arn: The Amazon Resource Name (ARN) of the Amazon S3 bucket where your DAG
+        code and supporting files are stored.
         :param startup_script_s3_path: The relative path to the startup shell script in your Amazon S3 bucket.
         :param startup_script_s3_object_version: The version of the startup shell script in your Amazon S3 bucket.
-        :param airflow_configuration_options: A list of key-value pairs containing the Apache Airflow configuration
-        options you want to attach to your environment.
-        :param environment_class: The environment class type.
-        :param max_workers: The maximum number of workers that you want to run in your environment.
-        :param network_configuration: The VPC networking components used to secure and enable network traffic
-        between the Amazon Web Services resources for your environment.
-        :param logging_configuration: The Apache Airflow log types to send to CloudWatch Logs.
+        :param webserver_access_mode: The Apache Airflow *Web server* access mode.
         :param weekly_maintenance_window_start: The day and time of the week in Coordinated Universal Time (UTC) 24-hour
         standard time to start weekly maintenance updates of your environment in
         the following format: ``DAY:HH:MM``.
-        :param webserver_access_mode: The Apache Airflow *Web server* access mode.
-        :param min_workers: The minimum number of workers that you want to run in your environment.
-        :param schedulers: The number of Apache Airflow schedulers to run in your Amazon MWAA
-        environment.
-        :param min_webservers: The minimum number of web servers that you want to run in your
-        environment.
-        :param max_webservers: The maximum number of web servers that you want to run in your
-        environment.
         :returns: UpdateEnvironmentOutput
         :raises ResourceNotFoundException:
         :raises ValidationException:

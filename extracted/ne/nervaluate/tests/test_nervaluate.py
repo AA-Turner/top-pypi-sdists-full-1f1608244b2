@@ -1,4 +1,7 @@
+import pytest
+
 from nervaluate import (
+    Evaluator,
     compute_actual_possible,
     compute_metrics,
     compute_precision_recall,
@@ -887,3 +890,20 @@ def test_compute_metrics_one_pred_two_true():
 
     assert results1 == expected
     assert results2 == expected
+
+
+def test_evaluator_different_number_of_documents():
+    """Test that Evaluator raises ValueError when number of predicted documents doesn't match true documents."""
+
+    # Create test data with different number of documents
+    true = [
+        [{"label": "PER", "start": 0, "end": 5}],  # First document
+        [{"label": "LOC", "start": 10, "end": 15}],  # Second document
+    ]
+    pred = [[{"label": "PER", "start": 0, "end": 5}]]  # Only one document
+    tags = ["PER", "LOC"]
+
+    # Test that ValueError is raised
+    with pytest.raises(ValueError, match="Number of predicted documents does not equal true"):
+        evaluator = Evaluator(true=true, pred=pred, tags=tags)
+        evaluator.evaluate()

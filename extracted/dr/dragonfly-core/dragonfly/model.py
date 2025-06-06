@@ -1069,7 +1069,7 @@ class Model(_BaseGeometry):
                 * OpenStudio
                 * DesignBuilder
                 * DOE2
-                * IES
+                * IESVE
                 * IDAICE
 
                 Note that EnergyPlus, OpenStudio, and DesignBuilder are all set
@@ -1092,8 +1092,8 @@ class Model(_BaseGeometry):
         energy_extensions = ('energyplus', 'openstudio', 'designbuilder')
         if extension_name in energy_extensions:
             extension_name = 'energy'
-        elif extension_name == 'iesve':  # TODO: remove when honeybee-iesve is published
-            extension_name = 'ies'
+        elif extension_name == 'ies':
+            extension_name = 'iesve'
 
         # check the extension attributes
         assert self.tolerance != 0, \
@@ -1547,7 +1547,10 @@ class Model(_BaseGeometry):
         for bldg in self._buildings:
             ov_msg = bldg.check_collisions_between_stories(tolerance, False, detailed)
             if ov_msg:
-                bldg_msgs.extend(ov_msg)
+                if detailed:
+                    bldg_msgs.extend(ov_msg)
+                else:
+                    bldg_msgs.append(ov_msg)
         if detailed:
             return bldg_msgs
         if bldg_msgs != []:

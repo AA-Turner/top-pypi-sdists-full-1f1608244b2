@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: robyn
-Version: 0.66.2
+Version: 0.67.0
 Classifier: Development Status :: 3 - Alpha
 Classifier: Environment :: Web Environment
 Classifier: Intended Audience :: Developers
@@ -13,12 +13,12 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: Implementation :: CPython
-Requires-Dist: watchdog == 4.0.1
-Requires-Dist: multiprocess == 0.70.14
 Requires-Dist: inquirerpy == 0.3.4
-Requires-Dist: rustimport == 1.3.4
+Requires-Dist: multiprocess == 0.70.14
 Requires-Dist: orjson == 3.9.15
+Requires-Dist: rustimport == 1.3.4
 Requires-Dist: uvloop~=0.19.0; sys_platform != 'win32' and platform_python_implementation == 'CPython' and platform_machine != 'armv7l'
+Requires-Dist: watchdog == 4.0.1
 Requires-Dist: jinja2 == 3.0.1; extra == 'templating'
 Provides-Extra: templating
 License-File: LICENSE
@@ -28,10 +28,10 @@ Author: Sanskar Jethi <sansyrox@gmail.com>
 Author-email: Sanskar Jethi <sansyrox@gmail.com>
 License: BSD License (BSD)
 Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
+Project-URL: Documentation, https://robyn.tech/
 Project-URL: Repository, https://github.com/sparckles/robyn
 Project-URL: Issues, https://github.com/sparckles/robyn/issues
 Project-URL: Changelog, https://github.com/sparckles/robyn/blob/main/CHANGELOG.md
-Project-URL: Documentation, https://robyn.tech/
 
 <p align="center"><img alt="Robyn Logo" src="https://user-images.githubusercontent.com/29942790/140995889-5d91dcff-3aa7-4cfb-8a90-2cddf1337dca.png" width="250" /><p>
 

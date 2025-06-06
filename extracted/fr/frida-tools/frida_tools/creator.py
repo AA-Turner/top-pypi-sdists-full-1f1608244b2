@@ -74,15 +74,15 @@ class CreatorApplication(ConsoleApplication):
   "description": "Frida agent written in TypeScript",
   "private": true,
   "main": "agent/index.ts",
+  "type": "module",
   "scripts": {{
     "prepare": "npm run build",
     "build": "frida-compile agent/index.ts -o _agent.js -c",
     "watch": "frida-compile agent/index.ts -o _agent.js -w"
   }},
   "devDependencies": {{
-    "@types/frida-gum": "^18.3.1",
-    "@types/node": "^18.14.0",
-    "frida-compile": "^17.0.0"
+    "@types/frida-gum": "^19.0.0",
+    "@types/node": "^18.14.0"
   }}
 }}
 """
@@ -92,16 +92,15 @@ class CreatorApplication(ConsoleApplication):
         ] = """\
 {
   "compilerOptions": {
-    "target": "es2020",
-    "lib": ["es2020"],
-    "allowJs": true,
-    "noEmit": true,
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "Node16",
     "strict": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node16"
+    "noEmit": true
   },
-  "exclude": ["_agent.js"]
+  "include": ["agent/**/*.ts"]
 }
+
 """
 
         assets[
@@ -123,7 +122,7 @@ Process.getModuleByName("libSystem.B.dylib")
         log(`export ${index}: ${exp.name}`);
     });
 
-Interceptor.attach(Module.getExportByName(null, "open"), {
+Interceptor.attach(Module.findGlobalExportByName("open")!, {
     onEnter(args) {
         const path = args[0].readUtf8String();
         log(`open() path="${path}"`);
@@ -139,7 +138,7 @@ export function log(message: string): void {
 }
 """
 
-        assets[".gitignore"] = "/node_modules/\n"
+        assets[".gitignore"] = "/node_modules/\n_agent.js\n"
 
         message = """\
 Run `npm install` to bootstrap, then:

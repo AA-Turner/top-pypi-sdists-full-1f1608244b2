@@ -43,6 +43,9 @@ GuardrailConfigurationGuardrailIdString = str
 GuardrailConfigurationGuardrailVersionString = str
 GuardrailContextualGroundingFilterConfigThresholdDouble = float
 GuardrailContextualGroundingFilterThresholdDouble = float
+GuardrailCrossRegionGuardrailProfileArn = str
+GuardrailCrossRegionGuardrailProfileId = str
+GuardrailCrossRegionGuardrailProfileIdentifier = str
 GuardrailDescription = str
 GuardrailDraftVersion = str
 GuardrailFailureRecommendation = str
@@ -1114,6 +1117,20 @@ class CreateEvaluationJobResponse(TypedDict, total=False):
     jobArn: EvaluationJobArn
 
 
+class GuardrailCrossRegionConfig(TypedDict, total=False):
+    """The system-defined guardrail profile that you're using with your
+    guardrail. Guardrail profiles define the destination Amazon Web Services
+    Regions where guardrail inference requests can be automatically routed.
+    Using guardrail profiles helps maintain guardrail performance and
+    reliability when demand increases.
+
+    For more information, see the `Amazon Bedrock User
+    Guide <https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-cross-region.html>`__.
+    """
+
+    guardrailProfileIdentifier: GuardrailCrossRegionGuardrailProfileIdentifier
+
+
 GuardrailContextualGroundingFilterConfig = TypedDict(
     "GuardrailContextualGroundingFilterConfig",
     {
@@ -1266,6 +1283,7 @@ class CreateGuardrailRequest(ServiceRequest):
     wordPolicyConfig: Optional[GuardrailWordPolicyConfig]
     sensitiveInformationPolicyConfig: Optional[GuardrailSensitiveInformationPolicyConfig]
     contextualGroundingPolicyConfig: Optional[GuardrailContextualGroundingPolicyConfig]
+    crossRegionConfig: Optional[GuardrailCrossRegionConfig]
     blockedInputMessaging: GuardrailBlockedMessaging
     blockedOutputsMessaging: GuardrailBlockedMessaging
     kmsKeyId: Optional[KmsKeyId]
@@ -1915,6 +1933,20 @@ class GetGuardrailRequest(ServiceRequest):
 
 GuardrailFailureRecommendations = List[GuardrailFailureRecommendation]
 GuardrailStatusReasons = List[GuardrailStatusReason]
+
+
+class GuardrailCrossRegionDetails(TypedDict, total=False):
+    """Contains details about the system-defined guardrail profile that you're
+    using with your guardrail for cross-Region inference.
+
+    For more information, see the `Amazon Bedrock User
+    Guide <https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-cross-region.html>`__.
+    """
+
+    guardrailProfileId: Optional[GuardrailCrossRegionGuardrailProfileId]
+    guardrailProfileArn: Optional[GuardrailCrossRegionGuardrailProfileArn]
+
+
 GuardrailContextualGroundingFilter = TypedDict(
     "GuardrailContextualGroundingFilter",
     {
@@ -2078,6 +2110,7 @@ class GetGuardrailResponse(TypedDict, total=False):
     wordPolicy: Optional[GuardrailWordPolicy]
     sensitiveInformationPolicy: Optional[GuardrailSensitiveInformationPolicy]
     contextualGroundingPolicy: Optional[GuardrailContextualGroundingPolicy]
+    crossRegionDetails: Optional[GuardrailCrossRegionDetails]
     createdAt: Timestamp
     updatedAt: Timestamp
     statusReasons: Optional[GuardrailStatusReasons]
@@ -2350,6 +2383,7 @@ class GuardrailSummary(TypedDict, total=False):
     version: GuardrailVersion
     createdAt: Timestamp
     updatedAt: Timestamp
+    crossRegionDetails: Optional[GuardrailCrossRegionDetails]
 
 
 GuardrailSummaries = List[GuardrailSummary]
@@ -2798,6 +2832,7 @@ class UpdateGuardrailRequest(ServiceRequest):
     wordPolicyConfig: Optional[GuardrailWordPolicyConfig]
     sensitiveInformationPolicyConfig: Optional[GuardrailSensitiveInformationPolicyConfig]
     contextualGroundingPolicyConfig: Optional[GuardrailContextualGroundingPolicyConfig]
+    crossRegionConfig: Optional[GuardrailCrossRegionConfig]
     blockedInputMessaging: GuardrailBlockedMessaging
     blockedOutputsMessaging: GuardrailBlockedMessaging
     kmsKeyId: Optional[KmsKeyId]
@@ -2864,11 +2899,11 @@ class BedrockApi:
         evaluation_config: EvaluationConfig,
         inference_config: EvaluationInferenceConfig,
         output_data_config: EvaluationOutputDataConfig,
-        job_description: EvaluationJobDescription = None,
-        client_request_token: IdempotencyToken = None,
-        customer_encryption_key_id: KmsKeyId = None,
-        job_tags: TagList = None,
-        application_type: ApplicationType = None,
+        job_description: EvaluationJobDescription | None = None,
+        client_request_token: IdempotencyToken | None = None,
+        customer_encryption_key_id: KmsKeyId | None = None,
+        job_tags: TagList | None = None,
+        application_type: ApplicationType | None = None,
         **kwargs,
     ) -> CreateEvaluationJobResponse:
         """Creates an evaluation job.
@@ -2908,15 +2943,17 @@ class BedrockApi:
         name: GuardrailName,
         blocked_input_messaging: GuardrailBlockedMessaging,
         blocked_outputs_messaging: GuardrailBlockedMessaging,
-        description: GuardrailDescription = None,
-        topic_policy_config: GuardrailTopicPolicyConfig = None,
-        content_policy_config: GuardrailContentPolicyConfig = None,
-        word_policy_config: GuardrailWordPolicyConfig = None,
-        sensitive_information_policy_config: GuardrailSensitiveInformationPolicyConfig = None,
-        contextual_grounding_policy_config: GuardrailContextualGroundingPolicyConfig = None,
-        kms_key_id: KmsKeyId = None,
-        tags: TagList = None,
-        client_request_token: IdempotencyToken = None,
+        description: GuardrailDescription | None = None,
+        topic_policy_config: GuardrailTopicPolicyConfig | None = None,
+        content_policy_config: GuardrailContentPolicyConfig | None = None,
+        word_policy_config: GuardrailWordPolicyConfig | None = None,
+        sensitive_information_policy_config: GuardrailSensitiveInformationPolicyConfig
+        | None = None,
+        contextual_grounding_policy_config: GuardrailContextualGroundingPolicyConfig | None = None,
+        cross_region_config: GuardrailCrossRegionConfig | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        tags: TagList | None = None,
+        client_request_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> CreateGuardrailResponse:
         """Creates a guardrail to block topics and to implement safeguards for your
@@ -2959,6 +2996,8 @@ class BedrockApi:
         :param sensitive_information_policy_config: The sensitive information policy to configure for the guardrail.
         :param contextual_grounding_policy_config: The contextual grounding policy configuration used to create a
         guardrail.
+        :param cross_region_config: The system-defined guardrail profile that you're using with your
+        guardrail.
         :param kms_key_id: The ARN of the KMS key that you use to encrypt the guardrail.
         :param tags: The tags that you want to attach to the guardrail.
         :param client_request_token: A unique, case-sensitive identifier to ensure that the API request
@@ -2980,8 +3019,8 @@ class BedrockApi:
         self,
         context: RequestContext,
         guardrail_identifier: GuardrailIdentifier,
-        description: GuardrailDescription = None,
-        client_request_token: IdempotencyToken = None,
+        description: GuardrailDescription | None = None,
+        client_request_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> CreateGuardrailVersionResponse:
         """Creates a version of the guardrail. Use this API to create a snapshot of
@@ -3009,9 +3048,9 @@ class BedrockApi:
         context: RequestContext,
         inference_profile_name: InferenceProfileName,
         model_source: InferenceProfileModelSource,
-        description: InferenceProfileDescription = None,
-        client_request_token: IdempotencyToken = None,
-        tags: TagList = None,
+        description: InferenceProfileDescription | None = None,
+        client_request_token: IdempotencyToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateInferenceProfileResponse:
         """Creates an application inference profile to track metrics and costs when
@@ -3051,9 +3090,9 @@ class BedrockApi:
         model_source_identifier: ModelSourceIdentifier,
         endpoint_config: EndpointConfig,
         endpoint_name: EndpointName,
-        accept_eula: AcceptEula = None,
-        client_request_token: IdempotencyToken = None,
-        tags: TagList = None,
+        accept_eula: AcceptEula | None = None,
+        client_request_token: IdempotencyToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateMarketplaceModelEndpointResponse:
         """Creates an endpoint for a model from Amazon Bedrock Marketplace. The
@@ -3087,9 +3126,9 @@ class BedrockApi:
         context: RequestContext,
         source_model_arn: ModelArn,
         target_model_name: CustomModelName,
-        model_kms_key_id: KmsKeyId = None,
-        target_model_tags: TagList = None,
-        client_request_token: IdempotencyToken = None,
+        model_kms_key_id: KmsKeyId | None = None,
+        target_model_tags: TagList | None = None,
+        client_request_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> CreateModelCopyJobResponse:
         """Copies a model to another region so that it can be used there. For more
@@ -3122,15 +3161,15 @@ class BedrockApi:
         base_model_identifier: BaseModelIdentifier,
         training_data_config: TrainingDataConfig,
         output_data_config: OutputDataConfig,
-        client_request_token: IdempotencyToken = None,
-        customization_type: CustomizationType = None,
-        custom_model_kms_key_id: KmsKeyId = None,
-        job_tags: TagList = None,
-        custom_model_tags: TagList = None,
-        validation_data_config: ValidationDataConfig = None,
-        hyper_parameters: ModelCustomizationHyperParameters = None,
-        vpc_config: VpcConfig = None,
-        customization_config: CustomizationConfig = None,
+        client_request_token: IdempotencyToken | None = None,
+        customization_type: CustomizationType | None = None,
+        custom_model_kms_key_id: KmsKeyId | None = None,
+        job_tags: TagList | None = None,
+        custom_model_tags: TagList | None = None,
+        validation_data_config: ValidationDataConfig | None = None,
+        hyper_parameters: ModelCustomizationHyperParameters | None = None,
+        vpc_config: VpcConfig | None = None,
+        customization_config: CustomizationConfig | None = None,
         **kwargs,
     ) -> CreateModelCustomizationJobResponse:
         """Creates a fine-tuning job to customize a base model.
@@ -3192,11 +3231,11 @@ class BedrockApi:
         imported_model_name: ImportedModelName,
         role_arn: RoleArn,
         model_data_source: ModelDataSource,
-        job_tags: TagList = None,
-        imported_model_tags: TagList = None,
-        client_request_token: IdempotencyToken = None,
-        vpc_config: VpcConfig = None,
-        imported_model_kms_key_id: KmsKeyId = None,
+        job_tags: TagList | None = None,
+        imported_model_tags: TagList | None = None,
+        client_request_token: IdempotencyToken | None = None,
+        vpc_config: VpcConfig | None = None,
+        imported_model_kms_key_id: KmsKeyId | None = None,
         **kwargs,
     ) -> CreateModelImportJobResponse:
         """Creates a model import job to import model that you have customized in
@@ -3236,10 +3275,10 @@ class BedrockApi:
         model_id: ModelId,
         input_data_config: ModelInvocationJobInputDataConfig,
         output_data_config: ModelInvocationJobOutputDataConfig,
-        client_request_token: ModelInvocationIdempotencyToken = None,
-        vpc_config: VpcConfig = None,
-        timeout_duration_in_hours: ModelInvocationJobTimeoutDurationInHours = None,
-        tags: TagList = None,
+        client_request_token: ModelInvocationIdempotencyToken | None = None,
+        vpc_config: VpcConfig | None = None,
+        timeout_duration_in_hours: ModelInvocationJobTimeoutDurationInHours | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateModelInvocationJobResponse:
         """Creates a batch inference job to invoke a model on multiple prompts.
@@ -3285,9 +3324,9 @@ class BedrockApi:
         models: PromptRouterTargetModels,
         routing_criteria: RoutingCriteria,
         fallback_model: PromptRouterTargetModel,
-        client_request_token: IdempotencyToken = None,
-        description: PromptRouterDescription = None,
-        tags: TagList = None,
+        client_request_token: IdempotencyToken | None = None,
+        description: PromptRouterDescription | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreatePromptRouterResponse:
         """Creates a prompt router that manages the routing of requests between
@@ -3323,9 +3362,9 @@ class BedrockApi:
         model_units: PositiveInteger,
         provisioned_model_name: ProvisionedModelName,
         model_id: ModelIdentifier,
-        client_request_token: IdempotencyToken = None,
-        commitment_duration: CommitmentDuration = None,
-        tags: TagList = None,
+        client_request_token: IdempotencyToken | None = None,
+        commitment_duration: CommitmentDuration | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateProvisionedModelThroughputResponse:
         """Creates dedicated throughput for a base or custom model with the model
@@ -3381,7 +3420,7 @@ class BedrockApi:
         self,
         context: RequestContext,
         guardrail_identifier: GuardrailIdentifier,
-        guardrail_version: GuardrailNumericalVersion = None,
+        guardrail_version: GuardrailNumericalVersion | None = None,
         **kwargs,
     ) -> DeleteGuardrailResponse:
         """Deletes a guardrail.
@@ -3596,7 +3635,7 @@ class BedrockApi:
         self,
         context: RequestContext,
         guardrail_identifier: GuardrailIdentifier,
-        guardrail_version: GuardrailVersion = None,
+        guardrail_version: GuardrailVersion | None = None,
         **kwargs,
     ) -> GetGuardrailResponse:
         """Gets details about a guardrail. If you don't specify a version, the
@@ -3801,16 +3840,16 @@ class BedrockApi:
     def list_custom_models(
         self,
         context: RequestContext,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        name_contains: CustomModelName = None,
-        base_model_arn_equals: ModelArn = None,
-        foundation_model_arn_equals: FoundationModelArn = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        sort_by: SortModelsBy = None,
-        sort_order: SortOrder = None,
-        is_owned: Boolean = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        name_contains: CustomModelName | None = None,
+        base_model_arn_equals: ModelArn | None = None,
+        foundation_model_arn_equals: FoundationModelArn | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        sort_by: SortModelsBy | None = None,
+        sort_order: SortOrder | None = None,
+        is_owned: Boolean | None = None,
         **kwargs,
     ) -> ListCustomModelsResponse:
         """Returns a list of the custom models that you have created with the
@@ -3848,15 +3887,15 @@ class BedrockApi:
     def list_evaluation_jobs(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        status_equals: EvaluationJobStatus = None,
-        application_type_equals: ApplicationType = None,
-        name_contains: EvaluationJobName = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        sort_by: SortJobsBy = None,
-        sort_order: SortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        status_equals: EvaluationJobStatus | None = None,
+        application_type_equals: ApplicationType | None = None,
+        name_contains: EvaluationJobName | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        sort_by: SortJobsBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListEvaluationJobsResponse:
         """Lists all existing evaluation jobs.
@@ -3887,10 +3926,10 @@ class BedrockApi:
     def list_foundation_models(
         self,
         context: RequestContext,
-        by_provider: Provider = None,
-        by_customization_type: ModelCustomization = None,
-        by_output_modality: ModelModality = None,
-        by_inference_type: InferenceType = None,
+        by_provider: Provider | None = None,
+        by_customization_type: ModelCustomization | None = None,
+        by_output_modality: ModelModality | None = None,
+        by_inference_type: InferenceType | None = None,
         **kwargs,
     ) -> ListFoundationModelsResponse:
         """Lists Amazon Bedrock foundation models that you can use. You can filter
@@ -3916,9 +3955,9 @@ class BedrockApi:
     def list_guardrails(
         self,
         context: RequestContext,
-        guardrail_identifier: GuardrailIdentifier = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
+        guardrail_identifier: GuardrailIdentifier | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListGuardrailsResponse:
         """Lists details about all the guardrails in an account. To list the
@@ -3949,13 +3988,13 @@ class BedrockApi:
     def list_imported_models(
         self,
         context: RequestContext,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        name_contains: ImportedModelName = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        sort_by: SortModelsBy = None,
-        sort_order: SortOrder = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        name_contains: ImportedModelName | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        sort_by: SortModelsBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListImportedModelsResponse:
         """Returns a list of models you've imported. You can filter the results to
@@ -3986,9 +4025,9 @@ class BedrockApi:
     def list_inference_profiles(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        type_equals: InferenceProfileType = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        type_equals: InferenceProfileType | None = None,
         **kwargs,
     ) -> ListInferenceProfilesResponse:
         """Returns a list of inference profiles that you can use. For more
@@ -4014,9 +4053,9 @@ class BedrockApi:
     def list_marketplace_model_endpoints(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        model_source_equals: ModelSourceIdentifier = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        model_source_equals: ModelSourceIdentifier | None = None,
         **kwargs,
     ) -> ListMarketplaceModelEndpointsResponse:
         """Lists the endpoints for models from Amazon Bedrock Marketplace in your
@@ -4039,16 +4078,16 @@ class BedrockApi:
     def list_model_copy_jobs(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        status_equals: ModelCopyJobStatus = None,
-        source_account_equals: AccountId = None,
-        source_model_arn_equals: ModelArn = None,
-        target_model_name_contains: CustomModelName = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        sort_by: SortJobsBy = None,
-        sort_order: SortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        status_equals: ModelCopyJobStatus | None = None,
+        source_account_equals: AccountId | None = None,
+        source_model_arn_equals: ModelArn | None = None,
+        target_model_name_contains: CustomModelName | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        sort_by: SortJobsBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListModelCopyJobsResponse:
         """Returns a list of model copy jobs that you have submitted. You can
@@ -4087,14 +4126,14 @@ class BedrockApi:
     def list_model_customization_jobs(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        status_equals: FineTuningJobStatus = None,
-        name_contains: JobName = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        sort_by: SortJobsBy = None,
-        sort_order: SortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        status_equals: FineTuningJobStatus | None = None,
+        name_contains: JobName | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        sort_by: SortJobsBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListModelCustomizationJobsResponse:
         """Returns a list of model customization jobs that you have submitted. You
@@ -4128,14 +4167,14 @@ class BedrockApi:
     def list_model_import_jobs(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        status_equals: ModelImportJobStatus = None,
-        name_contains: JobName = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        sort_by: SortJobsBy = None,
-        sort_order: SortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        status_equals: ModelImportJobStatus | None = None,
+        name_contains: JobName | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        sort_by: SortJobsBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListModelImportJobsResponse:
         """Returns a list of import jobs you've submitted. You can filter the
@@ -4167,14 +4206,14 @@ class BedrockApi:
     def list_model_invocation_jobs(
         self,
         context: RequestContext,
-        submit_time_after: Timestamp = None,
-        submit_time_before: Timestamp = None,
-        status_equals: ModelInvocationJobStatus = None,
-        name_contains: ModelInvocationJobName = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        sort_by: SortJobsBy = None,
-        sort_order: SortOrder = None,
+        submit_time_after: Timestamp | None = None,
+        submit_time_before: Timestamp | None = None,
+        status_equals: ModelInvocationJobStatus | None = None,
+        name_contains: ModelInvocationJobName | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        sort_by: SortJobsBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListModelInvocationJobsResponse:
         """Lists all batch inference jobs in the account. For more information, see
@@ -4225,15 +4264,15 @@ class BedrockApi:
     def list_provisioned_model_throughputs(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        status_equals: ProvisionedModelStatus = None,
-        model_arn_equals: ModelArn = None,
-        name_contains: ProvisionedModelName = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
-        sort_by: SortByProvisionedModels = None,
-        sort_order: SortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        status_equals: ProvisionedModelStatus | None = None,
+        model_arn_equals: ModelArn | None = None,
+        name_contains: ProvisionedModelName | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
+        sort_by: SortByProvisionedModels | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListProvisionedModelThroughputsResponse:
         """Lists the Provisioned Throughputs in the account. For more information,
@@ -4437,13 +4476,15 @@ class BedrockApi:
         name: GuardrailName,
         blocked_input_messaging: GuardrailBlockedMessaging,
         blocked_outputs_messaging: GuardrailBlockedMessaging,
-        description: GuardrailDescription = None,
-        topic_policy_config: GuardrailTopicPolicyConfig = None,
-        content_policy_config: GuardrailContentPolicyConfig = None,
-        word_policy_config: GuardrailWordPolicyConfig = None,
-        sensitive_information_policy_config: GuardrailSensitiveInformationPolicyConfig = None,
-        contextual_grounding_policy_config: GuardrailContextualGroundingPolicyConfig = None,
-        kms_key_id: KmsKeyId = None,
+        description: GuardrailDescription | None = None,
+        topic_policy_config: GuardrailTopicPolicyConfig | None = None,
+        content_policy_config: GuardrailContentPolicyConfig | None = None,
+        word_policy_config: GuardrailWordPolicyConfig | None = None,
+        sensitive_information_policy_config: GuardrailSensitiveInformationPolicyConfig
+        | None = None,
+        contextual_grounding_policy_config: GuardrailContextualGroundingPolicyConfig | None = None,
+        cross_region_config: GuardrailCrossRegionConfig | None = None,
+        kms_key_id: KmsKeyId | None = None,
         **kwargs,
     ) -> UpdateGuardrailResponse:
         """Updates a guardrail with the values you specify.
@@ -4497,6 +4538,8 @@ class BedrockApi:
         :param sensitive_information_policy_config: The sensitive information policy to configure for the guardrail.
         :param contextual_grounding_policy_config: The contextual grounding policy configuration used to update a
         guardrail.
+        :param cross_region_config: The system-defined guardrail profile that you're using with your
+        guardrail.
         :param kms_key_id: The ARN of the KMS key with which to encrypt the guardrail.
         :returns: UpdateGuardrailResponse
         :raises ResourceNotFoundException:
@@ -4515,7 +4558,7 @@ class BedrockApi:
         context: RequestContext,
         endpoint_arn: Arn,
         endpoint_config: EndpointConfig,
-        client_request_token: IdempotencyToken = None,
+        client_request_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> UpdateMarketplaceModelEndpointResponse:
         """Updates the configuration of an existing endpoint for a model from
@@ -4542,8 +4585,8 @@ class BedrockApi:
         self,
         context: RequestContext,
         provisioned_model_id: ProvisionedModelId,
-        desired_provisioned_model_name: ProvisionedModelName = None,
-        desired_model_id: ModelIdentifier = None,
+        desired_provisioned_model_name: ProvisionedModelName | None = None,
+        desired_model_id: ModelIdentifier | None = None,
         **kwargs,
     ) -> UpdateProvisionedModelThroughputResponse:
         """Updates the name or associated model for a Provisioned Throughput. For

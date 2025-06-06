@@ -12,7 +12,7 @@ from setuptools.command.install import install
 from setuptools.command.sdist import sdist
 
 # NOTE: Version is replaced by a regex script.
-version = "0.6.10"
+version = "0.6.11"
 
 
 def _copy_native_code_to_setup():
@@ -249,6 +249,13 @@ https://github.com/interpretml/interpret
         "notebook": ["ipykernel>=4.10.0", "ipython>=5.5.0"],
         # Plotly (required if .visualize is ever called)
         "plotly": ["plotly>=3.8.1"],
+        # Export
+        "excel": [
+            "Xlsxwriter>=3.0.1",
+            "dotsi>=0.0.3",
+            "seaborn>=0.13.2",
+            "matplotlib>=3.9.1",
+        ],
         # Explainers
         "lime": ["lime>=0.1.1.33"],
         "sensitivity": ["SALib>=1.3.3"],
@@ -259,11 +266,7 @@ https://github.com/interpretml/interpret
         "aplr": ["aplr>=10.6.1"],
         # Dash
         "dash": [
-            # dash 2.* removed the dependencies on: dash-html-components, dash-core-components, dash-table
-            "dash>=1.0.0,<3.0.0",
-            "dash-core-components>=1.0.0",  # dash 2.* removes the need for this dependency
-            "dash-html-components>=1.0.0",  # dash 2.* removes the need for this dependency
-            "dash-table>=4.1.0",  # dash 2.* removes the need for this dependency
+            "dash>=2.0.0,<3.0.0",
             "dash-cytoscape>=0.1.1",
             "gevent>=1.3.6",
             "requests>=2.19.0",

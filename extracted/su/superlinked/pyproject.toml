@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "superlinked"
-version = "27.6.1"  # The version will be dynamically updated
+version = "28.0.0"  # The version will be dynamically updated
 description = "The Superlinked vector computing library"
 authors = ["Superlinked Release <release@superlinked.com>"]
 readme = "PYPI_README.md"
@@ -114,6 +114,7 @@ rich = "^13.7.0"
 # for performant tests
 pytest= ">=7.4.4,<9.0.0"
 pytest-xdist = "^3.6.1"
+pytest-sugar = "^1.0.0"
 callee = "^0.3.1"
 detect-secrets = "^1.5.0"
 flake8-pyproject = "^1.2.3"
@@ -214,7 +215,8 @@ module = [
     "sklearn.*",
     "furl.*",
     "google.*",
-    "huggingface_hub.*"
+    "huggingface_hub.*",
+    "torchvision.transforms.transforms"
 ]
 ignore_missing_imports = true
 

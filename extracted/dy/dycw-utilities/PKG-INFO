@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dycw-utilities
-Version: 0.129.6
+Version: 0.129.8
 Author-email: Derek Wan <d.wan@icloud.com>
 License-File: LICENSE
 Requires-Python: >=3.12
@@ -93,12 +93,11 @@ Requires-Dist: polars-lts-cpu<1.31,>=1.30.0; extra == 'zzz-test-iterables'
 Requires-Dist: whenever<0.9,>=0.8.4; extra == 'zzz-test-iterables'
 Provides-Extra: zzz-test-jupyter
 Requires-Dist: jupyterlab<4.3,>=4.2.0; extra == 'zzz-test-jupyter'
-Requires-Dist: pandas<2.3,>=2.2.2; extra == 'zzz-test-jupyter'
+Requires-Dist: pandas<2.4,>=2.3.0; extra == 'zzz-test-jupyter'
 Requires-Dist: polars-lts-cpu<1.31,>=1.30.0; extra == 'zzz-test-jupyter'
 Provides-Extra: zzz-test-logging
 Requires-Dist: atomicwrites<1.5,>=1.4.1; extra == 'zzz-test-logging'
 Requires-Dist: coloredlogs<15.1,>=15.0.1; extra == 'zzz-test-logging'
-Requires-Dist: concurrent-log-handler<0.10,>=0.9.26; extra == 'zzz-test-logging'
 Requires-Dist: rich<14.1,>=14.0.0; extra == 'zzz-test-logging'
 Requires-Dist: tomlkit<0.14,>=0.13.2; extra == 'zzz-test-logging'
 Requires-Dist: tzlocal<5.4,>=5.3.1; extra == 'zzz-test-logging'
@@ -173,7 +172,7 @@ Requires-Dist: scipy<1.16,>=1.15.3; extra == 'zzz-test-scipy'
 Provides-Extra: zzz-test-sentinel
 Provides-Extra: zzz-test-shelve
 Provides-Extra: zzz-test-slack-sdk
-Requires-Dist: aiohttp<3.12.8,>=3.12.7; extra == 'zzz-test-slack-sdk'
+Requires-Dist: aiohttp<3.12.10,>=3.12.9; extra == 'zzz-test-slack-sdk'
 Requires-Dist: slack-sdk<3.36,>=3.35.0; extra == 'zzz-test-slack-sdk'
 Provides-Extra: zzz-test-socket
 Provides-Extra: zzz-test-sqlalchemy

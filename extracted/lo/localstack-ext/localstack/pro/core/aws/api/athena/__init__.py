@@ -1871,7 +1871,7 @@ class AthenaApi:
         context: RequestContext,
         target_dpus: TargetDpusInteger,
         name: CapacityReservationName,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateCapacityReservationOutput:
         """Creates a capacity reservation with the specified name and number of
@@ -1894,7 +1894,8 @@ class AthenaApi:
         properties. Catalogs created are visible to all users of the same Amazon
         Web Services account.
 
-        This API operation creates the following resources.
+        For a ``FEDERATED`` catalog, this API operation creates the following
+        resources.
 
         -  CFN Stack Name with a maximum length of 128 characters and prefix
            ``athenafederatedcatalog-CATALOG_NAME_SANITIZED`` with length 23
@@ -1930,9 +1931,9 @@ class AthenaApi:
         name: NameString,
         database: DatabaseString,
         query_string: QueryString,
-        description: DescriptionString = None,
-        client_request_token: IdempotencyToken = None,
-        work_group: WorkGroupName = None,
+        description: DescriptionString | None = None,
+        client_request_token: IdempotencyToken | None = None,
+        work_group: WorkGroupName | None = None,
         **kwargs,
     ) -> CreateNamedQueryOutput:
         """Creates a named query in the specified workgroup. Requires that you have
@@ -1957,7 +1958,7 @@ class AthenaApi:
         context: RequestContext,
         work_group: WorkGroupName,
         name: NotebookName,
-        client_request_token: ClientRequestToken = None,
+        client_request_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> CreateNotebookOutput:
         """Creates an empty ``ipynb`` file in the specified Apache Spark enabled
@@ -1984,7 +1985,7 @@ class AthenaApi:
         statement_name: StatementName,
         work_group: WorkGroupName,
         query_statement: QueryString,
-        description: DescriptionString = None,
+        description: DescriptionString | None = None,
         **kwargs,
     ) -> CreatePreparedStatementOutput:
         """Creates a prepared statement for use with SQL queries in Athena.
@@ -2022,9 +2023,9 @@ class AthenaApi:
         self,
         context: RequestContext,
         name: WorkGroupName,
-        configuration: WorkGroupConfiguration = None,
-        description: WorkGroupDescriptionString = None,
-        tags: TagList = None,
+        configuration: WorkGroupConfiguration | None = None,
+        description: WorkGroupDescriptionString | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateWorkGroupOutput:
         """Creates a workgroup with the specified name. A workgroup can be an
@@ -2064,7 +2065,7 @@ class AthenaApi:
         self,
         context: RequestContext,
         name: CatalogNameString,
-        delete_catalog_only: Boolean = None,
+        delete_catalog_only: Boolean | None = None,
         **kwargs,
     ) -> DeleteDataCatalogOutput:
         """Deletes a data catalog.
@@ -2130,7 +2131,7 @@ class AthenaApi:
         self,
         context: RequestContext,
         work_group: WorkGroupName,
-        recursive_delete_option: BoxedBoolean = None,
+        recursive_delete_option: BoxedBoolean | None = None,
         **kwargs,
     ) -> DeleteWorkGroupOutput:
         """Deletes the workgroup with the specified name. The primary workgroup
@@ -2235,7 +2236,7 @@ class AthenaApi:
         self,
         context: RequestContext,
         name: CatalogNameString,
-        work_group: WorkGroupName = None,
+        work_group: WorkGroupName | None = None,
         **kwargs,
     ) -> GetDataCatalogOutput:
         """Returns the specified data catalog.
@@ -2254,7 +2255,7 @@ class AthenaApi:
         context: RequestContext,
         catalog_name: CatalogNameString,
         database_name: NameString,
-        work_group: WorkGroupName = None,
+        work_group: WorkGroupName | None = None,
         **kwargs,
     ) -> GetDatabaseOutput:
         """Returns a database object for the specified database and data catalog.
@@ -2338,8 +2339,8 @@ class AthenaApi:
         self,
         context: RequestContext,
         query_execution_id: QueryExecutionId,
-        next_token: Token = None,
-        max_results: MaxQueryResults = None,
+        next_token: Token | None = None,
+        max_results: MaxQueryResults | None = None,
         **kwargs,
     ) -> GetQueryResultsOutput:
         """Streams the results of a single query execution specified by
@@ -2428,7 +2429,7 @@ class AthenaApi:
         catalog_name: CatalogNameString,
         database_name: NameString,
         table_name: NameString,
-        work_group: WorkGroupName = None,
+        work_group: WorkGroupName | None = None,
         **kwargs,
     ) -> GetTableMetadataOutput:
         """Returns table metadata for the specified catalog, database, and table.
@@ -2488,8 +2489,8 @@ class AthenaApi:
     def list_application_dpu_sizes(
         self,
         context: RequestContext,
-        max_results: MaxApplicationDPUSizesCount = None,
-        next_token: Token = None,
+        max_results: MaxApplicationDPUSizesCount | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListApplicationDPUSizesOutput:
         """Returns the supported DPU sizes for the supported application runtimes
@@ -2510,9 +2511,9 @@ class AthenaApi:
         self,
         context: RequestContext,
         session_id: SessionId,
-        state_filter: CalculationExecutionState = None,
-        max_results: MaxCalculationsCount = None,
-        next_token: SessionManagerToken = None,
+        state_filter: CalculationExecutionState | None = None,
+        max_results: MaxCalculationsCount | None = None,
+        next_token: SessionManagerToken | None = None,
         **kwargs,
     ) -> ListCalculationExecutionsResponse:
         """Lists the calculations that have been submitted to a session in
@@ -2535,8 +2536,8 @@ class AthenaApi:
     def list_capacity_reservations(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: MaxCapacityReservationsCount = None,
+        next_token: Token | None = None,
+        max_results: MaxCapacityReservationsCount | None = None,
         **kwargs,
     ) -> ListCapacityReservationsOutput:
         """Lists the capacity reservations for the current account.
@@ -2554,9 +2555,9 @@ class AthenaApi:
     def list_data_catalogs(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: MaxDataCatalogsCount = None,
-        work_group: WorkGroupName = None,
+        next_token: Token | None = None,
+        max_results: MaxDataCatalogsCount | None = None,
+        work_group: WorkGroupName | None = None,
         **kwargs,
     ) -> ListDataCatalogsOutput:
         """Lists the data catalogs in the current Amazon Web Services account.
@@ -2579,9 +2580,9 @@ class AthenaApi:
         self,
         context: RequestContext,
         catalog_name: CatalogNameString,
-        next_token: Token = None,
-        max_results: MaxDatabasesCount = None,
-        work_group: WorkGroupName = None,
+        next_token: Token | None = None,
+        max_results: MaxDatabasesCount | None = None,
+        work_group: WorkGroupName | None = None,
         **kwargs,
     ) -> ListDatabasesOutput:
         """Lists the databases in the specified data catalog.
@@ -2602,8 +2603,8 @@ class AthenaApi:
     def list_engine_versions(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: MaxEngineVersionsCount = None,
+        next_token: Token | None = None,
+        max_results: MaxEngineVersionsCount | None = None,
         **kwargs,
     ) -> ListEngineVersionsOutput:
         """Returns a list of engine versions that are available to choose from,
@@ -2623,9 +2624,9 @@ class AthenaApi:
         self,
         context: RequestContext,
         session_id: SessionId,
-        executor_state_filter: ExecutorState = None,
-        max_results: MaxListExecutorsCount = None,
-        next_token: SessionManagerToken = None,
+        executor_state_filter: ExecutorState | None = None,
+        max_results: MaxListExecutorsCount | None = None,
+        next_token: SessionManagerToken | None = None,
         **kwargs,
     ) -> ListExecutorsResponse:
         """Lists, in descending order, the executors that joined a session. Newer
@@ -2648,9 +2649,9 @@ class AthenaApi:
     def list_named_queries(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: MaxNamedQueriesCount = None,
-        work_group: WorkGroupName = None,
+        next_token: Token | None = None,
+        max_results: MaxNamedQueriesCount | None = None,
+        work_group: WorkGroupName | None = None,
         **kwargs,
     ) -> ListNamedQueriesOutput:
         """Provides a list of available query IDs only for queries saved in the
@@ -2674,9 +2675,9 @@ class AthenaApi:
         self,
         context: RequestContext,
         work_group: WorkGroupName,
-        filters: FilterDefinition = None,
-        next_token: Token = None,
-        max_results: MaxNotebooksCount = None,
+        filters: FilterDefinition | None = None,
+        next_token: Token | None = None,
+        max_results: MaxNotebooksCount | None = None,
         **kwargs,
     ) -> ListNotebookMetadataOutput:
         """Displays the notebook files for the specified workgroup in paginated
@@ -2700,8 +2701,8 @@ class AthenaApi:
         self,
         context: RequestContext,
         notebook_id: NotebookId,
-        max_results: MaxSessionsCount = None,
-        next_token: Token = None,
+        max_results: MaxSessionsCount | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListNotebookSessionsResponse:
         """Lists, in descending order, the sessions that have been created in a
@@ -2725,8 +2726,8 @@ class AthenaApi:
         self,
         context: RequestContext,
         work_group: WorkGroupName,
-        next_token: Token = None,
-        max_results: MaxPreparedStatementsCount = None,
+        next_token: Token | None = None,
+        max_results: MaxPreparedStatementsCount | None = None,
         **kwargs,
     ) -> ListPreparedStatementsOutput:
         """Lists the prepared statements in the specified workgroup.
@@ -2745,9 +2746,9 @@ class AthenaApi:
     def list_query_executions(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: MaxQueryExecutionsCount = None,
-        work_group: WorkGroupName = None,
+        next_token: Token | None = None,
+        max_results: MaxQueryExecutionsCount | None = None,
+        work_group: WorkGroupName | None = None,
         **kwargs,
     ) -> ListQueryExecutionsOutput:
         """Provides a list of available query execution IDs for the queries in the
@@ -2771,9 +2772,9 @@ class AthenaApi:
         self,
         context: RequestContext,
         work_group: WorkGroupName,
-        state_filter: SessionState = None,
-        max_results: MaxSessionsCount = None,
-        next_token: SessionManagerToken = None,
+        state_filter: SessionState | None = None,
+        max_results: MaxSessionsCount | None = None,
+        next_token: SessionManagerToken | None = None,
         **kwargs,
     ) -> ListSessionsResponse:
         """Lists the sessions in a workgroup that are in an active state like
@@ -2798,10 +2799,10 @@ class AthenaApi:
         context: RequestContext,
         catalog_name: CatalogNameString,
         database_name: NameString,
-        expression: ExpressionString = None,
-        next_token: Token = None,
-        max_results: MaxTableMetadataCount = None,
-        work_group: WorkGroupName = None,
+        expression: ExpressionString | None = None,
+        next_token: Token | None = None,
+        max_results: MaxTableMetadataCount | None = None,
+        work_group: WorkGroupName | None = None,
         **kwargs,
     ) -> ListTableMetadataOutput:
         """Lists the metadata for the tables in the specified data catalog
@@ -2827,8 +2828,8 @@ class AthenaApi:
         self,
         context: RequestContext,
         resource_arn: AmazonResourceName,
-        next_token: Token = None,
-        max_results: MaxTagsCount = None,
+        next_token: Token | None = None,
+        max_results: MaxTagsCount | None = None,
         **kwargs,
     ) -> ListTagsForResourceOutput:
         """Lists the tags associated with an Athena resource.
@@ -2850,8 +2851,8 @@ class AthenaApi:
     def list_work_groups(
         self,
         context: RequestContext,
-        next_token: Token = None,
-        max_results: MaxWorkGroupsCount = None,
+        next_token: Token | None = None,
+        max_results: MaxWorkGroupsCount | None = None,
         **kwargs,
     ) -> ListWorkGroupsOutput:
         """Lists available workgroups for the account.
@@ -2892,10 +2893,10 @@ class AthenaApi:
         self,
         context: RequestContext,
         session_id: SessionId,
-        description: DescriptionString = None,
-        calculation_configuration: CalculationConfiguration = None,
-        code_block: CodeBlock = None,
-        client_request_token: IdempotencyToken = None,
+        description: DescriptionString | None = None,
+        calculation_configuration: CalculationConfiguration | None = None,
+        code_block: CodeBlock | None = None,
+        client_request_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> StartCalculationExecutionResponse:
         """Submits calculations for execution within a session. You can supply the
@@ -2925,12 +2926,12 @@ class AthenaApi:
         self,
         context: RequestContext,
         query_string: QueryString,
-        client_request_token: IdempotencyToken = None,
-        query_execution_context: QueryExecutionContext = None,
-        result_configuration: ResultConfiguration = None,
-        work_group: WorkGroupName = None,
-        execution_parameters: ExecutionParameters = None,
-        result_reuse_configuration: ResultReuseConfiguration = None,
+        client_request_token: IdempotencyToken | None = None,
+        query_execution_context: QueryExecutionContext | None = None,
+        result_configuration: ResultConfiguration | None = None,
+        work_group: WorkGroupName | None = None,
+        execution_parameters: ExecutionParameters | None = None,
+        result_reuse_configuration: ResultReuseConfiguration | None = None,
         **kwargs,
     ) -> StartQueryExecutionOutput:
         """Runs the SQL query statements contained in the ``Query``. Requires you
@@ -2963,10 +2964,10 @@ class AthenaApi:
         context: RequestContext,
         work_group: WorkGroupName,
         engine_configuration: EngineConfiguration,
-        description: DescriptionString = None,
-        notebook_version: NameString = None,
-        session_idle_timeout_in_minutes: SessionIdleTimeoutInMinutes = None,
-        client_request_token: IdempotencyToken = None,
+        description: DescriptionString | None = None,
+        notebook_version: NameString | None = None,
+        session_idle_timeout_in_minutes: SessionIdleTimeoutInMinutes | None = None,
+        client_request_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> StartSessionResponse:
         """Creates a session for running calculations within a workgroup. The
@@ -3136,7 +3137,7 @@ class AthenaApi:
         named_query_id: NamedQueryId,
         name: NameString,
         query_string: QueryString,
-        description: NamedQueryDescriptionString = None,
+        description: NamedQueryDescriptionString | None = None,
         **kwargs,
     ) -> UpdateNamedQueryOutput:
         """Updates a NamedQuery object. The database or workgroup cannot be
@@ -3177,7 +3178,7 @@ class AthenaApi:
         context: RequestContext,
         notebook_id: NotebookId,
         name: NotebookName,
-        client_request_token: ClientRequestToken = None,
+        client_request_token: ClientRequestToken | None = None,
         **kwargs,
     ) -> UpdateNotebookMetadataOutput:
         """Updates the metadata for a notebook.
@@ -3200,7 +3201,7 @@ class AthenaApi:
         statement_name: StatementName,
         work_group: WorkGroupName,
         query_statement: QueryString,
-        description: DescriptionString = None,
+        description: DescriptionString | None = None,
         **kwargs,
     ) -> UpdatePreparedStatementOutput:
         """Updates a prepared statement.
@@ -3221,9 +3222,9 @@ class AthenaApi:
         self,
         context: RequestContext,
         work_group: WorkGroupName,
-        description: WorkGroupDescriptionString = None,
-        configuration_updates: WorkGroupConfigurationUpdates = None,
-        state: WorkGroupState = None,
+        description: WorkGroupDescriptionString | None = None,
+        configuration_updates: WorkGroupConfigurationUpdates | None = None,
+        state: WorkGroupState | None = None,
         **kwargs,
     ) -> UpdateWorkGroupOutput:
         """Updates the workgroup with the specified name. The workgroup's name

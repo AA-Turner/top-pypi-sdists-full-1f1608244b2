@@ -3,6 +3,8 @@ from typing import Any, Dict, List, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
+from ..models.get_top_hub_scripts_response_200_asks_item_kind import GetTopHubScriptsResponse200AsksItemKind
+
 T = TypeVar("T", bound="GetTopHubScriptsResponse200AsksItem")
 
 
@@ -15,7 +17,7 @@ class GetTopHubScriptsResponse200AsksItem:
         summary (str):
         app (str):
         version_id (float):
-        kind (Any):
+        kind (GetTopHubScriptsResponse200AsksItemKind):
         votes (float):
         views (float):
     """
@@ -25,7 +27,7 @@ class GetTopHubScriptsResponse200AsksItem:
     summary: str
     app: str
     version_id: float
-    kind: Any
+    kind: GetTopHubScriptsResponse200AsksItemKind
     votes: float
     views: float
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -36,7 +38,8 @@ class GetTopHubScriptsResponse200AsksItem:
         summary = self.summary
         app = self.app
         version_id = self.version_id
-        kind = self.kind
+        kind = self.kind.value
+
         votes = self.votes
         views = self.views
 
@@ -70,7 +73,7 @@ class GetTopHubScriptsResponse200AsksItem:
 
         version_id = d.pop("version_id")
 
-        kind = d.pop("kind")
+        kind = GetTopHubScriptsResponse200AsksItemKind(d.pop("kind"))
 
         votes = d.pop("votes")
 

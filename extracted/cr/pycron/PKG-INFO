@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: pycron
-Version: 3.1.2
+Version: 3.2.0
 Summary: Simple cron-like parser, which determines if current datetime matches conditions.
 License: MIT
 Keywords: cron,parser

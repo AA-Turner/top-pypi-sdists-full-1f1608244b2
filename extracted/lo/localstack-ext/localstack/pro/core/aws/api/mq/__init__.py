@@ -1057,21 +1057,21 @@ class MqApi:
         deployment_mode: DeploymentMode,
         engine_type: EngineType,
         publicly_accessible: _boolean,
-        authentication_strategy: AuthenticationStrategy = None,
-        auto_minor_version_upgrade: _boolean = None,
-        configuration: ConfigurationId = None,
-        creator_request_id: _string = None,
-        encryption_options: EncryptionOptions = None,
-        engine_version: _string = None,
-        ldap_server_metadata: LdapServerMetadataInput = None,
-        logs: Logs = None,
-        maintenance_window_start_time: WeeklyStartTime = None,
-        security_groups: _listOf__string = None,
-        storage_type: BrokerStorageType = None,
-        subnet_ids: _listOf__string = None,
-        tags: _mapOf__string = None,
-        data_replication_mode: DataReplicationMode = None,
-        data_replication_primary_broker_arn: _string = None,
+        authentication_strategy: AuthenticationStrategy | None = None,
+        auto_minor_version_upgrade: _boolean | None = None,
+        configuration: ConfigurationId | None = None,
+        creator_request_id: _string | None = None,
+        encryption_options: EncryptionOptions | None = None,
+        engine_version: _string | None = None,
+        ldap_server_metadata: LdapServerMetadataInput | None = None,
+        logs: Logs | None = None,
+        maintenance_window_start_time: WeeklyStartTime | None = None,
+        security_groups: _listOf__string | None = None,
+        storage_type: BrokerStorageType | None = None,
+        subnet_ids: _listOf__string | None = None,
+        tags: _mapOf__string | None = None,
+        data_replication_mode: DataReplicationMode | None = None,
+        data_replication_primary_broker_arn: _string | None = None,
         **kwargs,
     ) -> CreateBrokerResponse:
         """Creates a broker. Note: This API is asynchronous.
@@ -1158,9 +1158,9 @@ class MqApi:
         context: RequestContext,
         engine_type: EngineType,
         name: _string,
-        authentication_strategy: AuthenticationStrategy = None,
-        engine_version: _string = None,
-        tags: _mapOf__string = None,
+        authentication_strategy: AuthenticationStrategy | None = None,
+        engine_version: _string | None = None,
+        tags: _mapOf__string | None = None,
         **kwargs,
     ) -> CreateConfigurationResponse:
         """Creates a new configuration for the specified configuration name. Amazon
@@ -1181,7 +1181,11 @@ class MqApi:
 
     @handler("CreateTags")
     def create_tags(
-        self, context: RequestContext, resource_arn: _string, tags: _mapOf__string = None, **kwargs
+        self,
+        context: RequestContext,
+        resource_arn: _string,
+        tags: _mapOf__string | None = None,
+        **kwargs,
     ) -> None:
         """Add a tag to a resource.
 
@@ -1201,9 +1205,9 @@ class MqApi:
         username: _string,
         broker_id: _string,
         password: _string,
-        console_access: _boolean = None,
-        groups: _listOf__string = None,
-        replication_user: _boolean = None,
+        console_access: _boolean | None = None,
+        groups: _listOf__string | None = None,
+        replication_user: _boolean | None = None,
         **kwargs,
     ) -> CreateUserResponse:
         """Creates an ActiveMQ user.
@@ -1310,9 +1314,9 @@ class MqApi:
     def describe_broker_engine_types(
         self,
         context: RequestContext,
-        engine_type: _string = None,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        engine_type: _string | None = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> DescribeBrokerEngineTypesResponse:
         """Describe available engine types and versions.
@@ -1333,11 +1337,11 @@ class MqApi:
     def describe_broker_instance_options(
         self,
         context: RequestContext,
-        engine_type: _string = None,
-        host_instance_type: _string = None,
-        max_results: MaxResults = None,
-        next_token: _string = None,
-        storage_type: _string = None,
+        engine_type: _string | None = None,
+        host_instance_type: _string | None = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
+        storage_type: _string | None = None,
         **kwargs,
     ) -> DescribeBrokerInstanceOptionsResponse:
         """Describe available broker instance options.
@@ -1412,8 +1416,8 @@ class MqApi:
     def list_brokers(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListBrokersResponse:
         """Returns a list of all brokers.
@@ -1434,8 +1438,8 @@ class MqApi:
         self,
         context: RequestContext,
         configuration_id: _string,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListConfigurationRevisionsResponse:
         """Returns a list of all revisions for the specified configuration.
@@ -1457,8 +1461,8 @@ class MqApi:
     def list_configurations(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListConfigurationsResponse:
         """Returns a list of all configurations.
@@ -1494,8 +1498,8 @@ class MqApi:
         self,
         context: RequestContext,
         broker_id: _string,
-        max_results: MaxResults = None,
-        next_token: _string = None,
+        max_results: MaxResults | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListUsersResponse:
         """Returns a list of all ActiveMQ users.
@@ -1549,16 +1553,16 @@ class MqApi:
         self,
         context: RequestContext,
         broker_id: _string,
-        authentication_strategy: AuthenticationStrategy = None,
-        auto_minor_version_upgrade: _boolean = None,
-        configuration: ConfigurationId = None,
-        engine_version: _string = None,
-        host_instance_type: _string = None,
-        ldap_server_metadata: LdapServerMetadataInput = None,
-        logs: Logs = None,
-        maintenance_window_start_time: WeeklyStartTime = None,
-        security_groups: _listOf__string = None,
-        data_replication_mode: DataReplicationMode = None,
+        authentication_strategy: AuthenticationStrategy | None = None,
+        auto_minor_version_upgrade: _boolean | None = None,
+        configuration: ConfigurationId | None = None,
+        engine_version: _string | None = None,
+        host_instance_type: _string | None = None,
+        ldap_server_metadata: LdapServerMetadataInput | None = None,
+        logs: Logs | None = None,
+        maintenance_window_start_time: WeeklyStartTime | None = None,
+        security_groups: _listOf__string | None = None,
+        data_replication_mode: DataReplicationMode | None = None,
         **kwargs,
     ) -> UpdateBrokerResponse:
         """Adds a pending configuration change to a broker.
@@ -1591,7 +1595,7 @@ class MqApi:
         context: RequestContext,
         configuration_id: _string,
         data: _string,
-        description: _string = None,
+        description: _string | None = None,
         **kwargs,
     ) -> UpdateConfigurationResponse:
         """Updates the specified configuration.
@@ -1614,10 +1618,10 @@ class MqApi:
         context: RequestContext,
         username: _string,
         broker_id: _string,
-        console_access: _boolean = None,
-        groups: _listOf__string = None,
-        password: _string = None,
-        replication_user: _boolean = None,
+        console_access: _boolean | None = None,
+        groups: _listOf__string | None = None,
+        password: _string | None = None,
+        replication_user: _boolean | None = None,
         **kwargs,
     ) -> UpdateUserResponse:
         """Updates the information for an ActiveMQ user.

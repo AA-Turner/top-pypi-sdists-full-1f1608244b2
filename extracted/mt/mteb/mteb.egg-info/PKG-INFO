@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mteb
-Version: 1.38.23
+Version: 1.38.27
 Summary: Massive Text Embedding Benchmark
 Author-email: MTEB Contributors <niklas@huggingface.co>, nouamane@huggingface.co, info@nils-reimers.de
 License:                                  Apache License
@@ -296,6 +296,8 @@ Provides-Extra: timm
 Requires-Dist: timm<1.1.0,>=1.0.15; extra == "timm"
 Provides-Extra: open-clip-torch
 Requires-Dist: open_clip_torch==2.31.0; extra == "open-clip-torch"
+Provides-Extra: xet
+Requires-Dist: huggingface_hub>=0.32.0; extra == "xet"
 Provides-Extra: ark
 Requires-Dist: volcengine-python-sdk[ark]==3.0.2; extra == "ark"
 Requires-Dist: tiktoken>=0.8.0; extra == "ark"

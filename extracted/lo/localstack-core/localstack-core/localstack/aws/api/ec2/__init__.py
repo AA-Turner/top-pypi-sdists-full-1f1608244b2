@@ -60,6 +60,7 @@ DeclarativePoliciesMaxResults = int
 DeclarativePoliciesReportId = str
 DedicatedHostFlag = bool
 DedicatedHostId = str
+DefaultEnaQueueCountPerInterface = int
 DefaultNetworkCardIndex = int
 DefaultingDhcpOptionsId = str
 DescribeAddressTransfersMaxResults = int
@@ -93,6 +94,7 @@ DescribeIpamByoasnMaxResults = int
 DescribeLaunchTemplatesMaxResults = int
 DescribeLockedSnapshotsMaxResults = int
 DescribeMacHostsRequestMaxResults = int
+DescribeMacModificationTasksMaxResults = int
 DescribeMovingAddressesMaxResults = int
 DescribeNatGatewaysMaxResults = int
 DescribeNetworkAclsMaxResults = int
@@ -229,6 +231,7 @@ LocalGatewayRoutetableId = str
 LocalGatewayVirtualInterfaceGroupId = str
 LocalGatewayVirtualInterfaceId = str
 Location = str
+MacModificationTaskId = str
 MaxIpv4AddrPerInterface = int
 MaxIpv6AddrPerInterface = int
 MaxNetworkInterfaces = int
@@ -236,6 +239,8 @@ MaxResults = int
 MaxResultsParam = int
 MaximumBandwidthInMbps = int
 MaximumEfaInterfaces = int
+MaximumEnaQueueCount = int
+MaximumEnaQueueCountPerInterface = int
 MaximumIops = int
 MaximumNetworkCards = int
 MaximumThroughputInMBps = float
@@ -267,6 +272,8 @@ NextToken = str
 NitroTpmSupportedVersionType = str
 OfferingId = str
 OutpostArn = str
+OutpostLagId = str
+OutpostLagMaxResults = int
 PasswordData = str
 PeakBandwidthInGbps = float
 PlacementGroupArn = str
@@ -312,8 +319,11 @@ ScheduledInstanceId = str
 SecurityGroupId = str
 SecurityGroupName = str
 SecurityGroupRuleId = str
+SensitiveMacCredentials = str
 SensitiveUrl = str
 SensitiveUserData = str
+ServiceLinkMaxResults = int
+ServiceLinkVirtualInterfaceId = str
 ServiceNetworkArn = str
 SnapshotCompletionDurationMinutesRequest = int
 SnapshotCompletionDurationMinutesResponse = int
@@ -1115,6 +1125,11 @@ class FleetType(StrEnum):
     instant = "instant"
 
 
+class FlexibleEnaQueuesSupport(StrEnum):
+    unsupported = "unsupported"
+    supported = "supported"
+
+
 class FlowLogsResourceType(StrEnum):
     VPC = "VPC"
     Subnet = "Subnet"
@@ -1328,6 +1343,11 @@ class InstanceMetadataProtocolState(StrEnum):
 class InstanceMetadataTagsState(StrEnum):
     disabled = "disabled"
     enabled = "enabled"
+
+
+class InstanceRebootMigrationState(StrEnum):
+    disabled = "disabled"
+    default = "default"
 
 
 class InstanceStateName(StrEnum):
@@ -2235,6 +2255,61 @@ class InstanceType(StrEnum):
     f2_12xlarge = "f2.12xlarge"
     f2_48xlarge = "f2.48xlarge"
     trn2_48xlarge = "trn2.48xlarge"
+    c7i_flex_12xlarge = "c7i-flex.12xlarge"
+    c7i_flex_16xlarge = "c7i-flex.16xlarge"
+    m7i_flex_12xlarge = "m7i-flex.12xlarge"
+    m7i_flex_16xlarge = "m7i-flex.16xlarge"
+    i7ie_metal_24xl = "i7ie.metal-24xl"
+    i7ie_metal_48xl = "i7ie.metal-48xl"
+    i8g_48xlarge = "i8g.48xlarge"
+    c8gd_medium = "c8gd.medium"
+    c8gd_large = "c8gd.large"
+    c8gd_xlarge = "c8gd.xlarge"
+    c8gd_2xlarge = "c8gd.2xlarge"
+    c8gd_4xlarge = "c8gd.4xlarge"
+    c8gd_8xlarge = "c8gd.8xlarge"
+    c8gd_12xlarge = "c8gd.12xlarge"
+    c8gd_16xlarge = "c8gd.16xlarge"
+    c8gd_24xlarge = "c8gd.24xlarge"
+    c8gd_48xlarge = "c8gd.48xlarge"
+    c8gd_metal_24xl = "c8gd.metal-24xl"
+    c8gd_metal_48xl = "c8gd.metal-48xl"
+    i7i_large = "i7i.large"
+    i7i_xlarge = "i7i.xlarge"
+    i7i_2xlarge = "i7i.2xlarge"
+    i7i_4xlarge = "i7i.4xlarge"
+    i7i_8xlarge = "i7i.8xlarge"
+    i7i_12xlarge = "i7i.12xlarge"
+    i7i_16xlarge = "i7i.16xlarge"
+    i7i_24xlarge = "i7i.24xlarge"
+    i7i_48xlarge = "i7i.48xlarge"
+    i7i_metal_24xl = "i7i.metal-24xl"
+    i7i_metal_48xl = "i7i.metal-48xl"
+    p6_b200_48xlarge = "p6-b200.48xlarge"
+    m8gd_medium = "m8gd.medium"
+    m8gd_large = "m8gd.large"
+    m8gd_xlarge = "m8gd.xlarge"
+    m8gd_2xlarge = "m8gd.2xlarge"
+    m8gd_4xlarge = "m8gd.4xlarge"
+    m8gd_8xlarge = "m8gd.8xlarge"
+    m8gd_12xlarge = "m8gd.12xlarge"
+    m8gd_16xlarge = "m8gd.16xlarge"
+    m8gd_24xlarge = "m8gd.24xlarge"
+    m8gd_48xlarge = "m8gd.48xlarge"
+    m8gd_metal_24xl = "m8gd.metal-24xl"
+    m8gd_metal_48xl = "m8gd.metal-48xl"
+    r8gd_medium = "r8gd.medium"
+    r8gd_large = "r8gd.large"
+    r8gd_xlarge = "r8gd.xlarge"
+    r8gd_2xlarge = "r8gd.2xlarge"
+    r8gd_4xlarge = "r8gd.4xlarge"
+    r8gd_8xlarge = "r8gd.8xlarge"
+    r8gd_12xlarge = "r8gd.12xlarge"
+    r8gd_16xlarge = "r8gd.16xlarge"
+    r8gd_24xlarge = "r8gd.24xlarge"
+    r8gd_48xlarge = "r8gd.48xlarge"
+    r8gd_metal_24xl = "r8gd.metal-24xl"
+    r8gd_metal_48xl = "r8gd.metal-48xl"
 
 
 class InstanceTypeHypervisor(StrEnum):
@@ -2584,6 +2659,21 @@ class LocalGatewayRouteType(StrEnum):
     propagated = "propagated"
 
 
+class LocalGatewayVirtualInterfaceConfigurationState(StrEnum):
+    pending = "pending"
+    available = "available"
+    deleting = "deleting"
+    deleted = "deleted"
+
+
+class LocalGatewayVirtualInterfaceGroupConfigurationState(StrEnum):
+    pending = "pending"
+    incomplete = "incomplete"
+    available = "available"
+    deleting = "deleting"
+    deleted = "deleted"
+
+
 class LocalStorage(StrEnum):
     included = "included"
     required = "required"
@@ -2618,6 +2708,23 @@ class LogDestinationType(StrEnum):
     cloud_watch_logs = "cloud-watch-logs"
     s3 = "s3"
     kinesis_data_firehose = "kinesis-data-firehose"
+
+
+class MacModificationTaskState(StrEnum):
+    successful = "successful"
+    failed = "failed"
+    in_progress = "in-progress"
+    pending = "pending"
+
+
+class MacModificationTaskType(StrEnum):
+    sip_modification = "sip-modification"
+    volume_ownership_delegation = "volume-ownership-delegation"
+
+
+class MacSystemIntegrityProtectionSettingStatus(StrEnum):
+    enabled = "enabled"
+    disabled = "disabled"
 
 
 class ManagedBy(StrEnum):
@@ -2865,11 +2972,22 @@ class ProtocolValue(StrEnum):
     gre = "gre"
 
 
+class PublicIpDnsOption(StrEnum):
+    public_dual_stack_dns_name = "public-dual-stack-dns-name"
+    public_ipv4_dns_name = "public-ipv4-dns-name"
+    public_ipv6_dns_name = "public-ipv6-dns-name"
+
+
 class RIProductDescription(StrEnum):
     Linux_UNIX = "Linux/UNIX"
     Linux_UNIX_Amazon_VPC_ = "Linux/UNIX (Amazon VPC)"
     Windows = "Windows"
     Windows_Amazon_VPC_ = "Windows (Amazon VPC)"
+
+
+class RebootMigrationSupport(StrEnum):
+    unsupported = "unsupported"
+    supported = "supported"
 
 
 class RecurringChargeFrequency(StrEnum):
@@ -2983,6 +3101,7 @@ class ResourceType(StrEnum):
     network_insights_path = "network-insights-path"
     network_insights_access_scope = "network-insights-access-scope"
     network_insights_access_scope_analysis = "network-insights-access-scope-analysis"
+    outpost_lag = "outpost-lag"
     placement_group = "placement-group"
     prefix_list = "prefix-list"
     replace_root_volume_task = "replace-root-volume-task"
@@ -2990,6 +3109,7 @@ class ResourceType(StrEnum):
     route_table = "route-table"
     security_group = "security-group"
     security_group_rule = "security-group-rule"
+    service_link_virtual_interface = "service-link-virtual-interface"
     snapshot = "snapshot"
     spot_fleet_request = "spot-fleet-request"
     spot_instances_request = "spot-instances-request"
@@ -3033,6 +3153,7 @@ class ResourceType(StrEnum):
     instance_connect_endpoint = "instance-connect-endpoint"
     verified_access_endpoint_target = "verified-access-endpoint-target"
     ipam_external_resource_verification_token = "ipam-external-resource-verification-token"
+    mac_modification_task = "mac-modification-task"
 
 
 class RootDeviceType(StrEnum):
@@ -3173,6 +3294,13 @@ class ServiceConnectivityType(StrEnum):
     ipv6 = "ipv6"
 
 
+class ServiceLinkVirtualInterfaceConfigurationState(StrEnum):
+    pending = "pending"
+    available = "available"
+    deleting = "deleting"
+    deleted = "deleted"
+
+
 class ServiceManaged(StrEnum):
     alb = "alb"
     nlb = "nlb"
@@ -3212,6 +3340,14 @@ class SnapshotBlockPublicAccessState(StrEnum):
 class SnapshotLocationEnum(StrEnum):
     regional = "regional"
     local = "local"
+
+
+class SnapshotReturnCodes(StrEnum):
+    success = "success"
+    skipped = "skipped"
+    missing_permissions = "missing-permissions"
+    internal_error = "internal-error"
+    client_error = "client-error"
 
 
 class SnapshotState(StrEnum):
@@ -3777,6 +3913,12 @@ class VpnStaticRouteSource(StrEnum):
     Static = "Static"
 
 
+class VpnTunnelProvisioningStatus(StrEnum):
+    available = "available"
+    pending = "pending"
+    failed = "failed"
+
+
 class WeekDay(StrEnum):
     sunday = "sunday"
     monday = "monday"
@@ -4147,6 +4289,7 @@ StringList = List[String]
 class AnalysisLoadBalancerTarget(TypedDict, total=False):
     Address: Optional[IpAddress]
     AvailabilityZone: Optional[String]
+    AvailabilityZoneId: Optional[String]
     Instance: Optional[AnalysisComponent]
     Port: Optional[Port]
 
@@ -4175,6 +4318,7 @@ class Explanation(TypedDict, total=False):
     Addresses: Optional[IpAddressList]
     AttachedTo: Optional[AnalysisComponent]
     AvailabilityZones: Optional[ValueStringList]
+    AvailabilityZoneIds: Optional[ValueStringList]
     Cidrs: Optional[ValueStringList]
     Component: Optional[AnalysisComponent]
     CustomerGateway: Optional[AnalysisComponent]
@@ -4408,6 +4552,18 @@ class ActiveInstance(TypedDict, total=False):
 ActiveInstanceSet = List[ActiveInstance]
 
 
+class ActiveVpnTunnelStatus(TypedDict, total=False):
+    Phase1EncryptionAlgorithm: Optional[String]
+    Phase2EncryptionAlgorithm: Optional[String]
+    Phase1IntegrityAlgorithm: Optional[String]
+    Phase2IntegrityAlgorithm: Optional[String]
+    Phase1DHGroup: Optional[Integer]
+    Phase2DHGroup: Optional[Integer]
+    IkeVersion: Optional[String]
+    ProvisioningStatus: Optional[VpnTunnelProvisioningStatus]
+    ProvisioningStatusReason: Optional[String]
+
+
 class AddIpamOperatingRegion(TypedDict, total=False):
     RegionName: Optional[String]
 
@@ -4538,11 +4694,12 @@ class AllocateHostsRequest(ServiceRequest):
     OutpostArn: Optional[String]
     HostMaintenance: Optional[HostMaintenance]
     AssetIds: Optional[AssetIdList]
+    AvailabilityZoneId: Optional[AvailabilityZoneId]
     AutoPlacement: Optional[AutoPlacement]
     ClientToken: Optional[String]
     InstanceType: Optional[String]
     Quantity: Optional[Integer]
-    AvailabilityZone: String
+    AvailabilityZone: Optional[String]
 
 
 ResponseHostIdList = List[String]
@@ -5129,6 +5286,7 @@ class EnaSrdSpecification(TypedDict, total=False):
 class AttachNetworkInterfaceRequest(ServiceRequest):
     NetworkCardIndex: Optional[Integer]
     EnaSrdSpecification: Optional[EnaSrdSpecification]
+    EnaQueueCount: Optional[Integer]
     DryRun: Optional[Boolean]
     NetworkInterfaceId: NetworkInterfaceId
     InstanceId: InstanceId
@@ -5531,6 +5689,7 @@ class EbsBlockDevice(TypedDict, total=False):
     Throughput: Optional[Integer]
     OutpostArn: Optional[String]
     Encrypted: Optional[Boolean]
+    VolumeInitializationRate: Optional[Integer]
 
 
 class BlockDeviceMapping(TypedDict, total=False):
@@ -5919,6 +6078,7 @@ class CapacityReservationInfo(TypedDict, total=False):
     InstanceType: Optional[String]
     AvailabilityZone: Optional[AvailabilityZoneName]
     Tenancy: Optional[CapacityReservationTenancy]
+    AvailabilityZoneId: Optional[AvailabilityZoneId]
 
 
 class CapacityReservationBillingRequest(TypedDict, total=False):
@@ -6731,6 +6891,39 @@ class CreateDefaultVpcResult(TypedDict, total=False):
     Vpc: Optional[Vpc]
 
 
+class CreateDelegateMacVolumeOwnershipTaskRequest(ServiceRequest):
+    ClientToken: Optional[String]
+    DryRun: Optional[Boolean]
+    InstanceId: InstanceId
+    MacCredentials: SensitiveMacCredentials
+    TagSpecifications: Optional[TagSpecificationList]
+
+
+class MacSystemIntegrityProtectionConfiguration(TypedDict, total=False):
+    AppleInternal: Optional[MacSystemIntegrityProtectionSettingStatus]
+    BaseSystem: Optional[MacSystemIntegrityProtectionSettingStatus]
+    DebuggingRestrictions: Optional[MacSystemIntegrityProtectionSettingStatus]
+    DTraceRestrictions: Optional[MacSystemIntegrityProtectionSettingStatus]
+    FilesystemProtections: Optional[MacSystemIntegrityProtectionSettingStatus]
+    KextSigning: Optional[MacSystemIntegrityProtectionSettingStatus]
+    NvramProtections: Optional[MacSystemIntegrityProtectionSettingStatus]
+    Status: Optional[MacSystemIntegrityProtectionSettingStatus]
+
+
+class MacModificationTask(TypedDict, total=False):
+    InstanceId: Optional[InstanceId]
+    MacModificationTaskId: Optional[MacModificationTaskId]
+    MacSystemIntegrityProtectionConfig: Optional[MacSystemIntegrityProtectionConfiguration]
+    StartTime: Optional[MillisecondDateTime]
+    Tags: Optional[TagList]
+    TaskState: Optional[MacModificationTaskState]
+    TaskType: Optional[MacModificationTaskType]
+
+
+class CreateDelegateMacVolumeOwnershipTaskResult(TypedDict, total=False):
+    MacModificationTask: Optional[MacModificationTask]
+
+
 class NewDhcpConfiguration(TypedDict, total=False):
     Key: Optional[String]
     Values: Optional[ValueStringList]
@@ -7017,7 +7210,7 @@ class FleetLaunchTemplateOverridesRequest(TypedDict, total=False):
     Placement: Optional[Placement]
     BlockDeviceMappings: Optional[FleetBlockDeviceMappingRequestList]
     InstanceRequirements: Optional[InstanceRequirementsRequest]
-    ImageId: Optional[ImageId]
+    ImageId: Optional[String]
 
 
 FleetLaunchTemplateOverridesListRequest = List[FleetLaunchTemplateOverridesRequest]
@@ -7661,6 +7854,7 @@ class LaunchTemplateInstanceNetworkInterfaceSpecificationRequest(TypedDict, tota
     PrimaryIpv6: Optional[Boolean]
     EnaSrdSpecification: Optional[EnaSrdSpecificationRequest]
     ConnectionTrackingSpecification: Optional[ConnectionTrackingSpecificationRequest]
+    EnaQueueCount: Optional[Integer]
 
 
 LaunchTemplateInstanceNetworkInterfaceSpecificationRequestList = List[
@@ -7677,6 +7871,7 @@ class LaunchTemplateEbsBlockDeviceRequest(TypedDict, total=False):
     VolumeSize: Optional[Integer]
     VolumeType: Optional[VolumeType]
     Throughput: Optional[Integer]
+    VolumeInitializationRate: Optional[Integer]
 
 
 class LaunchTemplateBlockDeviceMappingRequest(TypedDict, total=False):
@@ -7947,6 +8142,7 @@ class LaunchTemplateInstanceNetworkInterfaceSpecification(TypedDict, total=False
     PrimaryIpv6: Optional[Boolean]
     EnaSrdSpecification: Optional[LaunchTemplateEnaSrdSpecification]
     ConnectionTrackingSpecification: Optional[ConnectionTrackingSpecification]
+    EnaQueueCount: Optional[Integer]
 
 
 LaunchTemplateInstanceNetworkInterfaceSpecificationList = List[
@@ -7963,6 +8159,7 @@ class LaunchTemplateEbsBlockDevice(TypedDict, total=False):
     VolumeSize: Optional[Integer]
     VolumeType: Optional[VolumeType]
     Throughput: Optional[Integer]
+    VolumeInitializationRate: Optional[Integer]
 
 
 class LaunchTemplateBlockDeviceMapping(TypedDict, total=False):
@@ -8136,6 +8333,92 @@ class LocalGatewayRouteTableVpcAssociation(TypedDict, total=False):
 
 class CreateLocalGatewayRouteTableVpcAssociationResult(TypedDict, total=False):
     LocalGatewayRouteTableVpcAssociation: Optional[LocalGatewayRouteTableVpcAssociation]
+
+
+class CreateLocalGatewayVirtualInterfaceGroupRequest(ServiceRequest):
+    LocalGatewayId: LocalGatewayId
+    LocalBgpAsn: Optional[Integer]
+    LocalBgpAsnExtended: Optional[Long]
+    TagSpecifications: Optional[TagSpecificationList]
+    DryRun: Optional[Boolean]
+
+
+LocalGatewayVirtualInterfaceIdSet = List[LocalGatewayVirtualInterfaceId]
+
+
+class LocalGatewayVirtualInterfaceGroup(TypedDict, total=False):
+    LocalGatewayVirtualInterfaceGroupId: Optional[LocalGatewayVirtualInterfaceGroupId]
+    LocalGatewayVirtualInterfaceIds: Optional[LocalGatewayVirtualInterfaceIdSet]
+    LocalGatewayId: Optional[String]
+    OwnerId: Optional[String]
+    LocalBgpAsn: Optional[Integer]
+    LocalBgpAsnExtended: Optional[Long]
+    LocalGatewayVirtualInterfaceGroupArn: Optional[ResourceArn]
+    Tags: Optional[TagList]
+    ConfigurationState: Optional[LocalGatewayVirtualInterfaceGroupConfigurationState]
+
+
+class CreateLocalGatewayVirtualInterfaceGroupResult(TypedDict, total=False):
+    LocalGatewayVirtualInterfaceGroup: Optional[LocalGatewayVirtualInterfaceGroup]
+
+
+class CreateLocalGatewayVirtualInterfaceRequest(ServiceRequest):
+    LocalGatewayVirtualInterfaceGroupId: LocalGatewayVirtualInterfaceGroupId
+    OutpostLagId: OutpostLagId
+    Vlan: Integer
+    LocalAddress: String
+    PeerAddress: String
+    PeerBgpAsn: Optional[Integer]
+    TagSpecifications: Optional[TagSpecificationList]
+    DryRun: Optional[Boolean]
+    PeerBgpAsnExtended: Optional[Long]
+
+
+class LocalGatewayVirtualInterface(TypedDict, total=False):
+    LocalGatewayVirtualInterfaceId: Optional[LocalGatewayVirtualInterfaceId]
+    LocalGatewayId: Optional[String]
+    LocalGatewayVirtualInterfaceGroupId: Optional[LocalGatewayVirtualInterfaceGroupId]
+    LocalGatewayVirtualInterfaceArn: Optional[ResourceArn]
+    OutpostLagId: Optional[String]
+    Vlan: Optional[Integer]
+    LocalAddress: Optional[String]
+    PeerAddress: Optional[String]
+    LocalBgpAsn: Optional[Integer]
+    PeerBgpAsn: Optional[Integer]
+    PeerBgpAsnExtended: Optional[Long]
+    OwnerId: Optional[String]
+    Tags: Optional[TagList]
+    ConfigurationState: Optional[LocalGatewayVirtualInterfaceConfigurationState]
+
+
+class CreateLocalGatewayVirtualInterfaceResult(TypedDict, total=False):
+    LocalGatewayVirtualInterface: Optional[LocalGatewayVirtualInterface]
+
+
+class MacSystemIntegrityProtectionConfigurationRequest(TypedDict, total=False):
+    AppleInternal: Optional[MacSystemIntegrityProtectionSettingStatus]
+    BaseSystem: Optional[MacSystemIntegrityProtectionSettingStatus]
+    DebuggingRestrictions: Optional[MacSystemIntegrityProtectionSettingStatus]
+    DTraceRestrictions: Optional[MacSystemIntegrityProtectionSettingStatus]
+    FilesystemProtections: Optional[MacSystemIntegrityProtectionSettingStatus]
+    KextSigning: Optional[MacSystemIntegrityProtectionSettingStatus]
+    NvramProtections: Optional[MacSystemIntegrityProtectionSettingStatus]
+
+
+class CreateMacSystemIntegrityProtectionModificationTaskRequest(ServiceRequest):
+    ClientToken: Optional[String]
+    DryRun: Optional[Boolean]
+    InstanceId: InstanceId
+    MacCredentials: Optional[SensitiveMacCredentials]
+    MacSystemIntegrityProtectionConfiguration: Optional[
+        MacSystemIntegrityProtectionConfigurationRequest
+    ]
+    MacSystemIntegrityProtectionStatus: MacSystemIntegrityProtectionSettingStatus
+    TagSpecifications: Optional[TagSpecificationList]
+
+
+class CreateMacSystemIntegrityProtectionModificationTaskResult(TypedDict, total=False):
+    MacModificationTask: Optional[MacModificationTask]
 
 
 class CreateManagedPrefixListRequest(ServiceRequest):
@@ -8430,8 +8713,16 @@ class NetworkInterfacePrivateIpAddress(TypedDict, total=False):
 NetworkInterfacePrivateIpAddressList = List[NetworkInterfacePrivateIpAddress]
 
 
+class PublicIpDnsNameOptions(TypedDict, total=False):
+    DnsHostnameType: Optional[String]
+    PublicIpv4DnsName: Optional[String]
+    PublicIpv6DnsName: Optional[String]
+    PublicDualStackDnsName: Optional[String]
+
+
 class NetworkInterfaceIpv6Address(TypedDict, total=False):
     Ipv6Address: Optional[String]
+    PublicIpv6DnsName: Optional[String]
     IsPrimaryIpv6: Optional[Boolean]
 
 
@@ -8448,6 +8739,7 @@ class NetworkInterfaceAttachment(TypedDict, total=False):
     InstanceOwnerId: Optional[String]
     Status: Optional[AttachmentStatus]
     EnaSrdSpecification: Optional[AttachmentEnaSrdSpecification]
+    EnaQueueCount: Optional[Integer]
 
 
 class NetworkInterface(TypedDict, total=False):
@@ -8464,6 +8756,8 @@ class NetworkInterface(TypedDict, total=False):
     OutpostArn: Optional[String]
     OwnerId: Optional[String]
     PrivateDnsName: Optional[String]
+    PublicDnsName: Optional[String]
+    PublicIpDnsNameOptions: Optional[PublicIpDnsNameOptions]
     PrivateIpAddress: Optional[String]
     PrivateIpAddresses: Optional[NetworkInterfacePrivateIpAddressList]
     Ipv4Prefixes: Optional[Ipv4PrefixesList]
@@ -8528,6 +8822,7 @@ class CreateReplaceRootVolumeTaskRequest(ServiceRequest):
     TagSpecifications: Optional[TagSpecificationList]
     ImageId: Optional[ImageId]
     DeleteReplacedRootVolume: Optional[Boolean]
+    VolumeInitializationRate: Optional[Long]
 
 
 class ReplaceRootVolumeTask(TypedDict, total=False):
@@ -9626,6 +9921,7 @@ class CreateVolumeRequest(ServiceRequest):
     MultiAttachEnabled: Optional[Boolean]
     Throughput: Optional[Integer]
     ClientToken: Optional[String]
+    VolumeInitializationRate: Optional[Integer]
     Operator: Optional[OperatorRequest]
     DryRun: Optional[Boolean]
 
@@ -9966,6 +10262,7 @@ class CreateVpnConnectionRequest(ServiceRequest):
     VpnGatewayId: Optional[VpnGatewayId]
     TransitGatewayId: Optional[TransitGatewayId]
     TagSpecifications: Optional[TagSpecificationList]
+    PreSharedKeyStorage: Optional[String]
     DryRun: Optional[Boolean]
     Options: Optional[VpnConnectionOptionsSpecification]
 
@@ -10094,6 +10391,7 @@ class VpnConnection(TypedDict, total=False):
     Routes: Optional[VpnStaticRouteList]
     Tags: Optional[TagList]
     VgwTelemetry: Optional[VgwTelemetryList]
+    PreSharedKeyArn: Optional[String]
     VpnConnectionId: Optional[String]
     State: Optional[VpnState]
     CustomerGatewayConfiguration: Optional[customerGatewayConfiguration]
@@ -10495,6 +10793,24 @@ class DeleteLocalGatewayRouteTableVpcAssociationResult(TypedDict, total=False):
     LocalGatewayRouteTableVpcAssociation: Optional[LocalGatewayRouteTableVpcAssociation]
 
 
+class DeleteLocalGatewayVirtualInterfaceGroupRequest(ServiceRequest):
+    LocalGatewayVirtualInterfaceGroupId: LocalGatewayVirtualInterfaceGroupId
+    DryRun: Optional[Boolean]
+
+
+class DeleteLocalGatewayVirtualInterfaceGroupResult(TypedDict, total=False):
+    LocalGatewayVirtualInterfaceGroup: Optional[LocalGatewayVirtualInterfaceGroup]
+
+
+class DeleteLocalGatewayVirtualInterfaceRequest(ServiceRequest):
+    LocalGatewayVirtualInterfaceId: LocalGatewayVirtualInterfaceId
+    DryRun: Optional[Boolean]
+
+
+class DeleteLocalGatewayVirtualInterfaceResult(TypedDict, total=False):
+    LocalGatewayVirtualInterface: Optional[LocalGatewayVirtualInterface]
+
+
 class DeleteManagedPrefixListRequest(ServiceRequest):
     DryRun: Optional[Boolean]
     PrefixListId: PrefixListResourceId
@@ -10678,6 +10994,14 @@ class DeleteSecurityGroupResult(TypedDict, total=False):
 class DeleteSnapshotRequest(ServiceRequest):
     SnapshotId: SnapshotId
     DryRun: Optional[Boolean]
+
+
+class DeleteSnapshotReturnCode(TypedDict, total=False):
+    SnapshotId: Optional[SnapshotId]
+    ReturnCode: Optional[SnapshotReturnCodes]
+
+
+DeleteSnapshotResultSet = List[DeleteSnapshotReturnCode]
 
 
 class DeleteSpotDatafeedSubscriptionRequest(ServiceRequest):
@@ -11012,11 +11336,13 @@ class DeprovisionPublicIpv4PoolCidrResult(TypedDict, total=False):
 
 class DeregisterImageRequest(ServiceRequest):
     ImageId: ImageId
+    DeleteAssociatedSnapshots: Optional[Boolean]
     DryRun: Optional[Boolean]
 
 
 class DeregisterImageResult(TypedDict, total=False):
-    pass
+    Return: Optional[Boolean]
+    DeleteSnapshotResults: Optional[DeleteSnapshotResultSet]
 
 
 InstanceTagKeySet = List[String]
@@ -12632,6 +12958,9 @@ class NetworkCardInfo(TypedDict, total=False):
     MaximumNetworkInterfaces: Optional[MaxNetworkInterfaces]
     BaselineBandwidthInGbps: Optional[BaselineBandwidthInGbps]
     PeakBandwidthInGbps: Optional[PeakBandwidthInGbps]
+    DefaultEnaQueueCountPerInterface: Optional[DefaultEnaQueueCountPerInterface]
+    MaximumEnaQueueCount: Optional[MaximumEnaQueueCount]
+    MaximumEnaQueueCountPerInterface: Optional[MaximumEnaQueueCountPerInterface]
 
 
 NetworkCardInfoList = List[NetworkCardInfo]
@@ -12652,6 +12981,7 @@ class NetworkInfo(TypedDict, total=False):
     EncryptionInTransitSupported: Optional[EncryptionInTransitSupported]
     EnaSrdSupported: Optional[EnaSrdSupported]
     BandwidthWeightings: Optional[BandwidthWeightingTypeList]
+    FlexibleEnaQueuesSupport: Optional[FlexibleEnaQueuesSupport]
 
 
 class EbsOptimizedInfo(TypedDict, total=False):
@@ -12753,6 +13083,7 @@ class InstanceTypeInfo(TypedDict, total=False):
     MediaAcceleratorInfo: Optional[MediaAcceleratorInfo]
     NeuronInfo: Optional[NeuronInfo]
     PhcSupport: Optional[PhcSupport]
+    RebootMigrationSupport: Optional[RebootMigrationSupport]
 
 
 InstanceTypeInfoList = List[InstanceTypeInfo]
@@ -12781,6 +13112,7 @@ class InstanceNetworkPerformanceOptions(TypedDict, total=False):
 
 class InstanceMaintenanceOptions(TypedDict, total=False):
     AutoRecovery: Optional[InstanceAutoRecoveryState]
+    RebootMigration: Optional[InstanceRebootMigrationState]
 
 
 class PrivateDnsNameOptionsResponse(TypedDict, total=False):
@@ -12862,6 +13194,7 @@ class InstanceNetworkInterfaceAttachment(TypedDict, total=False):
     Status: Optional[AttachmentStatus]
     NetworkCardIndex: Optional[Integer]
     EnaSrdSpecification: Optional[InstanceAttachmentEnaSrdSpecification]
+    EnaQueueCount: Optional[Integer]
 
 
 class InstanceNetworkInterface(TypedDict, total=False):
@@ -13315,17 +13648,6 @@ class DescribeLocalGatewayVirtualInterfaceGroupsRequest(ServiceRequest):
     DryRun: Optional[Boolean]
 
 
-LocalGatewayVirtualInterfaceIdSet = List[LocalGatewayVirtualInterfaceId]
-
-
-class LocalGatewayVirtualInterfaceGroup(TypedDict, total=False):
-    LocalGatewayVirtualInterfaceGroupId: Optional[LocalGatewayVirtualInterfaceGroupId]
-    LocalGatewayVirtualInterfaceIds: Optional[LocalGatewayVirtualInterfaceIdSet]
-    LocalGatewayId: Optional[String]
-    OwnerId: Optional[String]
-    Tags: Optional[TagList]
-
-
 LocalGatewayVirtualInterfaceGroupSet = List[LocalGatewayVirtualInterfaceGroup]
 
 
@@ -13340,18 +13662,6 @@ class DescribeLocalGatewayVirtualInterfacesRequest(ServiceRequest):
     MaxResults: Optional[LocalGatewayMaxResults]
     NextToken: Optional[String]
     DryRun: Optional[Boolean]
-
-
-class LocalGatewayVirtualInterface(TypedDict, total=False):
-    LocalGatewayVirtualInterfaceId: Optional[LocalGatewayVirtualInterfaceId]
-    LocalGatewayId: Optional[String]
-    Vlan: Optional[Integer]
-    LocalAddress: Optional[String]
-    PeerAddress: Optional[String]
-    LocalBgpAsn: Optional[Integer]
-    PeerBgpAsn: Optional[Integer]
-    OwnerId: Optional[String]
-    Tags: Optional[TagList]
 
 
 LocalGatewayVirtualInterfaceSet = List[LocalGatewayVirtualInterface]
@@ -13440,6 +13750,25 @@ MacHostList = List[MacHost]
 
 class DescribeMacHostsResult(TypedDict, total=False):
     MacHosts: Optional[MacHostList]
+    NextToken: Optional[String]
+
+
+MacModificationTaskIdList = List[MacModificationTaskId]
+
+
+class DescribeMacModificationTasksRequest(ServiceRequest):
+    DryRun: Optional[Boolean]
+    Filters: Optional[FilterList]
+    MacModificationTaskIds: Optional[MacModificationTaskIdList]
+    MaxResults: Optional[DescribeMacModificationTasksMaxResults]
+    NextToken: Optional[String]
+
+
+MacModificationTaskList = List[MacModificationTask]
+
+
+class DescribeMacModificationTasksResult(TypedDict, total=False):
+    MacModificationTasks: Optional[MacModificationTaskList]
     NextToken: Optional[String]
 
 
@@ -13593,6 +13922,7 @@ class NetworkInsightsAnalysis(TypedDict, total=False):
     NetworkInsightsPathId: Optional[NetworkInsightsPathId]
     AdditionalAccounts: Optional[ValueStringList]
     FilterInArns: Optional[ArnList]
+    FilterOutArns: Optional[ArnList]
     StartDate: Optional[MillisecondDateTime]
     Status: Optional[AnalysisStatus]
     StatusMessage: Optional[String]
@@ -13682,6 +14012,38 @@ NetworkInterfaceList = List[NetworkInterface]
 
 class DescribeNetworkInterfacesResult(TypedDict, total=False):
     NetworkInterfaces: Optional[NetworkInterfaceList]
+    NextToken: Optional[String]
+
+
+OutpostLagIdSet = List[OutpostLagId]
+
+
+class DescribeOutpostLagsRequest(ServiceRequest):
+    OutpostLagIds: Optional[OutpostLagIdSet]
+    Filters: Optional[FilterList]
+    MaxResults: Optional[OutpostLagMaxResults]
+    NextToken: Optional[String]
+    DryRun: Optional[Boolean]
+
+
+ServiceLinkVirtualInterfaceIdSet = List[ServiceLinkVirtualInterfaceId]
+
+
+class OutpostLag(TypedDict, total=False):
+    OutpostArn: Optional[String]
+    OwnerId: Optional[String]
+    State: Optional[String]
+    OutpostLagId: Optional[OutpostLagId]
+    LocalGatewayVirtualInterfaceIds: Optional[LocalGatewayVirtualInterfaceIdSet]
+    ServiceLinkVirtualInterfaceIds: Optional[ServiceLinkVirtualInterfaceIdSet]
+    Tags: Optional[TagList]
+
+
+OutpostLagSet = List[OutpostLag]
+
+
+class DescribeOutpostLagsResult(TypedDict, total=False):
+    OutpostLags: Optional[OutpostLagSet]
     NextToken: Optional[String]
 
 
@@ -13863,6 +14225,7 @@ class ReservedInstancesConfiguration(TypedDict, total=False):
     InstanceType: Optional[InstanceType]
     Platform: Optional[String]
     Scope: Optional[scope]
+    AvailabilityZoneId: Optional[String]
 
 
 class ReservedInstancesModificationResult(TypedDict, total=False):
@@ -13906,6 +14269,7 @@ class DescribeReservedInstancesOfferingsRequest(ServiceRequest):
     OfferingClass: Optional[OfferingClassType]
     ProductDescription: Optional[RIProductDescription]
     ReservedInstancesOfferingIds: Optional[ReservedInstancesOfferingIdStringList]
+    AvailabilityZoneId: Optional[AvailabilityZoneId]
     DryRun: Optional[Boolean]
     Filters: Optional[FilterList]
     InstanceTenancy: Optional[Tenancy]
@@ -13939,6 +14303,7 @@ class ReservedInstancesOffering(TypedDict, total=False):
     PricingDetails: Optional[PricingDetailsList]
     RecurringCharges: Optional[RecurringChargesList]
     Scope: Optional[scope]
+    AvailabilityZoneId: Optional[AvailabilityZoneId]
     ReservedInstancesOfferingId: Optional[String]
     InstanceType: Optional[InstanceType]
     AvailabilityZone: Optional[String]
@@ -13975,6 +14340,7 @@ class ReservedInstances(TypedDict, total=False):
     RecurringCharges: Optional[RecurringChargesList]
     Scope: Optional[scope]
     Tags: Optional[TagList]
+    AvailabilityZoneId: Optional[String]
     ReservedInstancesId: Optional[String]
     InstanceType: Optional[InstanceType]
     AvailabilityZone: Optional[String]
@@ -14269,6 +14635,37 @@ class DescribeSecurityGroupsResult(TypedDict, total=False):
     SecurityGroups: Optional[SecurityGroupList]
 
 
+class DescribeServiceLinkVirtualInterfacesRequest(ServiceRequest):
+    ServiceLinkVirtualInterfaceIds: Optional[ServiceLinkVirtualInterfaceIdSet]
+    Filters: Optional[FilterList]
+    MaxResults: Optional[ServiceLinkMaxResults]
+    NextToken: Optional[String]
+    DryRun: Optional[Boolean]
+
+
+class ServiceLinkVirtualInterface(TypedDict, total=False):
+    ServiceLinkVirtualInterfaceId: Optional[ServiceLinkVirtualInterfaceId]
+    ServiceLinkVirtualInterfaceArn: Optional[ResourceArn]
+    OutpostId: Optional[String]
+    OutpostArn: Optional[String]
+    OwnerId: Optional[String]
+    LocalAddress: Optional[String]
+    PeerAddress: Optional[String]
+    PeerBgpAsn: Optional[Long]
+    Vlan: Optional[Integer]
+    OutpostLagId: Optional[OutpostLagId]
+    Tags: Optional[TagList]
+    ConfigurationState: Optional[ServiceLinkVirtualInterfaceConfigurationState]
+
+
+ServiceLinkVirtualInterfaceSet = List[ServiceLinkVirtualInterface]
+
+
+class DescribeServiceLinkVirtualInterfacesResult(TypedDict, total=False):
+    ServiceLinkVirtualInterfaces: Optional[ServiceLinkVirtualInterfaceSet]
+    NextToken: Optional[String]
+
+
 class DescribeSnapshotAttributeRequest(ServiceRequest):
     Attribute: SnapshotAttributeName
     SnapshotId: SnapshotId
@@ -14486,6 +14883,7 @@ class InstanceNetworkInterfaceSpecification(TypedDict, total=False):
     PrimaryIpv6: Optional[Boolean]
     EnaSrdSpecification: Optional[EnaSrdSpecificationRequest]
     ConnectionTrackingSpecification: Optional[ConnectionTrackingSpecificationRequest]
+    EnaQueueCount: Optional[Integer]
 
 
 InstanceNetworkInterfaceSpecificationList = List[InstanceNetworkInterfaceSpecification]
@@ -15285,6 +15683,7 @@ class VolumeStatusItem(TypedDict, total=False):
     VolumeId: Optional[String]
     VolumeStatus: Optional[VolumeStatusInfo]
     AttachmentStatuses: Optional[VolumeStatusAttachmentStatusList]
+    AvailabilityZoneId: Optional[String]
 
 
 VolumeStatusList = List[VolumeStatusItem]
@@ -15362,6 +15761,7 @@ class Volume(TypedDict, total=False):
     Throughput: Optional[Integer]
     SseType: Optional[SSEType]
     Operator: Optional[OperatorResponse]
+    VolumeInitializationRate: Optional[Integer]
     VolumeId: Optional[String]
     Size: Optional[Integer]
     SnapshotId: Optional[String]
@@ -16542,6 +16942,16 @@ class ExportVerifiedAccessInstanceClientConfigurationResult(TypedDict, total=Fal
     OpenVpnConfigurations: Optional[VerifiedAccessInstanceOpenVpnClientConfigurationList]
 
 
+class GetActiveVpnTunnelStatusRequest(ServiceRequest):
+    VpnConnectionId: VpnConnectionId
+    VpnTunnelOutsideIpAddress: String
+    DryRun: Optional[Boolean]
+
+
+class GetActiveVpnTunnelStatusResult(TypedDict, total=False):
+    ActiveVpnTunnelStatus: Optional[ActiveVpnTunnelStatus]
+
+
 class GetAllowedImagesSettingsRequest(ServiceRequest):
     DryRun: Optional[Boolean]
 
@@ -17568,6 +17978,7 @@ class GetVpnConnectionDeviceSampleConfigurationRequest(ServiceRequest):
     VpnConnectionId: VpnConnectionId
     VpnConnectionDeviceTypeId: VpnConnectionDeviceTypeId
     InternetKeyExchangeVersion: Optional[String]
+    SampleType: Optional[String]
     DryRun: Optional[Boolean]
 
 
@@ -18282,12 +18693,14 @@ class ModifyInstanceEventWindowResult(TypedDict, total=False):
 class ModifyInstanceMaintenanceOptionsRequest(ServiceRequest):
     InstanceId: InstanceId
     AutoRecovery: Optional[InstanceAutoRecoveryState]
+    RebootMigration: Optional[InstanceRebootMigrationState]
     DryRun: Optional[Boolean]
 
 
 class ModifyInstanceMaintenanceOptionsResult(TypedDict, total=False):
     InstanceId: Optional[String]
     AutoRecovery: Optional[InstanceAutoRecoveryState]
+    RebootMigration: Optional[InstanceRebootMigrationState]
 
 
 class ModifyInstanceMetadataDefaultsRequest(ServiceRequest):
@@ -18474,6 +18887,8 @@ class ModifyManagedPrefixListResult(TypedDict, total=False):
 
 
 class NetworkInterfaceAttachmentChanges(TypedDict, total=False):
+    DefaultEnaQueueCount: Optional[Boolean]
+    EnaQueueCount: Optional[Integer]
     AttachmentId: Optional[NetworkInterfaceAttachmentId]
     DeleteOnTermination: Optional[Boolean]
 
@@ -18501,6 +18916,16 @@ class ModifyPrivateDnsNameOptionsRequest(ServiceRequest):
 
 class ModifyPrivateDnsNameOptionsResult(TypedDict, total=False):
     Return: Optional[Boolean]
+
+
+class ModifyPublicIpDnsNameOptionsRequest(ServiceRequest):
+    NetworkInterfaceId: NetworkInterfaceId
+    HostnameType: PublicIpDnsOption
+    DryRun: Optional[Boolean]
+
+
+class ModifyPublicIpDnsNameOptionsResult(TypedDict, total=False):
+    Successful: Optional[Boolean]
 
 
 ReservedInstancesConfigurationList = List[ReservedInstancesConfiguration]
@@ -19111,6 +19536,7 @@ class ModifyVpnTunnelOptionsRequest(ServiceRequest):
     TunnelOptions: ModifyVpnTunnelOptionsSpecification
     DryRun: Optional[Boolean]
     SkipTunnelReplacement: Optional[Boolean]
+    PreSharedKeyStorage: Optional[String]
 
 
 class ModifyVpnTunnelOptionsResult(TypedDict, total=False):
@@ -20054,6 +20480,7 @@ class StartNetworkInsightsAnalysisRequest(ServiceRequest):
     NetworkInsightsPathId: NetworkInsightsPathId
     AdditionalAccounts: Optional[ValueStringList]
     FilterInArns: Optional[ArnList]
+    FilterOutArns: Optional[ArnList]
     DryRun: Optional[Boolean]
     TagSpecifications: Optional[TagSpecificationList]
     ClientToken: String
@@ -20204,8 +20631,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         address: String,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AcceptAddressTransferResult:
         raise NotImplementedError
@@ -20215,7 +20642,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         capacity_reservation_id: CapacityReservationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AcceptCapacityReservationBillingOwnershipResult:
         raise NotImplementedError
@@ -20225,8 +20652,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         reserved_instance_ids: ReservedInstanceIdSet,
-        dry_run: Boolean = None,
-        target_configurations: TargetConfigurationRequestSet = None,
+        dry_run: Boolean | None = None,
+        target_configurations: TargetConfigurationRequestSet | None = None,
         **kwargs,
     ) -> AcceptReservedInstancesExchangeQuoteResult:
         raise NotImplementedError
@@ -20235,10 +20662,10 @@ class Ec2Api:
     def accept_transit_gateway_multicast_domain_associations(
         self,
         context: RequestContext,
-        transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId = None,
-        transit_gateway_attachment_id: TransitGatewayAttachmentId = None,
-        subnet_ids: ValueStringList = None,
-        dry_run: Boolean = None,
+        transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId | None = None,
+        transit_gateway_attachment_id: TransitGatewayAttachmentId | None = None,
+        subnet_ids: ValueStringList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AcceptTransitGatewayMulticastDomainAssociationsResult:
         raise NotImplementedError
@@ -20248,7 +20675,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AcceptTransitGatewayPeeringAttachmentResult:
         raise NotImplementedError
@@ -20258,7 +20685,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AcceptTransitGatewayVpcAttachmentResult:
         raise NotImplementedError
@@ -20269,7 +20696,7 @@ class Ec2Api:
         context: RequestContext,
         service_id: VpcEndpointServiceId,
         vpc_endpoint_ids: VpcEndpointIdList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AcceptVpcEndpointConnectionsResult:
         raise NotImplementedError
@@ -20279,7 +20706,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_peering_connection_id: VpcPeeringConnectionIdWithResolver,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AcceptVpcPeeringConnectionResult:
         raise NotImplementedError
@@ -20289,9 +20716,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         cidr: String,
-        asn: String = None,
-        dry_run: Boolean = None,
-        network_border_group: String = None,
+        asn: String | None = None,
+        dry_run: Boolean | None = None,
+        network_border_group: String | None = None,
         **kwargs,
     ) -> AdvertiseByoipCidrResult:
         raise NotImplementedError
@@ -20300,14 +20727,14 @@ class Ec2Api:
     def allocate_address(
         self,
         context: RequestContext,
-        domain: DomainType = None,
-        address: PublicIpAddress = None,
-        public_ipv4_pool: Ipv4PoolEc2Id = None,
-        network_border_group: String = None,
-        customer_owned_ipv4_pool: String = None,
-        tag_specifications: TagSpecificationList = None,
-        ipam_pool_id: IpamPoolId = None,
-        dry_run: Boolean = None,
+        domain: DomainType | None = None,
+        address: PublicIpAddress | None = None,
+        public_ipv4_pool: Ipv4PoolEc2Id | None = None,
+        network_border_group: String | None = None,
+        customer_owned_ipv4_pool: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        ipam_pool_id: IpamPoolId | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AllocateAddressResult:
         raise NotImplementedError
@@ -20316,17 +20743,18 @@ class Ec2Api:
     def allocate_hosts(
         self,
         context: RequestContext,
-        availability_zone: String,
-        instance_family: String = None,
-        tag_specifications: TagSpecificationList = None,
-        host_recovery: HostRecovery = None,
-        outpost_arn: String = None,
-        host_maintenance: HostMaintenance = None,
-        asset_ids: AssetIdList = None,
-        auto_placement: AutoPlacement = None,
-        client_token: String = None,
-        instance_type: String = None,
-        quantity: Integer = None,
+        instance_family: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        host_recovery: HostRecovery | None = None,
+        outpost_arn: String | None = None,
+        host_maintenance: HostMaintenance | None = None,
+        asset_ids: AssetIdList | None = None,
+        availability_zone_id: AvailabilityZoneId | None = None,
+        auto_placement: AutoPlacement | None = None,
+        client_token: String | None = None,
+        instance_type: String | None = None,
+        quantity: Integer | None = None,
+        availability_zone: String | None = None,
         **kwargs,
     ) -> AllocateHostsResult:
         raise NotImplementedError
@@ -20336,14 +20764,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_pool_id: IpamPoolId,
-        dry_run: Boolean = None,
-        cidr: String = None,
-        netmask_length: Integer = None,
-        client_token: String = None,
-        description: String = None,
-        preview_next_cidr: Boolean = None,
-        allowed_cidrs: IpamPoolAllocationAllowedCidrs = None,
-        disallowed_cidrs: IpamPoolAllocationDisallowedCidrs = None,
+        dry_run: Boolean | None = None,
+        cidr: String | None = None,
+        netmask_length: Integer | None = None,
+        client_token: String | None = None,
+        description: String | None = None,
+        preview_next_cidr: Boolean | None = None,
+        allowed_cidrs: IpamPoolAllocationAllowedCidrs | None = None,
+        disallowed_cidrs: IpamPoolAllocationDisallowedCidrs | None = None,
         **kwargs,
     ) -> AllocateIpamPoolCidrResult:
         raise NotImplementedError
@@ -20355,7 +20783,7 @@ class Ec2Api:
         client_vpn_endpoint_id: ClientVpnEndpointId,
         vpc_id: VpcId,
         security_group_ids: ClientVpnSecurityGroupIdSet,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ApplySecurityGroupsToClientVpnTargetNetworkResult:
         raise NotImplementedError
@@ -20365,10 +20793,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_interface_id: NetworkInterfaceId,
-        ipv6_prefix_count: Integer = None,
-        ipv6_prefixes: IpPrefixList = None,
-        ipv6_addresses: Ipv6AddressList = None,
-        ipv6_address_count: Integer = None,
+        ipv6_prefix_count: Integer | None = None,
+        ipv6_prefixes: IpPrefixList | None = None,
+        ipv6_addresses: Ipv6AddressList | None = None,
+        ipv6_address_count: Integer | None = None,
         **kwargs,
     ) -> AssignIpv6AddressesResult:
         raise NotImplementedError
@@ -20378,11 +20806,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_interface_id: NetworkInterfaceId,
-        ipv4_prefixes: IpPrefixList = None,
-        ipv4_prefix_count: Integer = None,
-        private_ip_addresses: PrivateIpAddressStringList = None,
-        secondary_private_ip_address_count: Integer = None,
-        allow_reassignment: Boolean = None,
+        ipv4_prefixes: IpPrefixList | None = None,
+        ipv4_prefix_count: Integer | None = None,
+        private_ip_addresses: PrivateIpAddressStringList | None = None,
+        secondary_private_ip_address_count: Integer | None = None,
+        allow_reassignment: Boolean | None = None,
         **kwargs,
     ) -> AssignPrivateIpAddressesResult:
         raise NotImplementedError
@@ -20392,9 +20820,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         nat_gateway_id: NatGatewayId,
-        private_ip_addresses: IpList = None,
-        private_ip_address_count: PrivateIpAddressCount = None,
-        dry_run: Boolean = None,
+        private_ip_addresses: IpList | None = None,
+        private_ip_address_count: PrivateIpAddressCount | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssignPrivateNatGatewayAddressResult:
         raise NotImplementedError
@@ -20403,13 +20831,13 @@ class Ec2Api:
     def associate_address(
         self,
         context: RequestContext,
-        allocation_id: AllocationId = None,
-        instance_id: InstanceId = None,
-        public_ip: EipAllocationPublicIp = None,
-        dry_run: Boolean = None,
-        network_interface_id: NetworkInterfaceId = None,
-        private_ip_address: String = None,
-        allow_reassociation: Boolean = None,
+        allocation_id: AllocationId | None = None,
+        instance_id: InstanceId | None = None,
+        public_ip: EipAllocationPublicIp | None = None,
+        dry_run: Boolean | None = None,
+        network_interface_id: NetworkInterfaceId | None = None,
+        private_ip_address: String | None = None,
+        allow_reassociation: Boolean | None = None,
         **kwargs,
     ) -> AssociateAddressResult:
         raise NotImplementedError
@@ -20420,7 +20848,7 @@ class Ec2Api:
         context: RequestContext,
         capacity_reservation_id: CapacityReservationId,
         unused_reservation_billing_owner_id: AccountID,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateCapacityReservationBillingOwnerResult:
         raise NotImplementedError
@@ -20431,8 +20859,8 @@ class Ec2Api:
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
         subnet_id: SubnetId,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateClientVpnTargetNetworkResult:
         raise NotImplementedError
@@ -20443,7 +20871,7 @@ class Ec2Api:
         context: RequestContext,
         dhcp_options_id: DefaultingDhcpOptionsId,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -20454,7 +20882,7 @@ class Ec2Api:
         context: RequestContext,
         certificate_arn: CertificateId,
         role_arn: RoleId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateEnclaveCertificateIamRoleResult:
         raise NotImplementedError
@@ -20475,14 +20903,19 @@ class Ec2Api:
         context: RequestContext,
         instance_event_window_id: InstanceEventWindowId,
         association_target: InstanceEventWindowAssociationRequest,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateInstanceEventWindowResult:
         raise NotImplementedError
 
     @handler("AssociateIpamByoasn")
     def associate_ipam_byoasn(
-        self, context: RequestContext, asn: String, cidr: String, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        asn: String,
+        cidr: String,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> AssociateIpamByoasnResult:
         raise NotImplementedError
 
@@ -20492,9 +20925,9 @@ class Ec2Api:
         context: RequestContext,
         ipam_id: IpamId,
         ipam_resource_discovery_id: IpamResourceDiscoveryId,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> AssociateIpamResourceDiscoveryResult:
         raise NotImplementedError
@@ -20505,8 +20938,8 @@ class Ec2Api:
         context: RequestContext,
         nat_gateway_id: NatGatewayId,
         allocation_ids: AllocationIdList,
-        private_ip_addresses: IpList = None,
-        dry_run: Boolean = None,
+        private_ip_addresses: IpList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateNatGatewayAddressResult:
         raise NotImplementedError
@@ -20517,7 +20950,7 @@ class Ec2Api:
         context: RequestContext,
         route_server_id: RouteServerId,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateRouteServerResult:
         raise NotImplementedError
@@ -20527,9 +20960,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_table_id: RouteTableId,
-        gateway_id: RouteGatewayId = None,
-        dry_run: Boolean = None,
-        subnet_id: SubnetId = None,
+        gateway_id: RouteGatewayId | None = None,
+        dry_run: Boolean | None = None,
+        subnet_id: SubnetId | None = None,
         **kwargs,
     ) -> AssociateRouteTableResult:
         raise NotImplementedError
@@ -20540,7 +20973,7 @@ class Ec2Api:
         context: RequestContext,
         group_id: SecurityGroupId,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateSecurityGroupVpcResult:
         raise NotImplementedError
@@ -20550,9 +20983,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         subnet_id: SubnetId,
-        ipv6_ipam_pool_id: IpamPoolId = None,
-        ipv6_netmask_length: NetmaskLength = None,
-        ipv6_cidr_block: String = None,
+        ipv6_ipam_pool_id: IpamPoolId | None = None,
+        ipv6_netmask_length: NetmaskLength | None = None,
+        ipv6_cidr_block: String | None = None,
         **kwargs,
     ) -> AssociateSubnetCidrBlockResult:
         raise NotImplementedError
@@ -20564,7 +20997,7 @@ class Ec2Api:
         transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
         subnet_ids: TransitGatewaySubnetIdList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateTransitGatewayMulticastDomainResult:
         raise NotImplementedError
@@ -20575,7 +21008,7 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_policy_table_id: TransitGatewayPolicyTableId,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateTransitGatewayPolicyTableResult:
         raise NotImplementedError
@@ -20586,7 +21019,7 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateTransitGatewayRouteTableResult:
         raise NotImplementedError
@@ -20597,10 +21030,10 @@ class Ec2Api:
         context: RequestContext,
         branch_interface_id: NetworkInterfaceId,
         trunk_interface_id: NetworkInterfaceId,
-        vlan_id: Integer = None,
-        gre_key: Integer = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        vlan_id: Integer | None = None,
+        gre_key: Integer | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AssociateTrunkInterfaceResult:
         raise NotImplementedError
@@ -20610,15 +21043,15 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        cidr_block: String = None,
-        ipv6_cidr_block_network_border_group: String = None,
-        ipv6_pool: Ipv6PoolEc2Id = None,
-        ipv6_cidr_block: String = None,
-        ipv4_ipam_pool_id: IpamPoolId = None,
-        ipv4_netmask_length: NetmaskLength = None,
-        ipv6_ipam_pool_id: IpamPoolId = None,
-        ipv6_netmask_length: NetmaskLength = None,
-        amazon_provided_ipv6_cidr_block: Boolean = None,
+        cidr_block: String | None = None,
+        ipv6_cidr_block_network_border_group: String | None = None,
+        ipv6_pool: Ipv6PoolEc2Id | None = None,
+        ipv6_cidr_block: String | None = None,
+        ipv4_ipam_pool_id: IpamPoolId | None = None,
+        ipv4_netmask_length: NetmaskLength | None = None,
+        ipv6_ipam_pool_id: IpamPoolId | None = None,
+        ipv6_netmask_length: NetmaskLength | None = None,
+        amazon_provided_ipv6_cidr_block: Boolean | None = None,
         **kwargs,
     ) -> AssociateVpcCidrBlockResult:
         raise NotImplementedError
@@ -20630,7 +21063,7 @@ class Ec2Api:
         instance_id: InstanceId,
         vpc_id: VpcId,
         groups: GroupIdStringList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AttachClassicLinkVpcResult:
         raise NotImplementedError
@@ -20641,7 +21074,7 @@ class Ec2Api:
         context: RequestContext,
         internet_gateway_id: InternetGatewayId,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -20653,9 +21086,10 @@ class Ec2Api:
         network_interface_id: NetworkInterfaceId,
         instance_id: InstanceId,
         device_index: Integer,
-        network_card_index: Integer = None,
-        ena_srd_specification: EnaSrdSpecification = None,
-        dry_run: Boolean = None,
+        network_card_index: Integer | None = None,
+        ena_srd_specification: EnaSrdSpecification | None = None,
+        ena_queue_count: Integer | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AttachNetworkInterfaceResult:
         raise NotImplementedError
@@ -20666,8 +21100,8 @@ class Ec2Api:
         context: RequestContext,
         verified_access_instance_id: VerifiedAccessInstanceId,
         verified_access_trust_provider_id: VerifiedAccessTrustProviderId,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AttachVerifiedAccessTrustProviderResult:
         raise NotImplementedError
@@ -20679,7 +21113,7 @@ class Ec2Api:
         device: String,
         instance_id: InstanceId,
         volume_id: VolumeId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> VolumeAttachment:
         raise NotImplementedError
@@ -20690,7 +21124,7 @@ class Ec2Api:
         context: RequestContext,
         vpc_id: VpcId,
         vpn_gateway_id: VpnGatewayId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AttachVpnGatewayResult:
         raise NotImplementedError
@@ -20701,11 +21135,11 @@ class Ec2Api:
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
         target_network_cidr: String,
-        access_group_id: String = None,
-        authorize_all_groups: Boolean = None,
-        description: String = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        access_group_id: String | None = None,
+        authorize_all_groups: Boolean | None = None,
+        description: String | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AuthorizeClientVpnIngressResult:
         raise NotImplementedError
@@ -20715,15 +21149,15 @@ class Ec2Api:
         self,
         context: RequestContext,
         group_id: SecurityGroupId,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        source_security_group_name: String = None,
-        source_security_group_owner_id: String = None,
-        ip_protocol: String = None,
-        from_port: Integer = None,
-        to_port: Integer = None,
-        cidr_ip: String = None,
-        ip_permissions: IpPermissionList = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        source_security_group_name: String | None = None,
+        source_security_group_owner_id: String | None = None,
+        ip_protocol: String | None = None,
+        from_port: Integer | None = None,
+        to_port: Integer | None = None,
+        cidr_ip: String | None = None,
+        ip_permissions: IpPermissionList | None = None,
         **kwargs,
     ) -> AuthorizeSecurityGroupEgressResult:
         raise NotImplementedError
@@ -20732,17 +21166,17 @@ class Ec2Api:
     def authorize_security_group_ingress(
         self,
         context: RequestContext,
-        cidr_ip: String = None,
-        from_port: Integer = None,
-        group_id: SecurityGroupId = None,
-        group_name: SecurityGroupName = None,
-        ip_permissions: IpPermissionList = None,
-        ip_protocol: String = None,
-        source_security_group_name: String = None,
-        source_security_group_owner_id: String = None,
-        to_port: Integer = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        cidr_ip: String | None = None,
+        from_port: Integer | None = None,
+        group_id: SecurityGroupId | None = None,
+        group_name: SecurityGroupName | None = None,
+        ip_permissions: IpPermissionList | None = None,
+        ip_protocol: String | None = None,
+        source_security_group_name: String | None = None,
+        source_security_group_owner_id: String | None = None,
+        to_port: Integer | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> AuthorizeSecurityGroupIngressResult:
         raise NotImplementedError
@@ -20753,14 +21187,14 @@ class Ec2Api:
         context: RequestContext,
         instance_id: InstanceId,
         storage: Storage,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> BundleInstanceResult:
         raise NotImplementedError
 
     @handler("CancelBundleTask")
     def cancel_bundle_task(
-        self, context: RequestContext, bundle_id: BundleId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, bundle_id: BundleId, dry_run: Boolean | None = None, **kwargs
     ) -> CancelBundleTaskResult:
         raise NotImplementedError
 
@@ -20769,7 +21203,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         capacity_reservation_id: CapacityReservationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CancelCapacityReservationResult:
         raise NotImplementedError
@@ -20779,7 +21213,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         capacity_reservation_fleet_ids: CapacityReservationFleetIdSet,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CancelCapacityReservationFleetsResult:
         raise NotImplementedError
@@ -20789,8 +21223,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         conversion_task_id: ConversionTaskId,
-        dry_run: Boolean = None,
-        reason_message: String = None,
+        dry_run: Boolean | None = None,
+        reason_message: String | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -20800,7 +21234,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         report_id: DeclarativePoliciesReportId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CancelDeclarativePoliciesReportResult:
         raise NotImplementedError
@@ -20813,7 +21247,7 @@ class Ec2Api:
 
     @handler("CancelImageLaunchPermission")
     def cancel_image_launch_permission(
-        self, context: RequestContext, image_id: ImageId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, image_id: ImageId, dry_run: Boolean | None = None, **kwargs
     ) -> CancelImageLaunchPermissionResult:
         raise NotImplementedError
 
@@ -20821,9 +21255,9 @@ class Ec2Api:
     def cancel_import_task(
         self,
         context: RequestContext,
-        cancel_reason: String = None,
-        dry_run: Boolean = None,
-        import_task_id: ImportTaskId = None,
+        cancel_reason: String | None = None,
+        dry_run: Boolean | None = None,
+        import_task_id: ImportTaskId | None = None,
         **kwargs,
     ) -> CancelImportTaskResult:
         raise NotImplementedError
@@ -20843,7 +21277,7 @@ class Ec2Api:
         context: RequestContext,
         spot_fleet_request_ids: SpotFleetRequestIdList,
         terminate_instances: Boolean,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CancelSpotFleetRequestsResponse:
         raise NotImplementedError
@@ -20853,7 +21287,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         spot_instance_request_ids: SpotInstanceRequestIdList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CancelSpotInstanceRequestsResult:
         raise NotImplementedError
@@ -20864,7 +21298,7 @@ class Ec2Api:
         context: RequestContext,
         instance_id: InstanceId,
         product_code: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ConfirmProductInstanceResult:
         raise NotImplementedError
@@ -20875,10 +21309,10 @@ class Ec2Api:
         context: RequestContext,
         source_fpga_image_id: String,
         source_region: String,
-        dry_run: Boolean = None,
-        description: String = None,
-        name: String = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        name: String | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CopyFpgaImageResult:
         raise NotImplementedError
@@ -20890,15 +21324,15 @@ class Ec2Api:
         name: String,
         source_image_id: String,
         source_region: String,
-        client_token: String = None,
-        description: String = None,
-        encrypted: Boolean = None,
-        kms_key_id: KmsKeyId = None,
-        destination_outpost_arn: String = None,
-        copy_image_tags: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
-        snapshot_copy_completion_duration_minutes: Long = None,
-        dry_run: Boolean = None,
+        client_token: String | None = None,
+        description: String | None = None,
+        encrypted: Boolean | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        destination_outpost_arn: String | None = None,
+        copy_image_tags: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        snapshot_copy_completion_duration_minutes: Long | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CopyImageResult:
         raise NotImplementedError
@@ -20909,15 +21343,15 @@ class Ec2Api:
         context: RequestContext,
         source_region: String,
         source_snapshot_id: String,
-        description: String = None,
-        destination_outpost_arn: String = None,
-        destination_region: String = None,
-        encrypted: Boolean = None,
-        kms_key_id: KmsKeyId = None,
-        presigned_url: CopySnapshotRequestPSU = None,
-        tag_specifications: TagSpecificationList = None,
-        completion_duration_minutes: SnapshotCompletionDurationMinutesRequest = None,
-        dry_run: Boolean = None,
+        description: String | None = None,
+        destination_outpost_arn: String | None = None,
+        destination_region: String | None = None,
+        encrypted: Boolean | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        presigned_url: CopySnapshotRequestPSU | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        completion_duration_minutes: SnapshotCompletionDurationMinutesRequest | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CopySnapshotResult:
         raise NotImplementedError
@@ -20929,22 +21363,22 @@ class Ec2Api:
         instance_type: String,
         instance_platform: CapacityReservationInstancePlatform,
         instance_count: Integer,
-        client_token: String = None,
-        availability_zone: AvailabilityZoneName = None,
-        availability_zone_id: AvailabilityZoneId = None,
-        tenancy: CapacityReservationTenancy = None,
-        ebs_optimized: Boolean = None,
-        ephemeral_storage: Boolean = None,
-        end_date: DateTime = None,
-        end_date_type: EndDateType = None,
-        instance_match_criteria: InstanceMatchCriteria = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        outpost_arn: OutpostArn = None,
-        placement_group_arn: PlacementGroupArn = None,
-        start_date: MillisecondDateTime = None,
-        commitment_duration: CapacityReservationCommitmentDuration = None,
-        delivery_preference: CapacityReservationDeliveryPreference = None,
+        client_token: String | None = None,
+        availability_zone: AvailabilityZoneName | None = None,
+        availability_zone_id: AvailabilityZoneId | None = None,
+        tenancy: CapacityReservationTenancy | None = None,
+        ebs_optimized: Boolean | None = None,
+        ephemeral_storage: Boolean | None = None,
+        end_date: DateTime | None = None,
+        end_date_type: EndDateType | None = None,
+        instance_match_criteria: InstanceMatchCriteria | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        outpost_arn: OutpostArn | None = None,
+        placement_group_arn: PlacementGroupArn | None = None,
+        start_date: MillisecondDateTime | None = None,
+        commitment_duration: CapacityReservationCommitmentDuration | None = None,
+        delivery_preference: CapacityReservationDeliveryPreference | None = None,
         **kwargs,
     ) -> CreateCapacityReservationResult:
         raise NotImplementedError
@@ -20955,9 +21389,9 @@ class Ec2Api:
         context: RequestContext,
         source_capacity_reservation_id: CapacityReservationId,
         instance_count: Integer,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateCapacityReservationBySplittingResult:
         raise NotImplementedError
@@ -20968,13 +21402,13 @@ class Ec2Api:
         context: RequestContext,
         instance_type_specifications: ReservationFleetInstanceSpecificationList,
         total_target_capacity: Integer,
-        allocation_strategy: String = None,
-        client_token: String = None,
-        tenancy: FleetCapacityReservationTenancy = None,
-        end_date: MillisecondDateTime = None,
-        instance_match_criteria: FleetInstanceMatchCriteria = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        allocation_strategy: String | None = None,
+        client_token: String | None = None,
+        tenancy: FleetCapacityReservationTenancy | None = None,
+        end_date: MillisecondDateTime | None = None,
+        instance_match_criteria: FleetInstanceMatchCriteria | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateCapacityReservationFleetResult:
         raise NotImplementedError
@@ -20984,9 +21418,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        client_token: String = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CreateCarrierGatewayResult:
         raise NotImplementedError
@@ -20999,22 +21433,22 @@ class Ec2Api:
         server_certificate_arn: String,
         authentication_options: ClientVpnAuthenticationRequestList,
         connection_log_options: ConnectionLogOptions,
-        dns_servers: ValueStringList = None,
-        transport_protocol: TransportProtocol = None,
-        vpn_port: Integer = None,
-        description: String = None,
-        split_tunnel: Boolean = None,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        tag_specifications: TagSpecificationList = None,
-        security_group_ids: ClientVpnSecurityGroupIdSet = None,
-        vpc_id: VpcId = None,
-        self_service_portal: SelfServicePortal = None,
-        client_connect_options: ClientConnectOptions = None,
-        session_timeout_hours: Integer = None,
-        client_login_banner_options: ClientLoginBannerOptions = None,
-        client_route_enforcement_options: ClientRouteEnforcementOptions = None,
-        disconnect_on_session_timeout: Boolean = None,
+        dns_servers: ValueStringList | None = None,
+        transport_protocol: TransportProtocol | None = None,
+        vpn_port: Integer | None = None,
+        description: String | None = None,
+        split_tunnel: Boolean | None = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        security_group_ids: ClientVpnSecurityGroupIdSet | None = None,
+        vpc_id: VpcId | None = None,
+        self_service_portal: SelfServicePortal | None = None,
+        client_connect_options: ClientConnectOptions | None = None,
+        session_timeout_hours: Integer | None = None,
+        client_login_banner_options: ClientLoginBannerOptions | None = None,
+        client_route_enforcement_options: ClientRouteEnforcementOptions | None = None,
+        disconnect_on_session_timeout: Boolean | None = None,
         **kwargs,
     ) -> CreateClientVpnEndpointResult:
         raise NotImplementedError
@@ -21026,9 +21460,9 @@ class Ec2Api:
         client_vpn_endpoint_id: ClientVpnEndpointId,
         destination_cidr_block: String,
         target_vpc_subnet_id: SubnetId,
-        description: String = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        description: String | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateClientVpnRouteResult:
         raise NotImplementedError
@@ -21039,7 +21473,7 @@ class Ec2Api:
         context: RequestContext,
         cidr: String,
         coip_pool_id: Ipv4PoolCoipId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateCoipCidrResult:
         raise NotImplementedError
@@ -21049,8 +21483,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         local_gateway_route_table_id: LocalGatewayRoutetableId,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateCoipPoolResult:
         raise NotImplementedError
@@ -21066,16 +21500,29 @@ class Ec2Api:
         self,
         context: RequestContext,
         availability_zone: AvailabilityZoneName,
-        dry_run: Boolean = None,
-        ipv6_native: Boolean = None,
+        dry_run: Boolean | None = None,
+        ipv6_native: Boolean | None = None,
         **kwargs,
     ) -> CreateDefaultSubnetResult:
         raise NotImplementedError
 
     @handler("CreateDefaultVpc")
     def create_default_vpc(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> CreateDefaultVpcResult:
+        raise NotImplementedError
+
+    @handler("CreateDelegateMacVolumeOwnershipTask")
+    def create_delegate_mac_volume_ownership_task(
+        self,
+        context: RequestContext,
+        instance_id: InstanceId,
+        mac_credentials: SensitiveMacCredentials,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        **kwargs,
+    ) -> CreateDelegateMacVolumeOwnershipTaskResult:
         raise NotImplementedError
 
     @handler("CreateDhcpOptions")
@@ -21083,8 +21530,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         dhcp_configurations: NewDhcpConfigurationList,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateDhcpOptionsResult:
         raise NotImplementedError
@@ -21094,9 +21541,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateEgressOnlyInternetGatewayResult:
         raise NotImplementedError
@@ -21113,18 +21560,18 @@ class Ec2Api:
         context: RequestContext,
         resource_ids: FlowLogResourceIds,
         resource_type: FlowLogsResourceType,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        deliver_logs_permission_arn: String = None,
-        deliver_cross_account_role: String = None,
-        log_group_name: String = None,
-        traffic_type: TrafficType = None,
-        log_destination_type: LogDestinationType = None,
-        log_destination: String = None,
-        log_format: String = None,
-        tag_specifications: TagSpecificationList = None,
-        max_aggregation_interval: Integer = None,
-        destination_options: DestinationOptionsRequest = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        deliver_logs_permission_arn: String | None = None,
+        deliver_cross_account_role: String | None = None,
+        log_group_name: String | None = None,
+        traffic_type: TrafficType | None = None,
+        log_destination_type: LogDestinationType | None = None,
+        log_destination: String | None = None,
+        log_format: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        max_aggregation_interval: Integer | None = None,
+        destination_options: DestinationOptionsRequest | None = None,
         **kwargs,
     ) -> CreateFlowLogsResult:
         raise NotImplementedError
@@ -21134,12 +21581,12 @@ class Ec2Api:
         self,
         context: RequestContext,
         input_storage_location: StorageLocation,
-        dry_run: Boolean = None,
-        logs_storage_location: StorageLocation = None,
-        description: String = None,
-        name: String = None,
-        client_token: String = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        logs_storage_location: StorageLocation | None = None,
+        description: String | None = None,
+        name: String | None = None,
+        client_token: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateFpgaImageResult:
         raise NotImplementedError
@@ -21150,11 +21597,11 @@ class Ec2Api:
         context: RequestContext,
         instance_id: InstanceId,
         name: String,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        description: String = None,
-        no_reboot: Boolean = None,
-        block_device_mappings: BlockDeviceMappingRequestList = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        no_reboot: Boolean | None = None,
+        block_device_mappings: BlockDeviceMappingRequestList | None = None,
         **kwargs,
     ) -> CreateImageResult:
         raise NotImplementedError
@@ -21164,11 +21611,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         subnet_id: SubnetId,
-        dry_run: Boolean = None,
-        security_group_ids: SecurityGroupIdStringListRequest = None,
-        preserve_client_ip: Boolean = None,
-        client_token: String = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        security_group_ids: SecurityGroupIdStringListRequest | None = None,
+        preserve_client_ip: Boolean | None = None,
+        client_token: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateInstanceConnectEndpointResult:
         raise NotImplementedError
@@ -21177,11 +21624,11 @@ class Ec2Api:
     def create_instance_event_window(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        name: String = None,
-        time_ranges: InstanceEventWindowTimeRangeRequestSet = None,
-        cron_expression: InstanceEventWindowCronExpression = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        name: String | None = None,
+        time_ranges: InstanceEventWindowTimeRangeRequestSet | None = None,
+        cron_expression: InstanceEventWindowCronExpression | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateInstanceEventWindowResult:
         raise NotImplementedError
@@ -21193,8 +21640,8 @@ class Ec2Api:
         instance_id: InstanceId,
         target_environment: ExportEnvironment,
         export_to_s3_task: ExportToS3TaskSpecification,
-        tag_specifications: TagSpecificationList = None,
-        description: String = None,
+        tag_specifications: TagSpecificationList | None = None,
+        description: String | None = None,
         **kwargs,
     ) -> CreateInstanceExportTaskResult:
         raise NotImplementedError
@@ -21203,8 +21650,8 @@ class Ec2Api:
     def create_internet_gateway(
         self,
         context: RequestContext,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateInternetGatewayResult:
         raise NotImplementedError
@@ -21213,14 +21660,14 @@ class Ec2Api:
     def create_ipam(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        description: String = None,
-        operating_regions: AddIpamOperatingRegionSet = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
-        tier: IpamTier = None,
-        enable_private_gua: Boolean = None,
-        metered_account: IpamMeteredAccount = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        operating_regions: AddIpamOperatingRegionSet | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
+        tier: IpamTier | None = None,
+        enable_private_gua: Boolean | None = None,
+        metered_account: IpamMeteredAccount | None = None,
         **kwargs,
     ) -> CreateIpamResult:
         raise NotImplementedError
@@ -21230,9 +21677,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_id: IpamId,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CreateIpamExternalResourceVerificationTokenResult:
         raise NotImplementedError
@@ -21243,21 +21690,21 @@ class Ec2Api:
         context: RequestContext,
         ipam_scope_id: IpamScopeId,
         address_family: AddressFamily,
-        dry_run: Boolean = None,
-        locale: String = None,
-        source_ipam_pool_id: IpamPoolId = None,
-        description: String = None,
-        auto_import: Boolean = None,
-        publicly_advertisable: Boolean = None,
-        allocation_min_netmask_length: IpamNetmaskLength = None,
-        allocation_max_netmask_length: IpamNetmaskLength = None,
-        allocation_default_netmask_length: IpamNetmaskLength = None,
-        allocation_resource_tags: RequestIpamResourceTagList = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
-        aws_service: IpamPoolAwsService = None,
-        public_ip_source: IpamPoolPublicIpSource = None,
-        source_resource: IpamPoolSourceResourceRequest = None,
+        dry_run: Boolean | None = None,
+        locale: String | None = None,
+        source_ipam_pool_id: IpamPoolId | None = None,
+        description: String | None = None,
+        auto_import: Boolean | None = None,
+        publicly_advertisable: Boolean | None = None,
+        allocation_min_netmask_length: IpamNetmaskLength | None = None,
+        allocation_max_netmask_length: IpamNetmaskLength | None = None,
+        allocation_default_netmask_length: IpamNetmaskLength | None = None,
+        allocation_resource_tags: RequestIpamResourceTagList | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
+        aws_service: IpamPoolAwsService | None = None,
+        public_ip_source: IpamPoolPublicIpSource | None = None,
+        source_resource: IpamPoolSourceResourceRequest | None = None,
         **kwargs,
     ) -> CreateIpamPoolResult:
         raise NotImplementedError
@@ -21266,11 +21713,11 @@ class Ec2Api:
     def create_ipam_resource_discovery(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        description: String = None,
-        operating_regions: AddIpamOperatingRegionSet = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        operating_regions: AddIpamOperatingRegionSet | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CreateIpamResourceDiscoveryResult:
         raise NotImplementedError
@@ -21280,10 +21727,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_id: IpamId,
-        dry_run: Boolean = None,
-        description: String = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CreateIpamScopeResult:
         raise NotImplementedError
@@ -21293,10 +21740,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         key_name: String,
-        key_type: KeyType = None,
-        tag_specifications: TagSpecificationList = None,
-        key_format: KeyFormat = None,
-        dry_run: Boolean = None,
+        key_type: KeyType | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        key_format: KeyFormat | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> KeyPair:
         raise NotImplementedError
@@ -21307,11 +21754,11 @@ class Ec2Api:
         context: RequestContext,
         launch_template_name: LaunchTemplateName,
         launch_template_data: RequestLaunchTemplateData,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        version_description: VersionDescription = None,
-        operator: OperatorRequest = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        version_description: VersionDescription | None = None,
+        operator: OperatorRequest | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateLaunchTemplateResult:
         raise NotImplementedError
@@ -21321,13 +21768,13 @@ class Ec2Api:
         self,
         context: RequestContext,
         launch_template_data: RequestLaunchTemplateData,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        launch_template_id: LaunchTemplateId = None,
-        launch_template_name: LaunchTemplateName = None,
-        source_version: String = None,
-        version_description: VersionDescription = None,
-        resolve_alias: Boolean = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        launch_template_id: LaunchTemplateId | None = None,
+        launch_template_name: LaunchTemplateName | None = None,
+        source_version: String | None = None,
+        version_description: VersionDescription | None = None,
+        resolve_alias: Boolean | None = None,
         **kwargs,
     ) -> CreateLaunchTemplateVersionResult:
         raise NotImplementedError
@@ -21337,11 +21784,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         local_gateway_route_table_id: LocalGatewayRoutetableId,
-        destination_cidr_block: String = None,
-        local_gateway_virtual_interface_group_id: LocalGatewayVirtualInterfaceGroupId = None,
-        dry_run: Boolean = None,
-        network_interface_id: NetworkInterfaceId = None,
-        destination_prefix_list_id: PrefixListResourceId = None,
+        destination_cidr_block: String | None = None,
+        local_gateway_virtual_interface_group_id: LocalGatewayVirtualInterfaceGroupId | None = None,
+        dry_run: Boolean | None = None,
+        network_interface_id: NetworkInterfaceId | None = None,
+        destination_prefix_list_id: PrefixListResourceId | None = None,
         **kwargs,
     ) -> CreateLocalGatewayRouteResult:
         raise NotImplementedError
@@ -21351,9 +21798,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         local_gateway_id: LocalGatewayId,
-        mode: LocalGatewayRouteTableMode = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        mode: LocalGatewayRouteTableMode | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateLocalGatewayRouteTableResult:
         raise NotImplementedError
@@ -21364,8 +21811,8 @@ class Ec2Api:
         context: RequestContext,
         local_gateway_route_table_id: LocalGatewayRoutetableId,
         local_gateway_virtual_interface_group_id: LocalGatewayVirtualInterfaceGroupId,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateLocalGatewayRouteTableVirtualInterfaceGroupAssociationResult:
         raise NotImplementedError
@@ -21376,10 +21823,56 @@ class Ec2Api:
         context: RequestContext,
         local_gateway_route_table_id: LocalGatewayRoutetableId,
         vpc_id: VpcId,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateLocalGatewayRouteTableVpcAssociationResult:
+        raise NotImplementedError
+
+    @handler("CreateLocalGatewayVirtualInterface")
+    def create_local_gateway_virtual_interface(
+        self,
+        context: RequestContext,
+        local_gateway_virtual_interface_group_id: LocalGatewayVirtualInterfaceGroupId,
+        outpost_lag_id: OutpostLagId,
+        vlan: Integer,
+        local_address: String,
+        peer_address: String,
+        peer_bgp_asn: Integer | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        peer_bgp_asn_extended: Long | None = None,
+        **kwargs,
+    ) -> CreateLocalGatewayVirtualInterfaceResult:
+        raise NotImplementedError
+
+    @handler("CreateLocalGatewayVirtualInterfaceGroup")
+    def create_local_gateway_virtual_interface_group(
+        self,
+        context: RequestContext,
+        local_gateway_id: LocalGatewayId,
+        local_bgp_asn: Integer | None = None,
+        local_bgp_asn_extended: Long | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        **kwargs,
+    ) -> CreateLocalGatewayVirtualInterfaceGroupResult:
+        raise NotImplementedError
+
+    @handler("CreateMacSystemIntegrityProtectionModificationTask")
+    def create_mac_system_integrity_protection_modification_task(
+        self,
+        context: RequestContext,
+        instance_id: InstanceId,
+        mac_system_integrity_protection_status: MacSystemIntegrityProtectionSettingStatus,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        mac_credentials: SensitiveMacCredentials | None = None,
+        mac_system_integrity_protection_configuration: MacSystemIntegrityProtectionConfigurationRequest
+        | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        **kwargs,
+    ) -> CreateMacSystemIntegrityProtectionModificationTaskResult:
         raise NotImplementedError
 
     @handler("CreateManagedPrefixList")
@@ -21389,10 +21882,10 @@ class Ec2Api:
         prefix_list_name: String,
         max_entries: Integer,
         address_family: String,
-        dry_run: Boolean = None,
-        entries: AddPrefixListEntries = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        entries: AddPrefixListEntries | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CreateManagedPrefixListResult:
         raise NotImplementedError
@@ -21402,15 +21895,15 @@ class Ec2Api:
         self,
         context: RequestContext,
         subnet_id: SubnetId,
-        allocation_id: AllocationId = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
-        connectivity_type: ConnectivityType = None,
-        private_ip_address: String = None,
-        secondary_allocation_ids: AllocationIdList = None,
-        secondary_private_ip_addresses: IpList = None,
-        secondary_private_ip_address_count: PrivateIpAddressCount = None,
+        allocation_id: AllocationId | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        connectivity_type: ConnectivityType | None = None,
+        private_ip_address: String | None = None,
+        secondary_allocation_ids: AllocationIdList | None = None,
+        secondary_private_ip_addresses: IpList | None = None,
+        secondary_private_ip_address_count: PrivateIpAddressCount | None = None,
         **kwargs,
     ) -> CreateNatGatewayResult:
         raise NotImplementedError
@@ -21420,9 +21913,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateNetworkAclResult:
         raise NotImplementedError
@@ -21436,11 +21929,11 @@ class Ec2Api:
         protocol: String,
         rule_action: RuleAction,
         egress: Boolean,
-        dry_run: Boolean = None,
-        cidr_block: String = None,
-        ipv6_cidr_block: String = None,
-        icmp_type_code: IcmpTypeCode = None,
-        port_range: PortRange = None,
+        dry_run: Boolean | None = None,
+        cidr_block: String | None = None,
+        ipv6_cidr_block: String | None = None,
+        icmp_type_code: IcmpTypeCode | None = None,
+        port_range: PortRange | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -21450,10 +21943,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_token: String,
-        match_paths: AccessScopePathListRequest = None,
-        exclude_paths: AccessScopePathListRequest = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        match_paths: AccessScopePathListRequest | None = None,
+        exclude_paths: AccessScopePathListRequest | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateNetworkInsightsAccessScopeResult:
         raise NotImplementedError
@@ -21465,14 +21958,14 @@ class Ec2Api:
         source: NetworkInsightsResourceId,
         protocol: Protocol,
         client_token: String,
-        source_ip: IpAddress = None,
-        destination_ip: IpAddress = None,
-        destination: NetworkInsightsResourceId = None,
-        destination_port: Port = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        filter_at_source: PathRequestFilter = None,
-        filter_at_destination: PathRequestFilter = None,
+        source_ip: IpAddress | None = None,
+        destination_ip: IpAddress | None = None,
+        destination: NetworkInsightsResourceId | None = None,
+        destination_port: Port | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        filter_at_source: PathRequestFilter | None = None,
+        filter_at_destination: PathRequestFilter | None = None,
         **kwargs,
     ) -> CreateNetworkInsightsPathResult:
         raise NotImplementedError
@@ -21482,24 +21975,24 @@ class Ec2Api:
         self,
         context: RequestContext,
         subnet_id: SubnetId,
-        ipv4_prefixes: Ipv4PrefixList = None,
-        ipv4_prefix_count: Integer = None,
-        ipv6_prefixes: Ipv6PrefixList = None,
-        ipv6_prefix_count: Integer = None,
-        interface_type: NetworkInterfaceCreationType = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
-        enable_primary_ipv6: Boolean = None,
-        connection_tracking_specification: ConnectionTrackingSpecificationRequest = None,
-        operator: OperatorRequest = None,
-        description: String = None,
-        private_ip_address: String = None,
-        groups: SecurityGroupIdStringList = None,
-        private_ip_addresses: PrivateIpAddressSpecificationList = None,
-        secondary_private_ip_address_count: Integer = None,
-        ipv6_addresses: InstanceIpv6AddressList = None,
-        ipv6_address_count: Integer = None,
-        dry_run: Boolean = None,
+        ipv4_prefixes: Ipv4PrefixList | None = None,
+        ipv4_prefix_count: Integer | None = None,
+        ipv6_prefixes: Ipv6PrefixList | None = None,
+        ipv6_prefix_count: Integer | None = None,
+        interface_type: NetworkInterfaceCreationType | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
+        enable_primary_ipv6: Boolean | None = None,
+        connection_tracking_specification: ConnectionTrackingSpecificationRequest | None = None,
+        operator: OperatorRequest | None = None,
+        description: String | None = None,
+        private_ip_address: String | None = None,
+        groups: SecurityGroupIdStringList | None = None,
+        private_ip_addresses: PrivateIpAddressSpecificationList | None = None,
+        secondary_private_ip_address_count: Integer | None = None,
+        ipv6_addresses: InstanceIpv6AddressList | None = None,
+        ipv6_address_count: Integer | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateNetworkInterfaceResult:
         raise NotImplementedError
@@ -21510,9 +22003,9 @@ class Ec2Api:
         context: RequestContext,
         network_interface_id: NetworkInterfaceId,
         permission: InterfacePermissionType,
-        aws_account_id: String = None,
-        aws_service: String = None,
-        dry_run: Boolean = None,
+        aws_account_id: String | None = None,
+        aws_service: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateNetworkInterfacePermissionResult:
         raise NotImplementedError
@@ -21521,12 +22014,12 @@ class Ec2Api:
     def create_placement_group(
         self,
         context: RequestContext,
-        partition_count: Integer = None,
-        tag_specifications: TagSpecificationList = None,
-        spread_level: SpreadLevel = None,
-        dry_run: Boolean = None,
-        group_name: String = None,
-        strategy: PlacementStrategy = None,
+        partition_count: Integer | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        spread_level: SpreadLevel | None = None,
+        dry_run: Boolean | None = None,
+        group_name: String | None = None,
+        strategy: PlacementStrategy | None = None,
         **kwargs,
     ) -> CreatePlacementGroupResult:
         raise NotImplementedError
@@ -21535,9 +22028,9 @@ class Ec2Api:
     def create_public_ipv4_pool(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
-        network_border_group: String = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        network_border_group: String | None = None,
         **kwargs,
     ) -> CreatePublicIpv4PoolResult:
         raise NotImplementedError
@@ -21547,12 +22040,13 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_id: InstanceId,
-        snapshot_id: SnapshotId = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
-        image_id: ImageId = None,
-        delete_replaced_root_volume: Boolean = None,
+        snapshot_id: SnapshotId | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        image_id: ImageId | None = None,
+        delete_replaced_root_volume: Boolean | None = None,
+        volume_initialization_rate: Long | None = None,
         **kwargs,
     ) -> CreateReplaceRootVolumeTaskResult:
         raise NotImplementedError
@@ -21575,9 +22069,9 @@ class Ec2Api:
         context: RequestContext,
         bucket: String,
         object_key: String,
-        name: String = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        name: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateRestoreImageTaskResult:
         raise NotImplementedError
@@ -21587,21 +22081,21 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_table_id: RouteTableId,
-        destination_prefix_list_id: PrefixListResourceId = None,
-        vpc_endpoint_id: VpcEndpointId = None,
-        transit_gateway_id: TransitGatewayId = None,
-        local_gateway_id: LocalGatewayId = None,
-        carrier_gateway_id: CarrierGatewayId = None,
-        core_network_arn: CoreNetworkArn = None,
-        dry_run: Boolean = None,
-        destination_cidr_block: String = None,
-        gateway_id: RouteGatewayId = None,
-        destination_ipv6_cidr_block: String = None,
-        egress_only_internet_gateway_id: EgressOnlyInternetGatewayId = None,
-        instance_id: InstanceId = None,
-        network_interface_id: NetworkInterfaceId = None,
-        vpc_peering_connection_id: VpcPeeringConnectionId = None,
-        nat_gateway_id: NatGatewayId = None,
+        destination_prefix_list_id: PrefixListResourceId | None = None,
+        vpc_endpoint_id: VpcEndpointId | None = None,
+        transit_gateway_id: TransitGatewayId | None = None,
+        local_gateway_id: LocalGatewayId | None = None,
+        carrier_gateway_id: CarrierGatewayId | None = None,
+        core_network_arn: CoreNetworkArn | None = None,
+        dry_run: Boolean | None = None,
+        destination_cidr_block: String | None = None,
+        gateway_id: RouteGatewayId | None = None,
+        destination_ipv6_cidr_block: String | None = None,
+        egress_only_internet_gateway_id: EgressOnlyInternetGatewayId | None = None,
+        instance_id: InstanceId | None = None,
+        network_interface_id: NetworkInterfaceId | None = None,
+        vpc_peering_connection_id: VpcPeeringConnectionId | None = None,
+        nat_gateway_id: NatGatewayId | None = None,
         **kwargs,
     ) -> CreateRouteResult:
         raise NotImplementedError
@@ -21611,12 +22105,12 @@ class Ec2Api:
         self,
         context: RequestContext,
         amazon_side_asn: Long,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        persist_routes: RouteServerPersistRoutesAction = None,
-        persist_routes_duration: BoxedLong = None,
-        sns_notifications_enabled: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        persist_routes: RouteServerPersistRoutesAction | None = None,
+        persist_routes_duration: BoxedLong | None = None,
+        sns_notifications_enabled: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateRouteServerResult:
         raise NotImplementedError
@@ -21627,9 +22121,9 @@ class Ec2Api:
         context: RequestContext,
         route_server_id: RouteServerId,
         subnet_id: SubnetId,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateRouteServerEndpointResult:
         raise NotImplementedError
@@ -21641,8 +22135,8 @@ class Ec2Api:
         route_server_endpoint_id: RouteServerEndpointId,
         peer_address: String,
         bgp_options: RouteServerBgpOptionsRequest,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateRouteServerPeerResult:
         raise NotImplementedError
@@ -21652,9 +22146,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateRouteTableResult:
         raise NotImplementedError
@@ -21665,9 +22159,9 @@ class Ec2Api:
         context: RequestContext,
         description: String,
         group_name: String,
-        vpc_id: VpcId = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        vpc_id: VpcId | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateSecurityGroupResult:
         raise NotImplementedError
@@ -21677,11 +22171,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         volume_id: VolumeId,
-        description: String = None,
-        outpost_arn: String = None,
-        tag_specifications: TagSpecificationList = None,
-        location: SnapshotLocationEnum = None,
-        dry_run: Boolean = None,
+        description: String | None = None,
+        outpost_arn: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        location: SnapshotLocationEnum | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> Snapshot:
         raise NotImplementedError
@@ -21691,12 +22185,12 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_specification: InstanceSpecification,
-        description: String = None,
-        outpost_arn: String = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        copy_tags_from_source: CopyTagsFromSource = None,
-        location: SnapshotLocationEnum = None,
+        description: String | None = None,
+        outpost_arn: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        copy_tags_from_source: CopyTagsFromSource | None = None,
+        location: SnapshotLocationEnum | None = None,
         **kwargs,
     ) -> CreateSnapshotsResult:
         raise NotImplementedError
@@ -21706,8 +22200,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         bucket: String,
-        dry_run: Boolean = None,
-        prefix: String = None,
+        dry_run: Boolean | None = None,
+        prefix: String | None = None,
         **kwargs,
     ) -> CreateSpotDatafeedSubscriptionResult:
         raise NotImplementedError
@@ -21718,8 +22212,8 @@ class Ec2Api:
         context: RequestContext,
         image_id: ImageId,
         bucket: String,
-        s3_object_tags: S3ObjectTagList = None,
-        dry_run: Boolean = None,
+        s3_object_tags: S3ObjectTagList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateStoreImageTaskResult:
         raise NotImplementedError
@@ -21729,18 +22223,18 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        tag_specifications: TagSpecificationList = None,
-        availability_zone: String = None,
-        availability_zone_id: String = None,
-        cidr_block: String = None,
-        ipv6_cidr_block: String = None,
-        outpost_arn: String = None,
-        ipv6_native: Boolean = None,
-        ipv4_ipam_pool_id: IpamPoolId = None,
-        ipv4_netmask_length: NetmaskLength = None,
-        ipv6_ipam_pool_id: IpamPoolId = None,
-        ipv6_netmask_length: NetmaskLength = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        availability_zone: String | None = None,
+        availability_zone_id: String | None = None,
+        cidr_block: String | None = None,
+        ipv6_cidr_block: String | None = None,
+        outpost_arn: String | None = None,
+        ipv6_native: Boolean | None = None,
+        ipv4_ipam_pool_id: IpamPoolId | None = None,
+        ipv4_netmask_length: NetmaskLength | None = None,
+        ipv6_ipam_pool_id: IpamPoolId | None = None,
+        ipv6_netmask_length: NetmaskLength | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateSubnetResult:
         raise NotImplementedError
@@ -21752,9 +22246,9 @@ class Ec2Api:
         subnet_id: SubnetId,
         cidr: String,
         reservation_type: SubnetCidrReservationType,
-        description: String = None,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
+        description: String | None = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateSubnetCidrReservationResult:
         raise NotImplementedError
@@ -21765,7 +22259,7 @@ class Ec2Api:
         context: RequestContext,
         resources: ResourceIdList,
         tags: TagList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -21774,10 +22268,10 @@ class Ec2Api:
     def create_traffic_mirror_filter(
         self,
         context: RequestContext,
-        description: String = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        client_token: String = None,
+        description: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CreateTrafficMirrorFilterResult:
         raise NotImplementedError
@@ -21792,13 +22286,13 @@ class Ec2Api:
         rule_action: TrafficMirrorRuleAction,
         destination_cidr_block: String,
         source_cidr_block: String,
-        destination_port_range: TrafficMirrorPortRangeRequest = None,
-        source_port_range: TrafficMirrorPortRangeRequest = None,
-        protocol: Integer = None,
-        description: String = None,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        tag_specifications: TagSpecificationList = None,
+        destination_port_range: TrafficMirrorPortRangeRequest | None = None,
+        source_port_range: TrafficMirrorPortRangeRequest | None = None,
+        protocol: Integer | None = None,
+        description: String | None = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateTrafficMirrorFilterRuleResult:
         raise NotImplementedError
@@ -21811,12 +22305,12 @@ class Ec2Api:
         traffic_mirror_target_id: TrafficMirrorTargetId,
         traffic_mirror_filter_id: TrafficMirrorFilterId,
         session_number: Integer,
-        packet_length: Integer = None,
-        virtual_network_id: Integer = None,
-        description: String = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        client_token: String = None,
+        packet_length: Integer | None = None,
+        virtual_network_id: Integer | None = None,
+        description: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CreateTrafficMirrorSessionResult:
         raise NotImplementedError
@@ -21825,13 +22319,13 @@ class Ec2Api:
     def create_traffic_mirror_target(
         self,
         context: RequestContext,
-        network_interface_id: NetworkInterfaceId = None,
-        network_load_balancer_arn: String = None,
-        description: String = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        gateway_load_balancer_endpoint_id: VpcEndpointId = None,
+        network_interface_id: NetworkInterfaceId | None = None,
+        network_load_balancer_arn: String | None = None,
+        description: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        gateway_load_balancer_endpoint_id: VpcEndpointId | None = None,
         **kwargs,
     ) -> CreateTrafficMirrorTargetResult:
         raise NotImplementedError
@@ -21840,10 +22334,10 @@ class Ec2Api:
     def create_transit_gateway(
         self,
         context: RequestContext,
-        description: String = None,
-        options: TransitGatewayRequestOptions = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        description: String | None = None,
+        options: TransitGatewayRequestOptions | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayResult:
         raise NotImplementedError
@@ -21854,8 +22348,8 @@ class Ec2Api:
         context: RequestContext,
         transport_transit_gateway_attachment_id: TransitGatewayAttachmentId,
         options: CreateTransitGatewayConnectRequestOptions,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayConnectResult:
         raise NotImplementedError
@@ -21867,10 +22361,10 @@ class Ec2Api:
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
         peer_address: String,
         inside_cidr_blocks: InsideCidrBlocksStringList,
-        transit_gateway_address: String = None,
-        bgp_options: TransitGatewayConnectRequestBgpOptions = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        transit_gateway_address: String | None = None,
+        bgp_options: TransitGatewayConnectRequestBgpOptions | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayConnectPeerResult:
         raise NotImplementedError
@@ -21880,9 +22374,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_id: TransitGatewayId,
-        options: CreateTransitGatewayMulticastDomainRequestOptions = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        options: CreateTransitGatewayMulticastDomainRequestOptions | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayMulticastDomainResult:
         raise NotImplementedError
@@ -21895,9 +22389,9 @@ class Ec2Api:
         peer_transit_gateway_id: TransitAssociationGatewayId,
         peer_account_id: String,
         peer_region: String,
-        options: CreateTransitGatewayPeeringAttachmentRequestOptions = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        options: CreateTransitGatewayPeeringAttachmentRequestOptions | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayPeeringAttachmentResult:
         raise NotImplementedError
@@ -21907,8 +22401,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_id: TransitGatewayId,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayPolicyTableResult:
         raise NotImplementedError
@@ -21919,9 +22413,9 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
         prefix_list_id: PrefixListResourceId,
-        transit_gateway_attachment_id: TransitGatewayAttachmentId = None,
-        blackhole: Boolean = None,
-        dry_run: Boolean = None,
+        transit_gateway_attachment_id: TransitGatewayAttachmentId | None = None,
+        blackhole: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayPrefixListReferenceResult:
         raise NotImplementedError
@@ -21932,9 +22426,9 @@ class Ec2Api:
         context: RequestContext,
         destination_cidr_block: String,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
-        transit_gateway_attachment_id: TransitGatewayAttachmentId = None,
-        blackhole: Boolean = None,
-        dry_run: Boolean = None,
+        transit_gateway_attachment_id: TransitGatewayAttachmentId | None = None,
+        blackhole: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayRouteResult:
         raise NotImplementedError
@@ -21944,8 +22438,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_id: TransitGatewayId,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayRouteTableResult:
         raise NotImplementedError
@@ -21956,8 +22450,8 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
         peering_attachment_id: TransitGatewayAttachmentId,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayRouteTableAnnouncementResult:
         raise NotImplementedError
@@ -21969,9 +22463,9 @@ class Ec2Api:
         transit_gateway_id: TransitGatewayId,
         vpc_id: VpcId,
         subnet_ids: TransitGatewaySubnetIdList,
-        options: CreateTransitGatewayVpcAttachmentRequestOptions = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        options: CreateTransitGatewayVpcAttachmentRequestOptions | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> CreateTransitGatewayVpcAttachmentResult:
         raise NotImplementedError
@@ -21983,20 +22477,20 @@ class Ec2Api:
         verified_access_group_id: VerifiedAccessGroupId,
         endpoint_type: VerifiedAccessEndpointType,
         attachment_type: VerifiedAccessEndpointAttachmentType,
-        domain_certificate_arn: CertificateArn = None,
-        application_domain: String = None,
-        endpoint_domain_prefix: String = None,
-        security_group_ids: SecurityGroupIdList = None,
-        load_balancer_options: CreateVerifiedAccessEndpointLoadBalancerOptions = None,
-        network_interface_options: CreateVerifiedAccessEndpointEniOptions = None,
-        description: String = None,
-        policy_document: String = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        sse_specification: VerifiedAccessSseSpecificationRequest = None,
-        rds_options: CreateVerifiedAccessEndpointRdsOptions = None,
-        cidr_options: CreateVerifiedAccessEndpointCidrOptions = None,
+        domain_certificate_arn: CertificateArn | None = None,
+        application_domain: String | None = None,
+        endpoint_domain_prefix: String | None = None,
+        security_group_ids: SecurityGroupIdList | None = None,
+        load_balancer_options: CreateVerifiedAccessEndpointLoadBalancerOptions | None = None,
+        network_interface_options: CreateVerifiedAccessEndpointEniOptions | None = None,
+        description: String | None = None,
+        policy_document: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        sse_specification: VerifiedAccessSseSpecificationRequest | None = None,
+        rds_options: CreateVerifiedAccessEndpointRdsOptions | None = None,
+        cidr_options: CreateVerifiedAccessEndpointCidrOptions | None = None,
         **kwargs,
     ) -> CreateVerifiedAccessEndpointResult:
         raise NotImplementedError
@@ -22006,12 +22500,12 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_instance_id: VerifiedAccessInstanceId,
-        description: String = None,
-        policy_document: String = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        sse_specification: VerifiedAccessSseSpecificationRequest = None,
+        description: String | None = None,
+        policy_document: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        sse_specification: VerifiedAccessSseSpecificationRequest | None = None,
         **kwargs,
     ) -> CreateVerifiedAccessGroupResult:
         raise NotImplementedError
@@ -22020,12 +22514,12 @@ class Ec2Api:
     def create_verified_access_instance(
         self,
         context: RequestContext,
-        description: String = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        fips_enabled: Boolean = None,
-        cidr_endpoints_custom_sub_domain: String = None,
+        description: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        fips_enabled: Boolean | None = None,
+        cidr_endpoints_custom_sub_domain: String | None = None,
         **kwargs,
     ) -> CreateVerifiedAccessInstanceResult:
         raise NotImplementedError
@@ -22036,16 +22530,17 @@ class Ec2Api:
         context: RequestContext,
         trust_provider_type: TrustProviderType,
         policy_reference_name: String,
-        user_trust_provider_type: UserTrustProviderType = None,
-        device_trust_provider_type: DeviceTrustProviderType = None,
-        oidc_options: CreateVerifiedAccessTrustProviderOidcOptions = None,
-        device_options: CreateVerifiedAccessTrustProviderDeviceOptions = None,
-        description: String = None,
-        tag_specifications: TagSpecificationList = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        sse_specification: VerifiedAccessSseSpecificationRequest = None,
-        native_application_oidc_options: CreateVerifiedAccessNativeApplicationOidcOptions = None,
+        user_trust_provider_type: UserTrustProviderType | None = None,
+        device_trust_provider_type: DeviceTrustProviderType | None = None,
+        oidc_options: CreateVerifiedAccessTrustProviderOidcOptions | None = None,
+        device_options: CreateVerifiedAccessTrustProviderDeviceOptions | None = None,
+        description: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        sse_specification: VerifiedAccessSseSpecificationRequest | None = None,
+        native_application_oidc_options: CreateVerifiedAccessNativeApplicationOidcOptions
+        | None = None,
         **kwargs,
     ) -> CreateVerifiedAccessTrustProviderResult:
         raise NotImplementedError
@@ -22055,19 +22550,20 @@ class Ec2Api:
         self,
         context: RequestContext,
         availability_zone: AvailabilityZoneName,
-        encrypted: Boolean = None,
-        iops: Integer = None,
-        kms_key_id: KmsKeyId = None,
-        outpost_arn: String = None,
-        size: Integer = None,
-        snapshot_id: SnapshotId = None,
-        volume_type: VolumeType = None,
-        tag_specifications: TagSpecificationList = None,
-        multi_attach_enabled: Boolean = None,
-        throughput: Integer = None,
-        client_token: String = None,
-        operator: OperatorRequest = None,
-        dry_run: Boolean = None,
+        encrypted: Boolean | None = None,
+        iops: Integer | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        outpost_arn: String | None = None,
+        size: Integer | None = None,
+        snapshot_id: SnapshotId | None = None,
+        volume_type: VolumeType | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        multi_attach_enabled: Boolean | None = None,
+        throughput: Integer | None = None,
+        client_token: String | None = None,
+        volume_initialization_rate: Integer | None = None,
+        operator: OperatorRequest | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> Volume:
         raise NotImplementedError
@@ -22076,18 +22572,18 @@ class Ec2Api:
     def create_vpc(
         self,
         context: RequestContext,
-        cidr_block: String = None,
-        ipv6_pool: Ipv6PoolEc2Id = None,
-        ipv6_cidr_block: String = None,
-        ipv4_ipam_pool_id: IpamPoolId = None,
-        ipv4_netmask_length: NetmaskLength = None,
-        ipv6_ipam_pool_id: IpamPoolId = None,
-        ipv6_netmask_length: NetmaskLength = None,
-        ipv6_cidr_block_network_border_group: String = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        instance_tenancy: Tenancy = None,
-        amazon_provided_ipv6_cidr_block: Boolean = None,
+        cidr_block: String | None = None,
+        ipv6_pool: Ipv6PoolEc2Id | None = None,
+        ipv6_cidr_block: String | None = None,
+        ipv4_ipam_pool_id: IpamPoolId | None = None,
+        ipv4_netmask_length: NetmaskLength | None = None,
+        ipv6_ipam_pool_id: IpamPoolId | None = None,
+        ipv6_netmask_length: NetmaskLength | None = None,
+        ipv6_cidr_block_network_border_group: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        instance_tenancy: Tenancy | None = None,
+        amazon_provided_ipv6_cidr_block: Boolean | None = None,
         **kwargs,
     ) -> CreateVpcResult:
         raise NotImplementedError
@@ -22097,10 +22593,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         internet_gateway_exclusion_mode: InternetGatewayExclusionMode,
-        dry_run: Boolean = None,
-        subnet_id: SubnetId = None,
-        vpc_id: VpcId = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        subnet_id: SubnetId | None = None,
+        vpc_id: VpcId | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateVpcBlockPublicAccessExclusionResult:
         raise NotImplementedError
@@ -22110,22 +22606,22 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
-        vpc_endpoint_type: VpcEndpointType = None,
-        service_name: String = None,
-        policy_document: String = None,
-        route_table_ids: VpcEndpointRouteTableIdList = None,
-        subnet_ids: VpcEndpointSubnetIdList = None,
-        security_group_ids: VpcEndpointSecurityGroupIdList = None,
-        ip_address_type: IpAddressType = None,
-        dns_options: DnsOptionsSpecification = None,
-        client_token: String = None,
-        private_dns_enabled: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
-        subnet_configurations: SubnetConfigurationsList = None,
-        service_network_arn: ServiceNetworkArn = None,
-        resource_configuration_arn: ResourceConfigurationArn = None,
-        service_region: String = None,
+        dry_run: Boolean | None = None,
+        vpc_endpoint_type: VpcEndpointType | None = None,
+        service_name: String | None = None,
+        policy_document: String | None = None,
+        route_table_ids: VpcEndpointRouteTableIdList | None = None,
+        subnet_ids: VpcEndpointSubnetIdList | None = None,
+        security_group_ids: VpcEndpointSecurityGroupIdList | None = None,
+        ip_address_type: IpAddressType | None = None,
+        dns_options: DnsOptionsSpecification | None = None,
+        client_token: String | None = None,
+        private_dns_enabled: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        subnet_configurations: SubnetConfigurationsList | None = None,
+        service_network_arn: ServiceNetworkArn | None = None,
+        resource_configuration_arn: ResourceConfigurationArn | None = None,
+        service_region: String | None = None,
         **kwargs,
     ) -> CreateVpcEndpointResult:
         raise NotImplementedError
@@ -22136,10 +22632,10 @@ class Ec2Api:
         context: RequestContext,
         connection_notification_arn: String,
         connection_events: ValueStringList,
-        dry_run: Boolean = None,
-        service_id: VpcEndpointServiceId = None,
-        vpc_endpoint_id: VpcEndpointId = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        service_id: VpcEndpointServiceId | None = None,
+        vpc_endpoint_id: VpcEndpointId | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> CreateVpcEndpointConnectionNotificationResult:
         raise NotImplementedError
@@ -22148,15 +22644,15 @@ class Ec2Api:
     def create_vpc_endpoint_service_configuration(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        acceptance_required: Boolean = None,
-        private_dns_name: String = None,
-        network_load_balancer_arns: ValueStringList = None,
-        gateway_load_balancer_arns: ValueStringList = None,
-        supported_ip_address_types: ValueStringList = None,
-        supported_regions: ValueStringList = None,
-        client_token: String = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        acceptance_required: Boolean | None = None,
+        private_dns_name: String | None = None,
+        network_load_balancer_arns: ValueStringList | None = None,
+        gateway_load_balancer_arns: ValueStringList | None = None,
+        supported_ip_address_types: ValueStringList | None = None,
+        supported_regions: ValueStringList | None = None,
+        client_token: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> CreateVpcEndpointServiceConfigurationResult:
         raise NotImplementedError
@@ -22166,11 +22662,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        peer_region: String = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        peer_vpc_id: String = None,
-        peer_owner_id: String = None,
+        peer_region: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        peer_vpc_id: String | None = None,
+        peer_owner_id: String | None = None,
         **kwargs,
     ) -> CreateVpcPeeringConnectionResult:
         raise NotImplementedError
@@ -22202,7 +22698,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         carrier_gateway_id: CarrierGatewayId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteCarrierGatewayResult:
         raise NotImplementedError
@@ -22212,7 +22708,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteClientVpnEndpointResult:
         raise NotImplementedError
@@ -22223,8 +22719,8 @@ class Ec2Api:
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
         destination_cidr_block: String,
-        target_vpc_subnet_id: SubnetId = None,
-        dry_run: Boolean = None,
+        target_vpc_subnet_id: SubnetId | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteClientVpnRouteResult:
         raise NotImplementedError
@@ -22235,7 +22731,7 @@ class Ec2Api:
         context: RequestContext,
         cidr: String,
         coip_pool_id: Ipv4PoolCoipId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteCoipCidrResult:
         raise NotImplementedError
@@ -22245,7 +22741,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         coip_pool_id: Ipv4PoolCoipId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteCoipPoolResult:
         raise NotImplementedError
@@ -22255,7 +22751,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         customer_gateway_id: CustomerGatewayId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22265,7 +22761,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         dhcp_options_id: DhcpOptionsId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22275,7 +22771,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         egress_only_internet_gateway_id: EgressOnlyInternetGatewayId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteEgressOnlyInternetGatewayResult:
         raise NotImplementedError
@@ -22286,7 +22782,7 @@ class Ec2Api:
         context: RequestContext,
         fleet_ids: FleetIdSet,
         terminate_instances: Boolean,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteFleetsResult:
         raise NotImplementedError
@@ -22296,14 +22792,18 @@ class Ec2Api:
         self,
         context: RequestContext,
         flow_log_ids: FlowLogIdList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteFlowLogsResult:
         raise NotImplementedError
 
     @handler("DeleteFpgaImage")
     def delete_fpga_image(
-        self, context: RequestContext, fpga_image_id: FpgaImageId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        fpga_image_id: FpgaImageId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> DeleteFpgaImageResult:
         raise NotImplementedError
 
@@ -22312,7 +22812,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_connect_endpoint_id: InstanceConnectEndpointId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteInstanceConnectEndpointResult:
         raise NotImplementedError
@@ -22322,8 +22822,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_event_window_id: InstanceEventWindowId,
-        dry_run: Boolean = None,
-        force_delete: Boolean = None,
+        dry_run: Boolean | None = None,
+        force_delete: Boolean | None = None,
         **kwargs,
     ) -> DeleteInstanceEventWindowResult:
         raise NotImplementedError
@@ -22333,7 +22833,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         internet_gateway_id: InternetGatewayId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22343,8 +22843,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_id: IpamId,
-        dry_run: Boolean = None,
-        cascade: Boolean = None,
+        dry_run: Boolean | None = None,
+        cascade: Boolean | None = None,
         **kwargs,
     ) -> DeleteIpamResult:
         raise NotImplementedError
@@ -22354,7 +22854,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_external_resource_verification_token_id: IpamExternalResourceVerificationTokenId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteIpamExternalResourceVerificationTokenResult:
         raise NotImplementedError
@@ -22364,8 +22864,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_pool_id: IpamPoolId,
-        dry_run: Boolean = None,
-        cascade: Boolean = None,
+        dry_run: Boolean | None = None,
+        cascade: Boolean | None = None,
         **kwargs,
     ) -> DeleteIpamPoolResult:
         raise NotImplementedError
@@ -22375,14 +22875,18 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_resource_discovery_id: IpamResourceDiscoveryId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteIpamResourceDiscoveryResult:
         raise NotImplementedError
 
     @handler("DeleteIpamScope")
     def delete_ipam_scope(
-        self, context: RequestContext, ipam_scope_id: IpamScopeId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        ipam_scope_id: IpamScopeId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> DeleteIpamScopeResult:
         raise NotImplementedError
 
@@ -22390,9 +22894,9 @@ class Ec2Api:
     def delete_key_pair(
         self,
         context: RequestContext,
-        key_name: KeyPairNameWithResolver = None,
-        key_pair_id: KeyPairId = None,
-        dry_run: Boolean = None,
+        key_name: KeyPairNameWithResolver | None = None,
+        key_pair_id: KeyPairId | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteKeyPairResult:
         raise NotImplementedError
@@ -22401,9 +22905,9 @@ class Ec2Api:
     def delete_launch_template(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        launch_template_id: LaunchTemplateId = None,
-        launch_template_name: LaunchTemplateName = None,
+        dry_run: Boolean | None = None,
+        launch_template_id: LaunchTemplateId | None = None,
+        launch_template_name: LaunchTemplateName | None = None,
         **kwargs,
     ) -> DeleteLaunchTemplateResult:
         raise NotImplementedError
@@ -22413,9 +22917,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         versions: VersionStringList,
-        dry_run: Boolean = None,
-        launch_template_id: LaunchTemplateId = None,
-        launch_template_name: LaunchTemplateName = None,
+        dry_run: Boolean | None = None,
+        launch_template_id: LaunchTemplateId | None = None,
+        launch_template_name: LaunchTemplateName | None = None,
         **kwargs,
     ) -> DeleteLaunchTemplateVersionsResult:
         raise NotImplementedError
@@ -22425,9 +22929,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         local_gateway_route_table_id: LocalGatewayRoutetableId,
-        destination_cidr_block: String = None,
-        dry_run: Boolean = None,
-        destination_prefix_list_id: PrefixListResourceId = None,
+        destination_cidr_block: String | None = None,
+        dry_run: Boolean | None = None,
+        destination_prefix_list_id: PrefixListResourceId | None = None,
         **kwargs,
     ) -> DeleteLocalGatewayRouteResult:
         raise NotImplementedError
@@ -22437,7 +22941,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         local_gateway_route_table_id: LocalGatewayRoutetableId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteLocalGatewayRouteTableResult:
         raise NotImplementedError
@@ -22447,7 +22951,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         local_gateway_route_table_virtual_interface_group_association_id: LocalGatewayRouteTableVirtualInterfaceGroupAssociationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteLocalGatewayRouteTableVirtualInterfaceGroupAssociationResult:
         raise NotImplementedError
@@ -22457,9 +22961,29 @@ class Ec2Api:
         self,
         context: RequestContext,
         local_gateway_route_table_vpc_association_id: LocalGatewayRouteTableVpcAssociationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteLocalGatewayRouteTableVpcAssociationResult:
+        raise NotImplementedError
+
+    @handler("DeleteLocalGatewayVirtualInterface")
+    def delete_local_gateway_virtual_interface(
+        self,
+        context: RequestContext,
+        local_gateway_virtual_interface_id: LocalGatewayVirtualInterfaceId,
+        dry_run: Boolean | None = None,
+        **kwargs,
+    ) -> DeleteLocalGatewayVirtualInterfaceResult:
+        raise NotImplementedError
+
+    @handler("DeleteLocalGatewayVirtualInterfaceGroup")
+    def delete_local_gateway_virtual_interface_group(
+        self,
+        context: RequestContext,
+        local_gateway_virtual_interface_group_id: LocalGatewayVirtualInterfaceGroupId,
+        dry_run: Boolean | None = None,
+        **kwargs,
+    ) -> DeleteLocalGatewayVirtualInterfaceGroupResult:
         raise NotImplementedError
 
     @handler("DeleteManagedPrefixList")
@@ -22467,7 +22991,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         prefix_list_id: PrefixListResourceId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteManagedPrefixListResult:
         raise NotImplementedError
@@ -22477,7 +23001,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         nat_gateway_id: NatGatewayId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteNatGatewayResult:
         raise NotImplementedError
@@ -22487,7 +23011,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_acl_id: NetworkAclId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22499,7 +23023,7 @@ class Ec2Api:
         network_acl_id: NetworkAclId,
         rule_number: Integer,
         egress: Boolean,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22509,7 +23033,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_insights_access_scope_id: NetworkInsightsAccessScopeId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteNetworkInsightsAccessScopeResult:
         raise NotImplementedError
@@ -22519,7 +23043,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_insights_access_scope_analysis_id: NetworkInsightsAccessScopeAnalysisId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteNetworkInsightsAccessScopeAnalysisResult:
         raise NotImplementedError
@@ -22529,7 +23053,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_insights_analysis_id: NetworkInsightsAnalysisId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteNetworkInsightsAnalysisResult:
         raise NotImplementedError
@@ -22539,7 +23063,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_insights_path_id: NetworkInsightsPathId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteNetworkInsightsPathResult:
         raise NotImplementedError
@@ -22549,7 +23073,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_interface_id: NetworkInterfaceId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22559,8 +23083,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_interface_permission_id: NetworkInterfacePermissionId,
-        force: Boolean = None,
-        dry_run: Boolean = None,
+        force: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteNetworkInterfacePermissionResult:
         raise NotImplementedError
@@ -22570,7 +23094,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         group_name: PlacementGroupName,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22580,8 +23104,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         pool_id: Ipv4PoolEc2Id,
-        dry_run: Boolean = None,
-        network_border_group: String = None,
+        dry_run: Boolean | None = None,
+        network_border_group: String | None = None,
         **kwargs,
     ) -> DeletePublicIpv4PoolResult:
         raise NotImplementedError
@@ -22591,7 +23115,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         reserved_instances_ids: DeleteQueuedReservedInstancesIdList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteQueuedReservedInstancesResult:
         raise NotImplementedError
@@ -22601,10 +23125,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_table_id: RouteTableId,
-        destination_prefix_list_id: PrefixListResourceId = None,
-        dry_run: Boolean = None,
-        destination_cidr_block: String = None,
-        destination_ipv6_cidr_block: String = None,
+        destination_prefix_list_id: PrefixListResourceId | None = None,
+        dry_run: Boolean | None = None,
+        destination_cidr_block: String | None = None,
+        destination_ipv6_cidr_block: String | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22614,7 +23138,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_server_id: RouteServerId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteRouteServerResult:
         raise NotImplementedError
@@ -22624,7 +23148,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_server_endpoint_id: RouteServerEndpointId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteRouteServerEndpointResult:
         raise NotImplementedError
@@ -22634,7 +23158,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_server_peer_id: RouteServerPeerId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteRouteServerPeerResult:
         raise NotImplementedError
@@ -22644,7 +23168,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_table_id: RouteTableId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22653,28 +23177,32 @@ class Ec2Api:
     def delete_security_group(
         self,
         context: RequestContext,
-        group_id: SecurityGroupId = None,
-        group_name: SecurityGroupName = None,
-        dry_run: Boolean = None,
+        group_id: SecurityGroupId | None = None,
+        group_name: SecurityGroupName | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteSecurityGroupResult:
         raise NotImplementedError
 
     @handler("DeleteSnapshot")
     def delete_snapshot(
-        self, context: RequestContext, snapshot_id: SnapshotId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        snapshot_id: SnapshotId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> None:
         raise NotImplementedError
 
     @handler("DeleteSpotDatafeedSubscription")
     def delete_spot_datafeed_subscription(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> None:
         raise NotImplementedError
 
     @handler("DeleteSubnet")
     def delete_subnet(
-        self, context: RequestContext, subnet_id: SubnetId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, subnet_id: SubnetId, dry_run: Boolean | None = None, **kwargs
     ) -> None:
         raise NotImplementedError
 
@@ -22683,7 +23211,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         subnet_cidr_reservation_id: SubnetCidrReservationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteSubnetCidrReservationResult:
         raise NotImplementedError
@@ -22693,8 +23221,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         resources: ResourceIdList,
-        dry_run: Boolean = None,
-        tags: TagList = None,
+        dry_run: Boolean | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22704,7 +23232,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         traffic_mirror_filter_id: TrafficMirrorFilterId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTrafficMirrorFilterResult:
         raise NotImplementedError
@@ -22714,7 +23242,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         traffic_mirror_filter_rule_id: TrafficMirrorFilterRuleIdWithResolver,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTrafficMirrorFilterRuleResult:
         raise NotImplementedError
@@ -22724,7 +23252,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         traffic_mirror_session_id: TrafficMirrorSessionId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTrafficMirrorSessionResult:
         raise NotImplementedError
@@ -22734,7 +23262,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         traffic_mirror_target_id: TrafficMirrorTargetId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTrafficMirrorTargetResult:
         raise NotImplementedError
@@ -22744,7 +23272,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_id: TransitGatewayId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayResult:
         raise NotImplementedError
@@ -22754,7 +23282,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayConnectResult:
         raise NotImplementedError
@@ -22764,7 +23292,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_connect_peer_id: TransitGatewayConnectPeerId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayConnectPeerResult:
         raise NotImplementedError
@@ -22774,7 +23302,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayMulticastDomainResult:
         raise NotImplementedError
@@ -22784,7 +23312,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayPeeringAttachmentResult:
         raise NotImplementedError
@@ -22794,7 +23322,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_policy_table_id: TransitGatewayPolicyTableId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayPolicyTableResult:
         raise NotImplementedError
@@ -22805,7 +23333,7 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
         prefix_list_id: PrefixListResourceId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayPrefixListReferenceResult:
         raise NotImplementedError
@@ -22816,7 +23344,7 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
         destination_cidr_block: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayRouteResult:
         raise NotImplementedError
@@ -22826,7 +23354,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayRouteTableResult:
         raise NotImplementedError
@@ -22836,7 +23364,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_route_table_announcement_id: TransitGatewayRouteTableAnnouncementId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayRouteTableAnnouncementResult:
         raise NotImplementedError
@@ -22846,7 +23374,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteTransitGatewayVpcAttachmentResult:
         raise NotImplementedError
@@ -22856,8 +23384,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_endpoint_id: VerifiedAccessEndpointId,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteVerifiedAccessEndpointResult:
         raise NotImplementedError
@@ -22867,8 +23395,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_group_id: VerifiedAccessGroupId,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteVerifiedAccessGroupResult:
         raise NotImplementedError
@@ -22878,8 +23406,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_instance_id: VerifiedAccessInstanceId,
-        dry_run: Boolean = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> DeleteVerifiedAccessInstanceResult:
         raise NotImplementedError
@@ -22889,21 +23417,21 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_trust_provider_id: VerifiedAccessTrustProviderId,
-        dry_run: Boolean = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> DeleteVerifiedAccessTrustProviderResult:
         raise NotImplementedError
 
     @handler("DeleteVolume")
     def delete_volume(
-        self, context: RequestContext, volume_id: VolumeId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, volume_id: VolumeId, dry_run: Boolean | None = None, **kwargs
     ) -> None:
         raise NotImplementedError
 
     @handler("DeleteVpc")
     def delete_vpc(
-        self, context: RequestContext, vpc_id: VpcId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, vpc_id: VpcId, dry_run: Boolean | None = None, **kwargs
     ) -> None:
         raise NotImplementedError
 
@@ -22912,7 +23440,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         exclusion_id: VpcBlockPublicAccessExclusionId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteVpcBlockPublicAccessExclusionResult:
         raise NotImplementedError
@@ -22922,7 +23450,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         connection_notification_ids: ConnectionNotificationIdsList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteVpcEndpointConnectionNotificationsResult:
         raise NotImplementedError
@@ -22932,7 +23460,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         service_ids: VpcEndpointServiceIdList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteVpcEndpointServiceConfigurationsResult:
         raise NotImplementedError
@@ -22942,7 +23470,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_endpoint_ids: VpcEndpointIdList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteVpcEndpointsResult:
         raise NotImplementedError
@@ -22952,7 +23480,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_peering_connection_id: VpcPeeringConnectionId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeleteVpcPeeringConnectionResult:
         raise NotImplementedError
@@ -22962,7 +23490,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpn_connection_id: VpnConnectionId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -22982,14 +23510,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpn_gateway_id: VpnGatewayId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
 
     @handler("DeprovisionByoipCidr")
     def deprovision_byoip_cidr(
-        self, context: RequestContext, cidr: String, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, cidr: String, dry_run: Boolean | None = None, **kwargs
     ) -> DeprovisionByoipCidrResult:
         raise NotImplementedError
 
@@ -22999,7 +23527,7 @@ class Ec2Api:
         context: RequestContext,
         ipam_id: IpamId,
         asn: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeprovisionIpamByoasnResult:
         raise NotImplementedError
@@ -23009,8 +23537,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_pool_id: IpamPoolId,
-        dry_run: Boolean = None,
-        cidr: String = None,
+        dry_run: Boolean | None = None,
+        cidr: String | None = None,
         **kwargs,
     ) -> DeprovisionIpamPoolCidrResult:
         raise NotImplementedError
@@ -23021,14 +23549,19 @@ class Ec2Api:
         context: RequestContext,
         pool_id: Ipv4PoolEc2Id,
         cidr: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeprovisionPublicIpv4PoolCidrResult:
         raise NotImplementedError
 
     @handler("DeregisterImage")
     def deregister_image(
-        self, context: RequestContext, image_id: ImageId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        image_id: ImageId,
+        delete_associated_snapshots: Boolean | None = None,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> DeregisterImageResult:
         raise NotImplementedError
 
@@ -23037,7 +23570,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_tag_attribute: DeregisterInstanceTagAttributeRequest,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeregisterInstanceEventNotificationAttributesResult:
         raise NotImplementedError
@@ -23046,10 +23579,10 @@ class Ec2Api:
     def deregister_transit_gateway_multicast_group_members(
         self,
         context: RequestContext,
-        transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId = None,
-        group_ip_address: String = None,
-        network_interface_ids: TransitGatewayNetworkInterfaceIdList = None,
-        dry_run: Boolean = None,
+        transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId | None = None,
+        group_ip_address: String | None = None,
+        network_interface_ids: TransitGatewayNetworkInterfaceIdList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeregisterTransitGatewayMulticastGroupMembersResult:
         raise NotImplementedError
@@ -23058,10 +23591,10 @@ class Ec2Api:
     def deregister_transit_gateway_multicast_group_sources(
         self,
         context: RequestContext,
-        transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId = None,
-        group_ip_address: String = None,
-        network_interface_ids: TransitGatewayNetworkInterfaceIdList = None,
-        dry_run: Boolean = None,
+        transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId | None = None,
+        group_ip_address: String | None = None,
+        network_interface_ids: TransitGatewayNetworkInterfaceIdList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DeregisterTransitGatewayMulticastGroupSourcesResult:
         raise NotImplementedError
@@ -23070,8 +23603,8 @@ class Ec2Api:
     def describe_account_attributes(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        attribute_names: AccountAttributeNameStringList = None,
+        dry_run: Boolean | None = None,
+        attribute_names: AccountAttributeNameStringList | None = None,
         **kwargs,
     ) -> DescribeAccountAttributesResult:
         raise NotImplementedError
@@ -23080,10 +23613,10 @@ class Ec2Api:
     def describe_address_transfers(
         self,
         context: RequestContext,
-        allocation_ids: AllocationIdList = None,
-        next_token: String = None,
-        max_results: DescribeAddressTransfersMaxResults = None,
-        dry_run: Boolean = None,
+        allocation_ids: AllocationIdList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeAddressTransfersMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeAddressTransfersResult:
         raise NotImplementedError
@@ -23092,10 +23625,10 @@ class Ec2Api:
     def describe_addresses(
         self,
         context: RequestContext,
-        public_ips: PublicIpStringList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        allocation_ids: AllocationIdList = None,
+        public_ips: PublicIpStringList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        allocation_ids: AllocationIdList | None = None,
         **kwargs,
     ) -> DescribeAddressesResult:
         raise NotImplementedError
@@ -23104,18 +23637,18 @@ class Ec2Api:
     def describe_addresses_attribute(
         self,
         context: RequestContext,
-        allocation_ids: AllocationIds = None,
-        attribute: AddressAttributeName = None,
-        next_token: NextToken = None,
-        max_results: AddressMaxResults = None,
-        dry_run: Boolean = None,
+        allocation_ids: AllocationIds | None = None,
+        attribute: AddressAttributeName | None = None,
+        next_token: NextToken | None = None,
+        max_results: AddressMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeAddressesAttributeResult:
         raise NotImplementedError
 
     @handler("DescribeAggregateIdFormat")
     def describe_aggregate_id_format(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> DescribeAggregateIdFormatResult:
         raise NotImplementedError
 
@@ -23123,11 +23656,11 @@ class Ec2Api:
     def describe_availability_zones(
         self,
         context: RequestContext,
-        zone_names: ZoneNameStringList = None,
-        zone_ids: ZoneIdStringList = None,
-        all_availability_zones: Boolean = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        zone_names: ZoneNameStringList | None = None,
+        zone_ids: ZoneIdStringList | None = None,
+        all_availability_zones: Boolean | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeAvailabilityZonesResult:
         raise NotImplementedError
@@ -23136,10 +23669,10 @@ class Ec2Api:
     def describe_aws_network_performance_metric_subscriptions(
         self,
         context: RequestContext,
-        max_results: MaxResultsParam = None,
-        next_token: String = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        max_results: MaxResultsParam | None = None,
+        next_token: String | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeAwsNetworkPerformanceMetricSubscriptionsResult:
         raise NotImplementedError
@@ -23148,9 +23681,9 @@ class Ec2Api:
     def describe_bundle_tasks(
         self,
         context: RequestContext,
-        bundle_ids: BundleIdStringList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        bundle_ids: BundleIdStringList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeBundleTasksResult:
         raise NotImplementedError
@@ -23160,8 +23693,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         max_results: DescribeByoipCidrsMaxResults,
-        dry_run: Boolean = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeByoipCidrsResult:
         raise NotImplementedError
@@ -23170,11 +23703,11 @@ class Ec2Api:
     def describe_capacity_block_extension_history(
         self,
         context: RequestContext,
-        capacity_reservation_ids: CapacityReservationIdSet = None,
-        next_token: String = None,
-        max_results: DescribeFutureCapacityMaxResults = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        capacity_reservation_ids: CapacityReservationIdSet | None = None,
+        next_token: String | None = None,
+        max_results: DescribeFutureCapacityMaxResults | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeCapacityBlockExtensionHistoryResult:
         raise NotImplementedError
@@ -23185,9 +23718,9 @@ class Ec2Api:
         context: RequestContext,
         capacity_block_extension_duration_hours: Integer,
         capacity_reservation_id: CapacityReservationId,
-        dry_run: Boolean = None,
-        next_token: String = None,
-        max_results: DescribeCapacityBlockExtensionOfferingsMaxResults = None,
+        dry_run: Boolean | None = None,
+        next_token: String | None = None,
+        max_results: DescribeCapacityBlockExtensionOfferingsMaxResults | None = None,
         **kwargs,
     ) -> DescribeCapacityBlockExtensionOfferingsResult:
         raise NotImplementedError
@@ -23197,13 +23730,13 @@ class Ec2Api:
         self,
         context: RequestContext,
         capacity_duration_hours: Integer,
-        dry_run: Boolean = None,
-        instance_type: String = None,
-        instance_count: Integer = None,
-        start_date_range: MillisecondDateTime = None,
-        end_date_range: MillisecondDateTime = None,
-        next_token: String = None,
-        max_results: DescribeCapacityBlockOfferingsMaxResults = None,
+        dry_run: Boolean | None = None,
+        instance_type: String | None = None,
+        instance_count: Integer | None = None,
+        start_date_range: MillisecondDateTime | None = None,
+        end_date_range: MillisecondDateTime | None = None,
+        next_token: String | None = None,
+        max_results: DescribeCapacityBlockOfferingsMaxResults | None = None,
         **kwargs,
     ) -> DescribeCapacityBlockOfferingsResult:
         raise NotImplementedError
@@ -23213,11 +23746,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         role: CallerRole,
-        capacity_reservation_ids: CapacityReservationIdSet = None,
-        next_token: String = None,
-        max_results: DescribeCapacityReservationBillingRequestsRequestMaxResults = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        capacity_reservation_ids: CapacityReservationIdSet | None = None,
+        next_token: String | None = None,
+        max_results: DescribeCapacityReservationBillingRequestsRequestMaxResults | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeCapacityReservationBillingRequestsResult:
         raise NotImplementedError
@@ -23226,11 +23759,11 @@ class Ec2Api:
     def describe_capacity_reservation_fleets(
         self,
         context: RequestContext,
-        capacity_reservation_fleet_ids: CapacityReservationFleetIdSet = None,
-        next_token: String = None,
-        max_results: DescribeCapacityReservationFleetsMaxResults = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        capacity_reservation_fleet_ids: CapacityReservationFleetIdSet | None = None,
+        next_token: String | None = None,
+        max_results: DescribeCapacityReservationFleetsMaxResults | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeCapacityReservationFleetsResult:
         raise NotImplementedError
@@ -23239,11 +23772,11 @@ class Ec2Api:
     def describe_capacity_reservations(
         self,
         context: RequestContext,
-        capacity_reservation_ids: CapacityReservationIdSet = None,
-        next_token: String = None,
-        max_results: DescribeCapacityReservationsMaxResults = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        capacity_reservation_ids: CapacityReservationIdSet | None = None,
+        next_token: String | None = None,
+        max_results: DescribeCapacityReservationsMaxResults | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeCapacityReservationsResult:
         raise NotImplementedError
@@ -23252,11 +23785,11 @@ class Ec2Api:
     def describe_carrier_gateways(
         self,
         context: RequestContext,
-        carrier_gateway_ids: CarrierGatewayIdSet = None,
-        filters: FilterList = None,
-        max_results: CarrierGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        carrier_gateway_ids: CarrierGatewayIdSet | None = None,
+        filters: FilterList | None = None,
+        max_results: CarrierGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeCarrierGatewaysResult:
         raise NotImplementedError
@@ -23265,11 +23798,11 @@ class Ec2Api:
     def describe_classic_link_instances(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        instance_ids: InstanceIdStringList = None,
-        filters: FilterList = None,
-        next_token: String = None,
-        max_results: DescribeClassicLinkInstancesMaxResults = None,
+        dry_run: Boolean | None = None,
+        instance_ids: InstanceIdStringList | None = None,
+        filters: FilterList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeClassicLinkInstancesMaxResults | None = None,
         **kwargs,
     ) -> DescribeClassicLinkInstancesResult:
         raise NotImplementedError
@@ -23279,10 +23812,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
-        dry_run: Boolean = None,
-        next_token: NextToken = None,
-        filters: FilterList = None,
-        max_results: DescribeClientVpnAuthorizationRulesMaxResults = None,
+        dry_run: Boolean | None = None,
+        next_token: NextToken | None = None,
+        filters: FilterList | None = None,
+        max_results: DescribeClientVpnAuthorizationRulesMaxResults | None = None,
         **kwargs,
     ) -> DescribeClientVpnAuthorizationRulesResult:
         raise NotImplementedError
@@ -23292,10 +23825,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
-        filters: FilterList = None,
-        next_token: NextToken = None,
-        max_results: DescribeClientVpnConnectionsMaxResults = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        next_token: NextToken | None = None,
+        max_results: DescribeClientVpnConnectionsMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeClientVpnConnectionsResult:
         raise NotImplementedError
@@ -23304,11 +23837,11 @@ class Ec2Api:
     def describe_client_vpn_endpoints(
         self,
         context: RequestContext,
-        client_vpn_endpoint_ids: ClientVpnEndpointIdList = None,
-        max_results: DescribeClientVpnEndpointMaxResults = None,
-        next_token: NextToken = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        client_vpn_endpoint_ids: ClientVpnEndpointIdList | None = None,
+        max_results: DescribeClientVpnEndpointMaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeClientVpnEndpointsResult:
         raise NotImplementedError
@@ -23318,10 +23851,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
-        filters: FilterList = None,
-        max_results: DescribeClientVpnRoutesMaxResults = None,
-        next_token: NextToken = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: DescribeClientVpnRoutesMaxResults | None = None,
+        next_token: NextToken | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeClientVpnRoutesResult:
         raise NotImplementedError
@@ -23331,11 +23864,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
-        association_ids: ValueStringList = None,
-        max_results: DescribeClientVpnTargetNetworksMaxResults = None,
-        next_token: NextToken = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        association_ids: ValueStringList | None = None,
+        max_results: DescribeClientVpnTargetNetworksMaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeClientVpnTargetNetworksResult:
         raise NotImplementedError
@@ -23344,11 +23877,11 @@ class Ec2Api:
     def describe_coip_pools(
         self,
         context: RequestContext,
-        pool_ids: CoipPoolIdSet = None,
-        filters: FilterList = None,
-        max_results: CoipPoolMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        pool_ids: CoipPoolIdSet | None = None,
+        filters: FilterList | None = None,
+        max_results: CoipPoolMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeCoipPoolsResult:
         raise NotImplementedError
@@ -23357,8 +23890,8 @@ class Ec2Api:
     def describe_conversion_tasks(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        conversion_task_ids: ConversionIdStringList = None,
+        dry_run: Boolean | None = None,
+        conversion_task_ids: ConversionIdStringList | None = None,
         **kwargs,
     ) -> DescribeConversionTasksResult:
         raise NotImplementedError
@@ -23367,9 +23900,9 @@ class Ec2Api:
     def describe_customer_gateways(
         self,
         context: RequestContext,
-        customer_gateway_ids: CustomerGatewayIdStringList = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        customer_gateway_ids: CustomerGatewayIdStringList | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeCustomerGatewaysResult:
         raise NotImplementedError
@@ -23378,10 +23911,10 @@ class Ec2Api:
     def describe_declarative_policies_reports(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        next_token: String = None,
-        max_results: DeclarativePoliciesMaxResults = None,
-        report_ids: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        next_token: String | None = None,
+        max_results: DeclarativePoliciesMaxResults | None = None,
+        report_ids: ValueStringList | None = None,
         **kwargs,
     ) -> DescribeDeclarativePoliciesReportsResult:
         raise NotImplementedError
@@ -23390,11 +23923,11 @@ class Ec2Api:
     def describe_dhcp_options(
         self,
         context: RequestContext,
-        dhcp_options_ids: DhcpOptionsIdStringList = None,
-        next_token: String = None,
-        max_results: DescribeDhcpOptionsMaxResults = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        dhcp_options_ids: DhcpOptionsIdStringList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeDhcpOptionsMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeDhcpOptionsResult:
         raise NotImplementedError
@@ -23403,11 +23936,11 @@ class Ec2Api:
     def describe_egress_only_internet_gateways(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        egress_only_internet_gateway_ids: EgressOnlyInternetGatewayIdList = None,
-        max_results: DescribeEgressOnlyInternetGatewaysMaxResults = None,
-        next_token: String = None,
-        filters: FilterList = None,
+        dry_run: Boolean | None = None,
+        egress_only_internet_gateway_ids: EgressOnlyInternetGatewayIdList | None = None,
+        max_results: DescribeEgressOnlyInternetGatewaysMaxResults | None = None,
+        next_token: String | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeEgressOnlyInternetGatewaysResult:
         raise NotImplementedError
@@ -23416,11 +23949,11 @@ class Ec2Api:
     def describe_elastic_gpus(
         self,
         context: RequestContext,
-        elastic_gpu_ids: ElasticGpuIdSet = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: DescribeElasticGpusMaxResults = None,
-        next_token: String = None,
+        elastic_gpu_ids: ElasticGpuIdSet | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: DescribeElasticGpusMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeElasticGpusResult:
         raise NotImplementedError
@@ -23429,11 +23962,11 @@ class Ec2Api:
     def describe_export_image_tasks(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        export_image_task_ids: ExportImageTaskIdList = None,
-        max_results: DescribeExportImageTasksMaxResults = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        export_image_task_ids: ExportImageTaskIdList | None = None,
+        max_results: DescribeExportImageTasksMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeExportImageTasksResult:
         raise NotImplementedError
@@ -23442,8 +23975,8 @@ class Ec2Api:
     def describe_export_tasks(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        export_task_ids: ExportTaskIdStringList = None,
+        filters: FilterList | None = None,
+        export_task_ids: ExportTaskIdStringList | None = None,
         **kwargs,
     ) -> DescribeExportTasksResult:
         raise NotImplementedError
@@ -23452,11 +23985,11 @@ class Ec2Api:
     def describe_fast_launch_images(
         self,
         context: RequestContext,
-        image_ids: FastLaunchImageIdList = None,
-        filters: FilterList = None,
-        max_results: DescribeFastLaunchImagesRequestMaxResults = None,
-        next_token: NextToken = None,
-        dry_run: Boolean = None,
+        image_ids: FastLaunchImageIdList | None = None,
+        filters: FilterList | None = None,
+        max_results: DescribeFastLaunchImagesRequestMaxResults | None = None,
+        next_token: NextToken | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeFastLaunchImagesResult:
         raise NotImplementedError
@@ -23465,10 +23998,10 @@ class Ec2Api:
     def describe_fast_snapshot_restores(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_results: DescribeFastSnapshotRestoresMaxResults = None,
-        next_token: NextToken = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: DescribeFastSnapshotRestoresMaxResults | None = None,
+        next_token: NextToken | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeFastSnapshotRestoresResult:
         raise NotImplementedError
@@ -23479,10 +24012,10 @@ class Ec2Api:
         context: RequestContext,
         fleet_id: FleetId,
         start_time: DateTime,
-        dry_run: Boolean = None,
-        event_type: FleetEventType = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        event_type: FleetEventType | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeFleetHistoryResult:
         raise NotImplementedError
@@ -23492,10 +24025,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         fleet_id: FleetId,
-        dry_run: Boolean = None,
-        max_results: Integer = None,
-        next_token: String = None,
-        filters: FilterList = None,
+        dry_run: Boolean | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeFleetInstancesResult:
         raise NotImplementedError
@@ -23504,11 +24037,11 @@ class Ec2Api:
     def describe_fleets(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        max_results: Integer = None,
-        next_token: String = None,
-        fleet_ids: FleetIdSet = None,
-        filters: FilterList = None,
+        dry_run: Boolean | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        fleet_ids: FleetIdSet | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeFleetsResult:
         raise NotImplementedError
@@ -23517,11 +24050,11 @@ class Ec2Api:
     def describe_flow_logs(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filter: FilterList = None,
-        flow_log_ids: FlowLogIdList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        filter: FilterList | None = None,
+        flow_log_ids: FlowLogIdList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeFlowLogsResult:
         raise NotImplementedError
@@ -23532,7 +24065,7 @@ class Ec2Api:
         context: RequestContext,
         fpga_image_id: FpgaImageId,
         attribute: FpgaImageAttributeName,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeFpgaImageAttributeResult:
         raise NotImplementedError
@@ -23541,12 +24074,12 @@ class Ec2Api:
     def describe_fpga_images(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        fpga_image_ids: FpgaImageIdList = None,
-        owners: OwnerStringList = None,
-        filters: FilterList = None,
-        next_token: NextToken = None,
-        max_results: DescribeFpgaImagesMaxResults = None,
+        dry_run: Boolean | None = None,
+        fpga_image_ids: FpgaImageIdList | None = None,
+        owners: OwnerStringList | None = None,
+        filters: FilterList | None = None,
+        next_token: NextToken | None = None,
+        max_results: DescribeFpgaImagesMaxResults | None = None,
         **kwargs,
     ) -> DescribeFpgaImagesResult:
         raise NotImplementedError
@@ -23555,12 +24088,12 @@ class Ec2Api:
     def describe_host_reservation_offerings(
         self,
         context: RequestContext,
-        filter: FilterList = None,
-        max_duration: Integer = None,
-        max_results: DescribeHostReservationsMaxResults = None,
-        min_duration: Integer = None,
-        next_token: String = None,
-        offering_id: OfferingId = None,
+        filter: FilterList | None = None,
+        max_duration: Integer | None = None,
+        max_results: DescribeHostReservationsMaxResults | None = None,
+        min_duration: Integer | None = None,
+        next_token: String | None = None,
+        offering_id: OfferingId | None = None,
         **kwargs,
     ) -> DescribeHostReservationOfferingsResult:
         raise NotImplementedError
@@ -23569,10 +24102,10 @@ class Ec2Api:
     def describe_host_reservations(
         self,
         context: RequestContext,
-        filter: FilterList = None,
-        host_reservation_id_set: HostReservationIdSet = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        filter: FilterList | None = None,
+        host_reservation_id_set: HostReservationIdSet | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeHostReservationsResult:
         raise NotImplementedError
@@ -23581,10 +24114,10 @@ class Ec2Api:
     def describe_hosts(
         self,
         context: RequestContext,
-        host_ids: RequestHostIdList = None,
-        next_token: String = None,
-        max_results: Integer = None,
-        filter: FilterList = None,
+        host_ids: RequestHostIdList | None = None,
+        next_token: String | None = None,
+        max_results: Integer | None = None,
+        filter: FilterList | None = None,
         **kwargs,
     ) -> DescribeHostsResult:
         raise NotImplementedError
@@ -23593,23 +24126,27 @@ class Ec2Api:
     def describe_iam_instance_profile_associations(
         self,
         context: RequestContext,
-        association_ids: AssociationIdList = None,
-        filters: FilterList = None,
-        max_results: DescribeIamInstanceProfileAssociationsMaxResults = None,
-        next_token: NextToken = None,
+        association_ids: AssociationIdList | None = None,
+        filters: FilterList | None = None,
+        max_results: DescribeIamInstanceProfileAssociationsMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeIamInstanceProfileAssociationsResult:
         raise NotImplementedError
 
     @handler("DescribeIdFormat")
     def describe_id_format(
-        self, context: RequestContext, resource: String = None, **kwargs
+        self, context: RequestContext, resource: String | None = None, **kwargs
     ) -> DescribeIdFormatResult:
         raise NotImplementedError
 
     @handler("DescribeIdentityIdFormat")
     def describe_identity_id_format(
-        self, context: RequestContext, principal_arn: String, resource: String = None, **kwargs
+        self,
+        context: RequestContext,
+        principal_arn: String,
+        resource: String | None = None,
+        **kwargs,
     ) -> DescribeIdentityIdFormatResult:
         raise NotImplementedError
 
@@ -23619,7 +24156,7 @@ class Ec2Api:
         context: RequestContext,
         attribute: ImageAttributeName,
         image_id: ImageId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ImageAttribute:
         raise NotImplementedError
@@ -23628,15 +24165,15 @@ class Ec2Api:
     def describe_images(
         self,
         context: RequestContext,
-        executable_users: ExecutableByStringList = None,
-        image_ids: ImageIdStringList = None,
-        owners: OwnerStringList = None,
-        include_deprecated: Boolean = None,
-        include_disabled: Boolean = None,
-        max_results: Integer = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        executable_users: ExecutableByStringList | None = None,
+        image_ids: ImageIdStringList | None = None,
+        owners: OwnerStringList | None = None,
+        include_deprecated: Boolean | None = None,
+        include_disabled: Boolean | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeImagesResult:
         raise NotImplementedError
@@ -23645,11 +24182,11 @@ class Ec2Api:
     def describe_import_image_tasks(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        import_task_ids: ImportTaskIdList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        import_task_ids: ImportTaskIdList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeImportImageTasksResult:
         raise NotImplementedError
@@ -23658,11 +24195,11 @@ class Ec2Api:
     def describe_import_snapshot_tasks(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        import_task_ids: ImportSnapshotTaskIdList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        import_task_ids: ImportSnapshotTaskIdList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeImportSnapshotTasksResult:
         raise NotImplementedError
@@ -23673,7 +24210,7 @@ class Ec2Api:
         context: RequestContext,
         instance_id: InstanceId,
         attribute: InstanceAttributeName,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> InstanceAttribute:
         raise NotImplementedError
@@ -23682,11 +24219,11 @@ class Ec2Api:
     def describe_instance_connect_endpoints(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        max_results: InstanceConnectEndpointMaxResults = None,
-        next_token: NextToken = None,
-        filters: FilterList = None,
-        instance_connect_endpoint_ids: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        max_results: InstanceConnectEndpointMaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: FilterList | None = None,
+        instance_connect_endpoint_ids: ValueStringList | None = None,
         **kwargs,
     ) -> DescribeInstanceConnectEndpointsResult:
         raise NotImplementedError
@@ -23695,18 +24232,18 @@ class Ec2Api:
     def describe_instance_credit_specifications(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        instance_ids: InstanceIdStringList = None,
-        max_results: DescribeInstanceCreditSpecificationsMaxResults = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        instance_ids: InstanceIdStringList | None = None,
+        max_results: DescribeInstanceCreditSpecificationsMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeInstanceCreditSpecificationsResult:
         raise NotImplementedError
 
     @handler("DescribeInstanceEventNotificationAttributes")
     def describe_instance_event_notification_attributes(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> DescribeInstanceEventNotificationAttributesResult:
         raise NotImplementedError
 
@@ -23714,11 +24251,11 @@ class Ec2Api:
     def describe_instance_event_windows(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        instance_event_window_ids: InstanceEventWindowIdSet = None,
-        filters: FilterList = None,
-        max_results: ResultRange = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        instance_event_window_ids: InstanceEventWindowIdSet | None = None,
+        filters: FilterList | None = None,
+        max_results: ResultRange | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeInstanceEventWindowsResult:
         raise NotImplementedError
@@ -23727,11 +24264,11 @@ class Ec2Api:
     def describe_instance_image_metadata(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        instance_ids: InstanceIdStringList = None,
-        max_results: DescribeInstanceImageMetadataMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        instance_ids: InstanceIdStringList | None = None,
+        max_results: DescribeInstanceImageMetadataMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeInstanceImageMetadataResult:
         raise NotImplementedError
@@ -23740,12 +24277,12 @@ class Ec2Api:
     def describe_instance_status(
         self,
         context: RequestContext,
-        instance_ids: InstanceIdStringList = None,
-        max_results: Integer = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        include_all_instances: Boolean = None,
+        instance_ids: InstanceIdStringList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        include_all_instances: Boolean | None = None,
         **kwargs,
     ) -> DescribeInstanceStatusResult:
         raise NotImplementedError
@@ -23754,12 +24291,12 @@ class Ec2Api:
     def describe_instance_topology(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        next_token: String = None,
-        max_results: DescribeInstanceTopologyMaxResults = None,
-        instance_ids: DescribeInstanceTopologyInstanceIdSet = None,
-        group_names: DescribeInstanceTopologyGroupNameSet = None,
-        filters: FilterList = None,
+        dry_run: Boolean | None = None,
+        next_token: String | None = None,
+        max_results: DescribeInstanceTopologyMaxResults | None = None,
+        instance_ids: DescribeInstanceTopologyInstanceIdSet | None = None,
+        group_names: DescribeInstanceTopologyGroupNameSet | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeInstanceTopologyResult:
         raise NotImplementedError
@@ -23768,11 +24305,11 @@ class Ec2Api:
     def describe_instance_type_offerings(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        location_type: LocationType = None,
-        filters: FilterList = None,
-        max_results: DITOMaxResults = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        location_type: LocationType | None = None,
+        filters: FilterList | None = None,
+        max_results: DITOMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeInstanceTypeOfferingsResult:
         raise NotImplementedError
@@ -23781,11 +24318,11 @@ class Ec2Api:
     def describe_instance_types(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        instance_types: RequestInstanceTypeList = None,
-        filters: FilterList = None,
-        max_results: DITMaxResults = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        instance_types: RequestInstanceTypeList | None = None,
+        filters: FilterList | None = None,
+        max_results: DITMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeInstanceTypesResult:
         raise NotImplementedError
@@ -23794,11 +24331,11 @@ class Ec2Api:
     def describe_instances(
         self,
         context: RequestContext,
-        instance_ids: InstanceIdStringList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        next_token: String = None,
-        max_results: Integer = None,
+        instance_ids: InstanceIdStringList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        next_token: String | None = None,
+        max_results: Integer | None = None,
         **kwargs,
     ) -> DescribeInstancesResult:
         raise NotImplementedError
@@ -23807,11 +24344,11 @@ class Ec2Api:
     def describe_internet_gateways(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: DescribeInternetGatewaysMaxResults = None,
-        dry_run: Boolean = None,
-        internet_gateway_ids: InternetGatewayIdList = None,
-        filters: FilterList = None,
+        next_token: String | None = None,
+        max_results: DescribeInternetGatewaysMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        internet_gateway_ids: InternetGatewayIdList | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeInternetGatewaysResult:
         raise NotImplementedError
@@ -23820,9 +24357,9 @@ class Ec2Api:
     def describe_ipam_byoasn(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        max_results: DescribeIpamByoasnMaxResults = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        max_results: DescribeIpamByoasnMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeIpamByoasnResult:
         raise NotImplementedError
@@ -23831,11 +24368,11 @@ class Ec2Api:
     def describe_ipam_external_resource_verification_tokens(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        next_token: NextToken = None,
-        max_results: IpamMaxResults = None,
-        ipam_external_resource_verification_token_ids: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        next_token: NextToken | None = None,
+        max_results: IpamMaxResults | None = None,
+        ipam_external_resource_verification_token_ids: ValueStringList | None = None,
         **kwargs,
     ) -> DescribeIpamExternalResourceVerificationTokensResult:
         raise NotImplementedError
@@ -23844,11 +24381,11 @@ class Ec2Api:
     def describe_ipam_pools(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: IpamMaxResults = None,
-        next_token: NextToken = None,
-        ipam_pool_ids: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: IpamMaxResults | None = None,
+        next_token: NextToken | None = None,
+        ipam_pool_ids: ValueStringList | None = None,
         **kwargs,
     ) -> DescribeIpamPoolsResult:
         raise NotImplementedError
@@ -23857,11 +24394,11 @@ class Ec2Api:
     def describe_ipam_resource_discoveries(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        ipam_resource_discovery_ids: ValueStringList = None,
-        next_token: NextToken = None,
-        max_results: IpamMaxResults = None,
-        filters: FilterList = None,
+        dry_run: Boolean | None = None,
+        ipam_resource_discovery_ids: ValueStringList | None = None,
+        next_token: NextToken | None = None,
+        max_results: IpamMaxResults | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeIpamResourceDiscoveriesResult:
         raise NotImplementedError
@@ -23870,11 +24407,11 @@ class Ec2Api:
     def describe_ipam_resource_discovery_associations(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        ipam_resource_discovery_association_ids: ValueStringList = None,
-        next_token: NextToken = None,
-        max_results: IpamMaxResults = None,
-        filters: FilterList = None,
+        dry_run: Boolean | None = None,
+        ipam_resource_discovery_association_ids: ValueStringList | None = None,
+        next_token: NextToken | None = None,
+        max_results: IpamMaxResults | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeIpamResourceDiscoveryAssociationsResult:
         raise NotImplementedError
@@ -23883,11 +24420,11 @@ class Ec2Api:
     def describe_ipam_scopes(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: IpamMaxResults = None,
-        next_token: NextToken = None,
-        ipam_scope_ids: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: IpamMaxResults | None = None,
+        next_token: NextToken | None = None,
+        ipam_scope_ids: ValueStringList | None = None,
         **kwargs,
     ) -> DescribeIpamScopesResult:
         raise NotImplementedError
@@ -23896,11 +24433,11 @@ class Ec2Api:
     def describe_ipams(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: IpamMaxResults = None,
-        next_token: NextToken = None,
-        ipam_ids: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: IpamMaxResults | None = None,
+        next_token: NextToken | None = None,
+        ipam_ids: ValueStringList | None = None,
         **kwargs,
     ) -> DescribeIpamsResult:
         raise NotImplementedError
@@ -23909,11 +24446,11 @@ class Ec2Api:
     def describe_ipv6_pools(
         self,
         context: RequestContext,
-        pool_ids: Ipv6PoolIdList = None,
-        next_token: NextToken = None,
-        max_results: Ipv6PoolMaxResults = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        pool_ids: Ipv6PoolIdList | None = None,
+        next_token: NextToken | None = None,
+        max_results: Ipv6PoolMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeIpv6PoolsResult:
         raise NotImplementedError
@@ -23922,11 +24459,11 @@ class Ec2Api:
     def describe_key_pairs(
         self,
         context: RequestContext,
-        key_names: KeyNameStringList = None,
-        key_pair_ids: KeyPairIdStringList = None,
-        include_public_key: Boolean = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        key_names: KeyNameStringList | None = None,
+        key_pair_ids: KeyPairIdStringList | None = None,
+        include_public_key: Boolean | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeKeyPairsResult:
         raise NotImplementedError
@@ -23935,16 +24472,16 @@ class Ec2Api:
     def describe_launch_template_versions(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        launch_template_id: LaunchTemplateId = None,
-        launch_template_name: LaunchTemplateName = None,
-        versions: VersionStringList = None,
-        min_version: String = None,
-        max_version: String = None,
-        next_token: String = None,
-        max_results: Integer = None,
-        filters: FilterList = None,
-        resolve_alias: Boolean = None,
+        dry_run: Boolean | None = None,
+        launch_template_id: LaunchTemplateId | None = None,
+        launch_template_name: LaunchTemplateName | None = None,
+        versions: VersionStringList | None = None,
+        min_version: String | None = None,
+        max_version: String | None = None,
+        next_token: String | None = None,
+        max_results: Integer | None = None,
+        filters: FilterList | None = None,
+        resolve_alias: Boolean | None = None,
         **kwargs,
     ) -> DescribeLaunchTemplateVersionsResult:
         raise NotImplementedError
@@ -23953,12 +24490,12 @@ class Ec2Api:
     def describe_launch_templates(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        launch_template_ids: LaunchTemplateIdStringList = None,
-        launch_template_names: LaunchTemplateNameStringList = None,
-        filters: FilterList = None,
-        next_token: String = None,
-        max_results: DescribeLaunchTemplatesMaxResults = None,
+        dry_run: Boolean | None = None,
+        launch_template_ids: LaunchTemplateIdStringList | None = None,
+        launch_template_names: LaunchTemplateNameStringList | None = None,
+        filters: FilterList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeLaunchTemplatesMaxResults | None = None,
         **kwargs,
     ) -> DescribeLaunchTemplatesResult:
         raise NotImplementedError
@@ -23967,11 +24504,12 @@ class Ec2Api:
     def describe_local_gateway_route_table_virtual_interface_group_associations(
         self,
         context: RequestContext,
-        local_gateway_route_table_virtual_interface_group_association_ids: LocalGatewayRouteTableVirtualInterfaceGroupAssociationIdSet = None,
-        filters: FilterList = None,
-        max_results: LocalGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        local_gateway_route_table_virtual_interface_group_association_ids: LocalGatewayRouteTableVirtualInterfaceGroupAssociationIdSet
+        | None = None,
+        filters: FilterList | None = None,
+        max_results: LocalGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeLocalGatewayRouteTableVirtualInterfaceGroupAssociationsResult:
         raise NotImplementedError
@@ -23980,11 +24518,12 @@ class Ec2Api:
     def describe_local_gateway_route_table_vpc_associations(
         self,
         context: RequestContext,
-        local_gateway_route_table_vpc_association_ids: LocalGatewayRouteTableVpcAssociationIdSet = None,
-        filters: FilterList = None,
-        max_results: LocalGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        local_gateway_route_table_vpc_association_ids: LocalGatewayRouteTableVpcAssociationIdSet
+        | None = None,
+        filters: FilterList | None = None,
+        max_results: LocalGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeLocalGatewayRouteTableVpcAssociationsResult:
         raise NotImplementedError
@@ -23993,11 +24532,11 @@ class Ec2Api:
     def describe_local_gateway_route_tables(
         self,
         context: RequestContext,
-        local_gateway_route_table_ids: LocalGatewayRouteTableIdSet = None,
-        filters: FilterList = None,
-        max_results: LocalGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        local_gateway_route_table_ids: LocalGatewayRouteTableIdSet | None = None,
+        filters: FilterList | None = None,
+        max_results: LocalGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeLocalGatewayRouteTablesResult:
         raise NotImplementedError
@@ -24006,11 +24545,12 @@ class Ec2Api:
     def describe_local_gateway_virtual_interface_groups(
         self,
         context: RequestContext,
-        local_gateway_virtual_interface_group_ids: LocalGatewayVirtualInterfaceGroupIdSet = None,
-        filters: FilterList = None,
-        max_results: LocalGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        local_gateway_virtual_interface_group_ids: LocalGatewayVirtualInterfaceGroupIdSet
+        | None = None,
+        filters: FilterList | None = None,
+        max_results: LocalGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeLocalGatewayVirtualInterfaceGroupsResult:
         raise NotImplementedError
@@ -24019,11 +24559,11 @@ class Ec2Api:
     def describe_local_gateway_virtual_interfaces(
         self,
         context: RequestContext,
-        local_gateway_virtual_interface_ids: LocalGatewayVirtualInterfaceIdSet = None,
-        filters: FilterList = None,
-        max_results: LocalGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        local_gateway_virtual_interface_ids: LocalGatewayVirtualInterfaceIdSet | None = None,
+        filters: FilterList | None = None,
+        max_results: LocalGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeLocalGatewayVirtualInterfacesResult:
         raise NotImplementedError
@@ -24032,11 +24572,11 @@ class Ec2Api:
     def describe_local_gateways(
         self,
         context: RequestContext,
-        local_gateway_ids: LocalGatewayIdSet = None,
-        filters: FilterList = None,
-        max_results: LocalGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        local_gateway_ids: LocalGatewayIdSet | None = None,
+        filters: FilterList | None = None,
+        max_results: LocalGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeLocalGatewaysResult:
         raise NotImplementedError
@@ -24045,11 +24585,11 @@ class Ec2Api:
     def describe_locked_snapshots(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        max_results: DescribeLockedSnapshotsMaxResults = None,
-        next_token: String = None,
-        snapshot_ids: SnapshotIdStringList = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: DescribeLockedSnapshotsMaxResults | None = None,
+        next_token: String | None = None,
+        snapshot_ids: SnapshotIdStringList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeLockedSnapshotsResult:
         raise NotImplementedError
@@ -24058,23 +24598,36 @@ class Ec2Api:
     def describe_mac_hosts(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        host_ids: RequestHostIdList = None,
-        max_results: DescribeMacHostsRequestMaxResults = None,
-        next_token: String = None,
+        filters: FilterList | None = None,
+        host_ids: RequestHostIdList | None = None,
+        max_results: DescribeMacHostsRequestMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeMacHostsResult:
+        raise NotImplementedError
+
+    @handler("DescribeMacModificationTasks")
+    def describe_mac_modification_tasks(
+        self,
+        context: RequestContext,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        mac_modification_task_ids: MacModificationTaskIdList | None = None,
+        max_results: DescribeMacModificationTasksMaxResults | None = None,
+        next_token: String | None = None,
+        **kwargs,
+    ) -> DescribeMacModificationTasksResult:
         raise NotImplementedError
 
     @handler("DescribeManagedPrefixLists")
     def describe_managed_prefix_lists(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: PrefixListMaxResults = None,
-        next_token: NextToken = None,
-        prefix_list_ids: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: PrefixListMaxResults | None = None,
+        next_token: NextToken | None = None,
+        prefix_list_ids: ValueStringList | None = None,
         **kwargs,
     ) -> DescribeManagedPrefixListsResult:
         raise NotImplementedError
@@ -24083,11 +24636,11 @@ class Ec2Api:
     def describe_moving_addresses(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        public_ips: ValueStringList = None,
-        next_token: String = None,
-        filters: FilterList = None,
-        max_results: DescribeMovingAddressesMaxResults = None,
+        dry_run: Boolean | None = None,
+        public_ips: ValueStringList | None = None,
+        next_token: String | None = None,
+        filters: FilterList | None = None,
+        max_results: DescribeMovingAddressesMaxResults | None = None,
         **kwargs,
     ) -> DescribeMovingAddressesResult:
         raise NotImplementedError
@@ -24096,11 +24649,11 @@ class Ec2Api:
     def describe_nat_gateways(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filter: FilterList = None,
-        max_results: DescribeNatGatewaysMaxResults = None,
-        nat_gateway_ids: NatGatewayIdStringList = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        filter: FilterList | None = None,
+        max_results: DescribeNatGatewaysMaxResults | None = None,
+        nat_gateway_ids: NatGatewayIdStringList | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeNatGatewaysResult:
         raise NotImplementedError
@@ -24109,11 +24662,11 @@ class Ec2Api:
     def describe_network_acls(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: DescribeNetworkAclsMaxResults = None,
-        dry_run: Boolean = None,
-        network_acl_ids: NetworkAclIdStringList = None,
-        filters: FilterList = None,
+        next_token: String | None = None,
+        max_results: DescribeNetworkAclsMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        network_acl_ids: NetworkAclIdStringList | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeNetworkAclsResult:
         raise NotImplementedError
@@ -24122,14 +24675,15 @@ class Ec2Api:
     def describe_network_insights_access_scope_analyses(
         self,
         context: RequestContext,
-        network_insights_access_scope_analysis_ids: NetworkInsightsAccessScopeAnalysisIdList = None,
-        network_insights_access_scope_id: NetworkInsightsAccessScopeId = None,
-        analysis_start_time_begin: MillisecondDateTime = None,
-        analysis_start_time_end: MillisecondDateTime = None,
-        filters: FilterList = None,
-        max_results: NetworkInsightsMaxResults = None,
-        dry_run: Boolean = None,
-        next_token: NextToken = None,
+        network_insights_access_scope_analysis_ids: NetworkInsightsAccessScopeAnalysisIdList
+        | None = None,
+        network_insights_access_scope_id: NetworkInsightsAccessScopeId | None = None,
+        analysis_start_time_begin: MillisecondDateTime | None = None,
+        analysis_start_time_end: MillisecondDateTime | None = None,
+        filters: FilterList | None = None,
+        max_results: NetworkInsightsMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeNetworkInsightsAccessScopeAnalysesResult:
         raise NotImplementedError
@@ -24138,11 +24692,11 @@ class Ec2Api:
     def describe_network_insights_access_scopes(
         self,
         context: RequestContext,
-        network_insights_access_scope_ids: NetworkInsightsAccessScopeIdList = None,
-        filters: FilterList = None,
-        max_results: NetworkInsightsMaxResults = None,
-        dry_run: Boolean = None,
-        next_token: NextToken = None,
+        network_insights_access_scope_ids: NetworkInsightsAccessScopeIdList | None = None,
+        filters: FilterList | None = None,
+        max_results: NetworkInsightsMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeNetworkInsightsAccessScopesResult:
         raise NotImplementedError
@@ -24151,14 +24705,14 @@ class Ec2Api:
     def describe_network_insights_analyses(
         self,
         context: RequestContext,
-        network_insights_analysis_ids: NetworkInsightsAnalysisIdList = None,
-        network_insights_path_id: NetworkInsightsPathId = None,
-        analysis_start_time: MillisecondDateTime = None,
-        analysis_end_time: MillisecondDateTime = None,
-        filters: FilterList = None,
-        max_results: NetworkInsightsMaxResults = None,
-        dry_run: Boolean = None,
-        next_token: NextToken = None,
+        network_insights_analysis_ids: NetworkInsightsAnalysisIdList | None = None,
+        network_insights_path_id: NetworkInsightsPathId | None = None,
+        analysis_start_time: MillisecondDateTime | None = None,
+        analysis_end_time: MillisecondDateTime | None = None,
+        filters: FilterList | None = None,
+        max_results: NetworkInsightsMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeNetworkInsightsAnalysesResult:
         raise NotImplementedError
@@ -24167,11 +24721,11 @@ class Ec2Api:
     def describe_network_insights_paths(
         self,
         context: RequestContext,
-        network_insights_path_ids: NetworkInsightsPathIdList = None,
-        filters: FilterList = None,
-        max_results: NetworkInsightsMaxResults = None,
-        dry_run: Boolean = None,
-        next_token: NextToken = None,
+        network_insights_path_ids: NetworkInsightsPathIdList | None = None,
+        filters: FilterList | None = None,
+        max_results: NetworkInsightsMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeNetworkInsightsPathsResult:
         raise NotImplementedError
@@ -24181,8 +24735,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_interface_id: NetworkInterfaceId,
-        dry_run: Boolean = None,
-        attribute: NetworkInterfaceAttribute = None,
+        dry_run: Boolean | None = None,
+        attribute: NetworkInterfaceAttribute | None = None,
         **kwargs,
     ) -> DescribeNetworkInterfaceAttributeResult:
         raise NotImplementedError
@@ -24191,10 +24745,10 @@ class Ec2Api:
     def describe_network_interface_permissions(
         self,
         context: RequestContext,
-        network_interface_permission_ids: NetworkInterfacePermissionIdList = None,
-        filters: FilterList = None,
-        next_token: String = None,
-        max_results: DescribeNetworkInterfacePermissionsMaxResults = None,
+        network_interface_permission_ids: NetworkInterfacePermissionIdList | None = None,
+        filters: FilterList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeNetworkInterfacePermissionsMaxResults | None = None,
         **kwargs,
     ) -> DescribeNetworkInterfacePermissionsResult:
         raise NotImplementedError
@@ -24203,23 +24757,36 @@ class Ec2Api:
     def describe_network_interfaces(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: DescribeNetworkInterfacesMaxResults = None,
-        dry_run: Boolean = None,
-        network_interface_ids: NetworkInterfaceIdList = None,
-        filters: FilterList = None,
+        next_token: String | None = None,
+        max_results: DescribeNetworkInterfacesMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        network_interface_ids: NetworkInterfaceIdList | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeNetworkInterfacesResult:
+        raise NotImplementedError
+
+    @handler("DescribeOutpostLags")
+    def describe_outpost_lags(
+        self,
+        context: RequestContext,
+        outpost_lag_ids: OutpostLagIdSet | None = None,
+        filters: FilterList | None = None,
+        max_results: OutpostLagMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
+        **kwargs,
+    ) -> DescribeOutpostLagsResult:
         raise NotImplementedError
 
     @handler("DescribePlacementGroups")
     def describe_placement_groups(
         self,
         context: RequestContext,
-        group_ids: PlacementGroupIdStringList = None,
-        dry_run: Boolean = None,
-        group_names: PlacementGroupStringList = None,
-        filters: FilterList = None,
+        group_ids: PlacementGroupIdStringList | None = None,
+        dry_run: Boolean | None = None,
+        group_names: PlacementGroupStringList | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribePlacementGroupsResult:
         raise NotImplementedError
@@ -24228,11 +24795,11 @@ class Ec2Api:
     def describe_prefix_lists(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
-        prefix_list_ids: PrefixListResourceIdStringList = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        prefix_list_ids: PrefixListResourceIdStringList | None = None,
         **kwargs,
     ) -> DescribePrefixListsResult:
         raise NotImplementedError
@@ -24241,10 +24808,10 @@ class Ec2Api:
     def describe_principal_id_format(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        resources: ResourceList = None,
-        max_results: DescribePrincipalIdFormatMaxResults = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        resources: ResourceList | None = None,
+        max_results: DescribePrincipalIdFormatMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribePrincipalIdFormatResult:
         raise NotImplementedError
@@ -24253,10 +24820,10 @@ class Ec2Api:
     def describe_public_ipv4_pools(
         self,
         context: RequestContext,
-        pool_ids: PublicIpv4PoolIdStringList = None,
-        next_token: NextToken = None,
-        max_results: PoolMaxResults = None,
-        filters: FilterList = None,
+        pool_ids: PublicIpv4PoolIdStringList | None = None,
+        next_token: NextToken | None = None,
+        max_results: PoolMaxResults | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribePublicIpv4PoolsResult:
         raise NotImplementedError
@@ -24265,10 +24832,10 @@ class Ec2Api:
     def describe_regions(
         self,
         context: RequestContext,
-        region_names: RegionNameStringList = None,
-        all_regions: Boolean = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        region_names: RegionNameStringList | None = None,
+        all_regions: Boolean | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeRegionsResult:
         raise NotImplementedError
@@ -24277,11 +24844,11 @@ class Ec2Api:
     def describe_replace_root_volume_tasks(
         self,
         context: RequestContext,
-        replace_root_volume_task_ids: ReplaceRootVolumeTaskIds = None,
-        filters: FilterList = None,
-        max_results: DescribeReplaceRootVolumeTasksMaxResults = None,
-        next_token: NextToken = None,
-        dry_run: Boolean = None,
+        replace_root_volume_task_ids: ReplaceRootVolumeTaskIds | None = None,
+        filters: FilterList | None = None,
+        max_results: DescribeReplaceRootVolumeTasksMaxResults | None = None,
+        next_token: NextToken | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeReplaceRootVolumeTasksResult:
         raise NotImplementedError
@@ -24290,11 +24857,11 @@ class Ec2Api:
     def describe_reserved_instances(
         self,
         context: RequestContext,
-        offering_class: OfferingClassType = None,
-        reserved_instances_ids: ReservedInstancesIdStringList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        offering_type: OfferingTypeValues = None,
+        offering_class: OfferingClassType | None = None,
+        reserved_instances_ids: ReservedInstancesIdStringList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        offering_type: OfferingTypeValues | None = None,
         **kwargs,
     ) -> DescribeReservedInstancesResult:
         raise NotImplementedError
@@ -24303,9 +24870,9 @@ class Ec2Api:
     def describe_reserved_instances_listings(
         self,
         context: RequestContext,
-        reserved_instances_id: ReservationId = None,
-        reserved_instances_listing_id: ReservedInstancesListingId = None,
-        filters: FilterList = None,
+        reserved_instances_id: ReservationId | None = None,
+        reserved_instances_listing_id: ReservedInstancesListingId | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeReservedInstancesListingsResult:
         raise NotImplementedError
@@ -24314,9 +24881,10 @@ class Ec2Api:
     def describe_reserved_instances_modifications(
         self,
         context: RequestContext,
-        reserved_instances_modification_ids: ReservedInstancesModificationIdStringList = None,
-        next_token: String = None,
-        filters: FilterList = None,
+        reserved_instances_modification_ids: ReservedInstancesModificationIdStringList
+        | None = None,
+        next_token: String | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeReservedInstancesModificationsResult:
         raise NotImplementedError
@@ -24325,21 +24893,22 @@ class Ec2Api:
     def describe_reserved_instances_offerings(
         self,
         context: RequestContext,
-        availability_zone: String = None,
-        include_marketplace: Boolean = None,
-        instance_type: InstanceType = None,
-        max_duration: Long = None,
-        max_instance_count: Integer = None,
-        min_duration: Long = None,
-        offering_class: OfferingClassType = None,
-        product_description: RIProductDescription = None,
-        reserved_instances_offering_ids: ReservedInstancesOfferingIdStringList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        instance_tenancy: Tenancy = None,
-        offering_type: OfferingTypeValues = None,
-        next_token: String = None,
-        max_results: Integer = None,
+        availability_zone: String | None = None,
+        include_marketplace: Boolean | None = None,
+        instance_type: InstanceType | None = None,
+        max_duration: Long | None = None,
+        max_instance_count: Integer | None = None,
+        min_duration: Long | None = None,
+        offering_class: OfferingClassType | None = None,
+        product_description: RIProductDescription | None = None,
+        reserved_instances_offering_ids: ReservedInstancesOfferingIdStringList | None = None,
+        availability_zone_id: AvailabilityZoneId | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        instance_tenancy: Tenancy | None = None,
+        offering_type: OfferingTypeValues | None = None,
+        next_token: String | None = None,
+        max_results: Integer | None = None,
         **kwargs,
     ) -> DescribeReservedInstancesOfferingsResult:
         raise NotImplementedError
@@ -24348,11 +24917,11 @@ class Ec2Api:
     def describe_route_server_endpoints(
         self,
         context: RequestContext,
-        route_server_endpoint_ids: RouteServerEndpointIdsList = None,
-        next_token: String = None,
-        max_results: RouteServerMaxResults = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        route_server_endpoint_ids: RouteServerEndpointIdsList | None = None,
+        next_token: String | None = None,
+        max_results: RouteServerMaxResults | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeRouteServerEndpointsResult:
         raise NotImplementedError
@@ -24361,11 +24930,11 @@ class Ec2Api:
     def describe_route_server_peers(
         self,
         context: RequestContext,
-        route_server_peer_ids: RouteServerPeerIdsList = None,
-        next_token: String = None,
-        max_results: RouteServerMaxResults = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        route_server_peer_ids: RouteServerPeerIdsList | None = None,
+        next_token: String | None = None,
+        max_results: RouteServerMaxResults | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeRouteServerPeersResult:
         raise NotImplementedError
@@ -24374,11 +24943,11 @@ class Ec2Api:
     def describe_route_servers(
         self,
         context: RequestContext,
-        route_server_ids: RouteServerIdsList = None,
-        next_token: String = None,
-        max_results: RouteServerMaxResults = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        route_server_ids: RouteServerIdsList | None = None,
+        next_token: String | None = None,
+        max_results: RouteServerMaxResults | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeRouteServersResult:
         raise NotImplementedError
@@ -24387,11 +24956,11 @@ class Ec2Api:
     def describe_route_tables(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: DescribeRouteTablesMaxResults = None,
-        dry_run: Boolean = None,
-        route_table_ids: RouteTableIdStringList = None,
-        filters: FilterList = None,
+        next_token: String | None = None,
+        max_results: DescribeRouteTablesMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        route_table_ids: RouteTableIdStringList | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeRouteTablesResult:
         raise NotImplementedError
@@ -24402,12 +24971,12 @@ class Ec2Api:
         context: RequestContext,
         first_slot_start_time_range: SlotDateTimeRangeRequest,
         recurrence: ScheduledInstanceRecurrenceRequest,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: DescribeScheduledInstanceAvailabilityMaxResults = None,
-        max_slot_duration_in_hours: Integer = None,
-        min_slot_duration_in_hours: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: DescribeScheduledInstanceAvailabilityMaxResults | None = None,
+        max_slot_duration_in_hours: Integer | None = None,
+        min_slot_duration_in_hours: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeScheduledInstanceAvailabilityResult:
         raise NotImplementedError
@@ -24416,19 +24985,19 @@ class Ec2Api:
     def describe_scheduled_instances(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
-        scheduled_instance_ids: ScheduledInstanceIdRequestSet = None,
-        slot_start_time_range: SlotStartTimeRangeRequest = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        scheduled_instance_ids: ScheduledInstanceIdRequestSet | None = None,
+        slot_start_time_range: SlotStartTimeRangeRequest | None = None,
         **kwargs,
     ) -> DescribeScheduledInstancesResult:
         raise NotImplementedError
 
     @handler("DescribeSecurityGroupReferences")
     def describe_security_group_references(
-        self, context: RequestContext, group_id: GroupIds, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, group_id: GroupIds, dry_run: Boolean | None = None, **kwargs
     ) -> DescribeSecurityGroupReferencesResult:
         raise NotImplementedError
 
@@ -24436,11 +25005,11 @@ class Ec2Api:
     def describe_security_group_rules(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        security_group_rule_ids: SecurityGroupRuleIdList = None,
-        dry_run: Boolean = None,
-        next_token: String = None,
-        max_results: DescribeSecurityGroupRulesMaxResults = None,
+        filters: FilterList | None = None,
+        security_group_rule_ids: SecurityGroupRuleIdList | None = None,
+        dry_run: Boolean | None = None,
+        next_token: String | None = None,
+        max_results: DescribeSecurityGroupRulesMaxResults | None = None,
         **kwargs,
     ) -> DescribeSecurityGroupRulesResult:
         raise NotImplementedError
@@ -24449,10 +25018,10 @@ class Ec2Api:
     def describe_security_group_vpc_associations(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        next_token: String = None,
-        max_results: DescribeSecurityGroupVpcAssociationsMaxResults = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeSecurityGroupVpcAssociationsMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeSecurityGroupVpcAssociationsResult:
         raise NotImplementedError
@@ -24461,14 +25030,27 @@ class Ec2Api:
     def describe_security_groups(
         self,
         context: RequestContext,
-        group_ids: GroupIdStringList = None,
-        group_names: GroupNameStringList = None,
-        next_token: String = None,
-        max_results: DescribeSecurityGroupsMaxResults = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        group_ids: GroupIdStringList | None = None,
+        group_names: GroupNameStringList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeSecurityGroupsMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeSecurityGroupsResult:
+        raise NotImplementedError
+
+    @handler("DescribeServiceLinkVirtualInterfaces")
+    def describe_service_link_virtual_interfaces(
+        self,
+        context: RequestContext,
+        service_link_virtual_interface_ids: ServiceLinkVirtualInterfaceIdSet | None = None,
+        filters: FilterList | None = None,
+        max_results: ServiceLinkMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
+        **kwargs,
+    ) -> DescribeServiceLinkVirtualInterfacesResult:
         raise NotImplementedError
 
     @handler("DescribeSnapshotAttribute")
@@ -24477,7 +25059,7 @@ class Ec2Api:
         context: RequestContext,
         attribute: SnapshotAttributeName,
         snapshot_id: SnapshotId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeSnapshotAttributeResult:
         raise NotImplementedError
@@ -24486,10 +25068,10 @@ class Ec2Api:
     def describe_snapshot_tier_status(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
-        next_token: String = None,
-        max_results: DescribeSnapshotTierStatusMaxResults = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
+        next_token: String | None = None,
+        max_results: DescribeSnapshotTierStatusMaxResults | None = None,
         **kwargs,
     ) -> DescribeSnapshotTierStatusResult:
         raise NotImplementedError
@@ -24498,20 +25080,20 @@ class Ec2Api:
     def describe_snapshots(
         self,
         context: RequestContext,
-        max_results: Integer = None,
-        next_token: String = None,
-        owner_ids: OwnerStringList = None,
-        restorable_by_user_ids: RestorableByStringList = None,
-        snapshot_ids: SnapshotIdStringList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        owner_ids: OwnerStringList | None = None,
+        restorable_by_user_ids: RestorableByStringList | None = None,
+        snapshot_ids: SnapshotIdStringList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeSnapshotsResult:
         raise NotImplementedError
 
     @handler("DescribeSpotDatafeedSubscription")
     def describe_spot_datafeed_subscription(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> DescribeSpotDatafeedSubscriptionResult:
         raise NotImplementedError
 
@@ -24520,9 +25102,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         spot_fleet_request_id: SpotFleetRequestId,
-        dry_run: Boolean = None,
-        next_token: String = None,
-        max_results: DescribeSpotFleetInstancesMaxResults = None,
+        dry_run: Boolean | None = None,
+        next_token: String | None = None,
+        max_results: DescribeSpotFleetInstancesMaxResults | None = None,
         **kwargs,
     ) -> DescribeSpotFleetInstancesResponse:
         raise NotImplementedError
@@ -24533,10 +25115,10 @@ class Ec2Api:
         context: RequestContext,
         spot_fleet_request_id: SpotFleetRequestId,
         start_time: DateTime,
-        dry_run: Boolean = None,
-        event_type: EventType = None,
-        next_token: String = None,
-        max_results: DescribeSpotFleetRequestHistoryMaxResults = None,
+        dry_run: Boolean | None = None,
+        event_type: EventType | None = None,
+        next_token: String | None = None,
+        max_results: DescribeSpotFleetRequestHistoryMaxResults | None = None,
         **kwargs,
     ) -> DescribeSpotFleetRequestHistoryResponse:
         raise NotImplementedError
@@ -24545,10 +25127,10 @@ class Ec2Api:
     def describe_spot_fleet_requests(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        spot_fleet_request_ids: SpotFleetRequestIdList = None,
-        next_token: String = None,
-        max_results: Integer = None,
+        dry_run: Boolean | None = None,
+        spot_fleet_request_ids: SpotFleetRequestIdList | None = None,
+        next_token: String | None = None,
+        max_results: Integer | None = None,
         **kwargs,
     ) -> DescribeSpotFleetRequestsResponse:
         raise NotImplementedError
@@ -24557,11 +25139,11 @@ class Ec2Api:
     def describe_spot_instance_requests(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: Integer = None,
-        dry_run: Boolean = None,
-        spot_instance_request_ids: SpotInstanceRequestIdList = None,
-        filters: FilterList = None,
+        next_token: String | None = None,
+        max_results: Integer | None = None,
+        dry_run: Boolean | None = None,
+        spot_instance_request_ids: SpotInstanceRequestIdList | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeSpotInstanceRequestsResult:
         raise NotImplementedError
@@ -24570,15 +25152,15 @@ class Ec2Api:
     def describe_spot_price_history(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        start_time: DateTime = None,
-        end_time: DateTime = None,
-        instance_types: InstanceTypeList = None,
-        product_descriptions: ProductDescriptionList = None,
-        filters: FilterList = None,
-        availability_zone: String = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        start_time: DateTime | None = None,
+        end_time: DateTime | None = None,
+        instance_types: InstanceTypeList | None = None,
+        product_descriptions: ProductDescriptionList | None = None,
+        filters: FilterList | None = None,
+        availability_zone: String | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeSpotPriceHistoryResult:
         raise NotImplementedError
@@ -24588,9 +25170,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
-        max_results: DescribeStaleSecurityGroupsMaxResults = None,
-        next_token: DescribeStaleSecurityGroupsNextToken = None,
+        dry_run: Boolean | None = None,
+        max_results: DescribeStaleSecurityGroupsMaxResults | None = None,
+        next_token: DescribeStaleSecurityGroupsNextToken | None = None,
         **kwargs,
     ) -> DescribeStaleSecurityGroupsResult:
         raise NotImplementedError
@@ -24599,11 +25181,11 @@ class Ec2Api:
     def describe_store_image_tasks(
         self,
         context: RequestContext,
-        image_ids: ImageIdList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        next_token: String = None,
-        max_results: DescribeStoreImageTasksRequestMaxResults = None,
+        image_ids: ImageIdList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeStoreImageTasksRequestMaxResults | None = None,
         **kwargs,
     ) -> DescribeStoreImageTasksResult:
         raise NotImplementedError
@@ -24612,11 +25194,11 @@ class Ec2Api:
     def describe_subnets(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        subnet_ids: SubnetIdStringList = None,
-        next_token: String = None,
-        max_results: DescribeSubnetsMaxResults = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        subnet_ids: SubnetIdStringList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeSubnetsMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeSubnetsResult:
         raise NotImplementedError
@@ -24625,10 +25207,10 @@ class Ec2Api:
     def describe_tags(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeTagsResult:
         raise NotImplementedError
@@ -24637,12 +25219,12 @@ class Ec2Api:
     def describe_traffic_mirror_filter_rules(
         self,
         context: RequestContext,
-        traffic_mirror_filter_rule_ids: TrafficMirrorFilterRuleIdList = None,
-        traffic_mirror_filter_id: TrafficMirrorFilterId = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: TrafficMirroringMaxResults = None,
-        next_token: NextToken = None,
+        traffic_mirror_filter_rule_ids: TrafficMirrorFilterRuleIdList | None = None,
+        traffic_mirror_filter_id: TrafficMirrorFilterId | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: TrafficMirroringMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeTrafficMirrorFilterRulesResult:
         raise NotImplementedError
@@ -24651,11 +25233,11 @@ class Ec2Api:
     def describe_traffic_mirror_filters(
         self,
         context: RequestContext,
-        traffic_mirror_filter_ids: TrafficMirrorFilterIdList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: TrafficMirroringMaxResults = None,
-        next_token: NextToken = None,
+        traffic_mirror_filter_ids: TrafficMirrorFilterIdList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: TrafficMirroringMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeTrafficMirrorFiltersResult:
         raise NotImplementedError
@@ -24664,11 +25246,11 @@ class Ec2Api:
     def describe_traffic_mirror_sessions(
         self,
         context: RequestContext,
-        traffic_mirror_session_ids: TrafficMirrorSessionIdList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: TrafficMirroringMaxResults = None,
-        next_token: NextToken = None,
+        traffic_mirror_session_ids: TrafficMirrorSessionIdList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: TrafficMirroringMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeTrafficMirrorSessionsResult:
         raise NotImplementedError
@@ -24677,11 +25259,11 @@ class Ec2Api:
     def describe_traffic_mirror_targets(
         self,
         context: RequestContext,
-        traffic_mirror_target_ids: TrafficMirrorTargetIdList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: TrafficMirroringMaxResults = None,
-        next_token: NextToken = None,
+        traffic_mirror_target_ids: TrafficMirrorTargetIdList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: TrafficMirroringMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeTrafficMirrorTargetsResult:
         raise NotImplementedError
@@ -24690,11 +25272,11 @@ class Ec2Api:
     def describe_transit_gateway_attachments(
         self,
         context: RequestContext,
-        transit_gateway_attachment_ids: TransitGatewayAttachmentIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_attachment_ids: TransitGatewayAttachmentIdStringList | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewayAttachmentsResult:
         raise NotImplementedError
@@ -24703,11 +25285,11 @@ class Ec2Api:
     def describe_transit_gateway_connect_peers(
         self,
         context: RequestContext,
-        transit_gateway_connect_peer_ids: TransitGatewayConnectPeerIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_connect_peer_ids: TransitGatewayConnectPeerIdStringList | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewayConnectPeersResult:
         raise NotImplementedError
@@ -24716,11 +25298,11 @@ class Ec2Api:
     def describe_transit_gateway_connects(
         self,
         context: RequestContext,
-        transit_gateway_attachment_ids: TransitGatewayAttachmentIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_attachment_ids: TransitGatewayAttachmentIdStringList | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewayConnectsResult:
         raise NotImplementedError
@@ -24729,11 +25311,12 @@ class Ec2Api:
     def describe_transit_gateway_multicast_domains(
         self,
         context: RequestContext,
-        transit_gateway_multicast_domain_ids: TransitGatewayMulticastDomainIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_multicast_domain_ids: TransitGatewayMulticastDomainIdStringList
+        | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewayMulticastDomainsResult:
         raise NotImplementedError
@@ -24742,11 +25325,11 @@ class Ec2Api:
     def describe_transit_gateway_peering_attachments(
         self,
         context: RequestContext,
-        transit_gateway_attachment_ids: TransitGatewayAttachmentIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_attachment_ids: TransitGatewayAttachmentIdStringList | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewayPeeringAttachmentsResult:
         raise NotImplementedError
@@ -24755,11 +25338,11 @@ class Ec2Api:
     def describe_transit_gateway_policy_tables(
         self,
         context: RequestContext,
-        transit_gateway_policy_table_ids: TransitGatewayPolicyTableIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_policy_table_ids: TransitGatewayPolicyTableIdStringList | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewayPolicyTablesResult:
         raise NotImplementedError
@@ -24768,11 +25351,12 @@ class Ec2Api:
     def describe_transit_gateway_route_table_announcements(
         self,
         context: RequestContext,
-        transit_gateway_route_table_announcement_ids: TransitGatewayRouteTableAnnouncementIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_route_table_announcement_ids: TransitGatewayRouteTableAnnouncementIdStringList
+        | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewayRouteTableAnnouncementsResult:
         raise NotImplementedError
@@ -24781,11 +25365,11 @@ class Ec2Api:
     def describe_transit_gateway_route_tables(
         self,
         context: RequestContext,
-        transit_gateway_route_table_ids: TransitGatewayRouteTableIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_route_table_ids: TransitGatewayRouteTableIdStringList | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewayRouteTablesResult:
         raise NotImplementedError
@@ -24794,11 +25378,11 @@ class Ec2Api:
     def describe_transit_gateway_vpc_attachments(
         self,
         context: RequestContext,
-        transit_gateway_attachment_ids: TransitGatewayAttachmentIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_attachment_ids: TransitGatewayAttachmentIdStringList | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewayVpcAttachmentsResult:
         raise NotImplementedError
@@ -24807,11 +25391,11 @@ class Ec2Api:
     def describe_transit_gateways(
         self,
         context: RequestContext,
-        transit_gateway_ids: TransitGatewayIdStringList = None,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        transit_gateway_ids: TransitGatewayIdStringList | None = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeTransitGatewaysResult:
         raise NotImplementedError
@@ -24820,11 +25404,11 @@ class Ec2Api:
     def describe_trunk_interface_associations(
         self,
         context: RequestContext,
-        association_ids: TrunkInterfaceAssociationIdList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        next_token: String = None,
-        max_results: DescribeTrunkInterfaceAssociationsMaxResults = None,
+        association_ids: TrunkInterfaceAssociationIdList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeTrunkInterfaceAssociationsMaxResults | None = None,
         **kwargs,
     ) -> DescribeTrunkInterfaceAssociationsResult:
         raise NotImplementedError
@@ -24833,13 +25417,13 @@ class Ec2Api:
     def describe_verified_access_endpoints(
         self,
         context: RequestContext,
-        verified_access_endpoint_ids: VerifiedAccessEndpointIdList = None,
-        verified_access_instance_id: VerifiedAccessInstanceId = None,
-        verified_access_group_id: VerifiedAccessGroupId = None,
-        max_results: DescribeVerifiedAccessEndpointsMaxResults = None,
-        next_token: NextToken = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        verified_access_endpoint_ids: VerifiedAccessEndpointIdList | None = None,
+        verified_access_instance_id: VerifiedAccessInstanceId | None = None,
+        verified_access_group_id: VerifiedAccessGroupId | None = None,
+        max_results: DescribeVerifiedAccessEndpointsMaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVerifiedAccessEndpointsResult:
         raise NotImplementedError
@@ -24848,12 +25432,12 @@ class Ec2Api:
     def describe_verified_access_groups(
         self,
         context: RequestContext,
-        verified_access_group_ids: VerifiedAccessGroupIdList = None,
-        verified_access_instance_id: VerifiedAccessInstanceId = None,
-        max_results: DescribeVerifiedAccessGroupMaxResults = None,
-        next_token: NextToken = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        verified_access_group_ids: VerifiedAccessGroupIdList | None = None,
+        verified_access_instance_id: VerifiedAccessInstanceId | None = None,
+        max_results: DescribeVerifiedAccessGroupMaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVerifiedAccessGroupsResult:
         raise NotImplementedError
@@ -24862,11 +25446,11 @@ class Ec2Api:
     def describe_verified_access_instance_logging_configurations(
         self,
         context: RequestContext,
-        verified_access_instance_ids: VerifiedAccessInstanceIdList = None,
-        max_results: DescribeVerifiedAccessInstanceLoggingConfigurationsMaxResults = None,
-        next_token: NextToken = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        verified_access_instance_ids: VerifiedAccessInstanceIdList | None = None,
+        max_results: DescribeVerifiedAccessInstanceLoggingConfigurationsMaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVerifiedAccessInstanceLoggingConfigurationsResult:
         raise NotImplementedError
@@ -24875,11 +25459,11 @@ class Ec2Api:
     def describe_verified_access_instances(
         self,
         context: RequestContext,
-        verified_access_instance_ids: VerifiedAccessInstanceIdList = None,
-        max_results: DescribeVerifiedAccessInstancesMaxResults = None,
-        next_token: NextToken = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        verified_access_instance_ids: VerifiedAccessInstanceIdList | None = None,
+        max_results: DescribeVerifiedAccessInstancesMaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVerifiedAccessInstancesResult:
         raise NotImplementedError
@@ -24888,11 +25472,11 @@ class Ec2Api:
     def describe_verified_access_trust_providers(
         self,
         context: RequestContext,
-        verified_access_trust_provider_ids: VerifiedAccessTrustProviderIdList = None,
-        max_results: DescribeVerifiedAccessTrustProvidersMaxResults = None,
-        next_token: NextToken = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        verified_access_trust_provider_ids: VerifiedAccessTrustProviderIdList | None = None,
+        max_results: DescribeVerifiedAccessTrustProvidersMaxResults | None = None,
+        next_token: NextToken | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVerifiedAccessTrustProvidersResult:
         raise NotImplementedError
@@ -24903,7 +25487,7 @@ class Ec2Api:
         context: RequestContext,
         attribute: VolumeAttributeName,
         volume_id: VolumeId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVolumeAttributeResult:
         raise NotImplementedError
@@ -24912,11 +25496,11 @@ class Ec2Api:
     def describe_volume_status(
         self,
         context: RequestContext,
-        max_results: Integer = None,
-        next_token: String = None,
-        volume_ids: VolumeIdStringList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        volume_ids: VolumeIdStringList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeVolumeStatusResult:
         raise NotImplementedError
@@ -24925,11 +25509,11 @@ class Ec2Api:
     def describe_volumes(
         self,
         context: RequestContext,
-        volume_ids: VolumeIdStringList = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        next_token: String = None,
-        max_results: Integer = None,
+        volume_ids: VolumeIdStringList | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        next_token: String | None = None,
+        max_results: Integer | None = None,
         **kwargs,
     ) -> DescribeVolumesResult:
         raise NotImplementedError
@@ -24938,11 +25522,11 @@ class Ec2Api:
     def describe_volumes_modifications(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        volume_ids: VolumeIdStringList = None,
-        filters: FilterList = None,
-        next_token: String = None,
-        max_results: Integer = None,
+        dry_run: Boolean | None = None,
+        volume_ids: VolumeIdStringList | None = None,
+        filters: FilterList | None = None,
+        next_token: String | None = None,
+        max_results: Integer | None = None,
         **kwargs,
     ) -> DescribeVolumesModificationsResult:
         raise NotImplementedError
@@ -24953,7 +25537,7 @@ class Ec2Api:
         context: RequestContext,
         attribute: VpcAttributeName,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVpcAttributeResult:
         raise NotImplementedError
@@ -24962,18 +25546,18 @@ class Ec2Api:
     def describe_vpc_block_public_access_exclusions(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        exclusion_ids: VpcBlockPublicAccessExclusionIdList = None,
-        next_token: String = None,
-        max_results: DescribeVpcBlockPublicAccessExclusionsMaxResults = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        exclusion_ids: VpcBlockPublicAccessExclusionIdList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeVpcBlockPublicAccessExclusionsMaxResults | None = None,
         **kwargs,
     ) -> DescribeVpcBlockPublicAccessExclusionsResult:
         raise NotImplementedError
 
     @handler("DescribeVpcBlockPublicAccessOptions")
     def describe_vpc_block_public_access_options(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> DescribeVpcBlockPublicAccessOptionsResult:
         raise NotImplementedError
 
@@ -24981,9 +25565,9 @@ class Ec2Api:
     def describe_vpc_classic_link(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        vpc_ids: VpcClassicLinkIdList = None,
-        filters: FilterList = None,
+        dry_run: Boolean | None = None,
+        vpc_ids: VpcClassicLinkIdList | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeVpcClassicLinkResult:
         raise NotImplementedError
@@ -24992,9 +25576,9 @@ class Ec2Api:
     def describe_vpc_classic_link_dns_support(
         self,
         context: RequestContext,
-        vpc_ids: VpcClassicLinkIdList = None,
-        max_results: DescribeVpcClassicLinkDnsSupportMaxResults = None,
-        next_token: DescribeVpcClassicLinkDnsSupportNextToken = None,
+        vpc_ids: VpcClassicLinkIdList | None = None,
+        max_results: DescribeVpcClassicLinkDnsSupportMaxResults | None = None,
+        next_token: DescribeVpcClassicLinkDnsSupportNextToken | None = None,
         **kwargs,
     ) -> DescribeVpcClassicLinkDnsSupportResult:
         raise NotImplementedError
@@ -25003,11 +25587,11 @@ class Ec2Api:
     def describe_vpc_endpoint_associations(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        vpc_endpoint_ids: VpcEndpointIdList = None,
-        filters: FilterList = None,
-        max_results: maxResults = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        vpc_endpoint_ids: VpcEndpointIdList | None = None,
+        filters: FilterList | None = None,
+        max_results: maxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeVpcEndpointAssociationsResult:
         raise NotImplementedError
@@ -25016,11 +25600,11 @@ class Ec2Api:
     def describe_vpc_endpoint_connection_notifications(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        connection_notification_id: ConnectionNotificationId = None,
-        filters: FilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        connection_notification_id: ConnectionNotificationId | None = None,
+        filters: FilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeVpcEndpointConnectionNotificationsResult:
         raise NotImplementedError
@@ -25029,10 +25613,10 @@ class Ec2Api:
     def describe_vpc_endpoint_connections(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeVpcEndpointConnectionsResult:
         raise NotImplementedError
@@ -25041,11 +25625,11 @@ class Ec2Api:
     def describe_vpc_endpoint_service_configurations(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        service_ids: VpcEndpointServiceIdList = None,
-        filters: FilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        service_ids: VpcEndpointServiceIdList | None = None,
+        filters: FilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeVpcEndpointServiceConfigurationsResult:
         raise NotImplementedError
@@ -25055,10 +25639,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         service_id: VpcEndpointServiceId,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeVpcEndpointServicePermissionsResult:
         raise NotImplementedError
@@ -25067,12 +25651,12 @@ class Ec2Api:
     def describe_vpc_endpoint_services(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        service_names: ValueStringList = None,
-        filters: FilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
-        service_regions: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        service_names: ValueStringList | None = None,
+        filters: FilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        service_regions: ValueStringList | None = None,
         **kwargs,
     ) -> DescribeVpcEndpointServicesResult:
         raise NotImplementedError
@@ -25081,11 +25665,11 @@ class Ec2Api:
     def describe_vpc_endpoints(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        vpc_endpoint_ids: VpcEndpointIdList = None,
-        filters: FilterList = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        vpc_endpoint_ids: VpcEndpointIdList | None = None,
+        filters: FilterList | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> DescribeVpcEndpointsResult:
         raise NotImplementedError
@@ -25094,11 +25678,11 @@ class Ec2Api:
     def describe_vpc_peering_connections(
         self,
         context: RequestContext,
-        next_token: String = None,
-        max_results: DescribeVpcPeeringConnectionsMaxResults = None,
-        dry_run: Boolean = None,
-        vpc_peering_connection_ids: VpcPeeringConnectionIdList = None,
-        filters: FilterList = None,
+        next_token: String | None = None,
+        max_results: DescribeVpcPeeringConnectionsMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        vpc_peering_connection_ids: VpcPeeringConnectionIdList | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> DescribeVpcPeeringConnectionsResult:
         raise NotImplementedError
@@ -25107,11 +25691,11 @@ class Ec2Api:
     def describe_vpcs(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        vpc_ids: VpcIdStringList = None,
-        next_token: String = None,
-        max_results: DescribeVpcsMaxResults = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        vpc_ids: VpcIdStringList | None = None,
+        next_token: String | None = None,
+        max_results: DescribeVpcsMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVpcsResult:
         raise NotImplementedError
@@ -25120,9 +25704,9 @@ class Ec2Api:
     def describe_vpn_connections(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        vpn_connection_ids: VpnConnectionIdStringList = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        vpn_connection_ids: VpnConnectionIdStringList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVpnConnectionsResult:
         raise NotImplementedError
@@ -25131,9 +25715,9 @@ class Ec2Api:
     def describe_vpn_gateways(
         self,
         context: RequestContext,
-        filters: FilterList = None,
-        vpn_gateway_ids: VpnGatewayIdStringList = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        vpn_gateway_ids: VpnGatewayIdStringList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DescribeVpnGatewaysResult:
         raise NotImplementedError
@@ -25144,7 +25728,7 @@ class Ec2Api:
         context: RequestContext,
         instance_id: InstanceId,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DetachClassicLinkVpcResult:
         raise NotImplementedError
@@ -25155,7 +25739,7 @@ class Ec2Api:
         context: RequestContext,
         internet_gateway_id: InternetGatewayId,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -25165,8 +25749,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         attachment_id: NetworkInterfaceAttachmentId,
-        dry_run: Boolean = None,
-        force: Boolean = None,
+        dry_run: Boolean | None = None,
+        force: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -25177,8 +25761,8 @@ class Ec2Api:
         context: RequestContext,
         verified_access_instance_id: VerifiedAccessInstanceId,
         verified_access_trust_provider_id: VerifiedAccessTrustProviderId,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DetachVerifiedAccessTrustProviderResult:
         raise NotImplementedError
@@ -25188,10 +25772,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         volume_id: VolumeIdWithResolver,
-        device: String = None,
-        force: Boolean = None,
-        instance_id: InstanceIdForResolver = None,
-        dry_run: Boolean = None,
+        device: String | None = None,
+        force: Boolean | None = None,
+        instance_id: InstanceIdForResolver | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> VolumeAttachment:
         raise NotImplementedError
@@ -25202,7 +25786,7 @@ class Ec2Api:
         context: RequestContext,
         vpc_id: VpcId,
         vpn_gateway_id: VpnGatewayId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -25212,14 +25796,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         allocation_id: AllocationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisableAddressTransferResult:
         raise NotImplementedError
 
     @handler("DisableAllowedImagesSettings")
     def disable_allowed_images_settings(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> DisableAllowedImagesSettingsResult:
         raise NotImplementedError
 
@@ -25227,18 +25811,18 @@ class Ec2Api:
     def disable_aws_network_performance_metric_subscription(
         self,
         context: RequestContext,
-        source: String = None,
-        destination: String = None,
-        metric: MetricType = None,
-        statistic: StatisticType = None,
-        dry_run: Boolean = None,
+        source: String | None = None,
+        destination: String | None = None,
+        metric: MetricType | None = None,
+        statistic: StatisticType | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisableAwsNetworkPerformanceMetricSubscriptionResult:
         raise NotImplementedError
 
     @handler("DisableEbsEncryptionByDefault")
     def disable_ebs_encryption_by_default(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> DisableEbsEncryptionByDefaultResult:
         raise NotImplementedError
 
@@ -25247,8 +25831,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         image_id: ImageId,
-        force: Boolean = None,
-        dry_run: Boolean = None,
+        force: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisableFastLaunchResult:
         raise NotImplementedError
@@ -25259,32 +25843,32 @@ class Ec2Api:
         context: RequestContext,
         availability_zones: AvailabilityZoneStringList,
         source_snapshot_ids: SnapshotIdStringList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisableFastSnapshotRestoresResult:
         raise NotImplementedError
 
     @handler("DisableImage")
     def disable_image(
-        self, context: RequestContext, image_id: ImageId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, image_id: ImageId, dry_run: Boolean | None = None, **kwargs
     ) -> DisableImageResult:
         raise NotImplementedError
 
     @handler("DisableImageBlockPublicAccess")
     def disable_image_block_public_access(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> DisableImageBlockPublicAccessResult:
         raise NotImplementedError
 
     @handler("DisableImageDeprecation")
     def disable_image_deprecation(
-        self, context: RequestContext, image_id: ImageId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, image_id: ImageId, dry_run: Boolean | None = None, **kwargs
     ) -> DisableImageDeprecationResult:
         raise NotImplementedError
 
     @handler("DisableImageDeregistrationProtection")
     def disable_image_deregistration_protection(
-        self, context: RequestContext, image_id: ImageId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, image_id: ImageId, dry_run: Boolean | None = None, **kwargs
     ) -> DisableImageDeregistrationProtectionResult:
         raise NotImplementedError
 
@@ -25293,7 +25877,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         delegated_admin_account_id: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisableIpamOrganizationAdminAccountResult:
         raise NotImplementedError
@@ -25304,20 +25888,20 @@ class Ec2Api:
         context: RequestContext,
         route_server_id: RouteServerId,
         route_table_id: RouteTableId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisableRouteServerPropagationResult:
         raise NotImplementedError
 
     @handler("DisableSerialConsoleAccess")
     def disable_serial_console_access(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> DisableSerialConsoleAccessResult:
         raise NotImplementedError
 
     @handler("DisableSnapshotBlockPublicAccess")
     def disable_snapshot_block_public_access(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> DisableSnapshotBlockPublicAccessResult:
         raise NotImplementedError
 
@@ -25326,9 +25910,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
-        transit_gateway_attachment_id: TransitGatewayAttachmentId = None,
-        dry_run: Boolean = None,
-        transit_gateway_route_table_announcement_id: TransitGatewayRouteTableAnnouncementId = None,
+        transit_gateway_attachment_id: TransitGatewayAttachmentId | None = None,
+        dry_run: Boolean | None = None,
+        transit_gateway_route_table_announcement_id: TransitGatewayRouteTableAnnouncementId
+        | None = None,
         **kwargs,
     ) -> DisableTransitGatewayRouteTablePropagationResult:
         raise NotImplementedError
@@ -25339,20 +25924,20 @@ class Ec2Api:
         context: RequestContext,
         gateway_id: VpnGatewayId,
         route_table_id: RouteTableId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
 
     @handler("DisableVpcClassicLink")
     def disable_vpc_classic_link(
-        self, context: RequestContext, vpc_id: VpcId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, vpc_id: VpcId, dry_run: Boolean | None = None, **kwargs
     ) -> DisableVpcClassicLinkResult:
         raise NotImplementedError
 
     @handler("DisableVpcClassicLinkDnsSupport")
     def disable_vpc_classic_link_dns_support(
-        self, context: RequestContext, vpc_id: VpcId = None, **kwargs
+        self, context: RequestContext, vpc_id: VpcId | None = None, **kwargs
     ) -> DisableVpcClassicLinkDnsSupportResult:
         raise NotImplementedError
 
@@ -25360,9 +25945,9 @@ class Ec2Api:
     def disassociate_address(
         self,
         context: RequestContext,
-        association_id: ElasticIpAssociationId = None,
-        public_ip: EipAllocationPublicIp = None,
-        dry_run: Boolean = None,
+        association_id: ElasticIpAssociationId | None = None,
+        public_ip: EipAllocationPublicIp | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -25373,7 +25958,7 @@ class Ec2Api:
         context: RequestContext,
         capacity_reservation_id: CapacityReservationId,
         unused_reservation_billing_owner_id: AccountID,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateCapacityReservationBillingOwnerResult:
         raise NotImplementedError
@@ -25384,7 +25969,7 @@ class Ec2Api:
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
         association_id: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateClientVpnTargetNetworkResult:
         raise NotImplementedError
@@ -25395,7 +25980,7 @@ class Ec2Api:
         context: RequestContext,
         certificate_arn: CertificateId,
         role_arn: RoleId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateEnclaveCertificateIamRoleResult:
         raise NotImplementedError
@@ -25412,14 +25997,19 @@ class Ec2Api:
         context: RequestContext,
         instance_event_window_id: InstanceEventWindowId,
         association_target: InstanceEventWindowDisassociationRequest,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateInstanceEventWindowResult:
         raise NotImplementedError
 
     @handler("DisassociateIpamByoasn")
     def disassociate_ipam_byoasn(
-        self, context: RequestContext, asn: String, cidr: String, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        asn: String,
+        cidr: String,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> DisassociateIpamByoasnResult:
         raise NotImplementedError
 
@@ -25428,7 +26018,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_resource_discovery_association_id: IpamResourceDiscoveryAssociationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateIpamResourceDiscoveryResult:
         raise NotImplementedError
@@ -25439,8 +26029,8 @@ class Ec2Api:
         context: RequestContext,
         nat_gateway_id: NatGatewayId,
         association_ids: EipAssociationIdList,
-        max_drain_duration_seconds: DrainSeconds = None,
-        dry_run: Boolean = None,
+        max_drain_duration_seconds: DrainSeconds | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateNatGatewayAddressResult:
         raise NotImplementedError
@@ -25451,7 +26041,7 @@ class Ec2Api:
         context: RequestContext,
         route_server_id: RouteServerId,
         vpc_id: VpcId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateRouteServerResult:
         raise NotImplementedError
@@ -25461,7 +26051,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         association_id: RouteTableAssociationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -25472,7 +26062,7 @@ class Ec2Api:
         context: RequestContext,
         group_id: DisassociateSecurityGroupVpcSecurityGroupId,
         vpc_id: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateSecurityGroupVpcResult:
         raise NotImplementedError
@@ -25490,7 +26080,7 @@ class Ec2Api:
         transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
         subnet_ids: TransitGatewaySubnetIdList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateTransitGatewayMulticastDomainResult:
         raise NotImplementedError
@@ -25501,7 +26091,7 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_policy_table_id: TransitGatewayPolicyTableId,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateTransitGatewayPolicyTableResult:
         raise NotImplementedError
@@ -25512,7 +26102,7 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateTransitGatewayRouteTableResult:
         raise NotImplementedError
@@ -25522,8 +26112,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         association_id: TrunkInterfaceAssociationId,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> DisassociateTrunkInterfaceResult:
         raise NotImplementedError
@@ -25540,7 +26130,7 @@ class Ec2Api:
         context: RequestContext,
         allocation_id: AllocationId,
         transfer_account_id: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableAddressTransferResult:
         raise NotImplementedError
@@ -25550,7 +26140,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         allowed_images_settings_state: AllowedImagesSettingsEnabledState,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableAllowedImagesSettingsResult:
         raise NotImplementedError
@@ -25559,18 +26149,18 @@ class Ec2Api:
     def enable_aws_network_performance_metric_subscription(
         self,
         context: RequestContext,
-        source: String = None,
-        destination: String = None,
-        metric: MetricType = None,
-        statistic: StatisticType = None,
-        dry_run: Boolean = None,
+        source: String | None = None,
+        destination: String | None = None,
+        metric: MetricType | None = None,
+        statistic: StatisticType | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableAwsNetworkPerformanceMetricSubscriptionResult:
         raise NotImplementedError
 
     @handler("EnableEbsEncryptionByDefault")
     def enable_ebs_encryption_by_default(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> EnableEbsEncryptionByDefaultResult:
         raise NotImplementedError
 
@@ -25579,11 +26169,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         image_id: ImageId,
-        resource_type: String = None,
-        snapshot_configuration: FastLaunchSnapshotConfigurationRequest = None,
-        launch_template: FastLaunchLaunchTemplateSpecificationRequest = None,
-        max_parallel_launches: Integer = None,
-        dry_run: Boolean = None,
+        resource_type: String | None = None,
+        snapshot_configuration: FastLaunchSnapshotConfigurationRequest | None = None,
+        launch_template: FastLaunchLaunchTemplateSpecificationRequest | None = None,
+        max_parallel_launches: Integer | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableFastLaunchResult:
         raise NotImplementedError
@@ -25594,14 +26184,14 @@ class Ec2Api:
         context: RequestContext,
         availability_zones: AvailabilityZoneStringList,
         source_snapshot_ids: SnapshotIdStringList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableFastSnapshotRestoresResult:
         raise NotImplementedError
 
     @handler("EnableImage")
     def enable_image(
-        self, context: RequestContext, image_id: ImageId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, image_id: ImageId, dry_run: Boolean | None = None, **kwargs
     ) -> EnableImageResult:
         raise NotImplementedError
 
@@ -25610,7 +26200,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         image_block_public_access_state: ImageBlockPublicAccessEnabledState,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableImageBlockPublicAccessResult:
         raise NotImplementedError
@@ -25621,7 +26211,7 @@ class Ec2Api:
         context: RequestContext,
         image_id: ImageId,
         deprecate_at: MillisecondDateTime,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableImageDeprecationResult:
         raise NotImplementedError
@@ -25631,8 +26221,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         image_id: ImageId,
-        with_cooldown: Boolean = None,
-        dry_run: Boolean = None,
+        with_cooldown: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableImageDeregistrationProtectionResult:
         raise NotImplementedError
@@ -25642,14 +26232,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         delegated_admin_account_id: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableIpamOrganizationAdminAccountResult:
         raise NotImplementedError
 
     @handler("EnableReachabilityAnalyzerOrganizationSharing")
     def enable_reachability_analyzer_organization_sharing(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> EnableReachabilityAnalyzerOrganizationSharingResult:
         raise NotImplementedError
 
@@ -25659,14 +26249,14 @@ class Ec2Api:
         context: RequestContext,
         route_server_id: RouteServerId,
         route_table_id: RouteTableId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableRouteServerPropagationResult:
         raise NotImplementedError
 
     @handler("EnableSerialConsoleAccess")
     def enable_serial_console_access(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> EnableSerialConsoleAccessResult:
         raise NotImplementedError
 
@@ -25675,7 +26265,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         state: SnapshotBlockPublicAccessState,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> EnableSnapshotBlockPublicAccessResult:
         raise NotImplementedError
@@ -25685,9 +26275,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
-        transit_gateway_attachment_id: TransitGatewayAttachmentId = None,
-        dry_run: Boolean = None,
-        transit_gateway_route_table_announcement_id: TransitGatewayRouteTableAnnouncementId = None,
+        transit_gateway_attachment_id: TransitGatewayAttachmentId | None = None,
+        dry_run: Boolean | None = None,
+        transit_gateway_route_table_announcement_id: TransitGatewayRouteTableAnnouncementId
+        | None = None,
         **kwargs,
     ) -> EnableTransitGatewayRouteTablePropagationResult:
         raise NotImplementedError
@@ -25698,26 +26289,26 @@ class Ec2Api:
         context: RequestContext,
         gateway_id: VpnGatewayId,
         route_table_id: RouteTableId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
 
     @handler("EnableVolumeIO")
     def enable_volume_io(
-        self, context: RequestContext, volume_id: VolumeId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, volume_id: VolumeId, dry_run: Boolean | None = None, **kwargs
     ) -> None:
         raise NotImplementedError
 
     @handler("EnableVpcClassicLink")
     def enable_vpc_classic_link(
-        self, context: RequestContext, vpc_id: VpcId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, vpc_id: VpcId, dry_run: Boolean | None = None, **kwargs
     ) -> EnableVpcClassicLinkResult:
         raise NotImplementedError
 
     @handler("EnableVpcClassicLinkDnsSupport")
     def enable_vpc_classic_link_dns_support(
-        self, context: RequestContext, vpc_id: VpcId = None, **kwargs
+        self, context: RequestContext, vpc_id: VpcId | None = None, **kwargs
     ) -> EnableVpcClassicLinkDnsSupportResult:
         raise NotImplementedError
 
@@ -25726,7 +26317,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ExportClientVpnClientCertificateRevocationListResult:
         raise NotImplementedError
@@ -25736,7 +26327,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ExportClientVpnClientConfigurationResult:
         raise NotImplementedError
@@ -25748,11 +26339,11 @@ class Ec2Api:
         disk_image_format: DiskImageFormat,
         image_id: ImageId,
         s3_export_location: ExportTaskS3LocationRequest,
-        client_token: String = None,
-        description: String = None,
-        dry_run: Boolean = None,
-        role_name: String = None,
-        tag_specifications: TagSpecificationList = None,
+        client_token: String | None = None,
+        description: String | None = None,
+        dry_run: Boolean | None = None,
+        role_name: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> ExportImageResult:
         raise NotImplementedError
@@ -25763,8 +26354,8 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
         s3_bucket: String,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ExportTransitGatewayRoutesResult:
         raise NotImplementedError
@@ -25774,14 +26365,25 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_instance_id: VerifiedAccessInstanceId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ExportVerifiedAccessInstanceClientConfigurationResult:
         raise NotImplementedError
 
+    @handler("GetActiveVpnTunnelStatus")
+    def get_active_vpn_tunnel_status(
+        self,
+        context: RequestContext,
+        vpn_connection_id: VpnConnectionId,
+        vpn_tunnel_outside_ip_address: String,
+        dry_run: Boolean | None = None,
+        **kwargs,
+    ) -> GetActiveVpnTunnelStatusResult:
+        raise NotImplementedError
+
     @handler("GetAllowedImagesSettings")
     def get_allowed_images_settings(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> GetAllowedImagesSettingsResult:
         raise NotImplementedError
 
@@ -25790,7 +26392,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         certificate_arn: CertificateId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetAssociatedEnclaveCertificateIamRolesResult:
         raise NotImplementedError
@@ -25800,9 +26402,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         pool_id: Ipv6PoolEc2Id,
-        next_token: NextToken = None,
-        max_results: Ipv6PoolMaxResults = None,
-        dry_run: Boolean = None,
+        next_token: NextToken | None = None,
+        max_results: Ipv6PoolMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetAssociatedIpv6PoolCidrsResult:
         raise NotImplementedError
@@ -25811,12 +26413,12 @@ class Ec2Api:
     def get_aws_network_performance_data(
         self,
         context: RequestContext,
-        data_queries: DataQueries = None,
-        start_time: MillisecondDateTime = None,
-        end_time: MillisecondDateTime = None,
-        max_results: Integer = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        data_queries: DataQueries | None = None,
+        start_time: MillisecondDateTime | None = None,
+        end_time: MillisecondDateTime | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetAwsNetworkPerformanceDataResult:
         raise NotImplementedError
@@ -25826,9 +26428,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         capacity_reservation_id: CapacityReservationId,
-        next_token: String = None,
-        max_results: GetCapacityReservationUsageRequestMaxResults = None,
-        dry_run: Boolean = None,
+        next_token: String | None = None,
+        max_results: GetCapacityReservationUsageRequestMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetCapacityReservationUsageResult:
         raise NotImplementedError
@@ -25838,10 +26440,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         pool_id: Ipv4PoolCoipId,
-        filters: FilterList = None,
-        max_results: CoipPoolMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: CoipPoolMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetCoipPoolUsageResult:
         raise NotImplementedError
@@ -25851,8 +26453,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_id: InstanceId,
-        latest: Boolean = None,
-        dry_run: Boolean = None,
+        latest: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetConsoleOutputResult:
         raise NotImplementedError
@@ -25862,8 +26464,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_id: InstanceId,
-        dry_run: Boolean = None,
-        wake_up: Boolean = None,
+        dry_run: Boolean | None = None,
+        wake_up: Boolean | None = None,
         **kwargs,
     ) -> GetConsoleScreenshotResult:
         raise NotImplementedError
@@ -25873,7 +26475,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         report_id: DeclarativePoliciesReportId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetDeclarativePoliciesReportSummaryResult:
         raise NotImplementedError
@@ -25883,20 +26485,20 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_family: UnlimitedSupportedInstanceFamily,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetDefaultCreditSpecificationResult:
         raise NotImplementedError
 
     @handler("GetEbsDefaultKmsKeyId")
     def get_ebs_default_kms_key_id(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> GetEbsDefaultKmsKeyIdResult:
         raise NotImplementedError
 
     @handler("GetEbsEncryptionByDefault")
     def get_ebs_encryption_by_default(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> GetEbsEncryptionByDefaultResult:
         raise NotImplementedError
 
@@ -25907,7 +26509,7 @@ class Ec2Api:
         flow_log_id: VpcFlowLogId,
         config_delivery_s3_destination_arn: String,
         integrate_services: IntegrateServices,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetFlowLogsIntegrationTemplateResult:
         raise NotImplementedError
@@ -25917,9 +26519,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         capacity_reservation_id: CapacityReservationId,
-        next_token: String = None,
-        max_results: GetGroupsForCapacityReservationRequestMaxResults = None,
-        dry_run: Boolean = None,
+        next_token: String | None = None,
+        max_results: GetGroupsForCapacityReservationRequestMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetGroupsForCapacityReservationResult:
         raise NotImplementedError
@@ -25936,13 +26538,13 @@ class Ec2Api:
 
     @handler("GetImageBlockPublicAccessState")
     def get_image_block_public_access_state(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> GetImageBlockPublicAccessStateResult:
         raise NotImplementedError
 
     @handler("GetInstanceMetadataDefaults")
     def get_instance_metadata_defaults(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> GetInstanceMetadataDefaultsResult:
         raise NotImplementedError
 
@@ -25953,7 +26555,7 @@ class Ec2Api:
         instance_id: InstanceId,
         key_type: EkPubKeyType,
         key_format: EkPubKeyFormat,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetInstanceTpmEkPubResult:
         raise NotImplementedError
@@ -25965,16 +26567,20 @@ class Ec2Api:
         architecture_types: ArchitectureTypeSet,
         virtualization_types: VirtualizationTypeSet,
         instance_requirements: InstanceRequirementsRequest,
-        dry_run: Boolean = None,
-        max_results: Integer = None,
-        next_token: String = None,
+        dry_run: Boolean | None = None,
+        max_results: Integer | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> GetInstanceTypesFromInstanceRequirementsResult:
         raise NotImplementedError
 
     @handler("GetInstanceUefiData")
     def get_instance_uefi_data(
-        self, context: RequestContext, instance_id: InstanceId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        instance_id: InstanceId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> GetInstanceUefiDataResult:
         raise NotImplementedError
 
@@ -25984,12 +26590,12 @@ class Ec2Api:
         context: RequestContext,
         cidr: String,
         ipam_scope_id: IpamScopeId,
-        dry_run: Boolean = None,
-        vpc_id: String = None,
-        start_time: MillisecondDateTime = None,
-        end_time: MillisecondDateTime = None,
-        max_results: IpamAddressHistoryMaxResults = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        vpc_id: String | None = None,
+        start_time: MillisecondDateTime | None = None,
+        end_time: MillisecondDateTime | None = None,
+        max_results: IpamAddressHistoryMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> GetIpamAddressHistoryResult:
         raise NotImplementedError
@@ -26000,10 +26606,10 @@ class Ec2Api:
         context: RequestContext,
         ipam_resource_discovery_id: IpamResourceDiscoveryId,
         discovery_region: String,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        next_token: NextToken = None,
-        max_results: IpamMaxResults = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        next_token: NextToken | None = None,
+        max_results: IpamMaxResults | None = None,
         **kwargs,
     ) -> GetIpamDiscoveredAccountsResult:
         raise NotImplementedError
@@ -26014,10 +26620,10 @@ class Ec2Api:
         context: RequestContext,
         ipam_resource_discovery_id: IpamResourceDiscoveryId,
         address_region: String,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        next_token: NextToken = None,
-        max_results: IpamMaxResults = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        next_token: NextToken | None = None,
+        max_results: IpamMaxResults | None = None,
         **kwargs,
     ) -> GetIpamDiscoveredPublicAddressesResult:
         raise NotImplementedError
@@ -26028,10 +26634,10 @@ class Ec2Api:
         context: RequestContext,
         ipam_resource_discovery_id: IpamResourceDiscoveryId,
         resource_region: String,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        next_token: NextToken = None,
-        max_results: IpamMaxResults = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        next_token: NextToken | None = None,
+        max_results: IpamMaxResults | None = None,
         **kwargs,
     ) -> GetIpamDiscoveredResourceCidrsResult:
         raise NotImplementedError
@@ -26041,11 +26647,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_pool_id: IpamPoolId,
-        dry_run: Boolean = None,
-        ipam_pool_allocation_id: IpamPoolAllocationId = None,
-        filters: FilterList = None,
-        max_results: GetIpamPoolAllocationsMaxResults = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        ipam_pool_allocation_id: IpamPoolAllocationId | None = None,
+        filters: FilterList | None = None,
+        max_results: GetIpamPoolAllocationsMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> GetIpamPoolAllocationsResult:
         raise NotImplementedError
@@ -26055,10 +26661,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_pool_id: IpamPoolId,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: IpamMaxResults = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: IpamMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> GetIpamPoolCidrsResult:
         raise NotImplementedError
@@ -26068,22 +26674,26 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_scope_id: IpamScopeId,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
-        max_results: IpamMaxResults = None,
-        next_token: NextToken = None,
-        ipam_pool_id: IpamPoolId = None,
-        resource_id: String = None,
-        resource_type: IpamResourceType = None,
-        resource_tag: RequestIpamResourceTag = None,
-        resource_owner: String = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
+        max_results: IpamMaxResults | None = None,
+        next_token: NextToken | None = None,
+        ipam_pool_id: IpamPoolId | None = None,
+        resource_id: String | None = None,
+        resource_type: IpamResourceType | None = None,
+        resource_tag: RequestIpamResourceTag | None = None,
+        resource_owner: String | None = None,
         **kwargs,
     ) -> GetIpamResourceCidrsResult:
         raise NotImplementedError
 
     @handler("GetLaunchTemplateData")
     def get_launch_template_data(
-        self, context: RequestContext, instance_id: InstanceId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        instance_id: InstanceId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> GetLaunchTemplateDataResult:
         raise NotImplementedError
 
@@ -26092,9 +26702,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         prefix_list_id: PrefixListResourceId,
-        dry_run: Boolean = None,
-        max_results: GetManagedPrefixListAssociationsMaxResults = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        max_results: GetManagedPrefixListAssociationsMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> GetManagedPrefixListAssociationsResult:
         raise NotImplementedError
@@ -26104,10 +26714,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         prefix_list_id: PrefixListResourceId,
-        dry_run: Boolean = None,
-        target_version: Long = None,
-        max_results: PrefixListMaxResults = None,
-        next_token: NextToken = None,
+        dry_run: Boolean | None = None,
+        target_version: Long | None = None,
+        max_results: PrefixListMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> GetManagedPrefixListEntriesResult:
         raise NotImplementedError
@@ -26117,9 +26727,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_insights_access_scope_analysis_id: NetworkInsightsAccessScopeAnalysisId,
-        max_results: GetNetworkInsightsAccessScopeAnalysisFindingsMaxResults = None,
-        next_token: NextToken = None,
-        dry_run: Boolean = None,
+        max_results: GetNetworkInsightsAccessScopeAnalysisFindingsMaxResults | None = None,
+        next_token: NextToken | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetNetworkInsightsAccessScopeAnalysisFindingsResult:
         raise NotImplementedError
@@ -26129,14 +26739,18 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_insights_access_scope_id: NetworkInsightsAccessScopeId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetNetworkInsightsAccessScopeContentResult:
         raise NotImplementedError
 
     @handler("GetPasswordData")
     def get_password_data(
-        self, context: RequestContext, instance_id: InstanceId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        instance_id: InstanceId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> GetPasswordDataResult:
         raise NotImplementedError
 
@@ -26145,8 +26759,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         reserved_instance_ids: ReservedInstanceIdSet,
-        dry_run: Boolean = None,
-        target_configurations: TargetConfigurationRequestSet = None,
+        dry_run: Boolean | None = None,
+        target_configurations: TargetConfigurationRequestSet | None = None,
         **kwargs,
     ) -> GetReservedInstancesExchangeQuoteResult:
         raise NotImplementedError
@@ -26156,7 +26770,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_server_id: RouteServerId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetRouteServerAssociationsResult:
         raise NotImplementedError
@@ -26166,8 +26780,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_server_id: RouteServerId,
-        route_table_id: RouteTableId = None,
-        dry_run: Boolean = None,
+        route_table_id: RouteTableId | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetRouteServerPropagationsResult:
         raise NotImplementedError
@@ -26177,10 +26791,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_server_id: RouteServerId,
-        next_token: String = None,
-        max_results: RouteServerMaxResults = None,
-        dry_run: Boolean = None,
-        filters: FilterList = None,
+        next_token: String | None = None,
+        max_results: RouteServerMaxResults | None = None,
+        dry_run: Boolean | None = None,
+        filters: FilterList | None = None,
         **kwargs,
     ) -> GetRouteServerRoutingDatabaseResult:
         raise NotImplementedError
@@ -26190,23 +26804,23 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        next_token: String = None,
-        max_results: GetSecurityGroupsForVpcRequestMaxResults = None,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
+        next_token: String | None = None,
+        max_results: GetSecurityGroupsForVpcRequestMaxResults | None = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetSecurityGroupsForVpcResult:
         raise NotImplementedError
 
     @handler("GetSerialConsoleAccessStatus")
     def get_serial_console_access_status(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> GetSerialConsoleAccessStatusResult:
         raise NotImplementedError
 
     @handler("GetSnapshotBlockPublicAccessState")
     def get_snapshot_block_public_access_state(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> GetSnapshotBlockPublicAccessStateResult:
         raise NotImplementedError
 
@@ -26215,14 +26829,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         target_capacity: SpotPlacementScoresTargetCapacity,
-        instance_types: InstanceTypes = None,
-        target_capacity_unit_type: TargetCapacityUnitType = None,
-        single_availability_zone: Boolean = None,
-        region_names: RegionNames = None,
-        instance_requirements_with_metadata: InstanceRequirementsWithMetadataRequest = None,
-        dry_run: Boolean = None,
-        max_results: SpotPlacementScoresMaxResults = None,
-        next_token: String = None,
+        instance_types: InstanceTypes | None = None,
+        target_capacity_unit_type: TargetCapacityUnitType | None = None,
+        single_availability_zone: Boolean | None = None,
+        region_names: RegionNames | None = None,
+        instance_requirements_with_metadata: InstanceRequirementsWithMetadataRequest | None = None,
+        dry_run: Boolean | None = None,
+        max_results: SpotPlacementScoresMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> GetSpotPlacementScoresResult:
         raise NotImplementedError
@@ -26232,10 +26846,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         subnet_id: SubnetId,
-        filters: FilterList = None,
-        dry_run: Boolean = None,
-        next_token: String = None,
-        max_results: GetSubnetCidrReservationsMaxResults = None,
+        filters: FilterList | None = None,
+        dry_run: Boolean | None = None,
+        next_token: String | None = None,
+        max_results: GetSubnetCidrReservationsMaxResults | None = None,
         **kwargs,
     ) -> GetSubnetCidrReservationsResult:
         raise NotImplementedError
@@ -26245,10 +26859,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetTransitGatewayAttachmentPropagationsResult:
         raise NotImplementedError
@@ -26258,10 +26872,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetTransitGatewayMulticastDomainAssociationsResult:
         raise NotImplementedError
@@ -26271,10 +26885,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_policy_table_id: TransitGatewayPolicyTableId,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetTransitGatewayPolicyTableAssociationsResult:
         raise NotImplementedError
@@ -26284,10 +26898,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_policy_table_id: TransitGatewayPolicyTableId,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetTransitGatewayPolicyTableEntriesResult:
         raise NotImplementedError
@@ -26297,10 +26911,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetTransitGatewayPrefixListReferencesResult:
         raise NotImplementedError
@@ -26310,10 +26924,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetTransitGatewayRouteTableAssociationsResult:
         raise NotImplementedError
@@ -26323,10 +26937,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetTransitGatewayRouteTablePropagationsResult:
         raise NotImplementedError
@@ -26336,7 +26950,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_endpoint_id: VerifiedAccessEndpointId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetVerifiedAccessEndpointPolicyResult:
         raise NotImplementedError
@@ -26346,9 +26960,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_endpoint_id: VerifiedAccessEndpointId,
-        max_results: GetVerifiedAccessEndpointTargetsMaxResults = None,
-        next_token: NextToken = None,
-        dry_run: Boolean = None,
+        max_results: GetVerifiedAccessEndpointTargetsMaxResults | None = None,
+        next_token: NextToken | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetVerifiedAccessEndpointTargetsResult:
         raise NotImplementedError
@@ -26358,7 +26972,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_group_id: VerifiedAccessGroupId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetVerifiedAccessGroupPolicyResult:
         raise NotImplementedError
@@ -26369,8 +26983,9 @@ class Ec2Api:
         context: RequestContext,
         vpn_connection_id: VpnConnectionId,
         vpn_connection_device_type_id: VpnConnectionDeviceTypeId,
-        internet_key_exchange_version: String = None,
-        dry_run: Boolean = None,
+        internet_key_exchange_version: String | None = None,
+        sample_type: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetVpnConnectionDeviceSampleConfigurationResult:
         raise NotImplementedError
@@ -26379,9 +26994,9 @@ class Ec2Api:
     def get_vpn_connection_device_types(
         self,
         context: RequestContext,
-        max_results: GVCDMaxResults = None,
-        next_token: NextToken = None,
-        dry_run: Boolean = None,
+        max_results: GVCDMaxResults | None = None,
+        next_token: NextToken | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetVpnConnectionDeviceTypesResult:
         raise NotImplementedError
@@ -26392,7 +27007,7 @@ class Ec2Api:
         context: RequestContext,
         vpn_connection_id: VpnConnectionId,
         vpn_tunnel_outside_ip_address: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> GetVpnTunnelReplacementStatusResult:
         raise NotImplementedError
@@ -26403,7 +27018,7 @@ class Ec2Api:
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
         certificate_revocation_list: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ImportClientVpnClientCertificateRevocationListResult:
         raise NotImplementedError
@@ -26412,22 +27027,22 @@ class Ec2Api:
     def import_image(
         self,
         context: RequestContext,
-        architecture: String = None,
-        client_data: ClientData = None,
-        client_token: String = None,
-        description: String = None,
-        disk_containers: ImageDiskContainerList = None,
-        dry_run: Boolean = None,
-        encrypted: Boolean = None,
-        hypervisor: String = None,
-        kms_key_id: KmsKeyId = None,
-        license_type: String = None,
-        platform: String = None,
-        role_name: String = None,
-        license_specifications: ImportImageLicenseSpecificationListRequest = None,
-        tag_specifications: TagSpecificationList = None,
-        usage_operation: String = None,
-        boot_mode: BootModeValues = None,
+        architecture: String | None = None,
+        client_data: ClientData | None = None,
+        client_token: String | None = None,
+        description: String | None = None,
+        disk_containers: ImageDiskContainerList | None = None,
+        dry_run: Boolean | None = None,
+        encrypted: Boolean | None = None,
+        hypervisor: String | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        license_type: String | None = None,
+        platform: String | None = None,
+        role_name: String | None = None,
+        license_specifications: ImportImageLicenseSpecificationListRequest | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        usage_operation: String | None = None,
+        boot_mode: BootModeValues | None = None,
         **kwargs,
     ) -> ImportImageResult:
         raise NotImplementedError
@@ -26437,10 +27052,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         platform: PlatformValues,
-        dry_run: Boolean = None,
-        description: String = None,
-        launch_specification: ImportInstanceLaunchSpecification = None,
-        disk_images: DiskImageList = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        launch_specification: ImportInstanceLaunchSpecification | None = None,
+        disk_images: DiskImageList | None = None,
         **kwargs,
     ) -> ImportInstanceResult:
         raise NotImplementedError
@@ -26451,8 +27066,8 @@ class Ec2Api:
         context: RequestContext,
         key_name: String,
         public_key_material: Blob,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ImportKeyPairResult:
         raise NotImplementedError
@@ -26461,15 +27076,15 @@ class Ec2Api:
     def import_snapshot(
         self,
         context: RequestContext,
-        client_data: ClientData = None,
-        client_token: String = None,
-        description: String = None,
-        disk_container: SnapshotDiskContainer = None,
-        dry_run: Boolean = None,
-        encrypted: Boolean = None,
-        kms_key_id: KmsKeyId = None,
-        role_name: String = None,
-        tag_specifications: TagSpecificationList = None,
+        client_data: ClientData | None = None,
+        client_token: String | None = None,
+        description: String | None = None,
+        disk_container: SnapshotDiskContainer | None = None,
+        dry_run: Boolean | None = None,
+        encrypted: Boolean | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        role_name: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> ImportSnapshotResult:
         raise NotImplementedError
@@ -26481,8 +27096,8 @@ class Ec2Api:
         availability_zone: String,
         image: DiskImageDetail,
         volume: VolumeDetail,
-        dry_run: Boolean = None,
-        description: String = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
         **kwargs,
     ) -> ImportVolumeResult:
         raise NotImplementedError
@@ -26491,10 +27106,10 @@ class Ec2Api:
     def list_images_in_recycle_bin(
         self,
         context: RequestContext,
-        image_ids: ImageIdStringList = None,
-        next_token: String = None,
-        max_results: ListImagesInRecycleBinMaxResults = None,
-        dry_run: Boolean = None,
+        image_ids: ImageIdStringList | None = None,
+        next_token: String | None = None,
+        max_results: ListImagesInRecycleBinMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ListImagesInRecycleBinResult:
         raise NotImplementedError
@@ -26503,10 +27118,10 @@ class Ec2Api:
     def list_snapshots_in_recycle_bin(
         self,
         context: RequestContext,
-        max_results: ListSnapshotsInRecycleBinMaxResults = None,
-        next_token: String = None,
-        snapshot_ids: SnapshotIdStringList = None,
-        dry_run: Boolean = None,
+        max_results: ListSnapshotsInRecycleBinMaxResults | None = None,
+        next_token: String | None = None,
+        snapshot_ids: SnapshotIdStringList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ListSnapshotsInRecycleBinResult:
         raise NotImplementedError
@@ -26517,10 +27132,10 @@ class Ec2Api:
         context: RequestContext,
         snapshot_id: SnapshotId,
         lock_mode: LockMode,
-        dry_run: Boolean = None,
-        cool_off_period: CoolOffPeriodRequestHours = None,
-        lock_duration: RetentionPeriodRequestDays = None,
-        expiration_date: MillisecondDateTime = None,
+        dry_run: Boolean | None = None,
+        cool_off_period: CoolOffPeriodRequestHours | None = None,
+        lock_duration: RetentionPeriodRequestDays | None = None,
+        expiration_date: MillisecondDateTime | None = None,
         **kwargs,
     ) -> LockSnapshotResult:
         raise NotImplementedError
@@ -26530,8 +27145,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         allocation_id: AllocationId,
-        domain_name: String = None,
-        dry_run: Boolean = None,
+        domain_name: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyAddressAttributeResult:
         raise NotImplementedError
@@ -26542,7 +27157,7 @@ class Ec2Api:
         context: RequestContext,
         group_name: String,
         opt_in_status: ModifyAvailabilityZoneOptInStatus,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyAvailabilityZoneGroupResult:
         raise NotImplementedError
@@ -26552,13 +27167,13 @@ class Ec2Api:
         self,
         context: RequestContext,
         capacity_reservation_id: CapacityReservationId,
-        instance_count: Integer = None,
-        end_date: DateTime = None,
-        end_date_type: EndDateType = None,
-        accept: Boolean = None,
-        dry_run: Boolean = None,
-        additional_info: String = None,
-        instance_match_criteria: InstanceMatchCriteria = None,
+        instance_count: Integer | None = None,
+        end_date: DateTime | None = None,
+        end_date_type: EndDateType | None = None,
+        accept: Boolean | None = None,
+        dry_run: Boolean | None = None,
+        additional_info: String | None = None,
+        instance_match_criteria: InstanceMatchCriteria | None = None,
         **kwargs,
     ) -> ModifyCapacityReservationResult:
         raise NotImplementedError
@@ -26568,10 +27183,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         capacity_reservation_fleet_id: CapacityReservationFleetId,
-        total_target_capacity: Integer = None,
-        end_date: MillisecondDateTime = None,
-        dry_run: Boolean = None,
-        remove_end_date: Boolean = None,
+        total_target_capacity: Integer | None = None,
+        end_date: MillisecondDateTime | None = None,
+        dry_run: Boolean | None = None,
+        remove_end_date: Boolean | None = None,
         **kwargs,
     ) -> ModifyCapacityReservationFleetResult:
         raise NotImplementedError
@@ -26581,21 +27196,21 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
-        server_certificate_arn: String = None,
-        connection_log_options: ConnectionLogOptions = None,
-        dns_servers: DnsServersOptionsModifyStructure = None,
-        vpn_port: Integer = None,
-        description: String = None,
-        split_tunnel: Boolean = None,
-        dry_run: Boolean = None,
-        security_group_ids: ClientVpnSecurityGroupIdSet = None,
-        vpc_id: VpcId = None,
-        self_service_portal: SelfServicePortal = None,
-        client_connect_options: ClientConnectOptions = None,
-        session_timeout_hours: Integer = None,
-        client_login_banner_options: ClientLoginBannerOptions = None,
-        client_route_enforcement_options: ClientRouteEnforcementOptions = None,
-        disconnect_on_session_timeout: Boolean = None,
+        server_certificate_arn: String | None = None,
+        connection_log_options: ConnectionLogOptions | None = None,
+        dns_servers: DnsServersOptionsModifyStructure | None = None,
+        vpn_port: Integer | None = None,
+        description: String | None = None,
+        split_tunnel: Boolean | None = None,
+        dry_run: Boolean | None = None,
+        security_group_ids: ClientVpnSecurityGroupIdSet | None = None,
+        vpc_id: VpcId | None = None,
+        self_service_portal: SelfServicePortal | None = None,
+        client_connect_options: ClientConnectOptions | None = None,
+        session_timeout_hours: Integer | None = None,
+        client_login_banner_options: ClientLoginBannerOptions | None = None,
+        client_route_enforcement_options: ClientRouteEnforcementOptions | None = None,
+        disconnect_on_session_timeout: Boolean | None = None,
         **kwargs,
     ) -> ModifyClientVpnEndpointResult:
         raise NotImplementedError
@@ -26606,14 +27221,18 @@ class Ec2Api:
         context: RequestContext,
         instance_family: UnlimitedSupportedInstanceFamily,
         cpu_credits: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyDefaultCreditSpecificationResult:
         raise NotImplementedError
 
     @handler("ModifyEbsDefaultKmsKeyId")
     def modify_ebs_default_kms_key_id(
-        self, context: RequestContext, kms_key_id: KmsKeyId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        kms_key_id: KmsKeyId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> ModifyEbsDefaultKmsKeyIdResult:
         raise NotImplementedError
 
@@ -26628,15 +27247,15 @@ class Ec2Api:
         self,
         context: RequestContext,
         fpga_image_id: FpgaImageId,
-        dry_run: Boolean = None,
-        attribute: FpgaImageAttributeName = None,
-        operation_type: OperationType = None,
-        user_ids: UserIdStringList = None,
-        user_groups: UserGroupStringList = None,
-        product_codes: ProductCodeStringList = None,
-        load_permission: LoadPermissionModifications = None,
-        description: String = None,
-        name: String = None,
+        dry_run: Boolean | None = None,
+        attribute: FpgaImageAttributeName | None = None,
+        operation_type: OperationType | None = None,
+        user_ids: UserIdStringList | None = None,
+        user_groups: UserGroupStringList | None = None,
+        product_codes: ProductCodeStringList | None = None,
+        load_permission: LoadPermissionModifications | None = None,
+        description: String | None = None,
+        name: String | None = None,
         **kwargs,
     ) -> ModifyFpgaImageAttributeResult:
         raise NotImplementedError
@@ -26646,11 +27265,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         host_ids: RequestHostIdList,
-        host_recovery: HostRecovery = None,
-        instance_type: String = None,
-        instance_family: String = None,
-        host_maintenance: HostMaintenance = None,
-        auto_placement: AutoPlacement = None,
+        host_recovery: HostRecovery | None = None,
+        instance_type: String | None = None,
+        instance_family: String | None = None,
+        host_maintenance: HostMaintenance | None = None,
+        auto_placement: AutoPlacement | None = None,
         **kwargs,
     ) -> ModifyHostsResult:
         raise NotImplementedError
@@ -26677,18 +27296,18 @@ class Ec2Api:
         self,
         context: RequestContext,
         image_id: ImageId,
-        attribute: String = None,
-        description: AttributeValue = None,
-        launch_permission: LaunchPermissionModifications = None,
-        operation_type: OperationType = None,
-        product_codes: ProductCodeStringList = None,
-        user_groups: UserGroupStringList = None,
-        user_ids: UserIdStringList = None,
-        value: String = None,
-        organization_arns: OrganizationArnStringList = None,
-        organizational_unit_arns: OrganizationalUnitArnStringList = None,
-        imds_support: AttributeValue = None,
-        dry_run: Boolean = None,
+        attribute: String | None = None,
+        description: AttributeValue | None = None,
+        launch_permission: LaunchPermissionModifications | None = None,
+        operation_type: OperationType | None = None,
+        product_codes: ProductCodeStringList | None = None,
+        user_groups: UserGroupStringList | None = None,
+        user_ids: UserIdStringList | None = None,
+        value: String | None = None,
+        organization_arns: OrganizationArnStringList | None = None,
+        organizational_unit_arns: OrganizationalUnitArnStringList | None = None,
+        imds_support: AttributeValue | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -26698,22 +27317,22 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_id: InstanceId,
-        source_dest_check: AttributeBooleanValue = None,
-        disable_api_stop: AttributeBooleanValue = None,
-        dry_run: Boolean = None,
-        attribute: InstanceAttributeName = None,
-        value: String = None,
-        block_device_mappings: InstanceBlockDeviceMappingSpecificationList = None,
-        disable_api_termination: AttributeBooleanValue = None,
-        instance_type: AttributeValue = None,
-        kernel: AttributeValue = None,
-        ramdisk: AttributeValue = None,
-        user_data: BlobAttributeValue = None,
-        instance_initiated_shutdown_behavior: AttributeValue = None,
-        groups: GroupIdStringList = None,
-        ebs_optimized: AttributeBooleanValue = None,
-        sriov_net_support: AttributeValue = None,
-        ena_support: AttributeBooleanValue = None,
+        source_dest_check: AttributeBooleanValue | None = None,
+        disable_api_stop: AttributeBooleanValue | None = None,
+        dry_run: Boolean | None = None,
+        attribute: InstanceAttributeName | None = None,
+        value: String | None = None,
+        block_device_mappings: InstanceBlockDeviceMappingSpecificationList | None = None,
+        disable_api_termination: AttributeBooleanValue | None = None,
+        instance_type: AttributeValue | None = None,
+        kernel: AttributeValue | None = None,
+        ramdisk: AttributeValue | None = None,
+        user_data: BlobAttributeValue | None = None,
+        instance_initiated_shutdown_behavior: AttributeValue | None = None,
+        groups: GroupIdStringList | None = None,
+        ebs_optimized: AttributeBooleanValue | None = None,
+        sriov_net_support: AttributeValue | None = None,
+        ena_support: AttributeBooleanValue | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -26724,7 +27343,7 @@ class Ec2Api:
         context: RequestContext,
         instance_id: InstanceId,
         capacity_reservation_specification: CapacityReservationSpecification,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyInstanceCapacityReservationAttributesResult:
         raise NotImplementedError
@@ -26736,7 +27355,7 @@ class Ec2Api:
         instance_id: InstanceId,
         core_count: Integer,
         threads_per_core: Integer,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyInstanceCpuOptionsResult:
         raise NotImplementedError
@@ -26746,8 +27365,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_credit_specifications: InstanceCreditSpecificationListRequest,
-        dry_run: Boolean = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> ModifyInstanceCreditSpecificationResult:
         raise NotImplementedError
@@ -26759,7 +27378,7 @@ class Ec2Api:
         instance_id: InstanceId,
         instance_event_id: String,
         not_before: DateTime,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyInstanceEventStartTimeResult:
         raise NotImplementedError
@@ -26769,10 +27388,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_event_window_id: InstanceEventWindowId,
-        dry_run: Boolean = None,
-        name: String = None,
-        time_ranges: InstanceEventWindowTimeRangeRequestSet = None,
-        cron_expression: InstanceEventWindowCronExpression = None,
+        dry_run: Boolean | None = None,
+        name: String | None = None,
+        time_ranges: InstanceEventWindowTimeRangeRequestSet | None = None,
+        cron_expression: InstanceEventWindowCronExpression | None = None,
         **kwargs,
     ) -> ModifyInstanceEventWindowResult:
         raise NotImplementedError
@@ -26782,8 +27401,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_id: InstanceId,
-        auto_recovery: InstanceAutoRecoveryState = None,
-        dry_run: Boolean = None,
+        auto_recovery: InstanceAutoRecoveryState | None = None,
+        reboot_migration: InstanceRebootMigrationState | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyInstanceMaintenanceOptionsResult:
         raise NotImplementedError
@@ -26792,11 +27412,11 @@ class Ec2Api:
     def modify_instance_metadata_defaults(
         self,
         context: RequestContext,
-        http_tokens: MetadataDefaultHttpTokensState = None,
-        http_put_response_hop_limit: BoxedInteger = None,
-        http_endpoint: DefaultInstanceMetadataEndpointState = None,
-        instance_metadata_tags: DefaultInstanceMetadataTagsState = None,
-        dry_run: Boolean = None,
+        http_tokens: MetadataDefaultHttpTokensState | None = None,
+        http_put_response_hop_limit: BoxedInteger | None = None,
+        http_endpoint: DefaultInstanceMetadataEndpointState | None = None,
+        instance_metadata_tags: DefaultInstanceMetadataTagsState | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyInstanceMetadataDefaultsResult:
         raise NotImplementedError
@@ -26806,12 +27426,12 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_id: InstanceId,
-        http_tokens: HttpTokensState = None,
-        http_put_response_hop_limit: Integer = None,
-        http_endpoint: InstanceMetadataEndpointState = None,
-        dry_run: Boolean = None,
-        http_protocol_ipv6: InstanceMetadataProtocolState = None,
-        instance_metadata_tags: InstanceMetadataTagsState = None,
+        http_tokens: HttpTokensState | None = None,
+        http_put_response_hop_limit: Integer | None = None,
+        http_endpoint: InstanceMetadataEndpointState | None = None,
+        dry_run: Boolean | None = None,
+        http_protocol_ipv6: InstanceMetadataProtocolState | None = None,
+        instance_metadata_tags: InstanceMetadataTagsState | None = None,
         **kwargs,
     ) -> ModifyInstanceMetadataOptionsResult:
         raise NotImplementedError
@@ -26822,7 +27442,7 @@ class Ec2Api:
         context: RequestContext,
         instance_id: InstanceId,
         bandwidth_weighting: InstanceBandwidthWeighting,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyInstanceNetworkPerformanceResult:
         raise NotImplementedError
@@ -26832,13 +27452,13 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_id: InstanceId,
-        group_name: PlacementGroupName = None,
-        partition_number: Integer = None,
-        host_resource_group_arn: String = None,
-        group_id: PlacementGroupId = None,
-        tenancy: HostTenancy = None,
-        affinity: Affinity = None,
-        host_id: DedicatedHostId = None,
+        group_name: PlacementGroupName | None = None,
+        partition_number: Integer | None = None,
+        host_resource_group_arn: String | None = None,
+        group_id: PlacementGroupId | None = None,
+        tenancy: HostTenancy | None = None,
+        affinity: Affinity | None = None,
+        host_id: DedicatedHostId | None = None,
         **kwargs,
     ) -> ModifyInstancePlacementResult:
         raise NotImplementedError
@@ -26848,13 +27468,13 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_id: IpamId,
-        dry_run: Boolean = None,
-        description: String = None,
-        add_operating_regions: AddIpamOperatingRegionSet = None,
-        remove_operating_regions: RemoveIpamOperatingRegionSet = None,
-        tier: IpamTier = None,
-        enable_private_gua: Boolean = None,
-        metered_account: IpamMeteredAccount = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        add_operating_regions: AddIpamOperatingRegionSet | None = None,
+        remove_operating_regions: RemoveIpamOperatingRegionSet | None = None,
+        tier: IpamTier | None = None,
+        enable_private_gua: Boolean | None = None,
+        metered_account: IpamMeteredAccount | None = None,
         **kwargs,
     ) -> ModifyIpamResult:
         raise NotImplementedError
@@ -26864,15 +27484,15 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_pool_id: IpamPoolId,
-        dry_run: Boolean = None,
-        description: String = None,
-        auto_import: Boolean = None,
-        allocation_min_netmask_length: IpamNetmaskLength = None,
-        allocation_max_netmask_length: IpamNetmaskLength = None,
-        allocation_default_netmask_length: IpamNetmaskLength = None,
-        clear_allocation_default_netmask_length: Boolean = None,
-        add_allocation_resource_tags: RequestIpamResourceTagList = None,
-        remove_allocation_resource_tags: RequestIpamResourceTagList = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        auto_import: Boolean | None = None,
+        allocation_min_netmask_length: IpamNetmaskLength | None = None,
+        allocation_max_netmask_length: IpamNetmaskLength | None = None,
+        allocation_default_netmask_length: IpamNetmaskLength | None = None,
+        clear_allocation_default_netmask_length: Boolean | None = None,
+        add_allocation_resource_tags: RequestIpamResourceTagList | None = None,
+        remove_allocation_resource_tags: RequestIpamResourceTagList | None = None,
         **kwargs,
     ) -> ModifyIpamPoolResult:
         raise NotImplementedError
@@ -26886,8 +27506,8 @@ class Ec2Api:
         resource_region: String,
         current_ipam_scope_id: IpamScopeId,
         monitored: Boolean,
-        dry_run: Boolean = None,
-        destination_ipam_scope_id: IpamScopeId = None,
+        dry_run: Boolean | None = None,
+        destination_ipam_scope_id: IpamScopeId | None = None,
         **kwargs,
     ) -> ModifyIpamResourceCidrResult:
         raise NotImplementedError
@@ -26897,12 +27517,13 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_resource_discovery_id: IpamResourceDiscoveryId,
-        dry_run: Boolean = None,
-        description: String = None,
-        add_operating_regions: AddIpamOperatingRegionSet = None,
-        remove_operating_regions: RemoveIpamOperatingRegionSet = None,
-        add_organizational_unit_exclusions: AddIpamOrganizationalUnitExclusionSet = None,
-        remove_organizational_unit_exclusions: RemoveIpamOrganizationalUnitExclusionSet = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        add_operating_regions: AddIpamOperatingRegionSet | None = None,
+        remove_operating_regions: RemoveIpamOperatingRegionSet | None = None,
+        add_organizational_unit_exclusions: AddIpamOrganizationalUnitExclusionSet | None = None,
+        remove_organizational_unit_exclusions: RemoveIpamOrganizationalUnitExclusionSet
+        | None = None,
         **kwargs,
     ) -> ModifyIpamResourceDiscoveryResult:
         raise NotImplementedError
@@ -26912,8 +27533,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_scope_id: IpamScopeId,
-        dry_run: Boolean = None,
-        description: String = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
         **kwargs,
     ) -> ModifyIpamScopeResult:
         raise NotImplementedError
@@ -26922,11 +27543,11 @@ class Ec2Api:
     def modify_launch_template(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        launch_template_id: LaunchTemplateId = None,
-        launch_template_name: LaunchTemplateName = None,
-        default_version: String = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        launch_template_id: LaunchTemplateId | None = None,
+        launch_template_name: LaunchTemplateName | None = None,
+        default_version: String | None = None,
         **kwargs,
     ) -> ModifyLaunchTemplateResult:
         raise NotImplementedError
@@ -26936,11 +27557,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         local_gateway_route_table_id: LocalGatewayRoutetableId,
-        destination_cidr_block: String = None,
-        local_gateway_virtual_interface_group_id: LocalGatewayVirtualInterfaceGroupId = None,
-        network_interface_id: NetworkInterfaceId = None,
-        dry_run: Boolean = None,
-        destination_prefix_list_id: PrefixListResourceId = None,
+        destination_cidr_block: String | None = None,
+        local_gateway_virtual_interface_group_id: LocalGatewayVirtualInterfaceGroupId | None = None,
+        network_interface_id: NetworkInterfaceId | None = None,
+        dry_run: Boolean | None = None,
+        destination_prefix_list_id: PrefixListResourceId | None = None,
         **kwargs,
     ) -> ModifyLocalGatewayRouteResult:
         raise NotImplementedError
@@ -26950,12 +27571,12 @@ class Ec2Api:
         self,
         context: RequestContext,
         prefix_list_id: PrefixListResourceId,
-        dry_run: Boolean = None,
-        current_version: Long = None,
-        prefix_list_name: String = None,
-        add_entries: AddPrefixListEntries = None,
-        remove_entries: RemovePrefixListEntries = None,
-        max_entries: Integer = None,
+        dry_run: Boolean | None = None,
+        current_version: Long | None = None,
+        prefix_list_name: String | None = None,
+        add_entries: AddPrefixListEntries | None = None,
+        remove_entries: RemovePrefixListEntries | None = None,
+        max_entries: Integer | None = None,
         **kwargs,
     ) -> ModifyManagedPrefixListResult:
         raise NotImplementedError
@@ -26965,15 +27586,15 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_interface_id: NetworkInterfaceId,
-        ena_srd_specification: EnaSrdSpecification = None,
-        enable_primary_ipv6: Boolean = None,
-        connection_tracking_specification: ConnectionTrackingSpecificationRequest = None,
-        associate_public_ip_address: Boolean = None,
-        dry_run: Boolean = None,
-        description: AttributeValue = None,
-        source_dest_check: AttributeBooleanValue = None,
-        groups: SecurityGroupIdStringList = None,
-        attachment: NetworkInterfaceAttachmentChanges = None,
+        ena_srd_specification: EnaSrdSpecification | None = None,
+        enable_primary_ipv6: Boolean | None = None,
+        connection_tracking_specification: ConnectionTrackingSpecificationRequest | None = None,
+        associate_public_ip_address: Boolean | None = None,
+        dry_run: Boolean | None = None,
+        description: AttributeValue | None = None,
+        source_dest_check: AttributeBooleanValue | None = None,
+        groups: SecurityGroupIdStringList | None = None,
+        attachment: NetworkInterfaceAttachmentChanges | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -26983,12 +27604,23 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_id: InstanceId,
-        dry_run: Boolean = None,
-        private_dns_hostname_type: HostnameType = None,
-        enable_resource_name_dns_a_record: Boolean = None,
-        enable_resource_name_dns_aaaa_record: Boolean = None,
+        dry_run: Boolean | None = None,
+        private_dns_hostname_type: HostnameType | None = None,
+        enable_resource_name_dns_a_record: Boolean | None = None,
+        enable_resource_name_dns_aaaa_record: Boolean | None = None,
         **kwargs,
     ) -> ModifyPrivateDnsNameOptionsResult:
+        raise NotImplementedError
+
+    @handler("ModifyPublicIpDnsNameOptions")
+    def modify_public_ip_dns_name_options(
+        self,
+        context: RequestContext,
+        network_interface_id: NetworkInterfaceId,
+        hostname_type: PublicIpDnsOption,
+        dry_run: Boolean | None = None,
+        **kwargs,
+    ) -> ModifyPublicIpDnsNameOptionsResult:
         raise NotImplementedError
 
     @handler("ModifyReservedInstances")
@@ -26997,7 +27629,7 @@ class Ec2Api:
         context: RequestContext,
         reserved_instances_ids: ReservedInstancesIdStringList,
         target_configurations: ReservedInstancesConfigurationList,
-        client_token: String = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> ModifyReservedInstancesResult:
         raise NotImplementedError
@@ -27007,10 +27639,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_server_id: RouteServerId,
-        persist_routes: RouteServerPersistRoutesAction = None,
-        persist_routes_duration: BoxedLong = None,
-        sns_notifications_enabled: Boolean = None,
-        dry_run: Boolean = None,
+        persist_routes: RouteServerPersistRoutesAction | None = None,
+        persist_routes_duration: BoxedLong | None = None,
+        sns_notifications_enabled: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyRouteServerResult:
         raise NotImplementedError
@@ -27021,7 +27653,7 @@ class Ec2Api:
         context: RequestContext,
         group_id: SecurityGroupId,
         security_group_rules: SecurityGroupRuleUpdateList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifySecurityGroupRulesResult:
         raise NotImplementedError
@@ -27031,12 +27663,12 @@ class Ec2Api:
         self,
         context: RequestContext,
         snapshot_id: SnapshotId,
-        attribute: SnapshotAttributeName = None,
-        create_volume_permission: CreateVolumePermissionModifications = None,
-        group_names: GroupNameStringList = None,
-        operation_type: OperationType = None,
-        user_ids: UserIdStringList = None,
-        dry_run: Boolean = None,
+        attribute: SnapshotAttributeName | None = None,
+        create_volume_permission: CreateVolumePermissionModifications | None = None,
+        group_names: GroupNameStringList | None = None,
+        operation_type: OperationType | None = None,
+        user_ids: UserIdStringList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27046,8 +27678,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         snapshot_id: SnapshotId,
-        storage_tier: TargetStorageTier = None,
-        dry_run: Boolean = None,
+        storage_tier: TargetStorageTier | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifySnapshotTierResult:
         raise NotImplementedError
@@ -27063,16 +27695,16 @@ class Ec2Api:
         self,
         context: RequestContext,
         subnet_id: SubnetId,
-        assign_ipv6_address_on_creation: AttributeBooleanValue = None,
-        map_public_ip_on_launch: AttributeBooleanValue = None,
-        map_customer_owned_ip_on_launch: AttributeBooleanValue = None,
-        customer_owned_ipv4_pool: CoipPoolId = None,
-        enable_dns64: AttributeBooleanValue = None,
-        private_dns_hostname_type_on_launch: HostnameType = None,
-        enable_resource_name_dns_a_record_on_launch: AttributeBooleanValue = None,
-        enable_resource_name_dns_aaaa_record_on_launch: AttributeBooleanValue = None,
-        enable_lni_at_device_index: Integer = None,
-        disable_lni_at_device_index: AttributeBooleanValue = None,
+        assign_ipv6_address_on_creation: AttributeBooleanValue | None = None,
+        map_public_ip_on_launch: AttributeBooleanValue | None = None,
+        map_customer_owned_ip_on_launch: AttributeBooleanValue | None = None,
+        customer_owned_ipv4_pool: CoipPoolId | None = None,
+        enable_dns64: AttributeBooleanValue | None = None,
+        private_dns_hostname_type_on_launch: HostnameType | None = None,
+        enable_resource_name_dns_a_record_on_launch: AttributeBooleanValue | None = None,
+        enable_resource_name_dns_aaaa_record_on_launch: AttributeBooleanValue | None = None,
+        enable_lni_at_device_index: Integer | None = None,
+        disable_lni_at_device_index: AttributeBooleanValue | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27082,9 +27714,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         traffic_mirror_filter_id: TrafficMirrorFilterId,
-        add_network_services: TrafficMirrorNetworkServiceList = None,
-        remove_network_services: TrafficMirrorNetworkServiceList = None,
-        dry_run: Boolean = None,
+        add_network_services: TrafficMirrorNetworkServiceList | None = None,
+        remove_network_services: TrafficMirrorNetworkServiceList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyTrafficMirrorFilterNetworkServicesResult:
         raise NotImplementedError
@@ -27094,17 +27726,17 @@ class Ec2Api:
         self,
         context: RequestContext,
         traffic_mirror_filter_rule_id: TrafficMirrorFilterRuleIdWithResolver,
-        traffic_direction: TrafficDirection = None,
-        rule_number: Integer = None,
-        rule_action: TrafficMirrorRuleAction = None,
-        destination_port_range: TrafficMirrorPortRangeRequest = None,
-        source_port_range: TrafficMirrorPortRangeRequest = None,
-        protocol: Integer = None,
-        destination_cidr_block: String = None,
-        source_cidr_block: String = None,
-        description: String = None,
-        remove_fields: TrafficMirrorFilterRuleFieldList = None,
-        dry_run: Boolean = None,
+        traffic_direction: TrafficDirection | None = None,
+        rule_number: Integer | None = None,
+        rule_action: TrafficMirrorRuleAction | None = None,
+        destination_port_range: TrafficMirrorPortRangeRequest | None = None,
+        source_port_range: TrafficMirrorPortRangeRequest | None = None,
+        protocol: Integer | None = None,
+        destination_cidr_block: String | None = None,
+        source_cidr_block: String | None = None,
+        description: String | None = None,
+        remove_fields: TrafficMirrorFilterRuleFieldList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyTrafficMirrorFilterRuleResult:
         raise NotImplementedError
@@ -27114,14 +27746,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         traffic_mirror_session_id: TrafficMirrorSessionId,
-        traffic_mirror_target_id: TrafficMirrorTargetId = None,
-        traffic_mirror_filter_id: TrafficMirrorFilterId = None,
-        packet_length: Integer = None,
-        session_number: Integer = None,
-        virtual_network_id: Integer = None,
-        description: String = None,
-        remove_fields: TrafficMirrorSessionFieldList = None,
-        dry_run: Boolean = None,
+        traffic_mirror_target_id: TrafficMirrorTargetId | None = None,
+        traffic_mirror_filter_id: TrafficMirrorFilterId | None = None,
+        packet_length: Integer | None = None,
+        session_number: Integer | None = None,
+        virtual_network_id: Integer | None = None,
+        description: String | None = None,
+        remove_fields: TrafficMirrorSessionFieldList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyTrafficMirrorSessionResult:
         raise NotImplementedError
@@ -27131,9 +27763,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_id: TransitGatewayId,
-        description: String = None,
-        options: ModifyTransitGatewayOptions = None,
-        dry_run: Boolean = None,
+        description: String | None = None,
+        options: ModifyTransitGatewayOptions | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyTransitGatewayResult:
         raise NotImplementedError
@@ -27144,9 +27776,9 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
         prefix_list_id: PrefixListResourceId,
-        transit_gateway_attachment_id: TransitGatewayAttachmentId = None,
-        blackhole: Boolean = None,
-        dry_run: Boolean = None,
+        transit_gateway_attachment_id: TransitGatewayAttachmentId | None = None,
+        blackhole: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyTransitGatewayPrefixListReferenceResult:
         raise NotImplementedError
@@ -27156,10 +27788,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        add_subnet_ids: TransitGatewaySubnetIdList = None,
-        remove_subnet_ids: TransitGatewaySubnetIdList = None,
-        options: ModifyTransitGatewayVpcAttachmentRequestOptions = None,
-        dry_run: Boolean = None,
+        add_subnet_ids: TransitGatewaySubnetIdList | None = None,
+        remove_subnet_ids: TransitGatewaySubnetIdList | None = None,
+        options: ModifyTransitGatewayVpcAttachmentRequestOptions | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyTransitGatewayVpcAttachmentResult:
         raise NotImplementedError
@@ -27169,14 +27801,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_endpoint_id: VerifiedAccessEndpointId,
-        verified_access_group_id: VerifiedAccessGroupId = None,
-        load_balancer_options: ModifyVerifiedAccessEndpointLoadBalancerOptions = None,
-        network_interface_options: ModifyVerifiedAccessEndpointEniOptions = None,
-        description: String = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        rds_options: ModifyVerifiedAccessEndpointRdsOptions = None,
-        cidr_options: ModifyVerifiedAccessEndpointCidrOptions = None,
+        verified_access_group_id: VerifiedAccessGroupId | None = None,
+        load_balancer_options: ModifyVerifiedAccessEndpointLoadBalancerOptions | None = None,
+        network_interface_options: ModifyVerifiedAccessEndpointEniOptions | None = None,
+        description: String | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        rds_options: ModifyVerifiedAccessEndpointRdsOptions | None = None,
+        cidr_options: ModifyVerifiedAccessEndpointCidrOptions | None = None,
         **kwargs,
     ) -> ModifyVerifiedAccessEndpointResult:
         raise NotImplementedError
@@ -27186,11 +27818,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_endpoint_id: VerifiedAccessEndpointId,
-        policy_enabled: Boolean = None,
-        policy_document: String = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        sse_specification: VerifiedAccessSseSpecificationRequest = None,
+        policy_enabled: Boolean | None = None,
+        policy_document: String | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        sse_specification: VerifiedAccessSseSpecificationRequest | None = None,
         **kwargs,
     ) -> ModifyVerifiedAccessEndpointPolicyResult:
         raise NotImplementedError
@@ -27200,10 +27832,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_group_id: VerifiedAccessGroupId,
-        verified_access_instance_id: VerifiedAccessInstanceId = None,
-        description: String = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        verified_access_instance_id: VerifiedAccessInstanceId | None = None,
+        description: String | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyVerifiedAccessGroupResult:
         raise NotImplementedError
@@ -27213,11 +27845,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_group_id: VerifiedAccessGroupId,
-        policy_enabled: Boolean = None,
-        policy_document: String = None,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        sse_specification: VerifiedAccessSseSpecificationRequest = None,
+        policy_enabled: Boolean | None = None,
+        policy_document: String | None = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        sse_specification: VerifiedAccessSseSpecificationRequest | None = None,
         **kwargs,
     ) -> ModifyVerifiedAccessGroupPolicyResult:
         raise NotImplementedError
@@ -27227,10 +27859,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_instance_id: VerifiedAccessInstanceId,
-        description: String = None,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        cidr_endpoints_custom_sub_domain: String = None,
+        description: String | None = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        cidr_endpoints_custom_sub_domain: String | None = None,
         **kwargs,
     ) -> ModifyVerifiedAccessInstanceResult:
         raise NotImplementedError
@@ -27241,8 +27873,8 @@ class Ec2Api:
         context: RequestContext,
         verified_access_instance_id: VerifiedAccessInstanceId,
         access_logs: VerifiedAccessLogOptions,
-        dry_run: Boolean = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> ModifyVerifiedAccessInstanceLoggingConfigurationResult:
         raise NotImplementedError
@@ -27252,13 +27884,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         verified_access_trust_provider_id: VerifiedAccessTrustProviderId,
-        oidc_options: ModifyVerifiedAccessTrustProviderOidcOptions = None,
-        device_options: ModifyVerifiedAccessTrustProviderDeviceOptions = None,
-        description: String = None,
-        dry_run: Boolean = None,
-        client_token: String = None,
-        sse_specification: VerifiedAccessSseSpecificationRequest = None,
-        native_application_oidc_options: ModifyVerifiedAccessNativeApplicationOidcOptions = None,
+        oidc_options: ModifyVerifiedAccessTrustProviderOidcOptions | None = None,
+        device_options: ModifyVerifiedAccessTrustProviderDeviceOptions | None = None,
+        description: String | None = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
+        sse_specification: VerifiedAccessSseSpecificationRequest | None = None,
+        native_application_oidc_options: ModifyVerifiedAccessNativeApplicationOidcOptions
+        | None = None,
         **kwargs,
     ) -> ModifyVerifiedAccessTrustProviderResult:
         raise NotImplementedError
@@ -27268,12 +27901,12 @@ class Ec2Api:
         self,
         context: RequestContext,
         volume_id: VolumeId,
-        dry_run: Boolean = None,
-        size: Integer = None,
-        volume_type: VolumeType = None,
-        iops: Integer = None,
-        throughput: Integer = None,
-        multi_attach_enabled: Boolean = None,
+        dry_run: Boolean | None = None,
+        size: Integer | None = None,
+        volume_type: VolumeType | None = None,
+        iops: Integer | None = None,
+        throughput: Integer | None = None,
+        multi_attach_enabled: Boolean | None = None,
         **kwargs,
     ) -> ModifyVolumeResult:
         raise NotImplementedError
@@ -27283,8 +27916,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         volume_id: VolumeId,
-        auto_enable_io: AttributeBooleanValue = None,
-        dry_run: Boolean = None,
+        auto_enable_io: AttributeBooleanValue | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27294,9 +27927,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_id: VpcId,
-        enable_dns_hostnames: AttributeBooleanValue = None,
-        enable_dns_support: AttributeBooleanValue = None,
-        enable_network_address_usage_metrics: AttributeBooleanValue = None,
+        enable_dns_hostnames: AttributeBooleanValue | None = None,
+        enable_dns_support: AttributeBooleanValue | None = None,
+        enable_network_address_usage_metrics: AttributeBooleanValue | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27307,7 +27940,7 @@ class Ec2Api:
         context: RequestContext,
         exclusion_id: VpcBlockPublicAccessExclusionId,
         internet_gateway_exclusion_mode: InternetGatewayExclusionMode,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyVpcBlockPublicAccessExclusionResult:
         raise NotImplementedError
@@ -27317,7 +27950,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         internet_gateway_block_mode: InternetGatewayBlockMode,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyVpcBlockPublicAccessOptionsResult:
         raise NotImplementedError
@@ -27327,19 +27960,19 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_endpoint_id: VpcEndpointId,
-        dry_run: Boolean = None,
-        reset_policy: Boolean = None,
-        policy_document: String = None,
-        add_route_table_ids: VpcEndpointRouteTableIdList = None,
-        remove_route_table_ids: VpcEndpointRouteTableIdList = None,
-        add_subnet_ids: VpcEndpointSubnetIdList = None,
-        remove_subnet_ids: VpcEndpointSubnetIdList = None,
-        add_security_group_ids: VpcEndpointSecurityGroupIdList = None,
-        remove_security_group_ids: VpcEndpointSecurityGroupIdList = None,
-        ip_address_type: IpAddressType = None,
-        dns_options: DnsOptionsSpecification = None,
-        private_dns_enabled: Boolean = None,
-        subnet_configurations: SubnetConfigurationsList = None,
+        dry_run: Boolean | None = None,
+        reset_policy: Boolean | None = None,
+        policy_document: String | None = None,
+        add_route_table_ids: VpcEndpointRouteTableIdList | None = None,
+        remove_route_table_ids: VpcEndpointRouteTableIdList | None = None,
+        add_subnet_ids: VpcEndpointSubnetIdList | None = None,
+        remove_subnet_ids: VpcEndpointSubnetIdList | None = None,
+        add_security_group_ids: VpcEndpointSecurityGroupIdList | None = None,
+        remove_security_group_ids: VpcEndpointSecurityGroupIdList | None = None,
+        ip_address_type: IpAddressType | None = None,
+        dns_options: DnsOptionsSpecification | None = None,
+        private_dns_enabled: Boolean | None = None,
+        subnet_configurations: SubnetConfigurationsList | None = None,
         **kwargs,
     ) -> ModifyVpcEndpointResult:
         raise NotImplementedError
@@ -27349,9 +27982,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         connection_notification_id: ConnectionNotificationId,
-        dry_run: Boolean = None,
-        connection_notification_arn: String = None,
-        connection_events: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        connection_notification_arn: String | None = None,
+        connection_events: ValueStringList | None = None,
         **kwargs,
     ) -> ModifyVpcEndpointConnectionNotificationResult:
         raise NotImplementedError
@@ -27361,18 +27994,18 @@ class Ec2Api:
         self,
         context: RequestContext,
         service_id: VpcEndpointServiceId,
-        dry_run: Boolean = None,
-        private_dns_name: String = None,
-        remove_private_dns_name: Boolean = None,
-        acceptance_required: Boolean = None,
-        add_network_load_balancer_arns: ValueStringList = None,
-        remove_network_load_balancer_arns: ValueStringList = None,
-        add_gateway_load_balancer_arns: ValueStringList = None,
-        remove_gateway_load_balancer_arns: ValueStringList = None,
-        add_supported_ip_address_types: ValueStringList = None,
-        remove_supported_ip_address_types: ValueStringList = None,
-        add_supported_regions: ValueStringList = None,
-        remove_supported_regions: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        private_dns_name: String | None = None,
+        remove_private_dns_name: Boolean | None = None,
+        acceptance_required: Boolean | None = None,
+        add_network_load_balancer_arns: ValueStringList | None = None,
+        remove_network_load_balancer_arns: ValueStringList | None = None,
+        add_gateway_load_balancer_arns: ValueStringList | None = None,
+        remove_gateway_load_balancer_arns: ValueStringList | None = None,
+        add_supported_ip_address_types: ValueStringList | None = None,
+        remove_supported_ip_address_types: ValueStringList | None = None,
+        add_supported_regions: ValueStringList | None = None,
+        remove_supported_regions: ValueStringList | None = None,
         **kwargs,
     ) -> ModifyVpcEndpointServiceConfigurationResult:
         raise NotImplementedError
@@ -27383,7 +28016,7 @@ class Ec2Api:
         context: RequestContext,
         service_id: VpcEndpointServiceId,
         payer_responsibility: PayerResponsibility,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyVpcEndpointServicePayerResponsibilityResult:
         raise NotImplementedError
@@ -27393,9 +28026,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         service_id: VpcEndpointServiceId,
-        dry_run: Boolean = None,
-        add_allowed_principals: ValueStringList = None,
-        remove_allowed_principals: ValueStringList = None,
+        dry_run: Boolean | None = None,
+        add_allowed_principals: ValueStringList | None = None,
+        remove_allowed_principals: ValueStringList | None = None,
         **kwargs,
     ) -> ModifyVpcEndpointServicePermissionsResult:
         raise NotImplementedError
@@ -27405,9 +28038,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_peering_connection_id: VpcPeeringConnectionId,
-        accepter_peering_connection_options: PeeringConnectionOptionsRequest = None,
-        dry_run: Boolean = None,
-        requester_peering_connection_options: PeeringConnectionOptionsRequest = None,
+        accepter_peering_connection_options: PeeringConnectionOptionsRequest | None = None,
+        dry_run: Boolean | None = None,
+        requester_peering_connection_options: PeeringConnectionOptionsRequest | None = None,
         **kwargs,
     ) -> ModifyVpcPeeringConnectionOptionsResult:
         raise NotImplementedError
@@ -27418,7 +28051,7 @@ class Ec2Api:
         context: RequestContext,
         vpc_id: VpcId,
         instance_tenancy: VpcTenancy,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyVpcTenancyResult:
         raise NotImplementedError
@@ -27428,10 +28061,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpn_connection_id: VpnConnectionId,
-        transit_gateway_id: TransitGatewayId = None,
-        customer_gateway_id: CustomerGatewayId = None,
-        vpn_gateway_id: VpnGatewayId = None,
-        dry_run: Boolean = None,
+        transit_gateway_id: TransitGatewayId | None = None,
+        customer_gateway_id: CustomerGatewayId | None = None,
+        vpn_gateway_id: VpnGatewayId | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyVpnConnectionResult:
         raise NotImplementedError
@@ -27441,11 +28074,11 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpn_connection_id: VpnConnectionId,
-        local_ipv4_network_cidr: String = None,
-        remote_ipv4_network_cidr: String = None,
-        local_ipv6_network_cidr: String = None,
-        remote_ipv6_network_cidr: String = None,
-        dry_run: Boolean = None,
+        local_ipv4_network_cidr: String | None = None,
+        remote_ipv4_network_cidr: String | None = None,
+        local_ipv6_network_cidr: String | None = None,
+        remote_ipv6_network_cidr: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyVpnConnectionOptionsResult:
         raise NotImplementedError
@@ -27456,7 +28089,7 @@ class Ec2Api:
         context: RequestContext,
         vpn_connection_id: VpnConnectionId,
         vpn_tunnel_outside_ip_address: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ModifyVpnTunnelCertificateResult:
         raise NotImplementedError
@@ -27468,8 +28101,9 @@ class Ec2Api:
         vpn_connection_id: VpnConnectionId,
         vpn_tunnel_outside_ip_address: String,
         tunnel_options: ModifyVpnTunnelOptionsSpecification,
-        dry_run: Boolean = None,
-        skip_tunnel_replacement: Boolean = None,
+        dry_run: Boolean | None = None,
+        skip_tunnel_replacement: Boolean | None = None,
+        pre_shared_key_storage: String | None = None,
         **kwargs,
     ) -> ModifyVpnTunnelOptionsResult:
         raise NotImplementedError
@@ -27479,14 +28113,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_ids: InstanceIdStringList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> MonitorInstancesResult:
         raise NotImplementedError
 
     @handler("MoveAddressToVpc")
     def move_address_to_vpc(
-        self, context: RequestContext, public_ip: String, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, public_ip: String, dry_run: Boolean | None = None, **kwargs
     ) -> MoveAddressToVpcResult:
         raise NotImplementedError
 
@@ -27497,7 +28131,7 @@ class Ec2Api:
         cidr: String,
         ipam_pool_id: IpamPoolId,
         ipam_pool_owner: String,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> MoveByoipCidrToIpamResult:
         raise NotImplementedError
@@ -27509,8 +28143,8 @@ class Ec2Api:
         source_capacity_reservation_id: CapacityReservationId,
         destination_capacity_reservation_id: CapacityReservationId,
         instance_count: Integer,
-        dry_run: Boolean = None,
-        client_token: String = None,
+        dry_run: Boolean | None = None,
+        client_token: String | None = None,
         **kwargs,
     ) -> MoveCapacityReservationInstancesResult:
         raise NotImplementedError
@@ -27520,13 +28154,13 @@ class Ec2Api:
         self,
         context: RequestContext,
         cidr: String,
-        cidr_authorization_context: CidrAuthorizationContext = None,
-        publicly_advertisable: Boolean = None,
-        description: String = None,
-        dry_run: Boolean = None,
-        pool_tag_specifications: TagSpecificationList = None,
-        multi_region: Boolean = None,
-        network_border_group: String = None,
+        cidr_authorization_context: CidrAuthorizationContext | None = None,
+        publicly_advertisable: Boolean | None = None,
+        description: String | None = None,
+        dry_run: Boolean | None = None,
+        pool_tag_specifications: TagSpecificationList | None = None,
+        multi_region: Boolean | None = None,
+        network_border_group: String | None = None,
         **kwargs,
     ) -> ProvisionByoipCidrResult:
         raise NotImplementedError
@@ -27538,7 +28172,7 @@ class Ec2Api:
         ipam_id: IpamId,
         asn: String,
         asn_authorization_context: AsnAuthorizationContext,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ProvisionIpamByoasnResult:
         raise NotImplementedError
@@ -27548,13 +28182,14 @@ class Ec2Api:
         self,
         context: RequestContext,
         ipam_pool_id: IpamPoolId,
-        dry_run: Boolean = None,
-        cidr: String = None,
-        cidr_authorization_context: IpamCidrAuthorizationContext = None,
-        netmask_length: Integer = None,
-        client_token: String = None,
-        verification_method: VerificationMethod = None,
-        ipam_external_resource_verification_token_id: IpamExternalResourceVerificationTokenId = None,
+        dry_run: Boolean | None = None,
+        cidr: String | None = None,
+        cidr_authorization_context: IpamCidrAuthorizationContext | None = None,
+        netmask_length: Integer | None = None,
+        client_token: String | None = None,
+        verification_method: VerificationMethod | None = None,
+        ipam_external_resource_verification_token_id: IpamExternalResourceVerificationTokenId
+        | None = None,
         **kwargs,
     ) -> ProvisionIpamPoolCidrResult:
         raise NotImplementedError
@@ -27566,8 +28201,8 @@ class Ec2Api:
         ipam_pool_id: IpamPoolId,
         pool_id: Ipv4PoolEc2Id,
         netmask_length: Integer,
-        dry_run: Boolean = None,
-        network_border_group: String = None,
+        dry_run: Boolean | None = None,
+        network_border_group: String | None = None,
         **kwargs,
     ) -> ProvisionPublicIpv4PoolCidrResult:
         raise NotImplementedError
@@ -27578,8 +28213,8 @@ class Ec2Api:
         context: RequestContext,
         capacity_block_offering_id: OfferingId,
         instance_platform: CapacityReservationInstancePlatform,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> PurchaseCapacityBlockResult:
         raise NotImplementedError
@@ -27590,7 +28225,7 @@ class Ec2Api:
         context: RequestContext,
         capacity_block_extension_offering_id: OfferingId,
         capacity_reservation_id: CapacityReservationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> PurchaseCapacityBlockExtensionResult:
         raise NotImplementedError
@@ -27601,10 +28236,10 @@ class Ec2Api:
         context: RequestContext,
         host_id_set: RequestHostIdSet,
         offering_id: OfferingId,
-        client_token: String = None,
-        currency_code: CurrencyCodeValues = None,
-        limit_price: String = None,
-        tag_specifications: TagSpecificationList = None,
+        client_token: String | None = None,
+        currency_code: CurrencyCodeValues | None = None,
+        limit_price: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> PurchaseHostReservationResult:
         raise NotImplementedError
@@ -27615,9 +28250,9 @@ class Ec2Api:
         context: RequestContext,
         instance_count: Integer,
         reserved_instances_offering_id: ReservedInstancesOfferingId,
-        purchase_time: DateTime = None,
-        dry_run: Boolean = None,
-        limit_price: ReservedInstanceLimitPrice = None,
+        purchase_time: DateTime | None = None,
+        dry_run: Boolean | None = None,
+        limit_price: ReservedInstanceLimitPrice | None = None,
         **kwargs,
     ) -> PurchaseReservedInstancesOfferingResult:
         raise NotImplementedError
@@ -27627,8 +28262,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         purchase_requests: PurchaseRequestSet,
-        client_token: String = None,
-        dry_run: Boolean = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> PurchaseScheduledInstancesResult:
         raise NotImplementedError
@@ -27638,7 +28273,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_ids: InstanceIdStringList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27648,23 +28283,23 @@ class Ec2Api:
         self,
         context: RequestContext,
         name: String,
-        image_location: String = None,
-        billing_products: BillingProductList = None,
-        boot_mode: BootModeValues = None,
-        tpm_support: TpmSupportValues = None,
-        uefi_data: StringType = None,
-        imds_support: ImdsSupportValues = None,
-        tag_specifications: TagSpecificationList = None,
-        dry_run: Boolean = None,
-        description: String = None,
-        architecture: ArchitectureValues = None,
-        kernel_id: KernelId = None,
-        ramdisk_id: RamdiskId = None,
-        root_device_name: String = None,
-        block_device_mappings: BlockDeviceMappingRequestList = None,
-        virtualization_type: String = None,
-        sriov_net_support: String = None,
-        ena_support: Boolean = None,
+        image_location: String | None = None,
+        billing_products: BillingProductList | None = None,
+        boot_mode: BootModeValues | None = None,
+        tpm_support: TpmSupportValues | None = None,
+        uefi_data: StringType | None = None,
+        imds_support: ImdsSupportValues | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        dry_run: Boolean | None = None,
+        description: String | None = None,
+        architecture: ArchitectureValues | None = None,
+        kernel_id: KernelId | None = None,
+        ramdisk_id: RamdiskId | None = None,
+        root_device_name: String | None = None,
+        block_device_mappings: BlockDeviceMappingRequestList | None = None,
+        virtualization_type: String | None = None,
+        sriov_net_support: String | None = None,
+        ena_support: Boolean | None = None,
         **kwargs,
     ) -> RegisterImageResult:
         raise NotImplementedError
@@ -27674,7 +28309,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_tag_attribute: RegisterInstanceTagAttributeRequest,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RegisterInstanceEventNotificationAttributesResult:
         raise NotImplementedError
@@ -27685,8 +28320,8 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId,
         network_interface_ids: TransitGatewayNetworkInterfaceIdList,
-        group_ip_address: String = None,
-        dry_run: Boolean = None,
+        group_ip_address: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RegisterTransitGatewayMulticastGroupMembersResult:
         raise NotImplementedError
@@ -27697,8 +28332,8 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId,
         network_interface_ids: TransitGatewayNetworkInterfaceIdList,
-        group_ip_address: String = None,
-        dry_run: Boolean = None,
+        group_ip_address: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RegisterTransitGatewayMulticastGroupSourcesResult:
         raise NotImplementedError
@@ -27708,7 +28343,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         capacity_reservation_id: CapacityReservationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RejectCapacityReservationBillingOwnershipResult:
         raise NotImplementedError
@@ -27717,10 +28352,10 @@ class Ec2Api:
     def reject_transit_gateway_multicast_domain_associations(
         self,
         context: RequestContext,
-        transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId = None,
-        transit_gateway_attachment_id: TransitGatewayAttachmentId = None,
-        subnet_ids: ValueStringList = None,
-        dry_run: Boolean = None,
+        transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId | None = None,
+        transit_gateway_attachment_id: TransitGatewayAttachmentId | None = None,
+        subnet_ids: ValueStringList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RejectTransitGatewayMulticastDomainAssociationsResult:
         raise NotImplementedError
@@ -27730,7 +28365,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RejectTransitGatewayPeeringAttachmentResult:
         raise NotImplementedError
@@ -27740,7 +28375,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_attachment_id: TransitGatewayAttachmentId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RejectTransitGatewayVpcAttachmentResult:
         raise NotImplementedError
@@ -27751,7 +28386,7 @@ class Ec2Api:
         context: RequestContext,
         service_id: VpcEndpointServiceId,
         vpc_endpoint_ids: VpcEndpointIdList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RejectVpcEndpointConnectionsResult:
         raise NotImplementedError
@@ -27761,7 +28396,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         vpc_peering_connection_id: VpcPeeringConnectionId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RejectVpcPeeringConnectionResult:
         raise NotImplementedError
@@ -27770,10 +28405,10 @@ class Ec2Api:
     def release_address(
         self,
         context: RequestContext,
-        allocation_id: AllocationId = None,
-        public_ip: String = None,
-        network_border_group: String = None,
-        dry_run: Boolean = None,
+        allocation_id: AllocationId | None = None,
+        public_ip: String | None = None,
+        network_border_group: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27791,7 +28426,7 @@ class Ec2Api:
         ipam_pool_id: IpamPoolId,
         cidr: String,
         ipam_pool_allocation_id: IpamPoolAllocationId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ReleaseIpamPoolAllocationResult:
         raise NotImplementedError
@@ -27810,8 +28445,8 @@ class Ec2Api:
     def replace_image_criteria_in_allowed_images_settings(
         self,
         context: RequestContext,
-        image_criteria: ImageCriterionRequestList = None,
-        dry_run: Boolean = None,
+        image_criteria: ImageCriterionRequestList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ReplaceImageCriteriaInAllowedImagesSettingsResult:
         raise NotImplementedError
@@ -27822,7 +28457,7 @@ class Ec2Api:
         context: RequestContext,
         association_id: NetworkAclAssociationId,
         network_acl_id: NetworkAclId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ReplaceNetworkAclAssociationResult:
         raise NotImplementedError
@@ -27836,11 +28471,11 @@ class Ec2Api:
         protocol: String,
         rule_action: RuleAction,
         egress: Boolean,
-        dry_run: Boolean = None,
-        cidr_block: String = None,
-        ipv6_cidr_block: String = None,
-        icmp_type_code: IcmpTypeCode = None,
-        port_range: PortRange = None,
+        dry_run: Boolean | None = None,
+        cidr_block: String | None = None,
+        ipv6_cidr_block: String | None = None,
+        icmp_type_code: IcmpTypeCode | None = None,
+        port_range: PortRange | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27850,22 +28485,22 @@ class Ec2Api:
         self,
         context: RequestContext,
         route_table_id: RouteTableId,
-        destination_prefix_list_id: PrefixListResourceId = None,
-        vpc_endpoint_id: VpcEndpointId = None,
-        local_target: Boolean = None,
-        transit_gateway_id: TransitGatewayId = None,
-        local_gateway_id: LocalGatewayId = None,
-        carrier_gateway_id: CarrierGatewayId = None,
-        core_network_arn: CoreNetworkArn = None,
-        dry_run: Boolean = None,
-        destination_cidr_block: String = None,
-        gateway_id: RouteGatewayId = None,
-        destination_ipv6_cidr_block: String = None,
-        egress_only_internet_gateway_id: EgressOnlyInternetGatewayId = None,
-        instance_id: InstanceId = None,
-        network_interface_id: NetworkInterfaceId = None,
-        vpc_peering_connection_id: VpcPeeringConnectionId = None,
-        nat_gateway_id: NatGatewayId = None,
+        destination_prefix_list_id: PrefixListResourceId | None = None,
+        vpc_endpoint_id: VpcEndpointId | None = None,
+        local_target: Boolean | None = None,
+        transit_gateway_id: TransitGatewayId | None = None,
+        local_gateway_id: LocalGatewayId | None = None,
+        carrier_gateway_id: CarrierGatewayId | None = None,
+        core_network_arn: CoreNetworkArn | None = None,
+        dry_run: Boolean | None = None,
+        destination_cidr_block: String | None = None,
+        gateway_id: RouteGatewayId | None = None,
+        destination_ipv6_cidr_block: String | None = None,
+        egress_only_internet_gateway_id: EgressOnlyInternetGatewayId | None = None,
+        instance_id: InstanceId | None = None,
+        network_interface_id: NetworkInterfaceId | None = None,
+        vpc_peering_connection_id: VpcPeeringConnectionId | None = None,
+        nat_gateway_id: NatGatewayId | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27876,7 +28511,7 @@ class Ec2Api:
         context: RequestContext,
         association_id: RouteTableAssociationId,
         route_table_id: RouteTableId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ReplaceRouteTableAssociationResult:
         raise NotImplementedError
@@ -27887,9 +28522,9 @@ class Ec2Api:
         context: RequestContext,
         destination_cidr_block: String,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
-        transit_gateway_attachment_id: TransitGatewayAttachmentId = None,
-        blackhole: Boolean = None,
-        dry_run: Boolean = None,
+        transit_gateway_attachment_id: TransitGatewayAttachmentId | None = None,
+        blackhole: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ReplaceTransitGatewayRouteResult:
         raise NotImplementedError
@@ -27900,8 +28535,8 @@ class Ec2Api:
         context: RequestContext,
         vpn_connection_id: VpnConnectionId,
         vpn_tunnel_outside_ip_address: String,
-        apply_pending_maintenance: Boolean = None,
-        dry_run: Boolean = None,
+        apply_pending_maintenance: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ReplaceVpnTunnelResult:
         raise NotImplementedError
@@ -27913,10 +28548,10 @@ class Ec2Api:
         instances: InstanceIdStringList,
         status: ReportStatusType,
         reason_codes: ReasonCodesList,
-        dry_run: Boolean = None,
-        start_time: DateTime = None,
-        end_time: DateTime = None,
-        description: ReportInstanceStatusRequestDescription = None,
+        dry_run: Boolean | None = None,
+        start_time: DateTime | None = None,
+        end_time: DateTime | None = None,
+        description: ReportInstanceStatusRequestDescription | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27926,7 +28561,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         spot_fleet_request_config: SpotFleetRequestConfigData,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RequestSpotFleetResponse:
         raise NotImplementedError
@@ -27943,14 +28578,14 @@ class Ec2Api:
         context: RequestContext,
         allocation_id: AllocationId,
         attribute: AddressAttributeName,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> ResetAddressAttributeResult:
         raise NotImplementedError
 
     @handler("ResetEbsDefaultKmsKeyId")
     def reset_ebs_default_kms_key_id(
-        self, context: RequestContext, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, dry_run: Boolean | None = None, **kwargs
     ) -> ResetEbsDefaultKmsKeyIdResult:
         raise NotImplementedError
 
@@ -27959,8 +28594,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         fpga_image_id: FpgaImageId,
-        dry_run: Boolean = None,
-        attribute: ResetFpgaImageAttributeName = None,
+        dry_run: Boolean | None = None,
+        attribute: ResetFpgaImageAttributeName | None = None,
         **kwargs,
     ) -> ResetFpgaImageAttributeResult:
         raise NotImplementedError
@@ -27971,7 +28606,7 @@ class Ec2Api:
         context: RequestContext,
         attribute: ResetImageAttributeName,
         image_id: ImageId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27982,7 +28617,7 @@ class Ec2Api:
         context: RequestContext,
         instance_id: InstanceId,
         attribute: InstanceAttributeName,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -27992,8 +28627,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_interface_id: NetworkInterfaceId,
-        dry_run: Boolean = None,
-        source_dest_check: String = None,
+        dry_run: Boolean | None = None,
+        source_dest_check: String | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -28004,20 +28639,20 @@ class Ec2Api:
         context: RequestContext,
         attribute: SnapshotAttributeName,
         snapshot_id: SnapshotId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
 
     @handler("RestoreAddressToClassic")
     def restore_address_to_classic(
-        self, context: RequestContext, public_ip: String, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, public_ip: String, dry_run: Boolean | None = None, **kwargs
     ) -> RestoreAddressToClassicResult:
         raise NotImplementedError
 
     @handler("RestoreImageFromRecycleBin")
     def restore_image_from_recycle_bin(
-        self, context: RequestContext, image_id: ImageId, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, image_id: ImageId, dry_run: Boolean | None = None, **kwargs
     ) -> RestoreImageFromRecycleBinResult:
         raise NotImplementedError
 
@@ -28028,14 +28663,18 @@ class Ec2Api:
         prefix_list_id: PrefixListResourceId,
         previous_version: Long,
         current_version: Long,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RestoreManagedPrefixListVersionResult:
         raise NotImplementedError
 
     @handler("RestoreSnapshotFromRecycleBin")
     def restore_snapshot_from_recycle_bin(
-        self, context: RequestContext, snapshot_id: SnapshotId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        snapshot_id: SnapshotId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> RestoreSnapshotFromRecycleBinResult:
         raise NotImplementedError
 
@@ -28044,9 +28683,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         snapshot_id: SnapshotId,
-        temporary_restore_days: RestoreSnapshotTierRequestTemporaryRestoreDays = None,
-        permanent_restore: Boolean = None,
-        dry_run: Boolean = None,
+        temporary_restore_days: RestoreSnapshotTierRequestTemporaryRestoreDays | None = None,
+        permanent_restore: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RestoreSnapshotTierResult:
         raise NotImplementedError
@@ -28057,9 +28696,9 @@ class Ec2Api:
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
         target_network_cidr: String,
-        access_group_id: String = None,
-        revoke_all_groups: Boolean = None,
-        dry_run: Boolean = None,
+        access_group_id: String | None = None,
+        revoke_all_groups: Boolean | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RevokeClientVpnIngressResult:
         raise NotImplementedError
@@ -28069,15 +28708,15 @@ class Ec2Api:
         self,
         context: RequestContext,
         group_id: SecurityGroupId,
-        security_group_rule_ids: SecurityGroupRuleIdList = None,
-        dry_run: Boolean = None,
-        source_security_group_name: String = None,
-        source_security_group_owner_id: String = None,
-        ip_protocol: String = None,
-        from_port: Integer = None,
-        to_port: Integer = None,
-        cidr_ip: String = None,
-        ip_permissions: IpPermissionList = None,
+        security_group_rule_ids: SecurityGroupRuleIdList | None = None,
+        dry_run: Boolean | None = None,
+        source_security_group_name: String | None = None,
+        source_security_group_owner_id: String | None = None,
+        ip_protocol: String | None = None,
+        from_port: Integer | None = None,
+        to_port: Integer | None = None,
+        cidr_ip: String | None = None,
+        ip_permissions: IpPermissionList | None = None,
         **kwargs,
     ) -> RevokeSecurityGroupEgressResult:
         raise NotImplementedError
@@ -28086,17 +28725,17 @@ class Ec2Api:
     def revoke_security_group_ingress(
         self,
         context: RequestContext,
-        cidr_ip: String = None,
-        from_port: Integer = None,
-        group_id: SecurityGroupId = None,
-        group_name: SecurityGroupName = None,
-        ip_permissions: IpPermissionList = None,
-        ip_protocol: String = None,
-        source_security_group_name: String = None,
-        source_security_group_owner_id: String = None,
-        to_port: Integer = None,
-        security_group_rule_ids: SecurityGroupRuleIdList = None,
-        dry_run: Boolean = None,
+        cidr_ip: String | None = None,
+        from_port: Integer | None = None,
+        group_id: SecurityGroupId | None = None,
+        group_name: SecurityGroupName | None = None,
+        ip_permissions: IpPermissionList | None = None,
+        ip_protocol: String | None = None,
+        source_security_group_name: String | None = None,
+        source_security_group_owner_id: String | None = None,
+        to_port: Integer | None = None,
+        security_group_rule_ids: SecurityGroupRuleIdList | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> RevokeSecurityGroupIngressResult:
         raise NotImplementedError
@@ -28107,47 +28746,47 @@ class Ec2Api:
         context: RequestContext,
         max_count: Integer,
         min_count: Integer,
-        block_device_mappings: BlockDeviceMappingRequestList = None,
-        image_id: ImageId = None,
-        instance_type: InstanceType = None,
-        ipv6_address_count: Integer = None,
-        ipv6_addresses: InstanceIpv6AddressList = None,
-        kernel_id: KernelId = None,
-        key_name: KeyPairName = None,
-        monitoring: RunInstancesMonitoringEnabled = None,
-        placement: Placement = None,
-        ramdisk_id: RamdiskId = None,
-        security_group_ids: SecurityGroupIdStringList = None,
-        security_groups: SecurityGroupStringList = None,
-        subnet_id: SubnetId = None,
-        user_data: RunInstancesUserData = None,
-        elastic_gpu_specification: ElasticGpuSpecifications = None,
-        elastic_inference_accelerators: ElasticInferenceAccelerators = None,
-        tag_specifications: TagSpecificationList = None,
-        launch_template: LaunchTemplateSpecification = None,
-        instance_market_options: InstanceMarketOptionsRequest = None,
-        credit_specification: CreditSpecificationRequest = None,
-        cpu_options: CpuOptionsRequest = None,
-        capacity_reservation_specification: CapacityReservationSpecification = None,
-        hibernation_options: HibernationOptionsRequest = None,
-        license_specifications: LicenseSpecificationListRequest = None,
-        metadata_options: InstanceMetadataOptionsRequest = None,
-        enclave_options: EnclaveOptionsRequest = None,
-        private_dns_name_options: PrivateDnsNameOptionsRequest = None,
-        maintenance_options: InstanceMaintenanceOptionsRequest = None,
-        disable_api_stop: Boolean = None,
-        enable_primary_ipv6: Boolean = None,
-        network_performance_options: InstanceNetworkPerformanceOptionsRequest = None,
-        operator: OperatorRequest = None,
-        dry_run: Boolean = None,
-        disable_api_termination: Boolean = None,
-        instance_initiated_shutdown_behavior: ShutdownBehavior = None,
-        private_ip_address: String = None,
-        client_token: String = None,
-        additional_info: String = None,
-        network_interfaces: InstanceNetworkInterfaceSpecificationList = None,
-        iam_instance_profile: IamInstanceProfileSpecification = None,
-        ebs_optimized: Boolean = None,
+        block_device_mappings: BlockDeviceMappingRequestList | None = None,
+        image_id: ImageId | None = None,
+        instance_type: InstanceType | None = None,
+        ipv6_address_count: Integer | None = None,
+        ipv6_addresses: InstanceIpv6AddressList | None = None,
+        kernel_id: KernelId | None = None,
+        key_name: KeyPairName | None = None,
+        monitoring: RunInstancesMonitoringEnabled | None = None,
+        placement: Placement | None = None,
+        ramdisk_id: RamdiskId | None = None,
+        security_group_ids: SecurityGroupIdStringList | None = None,
+        security_groups: SecurityGroupStringList | None = None,
+        subnet_id: SubnetId | None = None,
+        user_data: RunInstancesUserData | None = None,
+        elastic_gpu_specification: ElasticGpuSpecifications | None = None,
+        elastic_inference_accelerators: ElasticInferenceAccelerators | None = None,
+        tag_specifications: TagSpecificationList | None = None,
+        launch_template: LaunchTemplateSpecification | None = None,
+        instance_market_options: InstanceMarketOptionsRequest | None = None,
+        credit_specification: CreditSpecificationRequest | None = None,
+        cpu_options: CpuOptionsRequest | None = None,
+        capacity_reservation_specification: CapacityReservationSpecification | None = None,
+        hibernation_options: HibernationOptionsRequest | None = None,
+        license_specifications: LicenseSpecificationListRequest | None = None,
+        metadata_options: InstanceMetadataOptionsRequest | None = None,
+        enclave_options: EnclaveOptionsRequest | None = None,
+        private_dns_name_options: PrivateDnsNameOptionsRequest | None = None,
+        maintenance_options: InstanceMaintenanceOptionsRequest | None = None,
+        disable_api_stop: Boolean | None = None,
+        enable_primary_ipv6: Boolean | None = None,
+        network_performance_options: InstanceNetworkPerformanceOptionsRequest | None = None,
+        operator: OperatorRequest | None = None,
+        dry_run: Boolean | None = None,
+        disable_api_termination: Boolean | None = None,
+        instance_initiated_shutdown_behavior: ShutdownBehavior | None = None,
+        private_ip_address: String | None = None,
+        client_token: String | None = None,
+        additional_info: String | None = None,
+        network_interfaces: InstanceNetworkInterfaceSpecificationList | None = None,
+        iam_instance_profile: IamInstanceProfileSpecification | None = None,
+        ebs_optimized: Boolean | None = None,
         **kwargs,
     ) -> Reservation:
         raise NotImplementedError
@@ -28158,9 +28797,9 @@ class Ec2Api:
         context: RequestContext,
         launch_specification: ScheduledInstancesLaunchSpecification,
         scheduled_instance_id: ScheduledInstanceId,
-        client_token: String = None,
-        dry_run: Boolean = None,
-        instance_count: Integer = None,
+        client_token: String | None = None,
+        dry_run: Boolean | None = None,
+        instance_count: Integer | None = None,
         **kwargs,
     ) -> RunScheduledInstancesResult:
         raise NotImplementedError
@@ -28170,10 +28809,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         local_gateway_route_table_id: LocalGatewayRoutetableId,
-        filters: FilterList = None,
-        max_results: MaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: MaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> SearchLocalGatewayRoutesResult:
         raise NotImplementedError
@@ -28183,10 +28822,10 @@ class Ec2Api:
         self,
         context: RequestContext,
         transit_gateway_multicast_domain_id: TransitGatewayMulticastDomainId,
-        filters: FilterList = None,
-        max_results: TransitGatewayMaxResults = None,
-        next_token: String = None,
-        dry_run: Boolean = None,
+        filters: FilterList | None = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        next_token: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> SearchTransitGatewayMulticastGroupsResult:
         raise NotImplementedError
@@ -28197,15 +28836,19 @@ class Ec2Api:
         context: RequestContext,
         transit_gateway_route_table_id: TransitGatewayRouteTableId,
         filters: FilterList,
-        max_results: TransitGatewayMaxResults = None,
-        dry_run: Boolean = None,
+        max_results: TransitGatewayMaxResults | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> SearchTransitGatewayRoutesResult:
         raise NotImplementedError
 
     @handler("SendDiagnosticInterrupt")
     def send_diagnostic_interrupt(
-        self, context: RequestContext, instance_id: InstanceId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        instance_id: InstanceId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> None:
         raise NotImplementedError
 
@@ -28215,9 +28858,9 @@ class Ec2Api:
         context: RequestContext,
         s3_bucket: String,
         target_id: String,
-        dry_run: Boolean = None,
-        s3_prefix: String = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        s3_prefix: String | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> StartDeclarativePoliciesReportResult:
         raise NotImplementedError
@@ -28227,8 +28870,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_ids: InstanceIdStringList,
-        additional_info: String = None,
-        dry_run: Boolean = None,
+        additional_info: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> StartInstancesResult:
         raise NotImplementedError
@@ -28239,8 +28882,8 @@ class Ec2Api:
         context: RequestContext,
         network_insights_access_scope_id: NetworkInsightsAccessScopeId,
         client_token: String,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> StartNetworkInsightsAccessScopeAnalysisResult:
         raise NotImplementedError
@@ -28251,10 +28894,11 @@ class Ec2Api:
         context: RequestContext,
         network_insights_path_id: NetworkInsightsPathId,
         client_token: String,
-        additional_accounts: ValueStringList = None,
-        filter_in_arns: ArnList = None,
-        dry_run: Boolean = None,
-        tag_specifications: TagSpecificationList = None,
+        additional_accounts: ValueStringList | None = None,
+        filter_in_arns: ArnList | None = None,
+        filter_out_arns: ArnList | None = None,
+        dry_run: Boolean | None = None,
+        tag_specifications: TagSpecificationList | None = None,
         **kwargs,
     ) -> StartNetworkInsightsAnalysisResult:
         raise NotImplementedError
@@ -28264,7 +28908,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         service_id: VpcEndpointServiceId,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> StartVpcEndpointServicePrivateDnsVerificationResult:
         raise NotImplementedError
@@ -28274,9 +28918,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_ids: InstanceIdStringList,
-        hibernate: Boolean = None,
-        dry_run: Boolean = None,
-        force: Boolean = None,
+        hibernate: Boolean | None = None,
+        dry_run: Boolean | None = None,
+        force: Boolean | None = None,
         **kwargs,
     ) -> StopInstancesResult:
         raise NotImplementedError
@@ -28286,9 +28930,9 @@ class Ec2Api:
         self,
         context: RequestContext,
         client_vpn_endpoint_id: ClientVpnEndpointId,
-        connection_id: String = None,
-        username: String = None,
-        dry_run: Boolean = None,
+        connection_id: String | None = None,
+        username: String | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> TerminateClientVpnConnectionsResult:
         raise NotImplementedError
@@ -28298,7 +28942,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_ids: InstanceIdStringList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> TerminateInstancesResult:
         raise NotImplementedError
@@ -28308,8 +28952,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_interface_id: NetworkInterfaceId,
-        ipv6_prefixes: IpPrefixList = None,
-        ipv6_addresses: Ipv6AddressList = None,
+        ipv6_prefixes: IpPrefixList | None = None,
+        ipv6_addresses: Ipv6AddressList | None = None,
         **kwargs,
     ) -> UnassignIpv6AddressesResult:
         raise NotImplementedError
@@ -28319,8 +28963,8 @@ class Ec2Api:
         self,
         context: RequestContext,
         network_interface_id: NetworkInterfaceId,
-        ipv4_prefixes: IpPrefixList = None,
-        private_ip_addresses: PrivateIpAddressStringList = None,
+        ipv4_prefixes: IpPrefixList | None = None,
+        private_ip_addresses: PrivateIpAddressStringList | None = None,
         **kwargs,
     ) -> None:
         raise NotImplementedError
@@ -28331,15 +28975,19 @@ class Ec2Api:
         context: RequestContext,
         nat_gateway_id: NatGatewayId,
         private_ip_addresses: IpList,
-        max_drain_duration_seconds: DrainSeconds = None,
-        dry_run: Boolean = None,
+        max_drain_duration_seconds: DrainSeconds | None = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> UnassignPrivateNatGatewayAddressResult:
         raise NotImplementedError
 
     @handler("UnlockSnapshot")
     def unlock_snapshot(
-        self, context: RequestContext, snapshot_id: SnapshotId, dry_run: Boolean = None, **kwargs
+        self,
+        context: RequestContext,
+        snapshot_id: SnapshotId,
+        dry_run: Boolean | None = None,
+        **kwargs,
     ) -> UnlockSnapshotResult:
         raise NotImplementedError
 
@@ -28348,7 +28996,7 @@ class Ec2Api:
         self,
         context: RequestContext,
         instance_ids: InstanceIdStringList,
-        dry_run: Boolean = None,
+        dry_run: Boolean | None = None,
         **kwargs,
     ) -> UnmonitorInstancesResult:
         raise NotImplementedError
@@ -28357,11 +29005,11 @@ class Ec2Api:
     def update_security_group_rule_descriptions_egress(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        group_id: SecurityGroupId = None,
-        group_name: SecurityGroupName = None,
-        ip_permissions: IpPermissionList = None,
-        security_group_rule_descriptions: SecurityGroupRuleDescriptionList = None,
+        dry_run: Boolean | None = None,
+        group_id: SecurityGroupId | None = None,
+        group_name: SecurityGroupName | None = None,
+        ip_permissions: IpPermissionList | None = None,
+        security_group_rule_descriptions: SecurityGroupRuleDescriptionList | None = None,
         **kwargs,
     ) -> UpdateSecurityGroupRuleDescriptionsEgressResult:
         raise NotImplementedError
@@ -28370,17 +29018,17 @@ class Ec2Api:
     def update_security_group_rule_descriptions_ingress(
         self,
         context: RequestContext,
-        dry_run: Boolean = None,
-        group_id: SecurityGroupId = None,
-        group_name: SecurityGroupName = None,
-        ip_permissions: IpPermissionList = None,
-        security_group_rule_descriptions: SecurityGroupRuleDescriptionList = None,
+        dry_run: Boolean | None = None,
+        group_id: SecurityGroupId | None = None,
+        group_name: SecurityGroupName | None = None,
+        ip_permissions: IpPermissionList | None = None,
+        security_group_rule_descriptions: SecurityGroupRuleDescriptionList | None = None,
         **kwargs,
     ) -> UpdateSecurityGroupRuleDescriptionsIngressResult:
         raise NotImplementedError
 
     @handler("WithdrawByoipCidr")
     def withdraw_byoip_cidr(
-        self, context: RequestContext, cidr: String, dry_run: Boolean = None, **kwargs
+        self, context: RequestContext, cidr: String, dry_run: Boolean | None = None, **kwargs
     ) -> WithdrawByoipCidrResult:
         raise NotImplementedError

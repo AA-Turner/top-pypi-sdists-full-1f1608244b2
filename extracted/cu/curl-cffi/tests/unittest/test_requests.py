@@ -348,6 +348,33 @@ def test_cookies(server):
     assert cookies["foo"] == "bar"
 
 
+def test_cookies_update_disabled(server):
+    s = requests.Session()
+
+    set_url = str(server.url.copy_with(path="/unique_cookie"))
+
+    r = s.get(set_url)
+    assert r.cookies["foo"] == s.cookies["foo"]
+    old_cookie = r.cookies["foo"]
+
+    # Let's start discarding cookies
+    s.discard_cookies = True
+    r = s.get(set_url)
+    assert r.cookies["foo"] != s.cookies["foo"]
+    assert old_cookie == s.cookies["foo"]
+
+    # The behavior can be reverted
+    s.discard_cookies = False
+    r = s.get(set_url)
+    assert r.cookies["foo"] == s.cookies["foo"]
+    old_cookie = r.cookies["foo"]
+
+    # Also works as request parameter
+    r = s.get(set_url, discard_cookies=True)
+    assert r.cookies["foo"] != s.cookies["foo"]
+    assert old_cookie == s.cookies["foo"]
+
+
 def test_secure_cookies(server):
     with pytest.warns(CurlCffiWarning, match="changed"):
         r = requests.get(
@@ -447,9 +474,18 @@ def test_response_headers(server):
 
 
 def test_response_cookies(server):
-    r = requests.get(str(server.url.copy_with(path="/set_cookies")))
-    print(r.cookies)
+    s = requests.Session(cookies={"old": "bar"})
+    r = s.get(str(server.url.copy_with(path="/set_cookies")))
+
+    # set-cookies from response
     assert r.cookies["foo"] == "bar"
+    assert s.cookies["foo"] == "bar"
+
+    # session cookies not in response object
+    assert r.cookies.get("old") is None
+
+    # non-exist cookies
+    assert r.cookies.get("xxx") is None
 
 
 def test_elapsed(server):
@@ -538,10 +574,13 @@ def test_session_preset_cookies(server):
         str(server.url.copy_with(path="/echo_cookies")), cookies={"hello": "world"}
     )
     cookies = r.json()
+
     # old cookies should be persisted
     assert cookies["foo"] == "bar"
+
     # new cookies should be added
     assert cookies["hello"] == "world"
+
     # XXX: request cookies will always be added to the entire session
     # request cookies should not be added to session cookiejar
     # assert s.cookies.get("hello") is None
@@ -932,3 +971,8 @@ def test_response_ip_and_port(server):
     assert r.primary_port == 8000
     assert r.local_ip == "127.0.0.1"
     assert r.local_port != 0
+
+
+def test_http_version(server):
+    r = requests.get(str(server.url), http_version="v1")
+    assert r.status_code == 200

@@ -22,7 +22,7 @@ REPLICATOR_HELP=PREVIEW_BANNER+'\n\nThe replicator command group allows you to r
 class ProfileLoadError(RuntimeError):
 	def __init__(A,profile_name):super().__init__(f"Could not find profile '{profile_name}'")
 class ReplicatorCliGroup(RequiresPlatformLicenseGroup):
-	name=_G;tier='Teams'
+	name=_G;tier='Ultimate'
 	def invoke(A,ctx):print(PREVIEW_BANNER,file=sys.stderr);super().invoke(ctx)
 class AWSConfig(TypedDict,total=False):aws_access_key_id:str;aws_secret_access_key:str;aws_session_token:Optional[str];region_name:str;endpoint_url:Optional[str];profile_name:str
 def get_aws_env_config(prefix):A={A:os.getenv(B.format(prefix))for(A,B)in AWS_CONFIG_ENV_VARS.items()};return AWSConfig(**{B:A for(B,A)in A.items()if A})

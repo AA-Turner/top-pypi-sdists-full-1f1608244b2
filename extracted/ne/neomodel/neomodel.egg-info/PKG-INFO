@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: neomodel
-Version: 5.4.5
+Version: 5.5.0
 Summary: An object mapper for the neo4j graph database.
 Author-email: Robin Edwards <robin.ge@gmail.com>
 Maintainer-email: Marius Conjeaud <marius.conjeaud@outlook.com>, Antoine Nguyen <tonio@ngyn.org>, Athanasios Anastasiou <athanastasiou@gmail.com>
@@ -47,6 +47,7 @@ Provides-Extra: numpy
 Requires-Dist: numpy; extra == "numpy"
 Provides-Extra: rust-driver-ext
 Requires-Dist: neo4j-rust-ext==5.28.1.0; extra == "rust-driver-ext"
+Dynamic: license-file
 
 ![neomodel](https://raw.githubusercontent.com/neo4j-contrib/neomodel/master/doc/source/_static/neomodel-300.png)
 

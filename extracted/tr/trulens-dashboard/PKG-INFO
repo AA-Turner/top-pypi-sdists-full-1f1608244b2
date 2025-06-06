@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: trulens-dashboard
-Version: 1.5.0
+Version: 1.5.1
 Summary: Library to systematically track and evaluate LLM based applications.
 Home-page: https://trulens.org/
 License: MIT

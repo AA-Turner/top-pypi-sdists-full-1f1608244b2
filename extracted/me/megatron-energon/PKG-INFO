@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: megatron-energon
-Version: 6.0.1
+Version: 7.0.0
 Summary: Megatron's multi-modal data loader
 Project-URL: Homepage, https://github.com/NVIDIA/Megatron-Energon
 Author-email: Lukas Vögtle <lvoegtle@nvidia.com>, Philipp Fischer <pfischer@nvidia.com>
@@ -8,18 +8,19 @@ License-Expression: BSD-3-Clause
 License-File: LICENSE
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
-Requires-Python: >=3.9
+Requires-Python: >=3.10
 Requires-Dist: braceexpand
 Requires-Dist: click
 Requires-Dist: dataslots; python_version < '3.10'
-Requires-Dist: multi-storage-client>=0.16.0
+Requires-Dist: mfusepy
+Requires-Dist: multi-storage-client>=0.18.0
 Requires-Dist: numpy
 Requires-Dist: pillow>=10.0.1
 Requires-Dist: pyyaml
+Requires-Dist: rapidyaml==0.9.0
 Requires-Dist: s3fs
 Requires-Dist: torch
 Requires-Dist: tqdm
@@ -32,18 +33,20 @@ Requires-Dist: bitstring>=4.2.3; extra == 'av-decode'
 Requires-Dist: ebmlite>=3.3.1; extra == 'av-decode'
 Requires-Dist: filetype>=1.2.0; extra == 'av-decode'
 Requires-Dist: sortedcontainers>=2.4.0; extra == 'av-decode'
-Requires-Dist: soundfile; extra == 'av-decode'
 Provides-Extra: azure-storage-blob
 Requires-Dist: multi-storage-client[azure-storage-blob]; extra == 'azure-storage-blob'
 Provides-Extra: dev
 Requires-Dist: myst-parser; extra == 'dev'
 Requires-Dist: ruff; extra == 'dev'
+Requires-Dist: soundfile; extra == 'dev'
 Requires-Dist: sphinx; extra == 'dev'
 Requires-Dist: sphinx-click; extra == 'dev'
 Requires-Dist: sphinx-rtd-theme; extra == 'dev'
 Requires-Dist: sphinxcontrib-napoleon; extra == 'dev'
 Provides-Extra: google-cloud-storage
 Requires-Dist: multi-storage-client[google-cloud-storage]; extra == 'google-cloud-storage'
+Provides-Extra: guess-content
+Requires-Dist: filetype>=1.0.0; extra == 'guess-content'
 Provides-Extra: oci
 Requires-Dist: multi-storage-client[oci]; extra == 'oci'
 Provides-Extra: s3

@@ -477,10 +477,8 @@ from openapi_client.models.sso_mode import SSOMode
 from openapi_client.models.supportedbaseimagesenum import SUPPORTEDBASEIMAGESENUM
 from openapi_client.models.schedule_config import ScheduleConfig
 from openapi_client.models.scheduler_info import SchedulerInfo
-from openapi_client.models.serve_deployment_fast_api_docs_status import ServeDeploymentFastApiDocsStatus
 from openapi_client.models.serve_deployment_grafana_dashboard_status import ServeDeploymentGrafanaDashboardStatus
 from openapi_client.models.serve_deployment_state import ServeDeploymentState
-from openapi_client.models.servedeploymentfastapidocsstatus_response import ServedeploymentfastapidocsstatusResponse
 from openapi_client.models.server_session_token import ServerSessionToken
 from openapi_client.models.serversessiontoken_response import ServersessiontokenResponse
 from openapi_client.models.service_config import ServiceConfig
@@ -585,8 +583,6 @@ from openapi_client.models.waitlist_status_response import WaitlistStatusRespons
 from openapi_client.models.waitlist_status_type import WaitlistStatusType
 from openapi_client.models.waitliststatusresponse_response import WaitliststatusresponseResponse
 from openapi_client.models.wand_b_run_details import WandBRunDetails
-from openapi_client.models.web_terminal import WebTerminal
-from openapi_client.models.webterminal_response import WebterminalResponse
 from openapi_client.models.worker_node_type import WorkerNodeType
 from openapi_client.models.workload_info import WorkloadInfo
 from openapi_client.models.workload_type import WorkloadType

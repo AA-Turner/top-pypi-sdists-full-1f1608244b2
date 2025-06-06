@@ -27,8 +27,21 @@ class CompilerApplication(ConsoleApplication):
         parser.add_argument("-o", "--output", help="write output to <file>")
         parser.add_argument("-w", "--watch", help="watch for changes and recompile", action="store_true")
         parser.add_argument("-S", "--no-source-maps", help="omit source-maps", action="store_true")
-        parser.add_argument("-c", "--compress", help="compress using terser", action="store_true")
+        parser.add_argument("-c", "--compress", help="minify code", action="store_true")
         parser.add_argument("-v", "--verbose", help="be verbose", action="store_true")
+        parser.add_argument(
+            "-F",
+            "--output-format",
+            help="desired output format",
+            choices=["unescaped", "hex-bytes", "c-string"],
+            default="unescaped",
+        )
+        parser.add_argument(
+            "-B", "--bundle-format", help="desired bundle format", choices=["esm", "iife"], default="esm"
+        )
+        parser.add_argument(
+            "-T", "--type-check", help="desired type-checking mode", choices=["full", "none"], default="full"
+        )
 
     def _initialize(self, parser: argparse.ArgumentParser, options: argparse.Namespace, args: List[str]) -> None:
         self._module = os.path.abspath(options.module)
@@ -37,6 +50,9 @@ class CompilerApplication(ConsoleApplication):
         self._verbose = self._mode == "watch" or options.verbose
         self._compiler_options = {
             "project_root": os.getcwd(),
+            "output_format": options.output_format,
+            "bundle_format": options.bundle_format,
+            "type_check": options.type_check,
             "source_maps": "omitted" if options.no_source_maps else "included",
             "compression": "terser" if options.compress else "none",
         }

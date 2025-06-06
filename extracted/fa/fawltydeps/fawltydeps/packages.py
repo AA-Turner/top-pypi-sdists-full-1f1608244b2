@@ -1,5 +1,7 @@
 """Encapsulate the lookup of packages and their provided import names."""
 
+from __future__ import annotations
+
 import logging
 import shutil
 import subprocess
@@ -7,22 +9,13 @@ import sys
 import tempfile
 import venv
 from abc import ABC, abstractmethod
+from collections.abc import Iterable, Iterator
+from collections.abc import Set as AbstractSet
 from contextlib import contextmanager, suppress
 from dataclasses import dataclass, replace
 from functools import cached_property, partial
 from pathlib import Path
-from typing import (
-    AbstractSet,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    Optional,
-    Set,
-    Tuple,
-    Type,
-    Union,
-)
+from typing import Optional, Union
 
 # importlib_metadata is gradually graduating into the importlib.metadata stdlib
 # module, however we rely on internal functions and recent (and upcoming)
@@ -49,7 +42,7 @@ if sys.version_info >= (3, 11):
 else:
     import tomli as tomllib
 
-PackageDebugInfo = Union[None, str, Dict[str, Set[str]]]
+PackageDebugInfo = Union[None, str, dict[str, set[str]]]
 
 logger = logging.getLogger(__name__)
 
@@ -63,9 +56,9 @@ class Package:
     installed.
     """
 
-    package_name: str  # auto-normalized in .__post_init__()
-    import_names: Set[str]
-    resolved_with: Type["BasePackageResolver"]
+    package_name: str  # see .normalized_name for the normalized form
+    import_names: set[str]
+    resolved_with: type[BasePackageResolver]
     debug_info: PackageDebugInfo = None
 
     @staticmethod
@@ -77,26 +70,45 @@ class Package:
         (e.g. typing-extensions), but once installed, it is presented in the
         context of the local environment with a slightly different spelling
         (e.g. typing_extension).
+
+        Exception: Stubs-only packages have a "-stubs" suffix on their import
+        name that is _not_ normalized to "_stubs".
         """
-        return package_name.lower().replace("-", "_")
+        suffix = ""
+        if package_name.endswith("-stubs"):
+            package_name = package_name[:-6]
+            suffix = "-stubs"
+        return package_name.lower().replace("-", "_") + suffix
 
-    def __post_init__(self) -> None:
-        """Ensure Package object invariants."""
-        object.__setattr__(self, "package_name", self.normalize_name(self.package_name))
+    @cached_property
+    def normalized_name(self) -> str:
+        """Package name in normalized form."""
+        return self.normalize_name(self.package_name)
 
-    def has_type_stubs(self) -> Set[str]:
-        """Return a set of import names without type stubs suffix."""
-        provides_stubs_for = [
+    def stubbed_imports(self) -> set[str]:
+        """Return a set of import names without the type stubs suffix.
+
+        For example, a package that has .import_names == {"foo", "bar-stubs"},
+        will return {"bar"} from this method, indicating that it provides type
+        stubs for the "bar" import.
+
+        This allows stub-only packages to be matched against the import names
+        for which they provide type stubs. Stub-only packages are described in
+        https://typing.readthedocs.io/en/latest/spec/distributing.html, and the
+        "-stubs" suffix is mandated here. This makes it relatively safe for us
+        to assume that "FOO-stubs" is indeed directly associated with the "FOO"
+        module.
+        """
+        return {
             import_name[: -len("-stubs")]
             for import_name in self.import_names
             if import_name.endswith("-stubs")
-        ]
-        return set(provides_stubs_for)
+        }
 
     def is_used(self, imported_names: Iterable[str]) -> bool:
         """Return True iff this package is among the given import names."""
         return bool(self.import_names.intersection(imported_names)) or bool(
-            self.has_type_stubs().intersection(imported_names)
+            self.stubbed_imports().intersection(imported_names)
         )
 
 
@@ -104,8 +116,8 @@ class BasePackageResolver(ABC):
     """Define the interface for doing package -> import names lookup."""
 
     @abstractmethod
-    def lookup_packages(self, package_names: Set[str]) -> Dict[str, Package]:
-        """Convert package names into a Package objects with available imports.
+    def lookup_packages(self, package_names: set[str]) -> dict[str, Package]:
+        """Convert package names into corresponding Package objects.
 
         Resolve as many of the given package names as possible into their
         corresponding import names, and return a dict that maps the resolved
@@ -116,24 +128,40 @@ class BasePackageResolver(ABC):
         """
         raise NotImplementedError
 
+    def lookup_import(self, import_name: str) -> Iterable[Package]:
+        """Convert an import name into Package objects that provide this import.
+
+        This is a convenience helper for when we attempt to suggest a suitable
+        package name to depend on, in order to properly declare an undeclared
+        import.
+
+        This is the _reverse_ mapping of what .lookup_packages() provides, and
+        it is acceptable for a resolver to not provide this functionality (e.g.
+        the TemporaryAutoInstallResolver cannot provide this as long as PyPI
+        does not allow packages to be queried by provided import names, nor can
+        we allow the IdentityMapping to fabricate a nonsense package name based
+        on the given import name).
+        """
+        raise NotImplementedError
+
 
 def accumulate_mappings(
-    resolved_with: Type[BasePackageResolver],
-    custom_mappings: Iterable[Tuple[CustomMapping, str]],
-) -> Dict[str, Package]:
+    resolved_with: type[BasePackageResolver],
+    custom_mappings: Iterable[tuple[CustomMapping, str]],
+) -> dict[str, Package]:
     """Merge CustomMappings (w/associated descriptions) into a dict of Packages.
 
     Each resulting package object maps a (normalized) package name to a mapping
     dict where the provided imports are keyed by their associated description.
     The keys in the returned dict are also normalized package names.
     """
-    result: Dict[str, Package] = {}
+    result: dict[str, Package] = {}
     for custom_mapping, debug_key in custom_mappings:
         for name, imports in custom_mapping.items():
             normalized_name = Package.normalize_name(name)
             if normalized_name not in result:  # create new Package instance
                 result[normalized_name] = Package(
-                    package_name=normalized_name,
+                    package_name=name,
                     import_names=set(imports),
                     resolved_with=resolved_with,
                     debug_info={debug_key: set(imports)},
@@ -156,7 +184,7 @@ class UserDefinedMapping(BasePackageResolver):
 
     def __init__(
         self,
-        mapping_paths: Optional[Set[Path]] = None,
+        mapping_paths: Optional[set[Path]] = None,
         custom_mapping: Optional[CustomMapping] = None,
     ) -> None:
         self.mapping_paths = mapping_paths or set()
@@ -168,7 +196,7 @@ class UserDefinedMapping(BasePackageResolver):
         self.custom_mapping = custom_mapping
 
     @cached_property
-    def packages(self) -> Dict[str, Package]:
+    def packages(self) -> dict[str, Package]:
         """Gather a custom mapping given by a user.
 
         Mapping may come from two sources:
@@ -181,7 +209,7 @@ class UserDefinedMapping(BasePackageResolver):
         the remainder of this object's life in _packages.
         """
 
-        def _custom_mappings() -> Iterator[Tuple[CustomMapping, str]]:
+        def _custom_mappings() -> Iterator[tuple[CustomMapping, str]]:
             if self.custom_mapping is not None:
                 logger.debug("Applying user-defined mapping from settings.")
                 yield self.custom_mapping, "from settings"
@@ -194,13 +222,17 @@ class UserDefinedMapping(BasePackageResolver):
 
         return accumulate_mappings(self.__class__, _custom_mappings())
 
-    def lookup_packages(self, package_names: Set[str]) -> Dict[str, Package]:
-        """Convert package names to locally available Package objects."""
+    def lookup_packages(self, package_names: set[str]) -> dict[str, Package]:
+        """Convert package names to Package objects defined by this mapping."""
         return {
             name: self.packages[Package.normalize_name(name)]
             for name in package_names
             if Package.normalize_name(name) in self.packages
         }
+
+    def lookup_import(self, import_name: str) -> Iterable[Package]:
+        """Return all Package objects that provide the given import name."""
+        return (p for p in self.packages.values() if import_name in p.import_names)
 
 
 class InstalledPackageResolver(BasePackageResolver):
@@ -214,8 +246,8 @@ class InstalledPackageResolver(BasePackageResolver):
         """
 
     def _from_one_env(
-        self, env_paths: List[str]
-    ) -> Iterator[Tuple[CustomMapping, str]]:
+        self, env_paths: list[str]
+    ) -> Iterator[tuple[CustomMapping, str]]:
         """Return package-name-to-import-names mapping from one Python env.
 
         This is roughly equivalent to calling importlib_metadata's
@@ -247,15 +279,23 @@ class InstalledPackageResolver(BasePackageResolver):
                 _top_level_declared(dist)  # type: ignore[no-untyped-call]
                 or _top_level_inferred(dist)  # type: ignore[no-untyped-call]
             )
+            if not imports:
+                # We have found an installed package that provides zero import
+                # names. This might be a legitimate tool/application that is
+                # installed into the Python environment without providing any
+                # importable modules, but it might also be a symptom of broken/
+                # incomplete package metadata causing importlib_metadata to not
+                # find any provided import names.
+                logger.debug("  This module does not provide any import names!")
             yield {dist.name: imports}, str(parent_dir)
 
     @cached_property
     @abstractmethod
-    def packages(self) -> Dict[str, Package]:
+    def packages(self) -> dict[str, Package]:
         """Return mapping of package names to Package objects."""
         raise NotImplementedError
 
-    def lookup_packages(self, package_names: Set[str]) -> Dict[str, Package]:
+    def lookup_packages(self, package_names: set[str]) -> dict[str, Package]:
         """Convert package names to locally available Package objects.
 
         (Although this function generally works with _all_ locally available
@@ -277,12 +317,16 @@ class InstalledPackageResolver(BasePackageResolver):
             if Package.normalize_name(name) in self.packages
         }
 
+    def lookup_import(self, import_name: str) -> Iterable[Package]:
+        """Return all Package objects that provide the given import name."""
+        return (p for p in self.packages.values() if import_name in p.import_names)
+
 
 class SysPathPackageResolver(InstalledPackageResolver):
     """Lookup imports exposed by packages installed in sys.path."""
 
     @cached_property
-    def packages(self) -> Dict[str, Package]:
+    def packages(self) -> dict[str, Package]:
         """Return mapping of package names to Package objects.
 
         This enumerates the available packages in the current Python environment
@@ -302,7 +346,7 @@ class LocalPackageResolver(InstalledPackageResolver):
         provided import names.
         """
         super().__init__()
-        self.package_dirs: Set[Path] = {src.path for src in srcs}
+        self.package_dirs: set[Path] = {src.path for src in srcs}
 
     @classmethod
     def find_package_dirs(cls, path: Path) -> Iterator[Path]:  # noqa: C901, PLR0912
@@ -361,7 +405,7 @@ class LocalPackageResolver(InstalledPackageResolver):
                     yield package_dir
 
     @cached_property
-    def packages(self) -> Dict[str, Package]:
+    def packages(self) -> dict[str, Package]:
         """Return mapping of package names to Package objects.
 
         This enumerates the available packages in the given Python environment
@@ -369,20 +413,20 @@ class LocalPackageResolver(InstalledPackageResolver):
         the remainder of this object's life.
         """
 
-        def _pyenvs() -> Iterator[Tuple[CustomMapping, str]]:
+        def _pyenvs() -> Iterator[tuple[CustomMapping, str]]:
             for package_dir in self.package_dirs:
                 yield from self._from_one_env([str(package_dir)])
 
         return accumulate_mappings(self.__class__, _pyenvs())
 
 
-def pyenv_sources(*pyenv_paths: Path) -> Set[PyEnvSource]:
+def pyenv_sources(*pyenv_paths: Path) -> set[PyEnvSource]:
     """Convert Python environment paths into PyEnvSources.
 
     Convenience helper when you want to construct a LocalPackageResolver from
     one or more Python environment paths.
     """
-    ret: Set[PyEnvSource] = set()
+    ret: set[PyEnvSource] = set()
     for path in pyenv_paths:
         package_dirs = set(LocalPackageResolver.find_package_dirs(path))
         if not package_dirs:
@@ -418,7 +462,7 @@ class TemporaryAutoInstallResolver(BasePackageResolver):
             )
 
     @staticmethod
-    def _venv_install_cmd(venv_dir: Path, uv_exe: Optional[str] = None) -> List[str]:
+    def _venv_install_cmd(venv_dir: Path, uv_exe: Optional[str] = None) -> list[str]:
         """Return argv prefix for installing packages into the given venv.
 
         Construct the initial part of the command line (argv) for installing one
@@ -453,7 +497,7 @@ class TemporaryAutoInstallResolver(BasePackageResolver):
     @classmethod
     @contextmanager
     def installed_requirements(
-        cls, venv_dir: Path, requirements: List[str]
+        cls, venv_dir: Path, requirements: list[str]
     ) -> Iterator[Path]:
         """Install the given requirements into venv_dir.
 
@@ -498,7 +542,7 @@ class TemporaryAutoInstallResolver(BasePackageResolver):
 
     @classmethod
     @contextmanager
-    def temp_installed_requirements(cls, requirements: List[str]) -> Iterator[Path]:
+    def temp_installed_requirements(cls, requirements: list[str]) -> Iterator[Path]:
         """Create a temporary venv and install the given requirements into it.
 
         Provide a path to the temporary venv into the caller's context in which
@@ -513,7 +557,7 @@ class TemporaryAutoInstallResolver(BasePackageResolver):
             with cls.installed_requirements(Path(tmpdir), requirements) as venv_dir:
                 yield venv_dir
 
-    def lookup_packages(self, package_names: Set[str]) -> Dict[str, Package]:
+    def lookup_packages(self, package_names: set[str]) -> dict[str, Package]:
         """Convert package names into Package objects via temporary auto-install.
 
         Use the temp_installed_requirements() above to install the given package
@@ -559,14 +603,14 @@ class IdentityMapping(BasePackageResolver):
         )
         return Package(package_name, {import_name}, IdentityMapping)
 
-    def lookup_packages(self, package_names: Set[str]) -> Dict[str, Package]:
+    def lookup_packages(self, package_names: set[str]) -> dict[str, Package]:
         """Convert package names into Package objects w/the same import name."""
         return {name: self.lookup_package(name) for name in package_names}
 
 
 def setup_resolvers(
     *,
-    custom_mapping_files: Optional[Set[Path]] = None,
+    custom_mapping_files: Optional[set[Path]] = None,
     custom_mapping: Optional[CustomMapping] = None,
     pyenv_srcs: AbstractSet[PyEnvSource] = frozenset(),
     use_current_env: bool = False,
@@ -595,7 +639,7 @@ def setup_resolvers(
 def resolve_dependencies(
     dep_names: Iterable[str],
     resolvers: Iterable[BasePackageResolver],
-) -> Dict[str, Package]:
+) -> dict[str, Package]:
     """Associate dependencies with corresponding Package objects.
 
     Use the given sequence of resolvers to find Package objects for each of the
@@ -604,7 +648,7 @@ def resolve_dependencies(
     Return a dict mapping dependency names to the resolved Package objects.
     """
     deps = set(dep_names)  # consume the iterable once
-    ret: Dict[str, Package] = {}
+    ret: dict[str, Package] = {}
     for resolver in resolvers:
         unresolved = deps - ret.keys()
         if not unresolved:  # no unresolved deps left
@@ -622,7 +666,23 @@ def resolve_dependencies(
     return ret
 
 
-def validate_pyenv_source(path: Path) -> Optional[Set[PyEnvSource]]:
+def suggest_packages(
+    import_name: str, resolvers: Iterable[BasePackageResolver]
+) -> Iterator[Package]:
+    """Return Package objects that claim to provide the given import name.
+
+    We don't have an all-knowing source of what packages may provide an import
+    name, so this is a best-effort guess based on the packages available in the
+    given resolvers.
+    """
+    for resolver in resolvers:
+        try:
+            yield from resolver.lookup_import(import_name)
+        except NotImplementedError:
+            continue  # keep going on a best-effort basis
+
+
+def validate_pyenv_source(path: Path) -> Optional[set[PyEnvSource]]:
     """Check if the given directory path is a valid Python environment.
 
     - If a Python environment is found at the given path, then return a set of

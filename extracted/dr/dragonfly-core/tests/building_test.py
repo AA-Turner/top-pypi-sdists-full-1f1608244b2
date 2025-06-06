@@ -405,12 +405,10 @@ def test_check_collisions_between_stories():
 
     building.unique_stories[0].room_2ds[0].floor_to_ceiling_height = 4
     assert building.check_collisions_between_stories(raise_exception=False) != ''
-    print(building.check_collisions_between_stories(raise_exception=False))
 
     building.unique_stories[0].room_2ds[0].floor_to_ceiling_height = 3.5
     building.unique_stories[1].room_2ds[0].move(Vector3D(0, 0, -0.5))
     assert building.check_collisions_between_stories(raise_exception=False) != ''
-    print(building.check_collisions_between_stories(raise_exception=False))
 
 
 def test_honeybee_ceiling_plenum():

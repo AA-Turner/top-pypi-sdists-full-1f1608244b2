@@ -75,6 +75,10 @@ from ai.backend.common.service_discovery.etcd_discovery.service_discovery import
     ETCDServiceDiscovery,
     ETCDServiceDiscoveryArgs,
 )
+from ai.backend.common.service_discovery.redis_discovery.service_discovery import (
+    RedisServiceDiscovery,
+    RedisServiceDiscoveryArgs,
+)
 from ai.backend.common.service_discovery.service_discovery import (
     ServiceDiscoveryLoop,
     ServiceEndpoint,
@@ -84,6 +88,7 @@ from ai.backend.common.types import (
     AGENTID_MANAGER,
     AgentSelectionStrategy,
     RedisProfileTarget,
+    ServiceDiscoveryType,
 )
 from ai.backend.common.utils import env_info
 from ai.backend.logging import BraceStyleAdapter, Logger, LogLevel
@@ -476,7 +481,7 @@ async def webapp_plugin_ctx(root_app: web.Application) -> AsyncIterator[None]:
     root_ctx: RootContext = root_app["_root.context"]
     plugin_ctx = WebappPluginContext(
         root_ctx.etcd,
-        root_ctx.config_provider.config.model_dump(),
+        root_ctx.config_provider.config.model_dump(by_alias=True),
     )
     await plugin_ctx.init(
         context=root_ctx,
@@ -657,8 +662,19 @@ async def event_hub_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 
 @actxmgr
 async def service_discovery_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
-    root_ctx.service_discovery = ETCDServiceDiscovery(ETCDServiceDiscoveryArgs(root_ctx.etcd))
+    sd_type = root_ctx.config_provider.config.service_discovery.type
+    match sd_type:
+        case ServiceDiscoveryType.ETCD:
+            root_ctx.service_discovery = ETCDServiceDiscovery(
+                ETCDServiceDiscoveryArgs(root_ctx.etcd)
+            )
+        case ServiceDiscoveryType.REDIS:
+            root_ctx.service_discovery = RedisServiceDiscovery(
+                RedisServiceDiscoveryArgs(root_ctx.redis_live)
+            )
+
     root_ctx.sd_loop = ServiceDiscoveryLoop(
+        sd_type,
         root_ctx.service_discovery,
         ServiceMetadata(
             display_name=f"manager-{root_ctx.config_provider.config.manager.id}",
@@ -790,7 +806,7 @@ async def storage_manager_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 async def network_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     ctx = NetworkPluginContext(
         root_ctx.etcd,
-        root_ctx.config_provider.config.model_dump(),
+        root_ctx.config_provider.config.model_dump(by_alias=True),
     )
     root_ctx.network_plugin_ctx = ctx
     await ctx.init(
@@ -806,7 +822,7 @@ async def network_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 async def hook_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     ctx = HookPluginContext(
         root_ctx.etcd,
-        root_ctx.config_provider.config.model_dump(),
+        root_ctx.config_provider.config.model_dump(by_alias=True),
     )
     root_ctx.hook_plugin_ctx = ctx
     await ctx.init(
@@ -829,7 +845,7 @@ async def hook_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 async def event_dispatcher_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     ctx = EventDispatcherPluginContext(
         root_ctx.etcd,
-        root_ctx.config_provider.config.model_dump(),
+        root_ctx.config_provider.config.model_dump(by_alias=True),
     )
     root_ctx.event_dispatcher_plugin_ctx = ctx
     await ctx.init(
@@ -894,8 +910,12 @@ async def sched_dispatcher_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 async def monitoring_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     from .plugin.monitor import ManagerErrorPluginContext, ManagerStatsPluginContext
 
-    ectx = ManagerErrorPluginContext(root_ctx.etcd, root_ctx.config_provider.config.model_dump())
-    sctx = ManagerStatsPluginContext(root_ctx.etcd, root_ctx.config_provider.config.model_dump())
+    ectx = ManagerErrorPluginContext(
+        root_ctx.etcd, root_ctx.config_provider.config.model_dump(by_alias=True)
+    )
+    sctx = ManagerStatsPluginContext(
+        root_ctx.etcd, root_ctx.config_provider.config.model_dump(by_alias=True)
+    )
     init_success = False
 
     try:

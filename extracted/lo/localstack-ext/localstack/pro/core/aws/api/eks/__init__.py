@@ -2415,7 +2415,7 @@ class EksApi:
         context: RequestContext,
         cluster_name: String,
         encryption_config: EncryptionConfigList,
-        client_request_token: String = None,
+        client_request_token: String | None = None,
         **kwargs,
     ) -> AssociateEncryptionConfigResponse:
         """Associates an encryption configuration to an existing cluster.
@@ -2446,8 +2446,8 @@ class EksApi:
         context: RequestContext,
         cluster_name: String,
         oidc: OidcIdentityProviderConfigRequest,
-        tags: TagMap = None,
-        client_request_token: String = None,
+        tags: TagMap | None = None,
+        client_request_token: String | None = None,
         **kwargs,
     ) -> AssociateIdentityProviderConfigResponse:
         """Associates an identity provider configuration to a cluster.
@@ -2527,13 +2527,13 @@ class EksApi:
         context: RequestContext,
         cluster_name: ClusterName,
         addon_name: String,
-        addon_version: String = None,
-        service_account_role_arn: RoleArn = None,
-        resolve_conflicts: ResolveConflicts = None,
-        client_request_token: String = None,
-        tags: TagMap = None,
-        configuration_values: String = None,
-        pod_identity_associations: AddonPodIdentityAssociationsList = None,
+        addon_version: String | None = None,
+        service_account_role_arn: RoleArn | None = None,
+        resolve_conflicts: ResolveConflicts | None = None,
+        client_request_token: String | None = None,
+        tags: TagMap | None = None,
+        configuration_values: String | None = None,
+        pod_identity_associations: AddonPodIdentityAssociationsList | None = None,
         **kwargs,
     ) -> CreateAddonResponse:
         """Creates an Amazon EKS add-on.
@@ -2572,20 +2572,20 @@ class EksApi:
         name: ClusterName,
         role_arn: String,
         resources_vpc_config: VpcConfigRequest,
-        version: String = None,
-        kubernetes_network_config: KubernetesNetworkConfigRequest = None,
-        logging: Logging = None,
-        client_request_token: String = None,
-        tags: TagMap = None,
-        encryption_config: EncryptionConfigList = None,
-        outpost_config: OutpostConfigRequest = None,
-        access_config: CreateAccessConfigRequest = None,
-        bootstrap_self_managed_addons: BoxedBoolean = None,
-        upgrade_policy: UpgradePolicyRequest = None,
-        zonal_shift_config: ZonalShiftConfigRequest = None,
-        remote_network_config: RemoteNetworkConfigRequest = None,
-        compute_config: ComputeConfigRequest = None,
-        storage_config: StorageConfigRequest = None,
+        version: String | None = None,
+        kubernetes_network_config: KubernetesNetworkConfigRequest | None = None,
+        logging: Logging | None = None,
+        client_request_token: String | None = None,
+        tags: TagMap | None = None,
+        encryption_config: EncryptionConfigList | None = None,
+        outpost_config: OutpostConfigRequest | None = None,
+        access_config: CreateAccessConfigRequest | None = None,
+        bootstrap_self_managed_addons: BoxedBoolean | None = None,
+        upgrade_policy: UpgradePolicyRequest | None = None,
+        zonal_shift_config: ZonalShiftConfigRequest | None = None,
+        remote_network_config: RemoteNetworkConfigRequest | None = None,
+        compute_config: ComputeConfigRequest | None = None,
+        storage_config: StorageConfigRequest | None = None,
         **kwargs,
     ) -> CreateClusterResponse:
         """Creates an Amazon EKS control plane.
@@ -2678,11 +2678,11 @@ class EksApi:
         context: RequestContext,
         name: EksAnywhereSubscriptionName,
         term: EksAnywhereSubscriptionTerm,
-        license_quantity: Integer = None,
-        license_type: EksAnywhereSubscriptionLicenseType = None,
-        auto_renew: Boolean = None,
-        client_request_token: String = None,
-        tags: TagMap = None,
+        license_quantity: Integer | None = None,
+        license_type: EksAnywhereSubscriptionLicenseType | None = None,
+        auto_renew: Boolean | None = None,
+        client_request_token: String | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> CreateEksAnywhereSubscriptionResponse:
         """Creates an EKS Anywhere subscription. When a subscription is created, it
@@ -2718,10 +2718,10 @@ class EksApi:
         fargate_profile_name: String,
         cluster_name: String,
         pod_execution_role_arn: String,
-        subnets: StringList = None,
-        selectors: FargateProfileSelectors = None,
-        client_request_token: String = None,
-        tags: TagMap = None,
+        subnets: StringList | None = None,
+        selectors: FargateProfileSelectors | None = None,
+        client_request_token: String | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> CreateFargateProfileResponse:
         """Creates an Fargate profile for your Amazon EKS cluster. You must have at
@@ -2789,21 +2789,21 @@ class EksApi:
         nodegroup_name: String,
         subnets: StringList,
         node_role: String,
-        scaling_config: NodegroupScalingConfig = None,
-        disk_size: BoxedInteger = None,
-        instance_types: StringList = None,
-        ami_type: AMITypes = None,
-        remote_access: RemoteAccessConfig = None,
-        labels: labelsMap = None,
-        taints: taintsList = None,
-        tags: TagMap = None,
-        client_request_token: String = None,
-        launch_template: LaunchTemplateSpecification = None,
-        update_config: NodegroupUpdateConfig = None,
-        node_repair_config: NodeRepairConfig = None,
-        capacity_type: CapacityTypes = None,
-        version: String = None,
-        release_version: String = None,
+        scaling_config: NodegroupScalingConfig | None = None,
+        disk_size: BoxedInteger | None = None,
+        instance_types: StringList | None = None,
+        ami_type: AMITypes | None = None,
+        remote_access: RemoteAccessConfig | None = None,
+        labels: labelsMap | None = None,
+        taints: taintsList | None = None,
+        tags: TagMap | None = None,
+        client_request_token: String | None = None,
+        launch_template: LaunchTemplateSpecification | None = None,
+        update_config: NodegroupUpdateConfig | None = None,
+        node_repair_config: NodeRepairConfig | None = None,
+        capacity_type: CapacityTypes | None = None,
+        version: String | None = None,
+        release_version: String | None = None,
         **kwargs,
     ) -> CreateNodegroupResponse:
         """Creates a managed node group for an Amazon EKS cluster.
@@ -2875,8 +2875,8 @@ class EksApi:
         namespace: String,
         service_account: String,
         role_arn: String,
-        client_request_token: String = None,
-        tags: TagMap = None,
+        client_request_token: String | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> CreatePodIdentityAssociationResponse:
         """Creates an EKS Pod Identity association between a service account in an
@@ -2943,7 +2943,7 @@ class EksApi:
         context: RequestContext,
         cluster_name: ClusterName,
         addon_name: String,
-        preserve: Boolean = None,
+        preserve: Boolean | None = None,
         **kwargs,
     ) -> DeleteAddonResponse:
         """Deletes an Amazon EKS add-on.
@@ -3149,13 +3149,13 @@ class EksApi:
     def describe_addon_versions(
         self,
         context: RequestContext,
-        kubernetes_version: String = None,
-        max_results: DescribeAddonVersionsRequestMaxResults = None,
-        next_token: String = None,
-        addon_name: String = None,
-        types: StringList = None,
-        publishers: StringList = None,
-        owners: StringList = None,
+        kubernetes_version: String | None = None,
+        max_results: DescribeAddonVersionsRequestMaxResults | None = None,
+        next_token: String | None = None,
+        addon_name: String | None = None,
+        types: StringList | None = None,
+        publishers: StringList | None = None,
+        owners: StringList | None = None,
         **kwargs,
     ) -> DescribeAddonVersionsResponse:
         """Describes the versions for an add-on.
@@ -3208,14 +3208,14 @@ class EksApi:
     def describe_cluster_versions(
         self,
         context: RequestContext,
-        cluster_type: String = None,
-        max_results: DescribeClusterVersionMaxResults = None,
-        next_token: String = None,
-        default_only: BoxedBoolean = None,
-        include_all: BoxedBoolean = None,
-        cluster_versions: StringList = None,
-        status: ClusterVersionStatus = None,
-        version_status: VersionStatus = None,
+        cluster_type: String | None = None,
+        max_results: DescribeClusterVersionMaxResults | None = None,
+        next_token: String | None = None,
+        default_only: BoxedBoolean | None = None,
+        include_all: BoxedBoolean | None = None,
+        cluster_versions: StringList | None = None,
+        status: ClusterVersionStatus | None = None,
+        version_status: VersionStatus | None = None,
         **kwargs,
     ) -> DescribeClusterVersionsResponse:
         """Lists available Kubernetes versions for Amazon EKS clusters.
@@ -3348,8 +3348,8 @@ class EksApi:
         context: RequestContext,
         name: String,
         update_id: String,
-        nodegroup_name: String = None,
-        addon_name: String = None,
+        nodegroup_name: String | None = None,
+        addon_name: String | None = None,
         **kwargs,
     ) -> DescribeUpdateResponse:
         """Describes an update to an Amazon EKS resource.
@@ -3397,7 +3397,7 @@ class EksApi:
         context: RequestContext,
         cluster_name: String,
         identity_provider_config: IdentityProviderConfig,
-        client_request_token: String = None,
+        client_request_token: String | None = None,
         **kwargs,
     ) -> DisassociateIdentityProviderConfigResponse:
         """Disassociates an identity provider configuration from a cluster.
@@ -3426,9 +3426,9 @@ class EksApi:
         self,
         context: RequestContext,
         cluster_name: String,
-        associated_policy_arn: String = None,
-        max_results: ListAccessEntriesRequestMaxResults = None,
-        next_token: String = None,
+        associated_policy_arn: String | None = None,
+        max_results: ListAccessEntriesRequestMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListAccessEntriesResponse:
         """Lists the access entries for your cluster.
@@ -3451,8 +3451,8 @@ class EksApi:
     def list_access_policies(
         self,
         context: RequestContext,
-        max_results: ListAccessPoliciesRequestMaxResults = None,
-        next_token: String = None,
+        max_results: ListAccessPoliciesRequestMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListAccessPoliciesResponse:
         """Lists the available access policies.
@@ -3471,8 +3471,8 @@ class EksApi:
         self,
         context: RequestContext,
         cluster_name: ClusterName,
-        max_results: ListAddonsRequestMaxResults = None,
-        next_token: String = None,
+        max_results: ListAddonsRequestMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListAddonsResponse:
         """Lists the installed add-ons.
@@ -3497,8 +3497,8 @@ class EksApi:
         context: RequestContext,
         cluster_name: String,
         principal_arn: String,
-        max_results: ListAssociatedAccessPoliciesRequestMaxResults = None,
-        next_token: String = None,
+        max_results: ListAssociatedAccessPoliciesRequestMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListAssociatedAccessPoliciesResponse:
         """Lists the access policies associated with an access entry.
@@ -3520,9 +3520,9 @@ class EksApi:
     def list_clusters(
         self,
         context: RequestContext,
-        max_results: ListClustersRequestMaxResults = None,
-        next_token: String = None,
-        include: IncludeClustersList = None,
+        max_results: ListClustersRequestMaxResults | None = None,
+        next_token: String | None = None,
+        include: IncludeClustersList | None = None,
         **kwargs,
     ) -> ListClustersResponse:
         """Lists the Amazon EKS clusters in your Amazon Web Services account in the
@@ -3545,9 +3545,9 @@ class EksApi:
     def list_eks_anywhere_subscriptions(
         self,
         context: RequestContext,
-        max_results: ListEksAnywhereSubscriptionsRequestMaxResults = None,
-        next_token: String = None,
-        include_status: EksAnywhereSubscriptionStatusValues = None,
+        max_results: ListEksAnywhereSubscriptionsRequestMaxResults | None = None,
+        next_token: String | None = None,
+        include_status: EksAnywhereSubscriptionStatusValues | None = None,
         **kwargs,
     ) -> ListEksAnywhereSubscriptionsResponse:
         """Displays the full description of the subscription.
@@ -3571,8 +3571,8 @@ class EksApi:
         self,
         context: RequestContext,
         cluster_name: String,
-        max_results: FargateProfilesRequestMaxResults = None,
-        next_token: String = None,
+        max_results: FargateProfilesRequestMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListFargateProfilesResponse:
         """Lists the Fargate profiles associated with the specified cluster in your
@@ -3596,8 +3596,8 @@ class EksApi:
         self,
         context: RequestContext,
         cluster_name: String,
-        max_results: ListIdentityProviderConfigsRequestMaxResults = None,
-        next_token: String = None,
+        max_results: ListIdentityProviderConfigsRequestMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListIdentityProviderConfigsResponse:
         """Lists the identity provider configurations for your cluster.
@@ -3621,9 +3621,9 @@ class EksApi:
         self,
         context: RequestContext,
         cluster_name: String,
-        filter: InsightsFilter = None,
-        max_results: ListInsightsMaxResults = None,
-        next_token: String = None,
+        filter: InsightsFilter | None = None,
+        max_results: ListInsightsMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListInsightsResponse:
         """Returns a list of all insights checked for against the specified
@@ -3649,8 +3649,8 @@ class EksApi:
         self,
         context: RequestContext,
         cluster_name: String,
-        max_results: ListNodegroupsRequestMaxResults = None,
-        next_token: String = None,
+        max_results: ListNodegroupsRequestMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListNodegroupsResponse:
         """Lists the managed node groups associated with the specified cluster in
@@ -3676,10 +3676,10 @@ class EksApi:
         self,
         context: RequestContext,
         cluster_name: String,
-        namespace: String = None,
-        service_account: String = None,
-        max_results: ListPodIdentityAssociationsMaxResults = None,
-        next_token: String = None,
+        namespace: String | None = None,
+        service_account: String | None = None,
+        max_results: ListPodIdentityAssociationsMaxResults | None = None,
+        next_token: String | None = None,
         **kwargs,
     ) -> ListPodIdentityAssociationsResponse:
         """List the EKS Pod Identity associations in a cluster. You can filter the
@@ -3722,10 +3722,10 @@ class EksApi:
         self,
         context: RequestContext,
         name: String,
-        nodegroup_name: String = None,
-        addon_name: String = None,
-        next_token: String = None,
-        max_results: ListUpdatesRequestMaxResults = None,
+        nodegroup_name: String | None = None,
+        addon_name: String | None = None,
+        next_token: String | None = None,
+        max_results: ListUpdatesRequestMaxResults | None = None,
         **kwargs,
     ) -> ListUpdatesResponse:
         """Lists the updates associated with an Amazon EKS resource in your Amazon
@@ -3752,8 +3752,8 @@ class EksApi:
         context: RequestContext,
         name: ClusterName,
         connector_config: ConnectorConfigRequest,
-        client_request_token: String = None,
-        tags: TagMap = None,
+        client_request_token: String | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> RegisterClusterResponse:
         """Connects a Kubernetes cluster to the Amazon EKS control plane.
@@ -3835,9 +3835,9 @@ class EksApi:
         context: RequestContext,
         cluster_name: String,
         principal_arn: String,
-        kubernetes_groups: StringList = None,
-        client_request_token: String = None,
-        username: String = None,
+        kubernetes_groups: StringList | None = None,
+        client_request_token: String | None = None,
+        username: String | None = None,
         **kwargs,
     ) -> UpdateAccessEntryResponse:
         """Updates an access entry.
@@ -3864,12 +3864,12 @@ class EksApi:
         context: RequestContext,
         cluster_name: ClusterName,
         addon_name: String,
-        addon_version: String = None,
-        service_account_role_arn: RoleArn = None,
-        resolve_conflicts: ResolveConflicts = None,
-        client_request_token: String = None,
-        configuration_values: String = None,
-        pod_identity_associations: AddonPodIdentityAssociationsList = None,
+        addon_version: String | None = None,
+        service_account_role_arn: RoleArn | None = None,
+        resolve_conflicts: ResolveConflicts | None = None,
+        client_request_token: String | None = None,
+        configuration_values: String | None = None,
+        pod_identity_associations: AddonPodIdentityAssociationsList | None = None,
         **kwargs,
     ) -> UpdateAddonResponse:
         """Updates an Amazon EKS add-on.
@@ -3900,16 +3900,16 @@ class EksApi:
         self,
         context: RequestContext,
         name: String,
-        resources_vpc_config: VpcConfigRequest = None,
-        logging: Logging = None,
-        client_request_token: String = None,
-        access_config: UpdateAccessConfigRequest = None,
-        upgrade_policy: UpgradePolicyRequest = None,
-        zonal_shift_config: ZonalShiftConfigRequest = None,
-        compute_config: ComputeConfigRequest = None,
-        kubernetes_network_config: KubernetesNetworkConfigRequest = None,
-        storage_config: StorageConfigRequest = None,
-        remote_network_config: RemoteNetworkConfigRequest = None,
+        resources_vpc_config: VpcConfigRequest | None = None,
+        logging: Logging | None = None,
+        client_request_token: String | None = None,
+        access_config: UpdateAccessConfigRequest | None = None,
+        upgrade_policy: UpgradePolicyRequest | None = None,
+        zonal_shift_config: ZonalShiftConfigRequest | None = None,
+        compute_config: ComputeConfigRequest | None = None,
+        kubernetes_network_config: KubernetesNetworkConfigRequest | None = None,
+        storage_config: StorageConfigRequest | None = None,
+        remote_network_config: RemoteNetworkConfigRequest | None = None,
         **kwargs,
     ) -> UpdateClusterConfigResponse:
         """Updates an Amazon EKS cluster configuration. Your cluster continues to
@@ -3997,8 +3997,8 @@ class EksApi:
         context: RequestContext,
         name: String,
         version: String,
-        client_request_token: String = None,
-        force: Boolean = None,
+        client_request_token: String | None = None,
+        force: Boolean | None = None,
         **kwargs,
     ) -> UpdateClusterVersionResponse:
         """Updates an Amazon EKS cluster to the specified Kubernetes version. Your
@@ -4042,7 +4042,7 @@ class EksApi:
         context: RequestContext,
         id: String,
         auto_renew: Boolean,
-        client_request_token: String = None,
+        client_request_token: String | None = None,
         **kwargs,
     ) -> UpdateEksAnywhereSubscriptionResponse:
         """Update an EKS Anywhere Subscription. Only auto renewal and tags can be
@@ -4068,12 +4068,12 @@ class EksApi:
         context: RequestContext,
         cluster_name: String,
         nodegroup_name: String,
-        labels: UpdateLabelsPayload = None,
-        taints: UpdateTaintsPayload = None,
-        scaling_config: NodegroupScalingConfig = None,
-        update_config: NodegroupUpdateConfig = None,
-        node_repair_config: NodeRepairConfig = None,
-        client_request_token: String = None,
+        labels: UpdateLabelsPayload | None = None,
+        taints: UpdateTaintsPayload | None = None,
+        scaling_config: NodegroupScalingConfig | None = None,
+        update_config: NodegroupUpdateConfig | None = None,
+        node_repair_config: NodeRepairConfig | None = None,
+        client_request_token: String | None = None,
         **kwargs,
     ) -> UpdateNodegroupConfigResponse:
         """Updates an Amazon EKS managed node group configuration. Your node group
@@ -4112,11 +4112,11 @@ class EksApi:
         context: RequestContext,
         cluster_name: String,
         nodegroup_name: String,
-        version: String = None,
-        release_version: String = None,
-        launch_template: LaunchTemplateSpecification = None,
-        force: Boolean = None,
-        client_request_token: String = None,
+        version: String | None = None,
+        release_version: String | None = None,
+        launch_template: LaunchTemplateSpecification | None = None,
+        force: Boolean | None = None,
+        client_request_token: String | None = None,
         **kwargs,
     ) -> UpdateNodegroupVersionResponse:
         """Updates the Kubernetes version or AMI version of an Amazon EKS managed
@@ -4180,8 +4180,8 @@ class EksApi:
         context: RequestContext,
         cluster_name: String,
         association_id: String,
-        role_arn: String = None,
-        client_request_token: String = None,
+        role_arn: String | None = None,
+        client_request_token: String | None = None,
         **kwargs,
     ) -> UpdatePodIdentityAssociationResponse:
         """Updates a EKS Pod Identity association. Only the IAM role can be

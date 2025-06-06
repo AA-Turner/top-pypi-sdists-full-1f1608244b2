@@ -189,15 +189,6 @@ class Collective2SignalExport(QuantConnect.Algorithm.Framework.Portfolio.SignalE
         def strike_price(self, value: typing.Optional[float]) -> None:
             ...
 
-        @property
-        def price_multiplier(self) -> float:
-            """The multiplier to apply to the Exchange price to get the C2-formatted price. Default is 1"""
-            ...
-
-        @price_multiplier.setter
-        def price_multiplier(self, value: float) -> None:
-            ...
-
     @property
     def destination(self) -> System.Uri:
         """Collective2 API endpoint"""

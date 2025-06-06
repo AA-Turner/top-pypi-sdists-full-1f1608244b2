@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: agno
-Version: 1.5.8
+Version: 1.5.9
 Summary: Agno: a lightweight library for building Multi-Agent Systems
 Author-email: Ashpreet Bedi <ashpreet@agno.com>
 License: Copyright (c) Agno, Inc.
@@ -452,6 +452,8 @@ Provides-Extra: cerebras
 Requires-Dist: cerebras-cloud-sdk; extra == "cerebras"
 Provides-Extra: cohere
 Requires-Dist: cohere; extra == "cohere"
+Provides-Extra: infinity
+Requires-Dist: infinity_client; extra == "infinity"
 Provides-Extra: google
 Requires-Dist: google-genai; extra == "google"
 Provides-Extra: groq
@@ -495,6 +497,8 @@ Provides-Extra: fal
 Requires-Dist: fal_client; extra == "fal"
 Provides-Extra: firecrawl
 Requires-Dist: firecrawl-py; extra == "firecrawl"
+Provides-Extra: crawl4ai
+Requires-Dist: crawl4ai; extra == "crawl4ai"
 Provides-Extra: github
 Requires-Dist: PyGithub; extra == "github"
 Provides-Extra: gmail
@@ -556,7 +560,7 @@ Requires-Dist: sqlalchemy; extra == "singlestore"
 Provides-Extra: weaviate
 Requires-Dist: weaviate-client; extra == "weaviate"
 Provides-Extra: milvusdb
-Requires-Dist: pymilvus; extra == "milvusdb"
+Requires-Dist: pymilvus>=2.5.10; extra == "milvusdb"
 Provides-Extra: clickhouse
 Requires-Dist: clickhouse-connect; extra == "clickhouse"
 Provides-Extra: pinecone
@@ -574,6 +578,8 @@ Provides-Extra: markdown
 Requires-Dist: unstructured; extra == "markdown"
 Requires-Dist: markdown; extra == "markdown"
 Requires-Dist: aiofiles; extra == "markdown"
+Provides-Extra: agui
+Requires-Dist: ag-ui-protocol; extra == "agui"
 Provides-Extra: huggingface
 Requires-Dist: huggingface-hub; extra == "huggingface"
 Provides-Extra: performance
@@ -591,9 +597,11 @@ Requires-Dist: agno[anthropic]; extra == "models"
 Requires-Dist: agno[azure]; extra == "models"
 Requires-Dist: agno[cerebras]; extra == "models"
 Requires-Dist: agno[cohere]; extra == "models"
+Requires-Dist: agno[infinity]; extra == "models"
 Requires-Dist: agno[google]; extra == "models"
 Requires-Dist: agno[groq]; extra == "models"
 Requires-Dist: agno[ibm]; extra == "models"
+Requires-Dist: agno[infinity]; extra == "models"
 Requires-Dist: agno[litellm]; extra == "models"
 Requires-Dist: agno[meta]; extra == "models"
 Requires-Dist: agno[mistral]; extra == "models"
@@ -609,6 +617,7 @@ Requires-Dist: agno[duckdb]; extra == "tools"
 Requires-Dist: agno[newspaper]; extra == "tools"
 Requires-Dist: agno[youtube]; extra == "tools"
 Requires-Dist: agno[firecrawl]; extra == "tools"
+Requires-Dist: agno[crawl4ai]; extra == "tools"
 Requires-Dist: agno[github]; extra == "tools"
 Requires-Dist: agno[gmail]; extra == "tools"
 Requires-Dist: agno[googlemaps]; extra == "tools"
@@ -661,6 +670,7 @@ Requires-Dist: agno[knowledge]; extra == "tests"
 Requires-Dist: agno[embedders]; extra == "tests"
 Requires-Dist: agno[performance]; extra == "tests"
 Requires-Dist: agno[cookbooks]; extra == "tests"
+Requires-Dist: agno[agui]; extra == "tests"
 Requires-Dist: twine; extra == "tests"
 Requires-Dist: build; extra == "tests"
 Dynamic: license-file

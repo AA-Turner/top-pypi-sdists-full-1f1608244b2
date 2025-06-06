@@ -4,6 +4,7 @@ import hashlib
 import io
 import logging
 import pathlib
+import re
 import shutil
 import threading
 import time
@@ -21,6 +22,8 @@ from babeldoc.assets.assets import warmup
 from babeldoc.const import CACHE_FOLDER
 from babeldoc.converter import TranslateConverter
 from babeldoc.document_il import il_version_1
+from babeldoc.document_il.babeldoc_exception.BabelDOCException import ExtractTextError
+from babeldoc.document_il.babeldoc_exception.BabelDOCException import ScannedPDFError
 from babeldoc.document_il.backend.pdf_creater import SAVE_PDF_STAGE_NAME
 from babeldoc.document_il.backend.pdf_creater import SUBSET_FONT_STAGE_NAME
 from babeldoc.document_il.backend.pdf_creater import PDFCreater
@@ -684,12 +687,30 @@ def fix_media_box(doc: Document) -> None:
     return mediabox_data
 
 
+def check_cid_char(il: il_version_1.Document):
+    chars = []
+    for page in il.page:
+        chars.extend(page.pdf_character)
+
+    cid_count = 0
+    for char in chars:
+        if re.match(r"^\(cid:\d+\)$", char.char_unicode):
+            cid_count += 1
+
+    return cid_count > len(chars) * 0.8
+
+
 def _do_translate_single(
     pm: ProgressMonitor,
     translation_config: TranslationConfig,
 ) -> TranslateResult:
     """Original translation logic for a single document or part"""
     translation_config.progress_monitor = pm
+
+    if translation_config.shared_context_cross_split_part.auto_enabled_ocr_workaround:
+        translation_config.ocr_workaround = True
+        translation_config.skip_scanned_detection = True
+
     original_pdf_path = translation_config.input_file
     if translation_config.debug:
         doc_input = Document(original_pdf_path)
@@ -725,6 +746,23 @@ def _do_translate_single(
 
     resfont = None
     doc_pdf2zh.save(temp_pdf_path)
+
+    if not translation_config.skip_scanned_detection and DetectScannedFile(
+        translation_config
+    ).fast_check(doc_pdf2zh):
+        if translation_config.auto_enable_ocr_workaround:
+            logger.warning(
+                "Fast scanned check hit, Turning on OCR workaround.",
+            )
+            translation_config.shared_context_cross_split_part.auto_enabled_ocr_workaround = True
+            translation_config.ocr_workaround = True
+            translation_config.skip_scanned_detection = True
+        else:
+            logger.warning(
+                "Fast scanned check hit, Please check the input PDF file.",
+            )
+            raise ScannedPDFError("Scanned PDF detected.")
+
     il_creater = ILCreater(translation_config)
     il_creater.mupdf = doc_pdf2zh
     xml_converter = XMLConverter()
@@ -746,6 +784,9 @@ def _do_translate_single(
             docs,
             translation_config.get_working_file_path("create_il.debug.json"),
         )
+
+    if check_cid_char(docs):
+        raise ExtractTextError("The document contains too many CID chars.")
 
     # Rest of the original translation logic...
     # [Previous implementation of do_translate continues here]

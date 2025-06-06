@@ -46,7 +46,7 @@ class Garmin:
             "/usersummary-service/usersummary/daily"
         )
         self.garmin_connect_metrics_url = (
-            "/metrics-service/metrics/maxmet/daily"
+            "/metrics-service/metrics/maxmet/latest"
         )
         self.garmin_connect_daily_hydration_url = (
             "/usersummary-service/usersummary/hydration/daily"
@@ -220,7 +220,7 @@ class Garmin:
     def download(self, path, **kwargs):
         return self.garth.download(path, **kwargs)
 
-    def login(self, /, tokenstore: Optional[str] = None) -> bool | dict:
+    def login(self, /, tokenstore: Optional[str] = None) -> tuple[Any, Any]:
         """Log in using Garth."""
         tokenstore = tokenstore or os.getenv("GARMINTOKENS")
 
@@ -373,7 +373,7 @@ class Garmin:
         bmi: Optional[float] = None,
     ):
         dt = datetime.fromisoformat(timestamp) if timestamp else datetime.now()
-        fitEncoder = fit.FitEncoderWeight()
+        fitEncoder = FitEncoderWeight()
         fitEncoder.write_file_info()
         fitEncoder.write_file_creator()
         fitEncoder.write_device_info(dt)
@@ -601,7 +601,7 @@ class Garmin:
     def get_max_metrics(self, cdate: str) -> Dict[str, Any]:
         """Return available max metric data for 'cdate' format 'YYYY-MM-DD'."""
 
-        url = f"{self.garmin_connect_metrics_url}/{cdate}/{cdate}"
+        url = f"{self.garmin_connect_metrics_url}/{cdate}"
         logger.debug("Requesting max metrics")
 
         return self.connectapi(url)
@@ -692,7 +692,7 @@ class Garmin:
         """
 
         url = f"{self.garmin_daily_events_url}?calendarDate={cdate}"
-        logger.debug("Requesting all day stress data")
+        logger.debug("Requesting all day events data")
 
         return self.connectapi(url)
 
@@ -980,16 +980,20 @@ class Garmin:
 
         return self.connectapi(url)
 
-    def get_activities(self, start: int = 0, limit: int = 20):
+    def get_activities(self, start: int = 0, limit: int = 20, activitytype: Optional[str] = None):
         """
         Return available activities.
         :param start: Starting activity offset, where 0 means the most recent activity
         :param limit: Number of activities to return
+        :param activitytype: (Optional) Filter activities by type
         :return: List of activities from Garmin
         """
 
         url = self.garmin_connect_activities
         params = {"start": str(start), "limit": str(limit)}
+        if activitytype:
+            params["activityType"] = str(activitytype)
+
         logger.debug("Requesting activities")
 
         return self.connectapi(url, params=params)
@@ -1389,12 +1393,15 @@ class Garmin:
 
         return self.connectapi(url, params=params)
 
-    def get_gear_ativities(self, gearUUID):
-        """Return activities where gear uuid was used."""
-
+    def get_gear_ativities(self, gearUUID, limit = 9999):
+        """Return activities where gear uuid was used.
+        :param gearUUID: UUID of the gear to get activities for
+        :param limit: Maximum number of activities to return (default: 9999)
+        :return: List of activities where the specified gear was used
+        """
         gearUUID = str(gearUUID)
 
-        url = f"{self.garmin_connect_activities_baseurl}{gearUUID}/gear?start=0&limit=9999"
+        url = f"{self.garmin_connect_activities_baseurl}{gearUUID}/gear?start=0&limit={limit}"
         logger.debug("Requesting activities for gearUUID %s", gearUUID)
 
         return self.connectapi(url)

@@ -1336,9 +1336,9 @@ class TextractApi:
         context: RequestContext,
         document: Document,
         feature_types: FeatureTypes,
-        human_loop_config: HumanLoopConfig = None,
-        queries_config: QueriesConfig = None,
-        adapters_config: AdaptersConfig = None,
+        human_loop_config: HumanLoopConfig | None = None,
+        queries_config: QueriesConfig | None = None,
+        adapters_config: AdaptersConfig | None = None,
         **kwargs,
     ) -> AnalyzeDocumentResponse:
         """Analyzes an input document for relationships between detected items.
@@ -1470,10 +1470,10 @@ class TextractApi:
         context: RequestContext,
         adapter_name: AdapterName,
         feature_types: FeatureTypes,
-        client_request_token: ClientRequestToken = None,
-        description: AdapterDescription = None,
-        auto_update: AutoUpdate = None,
-        tags: TagMap = None,
+        client_request_token: ClientRequestToken | None = None,
+        description: AdapterDescription | None = None,
+        auto_update: AutoUpdate | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> CreateAdapterResponse:
         """Creates an adapter, which can be fine-tuned for enhanced performance on
@@ -1510,9 +1510,9 @@ class TextractApi:
         adapter_id: AdapterId,
         dataset_config: AdapterVersionDatasetConfig,
         output_config: OutputConfig,
-        client_request_token: ClientRequestToken = None,
-        kms_key_id: KMSKeyId = None,
-        tags: TagMap = None,
+        client_request_token: ClientRequestToken | None = None,
+        kms_key_id: KMSKeyId | None = None,
+        tags: TagMap | None = None,
         **kwargs,
     ) -> CreateAdapterVersionResponse:
         """Creates a new version of an adapter. Operates on a provided AdapterId
@@ -1682,8 +1682,8 @@ class TextractApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> GetDocumentAnalysisResponse:
         """Gets the results for an Amazon Textract asynchronous operation that
@@ -1768,8 +1768,8 @@ class TextractApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> GetDocumentTextDetectionResponse:
         """Gets the results for an Amazon Textract asynchronous operation that
@@ -1828,8 +1828,8 @@ class TextractApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> GetExpenseAnalysisResponse:
         """Gets the results for an Amazon Textract asynchronous operation that
@@ -1881,8 +1881,8 @@ class TextractApi:
         self,
         context: RequestContext,
         job_id: JobId,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> GetLendingAnalysisResponse:
         """Gets the results for an Amazon Textract asynchronous operation that
@@ -1953,11 +1953,11 @@ class TextractApi:
     def list_adapter_versions(
         self,
         context: RequestContext,
-        adapter_id: AdapterId = None,
-        after_creation_time: DateTime = None,
-        before_creation_time: DateTime = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
+        adapter_id: AdapterId | None = None,
+        after_creation_time: DateTime | None = None,
+        before_creation_time: DateTime | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListAdapterVersionsResponse:
         """List all version of an adapter that meet the specified filtration
@@ -1985,10 +1985,10 @@ class TextractApi:
     def list_adapters(
         self,
         context: RequestContext,
-        after_creation_time: DateTime = None,
-        before_creation_time: DateTime = None,
-        max_results: MaxResults = None,
-        next_token: PaginationToken = None,
+        after_creation_time: DateTime | None = None,
+        before_creation_time: DateTime | None = None,
+        max_results: MaxResults | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListAdaptersResponse:
         """Lists all adapters that match the specified filtration criteria.
@@ -2032,13 +2032,13 @@ class TextractApi:
         context: RequestContext,
         document_location: DocumentLocation,
         feature_types: FeatureTypes,
-        client_request_token: ClientRequestToken = None,
-        job_tag: JobTag = None,
-        notification_channel: NotificationChannel = None,
-        output_config: OutputConfig = None,
-        kms_key_id: KMSKeyId = None,
-        queries_config: QueriesConfig = None,
-        adapters_config: AdaptersConfig = None,
+        client_request_token: ClientRequestToken | None = None,
+        job_tag: JobTag | None = None,
+        notification_channel: NotificationChannel | None = None,
+        output_config: OutputConfig | None = None,
+        kms_key_id: KMSKeyId | None = None,
+        queries_config: QueriesConfig | None = None,
+        adapters_config: AdaptersConfig | None = None,
         **kwargs,
     ) -> StartDocumentAnalysisResponse:
         """Starts the asynchronous analysis of an input document for relationships
@@ -2095,11 +2095,11 @@ class TextractApi:
         self,
         context: RequestContext,
         document_location: DocumentLocation,
-        client_request_token: ClientRequestToken = None,
-        job_tag: JobTag = None,
-        notification_channel: NotificationChannel = None,
-        output_config: OutputConfig = None,
-        kms_key_id: KMSKeyId = None,
+        client_request_token: ClientRequestToken | None = None,
+        job_tag: JobTag | None = None,
+        notification_channel: NotificationChannel | None = None,
+        output_config: OutputConfig | None = None,
+        kms_key_id: KMSKeyId | None = None,
         **kwargs,
     ) -> StartDocumentTextDetectionResponse:
         """Starts the asynchronous detection of text in a document. Amazon Textract
@@ -2152,11 +2152,11 @@ class TextractApi:
         self,
         context: RequestContext,
         document_location: DocumentLocation,
-        client_request_token: ClientRequestToken = None,
-        job_tag: JobTag = None,
-        notification_channel: NotificationChannel = None,
-        output_config: OutputConfig = None,
-        kms_key_id: KMSKeyId = None,
+        client_request_token: ClientRequestToken | None = None,
+        job_tag: JobTag | None = None,
+        notification_channel: NotificationChannel | None = None,
+        output_config: OutputConfig | None = None,
+        kms_key_id: KMSKeyId | None = None,
         **kwargs,
     ) -> StartExpenseAnalysisResponse:
         """Starts the asynchronous analysis of invoices or receipts for data like
@@ -2210,11 +2210,11 @@ class TextractApi:
         self,
         context: RequestContext,
         document_location: DocumentLocation,
-        client_request_token: ClientRequestToken = None,
-        job_tag: JobTag = None,
-        notification_channel: NotificationChannel = None,
-        output_config: OutputConfig = None,
-        kms_key_id: KMSKeyId = None,
+        client_request_token: ClientRequestToken | None = None,
+        job_tag: JobTag | None = None,
+        notification_channel: NotificationChannel | None = None,
+        output_config: OutputConfig | None = None,
+        kms_key_id: KMSKeyId | None = None,
         **kwargs,
     ) -> StartLendingAnalysisResponse:
         """Starts the classification and analysis of an input document.
@@ -2321,9 +2321,9 @@ class TextractApi:
         self,
         context: RequestContext,
         adapter_id: AdapterId,
-        description: AdapterDescription = None,
-        adapter_name: AdapterName = None,
-        auto_update: AutoUpdate = None,
+        description: AdapterDescription | None = None,
+        adapter_name: AdapterName | None = None,
+        auto_update: AutoUpdate | None = None,
         **kwargs,
     ) -> UpdateAdapterResponse:
         """Update the configuration for an adapter. FeatureTypes configurations

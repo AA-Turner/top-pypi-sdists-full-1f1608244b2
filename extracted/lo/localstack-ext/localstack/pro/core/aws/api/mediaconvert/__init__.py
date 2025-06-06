@@ -413,6 +413,7 @@ class AudioSelectorType(StrEnum):
     TRACK = "TRACK"
     LANGUAGE_CODE = "LANGUAGE_CODE"
     HLS_RENDITION_GROUP = "HLS_RENDITION_GROUP"
+    ALL_PCM = "ALL_PCM"
 
 
 class AudioTypeControl(StrEnum):
@@ -634,6 +635,11 @@ class CaptionSourceType(StrEnum):
     NULL_SOURCE = "NULL_SOURCE"
     IMSC = "IMSC"
     WEBVTT = "WEBVTT"
+
+
+class CaptionSourceUpconvertSTLToTeletext(StrEnum):
+    UPCONVERT = "UPCONVERT"
+    DISABLED = "DISABLED"
 
 
 class ChromaPositionMode(StrEnum):
@@ -1292,6 +1298,15 @@ class Format(StrEnum):
     quicktime = "quicktime"
     matroska = "matroska"
     webm = "webm"
+
+
+class FrameMetricType(StrEnum):
+    PSNR = "PSNR"
+    SSIM = "SSIM"
+    MS_SSIM = "MS_SSIM"
+    PSNR_HVS = "PSNR_HVS"
+    VMAF = "VMAF"
+    QVBR = "QVBR"
 
 
 class GifFramerateControl(StrEnum):
@@ -3475,11 +3490,14 @@ class FrameRate(TypedDict, total=False):
     Numerator: Optional[_integer]
 
 
+_long = int
+
+
 class AudioProperties(TypedDict, total=False):
     """Details about the media file's audio track."""
 
     BitDepth: Optional[_integer]
-    BitRate: Optional[_integer]
+    BitRate: Optional[_long]
     Channels: Optional[_integer]
     FrameRate: Optional[FrameRate]
     LanguageCode: Optional[_string]
@@ -3637,6 +3655,9 @@ class Av1QvbrSettings(TypedDict, total=False):
     QvbrQualityLevelFineTune: Optional[_doubleMin0Max1]
 
 
+_listOfFrameMetricType = List[FrameMetricType]
+
+
 class Av1Settings(TypedDict, total=False):
     """Required when you set Codec, under VideoDescription>CodecSettings to the
     value AV1.
@@ -3652,6 +3673,7 @@ class Av1Settings(TypedDict, total=False):
     GopSize: Optional[_doubleMin0]
     MaxBitrate: Optional[_integerMin1000Max1152000000]
     NumberBFramesBetweenReferenceFrames: Optional[_integerMin0Max15]
+    PerFrameMetrics: Optional[_listOfFrameMetricType]
     QvbrSettings: Optional[Av1QvbrSettings]
     RateControlMode: Optional[Av1RateControlMode]
     Slices: Optional[_integerMin1Max32]
@@ -3693,6 +3715,7 @@ class AvcIntraSettings(TypedDict, total=False):
     FramerateDenominator: Optional[_integerMin1Max1001]
     FramerateNumerator: Optional[_integerMin24Max60000]
     InterlaceMode: Optional[AvcIntraInterlaceMode]
+    PerFrameMetrics: Optional[_listOfFrameMetricType]
     ScanTypeConversionMode: Optional[AvcIntraScanTypeConversionMode]
     SlowPal: Optional[AvcIntraSlowPal]
     Telecine: Optional[AvcIntraTelecine]
@@ -3981,6 +4004,7 @@ class FileSourceSettings(TypedDict, total=False):
     ]
     TimeDelta: Optional[_integerMinNegative2147483648Max2147483647]
     TimeDeltaUnits: Optional[FileSourceTimeDeltaUnits]
+    UpconvertSTLToTeletext: Optional[CaptionSourceUpconvertSTLToTeletext]
 
 
 class EmbeddedSourceSettings(TypedDict, total=False):
@@ -4265,7 +4289,7 @@ class VideoProperties(TypedDict, total=False):
     """Details about the media file's video track."""
 
     BitDepth: Optional[_integer]
-    BitRate: Optional[_integer]
+    BitRate: Optional[_long]
     ColorPrimaries: Optional[ColorPrimaries]
     FrameRate: Optional[FrameRate]
     Height: Optional[_integer]
@@ -4767,6 +4791,7 @@ class XavcSettings(TypedDict, total=False):
     FramerateConversionAlgorithm: Optional[XavcFramerateConversionAlgorithm]
     FramerateDenominator: Optional[_integerMin1Max1001]
     FramerateNumerator: Optional[_integerMin24Max60000]
+    PerFrameMetrics: Optional[_listOfFrameMetricType]
     Profile: Optional[XavcProfile]
     SlowPal: Optional[XavcSlowPal]
     Softness: Optional[_integerMin0Max128]
@@ -4858,6 +4883,7 @@ class ProresSettings(TypedDict, total=False):
     ParControl: Optional[ProresParControl]
     ParDenominator: Optional[_integerMin1Max2147483647]
     ParNumerator: Optional[_integerMin1Max2147483647]
+    PerFrameMetrics: Optional[_listOfFrameMetricType]
     ScanTypeConversionMode: Optional[ProresScanTypeConversionMode]
     SlowPal: Optional[ProresSlowPal]
     Telecine: Optional[ProresTelecine]
@@ -4889,6 +4915,7 @@ class Mpeg2Settings(TypedDict, total=False):
     ParControl: Optional[Mpeg2ParControl]
     ParDenominator: Optional[_integerMin1Max2147483647]
     ParNumerator: Optional[_integerMin1Max2147483647]
+    PerFrameMetrics: Optional[_listOfFrameMetricType]
     QualityTuningLevel: Optional[Mpeg2QualityTuningLevel]
     RateControlMode: Optional[Mpeg2RateControlMode]
     ScanTypeConversionMode: Optional[Mpeg2ScanTypeConversionMode]
@@ -4943,6 +4970,7 @@ class H265Settings(TypedDict, total=False):
     ParControl: Optional[H265ParControl]
     ParDenominator: Optional[_integerMin1Max2147483647]
     ParNumerator: Optional[_integerMin1Max2147483647]
+    PerFrameMetrics: Optional[_listOfFrameMetricType]
     QualityTuningLevel: Optional[H265QualityTuningLevel]
     QvbrSettings: Optional[H265QvbrSettings]
     RateControlMode: Optional[H265RateControlMode]
@@ -5002,6 +5030,7 @@ class H264Settings(TypedDict, total=False):
     ParControl: Optional[H264ParControl]
     ParDenominator: Optional[_integerMin1Max2147483647]
     ParNumerator: Optional[_integerMin1Max2147483647]
+    PerFrameMetrics: Optional[_listOfFrameMetricType]
     QualityTuningLevel: Optional[H264QualityTuningLevel]
     QvbrSettings: Optional[H264QvbrSettings]
     RateControlMode: Optional[H264RateControlMode]
@@ -5359,6 +5388,7 @@ class OutputGroupSettings(TypedDict, total=False):
     FileGroupSettings: Optional[FileGroupSettings]
     HlsGroupSettings: Optional[HlsGroupSettings]
     MsSmoothGroupSettings: Optional[MsSmoothGroupSettings]
+    PerFrameMetrics: Optional[_listOfFrameMetricType]
     Type: Optional[OutputGroupType]
 
 
@@ -5536,12 +5566,26 @@ class VideoOverlayInput(TypedDict, total=False):
     TimecodeStart: Optional[_stringMin11Max11Pattern01D20305D205D]
 
 
+class VideoOverlayCrop(TypedDict, total=False):
+    """Specify a rectangle of content to crop and use from your video overlay's
+    input video. When you do, MediaConvert uses the cropped dimensions that
+    you specify under X offset, Y offset, Width, and Height.
+    """
+
+    Height: Optional[_integerMin0Max2147483647]
+    Unit: Optional[VideoOverlayUnit]
+    Width: Optional[_integerMin0Max2147483647]
+    X: Optional[_integerMin0Max2147483647]
+    Y: Optional[_integerMin0Max2147483647]
+
+
 class VideoOverlay(TypedDict, total=False):
     """Overlay one or more videos on top of your input video. For more
     information, see
     https://docs.aws.amazon.com/mediaconvert/latest/ug/video-overlays.html
     """
 
+    Crop: Optional[VideoOverlayCrop]
     EndTimecode: Optional[_stringPattern010920405090509092]
     InitialPosition: Optional[VideoOverlayPosition]
     Input: Optional[VideoOverlayInput]
@@ -5592,9 +5636,9 @@ class DynamicAudioSelector(TypedDict, total=False):
     your source when you submit your job, but want to select multiple audio
     tracks. When you include an audio track in your output and specify this
     Dynamic audio selector as the Audio source, MediaConvert creates an
-    output audio track for each dynamically selected track. Note that when
-    you include a Dynamic audio selector for two or more inputs, each input
-    must have the same number of audio tracks and audio channels.
+    audio track within that output for each dynamically selected track. Note
+    that when you include a Dynamic audio selector for two or more inputs,
+    each input must have the same number of audio tracks and audio channels.
     """
 
     AudioDurationCorrection: Optional[AudioDurationCorrection]
@@ -6289,9 +6333,6 @@ class ListVersionsResponse(TypedDict, total=False):
     Versions: Optional[_listOfJobEngineVersion]
 
 
-_long = int
-
-
 class Metadata(TypedDict, total=False):
     """Metadata and other file information."""
 
@@ -6470,18 +6511,18 @@ class MediaconvertApi:
         context: RequestContext,
         role: _string,
         settings: JobSettings,
-        acceleration_settings: AccelerationSettings = None,
-        billing_tags_source: BillingTagsSource = None,
-        client_request_token: _string = None,
-        hop_destinations: _listOfHopDestination = None,
-        job_engine_version: _string = None,
-        job_template: _string = None,
-        priority: _integerMinNegative50Max50 = None,
-        queue: _string = None,
-        simulate_reserved_queue: SimulateReservedQueue = None,
-        status_update_interval: StatusUpdateInterval = None,
-        tags: _mapOf__string = None,
-        user_metadata: _mapOf__string = None,
+        acceleration_settings: AccelerationSettings | None = None,
+        billing_tags_source: BillingTagsSource | None = None,
+        client_request_token: _string | None = None,
+        hop_destinations: _listOfHopDestination | None = None,
+        job_engine_version: _string | None = None,
+        job_template: _string | None = None,
+        priority: _integerMinNegative50Max50 | None = None,
+        queue: _string | None = None,
+        simulate_reserved_queue: SimulateReservedQueue | None = None,
+        status_update_interval: StatusUpdateInterval | None = None,
+        tags: _mapOf__string | None = None,
+        user_metadata: _mapOf__string | None = None,
         **kwargs,
     ) -> CreateJobResponse:
         """Create a new transcoding job. For information about jobs and job
@@ -6491,7 +6532,9 @@ class MediaconvertApi:
         :param role: Required.
         :param settings: JobSettings contains all the transcode settings for a job.
         :param acceleration_settings: Optional.
-        :param billing_tags_source: Optional.
+        :param billing_tags_source: Optionally choose a Billing tags source that AWS Billing and Cost
+        Management will use to display tags for individual output costs on any
+        billing report that you set up.
         :param client_request_token: Prevent duplicate jobs from being created and ensure idempotency for
         your requests.
         :param hop_destinations: Optional.
@@ -6520,14 +6563,14 @@ class MediaconvertApi:
         context: RequestContext,
         settings: JobTemplateSettings,
         name: _string,
-        acceleration_settings: AccelerationSettings = None,
-        category: _string = None,
-        description: _string = None,
-        hop_destinations: _listOfHopDestination = None,
-        priority: _integerMinNegative50Max50 = None,
-        queue: _string = None,
-        status_update_interval: StatusUpdateInterval = None,
-        tags: _mapOf__string = None,
+        acceleration_settings: AccelerationSettings | None = None,
+        category: _string | None = None,
+        description: _string | None = None,
+        hop_destinations: _listOfHopDestination | None = None,
+        priority: _integerMinNegative50Max50 | None = None,
+        queue: _string | None = None,
+        status_update_interval: StatusUpdateInterval | None = None,
+        tags: _mapOf__string | None = None,
         **kwargs,
     ) -> CreateJobTemplateResponse:
         """Create a new job template. For information about job templates see the
@@ -6563,9 +6606,9 @@ class MediaconvertApi:
         context: RequestContext,
         settings: PresetSettings,
         name: _string,
-        category: _string = None,
-        description: _string = None,
-        tags: _mapOf__string = None,
+        category: _string | None = None,
+        description: _string | None = None,
+        tags: _mapOf__string | None = None,
         **kwargs,
     ) -> CreatePresetResponse:
         """Create a new preset. For information about job templates see the User
@@ -6591,12 +6634,12 @@ class MediaconvertApi:
         self,
         context: RequestContext,
         name: _string,
-        concurrent_jobs: _integer = None,
-        description: _string = None,
-        pricing_plan: PricingPlan = None,
-        reservation_plan_settings: ReservationPlanSettings = None,
-        status: QueueStatus = None,
-        tags: _mapOf__string = None,
+        concurrent_jobs: _integer | None = None,
+        description: _string | None = None,
+        pricing_plan: PricingPlan | None = None,
+        reservation_plan_settings: ReservationPlanSettings | None = None,
+        status: QueueStatus | None = None,
+        tags: _mapOf__string | None = None,
         **kwargs,
     ) -> CreateQueueResponse:
         """Create a new transcoding queue. For information about queues, see
@@ -6688,9 +6731,9 @@ class MediaconvertApi:
     def describe_endpoints(
         self,
         context: RequestContext,
-        max_results: _integer = None,
-        mode: DescribeEndpointsMode = None,
-        next_token: _string = None,
+        max_results: _integer | None = None,
+        mode: DescribeEndpointsMode | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> DescribeEndpointsResponse:
         """Send a request with an empty body to the regional API endpoint to get
@@ -6812,11 +6855,11 @@ class MediaconvertApi:
     def list_job_templates(
         self,
         context: RequestContext,
-        category: _string = None,
-        list_by: JobTemplateListBy = None,
-        max_results: _integerMin1Max20 = None,
-        next_token: _string = None,
-        order: Order = None,
+        category: _string | None = None,
+        list_by: JobTemplateListBy | None = None,
+        max_results: _integerMin1Max20 | None = None,
+        next_token: _string | None = None,
+        order: Order | None = None,
         **kwargs,
     ) -> ListJobTemplatesResponse:
         """Retrieve a JSON array of up to twenty of your job templates. This will
@@ -6845,11 +6888,11 @@ class MediaconvertApi:
     def list_jobs(
         self,
         context: RequestContext,
-        max_results: _integerMin1Max20 = None,
-        next_token: _string = None,
-        order: Order = None,
-        queue: _string = None,
-        status: JobStatus = None,
+        max_results: _integerMin1Max20 | None = None,
+        next_token: _string | None = None,
+        order: Order | None = None,
+        queue: _string | None = None,
+        status: JobStatus | None = None,
         **kwargs,
     ) -> ListJobsResponse:
         """Retrieve a JSON array of up to twenty of your most recently created
@@ -6877,11 +6920,11 @@ class MediaconvertApi:
     def list_presets(
         self,
         context: RequestContext,
-        category: _string = None,
-        list_by: PresetListBy = None,
-        max_results: _integerMin1Max20 = None,
-        next_token: _string = None,
-        order: Order = None,
+        category: _string | None = None,
+        list_by: PresetListBy | None = None,
+        max_results: _integerMin1Max20 | None = None,
+        next_token: _string | None = None,
+        order: Order | None = None,
         **kwargs,
     ) -> ListPresetsResponse:
         """Retrieve a JSON array of up to twenty of your presets. This will return
@@ -6909,10 +6952,10 @@ class MediaconvertApi:
     def list_queues(
         self,
         context: RequestContext,
-        list_by: QueueListBy = None,
-        max_results: _integerMin1Max20 = None,
-        next_token: _string = None,
-        order: Order = None,
+        list_by: QueueListBy | None = None,
+        max_results: _integerMin1Max20 | None = None,
+        next_token: _string | None = None,
+        order: Order | None = None,
         **kwargs,
     ) -> ListQueuesResponse:
         """Retrieve a JSON array of up to twenty of your queues. This will return
@@ -6956,8 +6999,8 @@ class MediaconvertApi:
     def list_versions(
         self,
         context: RequestContext,
-        max_results: _integerMin1Max20 = None,
-        next_token: _string = None,
+        max_results: _integerMin1Max20 | None = None,
+        next_token: _string | None = None,
         **kwargs,
     ) -> ListVersionsResponse:
         """Retrieve a JSON array of all available Job engine versions and the date
@@ -6977,7 +7020,7 @@ class MediaconvertApi:
 
     @handler("Probe")
     def probe(
-        self, context: RequestContext, input_files: _listOfProbeInputFile = None, **kwargs
+        self, context: RequestContext, input_files: _listOfProbeInputFile | None = None, **kwargs
     ) -> ProbeResponse:
         """Use Probe to obtain detailed information about your input media files.
         Probe returns a JSON that includes container, codec, frame rate,
@@ -7018,12 +7061,12 @@ class MediaconvertApi:
     def search_jobs(
         self,
         context: RequestContext,
-        input_file: _string = None,
-        max_results: _integerMin1Max20 = None,
-        next_token: _string = None,
-        order: Order = None,
-        queue: _string = None,
-        status: JobStatus = None,
+        input_file: _string | None = None,
+        max_results: _integerMin1Max20 | None = None,
+        next_token: _string | None = None,
+        order: Order | None = None,
+        queue: _string | None = None,
+        status: JobStatus | None = None,
         **kwargs,
     ) -> SearchJobsResponse:
         """Retrieve a JSON array that includes job details for up to twenty of your
@@ -7069,7 +7112,11 @@ class MediaconvertApi:
 
     @handler("UntagResource")
     def untag_resource(
-        self, context: RequestContext, arn: _string, tag_keys: _listOf__string = None, **kwargs
+        self,
+        context: RequestContext,
+        arn: _string,
+        tag_keys: _listOf__string | None = None,
+        **kwargs,
     ) -> UntagResourceResponse:
         """Remove tags from a MediaConvert queue, preset, or job template. For
         information about tagging, see the User Guide at
@@ -7093,14 +7140,14 @@ class MediaconvertApi:
         self,
         context: RequestContext,
         name: _string,
-        acceleration_settings: AccelerationSettings = None,
-        category: _string = None,
-        description: _string = None,
-        hop_destinations: _listOfHopDestination = None,
-        priority: _integerMinNegative50Max50 = None,
-        queue: _string = None,
-        settings: JobTemplateSettings = None,
-        status_update_interval: StatusUpdateInterval = None,
+        acceleration_settings: AccelerationSettings | None = None,
+        category: _string | None = None,
+        description: _string | None = None,
+        hop_destinations: _listOfHopDestination | None = None,
+        priority: _integerMinNegative50Max50 | None = None,
+        queue: _string | None = None,
+        settings: JobTemplateSettings | None = None,
+        status_update_interval: StatusUpdateInterval | None = None,
         **kwargs,
     ) -> UpdateJobTemplateResponse:
         """Modify one of your existing job templates.
@@ -7132,9 +7179,9 @@ class MediaconvertApi:
         self,
         context: RequestContext,
         name: _string,
-        category: _string = None,
-        description: _string = None,
-        settings: PresetSettings = None,
+        category: _string | None = None,
+        description: _string | None = None,
+        settings: PresetSettings | None = None,
         **kwargs,
     ) -> UpdatePresetResponse:
         """Modify one of your existing presets.
@@ -7158,10 +7205,10 @@ class MediaconvertApi:
         self,
         context: RequestContext,
         name: _string,
-        concurrent_jobs: _integer = None,
-        description: _string = None,
-        reservation_plan_settings: ReservationPlanSettings = None,
-        status: QueueStatus = None,
+        concurrent_jobs: _integer | None = None,
+        description: _string | None = None,
+        reservation_plan_settings: ReservationPlanSettings | None = None,
+        status: QueueStatus | None = None,
         **kwargs,
     ) -> UpdateQueueResponse:
         """Modify one of your existing queues.

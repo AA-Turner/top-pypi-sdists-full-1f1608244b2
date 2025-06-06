@@ -329,7 +329,7 @@ class AccountApi:
         self,
         context: RequestContext,
         alternate_contact_type: AlternateContactType,
-        account_id: AccountId = None,
+        account_id: AccountId | None = None,
         **kwargs,
     ) -> None:
         """Deletes the specified alternate contact from an Amazon Web Services
@@ -362,7 +362,7 @@ class AccountApi:
         self,
         context: RequestContext,
         region_name: RegionName,
-        account_id: AccountId = None,
+        account_id: AccountId | None = None,
         **kwargs,
     ) -> None:
         """Disables (opts-out) a particular Region for an account.
@@ -387,7 +387,7 @@ class AccountApi:
         self,
         context: RequestContext,
         region_name: RegionName,
-        account_id: AccountId = None,
+        account_id: AccountId | None = None,
         **kwargs,
     ) -> None:
         """Enables (opts-in) a particular Region for an account.
@@ -406,7 +406,7 @@ class AccountApi:
 
     @handler("GetAccountInformation")
     def get_account_information(
-        self, context: RequestContext, account_id: AccountId = None, **kwargs
+        self, context: RequestContext, account_id: AccountId | None = None, **kwargs
     ) -> GetAccountInformationResponse:
         """Retrieves information about the specified account including its account
         name, account ID, and account creation date and time. To use this API,
@@ -428,7 +428,7 @@ class AccountApi:
         self,
         context: RequestContext,
         alternate_contact_type: AlternateContactType,
-        account_id: AccountId = None,
+        account_id: AccountId | None = None,
         **kwargs,
     ) -> GetAlternateContactResponse:
         """Retrieves the specified alternate contact attached to an Amazon Web
@@ -459,7 +459,7 @@ class AccountApi:
 
     @handler("GetContactInformation")
     def get_contact_information(
-        self, context: RequestContext, account_id: AccountId = None, **kwargs
+        self, context: RequestContext, account_id: AccountId | None = None, **kwargs
     ) -> GetContactInformationResponse:
         """Retrieves the primary contact information of an Amazon Web Services
         account.
@@ -501,7 +501,7 @@ class AccountApi:
         self,
         context: RequestContext,
         region_name: RegionName,
-        account_id: AccountId = None,
+        account_id: AccountId | None = None,
         **kwargs,
     ) -> GetRegionOptStatusResponse:
         """Retrieves the opt-in status of a particular Region.
@@ -522,10 +522,10 @@ class AccountApi:
     def list_regions(
         self,
         context: RequestContext,
-        account_id: AccountId = None,
-        max_results: ListRegionsRequestMaxResultsInteger = None,
-        next_token: ListRegionsRequestNextTokenString = None,
-        region_opt_status_contains: RegionOptStatusList = None,
+        account_id: AccountId | None = None,
+        max_results: ListRegionsRequestMaxResultsInteger | None = None,
+        next_token: ListRegionsRequestNextTokenString | None = None,
+        region_opt_status_contains: RegionOptStatusList | None = None,
         **kwargs,
     ) -> ListRegionsResponse:
         """Lists all the Regions for a given account and their respective opt-in
@@ -552,7 +552,7 @@ class AccountApi:
         self,
         context: RequestContext,
         account_name: AccountName,
-        account_id: AccountId = None,
+        account_id: AccountId | None = None,
         **kwargs,
     ) -> None:
         """Updates the account name of the specified account. To use this API, IAM
@@ -577,7 +577,7 @@ class AccountApi:
         name: Name,
         phone_number: PhoneNumber,
         title: Title,
-        account_id: AccountId = None,
+        account_id: AccountId | None = None,
         **kwargs,
     ) -> None:
         """Modifies the specified alternate contact attached to an Amazon Web
@@ -613,7 +613,7 @@ class AccountApi:
         self,
         context: RequestContext,
         contact_information: ContactInformation,
-        account_id: AccountId = None,
+        account_id: AccountId | None = None,
         **kwargs,
     ) -> None:
         """Updates the primary contact information of an Amazon Web Services

@@ -1,5 +1,4 @@
-""" Test cogapp.
-"""
+"""Test cogapp."""
 
 import io
 import os
@@ -16,27 +15,27 @@ from unittest import TestCase
 from .cogapp import Cog, CogOptions, CogGenerator
 from .cogapp import CogError, CogUsageError, CogGeneratedError, CogUserException
 from .cogapp import usage, __version__, main
-from .makefiles import makeFiles
-from .whiteutils import reindentBlock
+from .hashhandler import HashHandler
+from .makefiles import make_files
+from .whiteutils import reindent_block
 
 
 class CogTestsInMemory(TestCase):
-    """ Test cases for cogapp.Cog()
-    """
+    """Test cases for cogapp.Cog()"""
 
-    def testNoCog(self):
+    def test_no_cog(self):
         strings = [
-            '',
-            ' ',
-            ' \t \t \tx',
-            'hello',
-            'the cat\nin the\nhat.',
-            'Horton\n\tHears A\n\t\tWho'
-            ]
+            "",
+            " ",
+            " \t \t \tx",
+            "hello",
+            "the cat\nin the\nhat.",
+            "Horton\n\tHears A\n\t\tWho",
+        ]
         for s in strings:
-            self.assertEqual(Cog().processString(s), s)
+            self.assertEqual(Cog().process_string(s), s)
 
-    def testSimple(self):
+    def test_simple(self):
         infile = """\
             Some text.
             //[[[cog
@@ -63,9 +62,9 @@ class CogTestsInMemory(TestCase):
             epilogue.
             """
 
-        self.assertEqual(Cog().processString(infile), outfile)
+        self.assertEqual(Cog().process_string(infile), outfile)
 
-    def testEmptyCog(self):
+    def test_empty_cog(self):
         # The cog clause can be totally empty.  Not sure why you'd want it,
         # but it works.
         infile = """\
@@ -76,10 +75,10 @@ class CogTestsInMemory(TestCase):
             goodbye
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testMultipleCogs(self):
+    def test_multiple_cogs(self):
         # One file can have many cog chunks, even abutting each other.
         infile = """\
             //[[[cog
@@ -100,10 +99,10 @@ class CogTestsInMemory(TestCase):
             //[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testTrimBlankLines(self):
+    def test_trim_blank_lines(self):
         infile = """\
             //[[[cog
             cog.out("This is line one\\n", trimblanklines=True)
@@ -118,10 +117,10 @@ class CogTestsInMemory(TestCase):
             //[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testTrimEmptyBlankLines(self):
+    def test_trim_empty_blank_lines(self):
         infile = """\
             //[[[cog
             cog.out("This is line one\\n", trimblanklines=True)
@@ -137,10 +136,10 @@ class CogTestsInMemory(TestCase):
             //[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testTrimBlankLinesWithLastPartial(self):
+    def test_trim_blank_lines_with_last_partial(self):
         infile = """\
             //[[[cog
             cog.out("This is line one\\n", trimblanklines=True)
@@ -152,10 +151,10 @@ class CogTestsInMemory(TestCase):
             //[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testCogOutDedent(self):
+    def test_cog_out_dedent(self):
         infile = """\
             //[[[cog
             cog.out("This is the first line\\n")
@@ -184,10 +183,10 @@ class CogTestsInMemory(TestCase):
             //[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def test22EndOfLine(self):
+    def test22_end_of_line(self):
         # In Python 2.2, this cog file was not parsing because the
         # last line is indented but didn't end with a newline.
         infile = """\
@@ -202,10 +201,10 @@ class CogTestsInMemory(TestCase):
             //[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testIndentedCode(self):
+    def test_indented_code(self):
         infile = """\
             first line
                 [[[cog
@@ -220,10 +219,10 @@ class CogTestsInMemory(TestCase):
             last line
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testPrefixedCode(self):
+    def test_prefixed_code(self):
         infile = """\
             --[[[cog
             --import cog
@@ -236,10 +235,10 @@ class CogTestsInMemory(TestCase):
             --[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testPrefixedIndentedCode(self):
+    def test_prefixed_indented_code(self):
         infile = """\
             prologue
             --[[[cog
@@ -253,10 +252,10 @@ class CogTestsInMemory(TestCase):
             --[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testBogusPrefixMatch(self):
+    def test_bogus_prefix_match(self):
         infile = """\
             prologue
             #[[[cog
@@ -271,10 +270,10 @@ class CogTestsInMemory(TestCase):
             #[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testNoFinalNewline(self):
+    def test_no_final_newline(self):
         # If the cog'ed output has no final newline,
         # it shouldn't eat up the cog terminator.
         infile = """\
@@ -289,10 +288,10 @@ class CogTestsInMemory(TestCase):
             epilogue
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testNoOutputAtAll(self):
+    def test_no_output_at_all(self):
         # If there is absolutely no cog output, that's ok.
         infile = """\
             prologue
@@ -303,10 +302,10 @@ class CogTestsInMemory(TestCase):
             epilogue
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testPurelyBlankLine(self):
+    def test_purely_blank_line(self):
         # If there is a blank line in the cog code with no whitespace
         # prefix, that should be OK.
 
@@ -323,10 +322,10 @@ class CogTestsInMemory(TestCase):
             epilogue
             """
 
-        infile = reindentBlock(infile.replace('$', ''))
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile.replace("$", ""))
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testEmptyOutl(self):
+    def test_empty_outl(self):
         # Alexander Belchenko suggested the string argument to outl should
         # be optional.  Does it work?
 
@@ -349,10 +348,10 @@ class CogTestsInMemory(TestCase):
             epilogue
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testFirstLineNum(self):
+    def test_first_line_num(self):
         infile = """\
             fooey
             [[[cog
@@ -368,10 +367,10 @@ class CogTestsInMemory(TestCase):
             [[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
-    def testCompactOneLineCode(self):
+    def test_compact_one_line_code(self):
         infile = """\
             first line
             hey: [[[cog cog.outl("hello %d" % (3*3*3*3)) ]]] looky!
@@ -388,10 +387,10 @@ class CogTestsInMemory(TestCase):
             last line
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), reindentBlock(outfile))
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), reindent_block(outfile))
 
-    def testInsideOutCompact(self):
+    def test_inside_out_compact(self):
         infile = """\
             first line
             hey?: ]]] what is this? [[[cog strange!
@@ -399,10 +398,12 @@ class CogTestsInMemory(TestCase):
             [[[end]]]
             last line
             """
-        with self.assertRaisesRegex(CogError, r"^infile.txt\(2\): Cog code markers inverted$"):
-            Cog().processString(reindentBlock(infile), "infile.txt")
+        with self.assertRaisesRegex(
+            CogError, r"^infile.txt\(2\): Cog code markers inverted$"
+        ):
+            Cog().process_string(reindent_block(infile), "infile.txt")
 
-    def testSharingGlobals(self):
+    def test_sharing_globals(self):
         infile = """\
             first line
             hey: [[[cog s="hey there" ]]] looky!
@@ -424,10 +425,10 @@ class CogTestsInMemory(TestCase):
             last line
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), reindentBlock(outfile))
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), reindent_block(outfile))
 
-    def testAssertInCogCode(self):
+    def test_assert_in_cog_code(self):
         # Check that we can test assertions in cog code in the test framework.
         infile = """\
             [[[cog
@@ -435,11 +436,11 @@ class CogTestsInMemory(TestCase):
             ]]]
             [[[end]]]
             """
-        infile = reindentBlock(infile)
+        infile = reindent_block(infile)
         with self.assertRaisesRegex(CogUserException, "AssertionError: Oops"):
-            Cog().processString(infile)
+            Cog().process_string(infile)
 
-    def testCogPrevious(self):
+    def test_cog_previous(self):
         # Check that we can access the previous run's output.
         infile = """\
             [[[cog
@@ -462,83 +463,93 @@ class CogTestsInMemory(TestCase):
             [[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), reindentBlock(outfile))
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), reindent_block(outfile))
 
 
 class CogOptionsTests(TestCase):
-    """ Test the CogOptions class.
-    """
+    """Test the CogOptions class."""
 
-    def testEquality(self):
+    def test_equality(self):
         o = CogOptions()
         p = CogOptions()
         self.assertEqual(o, p)
-        o.parseArgs(['-r'])
+        o.parse_args(["-r"])
         self.assertNotEqual(o, p)
-        p.parseArgs(['-r'])
+        p.parse_args(["-r"])
         self.assertEqual(o, p)
 
-    def testCloning(self):
+    def test_cloning(self):
         o = CogOptions()
-        o.parseArgs(['-I', 'fooey', '-I', 'booey', '-s', ' /*x*/'])
+        o.parse_args(["-I", "fooey", "-I", "booey", "-s", " /*x*/"])
         p = o.clone()
         self.assertEqual(o, p)
-        p.parseArgs(['-I', 'huey', '-D', 'foo=quux'])
+        p.parse_args(["-I", "huey", "-D", "foo=quux"])
         self.assertNotEqual(o, p)
         q = CogOptions()
-        q.parseArgs(['-I', 'fooey', '-I', 'booey', '-s', ' /*x*/', '-I', 'huey', '-D', 'foo=quux'])
+        q.parse_args(
+            [
+                "-I",
+                "fooey",
+                "-I",
+                "booey",
+                "-s",
+                " /*x*/",
+                "-I",
+                "huey",
+                "-D",
+                "foo=quux",
+            ]
+        )
         self.assertEqual(p, q)
 
-    def testCombiningFlags(self):
+    def test_combining_flags(self):
         # Single-character flags can be combined.
         o = CogOptions()
-        o.parseArgs(['-e', '-r', '-z'])
+        o.parse_args(["-e", "-r", "-z"])
         p = CogOptions()
-        p.parseArgs(['-erz'])
+        p.parse_args(["-erz"])
         self.assertEqual(o, p)
 
-    def testMarkers(self):
+    def test_markers(self):
         o = CogOptions()
-        o._parse_markers('a b c')
-        self.assertEqual('a', o.sBeginSpec)
-        self.assertEqual('b', o.sEndSpec)
-        self.assertEqual('c', o.sEndOutput)
+        o._parse_markers("a b c")
+        self.assertEqual("a", o.begin_spec)
+        self.assertEqual("b", o.end_spec)
+        self.assertEqual("c", o.end_output)
 
-    def testMarkersSwitch(self):
+    def test_markers_switch(self):
         o = CogOptions()
-        o.parseArgs(['--markers', 'a b c'])
-        self.assertEqual('a', o.sBeginSpec)
-        self.assertEqual('b', o.sEndSpec)
-        self.assertEqual('c', o.sEndOutput)
+        o.parse_args(["--markers", "a b c"])
+        self.assertEqual("a", o.begin_spec)
+        self.assertEqual("b", o.end_spec)
+        self.assertEqual("c", o.end_output)
 
 
 class FileStructureTests(TestCase):
-    """ Test cases to check that we're properly strict about the structure
-        of files.
-    """
+    """Test that we're properly strict about the structure of files."""
 
-    def isBad(self, infile, msg=None):
-        infile = reindentBlock(infile)
-        with self.assertRaisesRegex(CogError, "^"+re.escape(msg)+"$"):
-            Cog().processString(infile, 'infile.txt')
+    def is_bad(self, infile, msg=None):
+        infile = reindent_block(infile)
+        with self.assertRaisesRegex(CogError, "^" + re.escape(msg) + "$"):
+            Cog().process_string(infile, "infile.txt")
 
-    def testBeginNoEnd(self):
+    def test_begin_no_end(self):
         infile = """\
             Fooey
             #[[[cog
                 cog.outl('hello')
             """
-        self.isBad(infile, "infile.txt(2): Cog block begun but never ended.")
+        self.is_bad(infile, "infile.txt(2): Cog block begun but never ended.")
 
-    def testNoEoo(self):
+    def test_no_eoo(self):
         infile = """\
             Fooey
             #[[[cog
                 cog.outl('hello')
             #]]]
             """
-        self.isBad(infile, "infile.txt(4): Missing '[[[end]]]' before end of file.")
+        self.is_bad(infile, "infile.txt(4): Missing '[[[end]]]' before end of file.")
 
         infile2 = """\
             Fooey
@@ -549,13 +560,13 @@ class FileStructureTests(TestCase):
                 cog.outl('goodbye')
             #]]]
             """
-        self.isBad(infile2, "infile.txt(5): Unexpected '[[[cog'")
+        self.is_bad(infile2, "infile.txt(5): Unexpected '[[[cog'")
 
-    def testStartWithEnd(self):
+    def test_start_with_end(self):
         infile = """\
             #]]]
             """
-        self.isBad(infile, "infile.txt(1): Unexpected ']]]'")
+        self.is_bad(infile, "infile.txt(1): Unexpected ']]]'")
 
         infile2 = """\
             #[[[cog
@@ -564,13 +575,13 @@ class FileStructureTests(TestCase):
             #[[[end]]]
             #]]]
             """
-        self.isBad(infile2, "infile.txt(5): Unexpected ']]]'")
+        self.is_bad(infile2, "infile.txt(5): Unexpected ']]]'")
 
-    def testStartWithEoo(self):
+    def test_start_with_eoo(self):
         infile = """\
             #[[[end]]]
             """
-        self.isBad(infile, "infile.txt(1): Unexpected '[[[end]]]'")
+        self.is_bad(infile, "infile.txt(1): Unexpected '[[[end]]]'")
 
         infile2 = """\
             #[[[cog
@@ -579,15 +590,15 @@ class FileStructureTests(TestCase):
             #[[[end]]]
             #[[[end]]]
             """
-        self.isBad(infile2, "infile.txt(5): Unexpected '[[[end]]]'")
+        self.is_bad(infile2, "infile.txt(5): Unexpected '[[[end]]]'")
 
-    def testNoEnd(self):
+    def test_no_end(self):
         infile = """\
             #[[[cog
                 cog.outl("hello")
             #[[[end]]]
             """
-        self.isBad(infile, "infile.txt(3): Unexpected '[[[end]]]'")
+        self.is_bad(infile, "infile.txt(3): Unexpected '[[[end]]]'")
 
         infile2 = """\
             #[[[cog
@@ -598,9 +609,9 @@ class FileStructureTests(TestCase):
                 cog.outl("hello")
             #[[[end]]]
             """
-        self.isBad(infile2, "infile.txt(7): Unexpected '[[[end]]]'")
+        self.is_bad(infile2, "infile.txt(7): Unexpected '[[[end]]]'")
 
-    def testTwoBegins(self):
+    def test_two_begins(self):
         infile = """\
             #[[[cog
             #[[[cog
@@ -608,7 +619,7 @@ class FileStructureTests(TestCase):
             #]]]
             #[[[end]]]
             """
-        self.isBad(infile, "infile.txt(2): Unexpected '[[[cog'")
+        self.is_bad(infile, "infile.txt(2): Unexpected '[[[cog'")
 
         infile2 = """\
             #[[[cog
@@ -621,9 +632,9 @@ class FileStructureTests(TestCase):
             #]]]
             #[[[end]]]
             """
-        self.isBad(infile2, "infile.txt(6): Unexpected '[[[cog'")
+        self.is_bad(infile2, "infile.txt(6): Unexpected '[[[cog'")
 
-    def testTwoEnds(self):
+    def test_two_ends(self):
         infile = """\
             #[[[cog
                 cog.outl("hello")
@@ -631,7 +642,7 @@ class FileStructureTests(TestCase):
             #]]]
             #[[[end]]]
             """
-        self.isBad(infile, "infile.txt(4): Unexpected ']]]'")
+        self.is_bad(infile, "infile.txt(4): Unexpected ']]]'")
 
         infile2 = """\
             #[[[cog
@@ -644,34 +655,35 @@ class FileStructureTests(TestCase):
             #]]]
             #[[[end]]]
             """
-        self.isBad(infile2, "infile.txt(8): Unexpected ']]]'")
+        self.is_bad(infile2, "infile.txt(8): Unexpected ']]]'")
 
 
 class CogErrorTests(TestCase):
-    """ Test cases for cog.error().
-    """
+    """Test cases for cog.error()."""
 
-    def testErrorMsg(self):
+    def test_error_msg(self):
         infile = """\
             [[[cog cog.error("This ain't right!")]]]
             [[[end]]]
             """
 
-        infile = reindentBlock(infile)
+        infile = reindent_block(infile)
         with self.assertRaisesRegex(CogGeneratedError, "^This ain't right!$"):
-            Cog().processString(infile)
+            Cog().process_string(infile)
 
-    def testErrorNoMsg(self):
+    def test_error_no_msg(self):
         infile = """\
             [[[cog cog.error()]]]
             [[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        with self.assertRaisesRegex(CogGeneratedError, "^Error raised by cog generator.$"):
-            Cog().processString(infile)
+        infile = reindent_block(infile)
+        with self.assertRaisesRegex(
+            CogGeneratedError, "^Error raised by cog generator.$"
+        ):
+            Cog().process_string(infile)
 
-    def testNoErrorIfErrorNotCalled(self):
+    def test_no_error_if_error_not_called(self):
         infile = """\
             --[[[cog
             --import cog
@@ -686,169 +698,175 @@ class CogErrorTests(TestCase):
             --[[[end]]]
             """
 
-        infile = reindentBlock(infile)
-        self.assertEqual(Cog().processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(Cog().process_string(infile), infile)
 
 
 class CogGeneratorGetCodeTests(TestCase):
-    """ Unit tests against CogGenerator to see if its getCode() method works
-        properly.
-    """
+    """Tests for CogGenerator.getCode()."""
 
     def setUp(self):
-        """ All tests get a generator to use, and short same-length names for
-            the functions we're going to use.
-        """
+        # All tests get a generator to use, and short same-length names for
+        # the functions we're going to use.
         self.gen = CogGenerator()
-        self.m = self.gen.parseMarker
-        self.l = self.gen.parseLine
+        self.m = self.gen.parse_marker
+        self.parse_line = self.gen.parse_line
 
-    def testEmpty(self):
-        self.m('// [[[cog')
-        self.m('// ]]]')
-        self.assertEqual(self.gen.getCode(), '')
+    def test_empty(self):
+        self.m("// [[[cog")
+        self.m("// ]]]")
+        self.assertEqual(self.gen.get_code(), "")
 
-    def testSimple(self):
-        self.m('// [[[cog')
-        self.l('  print "hello"')
-        self.l('  print "bye"')
-        self.m('// ]]]')
-        self.assertEqual(self.gen.getCode(), 'print "hello"\nprint "bye"')
+    def test_simple(self):
+        self.m("// [[[cog")
+        self.parse_line('  print "hello"')
+        self.parse_line('  print "bye"')
+        self.m("// ]]]")
+        self.assertEqual(self.gen.get_code(), 'print "hello"\nprint "bye"')
 
-    def testCompressed1(self):
+    def test_compressed1(self):
         # For a while, I supported compressed code blocks, but no longer.
         self.m('// [[[cog: print """')
-        self.l('// hello')
-        self.l('// bye')
+        self.parse_line("// hello")
+        self.parse_line("// bye")
         self.m('// """)]]]')
-        self.assertEqual(self.gen.getCode(), 'hello\nbye')
+        self.assertEqual(self.gen.get_code(), "hello\nbye")
 
-    def testCompressed2(self):
+    def test_compressed2(self):
         # For a while, I supported compressed code blocks, but no longer.
         self.m('// [[[cog: print """')
-        self.l('hello')
-        self.l('bye')
+        self.parse_line("hello")
+        self.parse_line("bye")
         self.m('// """)]]]')
-        self.assertEqual(self.gen.getCode(), 'hello\nbye')
+        self.assertEqual(self.gen.get_code(), "hello\nbye")
 
-    def testCompressed3(self):
+    def test_compressed3(self):
         # For a while, I supported compressed code blocks, but no longer.
-        self.m('// [[[cog')
-        self.l('print """hello')
-        self.l('bye')
+        self.m("// [[[cog")
+        self.parse_line('print """hello')
+        self.parse_line("bye")
         self.m('// """)]]]')
-        self.assertEqual(self.gen.getCode(), 'print """hello\nbye')
+        self.assertEqual(self.gen.get_code(), 'print """hello\nbye')
 
-    def testCompressed4(self):
+    def test_compressed4(self):
         # For a while, I supported compressed code blocks, but no longer.
         self.m('// [[[cog: print """')
-        self.l('hello')
-        self.l('bye""")')
-        self.m('// ]]]')
-        self.assertEqual(self.gen.getCode(), 'hello\nbye""")')
+        self.parse_line("hello")
+        self.parse_line('bye""")')
+        self.m("// ]]]")
+        self.assertEqual(self.gen.get_code(), 'hello\nbye""")')
 
-    def testNoCommonPrefixForMarkers(self):
+    def test_no_common_prefix_for_markers(self):
         # It's important to be able to use #if 0 to hide lines from a
         # C++ compiler.
-        self.m('#if 0 //[[[cog')
-        self.l('\timport cog, sys')
-        self.l('')
-        self.l('\tprint sys.argv')
-        self.m('#endif //]]]')
-        self.assertEqual(self.gen.getCode(), 'import cog, sys\n\nprint sys.argv')
+        self.m("#if 0 //[[[cog")
+        self.parse_line("\timport cog, sys")
+        self.parse_line("")
+        self.parse_line("\tprint sys.argv")
+        self.m("#endif //]]]")
+        self.assertEqual(self.gen.get_code(), "import cog, sys\n\nprint sys.argv")
 
 
 class TestCaseWithTempDir(TestCase):
-
-    def newCog(self):
-        """ Initialize the cog members for another run.
-        """
+    def new_cog(self):
+        """Initialize the cog members for another run."""
         # Create a cog engine, and catch its output.
         self.cog = Cog()
         self.output = io.StringIO()
-        self.cog.setOutput(stdout=self.output, stderr=self.output)
+        self.cog.set_output(stdout=self.output, stderr=self.output)
 
     def setUp(self):
         # Create a temporary directory.
-        self.tempdir = os.path.join(tempfile.gettempdir(), 'testcog_tempdir_' + str(random.random())[2:])
+        self.tempdir = os.path.join(
+            tempfile.gettempdir(), "testcog_tempdir_" + str(random.random())[2:]
+        )
         os.mkdir(self.tempdir)
         self.olddir = os.getcwd()
         os.chdir(self.tempdir)
-        self.newCog()
+        self.new_cog()
 
     def tearDown(self):
         os.chdir(self.olddir)
         # Get rid of the temporary directory.
         shutil.rmtree(self.tempdir)
 
-    def assertFilesSame(self, sFName1, sFName2):
-        with open(os.path.join(self.tempdir, sFName1), 'rb') as f1:
+    def assertFilesSame(self, file_name1, file_name2):
+        with open(os.path.join(self.tempdir, file_name1), "rb") as f1:
             text1 = f1.read()
-        with open(os.path.join(self.tempdir, sFName2), 'rb') as f2:
+        with open(os.path.join(self.tempdir, file_name2), "rb") as f2:
             text2 = f2.read()
         self.assertEqual(text1, text2)
 
     def assertFileContent(self, fname, content):
         absname = os.path.join(self.tempdir, fname)
-        with open(absname, 'rb') as f:
+        with open(absname, "rb") as f:
             file_content = f.read()
         self.assertEqual(file_content, content.encode("utf-8"))
 
 
 class ArgumentHandlingTests(TestCaseWithTempDir):
-
-    def testArgumentFailure(self):
+    def test_argument_failure(self):
         # Return value 2 means usage problem.
-        self.assertEqual(self.cog.main(['argv0', '-j']), 2)
+        self.assertEqual(self.cog.main(["argv0", "-j"]), 2)
         output = self.output.getvalue()
         self.assertIn("option -j not recognized", output)
         with self.assertRaisesRegex(CogUsageError, r"^No files to process$"):
-            self.cog.callableMain(['argv0'])
+            self.cog.callable_main(["argv0"])
         with self.assertRaisesRegex(CogUsageError, r"^option -j not recognized$"):
-            self.cog.callableMain(['argv0', '-j'])
+            self.cog.callable_main(["argv0", "-j"])
 
-    def testNoDashOAndAtFile(self):
-        makeFiles({"cogfiles.txt": "# Please run cog"})
+    def test_no_dash_o_and_at_file(self):
+        make_files({"cogfiles.txt": "# Please run cog"})
         with self.assertRaisesRegex(CogUsageError, r"^Can't use -o with @file$"):
-            self.cog.callableMain(['argv0', '-o', 'foo', '@cogfiles.txt'])
+            self.cog.callable_main(["argv0", "-o", "foo", "@cogfiles.txt"])
 
-    def testNoDashOAndAmpFile(self):
-        makeFiles({"cogfiles.txt": "# Please run cog"})
+    def test_no_dash_o_and_amp_file(self):
+        make_files({"cogfiles.txt": "# Please run cog"})
         with self.assertRaisesRegex(CogUsageError, r"^Can't use -o with &file$"):
-            self.cog.callableMain(['argv0', '-o', 'foo', '&cogfiles.txt'])
+            self.cog.callable_main(["argv0", "-o", "foo", "&cogfiles.txt"])
 
-    def testDashV(self):
-        self.assertEqual(self.cog.main(['argv0', '-v']), 0)
+    def test_no_diff_without_check(self):
+        with self.assertRaisesRegex(
+            CogUsageError, r"^Can't use --diff without --check$"
+        ):
+            self.cog.callable_main(["argv0", "--diff"])
+
+    def test_dash_v(self):
+        self.assertEqual(self.cog.main(["argv0", "-v"]), 0)
         output = self.output.getvalue()
-        self.assertEqual('Cog version %s\n' % __version__, output)
+        self.assertEqual("Cog version %s\n" % __version__, output)
 
-    def producesHelp(self, args):
-        self.newCog()
-        argv = ['argv0'] + args.split()
+    def produces_help(self, args):
+        self.new_cog()
+        argv = ["argv0"] + args.split()
         self.assertEqual(self.cog.main(argv), 0)
         self.assertEqual(usage, self.output.getvalue())
 
-    def testDashH(self):
-        # -h or -? anywhere on the command line should just print help.
-        self.producesHelp("-h")
-        self.producesHelp("-?")
-        self.producesHelp("fooey.txt -h")
-        self.producesHelp("-o -r @fooey.txt -? @booey.txt")
+    def test_dash_h(self):
+        # -h, --help, or -? anywhere on the command line should just print help.
+        self.produces_help("-h")
+        self.produces_help("--help")
+        self.produces_help("-?")
+        self.produces_help("fooey.txt -h")
+        self.produces_help("fooey.txt --help")
+        self.produces_help("-o -r @fooey.txt -? @booey.txt")
 
-    def testDashOAndDashR(self):
+    def test_dash_o_and_dash_r(self):
         d = {
-            'cogfile.txt': """\
+            "cogfile.txt": """\
                 # Please run cog
                 """
-            }
+        }
 
-        makeFiles(d)
-        with self.assertRaisesRegex(CogUsageError, r"^Can't use -o with -r \(they are opposites\)$"):
-            self.cog.callableMain(['argv0', '-o', 'foo', '-r', 'cogfile.txt'])
+        make_files(d)
+        with self.assertRaisesRegex(
+            CogUsageError, r"^Can't use -o with -r \(they are opposites\)$"
+        ):
+            self.cog.callable_main(["argv0", "-o", "foo", "-r", "cogfile.txt"])
 
-    def testDashZ(self):
+    def test_dash_z(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -856,8 +874,7 @@ class ArgumentHandlingTests(TestCaseWithTempDir):
                     cog.outl("void %s();" % fn)
                 //]]]
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -868,26 +885,34 @@ class ArgumentHandlingTests(TestCaseWithTempDir):
                 void DoAnotherThing();
                 void DoLastThing();
                 """,
-            }
+        }
 
-        makeFiles(d)
-        with self.assertRaisesRegex(CogError, r"^test.cog\(6\): Missing '\[\[\[end\]\]\]' before end of file.$"):
-            self.cog.callableMain(['argv0', '-r', 'test.cog'])
-        self.newCog()
-        self.cog.callableMain(['argv0', '-r', '-z', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        with self.assertRaisesRegex(
+            CogError, r"^test.cog\(6\): Missing '\[\[\[end\]\]\]' before end of file.$"
+        ):
+            self.cog.callable_main(["argv0", "-r", "test.cog"])
+        self.new_cog()
+        self.cog.callable_main(["argv0", "-r", "-z", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testBadDashD(self):
+    def test_bad_dash_d(self):
         with self.assertRaisesRegex(CogUsageError, r"^-D takes a name=value argument$"):
-            self.cog.callableMain(['argv0', '-Dfooey', 'cog.txt'])
+            self.cog.callable_main(["argv0", "-Dfooey", "cog.txt"])
         with self.assertRaisesRegex(CogUsageError, r"^-D takes a name=value argument$"):
-            self.cog.callableMain(['argv0', '-D', 'fooey', 'cog.txt'])
+            self.cog.callable_main(["argv0", "-D", "fooey", "cog.txt"])
 
-    def testBadMarkers(self):
-        with self.assertRaisesRegex(CogUsageError, r"^--markers requires 3 values separated by spaces, could not parse 'X'$"):
-            self.cog.callableMain(['argv0', '--markers=X'])
-        with self.assertRaisesRegex(CogUsageError, r"^--markers requires 3 values separated by spaces, could not parse 'A B C D'$"):
-            self.cog.callableMain(['argv0', '--markers=A B C D'])
+    def test_bad_markers(self):
+        with self.assertRaisesRegex(
+            CogUsageError,
+            r"^--markers requires 3 values separated by spaces, could not parse 'X'$",
+        ):
+            self.cog.callable_main(["argv0", "--markers=X"])
+        with self.assertRaisesRegex(
+            CogUsageError,
+            r"^--markers requires 3 values separated by spaces, could not parse 'A B C D'$",
+        ):
+            self.cog.callable_main(["argv0", "--markers=A B C D"])
 
 
 class TestMain(TestCaseWithTempDir):
@@ -900,7 +925,7 @@ class TestMain(TestCaseWithTempDir):
     def tearDown(self):
         sys.stderr = self.old_stderr
         sys.argv = self.old_argv
-        sys.modules.pop('mycode', None)
+        sys.modules.pop("mycode", None)
         super().tearDown()
 
     def test_main_function(self):
@@ -908,10 +933,10 @@ class TestMain(TestCaseWithTempDir):
         ret = main()
         self.assertEqual(ret, 2)
         stderr = sys.stderr.getvalue()
-        self.assertEqual(stderr, 'option -Z not recognized\n(for help use -h)\n')
+        self.assertEqual(stderr, "option -Z not recognized\n(for help use --help)\n")
 
     files = {
-        'test.cog': """\
+        "test.cog": """\
             //[[[cog
             def func():
                 import mycode
@@ -924,12 +949,11 @@ class TestMain(TestCaseWithTempDir):
             //]]]
             //[[[end]]]
             """,
-
-        'mycode.py': """\
+        "mycode.py": """\
             def boom():
                 [][0]
             """,
-        }
+    }
 
     def test_error_report(self):
         self.check_error_report()
@@ -939,10 +963,10 @@ class TestMain(TestCaseWithTempDir):
 
     def check_error_report(self, *args):
         """Check that the error report is right."""
-        makeFiles(self.files)
+        make_files(self.files)
         sys.argv = ["argv0"] + list(args) + ["-r", "test.cog"]
         main()
-        expected = reindentBlock("""\
+        expected = reindent_block("""\
             Traceback (most recent call last):
               File "test.cog", line 9, in <module>
                 func()
@@ -956,10 +980,10 @@ class TestMain(TestCaseWithTempDir):
         assert expected == sys.stderr.getvalue()
 
     def test_error_in_prologue(self):
-        makeFiles(self.files)
+        make_files(self.files)
         sys.argv = ["argv0", "-p", "import mycode; mycode.boom()", "-r", "test.cog"]
         main()
-        expected = reindentBlock("""\
+        expected = reindent_block("""\
             Traceback (most recent call last):
               File "<prologue>", line 1, in <module>
                 import mycode; mycode.boom()
@@ -971,12 +995,10 @@ class TestMain(TestCaseWithTempDir):
         assert expected == sys.stderr.getvalue()
 
 
-
 class TestFileHandling(TestCaseWithTempDir):
-
-    def testSimple(self):
+    def test_simple(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -985,8 +1007,7 @@ class TestFileHandling(TestCaseWithTempDir):
                 //]]]
                 //[[[end]]]
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -998,17 +1019,17 @@ class TestFileHandling(TestCaseWithTempDir):
                 void DoLastThing();
                 //[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
         output = self.output.getvalue()
         self.assertIn("(changed)", output)
 
-    def testPrintOutput(self):
+    def test_print_output(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -1017,8 +1038,7 @@ class TestFileHandling(TestCaseWithTempDir):
                 //]]]
                 //[[[end]]]
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -1030,17 +1050,17 @@ class TestFileHandling(TestCaseWithTempDir):
                 void DoLastThing();
                 //[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-rP', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-rP", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
         output = self.output.getvalue()
         self.assertIn("(changed)", output)
 
-    def testWildcards(self):
+    def test_wildcards(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -1049,8 +1069,7 @@ class TestFileHandling(TestCaseWithTempDir):
                 //]]]
                 //[[[end]]]
                 """,
-
-            'test2.cog': """\
+            "test2.cog": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -1059,8 +1078,7 @@ class TestFileHandling(TestCaseWithTempDir):
                 //]]]
                 //[[[end]]]
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -1072,8 +1090,7 @@ class TestFileHandling(TestCaseWithTempDir):
                 void DoLastThing();
                 //[[[end]]]
                 """,
-
-            'not_this_one.cog': """\
+            "not_this_one.cog": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -1082,8 +1099,7 @@ class TestFileHandling(TestCaseWithTempDir):
                 //]]]
                 //[[[end]]]
                 """,
-
-            'not_this_one.out': """\
+            "not_this_one.out": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -1092,20 +1108,20 @@ class TestFileHandling(TestCaseWithTempDir):
                 //]]]
                 //[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', 't*.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
-        self.assertFilesSame('test2.cog', 'test.out')
-        self.assertFilesSame('not_this_one.cog', 'not_this_one.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "t*.cog"])
+        self.assertFilesSame("test.cog", "test.out")
+        self.assertFilesSame("test2.cog", "test.out")
+        self.assertFilesSame("not_this_one.cog", "not_this_one.out")
         output = self.output.getvalue()
         self.assertIn("(changed)", output)
 
-    def testOutputFile(self):
+    def test_output_file(self):
         # -o sets the output file.
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -1114,8 +1130,7 @@ class TestFileHandling(TestCaseWithTempDir):
                 //]]]
                 //[[[end]]]
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -1127,121 +1142,111 @@ class TestFileHandling(TestCaseWithTempDir):
                 void DoLastThing();
                 //[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-o', 'in/a/dir/test.cogged', 'test.cog'])
-        self.assertFilesSame('in/a/dir/test.cogged', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-o", "in/a/dir/test.cogged", "test.cog"])
+        self.assertFilesSame("in/a/dir/test.cogged", "test.out")
 
-    def testAtFile(self):
+    def test_at_file(self):
         d = {
-            'one.cog': """\
+            "one.cog": """\
                 //[[[cog
                 cog.outl("hello world")
                 //]]]
                 //[[[end]]]
                 """,
-
-            'one.out': """\
+            "one.out": """\
                 //[[[cog
                 cog.outl("hello world")
                 //]]]
                 hello world
                 //[[[end]]]
                 """,
-
-            'two.cog': """\
+            "two.cog": """\
                 //[[[cog
                 cog.outl("goodbye cruel world")
                 //]]]
                 //[[[end]]]
                 """,
-
-            'two.out': """\
+            "two.out": """\
                 //[[[cog
                 cog.outl("goodbye cruel world")
                 //]]]
                 goodbye cruel world
                 //[[[end]]]
                 """,
-
-            'cogfiles.txt': """\
+            "cogfiles.txt": """\
                 # Please run cog
                 one.cog
 
                 two.cog
-                """
-            }
+                """,
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '@cogfiles.txt'])
-        self.assertFilesSame('one.cog', 'one.out')
-        self.assertFilesSame('two.cog', 'two.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "@cogfiles.txt"])
+        self.assertFilesSame("one.cog", "one.out")
+        self.assertFilesSame("two.cog", "two.out")
         output = self.output.getvalue()
         self.assertIn("(changed)", output)
 
-    def testNestedAtFile(self):
+    def test_nested_at_file(self):
         d = {
-            'one.cog': """\
+            "one.cog": """\
                 //[[[cog
                 cog.outl("hello world")
                 //]]]
                 //[[[end]]]
                 """,
-
-            'one.out': """\
+            "one.out": """\
                 //[[[cog
                 cog.outl("hello world")
                 //]]]
                 hello world
                 //[[[end]]]
                 """,
-
-            'two.cog': """\
+            "two.cog": """\
                 //[[[cog
                 cog.outl("goodbye cruel world")
                 //]]]
                 //[[[end]]]
                 """,
-
-            'two.out': """\
+            "two.out": """\
                 //[[[cog
                 cog.outl("goodbye cruel world")
                 //]]]
                 goodbye cruel world
                 //[[[end]]]
                 """,
-
-            'cogfiles.txt': """\
+            "cogfiles.txt": """\
                 # Please run cog
                 one.cog
                 @cogfiles2.txt
                 """,
-
-            'cogfiles2.txt': """\
+            "cogfiles2.txt": """\
                 # This one too, please.
                 two.cog
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '@cogfiles.txt'])
-        self.assertFilesSame('one.cog', 'one.out')
-        self.assertFilesSame('two.cog', 'two.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "@cogfiles.txt"])
+        self.assertFilesSame("one.cog", "one.out")
+        self.assertFilesSame("two.cog", "two.out")
         output = self.output.getvalue()
         self.assertIn("(changed)", output)
 
-    def testAtFileWithArgs(self):
+    def test_at_file_with_args(self):
         d = {
-            'both.cog': """\
+            "both.cog": """\
                 //[[[cog
                 cog.outl("one: %s" % ('one' in globals()))
                 cog.outl("two: %s" % ('two' in globals()))
                 //]]]
                 //[[[end]]]
                 """,
-
-            'one.out': """\
+            "one.out": """\
                 //[[[cog
                 cog.outl("one: %s" % ('one' in globals()))
                 cog.outl("two: %s" % ('two' in globals()))
@@ -1250,8 +1255,7 @@ class TestFileHandling(TestCaseWithTempDir):
                 two: False // ONE
                 //[[[end]]]
                 """,
-
-            'two.out': """\
+            "two.out": """\
                 //[[[cog
                 cog.outl("one: %s" % ('one' in globals()))
                 cog.outl("two: %s" % ('two' in globals()))
@@ -1260,41 +1264,42 @@ class TestFileHandling(TestCaseWithTempDir):
                 two: True // TWO
                 //[[[end]]]
                 """,
-
-            'cogfiles.txt': """\
+            "cogfiles.txt": """\
                 # Please run cog
                 both.cog -o in/a/dir/both.one -s ' // ONE' -D one=x
                 both.cog -o in/a/dir/both.two -s ' // TWO' -D two=x
-                """
-            }
+                """,
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '@cogfiles.txt'])
-        self.assertFilesSame('in/a/dir/both.one', 'one.out')
-        self.assertFilesSame('in/a/dir/both.two', 'two.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "@cogfiles.txt"])
+        self.assertFilesSame("in/a/dir/both.one", "one.out")
+        self.assertFilesSame("in/a/dir/both.two", "two.out")
 
-    def testAtFileWithBadArgCombo(self):
+    def test_at_file_with_bad_arg_combo(self):
         d = {
-            'both.cog': """\
+            "both.cog": """\
                 //[[[cog
                 cog.outl("one: %s" % ('one' in globals()))
                 cog.outl("two: %s" % ('two' in globals()))
                 //]]]
                 //[[[end]]]
                 """,
-
-            'cogfiles.txt': """\
+            "cogfiles.txt": """\
                 # Please run cog
                 both.cog
                 both.cog -d # This is bad: -r and -d
-                """
-            }
+                """,
+        }
 
-        makeFiles(d)
-        with self.assertRaisesRegex(CogUsageError, r"^Can't use -d with -r \(or you would delete all your source!\)$"):
-            self.cog.callableMain(['argv0', '-r', '@cogfiles.txt'])
+        make_files(d)
+        with self.assertRaisesRegex(
+            CogUsageError,
+            r"^Can't use -d with -r \(or you would delete all your source!\)$",
+        ):
+            self.cog.callable_main(["argv0", "-r", "@cogfiles.txt"])
 
-    def testAtFileWithTrickyFilenames(self):
+    def test_at_file_with_tricky_filenames(self):
         def fix_backslashes(files_txt):
             """Make the contents of a files.txt sensitive to the platform."""
             if sys.platform != "win32":
@@ -1302,109 +1307,100 @@ class TestFileHandling(TestCaseWithTempDir):
             return files_txt
 
         d = {
-            'one 1.cog': """\
+            "one 1.cog": """\
                 //[[[cog cog.outl("hello world") ]]]
                 """,
-
-            'one.out': """\
+            "one.out": """\
                 //[[[cog cog.outl("hello world") ]]]
                 hello world //xxx
                 """,
-
-            'subdir': {
-                'subback.cog': """\
+            "subdir": {
+                "subback.cog": """\
                     //[[[cog cog.outl("down deep with backslashes") ]]]
                     """,
-
-                'subfwd.cog': """\
+                "subfwd.cog": """\
                     //[[[cog cog.outl("down deep with slashes") ]]]
                     """,
-                },
-
-            'subback.out': """\
+            },
+            "subback.out": """\
                 //[[[cog cog.outl("down deep with backslashes") ]]]
                 down deep with backslashes //yyy
                 """,
-
-            'subfwd.out': """\
+            "subfwd.out": """\
                 //[[[cog cog.outl("down deep with slashes") ]]]
                 down deep with slashes //zzz
                 """,
-
-            'cogfiles.txt': fix_backslashes("""\
+            "cogfiles.txt": fix_backslashes("""\
                 # Please run cog
                 'one 1.cog' -s ' //xxx'
                 subdir\\subback.cog -s ' //yyy'
                 subdir/subfwd.cog -s ' //zzz'
-                """)
-            }
+                """),
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-z', '-r', '@cogfiles.txt'])
-        self.assertFilesSame('one 1.cog', 'one.out')
-        self.assertFilesSame('subdir/subback.cog', 'subback.out')
-        self.assertFilesSame('subdir/subfwd.cog', 'subfwd.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-z", "-r", "@cogfiles.txt"])
+        self.assertFilesSame("one 1.cog", "one.out")
+        self.assertFilesSame("subdir/subback.cog", "subback.out")
+        self.assertFilesSame("subdir/subfwd.cog", "subfwd.out")
 
-    def testAmpFile(self):
+    def test_amp_file(self):
         d = {
-            'code': {
-                'files_to_cog': """\
+            "code": {
+                "files_to_cog": """\
                     # A locally resolved file name.
                     test.cog
                     """,
-
-                'test.cog': """\
+                "test.cog": """\
                     //[[[cog
                         import myampsubmodule
                     //]]]
                     //[[[end]]]
                     """,
-
-                'test.out': """\
+                "test.out": """\
                     //[[[cog
                         import myampsubmodule
                     //]]]
                     Hello from myampsubmodule
                     //[[[end]]]
                     """,
-
-                'myampsubmodule.py': """\
+                "myampsubmodule.py": """\
                     import cog
                     cog.outl("Hello from myampsubmodule")
-                    """
-                }
+                    """,
             }
+        }
 
-        makeFiles(d)
+        make_files(d)
         print(os.path.abspath("code/test.out"))
-        self.cog.callableMain(['argv0', '-r', '&code/files_to_cog'])
-        self.assertFilesSame('code/test.cog', 'code/test.out')
+        self.cog.callable_main(["argv0", "-r", "&code/files_to_cog"])
+        self.assertFilesSame("code/test.cog", "code/test.out")
 
     def run_with_verbosity(self, verbosity):
         d = {
-            'unchanged.cog': """\
+            "unchanged.cog": """\
                 //[[[cog
                 cog.outl("hello world")
                 //]]]
                 hello world
                 //[[[end]]]
                 """,
-
-            'changed.cog': """\
+            "changed.cog": """\
                 //[[[cog
                 cog.outl("goodbye cruel world")
                 //]]]
                 //[[[end]]]
                 """,
-
-            'cogfiles.txt': """\
+            "cogfiles.txt": """\
                 unchanged.cog
                 changed.cog
-                """
-            }
+                """,
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '--verbosity='+verbosity, '@cogfiles.txt'])
+        make_files(d)
+        self.cog.callable_main(
+            ["argv0", "-r", "--verbosity=" + verbosity, "@cogfiles.txt"]
+        )
         output = self.output.getvalue()
         return output
 
@@ -1418,64 +1414,99 @@ class TestFileHandling(TestCaseWithTempDir):
 
     def test_verbosity2(self):
         output = self.run_with_verbosity("2")
-        self.assertEqual(output, "Cogging unchanged.cog\nCogging changed.cog  (changed)\n")
+        self.assertEqual(
+            output, "Cogging unchanged.cog\nCogging changed.cog  (changed)\n"
+        )
+
+    def test_change_dir(self):
+        # The code can change directories, cog will move us back.
+        d = {
+            "sub": {
+                "data.txt": "Hello!",
+            },
+            "test.cog": """\
+                //[[[cog
+                import os
+                os.chdir("sub")
+                cog.outl(open("data.txt").read())
+                //]]]
+                //[[[end]]]
+                """,
+            "test.out": """\
+                //[[[cog
+                import os
+                os.chdir("sub")
+                cog.outl(open("data.txt").read())
+                //]]]
+                Hello!
+                //[[[end]]]
+                """,
+        }
+
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
+        output = self.output.getvalue()
+        self.assertIn("(changed)", output)
 
 
 class CogTestLineEndings(TestCaseWithTempDir):
     """Tests for -U option (force LF line-endings in output)."""
 
-    lines_in = ['Some text.',
-                '//[[[cog',
-                'cog.outl("Cog text")',
-                '//]]]',
-                'gobbledegook.',
-                '//[[[end]]]',
-                'epilogue.',
-                '']
+    lines_in = [
+        "Some text.",
+        "//[[[cog",
+        'cog.outl("Cog text")',
+        "//]]]",
+        "gobbledegook.",
+        "//[[[end]]]",
+        "epilogue.",
+        "",
+    ]
 
-    lines_out = ['Some text.',
-                 '//[[[cog',
-                 'cog.outl("Cog text")',
-                 '//]]]',
-                 'Cog text',
-                 '//[[[end]]]',
-                 'epilogue.',
-                 '']
+    lines_out = [
+        "Some text.",
+        "//[[[cog",
+        'cog.outl("Cog text")',
+        "//]]]",
+        "Cog text",
+        "//[[[end]]]",
+        "epilogue.",
+        "",
+    ]
 
-    def testOutputNativeEol(self):
-        makeFiles({'infile': '\n'.join(self.lines_in)})
-        self.cog.callableMain(['argv0', '-o', 'outfile', 'infile'])
-        self.assertFileContent('outfile', os.linesep.join(self.lines_out))
+    def test_output_native_eol(self):
+        make_files({"infile": "\n".join(self.lines_in)})
+        self.cog.callable_main(["argv0", "-o", "outfile", "infile"])
+        self.assertFileContent("outfile", os.linesep.join(self.lines_out))
 
-    def testOutputLfEol(self):
-        makeFiles({'infile': '\n'.join(self.lines_in)})
-        self.cog.callableMain(['argv0', '-U', '-o', 'outfile', 'infile'])
-        self.assertFileContent('outfile', '\n'.join(self.lines_out))
+    def test_output_lf_eol(self):
+        make_files({"infile": "\n".join(self.lines_in)})
+        self.cog.callable_main(["argv0", "-U", "-o", "outfile", "infile"])
+        self.assertFileContent("outfile", "\n".join(self.lines_out))
 
-    def testReplaceNativeEol(self):
-        makeFiles({'test.cog': '\n'.join(self.lines_in)})
-        self.cog.callableMain(['argv0', '-r', 'test.cog'])
-        self.assertFileContent('test.cog', os.linesep.join(self.lines_out))
+    def test_replace_native_eol(self):
+        make_files({"test.cog": "\n".join(self.lines_in)})
+        self.cog.callable_main(["argv0", "-r", "test.cog"])
+        self.assertFileContent("test.cog", os.linesep.join(self.lines_out))
 
-    def testReplaceLfEol(self):
-        makeFiles({'test.cog': '\n'.join(self.lines_in)})
-        self.cog.callableMain(['argv0', '-U', '-r', 'test.cog'])
-        self.assertFileContent('test.cog', '\n'.join(self.lines_out))
+    def test_replace_lf_eol(self):
+        make_files({"test.cog": "\n".join(self.lines_in)})
+        self.cog.callable_main(["argv0", "-U", "-r", "test.cog"])
+        self.assertFileContent("test.cog", "\n".join(self.lines_out))
 
 
 class CogTestCharacterEncoding(TestCaseWithTempDir):
-
-    def testSimple(self):
+    def test_simple(self):
         d = {
-            'test.cog': b"""\
+            "test.cog": b"""\
                 // This is my C++ file.
                 //[[[cog
                 cog.outl("// Unicode: \xe1\x88\xb4 (U+1234)")
                 //]]]
                 //[[[end]]]
                 """,
-
-            'test.out': b"""\
+            "test.out": b"""\
                 // This is my C++ file.
                 //[[[cog
                 cog.outl("// Unicode: \xe1\x88\xb4 (U+1234)")
@@ -1483,25 +1514,24 @@ class CogTestCharacterEncoding(TestCaseWithTempDir):
                 // Unicode: \xe1\x88\xb4 (U+1234)
                 //[[[end]]]
                 """.replace(b"\n", os.linesep.encode()),
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
         output = self.output.getvalue()
         self.assertIn("(changed)", output)
 
-    def testFileEncodingOption(self):
+    def test_file_encoding_option(self):
         d = {
-            'test.cog': b"""\
+            "test.cog": b"""\
                 // \xca\xee\xe4\xe8\xf0\xe2\xea\xe0 Windows
                 //[[[cog
                 cog.outl("\xd1\xfa\xe5\xf8\xfc \xe5\xf9\xb8 \xfd\xf2\xe8\xf5 \xec\xff\xe3\xea\xe8\xf5 \xf4\xf0\xe0\xed\xf6\xf3\xe7\xf1\xea\xe8\xf5 \xe1\xf3\xeb\xee\xea \xe4\xe0 \xe2\xfb\xef\xe5\xe9 \xf7\xe0\xfe")
                 //]]]
                 //[[[end]]]
                 """,
-
-            'test.out': b"""\
+            "test.out": b"""\
                 // \xca\xee\xe4\xe8\xf0\xe2\xea\xe0 Windows
                 //[[[cog
                 cog.outl("\xd1\xfa\xe5\xf8\xfc \xe5\xf9\xb8 \xfd\xf2\xe8\xf5 \xec\xff\xe3\xea\xe8\xf5 \xf4\xf0\xe0\xed\xf6\xf3\xe7\xf1\xea\xe8\xf5 \xe1\xf3\xeb\xee\xea \xe4\xe0 \xe2\xfb\xef\xe5\xe9 \xf7\xe0\xfe")
@@ -1509,19 +1539,22 @@ class CogTestCharacterEncoding(TestCaseWithTempDir):
                 \xd1\xfa\xe5\xf8\xfc \xe5\xf9\xb8 \xfd\xf2\xe8\xf5 \xec\xff\xe3\xea\xe8\xf5 \xf4\xf0\xe0\xed\xf6\xf3\xe7\xf1\xea\xe8\xf5 \xe1\xf3\xeb\xee\xea \xe4\xe0 \xe2\xfb\xef\xe5\xe9 \xf7\xe0\xfe
                 //[[[end]]]
                 """.replace(b"\n", os.linesep.encode()),
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-n', 'cp1251', '-r', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-n", "cp1251", "-r", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
         output = self.output.getvalue()
         self.assertIn("(changed)", output)
 
 
 class TestCaseWithImports(TestCaseWithTempDir):
-    """ When running tests which import modules, the sys.modules list
-        leaks from one test to the next.  This test case class scrubs
-        the list after each run to keep the tests isolated from each other.
+    """Automatic resetting of sys.modules for tests that import modules.
+
+    When running tests which import modules, the sys.modules list
+    leaks from one test to the next.  This test case class scrubs
+    the list after each run to keep the tests isolated from each other.
+
     """
 
     def setUp(self):
@@ -1530,10 +1563,8 @@ class TestCaseWithImports(TestCaseWithTempDir):
 
     def tearDown(self):
         modstoscrub = [
-            modname
-            for modname in sys.modules
-            if modname not in self.sysmodulekeys
-            ]
+            modname for modname in sys.modules if modname not in self.sysmodulekeys
+        ]
         for modname in modstoscrub:
             del sys.modules[modname]
         super().tearDown()
@@ -1541,246 +1572,241 @@ class TestCaseWithImports(TestCaseWithTempDir):
 
 class CogIncludeTests(TestCaseWithImports):
     dincludes = {
-        'test.cog': """\
+        "test.cog": """\
             //[[[cog
                 import mymodule
             //]]]
             //[[[end]]]
             """,
-
-        'test.out': """\
+        "test.out": """\
             //[[[cog
                 import mymodule
             //]]]
             Hello from mymodule
             //[[[end]]]
             """,
-
-        'test2.out': """\
+        "test2.out": """\
             //[[[cog
                 import mymodule
             //]]]
             Hello from mymodule in inc2
             //[[[end]]]
             """,
-
-        'include': {
-            'mymodule.py': """\
+        "include": {
+            "mymodule.py": """\
                 import cog
                 cog.outl("Hello from mymodule")
                 """
-            },
-
-        'inc2': {
-            'mymodule.py': """\
+        },
+        "inc2": {
+            "mymodule.py": """\
                 import cog
                 cog.outl("Hello from mymodule in inc2")
                 """
-            },
-
-        'inc3': {
-            'someothermodule.py': """\
+        },
+        "inc3": {
+            "someothermodule.py": """\
                 import cog
                 cog.outl("This is some other module.")
                 """
-            },
-        }
+        },
+    }
 
-    def testNeedIncludePath(self):
+    def test_need_include_path(self):
         # Try it without the -I, to see that an ImportError happens.
-        makeFiles(self.dincludes)
+        make_files(self.dincludes)
         msg = "(ImportError|ModuleNotFoundError): No module named '?mymodule'?"
         with self.assertRaisesRegex(CogUserException, msg):
-            self.cog.callableMain(['argv0', '-r', 'test.cog'])
+            self.cog.callable_main(["argv0", "-r", "test.cog"])
 
-    def testIncludePath(self):
+    def test_include_path(self):
         # Test that -I adds include directories properly.
-        makeFiles(self.dincludes)
-        self.cog.callableMain(['argv0', '-r', '-I', 'include', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(self.dincludes)
+        self.cog.callable_main(["argv0", "-r", "-I", "include", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testTwoIncludePaths(self):
+    def test_two_include_paths(self):
         # Test that two -I's add include directories properly.
-        makeFiles(self.dincludes)
-        self.cog.callableMain(['argv0', '-r', '-I', 'include', '-I', 'inc2', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(self.dincludes)
+        self.cog.callable_main(
+            ["argv0", "-r", "-I", "include", "-I", "inc2", "test.cog"]
+        )
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testTwoIncludePaths2(self):
+    def test_two_include_paths2(self):
         # Test that two -I's add include directories properly.
-        makeFiles(self.dincludes)
-        self.cog.callableMain(['argv0', '-r', '-I', 'inc2', '-I', 'include', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test2.out')
+        make_files(self.dincludes)
+        self.cog.callable_main(
+            ["argv0", "-r", "-I", "inc2", "-I", "include", "test.cog"]
+        )
+        self.assertFilesSame("test.cog", "test2.out")
 
-    def testUselessIncludePath(self):
+    def test_useless_include_path(self):
         # Test that the search will continue past the first directory.
-        makeFiles(self.dincludes)
-        self.cog.callableMain(['argv0', '-r', '-I', 'inc3', '-I', 'include', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(self.dincludes)
+        self.cog.callable_main(
+            ["argv0", "-r", "-I", "inc3", "-I", "include", "test.cog"]
+        )
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testSysPathIsUnchanged(self):
+    def test_sys_path_is_unchanged(self):
         d = {
-            'bad.cog': """\
+            "bad.cog": """\
                 //[[[cog cog.error("Oh no!") ]]]
                 //[[[end]]]
                 """,
-            'good.cog': """\
+            "good.cog": """\
                 //[[[cog cog.outl("Oh yes!") ]]]
                 //[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
+        make_files(d)
         # Is it unchanged just by creating a cog engine?
         oldsyspath = sys.path[:]
-        self.newCog()
+        self.new_cog()
         self.assertEqual(oldsyspath, sys.path)
         # Is it unchanged for a successful run?
-        self.newCog()
-        self.cog.callableMain(['argv0', '-r', 'good.cog'])
+        self.new_cog()
+        self.cog.callable_main(["argv0", "-r", "good.cog"])
         self.assertEqual(oldsyspath, sys.path)
         # Is it unchanged for a successful run with includes?
-        self.newCog()
-        self.cog.callableMain(['argv0', '-r', '-I', 'xyzzy', 'good.cog'])
+        self.new_cog()
+        self.cog.callable_main(["argv0", "-r", "-I", "xyzzy", "good.cog"])
         self.assertEqual(oldsyspath, sys.path)
         # Is it unchanged for a successful run with two includes?
-        self.newCog()
-        self.cog.callableMain(['argv0', '-r', '-I', 'xyzzy', '-I', 'quux', 'good.cog'])
+        self.new_cog()
+        self.cog.callable_main(["argv0", "-r", "-I", "xyzzy", "-I", "quux", "good.cog"])
         self.assertEqual(oldsyspath, sys.path)
         # Is it unchanged for a failed run?
-        self.newCog()
+        self.new_cog()
         with self.assertRaisesRegex(CogError, r"^Oh no!$"):
-            self.cog.callableMain(['argv0', '-r', 'bad.cog'])
+            self.cog.callable_main(["argv0", "-r", "bad.cog"])
         self.assertEqual(oldsyspath, sys.path)
         # Is it unchanged for a failed run with includes?
-        self.newCog()
+        self.new_cog()
         with self.assertRaisesRegex(CogError, r"^Oh no!$"):
-            self.cog.callableMain(['argv0', '-r', '-I', 'xyzzy', 'bad.cog'])
+            self.cog.callable_main(["argv0", "-r", "-I", "xyzzy", "bad.cog"])
         self.assertEqual(oldsyspath, sys.path)
         # Is it unchanged for a failed run with two includes?
-        self.newCog()
+        self.new_cog()
         with self.assertRaisesRegex(CogError, r"^Oh no!$"):
-            self.cog.callableMain(['argv0', '-r', '-I', 'xyzzy', '-I', 'quux', 'bad.cog'])
+            self.cog.callable_main(
+                ["argv0", "-r", "-I", "xyzzy", "-I", "quux", "bad.cog"]
+            )
         self.assertEqual(oldsyspath, sys.path)
 
-    def testSubDirectories(self):
+    def test_sub_directories(self):
         # Test that relative paths on the command line work, with includes.
 
         d = {
-            'code': {
-                'test.cog': """\
+            "code": {
+                "test.cog": """\
                     //[[[cog
                         import mysubmodule
                     //]]]
                     //[[[end]]]
                     """,
-
-                'test.out': """\
+                "test.out": """\
                     //[[[cog
                         import mysubmodule
                     //]]]
                     Hello from mysubmodule
                     //[[[end]]]
                     """,
-
-                'mysubmodule.py': """\
+                "mysubmodule.py": """\
                     import cog
                     cog.outl("Hello from mysubmodule")
-                    """
-                }
+                    """,
             }
+        }
 
-        makeFiles(d)
+        make_files(d)
         # We should be able to invoke cog without the -I switch, and it will
         # auto-include the current directory
-        self.cog.callableMain(['argv0', '-r', 'code/test.cog'])
-        self.assertFilesSame('code/test.cog', 'code/test.out')
+        self.cog.callable_main(["argv0", "-r", "code/test.cog"])
+        self.assertFilesSame("code/test.cog", "code/test.out")
 
 
 class CogTestsInFiles(TestCaseWithTempDir):
-
-    def testWarnIfNoCogCode(self):
+    def test_warn_if_no_cog_code(self):
         # Test that the -e switch warns if there is no Cog code.
         d = {
-            'with.cog': """\
+            "with.cog": """\
                 //[[[cog
                 cog.outl("hello world")
                 //]]]
                 hello world
                 //[[[end]]]
                 """,
-
-            'without.cog': """\
+            "without.cog": """\
                 There's no cog
                 code in this file.
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-e', 'with.cog'])
+        make_files(d)
+        self.cog.callable_main(["argv0", "-e", "with.cog"])
         output = self.output.getvalue()
         self.assertNotIn("Warning", output)
-        self.newCog()
-        self.cog.callableMain(['argv0', '-e', 'without.cog'])
+        self.new_cog()
+        self.cog.callable_main(["argv0", "-e", "without.cog"])
         output = self.output.getvalue()
         self.assertIn("Warning: no cog code found in without.cog", output)
-        self.newCog()
-        self.cog.callableMain(['argv0', 'without.cog'])
+        self.new_cog()
+        self.cog.callable_main(["argv0", "without.cog"])
         output = self.output.getvalue()
         self.assertNotIn("Warning", output)
 
-    def testFileNameProps(self):
+    def test_file_name_props(self):
         d = {
-            'cog1.txt': """\
+            "cog1.txt": """\
                 //[[[cog
                 cog.outl("This is %s in, %s out" % (cog.inFile, cog.outFile))
                 //]]]
                 this is cog1.txt in, cog1.txt out
                 [[[end]]]
                 """,
-
-            'cog1.out': """\
+            "cog1.out": """\
                 //[[[cog
                 cog.outl("This is %s in, %s out" % (cog.inFile, cog.outFile))
                 //]]]
                 This is cog1.txt in, cog1.txt out
                 [[[end]]]
                 """,
-
-            'cog1out.out': """\
+            "cog1out.out": """\
                 //[[[cog
                 cog.outl("This is %s in, %s out" % (cog.inFile, cog.outFile))
                 //]]]
                 This is cog1.txt in, cog1out.txt out
                 [[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', 'cog1.txt'])
-        self.assertFilesSame('cog1.txt', 'cog1.out')
-        self.newCog()
-        self.cog.callableMain(['argv0', '-o', 'cog1out.txt', 'cog1.txt'])
-        self.assertFilesSame('cog1out.txt', 'cog1out.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "cog1.txt"])
+        self.assertFilesSame("cog1.txt", "cog1.out")
+        self.new_cog()
+        self.cog.callable_main(["argv0", "-o", "cog1out.txt", "cog1.txt"])
+        self.assertFilesSame("cog1out.txt", "cog1out.out")
 
-    def testGlobalsDontCrossFiles(self):
+    def test_globals_dont_cross_files(self):
         # Make sure that global values don't get shared between files.
         d = {
-            'one.cog': """\
+            "one.cog": """\
                 //[[[cog s = "This was set in one.cog" ]]]
                 //[[[end]]]
                 //[[[cog cog.outl(s) ]]]
                 //[[[end]]]
                 """,
-
-            'one.out': """\
+            "one.out": """\
                 //[[[cog s = "This was set in one.cog" ]]]
                 //[[[end]]]
                 //[[[cog cog.outl(s) ]]]
                 This was set in one.cog
                 //[[[end]]]
                 """,
-
-            'two.cog': """\
+            "two.cog": """\
                 //[[[cog
                 try:
                     cog.outl(s)
@@ -1789,8 +1815,7 @@ class CogTestsInFiles(TestCaseWithTempDir):
                 //]]]
                 //[[[end]]]
                 """,
-
-            'two.out': """\
+            "two.out": """\
                 //[[[cog
                 try:
                     cog.outl(s)
@@ -1800,25 +1825,24 @@ class CogTestsInFiles(TestCaseWithTempDir):
                 s isn't set!
                 //[[[end]]]
                 """,
-
-            'cogfiles.txt': """\
+            "cogfiles.txt": """\
                 # Please run cog
                 one.cog
 
                 two.cog
-                """
-            }
+                """,
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '@cogfiles.txt'])
-        self.assertFilesSame('one.cog', 'one.out')
-        self.assertFilesSame('two.cog', 'two.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "@cogfiles.txt"])
+        self.assertFilesSame("one.cog", "one.out")
+        self.assertFilesSame("two.cog", "two.out")
         output = self.output.getvalue()
         self.assertIn("(changed)", output)
 
-    def testRemoveGeneratedOutput(self):
+    def test_remove_generated_output(self):
         d = {
-            'cog1.txt': """\
+            "cog1.txt": """\
                 //[[[cog
                 cog.outl("This line was generated.")
                 //]]]
@@ -1826,16 +1850,14 @@ class CogTestsInFiles(TestCaseWithTempDir):
                 //[[[end]]]
                 This line was not.
                 """,
-
-            'cog1.out': """\
+            "cog1.out": """\
                 //[[[cog
                 cog.outl("This line was generated.")
                 //]]]
                 //[[[end]]]
                 This line was not.
                 """,
-
-            'cog1.out2': """\
+            "cog1.out2": """\
                 //[[[cog
                 cog.outl("This line was generated.")
                 //]]]
@@ -1843,38 +1865,38 @@ class CogTestsInFiles(TestCaseWithTempDir):
                 //[[[end]]]
                 This line was not.
                 """,
-            }
+        }
 
-        makeFiles(d)
+        make_files(d)
         # Remove generated output.
-        self.cog.callableMain(['argv0', '-r', '-x', 'cog1.txt'])
-        self.assertFilesSame('cog1.txt', 'cog1.out')
-        self.newCog()
+        self.cog.callable_main(["argv0", "-r", "-x", "cog1.txt"])
+        self.assertFilesSame("cog1.txt", "cog1.out")
+        self.new_cog()
         # Regenerate the generated output.
-        self.cog.callableMain(['argv0', '-r', 'cog1.txt'])
-        self.assertFilesSame('cog1.txt', 'cog1.out2')
-        self.newCog()
+        self.cog.callable_main(["argv0", "-r", "cog1.txt"])
+        self.assertFilesSame("cog1.txt", "cog1.out2")
+        self.new_cog()
         # Remove the generated output again.
-        self.cog.callableMain(['argv0', '-r', '-x', 'cog1.txt'])
-        self.assertFilesSame('cog1.txt', 'cog1.out')
+        self.cog.callable_main(["argv0", "-r", "-x", "cog1.txt"])
+        self.assertFilesSame("cog1.txt", "cog1.out")
 
-    def testMsgCall(self):
+    def test_msg_call(self):
         infile = """\
             #[[[cog
                 cog.msg("Hello there!")
             #]]]
             #[[[end]]]
             """
-        infile = reindentBlock(infile)
-        self.assertEqual(self.cog.processString(infile), infile)
+        infile = reindent_block(infile)
+        self.assertEqual(self.cog.process_string(infile), infile)
         output = self.output.getvalue()
         self.assertEqual(output, "Message: Hello there!\n")
 
-    def testErrorMessageHasNoTraceback(self):
+    def test_error_message_has_no_traceback(self):
         # Test that a Cog error is printed to stderr with no traceback.
 
         d = {
-            'cog1.txt': """\
+            "cog1.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -1883,205 +1905,214 @@ class CogTestsInFiles(TestCaseWithTempDir):
                 Xhis line was newly
                 generated by cog
                 blah blah.
-                //[[[end]]] (checksum: a8540982e5ad6b95c9e9a184b26f4346)
+                //[[[end]]] (sum: qFQJguWta5)
                 """,
-            }
+        }
 
-        makeFiles(d)
+        make_files(d)
         stderr = io.StringIO()
-        self.cog.setOutput(stderr=stderr)
-        self.cog.main(['argv0', '-c', '-r', "cog1.txt"])
+        self.cog.set_output(stderr=stderr)
+        self.cog.main(["argv0", "-c", "-r", "cog1.txt"])
         self.assertEqual(self.output.getvalue(), "Cogging cog1.txt\n")
-        self.assertEqual(stderr.getvalue(), "cog1.txt(9): Output has been edited! Delete old checksum to unprotect.\n")
+        self.assertEqual(
+            stderr.getvalue(),
+            "cog1.txt(9): Output has been edited! Delete old checksum to unprotect.\n",
+        )
 
-    def testDashD(self):
+    def test_dash_d(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 --[[[cog cog.outl("Defined fooey as " + fooey) ]]]
                 --[[[end]]]
                 """,
-
-            'test.kablooey': """\
+            "test.kablooey": """\
                 --[[[cog cog.outl("Defined fooey as " + fooey) ]]]
                 Defined fooey as kablooey
                 --[[[end]]]
                 """,
-
-            'test.einstein': """\
+            "test.einstein": """\
                 --[[[cog cog.outl("Defined fooey as " + fooey) ]]]
                 Defined fooey as e=mc2
                 --[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-D', 'fooey=kablooey', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.kablooey')
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-Dfooey=kablooey', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.kablooey')
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-Dfooey=e=mc2', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.einstein')
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-Dbar=quux', '-Dfooey=kablooey', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.kablooey')
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-Dfooey=kablooey', '-Dbar=quux', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.kablooey')
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-Dfooey=gooey', '-Dfooey=kablooey', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.kablooey')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "-D", "fooey=kablooey", "test.cog"])
+        self.assertFilesSame("test.cog", "test.kablooey")
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "-Dfooey=kablooey", "test.cog"])
+        self.assertFilesSame("test.cog", "test.kablooey")
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "-Dfooey=e=mc2", "test.cog"])
+        self.assertFilesSame("test.cog", "test.einstein")
+        make_files(d)
+        self.cog.callable_main(
+            ["argv0", "-r", "-Dbar=quux", "-Dfooey=kablooey", "test.cog"]
+        )
+        self.assertFilesSame("test.cog", "test.kablooey")
+        make_files(d)
+        self.cog.callable_main(
+            ["argv0", "-r", "-Dfooey=kablooey", "-Dbar=quux", "test.cog"]
+        )
+        self.assertFilesSame("test.cog", "test.kablooey")
+        make_files(d)
+        self.cog.callable_main(
+            ["argv0", "-r", "-Dfooey=gooey", "-Dfooey=kablooey", "test.cog"]
+        )
+        self.assertFilesSame("test.cog", "test.kablooey")
 
-    def testOutputToStdout(self):
+    def test_output_to_stdout(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 --[[[cog cog.outl('Hey there!') ]]]
                 --[[[end]]]
                 """
-            }
+        }
 
-        makeFiles(d)
+        make_files(d)
         stderr = io.StringIO()
-        self.cog.setOutput(stderr=stderr)
-        self.cog.callableMain(['argv0', 'test.cog'])
+        self.cog.set_output(stderr=stderr)
+        self.cog.callable_main(["argv0", "test.cog"])
         output = self.output.getvalue()
         outerr = stderr.getvalue()
-        self.assertEqual(output, "--[[[cog cog.outl('Hey there!') ]]]\nHey there!\n--[[[end]]]\n")
+        self.assertEqual(
+            output, "--[[[cog cog.outl('Hey there!') ]]]\nHey there!\n--[[[end]]]\n"
+        )
         self.assertEqual(outerr, "")
 
-    def testReadFromStdin(self):
+    def test_read_from_stdin(self):
         stdin = io.StringIO("--[[[cog cog.outl('Wow') ]]]\n--[[[end]]]\n")
+
         def restore_stdin(old_stdin):
             sys.stdin = old_stdin
+
         self.addCleanup(restore_stdin, sys.stdin)
         sys.stdin = stdin
 
         stderr = io.StringIO()
-        self.cog.setOutput(stderr=stderr)
-        self.cog.callableMain(['argv0', '-'])
+        self.cog.set_output(stderr=stderr)
+        self.cog.callable_main(["argv0", "-"])
         output = self.output.getvalue()
         outerr = stderr.getvalue()
         self.assertEqual(output, "--[[[cog cog.outl('Wow') ]]]\nWow\n--[[[end]]]\n")
         self.assertEqual(outerr, "")
 
-    def testSuffixOutputLines(self):
+    def test_suffix_output_lines(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 Hey there.
                 ;[[[cog cog.outl('a\\nb\\n   \\nc') ]]]
                 ;[[[end]]]
                 Good bye.
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 Hey there.
                 ;[[[cog cog.outl('a\\nb\\n   \\nc') ]]]
                 a (foo)
                 b (foo)
                    """  # These three trailing spaces are important.
-                        # The suffix is not applied to completely blank lines.
-                """
+            # The suffix is not applied to completely blank lines.
+            """
                 c (foo)
                 ;[[[end]]]
                 Good bye.
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-s', ' (foo)', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "-s", " (foo)", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testEmptySuffix(self):
+    def test_empty_suffix(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 ;[[[cog cog.outl('a\\nb\\nc') ]]]
                 ;[[[end]]]
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 ;[[[cog cog.outl('a\\nb\\nc') ]]]
                 a
                 b
                 c
                 ;[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-s', '', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "-s", "", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testHellishSuffix(self):
+    def test_hellish_suffix(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 ;[[[cog cog.outl('a\\n\\nb') ]]]
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 ;[[[cog cog.outl('a\\n\\nb') ]]]
                 a /\\n*+([)]><
 
                 b /\\n*+([)]><
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-z', '-r', '-s', r' /\n*+([)]><', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-z", "-r", "-s", r" /\n*+([)]><", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testPrologue(self):
+    def test_prologue(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 Some text.
                 //[[[cog cog.outl(str(math.sqrt(2))[:12])]]]
                 //[[[end]]]
                 epilogue.
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 Some text.
                 //[[[cog cog.outl(str(math.sqrt(2))[:12])]]]
                 1.4142135623
                 //[[[end]]]
                 epilogue.
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-p', 'import math', 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "-p", "import math", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testThreads(self):
+    def test_threads(self):
         # Test that the implicitly imported cog module is actually different for
         # different threads.
         numthreads = 20
 
         d = {}
         for i in range(numthreads):
-            d[f'f{i}.cog'] = (
-                "x\n" * i +
-                "[[[cog\n" +
-                f"assert cog.firstLineNum == int(FIRST) == {i+1}\n" +
-                "]]]\n" +
-                "[[[end]]]\n"
-                )
-        makeFiles(d)
+            d[f"f{i}.cog"] = (
+                "x\n" * i
+                + "[[[cog\n"
+                + f"assert cog.firstLineNum == int(FIRST) == {i + 1}\n"
+                + "]]]\n"
+                + "[[[end]]]\n"
+            )
+        make_files(d)
 
         results = []
 
         def thread_main(num):
             try:
                 ret = Cog().main(
-                    ['cog.py', '-r', '-D', f'FIRST={num+1}', f'f{num}.cog']
-                    )
+                    ["cog.py", "-r", "-D", f"FIRST={num + 1}", f"f{num}.cog"]
+                )
                 assert ret == 0
-            except Exception as exc:    # pragma: no cover (only happens on test failure)
+            except Exception as exc:  # pragma: no cover (only happens on test failure)
                 results.append(exc)
             else:
                 results.append(None)
 
-        ts = [threading.Thread(target=thread_main, args=(i,)) for i in range(numthreads)]
+        ts = [
+            threading.Thread(target=thread_main, args=(i,)) for i in range(numthreads)
+        ]
         for t in ts:
             t.start()
         for t in ts:
@@ -2091,89 +2122,130 @@ class CogTestsInFiles(TestCaseWithTempDir):
 
 class CheckTests(TestCaseWithTempDir):
     def run_check(self, args, status=0):
-        actual_status = self.cog.main(['argv0', '--check'] + args)
+        actual_status = self.cog.main(["argv0", "--check"] + args)
         print(self.output.getvalue())
         self.assertEqual(status, actual_status)
 
     def assert_made_files_unchanged(self, d):
         for name, content in d.items():
-            content = reindentBlock(content)
-            if os.name == 'nt':
+            content = reindent_block(content)
+            if os.name == "nt":
                 content = content.replace("\n", "\r\n")
             self.assertFileContent(name, content)
 
     def test_check_no_cog(self):
         d = {
-            'hello.txt': """\
+            "hello.txt": """\
                 Hello.
                 """,
-            }
-        makeFiles(d)
-        self.run_check(['hello.txt'], status=0)
+        }
+        make_files(d)
+        self.run_check(["hello.txt"], status=0)
         self.assertEqual(self.output.getvalue(), "Checking hello.txt\n")
         self.assert_made_files_unchanged(d)
 
     def test_check_good(self):
         d = {
-            'unchanged.cog': """\
+            "unchanged.cog": """\
                 //[[[cog
                 cog.outl("hello world")
                 //]]]
                 hello world
                 //[[[end]]]
                 """,
-            }
-        makeFiles(d)
-        self.run_check(['unchanged.cog'], status=0)
+        }
+        make_files(d)
+        self.run_check(["unchanged.cog"], status=0)
         self.assertEqual(self.output.getvalue(), "Checking unchanged.cog\n")
         self.assert_made_files_unchanged(d)
 
     def test_check_bad(self):
         d = {
-            'changed.cog': """\
+            "changed.cog": """\
                 //[[[cog
                 cog.outl("goodbye world")
                 //]]]
                 hello world
                 //[[[end]]]
                 """,
-            }
-        makeFiles(d)
-        self.run_check(['changed.cog'], status=5)
-        self.assertEqual(self.output.getvalue(), "Checking changed.cog  (changed)\nCheck failed\n")
+        }
+        make_files(d)
+        self.run_check(["changed.cog"], status=5)
+        self.assertEqual(
+            self.output.getvalue(), "Checking changed.cog  (changed)\nCheck failed\n"
+        )
+        self.assert_made_files_unchanged(d)
+
+    def test_check_bad_with_diff(self):
+        d = {
+            "skittering.cog": """\
+                //[[[cog
+                for i in range(5): cog.outl(f"number {i}")
+                cog.outl("goodbye world")
+                //]]]
+                number 0
+                number 1
+                number 2
+                number 3
+                number 4
+                hello world
+                //[[[end]]]
+                """,
+        }
+        make_files(d)
+        self.run_check(["--diff", "skittering.cog"], status=5)
+        output = """\
+            Checking skittering.cog  (changed)
+            --- current skittering.cog
+            +++ changed skittering.cog
+            @@ -7,5 +7,5 @@
+             number 2
+             number 3
+             number 4
+            -hello world
+            +goodbye world
+             //[[[end]]]
+            Check failed
+            """
+        self.assertEqual(self.output.getvalue(), reindent_block(output))
         self.assert_made_files_unchanged(d)
 
     def test_check_mixed(self):
         d = {
-            'unchanged.cog': """\
+            "unchanged.cog": """\
                 //[[[cog
                 cog.outl("hello world")
                 //]]]
                 hello world
                 //[[[end]]]
                 """,
-            'changed.cog': """\
+            "changed.cog": """\
                 //[[[cog
                 cog.outl("goodbye world")
                 //]]]
                 hello world
                 //[[[end]]]
                 """,
-            }
-        makeFiles(d)
+        }
+        make_files(d)
         for verbosity, output in [
             ("0", "Check failed\n"),
             ("1", "Checking changed.cog  (changed)\nCheck failed\n"),
-            ("2", "Checking unchanged.cog\nChecking changed.cog  (changed)\nCheck failed\n"),
+            (
+                "2",
+                "Checking unchanged.cog\nChecking changed.cog  (changed)\nCheck failed\n",
+            ),
         ]:
-            self.newCog()
-            self.run_check(['--verbosity=%s' % verbosity, 'unchanged.cog', 'changed.cog'], status=5)
+            self.new_cog()
+            self.run_check(
+                ["--verbosity=%s" % verbosity, "unchanged.cog", "changed.cog"], status=5
+            )
             self.assertEqual(self.output.getvalue(), output)
             self.assert_made_files_unchanged(d)
 
     def test_check_with_good_checksum(self):
         d = {
-            'good.txt': """\
+            "good.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -2184,16 +2256,16 @@ class CheckTests(TestCaseWithTempDir):
                 blah blah.
                 //[[[end]]] (checksum: a8540982e5ad6b95c9e9a184b26f4346)
                 """,
-            }
-        makeFiles(d)
+        }
+        make_files(d)
         # Have to use -c with --check if there are checksums in the file.
-        self.run_check(['-c', 'good.txt'], status=0)
+        self.run_check(["-c", "good.txt"], status=0)
         self.assertEqual(self.output.getvalue(), "Checking good.txt\n")
         self.assert_made_files_unchanged(d)
 
     def test_check_with_bad_checksum(self):
         d = {
-            'bad.txt': """\
+            "bad.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -2204,26 +2276,70 @@ class CheckTests(TestCaseWithTempDir):
                 blah blah.
                 //[[[end]]] (checksum: a9999999e5ad6b95c9e9a184b26f4346)
                 """,
-            }
-        makeFiles(d)
+        }
+        make_files(d)
         # Have to use -c with --check if there are checksums in the file.
-        self.run_check(['-c', 'bad.txt'], status=1)
-        self.assertEqual(self.output.getvalue(), "Checking bad.txt\nbad.txt(9): Output has been edited! Delete old checksum to unprotect.\n")
+        self.run_check(["-c", "bad.txt"], status=1)
+        self.assertEqual(
+            self.output.getvalue(),
+            "Checking bad.txt\nbad.txt(9): Output has been edited! Delete old checksum to unprotect.\n",
+        )
+        self.assert_made_files_unchanged(d)
+
+    def test_check_with_good_sum(self):
+        d = {
+            "good.txt": """\
+                //[[[cog
+                cog.outl("This line was newly")
+                cog.outl("generated by cog")
+                cog.outl("blah blah.")
+                //]]]
+                This line was newly
+                generated by cog
+                blah blah.
+                //[[[end]]] (sum: qFQJguWta5)
+                """,
+        }
+        make_files(d)
+        # Have to use -c with --check if there are checksums in the file.
+        self.run_check(["-c", "good.txt"], status=0)
+        self.assertEqual(self.output.getvalue(), "Checking good.txt\n")
+        self.assert_made_files_unchanged(d)
+
+    def test_check_with_bad_sum(self):
+        d = {
+            "bad.txt": """\
+                //[[[cog
+                cog.outl("This line was newly")
+                cog.outl("generated by cog")
+                cog.outl("blah blah.")
+                //]]]
+                This line was newly
+                generated by cog
+                blah blah.
+                //[[[end]]] (sum: qZmZmeWta5)
+                """,
+        }
+        make_files(d)
+        # Have to use -c with --check if there are checksums in the file.
+        self.run_check(["-c", "bad.txt"], status=1)
+        self.assertEqual(
+            self.output.getvalue(),
+            "Checking bad.txt\nbad.txt(9): Output has been edited! Delete old checksum to unprotect.\n",
+        )
         self.assert_made_files_unchanged(d)
 
 
 class WritabilityTests(TestCaseWithTempDir):
-
     d = {
-        'test.cog': """\
+        "test.cog": """\
             //[[[cog
             for fn in ['DoSomething', 'DoAnotherThing', 'DoLastThing']:
                 cog.outl("void %s();" % fn)
             //]]]
             //[[[end]]]
             """,
-
-        'test.out': """\
+        "test.out": """\
             //[[[cog
             for fn in ['DoSomething', 'DoAnotherThing', 'DoLastThing']:
                 cog.outl("void %s();" % fn)
@@ -2233,89 +2349,86 @@ class WritabilityTests(TestCaseWithTempDir):
             void DoLastThing();
             //[[[end]]]
             """,
-        }
+    }
 
-    if os.name == 'nt':
+    if os.name == "nt":
         # for Windows
-        cmd_w_args = 'attrib -R %s'
-        cmd_w_asterisk = 'attrib -R *'
+        cmd_w_args = "attrib -R %s"
+        cmd_w_asterisk = "attrib -R *"
     else:
         # for unix-like
-        cmd_w_args = 'chmod +w %s'
-        cmd_w_asterisk = 'chmod +w *'
+        cmd_w_args = "chmod +w %s"
+        cmd_w_asterisk = "chmod +w *"
 
     def setUp(self):
         super().setUp()
-        makeFiles(self.d)
-        self.testcog = os.path.join(self.tempdir, 'test.cog')
-        os.chmod(self.testcog, stat.S_IREAD)   # Make the file readonly.
+        make_files(self.d)
+        self.testcog = os.path.join(self.tempdir, "test.cog")
+        os.chmod(self.testcog, stat.S_IREAD)  # Make the file readonly.
         assert not os.access(self.testcog, os.W_OK)
 
     def tearDown(self):
-        os.chmod(self.testcog, stat.S_IWRITE)   # Make the file writable again.
+        os.chmod(self.testcog, stat.S_IWRITE)  # Make the file writable again.
         super().tearDown()
 
-    def testReadonlyNoCommand(self):
+    def test_readonly_no_command(self):
         with self.assertRaisesRegex(CogError, "^Can't overwrite test.cog$"):
-            self.cog.callableMain(['argv0', '-r', 'test.cog'])
+            self.cog.callable_main(["argv0", "-r", "test.cog"])
         assert not os.access(self.testcog, os.W_OK)
 
-    def testReadonlyWithCommand(self):
-        self.cog.callableMain(['argv0', '-r', '-w', self.cmd_w_args, 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+    def test_readonly_with_command(self):
+        self.cog.callable_main(["argv0", "-r", "-w", self.cmd_w_args, "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
         assert os.access(self.testcog, os.W_OK)
 
-    def testReadonlyWithCommandWithNoSlot(self):
-        self.cog.callableMain(['argv0', '-r', '-w', self.cmd_w_asterisk, 'test.cog'])
-        self.assertFilesSame('test.cog', 'test.out')
+    def test_readonly_with_command_with_no_slot(self):
+        self.cog.callable_main(["argv0", "-r", "-w", self.cmd_w_asterisk, "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
         assert os.access(self.testcog, os.W_OK)
 
-    def testReadonlyWithIneffectualCommand(self):
+    def test_readonly_with_ineffectual_command(self):
         with self.assertRaisesRegex(CogError, "^Couldn't make test.cog writable$"):
-            self.cog.callableMain(['argv0', '-r', '-w', 'echo %s', 'test.cog'])
+            self.cog.callable_main(["argv0", "-r", "-w", "echo %s", "test.cog"])
         assert not os.access(self.testcog, os.W_OK)
 
 
 class ChecksumTests(TestCaseWithTempDir):
-
-    def testCreateChecksumOutput(self):
+    def test_create_checksum_output(self):
         d = {
-            'cog1.txt': """\
+            "cog1.txt": """\
                 //[[[cog
                 cog.outl("This line was generated.")
                 //]]]
                 This line was generated.
-                //[[[end]]]
+                //[[[end]]] what
                 This line was not.
                 """,
-
-            'cog1.out': """\
+            "cog1.out": """\
                 //[[[cog
                 cog.outl("This line was generated.")
                 //]]]
                 This line was generated.
-                //[[[end]]] (checksum: 8adb13fb59b996a1c7f0065ea9f3d893)
+                //[[[end]]] (sum: itsT+1m5lq) what
                 This line was not.
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-c', 'cog1.txt'])
-        self.assertFilesSame('cog1.txt', 'cog1.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "-c", "cog1.txt"])
+        self.assertFilesSame("cog1.txt", "cog1.out")
 
-    def testCheckChecksumOutput(self):
+    def test_check_checksum_output(self):
         d = {
-            'cog1.txt': """\
+            "cog1.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
                 cog.outl("blah blah.")
                 //]]]
                 This line was generated.
-                //[[[end]]] (checksum: 8adb13fb59b996a1c7f0065ea9f3d893)
+                //[[[end]]] (sum: itsT+1m5lq) end
                 """,
-
-            'cog1.out': """\
+            "cog1.out": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -2324,27 +2437,55 @@ class ChecksumTests(TestCaseWithTempDir):
                 This line was newly
                 generated by cog
                 blah blah.
-                //[[[end]]] (checksum: a8540982e5ad6b95c9e9a184b26f4346)
+                //[[[end]]] (sum: qFQJguWta5) end
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', '-c', 'cog1.txt'])
-        self.assertFilesSame('cog1.txt', 'cog1.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "-c", "cog1.txt"])
+        self.assertFilesSame("cog1.txt", "cog1.out")
 
-    def testRemoveChecksumOutput(self):
+    def test_check_old_checksum_format(self):
+        # Test that old checksum format can still be read
         d = {
-            'cog1.txt': """\
+            "cog1.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
                 cog.outl("blah blah.")
                 //]]]
                 This line was generated.
-                //[[[end]]] (checksum: 8adb13fb59b996a1c7f0065ea9f3d893) fooey
+                //[[[end]]] (checksum: 8adb13fb59b996a1c7f0065ea9f3d893) end
                 """,
+            "cog1.out": """\
+                //[[[cog
+                cog.outl("This line was newly")
+                cog.outl("generated by cog")
+                cog.outl("blah blah.")
+                //]]]
+                This line was newly
+                generated by cog
+                blah blah.
+                //[[[end]]] (sum: qFQJguWta5) end
+                """,
+        }
 
-            'cog1.out': """\
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "-c", "cog1.txt"])
+        self.assertFilesSame("cog1.txt", "cog1.out")
+
+    def test_remove_checksum_output(self):
+        d = {
+            "cog1.txt": """\
+                //[[[cog
+                cog.outl("This line was newly")
+                cog.outl("generated by cog")
+                cog.outl("blah blah.")
+                //]]]
+                This line was generated.
+                //[[[end]]] (sum: itsT+1m5lq) fooey
+                """,
+            "cog1.out": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -2355,15 +2496,15 @@ class ChecksumTests(TestCaseWithTempDir):
                 blah blah.
                 //[[[end]]] fooey
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-r', 'cog1.txt'])
-        self.assertFilesSame('cog1.txt', 'cog1.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "cog1.txt"])
+        self.assertFilesSame("cog1.txt", "cog1.out")
 
-    def testTamperedChecksumOutput(self):
+    def test_tampered_checksum_output(self):
         d = {
-            'cog1.txt': """\
+            "cog1.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -2372,10 +2513,9 @@ class ChecksumTests(TestCaseWithTempDir):
                 Xhis line was newly
                 generated by cog
                 blah blah.
-                //[[[end]]] (checksum: a8540982e5ad6b95c9e9a184b26f4346)
+                //[[[end]]] (sum: qFQJguWta5)
                 """,
-
-            'cog2.txt': """\
+            "cog2.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -2384,10 +2524,9 @@ class ChecksumTests(TestCaseWithTempDir):
                 This line was newly
                 generated by cog
                 blah blah!
-                //[[[end]]] (checksum: a8540982e5ad6b95c9e9a184b26f4346)
+                //[[[end]]] (sum: qFQJguWta5)
                 """,
-
-            'cog3.txt': """\
+            "cog3.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -2397,10 +2536,9 @@ class ChecksumTests(TestCaseWithTempDir):
                 This line was newly
                 generated by cog
                 blah blah.
-                //[[[end]]] (checksum: a8540982e5ad6b95c9e9a184b26f4346)
+                //[[[end]]] (sum: qFQJguWta5)
                 """,
-
-            'cog4.txt': """\
+            "cog4.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -2409,10 +2547,9 @@ class ChecksumTests(TestCaseWithTempDir):
                 This line was newly
                 generated by cog
                 blah blah..
-                //[[[end]]] (checksum: a8540982e5ad6b95c9e9a184b26f4346)
+                //[[[end]]] (sum: qFQJguWta5)
                 """,
-
-            'cog5.txt': """\
+            "cog5.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
@@ -2422,135 +2559,133 @@ class ChecksumTests(TestCaseWithTempDir):
                 generated by cog
                 blah blah.
                 extra
-                //[[[end]]] (checksum: a8540982e5ad6b95c9e9a184b26f4346)
+                //[[[end]]] (sum: qFQJguWta5)
                 """,
-
-            'cog6.txt': """\
+            "cog6.txt": """\
                 //[[[cog
                 cog.outl("This line was newly")
                 cog.outl("generated by cog")
                 cog.outl("blah blah.")
                 //]]]
-                //[[[end]]] (checksum: a8540982e5ad6b95c9e9a184b26f4346)
+                //[[[end]]] (sum: qFQJguWta5)
                 """,
-            }
+        }
 
-        makeFiles(d)
-        with self.assertRaisesRegex(CogError,
-            r"^cog1.txt\(9\): Output has been edited! Delete old checksum to unprotect.$"):
-            self.cog.callableMain(['argv0', '-c', "cog1.txt"])
-        with self.assertRaisesRegex(CogError,
-            r"^cog2.txt\(9\): Output has been edited! Delete old checksum to unprotect.$"):
-            self.cog.callableMain(['argv0', '-c', "cog2.txt"])
-        with self.assertRaisesRegex(CogError,
-            r"^cog3.txt\(10\): Output has been edited! Delete old checksum to unprotect.$"):
-            self.cog.callableMain(['argv0', '-c', "cog3.txt"])
-        with self.assertRaisesRegex(CogError,
-            r"^cog4.txt\(9\): Output has been edited! Delete old checksum to unprotect.$"):
-            self.cog.callableMain(['argv0', '-c', "cog4.txt"])
-        with self.assertRaisesRegex(CogError,
-            r"^cog5.txt\(10\): Output has been edited! Delete old checksum to unprotect.$"):
-            self.cog.callableMain(['argv0', '-c', "cog5.txt"])
-        with self.assertRaisesRegex(CogError,
-            r"^cog6.txt\(6\): Output has been edited! Delete old checksum to unprotect.$"):
-            self.cog.callableMain(['argv0', '-c', "cog6.txt"])
+        make_files(d)
+        with self.assertRaisesRegex(
+            CogError,
+            r"^cog1.txt\(9\): Output has been edited! Delete old checksum to unprotect.$",
+        ):
+            self.cog.callable_main(["argv0", "-c", "cog1.txt"])
+        with self.assertRaisesRegex(
+            CogError,
+            r"^cog2.txt\(9\): Output has been edited! Delete old checksum to unprotect.$",
+        ):
+            self.cog.callable_main(["argv0", "-c", "cog2.txt"])
+        with self.assertRaisesRegex(
+            CogError,
+            r"^cog3.txt\(10\): Output has been edited! Delete old checksum to unprotect.$",
+        ):
+            self.cog.callable_main(["argv0", "-c", "cog3.txt"])
+        with self.assertRaisesRegex(
+            CogError,
+            r"^cog4.txt\(9\): Output has been edited! Delete old checksum to unprotect.$",
+        ):
+            self.cog.callable_main(["argv0", "-c", "cog4.txt"])
+        with self.assertRaisesRegex(
+            CogError,
+            r"^cog5.txt\(10\): Output has been edited! Delete old checksum to unprotect.$",
+        ):
+            self.cog.callable_main(["argv0", "-c", "cog5.txt"])
+        with self.assertRaisesRegex(
+            CogError,
+            r"^cog6.txt\(6\): Output has been edited! Delete old checksum to unprotect.$",
+        ):
+            self.cog.callable_main(["argv0", "-c", "cog6.txt"])
 
-    def testArgvIsntModified(self):
-        argv = ['argv0', '-v']
+    def test_argv_isnt_modified(self):
+        argv = ["argv0", "-v"]
         orig_argv = argv[:]
-        self.cog.callableMain(argv)
+        self.cog.callable_main(argv)
         self.assertEqual(argv, orig_argv)
 
 
 class CustomMarkerTests(TestCaseWithTempDir):
-
-    def testCustomerMarkers(self):
+    def test_customer_markers(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 //{{
                 cog.outl("void %s();" % "MyFunction")
                 //}}
                 //{{end}}
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 //{{
                 cog.outl("void %s();" % "MyFunction")
                 //}}
                 void MyFunction();
                 //{{end}}
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain([
-            'argv0', '-r',
-            '--markers={{ }} {{end}}',
-            'test.cog'
-        ])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-r", "--markers={{ }} {{end}}", "test.cog"])
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testTrulyWackyMarkers(self):
+    def test_truly_wacky_markers(self):
         # Make sure the markers are properly re-escaped.
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 //**(
                 cog.outl("void %s();" % "MyFunction")
                 //**)
                 //**(end)**
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 //**(
                 cog.outl("void %s();" % "MyFunction")
                 //**)
                 void MyFunction();
                 //**(end)**
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain([
-            'argv0', '-r',
-            '--markers=**( **) **(end)**',
-            'test.cog'
-        ])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(
+            ["argv0", "-r", "--markers=**( **) **(end)**", "test.cog"]
+        )
+        self.assertFilesSame("test.cog", "test.out")
 
-    def testChangeJustOneMarker(self):
+    def test_change_just_one_marker(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 //**(
                 cog.outl("void %s();" % "MyFunction")
                 //]]]
                 //[[[end]]]
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 //**(
                 cog.outl("void %s();" % "MyFunction")
                 //]]]
                 void MyFunction();
                 //[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain([
-            'argv0', '-r',
-            '--markers=**( ]]] [[[end]]]',
-            'test.cog'
-        ])
-        self.assertFilesSame('test.cog', 'test.out')
+        make_files(d)
+        self.cog.callable_main(
+            ["argv0", "-r", "--markers=**( ]]] [[[end]]]", "test.cog"]
+        )
+        self.assertFilesSame("test.cog", "test.out")
 
 
 class BlakeTests(TestCaseWithTempDir):
-
     # Blake Winton's contributions.
-    def testDeleteCode(self):
+    def test_delete_code(self):
         # -o sets the output file.
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 // This is my C++ file.
                 //[[[cog
                 fnames = ['DoSomething', 'DoAnotherThing', 'DoLastThing']
@@ -2561,36 +2696,38 @@ class BlakeTests(TestCaseWithTempDir):
                 //[[[end]]]Data Data
                 And Some More
                 """,
-
-            'test.out': """\
+            "test.out": """\
                 // This is my C++ file.
                 void DoSomething();
                 void DoAnotherThing();
                 void DoLastThing();
                 And Some More
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.callableMain(['argv0', '-d', '-o', 'test.cogged', 'test.cog'])
-        self.assertFilesSame('test.cogged', 'test.out')
+        make_files(d)
+        self.cog.callable_main(["argv0", "-d", "-o", "test.cogged", "test.cog"])
+        self.assertFilesSame("test.cogged", "test.out")
 
-    def testDeleteCodeWithDashRFails(self):
+    def test_delete_code_with_dash_r_fails(self):
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 // This is my C++ file.
                 """
-            }
+        }
 
-        makeFiles(d)
-        with self.assertRaisesRegex(CogUsageError, r"^Can't use -d with -r \(or you would delete all your source!\)$"):
-            self.cog.callableMain(['argv0', '-r', '-d', 'test.cog'])
+        make_files(d)
+        with self.assertRaisesRegex(
+            CogUsageError,
+            r"^Can't use -d with -r \(or you would delete all your source!\)$",
+        ):
+            self.cog.callable_main(["argv0", "-r", "-d", "test.cog"])
 
-    def testSettingGlobals(self):
+    def test_setting_globals(self):
         # Blake Winton contributed a way to set the globals that will be used in
         # processFile().
         d = {
-            'test.cog': """\
+            "test.cog": """\
                 // This is my C++ file.
                 //[[[cog
                 for fn in fnames:
@@ -2598,58 +2735,86 @@ class BlakeTests(TestCaseWithTempDir):
                 //]]]
                 Some Sample Code Here
                 //[[[end]]]""",
-
-            'test.out': """\
+            "test.out": """\
                 // This is my C++ file.
                 void DoBlake();
                 void DoWinton();
                 void DoContribution();
                 """,
-            }
+        }
 
-        makeFiles(d)
+        make_files(d)
         globals = {}
-        globals['fnames'] = ['DoBlake', 'DoWinton', 'DoContribution']
-        self.cog.options.bDeleteCode = True
-        self.cog.processFile('test.cog', 'test.cogged', globals=globals)
-        self.assertFilesSame('test.cogged', 'test.out')
+        globals["fnames"] = ["DoBlake", "DoWinton", "DoContribution"]
+        self.cog.options.delete_code = True
+        self.cog.process_file("test.cog", "test.cogged", globals=globals)
+        self.assertFilesSame("test.cogged", "test.out")
 
 
 class ErrorCallTests(TestCaseWithTempDir):
-
-    def testErrorCallHasNoTraceback(self):
+    def test_error_call_has_no_traceback(self):
         # Test that cog.error() doesn't show a traceback.
         d = {
-            'error.cog': """\
+            "error.cog": """\
                 //[[[cog
                 cog.error("Something Bad!")
                 //]]]
                 //[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.main(['argv0', '-r', 'error.cog'])
+        make_files(d)
+        self.cog.main(["argv0", "-r", "error.cog"])
         output = self.output.getvalue()
         self.assertEqual(output, "Cogging error.cog\nError: Something Bad!\n")
 
-    def testRealErrorHasTraceback(self):
+    def test_real_error_has_traceback(self):
         # Test that a genuine error does show a traceback.
         d = {
-            'error.cog': """\
+            "error.cog": """\
                 //[[[cog
                 raise RuntimeError("Hey!")
                 //]]]
                 //[[[end]]]
                 """,
-            }
+        }
 
-        makeFiles(d)
-        self.cog.main(['argv0', '-r', 'error.cog'])
+        make_files(d)
+        self.cog.main(["argv0", "-r", "error.cog"])
         output = self.output.getvalue()
-        msg = 'Actual output:\n' + output
-        self.assertTrue(output.startswith("Cogging error.cog\nTraceback (most recent"), msg)
+        msg = "Actual output:\n" + output
+        self.assertTrue(
+            output.startswith("Cogging error.cog\nTraceback (most recent"), msg
+        )
         self.assertIn("RuntimeError: Hey!", output)
+
+
+class HashHandlerTests(TestCase):
+    """Test cases for HashHandler functionality."""
+
+    def setUp(self):
+        self.handler = HashHandler("[[[end]]]")
+
+    def test_validate_hash_with_base64_mismatch(self):
+        # Test the base64 validation branch with a mismatch
+        line = "//[[[end]]] (sum: wronghas12)"  # 10 chars to match regex
+        expected_hash = "a8540982e5ad6b95c9e9a184b26f4346"
+
+        with self.assertRaises(ValueError) as cm:
+            self.handler.validate_hash(line, expected_hash)
+        self.assertEqual(
+            str(cm.exception),
+            "Output has been edited! Delete old checksum to unprotect.",
+        )
+
+    def test_validate_hash_with_base64_match(self):
+        # Test the base64 validation branch with a match
+        line = "//[[[end]]] (sum: qFQJguWta5)"
+        expected_hash = "a8540982e5ad6b95c9e9a184b26f4346"
+
+        # Should not raise an exception
+        result = self.handler.validate_hash(line, expected_hash)
+        self.assertTrue(result)
 
 
 # Things not yet tested:

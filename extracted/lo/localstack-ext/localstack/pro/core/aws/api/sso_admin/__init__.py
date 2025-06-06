@@ -9,6 +9,7 @@ AccessControlAttributeValueSource = str
 AccessDeniedExceptionMessage = str
 AccountId = str
 ApplicationArn = str
+ApplicationNameType = str
 ApplicationProviderArn = str
 ApplicationUrl = str
 AssignmentRequired = bool
@@ -242,8 +243,8 @@ class AccountAssignment(TypedDict, total=False):
 
     AccountId: Optional[AccountId]
     PermissionSetArn: Optional[PermissionSetArn]
-    PrincipalId: Optional[PrincipalId]
     PrincipalType: Optional[PrincipalType]
+    PrincipalId: Optional[PrincipalId]
 
 
 class AccountAssignmentForPrincipal(TypedDict, total=False):
@@ -268,23 +269,23 @@ class AccountAssignmentOperationStatus(TypedDict, total=False):
     principal needs to access an account.
     """
 
-    CreatedDate: Optional[Date]
-    FailureReason: Optional[Reason]
-    PermissionSetArn: Optional[PermissionSetArn]
-    PrincipalId: Optional[PrincipalId]
-    PrincipalType: Optional[PrincipalType]
-    RequestId: Optional[UUId]
     Status: Optional[StatusValues]
+    RequestId: Optional[UUId]
+    FailureReason: Optional[Reason]
     TargetId: Optional[TargetId]
     TargetType: Optional[TargetType]
+    PermissionSetArn: Optional[PermissionSetArn]
+    PrincipalType: Optional[PrincipalType]
+    PrincipalId: Optional[PrincipalId]
+    CreatedDate: Optional[Date]
 
 
 class AccountAssignmentOperationStatusMetadata(TypedDict, total=False):
     """Provides information about the AccountAssignment creation request."""
 
-    CreatedDate: Optional[Date]
-    RequestId: Optional[UUId]
     Status: Optional[StatusValues]
+    RequestId: Optional[UUId]
+    CreatedDate: Optional[Date]
 
 
 AccountAssignmentOperationStatusList = List[AccountAssignmentOperationStatusMetadata]
@@ -300,8 +301,8 @@ class SignInOptions(TypedDict, total=False):
     portal.
     """
 
-    ApplicationUrl: Optional[ApplicationUrl]
     Origin: SignInOrigin
+    ApplicationUrl: Optional[ApplicationUrl]
 
 
 class PortalOptions(TypedDict, total=False):
@@ -318,15 +319,15 @@ class Application(TypedDict, total=False):
     for access management.
     """
 
-    ApplicationAccount: Optional[AccountId]
     ApplicationArn: Optional[ApplicationArn]
     ApplicationProviderArn: Optional[ApplicationProviderArn]
-    CreatedDate: Optional[Date]
-    Description: Optional[Description]
-    InstanceArn: Optional[InstanceArn]
     Name: Optional[NameType]
-    PortalOptions: Optional[PortalOptions]
+    ApplicationAccount: Optional[AccountId]
+    InstanceArn: Optional[InstanceArn]
     Status: Optional[ApplicationStatus]
+    PortalOptions: Optional[PortalOptions]
+    Description: Optional[Description]
+    CreatedDate: Optional[Date]
 
 
 class ApplicationAssignment(TypedDict, total=False):
@@ -359,8 +360,8 @@ class ResourceServerScopeDetails(TypedDict, total=False):
     scope that is associated with a resource server.
     """
 
-    DetailedTitle: Optional[Description]
     LongDescription: Optional[Description]
+    DetailedTitle: Optional[Description]
 
 
 ResourceServerScopes = Dict[ResourceServerScope, ResourceServerScopeDetails]
@@ -377,9 +378,9 @@ class DisplayData(TypedDict, total=False):
     provider.
     """
 
-    Description: Optional[Description]
     DisplayName: Optional[Name]
     IconUrl: Optional[IconUrl]
+    Description: Optional[Description]
 
 
 class ApplicationProvider(TypedDict, total=False):
@@ -389,8 +390,8 @@ class ApplicationProvider(TypedDict, total=False):
     """
 
     ApplicationProviderArn: ApplicationProviderArn
-    DisplayData: Optional[DisplayData]
     FederationProtocol: Optional[FederationProtocol]
+    DisplayData: Optional[DisplayData]
     ResourceServerConfig: Optional[ResourceServerConfig]
 
 
@@ -408,9 +409,9 @@ class CustomerManagedPolicyReference(TypedDict, total=False):
 
 
 class AttachCustomerManagedPolicyReferenceToPermissionSetRequest(ServiceRequest):
-    CustomerManagedPolicyReference: CustomerManagedPolicyReference
     InstanceArn: InstanceArn
     PermissionSetArn: PermissionSetArn
+    CustomerManagedPolicyReference: CustomerManagedPolicyReference
 
 
 class AttachCustomerManagedPolicyReferenceToPermissionSetResponse(TypedDict, total=False):
@@ -419,8 +420,8 @@ class AttachCustomerManagedPolicyReferenceToPermissionSetResponse(TypedDict, tot
 
 class AttachManagedPolicyToPermissionSetRequest(ServiceRequest):
     InstanceArn: InstanceArn
-    ManagedPolicyArn: ManagedPolicyArn
     PermissionSetArn: PermissionSetArn
+    ManagedPolicyArn: ManagedPolicyArn
 
 
 class AttachManagedPolicyToPermissionSetResponse(TypedDict, total=False):
@@ -428,12 +429,12 @@ class AttachManagedPolicyToPermissionSetResponse(TypedDict, total=False):
 
 
 class AttachedManagedPolicy(TypedDict, total=False):
-    """A structure that stores the details of the Amazon Web Services managed
-    policy.
+    """A structure that stores a list of managed policy ARNs that describe the
+    associated Amazon Web Services managed policy.
     """
 
-    Arn: Optional[ManagedPolicyArn]
     Name: Optional[Name]
+    Arn: Optional[ManagedPolicyArn]
 
 
 AttachedManagedPolicyList = List[AttachedManagedPolicy]
@@ -456,8 +457,8 @@ class AuthenticationMethod(TypedDict, total=False):
 class AuthenticationMethodItem(TypedDict, total=False):
     """A structure that describes an authentication method and its type."""
 
-    AuthenticationMethod: Optional[AuthenticationMethod]
     AuthenticationMethodType: Optional[AuthenticationMethodType]
+    AuthenticationMethod: Optional[AuthenticationMethod]
 
 
 AuthenticationMethods = List[AuthenticationMethodItem]
@@ -480,8 +481,8 @@ class AuthorizedTokenIssuer(TypedDict, total=False):
     a set of authorized audiences.
     """
 
-    AuthorizedAudiences: Optional[TokenIssuerAudiences]
     TrustedTokenIssuerArn: Optional[TrustedTokenIssuerArn]
+    AuthorizedAudiences: Optional[TokenIssuerAudiences]
 
 
 AuthorizedTokenIssuers = List[AuthorizedTokenIssuer]
@@ -489,11 +490,11 @@ AuthorizedTokenIssuers = List[AuthorizedTokenIssuer]
 
 class CreateAccountAssignmentRequest(ServiceRequest):
     InstanceArn: InstanceArn
-    PermissionSetArn: PermissionSetArn
-    PrincipalId: PrincipalId
-    PrincipalType: PrincipalType
     TargetId: TargetId
     TargetType: TargetType
+    PermissionSetArn: PermissionSetArn
+    PrincipalType: PrincipalType
+    PrincipalId: PrincipalId
 
 
 class CreateAccountAssignmentResponse(TypedDict, total=False):
@@ -525,14 +526,14 @@ TagList = List[Tag]
 
 
 class CreateApplicationRequest(ServiceRequest):
-    ApplicationProviderArn: ApplicationProviderArn
-    ClientToken: Optional[ClientToken]
-    Description: Optional[Description]
     InstanceArn: InstanceArn
-    Name: NameType
+    ApplicationProviderArn: ApplicationProviderArn
+    Name: ApplicationNameType
+    Description: Optional[Description]
     PortalOptions: Optional[PortalOptions]
-    Status: Optional[ApplicationStatus]
     Tags: Optional[TagList]
+    Status: Optional[ApplicationStatus]
+    ClientToken: Optional[ClientToken]
 
 
 class CreateApplicationResponse(TypedDict, total=False):
@@ -548,8 +549,8 @@ class InstanceAccessControlAttributeConfiguration(TypedDict, total=False):
 
 
 class CreateInstanceAccessControlAttributeConfigurationRequest(ServiceRequest):
-    InstanceAccessControlAttributeConfiguration: InstanceAccessControlAttributeConfiguration
     InstanceArn: InstanceArn
+    InstanceAccessControlAttributeConfiguration: InstanceAccessControlAttributeConfiguration
 
 
 class CreateInstanceAccessControlAttributeConfigurationResponse(TypedDict, total=False):
@@ -557,8 +558,8 @@ class CreateInstanceAccessControlAttributeConfigurationResponse(TypedDict, total
 
 
 class CreateInstanceRequest(ServiceRequest):
-    ClientToken: Optional[ClientToken]
     Name: Optional[NameType]
+    ClientToken: Optional[ClientToken]
     Tags: Optional[TagList]
 
 
@@ -567,23 +568,23 @@ class CreateInstanceResponse(TypedDict, total=False):
 
 
 class CreatePermissionSetRequest(ServiceRequest):
+    Name: PermissionSetName
     Description: Optional[PermissionSetDescription]
     InstanceArn: InstanceArn
-    Name: PermissionSetName
-    RelayState: Optional[RelayState]
     SessionDuration: Optional[Duration]
+    RelayState: Optional[RelayState]
     Tags: Optional[TagList]
 
 
 class PermissionSet(TypedDict, total=False):
     """An entity that contains IAM policies."""
 
-    CreatedDate: Optional[Date]
-    Description: Optional[PermissionSetDescription]
     Name: Optional[PermissionSetName]
     PermissionSetArn: Optional[PermissionSetArn]
-    RelayState: Optional[RelayState]
+    Description: Optional[PermissionSetDescription]
+    CreatedDate: Optional[Date]
     SessionDuration: Optional[Duration]
+    RelayState: Optional[RelayState]
 
 
 class CreatePermissionSetResponse(TypedDict, total=False):
@@ -595,9 +596,9 @@ class OidcJwtConfiguration(TypedDict, total=False):
     issuer that supports OpenID Connect (OIDC) and JSON Web Tokens (JWTs).
     """
 
+    IssuerUrl: TrustedTokenIssuerUrl
     ClaimAttributePath: ClaimAttributePath
     IdentityStoreAttributePath: JMESPath
-    IssuerUrl: TrustedTokenIssuerUrl
     JwksRetrievalOption: JwksRetrievalOption
 
 
@@ -611,12 +612,12 @@ class TrustedTokenIssuerConfiguration(TypedDict, total=False):
 
 
 class CreateTrustedTokenIssuerRequest(ServiceRequest):
-    ClientToken: Optional[ClientToken]
     InstanceArn: InstanceArn
     Name: TrustedTokenIssuerName
-    Tags: Optional[TagList]
-    TrustedTokenIssuerConfiguration: TrustedTokenIssuerConfiguration
     TrustedTokenIssuerType: TrustedTokenIssuerType
+    TrustedTokenIssuerConfiguration: TrustedTokenIssuerConfiguration
+    ClientToken: Optional[ClientToken]
+    Tags: Optional[TagList]
 
 
 class CreateTrustedTokenIssuerResponse(TypedDict, total=False):
@@ -628,11 +629,11 @@ CustomerManagedPolicyReferenceList = List[CustomerManagedPolicyReference]
 
 class DeleteAccountAssignmentRequest(ServiceRequest):
     InstanceArn: InstanceArn
-    PermissionSetArn: PermissionSetArn
-    PrincipalId: PrincipalId
-    PrincipalType: PrincipalType
     TargetId: TargetId
     TargetType: TargetType
+    PermissionSetArn: PermissionSetArn
+    PrincipalType: PrincipalType
+    PrincipalId: PrincipalId
 
 
 class DeleteAccountAssignmentResponse(TypedDict, total=False):
@@ -724,8 +725,8 @@ class DeleteTrustedTokenIssuerResponse(TypedDict, total=False):
 
 
 class DescribeAccountAssignmentCreationStatusRequest(ServiceRequest):
-    AccountAssignmentCreationRequestId: UUId
     InstanceArn: InstanceArn
+    AccountAssignmentCreationRequestId: UUId
 
 
 class DescribeAccountAssignmentCreationStatusResponse(TypedDict, total=False):
@@ -733,8 +734,8 @@ class DescribeAccountAssignmentCreationStatusResponse(TypedDict, total=False):
 
 
 class DescribeAccountAssignmentDeletionStatusRequest(ServiceRequest):
-    AccountAssignmentDeletionRequestId: UUId
     InstanceArn: InstanceArn
+    AccountAssignmentDeletionRequestId: UUId
 
 
 class DescribeAccountAssignmentDeletionStatusResponse(TypedDict, total=False):
@@ -748,9 +749,9 @@ class DescribeApplicationAssignmentRequest(ServiceRequest):
 
 
 class DescribeApplicationAssignmentResponse(TypedDict, total=False):
-    ApplicationArn: Optional[ApplicationArn]
-    PrincipalId: Optional[PrincipalId]
     PrincipalType: Optional[PrincipalType]
+    PrincipalId: Optional[PrincipalId]
+    ApplicationArn: Optional[ApplicationArn]
 
 
 class DescribeApplicationProviderRequest(ServiceRequest):
@@ -759,8 +760,8 @@ class DescribeApplicationProviderRequest(ServiceRequest):
 
 class DescribeApplicationProviderResponse(TypedDict, total=False):
     ApplicationProviderArn: ApplicationProviderArn
-    DisplayData: Optional[DisplayData]
     FederationProtocol: Optional[FederationProtocol]
+    DisplayData: Optional[DisplayData]
     ResourceServerConfig: Optional[ResourceServerConfig]
 
 
@@ -769,15 +770,15 @@ class DescribeApplicationRequest(ServiceRequest):
 
 
 class DescribeApplicationResponse(TypedDict, total=False):
-    ApplicationAccount: Optional[AccountId]
     ApplicationArn: Optional[ApplicationArn]
     ApplicationProviderArn: Optional[ApplicationProviderArn]
-    CreatedDate: Optional[Date]
-    Description: Optional[Description]
-    InstanceArn: Optional[InstanceArn]
     Name: Optional[NameType]
-    PortalOptions: Optional[PortalOptions]
+    ApplicationAccount: Optional[AccountId]
+    InstanceArn: Optional[InstanceArn]
     Status: Optional[ApplicationStatus]
+    PortalOptions: Optional[PortalOptions]
+    Description: Optional[Description]
+    CreatedDate: Optional[Date]
 
 
 class DescribeInstanceAccessControlAttributeConfigurationRequest(ServiceRequest):
@@ -785,11 +786,11 @@ class DescribeInstanceAccessControlAttributeConfigurationRequest(ServiceRequest)
 
 
 class DescribeInstanceAccessControlAttributeConfigurationResponse(TypedDict, total=False):
+    Status: Optional[InstanceAccessControlAttributeConfigurationStatus]
+    StatusReason: Optional[InstanceAccessControlAttributeConfigurationStatusReason]
     InstanceAccessControlAttributeConfiguration: Optional[
         InstanceAccessControlAttributeConfiguration
     ]
-    Status: Optional[InstanceAccessControlAttributeConfigurationStatus]
-    StatusReason: Optional[InstanceAccessControlAttributeConfigurationStatusReason]
 
 
 class DescribeInstanceRequest(ServiceRequest):
@@ -797,11 +798,11 @@ class DescribeInstanceRequest(ServiceRequest):
 
 
 class DescribeInstanceResponse(TypedDict, total=False):
-    CreatedDate: Optional[Date]
-    IdentityStoreId: Optional[Id]
     InstanceArn: Optional[InstanceArn]
-    Name: Optional[NameType]
+    IdentityStoreId: Optional[Id]
     OwnerAccountId: Optional[AccountId]
+    Name: Optional[NameType]
+    CreatedDate: Optional[Date]
     Status: Optional[InstanceStatus]
 
 
@@ -815,12 +816,12 @@ class PermissionSetProvisioningStatus(TypedDict, total=False):
     operation for a specified permission set.
     """
 
-    AccountId: Optional[AccountId]
-    CreatedDate: Optional[Date]
-    FailureReason: Optional[Reason]
-    PermissionSetArn: Optional[PermissionSetArn]
-    RequestId: Optional[UUId]
     Status: Optional[StatusValues]
+    RequestId: Optional[UUId]
+    AccountId: Optional[AccountId]
+    PermissionSetArn: Optional[PermissionSetArn]
+    FailureReason: Optional[Reason]
+    CreatedDate: Optional[Date]
 
 
 class DescribePermissionSetProvisioningStatusResponse(TypedDict, total=False):
@@ -841,16 +842,16 @@ class DescribeTrustedTokenIssuerRequest(ServiceRequest):
 
 
 class DescribeTrustedTokenIssuerResponse(TypedDict, total=False):
-    Name: Optional[TrustedTokenIssuerName]
     TrustedTokenIssuerArn: Optional[TrustedTokenIssuerArn]
-    TrustedTokenIssuerConfiguration: Optional[TrustedTokenIssuerConfiguration]
+    Name: Optional[TrustedTokenIssuerName]
     TrustedTokenIssuerType: Optional[TrustedTokenIssuerType]
+    TrustedTokenIssuerConfiguration: Optional[TrustedTokenIssuerConfiguration]
 
 
 class DetachCustomerManagedPolicyReferenceFromPermissionSetRequest(ServiceRequest):
-    CustomerManagedPolicyReference: CustomerManagedPolicyReference
     InstanceArn: InstanceArn
     PermissionSetArn: PermissionSetArn
+    CustomerManagedPolicyReference: CustomerManagedPolicyReference
 
 
 class DetachCustomerManagedPolicyReferenceFromPermissionSetResponse(TypedDict, total=False):
@@ -859,8 +860,8 @@ class DetachCustomerManagedPolicyReferenceFromPermissionSetResponse(TypedDict, t
 
 class DetachManagedPolicyFromPermissionSetRequest(ServiceRequest):
     InstanceArn: InstanceArn
-    ManagedPolicyArn: ManagedPolicyArn
     PermissionSetArn: PermissionSetArn
+    ManagedPolicyArn: ManagedPolicyArn
 
 
 class DetachManagedPolicyFromPermissionSetResponse(TypedDict, total=False):
@@ -876,8 +877,8 @@ ScopeTargets = List[ScopeTarget]
 
 
 class GetApplicationAccessScopeResponse(TypedDict, total=False):
-    AuthorizedTargets: Optional[ScopeTargets]
     Scope: Scope
+    AuthorizedTargets: Optional[ScopeTargets]
 
 
 class GetApplicationAssignmentConfigurationRequest(ServiceRequest):
@@ -904,7 +905,8 @@ class GetApplicationGrantRequest(ServiceRequest):
 
 class TokenExchangeGrant(TypedDict, total=False):
     """A structure that defines configuration settings for an application that
-    supports the OAuth 2.0 Token Exchange Grant.
+    supports the OAuth 2.0 Token Exchange Grant. For more information, see
+    `RFC 8693 <https://datatracker.ietf.org/doc/html/rfc8693>`__.
     """
 
     pass
@@ -912,7 +914,8 @@ class TokenExchangeGrant(TypedDict, total=False):
 
 class RefreshTokenGrant(TypedDict, total=False):
     """A structure that defines configuration settings for an application that
-    supports the OAuth 2.0 Refresh Token Grant.
+    supports the OAuth 2.0 Refresh Token Grant. For more, see `RFC
+    6749 <https://datatracker.ietf.org/doc/html/rfc6749#section-1.5>`__.
     """
 
     pass
@@ -920,7 +923,9 @@ class RefreshTokenGrant(TypedDict, total=False):
 
 class JwtBearerGrant(TypedDict, total=False):
     """A structure that defines configuration settings for an application that
-    supports the JWT Bearer Token Authorization Grant.
+    supports the JWT Bearer Token Authorization Grant. The
+    ``AuthorizedAudience`` field is the aud claim. For more information, see
+    `RFC 7523 <https://datatracker.ietf.org/doc/html/rfc7523>`__.
     """
 
     AuthorizedTokenIssuers: Optional[AuthorizedTokenIssuers]
@@ -985,8 +990,8 @@ class GetPermissionsBoundaryForPermissionSetResponse(TypedDict, total=False):
 class GrantItem(TypedDict, total=False):
     """A structure that defines a single grant and its configuration."""
 
-    Grant: Grant
     GrantType: GrantType
+    Grant: Grant
 
 
 Grants = List[GrantItem]
@@ -995,11 +1000,11 @@ Grants = List[GrantItem]
 class InstanceMetadata(TypedDict, total=False):
     """Provides information about the IAM Identity Center instance."""
 
-    CreatedDate: Optional[Date]
-    IdentityStoreId: Optional[Id]
     InstanceArn: Optional[InstanceArn]
-    Name: Optional[NameType]
+    IdentityStoreId: Optional[Id]
     OwnerAccountId: Optional[AccountId]
+    Name: Optional[NameType]
+    CreatedDate: Optional[Date]
     Status: Optional[InstanceStatus]
 
 
@@ -1013,10 +1018,10 @@ class OperationStatusFilter(TypedDict, total=False):
 
 
 class ListAccountAssignmentCreationStatusRequest(ServiceRequest):
-    Filter: Optional[OperationStatusFilter]
     InstanceArn: InstanceArn
     MaxResults: Optional[MaxResults]
     NextToken: Optional[Token]
+    Filter: Optional[OperationStatusFilter]
 
 
 class ListAccountAssignmentCreationStatusResponse(TypedDict, total=False):
@@ -1025,10 +1030,10 @@ class ListAccountAssignmentCreationStatusResponse(TypedDict, total=False):
 
 
 class ListAccountAssignmentDeletionStatusRequest(ServiceRequest):
-    Filter: Optional[OperationStatusFilter]
     InstanceArn: InstanceArn
     MaxResults: Optional[MaxResults]
     NextToken: Optional[Token]
+    Filter: Optional[OperationStatusFilter]
 
 
 class ListAccountAssignmentDeletionStatusResponse(TypedDict, total=False):
@@ -1043,12 +1048,12 @@ class ListAccountAssignmentsFilter(TypedDict, total=False):
 
 
 class ListAccountAssignmentsForPrincipalRequest(ServiceRequest):
-    Filter: Optional[ListAccountAssignmentsFilter]
     InstanceArn: InstanceArn
-    MaxResults: Optional[MaxResults]
-    NextToken: Optional[Token]
     PrincipalId: PrincipalId
     PrincipalType: PrincipalType
+    Filter: Optional[ListAccountAssignmentsFilter]
+    NextToken: Optional[Token]
+    MaxResults: Optional[MaxResults]
 
 
 class ListAccountAssignmentsForPrincipalResponse(TypedDict, total=False):
@@ -1057,11 +1062,11 @@ class ListAccountAssignmentsForPrincipalResponse(TypedDict, total=False):
 
 
 class ListAccountAssignmentsRequest(ServiceRequest):
-    AccountId: TargetId
     InstanceArn: InstanceArn
+    AccountId: TargetId
+    PermissionSetArn: PermissionSetArn
     MaxResults: Optional[MaxResults]
     NextToken: Optional[Token]
-    PermissionSetArn: PermissionSetArn
 
 
 class ListAccountAssignmentsResponse(TypedDict, total=False):
@@ -1071,10 +1076,10 @@ class ListAccountAssignmentsResponse(TypedDict, total=False):
 
 class ListAccountsForProvisionedPermissionSetRequest(ServiceRequest):
     InstanceArn: InstanceArn
-    MaxResults: Optional[MaxResults]
-    NextToken: Optional[Token]
     PermissionSetArn: PermissionSetArn
     ProvisioningStatus: Optional[ProvisioningStatus]
+    MaxResults: Optional[MaxResults]
+    NextToken: Optional[Token]
 
 
 class ListAccountsForProvisionedPermissionSetResponse(TypedDict, total=False):
@@ -1093,16 +1098,16 @@ class ScopeDetails(TypedDict, total=False):
     authorized targets.
     """
 
-    AuthorizedTargets: Optional[ScopeTargets]
     Scope: Scope
+    AuthorizedTargets: Optional[ScopeTargets]
 
 
 Scopes = List[ScopeDetails]
 
 
 class ListApplicationAccessScopesResponse(TypedDict, total=False):
-    NextToken: Optional[Token]
     Scopes: Scopes
+    NextToken: Optional[Token]
 
 
 class ListApplicationAssignmentsFilter(TypedDict, total=False):
@@ -1112,12 +1117,12 @@ class ListApplicationAssignmentsFilter(TypedDict, total=False):
 
 
 class ListApplicationAssignmentsForPrincipalRequest(ServiceRequest):
-    Filter: Optional[ListApplicationAssignmentsFilter]
     InstanceArn: InstanceArn
-    MaxResults: Optional[MaxResults]
-    NextToken: Optional[Token]
     PrincipalId: PrincipalId
     PrincipalType: PrincipalType
+    Filter: Optional[ListApplicationAssignmentsFilter]
+    NextToken: Optional[Token]
+    MaxResults: Optional[MaxResults]
 
 
 class ListApplicationAssignmentsForPrincipalResponse(TypedDict, total=False):
@@ -1174,10 +1179,10 @@ class ListApplicationsFilter(TypedDict, total=False):
 
 
 class ListApplicationsRequest(ServiceRequest):
-    Filter: Optional[ListApplicationsFilter]
     InstanceArn: InstanceArn
     MaxResults: Optional[MaxResults]
     NextToken: Optional[Token]
+    Filter: Optional[ListApplicationsFilter]
 
 
 class ListApplicationsResponse(TypedDict, total=False):
@@ -1187,9 +1192,9 @@ class ListApplicationsResponse(TypedDict, total=False):
 
 class ListCustomerManagedPolicyReferencesInPermissionSetRequest(ServiceRequest):
     InstanceArn: InstanceArn
+    PermissionSetArn: PermissionSetArn
     MaxResults: Optional[MaxResults]
     NextToken: Optional[Token]
-    PermissionSetArn: PermissionSetArn
 
 
 class ListCustomerManagedPolicyReferencesInPermissionSetResponse(TypedDict, total=False):
@@ -1209,9 +1214,9 @@ class ListInstancesResponse(TypedDict, total=False):
 
 class ListManagedPoliciesInPermissionSetRequest(ServiceRequest):
     InstanceArn: InstanceArn
+    PermissionSetArn: PermissionSetArn
     MaxResults: Optional[MaxResults]
     NextToken: Optional[Token]
-    PermissionSetArn: PermissionSetArn
 
 
 class ListManagedPoliciesInPermissionSetResponse(TypedDict, total=False):
@@ -1220,34 +1225,34 @@ class ListManagedPoliciesInPermissionSetResponse(TypedDict, total=False):
 
 
 class ListPermissionSetProvisioningStatusRequest(ServiceRequest):
-    Filter: Optional[OperationStatusFilter]
     InstanceArn: InstanceArn
     MaxResults: Optional[MaxResults]
     NextToken: Optional[Token]
+    Filter: Optional[OperationStatusFilter]
 
 
 class PermissionSetProvisioningStatusMetadata(TypedDict, total=False):
     """Provides information about the permission set provisioning status."""
 
-    CreatedDate: Optional[Date]
-    RequestId: Optional[UUId]
     Status: Optional[StatusValues]
+    RequestId: Optional[UUId]
+    CreatedDate: Optional[Date]
 
 
 PermissionSetProvisioningStatusList = List[PermissionSetProvisioningStatusMetadata]
 
 
 class ListPermissionSetProvisioningStatusResponse(TypedDict, total=False):
-    NextToken: Optional[Token]
     PermissionSetsProvisioningStatus: Optional[PermissionSetProvisioningStatusList]
+    NextToken: Optional[Token]
 
 
 class ListPermissionSetsProvisionedToAccountRequest(ServiceRequest):
-    AccountId: AccountId
     InstanceArn: InstanceArn
+    AccountId: AccountId
+    ProvisioningStatus: Optional[ProvisioningStatus]
     MaxResults: Optional[MaxResults]
     NextToken: Optional[Token]
-    ProvisioningStatus: Optional[ProvisioningStatus]
 
 
 PermissionSetList = List[PermissionSetArn]
@@ -1260,24 +1265,24 @@ class ListPermissionSetsProvisionedToAccountResponse(TypedDict, total=False):
 
 class ListPermissionSetsRequest(ServiceRequest):
     InstanceArn: InstanceArn
-    MaxResults: Optional[MaxResults]
     NextToken: Optional[Token]
+    MaxResults: Optional[MaxResults]
 
 
 class ListPermissionSetsResponse(TypedDict, total=False):
-    NextToken: Optional[Token]
     PermissionSets: Optional[PermissionSetList]
+    NextToken: Optional[Token]
 
 
 class ListTagsForResourceRequest(ServiceRequest):
     InstanceArn: Optional[InstanceArn]
-    NextToken: Optional[Token]
     ResourceArn: TaggableResourceArn
+    NextToken: Optional[Token]
 
 
 class ListTagsForResourceResponse(TypedDict, total=False):
-    NextToken: Optional[Token]
     Tags: Optional[TagList]
+    NextToken: Optional[Token]
 
 
 class ListTrustedTokenIssuersRequest(ServiceRequest):
@@ -1289,8 +1294,8 @@ class ListTrustedTokenIssuersRequest(ServiceRequest):
 class TrustedTokenIssuerMetadata(TypedDict, total=False):
     """A structure that describes a trusted token issuer."""
 
-    Name: Optional[TrustedTokenIssuerName]
     TrustedTokenIssuerArn: Optional[TrustedTokenIssuerArn]
+    Name: Optional[TrustedTokenIssuerName]
     TrustedTokenIssuerType: Optional[TrustedTokenIssuerType]
 
 
@@ -1298,8 +1303,8 @@ TrustedTokenIssuerList = List[TrustedTokenIssuerMetadata]
 
 
 class ListTrustedTokenIssuersResponse(TypedDict, total=False):
-    NextToken: Optional[Token]
     TrustedTokenIssuers: Optional[TrustedTokenIssuerList]
+    NextToken: Optional[Token]
 
 
 class OidcJwtUpdateConfiguration(TypedDict, total=False):
@@ -1325,9 +1330,9 @@ class ProvisionPermissionSetResponse(TypedDict, total=False):
 
 
 class PutApplicationAccessScopeRequest(ServiceRequest):
-    ApplicationArn: ApplicationArn
-    AuthorizedTargets: Optional[ScopeTargets]
     Scope: Scope
+    AuthorizedTargets: Optional[ScopeTargets]
+    ApplicationArn: ApplicationArn
 
 
 class PutApplicationAssignmentConfigurationRequest(ServiceRequest):
@@ -1341,20 +1346,20 @@ class PutApplicationAssignmentConfigurationResponse(TypedDict, total=False):
 
 class PutApplicationAuthenticationMethodRequest(ServiceRequest):
     ApplicationArn: ApplicationArn
-    AuthenticationMethod: AuthenticationMethod
     AuthenticationMethodType: AuthenticationMethodType
+    AuthenticationMethod: AuthenticationMethod
 
 
 class PutApplicationGrantRequest(ServiceRequest):
     ApplicationArn: ApplicationArn
-    Grant: Grant
     GrantType: GrantType
+    Grant: Grant
 
 
 class PutInlinePolicyToPermissionSetRequest(ServiceRequest):
-    InlinePolicy: PermissionSetPolicyDocument
     InstanceArn: InstanceArn
     PermissionSetArn: PermissionSetArn
+    InlinePolicy: PermissionSetPolicyDocument
 
 
 class PutInlinePolicyToPermissionSetResponse(TypedDict, total=False):
@@ -1413,10 +1418,10 @@ class UpdateApplicationPortalOptions(TypedDict, total=False):
 
 class UpdateApplicationRequest(ServiceRequest):
     ApplicationArn: ApplicationArn
+    Name: Optional[ApplicationNameType]
     Description: Optional[Description]
-    Name: Optional[NameType]
-    PortalOptions: Optional[UpdateApplicationPortalOptions]
     Status: Optional[ApplicationStatus]
+    PortalOptions: Optional[UpdateApplicationPortalOptions]
 
 
 class UpdateApplicationResponse(TypedDict, total=False):
@@ -1424,8 +1429,8 @@ class UpdateApplicationResponse(TypedDict, total=False):
 
 
 class UpdateInstanceAccessControlAttributeConfigurationRequest(ServiceRequest):
-    InstanceAccessControlAttributeConfiguration: InstanceAccessControlAttributeConfiguration
     InstanceArn: InstanceArn
+    InstanceAccessControlAttributeConfiguration: InstanceAccessControlAttributeConfiguration
 
 
 class UpdateInstanceAccessControlAttributeConfigurationResponse(TypedDict, total=False):
@@ -1433,8 +1438,8 @@ class UpdateInstanceAccessControlAttributeConfigurationResponse(TypedDict, total
 
 
 class UpdateInstanceRequest(ServiceRequest):
-    InstanceArn: InstanceArn
     Name: NameType
+    InstanceArn: InstanceArn
 
 
 class UpdateInstanceResponse(TypedDict, total=False):
@@ -1442,11 +1447,11 @@ class UpdateInstanceResponse(TypedDict, total=False):
 
 
 class UpdatePermissionSetRequest(ServiceRequest):
-    Description: Optional[PermissionSetDescription]
     InstanceArn: InstanceArn
     PermissionSetArn: PermissionSetArn
-    RelayState: Optional[RelayState]
+    Description: Optional[PermissionSetDescription]
     SessionDuration: Optional[Duration]
+    RelayState: Optional[RelayState]
 
 
 class UpdatePermissionSetResponse(TypedDict, total=False):
@@ -1454,8 +1459,8 @@ class UpdatePermissionSetResponse(TypedDict, total=False):
 
 
 class UpdateTrustedTokenIssuerRequest(ServiceRequest):
-    Name: Optional[TrustedTokenIssuerName]
     TrustedTokenIssuerArn: TrustedTokenIssuerArn
+    Name: Optional[TrustedTokenIssuerName]
     TrustedTokenIssuerConfiguration: Optional[TrustedTokenIssuerUpdateConfiguration]
 
 
@@ -1471,18 +1476,18 @@ class SsoAdminApi:
     def attach_customer_managed_policy_reference_to_permission_set(
         self,
         context: RequestContext,
-        customer_managed_policy_reference: CustomerManagedPolicyReference,
         instance_arn: InstanceArn,
         permission_set_arn: PermissionSetArn,
+        customer_managed_policy_reference: CustomerManagedPolicyReference,
         **kwargs,
     ) -> AttachCustomerManagedPolicyReferenceToPermissionSetResponse:
         """Attaches the specified customer managed policy to the specified
         PermissionSet.
 
-        :param customer_managed_policy_reference: Specifies the name and path of a customer managed policy.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
         :param permission_set_arn: The ARN of the ``PermissionSet``.
+        :param customer_managed_policy_reference: Specifies the name and path of a customer managed policy.
         :returns: AttachCustomerManagedPolicyReferenceToPermissionSetResponse
         :raises ServiceQuotaExceededException:
         :raises ThrottlingException:
@@ -1499,8 +1504,8 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        managed_policy_arn: ManagedPolicyArn,
         permission_set_arn: PermissionSetArn,
+        managed_policy_arn: ManagedPolicyArn,
         **kwargs,
     ) -> AttachManagedPolicyToPermissionSetResponse:
         """Attaches an Amazon Web Services managed policy ARN to a permission set.
@@ -1512,10 +1517,10 @@ class SsoAdminApi:
 
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
-        :param managed_policy_arn: The Amazon Web Services managed policy ARN to be attached to a
-        permission set.
         :param permission_set_arn: The ARN of the PermissionSet that the managed policy should be attached
         to.
+        :param managed_policy_arn: The Amazon Web Services managed policy ARN to be attached to a
+        permission set.
         :returns: AttachManagedPolicyToPermissionSetResponse
         :raises ServiceQuotaExceededException:
         :raises ThrottlingException:
@@ -1532,11 +1537,11 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        permission_set_arn: PermissionSetArn,
-        principal_id: PrincipalId,
-        principal_type: PrincipalType,
         target_id: TargetId,
         target_type: TargetType,
+        permission_set_arn: PermissionSetArn,
+        principal_type: PrincipalType,
+        principal_id: PrincipalId,
         **kwargs,
     ) -> CreateAccountAssignmentResponse:
         """Assigns access to a principal for a specified Amazon Web Services
@@ -1559,14 +1564,14 @@ class SsoAdminApi:
 
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
-        :param permission_set_arn: The ARN of the permission set that the admin wants to grant the
-        principal access to.
-        :param principal_id: An identifier for an object in IAM Identity Center, such as a user or
-        group.
-        :param principal_type: The entity type for which the assignment will be created.
         :param target_id: TargetID is an Amazon Web Services account identifier, (For example,
         123456789012).
         :param target_type: The entity type for which the assignment will be created.
+        :param permission_set_arn: The ARN of the permission set that the admin wants to grant the
+        principal access to.
+        :param principal_type: The entity type for which the assignment will be created.
+        :param principal_id: An identifier for an object in IAM Identity Center, such as a user or
+        group.
         :returns: CreateAccountAssignmentResponse
         :raises ServiceQuotaExceededException:
         :raises ThrottlingException:
@@ -1582,30 +1587,41 @@ class SsoAdminApi:
     def create_application(
         self,
         context: RequestContext,
-        application_provider_arn: ApplicationProviderArn,
         instance_arn: InstanceArn,
-        name: NameType,
-        client_token: ClientToken = None,
-        description: Description = None,
-        portal_options: PortalOptions = None,
-        status: ApplicationStatus = None,
-        tags: TagList = None,
+        application_provider_arn: ApplicationProviderArn,
+        name: ApplicationNameType,
+        description: Description | None = None,
+        portal_options: PortalOptions | None = None,
+        tags: TagList | None = None,
+        status: ApplicationStatus | None = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> CreateApplicationResponse:
-        """Creates an application in IAM Identity Center for the given application
-        provider.
+        """Creates an OAuth 2.0 customer managed application in IAM Identity Center
+        for the given application provider.
 
-        :param application_provider_arn: The ARN of the application provider under which the operation will run.
+        This API does not support creating SAML 2.0 customer managed
+        applications or Amazon Web Services managed applications. To learn how
+        to create an Amazon Web Services managed application, see the
+        application user guide. You can create a SAML 2.0 customer managed
+        application in the Amazon Web Services Management Console only. See
+        `Setting up customer managed SAML 2.0
+        applications <https://docs.aws.amazon.com/singlesignon/latest/userguide/customermanagedapps-saml2-setup.html>`__.
+        For more information on these application types, see `Amazon Web
+        Services managed
+        applications <https://docs.aws.amazon.com/singlesignon/latest/userguide/awsapps.html>`__.
+
         :param instance_arn: The ARN of the instance of IAM Identity Center under which the operation
         will run.
+        :param application_provider_arn: The ARN of the application provider under which the operation will run.
         :param name: The name of the .
-        :param client_token: Specifies a unique, case-sensitive ID that you provide to ensure the
-        idempotency of the request.
         :param description: The description of the .
         :param portal_options: A structure that describes the options for the portal associated with an
         application.
-        :param status: Specifies whether the application is enabled or disabled.
         :param tags: Specifies tags to be attached to the application.
+        :param status: Specifies whether the application is enabled or disabled.
+        :param client_token: Specifies a unique, case-sensitive ID that you provide to ensure the
+        idempotency of the request.
         :returns: CreateApplicationResponse
         :raises ServiceQuotaExceededException:
         :raises ThrottlingException:
@@ -1628,7 +1644,7 @@ class SsoAdminApi:
     ) -> CreateApplicationAssignmentResponse:
         """Grant application access to a user or group.
 
-        :param application_arn: The ARN of the application provider under which the operation will run.
+        :param application_arn: The ARN of the application for which the assignment is created.
         :param principal_id: An identifier for an object in IAM Identity Center, such as a user or
         group.
         :param principal_type: The entity type for which the assignment will be created.
@@ -1647,9 +1663,9 @@ class SsoAdminApi:
     def create_instance(
         self,
         context: RequestContext,
-        client_token: ClientToken = None,
-        name: NameType = None,
-        tags: TagList = None,
+        name: NameType | None = None,
+        client_token: ClientToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateInstanceResponse:
         """Creates an instance of IAM Identity Center for a standalone Amazon Web
@@ -1663,9 +1679,9 @@ class SsoAdminApi:
 
         -  An instance already exists in the same account.
 
+        :param name: The name of the instance of IAM Identity Center.
         :param client_token: Specifies a unique, case-sensitive ID that you provide to ensure the
         idempotency of the request.
-        :param name: The name of the instance of IAM Identity Center.
         :param tags: Specifies tags to be attached to the instance of IAM Identity Center.
         :returns: CreateInstanceResponse
         :raises ServiceQuotaExceededException:
@@ -1681,8 +1697,8 @@ class SsoAdminApi:
     def create_instance_access_control_attribute_configuration(
         self,
         context: RequestContext,
-        instance_access_control_attribute_configuration: InstanceAccessControlAttributeConfiguration,
         instance_arn: InstanceArn,
+        instance_access_control_attribute_configuration: InstanceAccessControlAttributeConfiguration,
         **kwargs,
     ) -> CreateInstanceAccessControlAttributeConfigurationResponse:
         """Enables the attributes-based access control (ABAC) feature for the
@@ -1696,10 +1712,10 @@ class SsoAdminApi:
         ``DescribeInstanceAccessControlAttributeConfiguration`` to validate that
         ``InstanceAccessControlAttributeConfiguration`` was created.
 
-        :param instance_access_control_attribute_configuration: Specifies the IAM Identity Center identity store attributes to add to
-        your ABAC configuration.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
+        :param instance_access_control_attribute_configuration: Specifies the IAM Identity Center identity store attributes to add to
+        your ABAC configuration.
         :returns: CreateInstanceAccessControlAttributeConfigurationResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -1714,12 +1730,12 @@ class SsoAdminApi:
     def create_permission_set(
         self,
         context: RequestContext,
-        instance_arn: InstanceArn,
         name: PermissionSetName,
-        description: PermissionSetDescription = None,
-        relay_state: RelayState = None,
-        session_duration: Duration = None,
-        tags: TagList = None,
+        instance_arn: InstanceArn,
+        description: PermissionSetDescription | None = None,
+        session_duration: Duration | None = None,
+        relay_state: RelayState | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreatePermissionSetResponse:
         """Creates a permission set within a specified IAM Identity Center
@@ -1728,14 +1744,14 @@ class SsoAdminApi:
         To grant users and groups access to Amazon Web Services account
         resources, use ``CreateAccountAssignment``.
 
+        :param name: The name of the PermissionSet.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
-        :param name: The name of the PermissionSet.
         :param description: The description of the PermissionSet.
-        :param relay_state: Used to redirect users within the application during the federation
-        authentication process.
         :param session_duration: The length of time that the application user sessions are valid in the
         ISO-8601 standard.
+        :param relay_state: Used to redirect users within the application during the federation
+        authentication process.
         :param tags: The tags to attach to the new PermissionSet.
         :returns: CreatePermissionSetResponse
         :raises ServiceQuotaExceededException:
@@ -1754,10 +1770,10 @@ class SsoAdminApi:
         context: RequestContext,
         instance_arn: InstanceArn,
         name: TrustedTokenIssuerName,
-        trusted_token_issuer_configuration: TrustedTokenIssuerConfiguration,
         trusted_token_issuer_type: TrustedTokenIssuerType,
-        client_token: ClientToken = None,
-        tags: TagList = None,
+        trusted_token_issuer_configuration: TrustedTokenIssuerConfiguration,
+        client_token: ClientToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateTrustedTokenIssuerResponse:
         """Creates a connection to a trusted token issuer in an instance of IAM
@@ -1773,9 +1789,9 @@ class SsoAdminApi:
         :param instance_arn: Specifies the ARN of the instance of IAM Identity Center to contain the
         new trusted token issuer configuration.
         :param name: Specifies the name of the new trusted token issuer configuration.
+        :param trusted_token_issuer_type: Specifies the type of the new trusted token issuer.
         :param trusted_token_issuer_configuration: Specifies settings that apply to the new trusted token issuer
         configuration.
-        :param trusted_token_issuer_type: Specifies the type of the new trusted token issuer.
         :param client_token: Specifies a unique, case-sensitive ID that you provide to ensure the
         idempotency of the request.
         :param tags: Specifies tags to be attached to the new trusted token issuer
@@ -1795,11 +1811,11 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        permission_set_arn: PermissionSetArn,
-        principal_id: PrincipalId,
-        principal_type: PrincipalType,
         target_id: TargetId,
         target_type: TargetType,
+        permission_set_arn: PermissionSetArn,
+        principal_type: PrincipalType,
+        principal_id: PrincipalId,
         **kwargs,
     ) -> DeleteAccountAssignmentResponse:
         """Deletes a principal's access from a specified Amazon Web Services
@@ -1811,13 +1827,13 @@ class SsoAdminApi:
 
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
-        :param permission_set_arn: The ARN of the permission set that will be used to remove access.
-        :param principal_id: An identifier for an object in IAM Identity Center, such as a user or
-        group.
-        :param principal_type: The entity type for which the assignment will be deleted.
         :param target_id: TargetID is an Amazon Web Services account identifier, (For example,
         123456789012).
         :param target_type: The entity type for which the assignment will be deleted.
+        :param permission_set_arn: The ARN of the permission set that will be used to remove access.
+        :param principal_type: The entity type for which the assignment will be deleted.
+        :param principal_id: An identifier for an object in IAM Identity Center, such as a user or
+        group.
         :returns: DeleteAccountAssignmentResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2072,15 +2088,15 @@ class SsoAdminApi:
     def describe_account_assignment_creation_status(
         self,
         context: RequestContext,
-        account_assignment_creation_request_id: UUId,
         instance_arn: InstanceArn,
+        account_assignment_creation_request_id: UUId,
         **kwargs,
     ) -> DescribeAccountAssignmentCreationStatusResponse:
         """Describes the status of the assignment creation request.
 
-        :param account_assignment_creation_request_id: The identifier that is used to track the request operation progress.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
+        :param account_assignment_creation_request_id: The identifier that is used to track the request operation progress.
         :returns: DescribeAccountAssignmentCreationStatusResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2094,15 +2110,15 @@ class SsoAdminApi:
     def describe_account_assignment_deletion_status(
         self,
         context: RequestContext,
-        account_assignment_deletion_request_id: UUId,
         instance_arn: InstanceArn,
+        account_assignment_deletion_request_id: UUId,
         **kwargs,
     ) -> DescribeAccountAssignmentDeletionStatusResponse:
         """Describes the status of the assignment deletion request.
 
-        :param account_assignment_deletion_request_id: The identifier that is used to track the request operation progress.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
+        :param account_assignment_deletion_request_id: The identifier that is used to track the request operation progress.
         :returns: DescribeAccountAssignmentDeletionStatusResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2297,18 +2313,18 @@ class SsoAdminApi:
     def detach_customer_managed_policy_reference_from_permission_set(
         self,
         context: RequestContext,
-        customer_managed_policy_reference: CustomerManagedPolicyReference,
         instance_arn: InstanceArn,
         permission_set_arn: PermissionSetArn,
+        customer_managed_policy_reference: CustomerManagedPolicyReference,
         **kwargs,
     ) -> DetachCustomerManagedPolicyReferenceFromPermissionSetResponse:
         """Detaches the specified customer managed policy from the specified
         PermissionSet.
 
-        :param customer_managed_policy_reference: Specifies the name and path of a customer managed policy.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
         :param permission_set_arn: The ARN of the ``PermissionSet``.
+        :param customer_managed_policy_reference: Specifies the name and path of a customer managed policy.
         :returns: DetachCustomerManagedPolicyReferenceFromPermissionSetResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2324,8 +2340,8 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        managed_policy_arn: ManagedPolicyArn,
         permission_set_arn: PermissionSetArn,
+        managed_policy_arn: ManagedPolicyArn,
         **kwargs,
     ) -> DetachManagedPolicyFromPermissionSetResponse:
         """Detaches the attached Amazon Web Services managed policy ARN from the
@@ -2333,9 +2349,9 @@ class SsoAdminApi:
 
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
+        :param permission_set_arn: The ARN of the PermissionSet from which the policy should be detached.
         :param managed_policy_arn: The Amazon Web Services managed policy ARN to be detached from a
         permission set.
-        :param permission_set_arn: The ARN of the PermissionSet from which the policy should be detached.
         :returns: DetachManagedPolicyFromPermissionSetResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2473,9 +2489,9 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        filter: OperationStatusFilter = None,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
+        filter: OperationStatusFilter | None = None,
         **kwargs,
     ) -> ListAccountAssignmentCreationStatusResponse:
         """Lists the status of the Amazon Web Services account assignment creation
@@ -2483,9 +2499,9 @@ class SsoAdminApi:
 
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
-        :param filter: Filters results based on the passed attribute value.
         :param max_results: The maximum number of results to display for the assignment.
         :param next_token: The pagination token for the list API.
+        :param filter: Filters results based on the passed attribute value.
         :returns: ListAccountAssignmentCreationStatusResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2500,9 +2516,9 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        filter: OperationStatusFilter = None,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
+        filter: OperationStatusFilter | None = None,
         **kwargs,
     ) -> ListAccountAssignmentDeletionStatusResponse:
         """Lists the status of the Amazon Web Services account assignment deletion
@@ -2510,9 +2526,9 @@ class SsoAdminApi:
 
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
-        :param filter: Filters results based on the passed attribute value.
         :param max_results: The maximum number of results to display for the assignment.
         :param next_token: The pagination token for the list API.
+        :param filter: Filters results based on the passed attribute value.
         :returns: ListAccountAssignmentDeletionStatusResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2526,20 +2542,20 @@ class SsoAdminApi:
     def list_account_assignments(
         self,
         context: RequestContext,
-        account_id: TargetId,
         instance_arn: InstanceArn,
+        account_id: TargetId,
         permission_set_arn: PermissionSetArn,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListAccountAssignmentsResponse:
         """Lists the assignee of the specified Amazon Web Services account with the
         specified permission set.
 
-        :param account_id: The identifier of the Amazon Web Services account from which to list the
-        assignments.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
+        :param account_id: The identifier of the Amazon Web Services account from which to list the
+        assignments.
         :param permission_set_arn: The ARN of the permission set from which to list assignments.
         :param max_results: The maximum number of results to display for the assignment.
         :param next_token: The pagination token for the list API.
@@ -2559,13 +2575,16 @@ class SsoAdminApi:
         instance_arn: InstanceArn,
         principal_id: PrincipalId,
         principal_type: PrincipalType,
-        filter: ListAccountAssignmentsFilter = None,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        filter: ListAccountAssignmentsFilter | None = None,
+        next_token: Token | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListAccountAssignmentsForPrincipalResponse:
         """Retrieves a list of the IAM Identity Center associated Amazon Web
-        Services accounts that the principal has access to.
+        Services accounts that the principal has access to. This action must be
+        called from the management account containing your organization instance
+        of IAM Identity Center. This action is not valid for account instances
+        of IAM Identity Center.
 
         :param instance_arn: Specifies the ARN of the instance of IAM Identity Center that contains
         the principal.
@@ -2573,9 +2592,9 @@ class SsoAdminApi:
         account assignments.
         :param principal_type: Specifies the type of the principal.
         :param filter: Specifies an Amazon Web Services account ID number.
+        :param next_token: Specifies that you want to receive the next page of results.
         :param max_results: Specifies the total number of results that you want included in each
         response.
-        :param next_token: Specifies that you want to receive the next page of results.
         :returns: ListAccountAssignmentsForPrincipalResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2591,9 +2610,9 @@ class SsoAdminApi:
         context: RequestContext,
         instance_arn: InstanceArn,
         permission_set_arn: PermissionSetArn,
-        max_results: MaxResults = None,
-        next_token: Token = None,
-        provisioning_status: ProvisioningStatus = None,
+        provisioning_status: ProvisioningStatus | None = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListAccountsForProvisionedPermissionSetResponse:
         """Lists all the Amazon Web Services accounts where the specified
@@ -2603,10 +2622,10 @@ class SsoAdminApi:
         will be executed.
         :param permission_set_arn: The ARN of the PermissionSet from which the associated Amazon Web
         Services accounts will be listed.
-        :param max_results: The maximum number of results to display for the PermissionSet.
-        :param next_token: The pagination token for the list API.
         :param provisioning_status: The permission set provisioning status for an Amazon Web Services
         account.
+        :param max_results: The maximum number of results to display for the PermissionSet.
+        :param next_token: The pagination token for the list API.
         :returns: ListAccountsForProvisionedPermissionSetResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2621,8 +2640,8 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         application_arn: ApplicationArn,
-        max_results: ListApplicationAccessScopesRequestMaxResultsInteger = None,
-        next_token: Token = None,
+        max_results: ListApplicationAccessScopesRequestMaxResultsInteger | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListApplicationAccessScopesResponse:
         """Lists the access scopes and authorized targets associated with an
@@ -2646,8 +2665,8 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         application_arn: ApplicationArn,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListApplicationAssignmentsResponse:
         """Lists Amazon Web Services account users that are assigned to an
@@ -2673,12 +2692,17 @@ class SsoAdminApi:
         instance_arn: InstanceArn,
         principal_id: PrincipalId,
         principal_type: PrincipalType,
-        filter: ListApplicationAssignmentsFilter = None,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        filter: ListApplicationAssignmentsFilter | None = None,
+        next_token: Token | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListApplicationAssignmentsForPrincipalResponse:
-        """Lists the applications to which a specified principal is assigned.
+        """Lists the applications to which a specified principal is assigned. You
+        must provide a filter when calling this action from a member account
+        against your organization instance of IAM Identity Center. A filter is
+        not required when called from the management account against an
+        organization instance of IAM Identity Center, or from a member account
+        against an account instance of IAM Identity Center in the same account.
 
         :param instance_arn: Specifies the instance of IAM Identity Center that contains principal
         and applications.
@@ -2688,9 +2712,9 @@ class SsoAdminApi:
         assignments.
         :param filter: Filters the output to include only assignments associated with the
         application that has the specified ARN.
+        :param next_token: Specifies that you want to receive the next page of results.
         :param max_results: Specifies the total number of results that you want included in each
         response.
-        :param next_token: Specifies that you want to receive the next page of results.
         :returns: ListApplicationAssignmentsForPrincipalResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2705,7 +2729,7 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         application_arn: ApplicationArn,
-        next_token: Token = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListApplicationAuthenticationMethodsResponse:
         """Lists all of the authentication methods supported by the specified
@@ -2728,7 +2752,7 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         application_arn: ApplicationArn,
-        next_token: Token = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListApplicationGrantsResponse:
         """List the grants associated with an application.
@@ -2748,8 +2772,8 @@ class SsoAdminApi:
     def list_application_providers(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListApplicationProvidersResponse:
         """Lists the application providers configured in the IAM Identity Center
@@ -2771,22 +2795,24 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        filter: ListApplicationsFilter = None,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
+        filter: ListApplicationsFilter | None = None,
         **kwargs,
     ) -> ListApplicationsResponse:
         """Lists all applications associated with the instance of IAM Identity
-        Center. When listing applications for an instance in the management
-        account, member accounts must use the ``applicationAccount`` parameter
-        to filter the list to only applications created from that account.
+        Center. When listing applications for an organization instance in the
+        management account, member accounts must use the ``applicationAccount``
+        parameter to filter the list to only applications created from that
+        account. When listing applications for an account instance in the same
+        member account, a filter is not required.
 
         :param instance_arn: The ARN of the IAM Identity Center application under which the operation
         will run.
-        :param filter: Filters response results.
         :param max_results: Specifies the total number of results that you want included in each
         response.
         :param next_token: Specifies that you want to receive the next page of results.
+        :param filter: Filters response results.
         :returns: ListApplicationsResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2801,8 +2827,8 @@ class SsoAdminApi:
         context: RequestContext,
         instance_arn: InstanceArn,
         permission_set_arn: PermissionSetArn,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListCustomerManagedPolicyReferencesInPermissionSetResponse:
         """Lists all customer managed policies attached to a specified
@@ -2826,8 +2852,8 @@ class SsoAdminApi:
     def list_instances(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListInstancesResponse:
         """Lists the details of the organization and account instances of IAM
@@ -2850,8 +2876,8 @@ class SsoAdminApi:
         context: RequestContext,
         instance_arn: InstanceArn,
         permission_set_arn: PermissionSetArn,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListManagedPoliciesInPermissionSetResponse:
         """Lists the Amazon Web Services managed policy that is attached to a
@@ -2876,9 +2902,9 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        filter: OperationStatusFilter = None,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
+        filter: OperationStatusFilter | None = None,
         **kwargs,
     ) -> ListPermissionSetProvisioningStatusResponse:
         """Lists the status of the permission set provisioning requests for a
@@ -2886,9 +2912,9 @@ class SsoAdminApi:
 
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
-        :param filter: Filters results based on the passed attribute value.
         :param max_results: The maximum number of results to display for the assignment.
         :param next_token: The pagination token for the list API.
+        :param filter: Filters results based on the passed attribute value.
         :returns: ListPermissionSetProvisioningStatusResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2903,16 +2929,16 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        next_token: Token | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPermissionSetsResponse:
         """Lists the PermissionSets in an IAM Identity Center instance.
 
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
-        :param max_results: The maximum number of results to display for the assignment.
         :param next_token: The pagination token for the list API.
+        :param max_results: The maximum number of results to display for the assignment.
         :returns: ListPermissionSetsResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2926,23 +2952,23 @@ class SsoAdminApi:
     def list_permission_sets_provisioned_to_account(
         self,
         context: RequestContext,
-        account_id: AccountId,
         instance_arn: InstanceArn,
-        max_results: MaxResults = None,
-        next_token: Token = None,
-        provisioning_status: ProvisioningStatus = None,
+        account_id: AccountId,
+        provisioning_status: ProvisioningStatus | None = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListPermissionSetsProvisionedToAccountResponse:
         """Lists all the permission sets that are provisioned to a specified Amazon
         Web Services account.
 
-        :param account_id: The identifier of the Amazon Web Services account from which to list the
-        assignments.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
+        :param account_id: The identifier of the Amazon Web Services account from which to list the
+        assignments.
+        :param provisioning_status: The status object for the permission set provisioning operation.
         :param max_results: The maximum number of results to display for the assignment.
         :param next_token: The pagination token for the list API.
-        :param provisioning_status: The status object for the permission set provisioning operation.
         :returns: ListPermissionSetsProvisionedToAccountResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -2957,8 +2983,8 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         resource_arn: TaggableResourceArn,
-        instance_arn: InstanceArn = None,
-        next_token: Token = None,
+        instance_arn: InstanceArn | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListTagsForResourceResponse:
         """Lists the tags that are attached to a specified resource.
@@ -2981,8 +3007,8 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         instance_arn: InstanceArn,
-        max_results: MaxResults = None,
-        next_token: Token = None,
+        max_results: MaxResults | None = None,
+        next_token: Token | None = None,
         **kwargs,
     ) -> ListTrustedTokenIssuersResponse:
         """Lists all the trusted token issuers configured in an instance of IAM
@@ -3008,7 +3034,7 @@ class SsoAdminApi:
         instance_arn: InstanceArn,
         permission_set_arn: PermissionSetArn,
         target_type: ProvisionTargetType,
-        target_id: TargetId = None,
+        target_id: TargetId | None = None,
         **kwargs,
     ) -> ProvisionPermissionSetResponse:
         """The process by which a specified permission set is provisioned to the
@@ -3034,18 +3060,18 @@ class SsoAdminApi:
     def put_application_access_scope(
         self,
         context: RequestContext,
-        application_arn: ApplicationArn,
         scope: Scope,
-        authorized_targets: ScopeTargets = None,
+        application_arn: ApplicationArn,
+        authorized_targets: ScopeTargets | None = None,
         **kwargs,
     ) -> None:
         """Adds or updates the list of authorized targets for an IAM Identity
         Center access scope for an application.
 
-        :param application_arn: Specifies the ARN of the application with the access scope with the
-        targets to add or update.
         :param scope: Specifies the name of the access scope to be associated with the
         specified targets.
+        :param application_arn: Specifies the ARN of the application with the access scope with the
+        targets to add or update.
         :param authorized_targets: Specifies an array list of ARNs that represent the authorized targets
         for this access scope.
         :raises ThrottlingException:
@@ -3095,17 +3121,17 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         application_arn: ApplicationArn,
-        authentication_method: AuthenticationMethod,
         authentication_method_type: AuthenticationMethodType,
+        authentication_method: AuthenticationMethod,
         **kwargs,
     ) -> None:
         """Adds or updates an authentication method for an application.
 
         :param application_arn: Specifies the ARN of the application with the authentication method to
         add or update.
-        :param authentication_method: Specifies a structure that describes the authentication method to add or
-        update.
         :param authentication_method_type: Specifies the type of the authentication method that you want to add or
+        update.
+        :param authentication_method: Specifies a structure that describes the authentication method to add or
         update.
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -3121,15 +3147,68 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         application_arn: ApplicationArn,
-        grant: Grant,
         grant_type: GrantType,
+        grant: Grant,
         **kwargs,
     ) -> None:
-        """Adds a grant to an application.
+        """Creates a configuration for an application to use grants. Conceptually
+        grants are authorization to request actions related to tokens. This
+        configuration will be used when parties are requesting and receiving
+        tokens during the trusted identity propagation process. For more
+        information on the IAM Identity Center supported grant workflows, see
+        `SAML 2.0 and OAuth
+        2.0 <https://docs.aws.amazon.com/singlesignon/latest/userguide/customermanagedapps-saml2-oauth2.html>`__.
+
+        A grant is created between your applications and Identity Center
+        instance which enables an application to use specified mechanisms to
+        obtain tokens. These tokens are used by your applications to gain access
+        to Amazon Web Services resources on behalf of users. The following
+        elements are within these exchanges:
+
+        -  **Requester** - The application requesting access to Amazon Web
+           Services resources.
+
+        -  **Subject** - Typically the user that is requesting access to Amazon
+           Web Services resources.
+
+        -  **Grant** - Conceptually, a grant is authorization to access Amazon
+           Web Services resources. These grants authorize token generation for
+           authenticating access to the requester and for the request to make
+           requests on behalf of the subjects. There are four types of grants:
+
+           -  **AuthorizationCode** - Allows an application to request
+              authorization through a series of user-agent redirects.
+
+           -  **JWT bearer** - Authorizes an application to exchange a JSON Web
+              Token that came from an external identity provider. To learn more,
+              see `RFC 6479 <https://datatracker.ietf.org/doc/html/rfc6749>`__.
+
+           -  **Refresh token** - Enables application to request new access
+              tokens to replace expiring or expired access tokens.
+
+           -  **Exchange token** - A grant that requests tokens from the
+              authorization server by providing a ‘subject’ token with access
+              scope authorizing trusted identity propagation to this
+              application. To learn more, see `RFC
+              8693 <https://datatracker.ietf.org/doc/html/rfc8693>`__.
+
+        -  **Authorization server** - IAM Identity Center requests tokens.
+
+        User credentials are never shared directly within these exchanges.
+        Instead, applications use grants to request access tokens from IAM
+        Identity Center. For more information, see `RFC
+        6479 <https://datatracker.ietf.org/doc/html/rfc6749>`__.
+
+        **Use cases**
+
+        -  Connecting to custom applications.
+
+        -  Configuring an Amazon Web Services service to make calls to another
+           Amazon Web Services services using JWT tokens.
 
         :param application_arn: Specifies the ARN of the application to update.
-        :param grant: Specifies a structure that describes the grant to update.
         :param grant_type: Specifies the type of grant to update.
+        :param grant: Specifies a structure that describes the grant to update.
         :raises ThrottlingException:
         :raises InternalServerException:
         :raises ResourceNotFoundException:
@@ -3143,9 +3222,9 @@ class SsoAdminApi:
     def put_inline_policy_to_permission_set(
         self,
         context: RequestContext,
-        inline_policy: PermissionSetPolicyDocument,
         instance_arn: InstanceArn,
         permission_set_arn: PermissionSetArn,
+        inline_policy: PermissionSetPolicyDocument,
         **kwargs,
     ) -> PutInlinePolicyToPermissionSetResponse:
         """Attaches an inline policy to a permission set.
@@ -3155,10 +3234,10 @@ class SsoAdminApi:
         action to apply the corresponding IAM policy updates to all assigned
         accounts.
 
-        :param inline_policy: The inline policy to attach to a PermissionSet.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
         :param permission_set_arn: The ARN of the permission set.
+        :param inline_policy: The inline policy to attach to a PermissionSet.
         :returns: PutInlinePolicyToPermissionSetResponse
         :raises ServiceQuotaExceededException:
         :raises ThrottlingException:
@@ -3202,7 +3281,7 @@ class SsoAdminApi:
         context: RequestContext,
         resource_arn: TaggableResourceArn,
         tags: TagList,
-        instance_arn: InstanceArn = None,
+        instance_arn: InstanceArn | None = None,
         **kwargs,
     ) -> TagResourceResponse:
         """Associates a set of tags with a specified resource.
@@ -3228,7 +3307,7 @@ class SsoAdminApi:
         context: RequestContext,
         resource_arn: TaggableResourceArn,
         tag_keys: TagKeyList,
-        instance_arn: InstanceArn = None,
+        instance_arn: InstanceArn | None = None,
         **kwargs,
     ) -> UntagResourceResponse:
         """Disassociates a set of tags from a specified resource.
@@ -3252,20 +3331,20 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         application_arn: ApplicationArn,
-        description: Description = None,
-        name: NameType = None,
-        portal_options: UpdateApplicationPortalOptions = None,
-        status: ApplicationStatus = None,
+        name: ApplicationNameType | None = None,
+        description: Description | None = None,
+        status: ApplicationStatus | None = None,
+        portal_options: UpdateApplicationPortalOptions | None = None,
         **kwargs,
     ) -> UpdateApplicationResponse:
         """Updates application properties.
 
         :param application_arn: Specifies the ARN of the application.
-        :param description: The description of the .
         :param name: Specifies the updated name for the application.
+        :param description: The description of the .
+        :param status: Specifies whether the application is enabled or disabled.
         :param portal_options: A structure that describes the options for the portal associated with an
         application.
-        :param status: Specifies whether the application is enabled or disabled.
         :returns: UpdateApplicationResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -3278,14 +3357,14 @@ class SsoAdminApi:
 
     @handler("UpdateInstance")
     def update_instance(
-        self, context: RequestContext, instance_arn: InstanceArn, name: NameType, **kwargs
+        self, context: RequestContext, name: NameType, instance_arn: InstanceArn, **kwargs
     ) -> UpdateInstanceResponse:
         """Update the details for the instance of IAM Identity Center that is owned
         by the Amazon Web Services account.
 
+        :param name: Updates the instance name.
         :param instance_arn: The ARN of the instance of IAM Identity Center under which the operation
         will run.
-        :param name: Updates the instance name.
         :returns: UpdateInstanceResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -3299,8 +3378,8 @@ class SsoAdminApi:
     def update_instance_access_control_attribute_configuration(
         self,
         context: RequestContext,
-        instance_access_control_attribute_configuration: InstanceAccessControlAttributeConfiguration,
         instance_arn: InstanceArn,
+        instance_access_control_attribute_configuration: InstanceAccessControlAttributeConfiguration,
         **kwargs,
     ) -> UpdateInstanceAccessControlAttributeConfigurationResponse:
         """Updates the IAM Identity Center identity store attributes that you can
@@ -3315,9 +3394,9 @@ class SsoAdminApi:
         Control </singlesignon/latest/userguide/abac.html>`__ in the *IAM
         Identity Center User Guide*.
 
-        :param instance_access_control_attribute_configuration: Updates the attributes for your ABAC configuration.
         :param instance_arn: The ARN of the IAM Identity Center instance under which the operation
         will be executed.
+        :param instance_access_control_attribute_configuration: Updates the attributes for your ABAC configuration.
         :returns: UpdateInstanceAccessControlAttributeConfigurationResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -3334,9 +3413,9 @@ class SsoAdminApi:
         context: RequestContext,
         instance_arn: InstanceArn,
         permission_set_arn: PermissionSetArn,
-        description: PermissionSetDescription = None,
-        relay_state: RelayState = None,
-        session_duration: Duration = None,
+        description: PermissionSetDescription | None = None,
+        session_duration: Duration | None = None,
+        relay_state: RelayState | None = None,
         **kwargs,
     ) -> UpdatePermissionSetResponse:
         """Updates an existing permission set.
@@ -3345,10 +3424,10 @@ class SsoAdminApi:
         will be executed.
         :param permission_set_arn: The ARN of the permission set.
         :param description: The description of the PermissionSet.
-        :param relay_state: Used to redirect users within the application during the federation
-        authentication process.
         :param session_duration: The length of time that the application user sessions are valid for in
         the ISO-8601 standard.
+        :param relay_state: Used to redirect users within the application during the federation
+        authentication process.
         :returns: UpdatePermissionSetResponse
         :raises ThrottlingException:
         :raises InternalServerException:
@@ -3364,8 +3443,8 @@ class SsoAdminApi:
         self,
         context: RequestContext,
         trusted_token_issuer_arn: TrustedTokenIssuerArn,
-        name: TrustedTokenIssuerName = None,
-        trusted_token_issuer_configuration: TrustedTokenIssuerUpdateConfiguration = None,
+        name: TrustedTokenIssuerName | None = None,
+        trusted_token_issuer_configuration: TrustedTokenIssuerUpdateConfiguration | None = None,
         **kwargs,
     ) -> UpdateTrustedTokenIssuerResponse:
         """Updates the name of the trusted token issuer, or the path of a source

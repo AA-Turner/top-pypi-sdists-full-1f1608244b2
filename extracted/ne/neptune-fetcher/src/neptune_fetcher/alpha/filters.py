@@ -26,7 +26,13 @@ from typing import (
     Union,
 )
 
-from neptune_fetcher.alpha.internal.retrieval import attribute_types as types
+from neptune_fetcher.internal import filters as _filters
+from neptune_fetcher.internal.retrieval import attribute_types as types
+from neptune_fetcher.internal.util import (
+    _validate_allowed_value,
+    _validate_list_of_allowed_values,
+    _validate_string_or_string_list,
+)
 
 __all__ = ["Filter", "AttributeFilter", "Attribute"]
 
@@ -44,6 +50,10 @@ class BaseAttributeFilter(ABC):
     def any(*filters: "BaseAttributeFilter") -> "BaseAttributeFilter":
         return _AttributeFilterAlternative(filters=filters)
 
+    @abc.abstractmethod
+    def _to_internal(self) -> _filters._BaseAttributeFilter:
+        ...
+
 
 @dataclass
 class AttributeFilter(BaseAttributeFilter):
@@ -57,7 +67,7 @@ class AttributeFilter(BaseAttributeFilter):
         type_in (list[Literal["float", "int", "string", "bool", "datetime", "float_series", "string_set",
         "string_series", "file"]]):
             A list of allowed attribute types. Defaults to all available types.
-            For a reference, see: https://docs-beta.neptune.ai/attribute_types
+            For a reference, see: https://docs.neptune.ai/attribute_types
         name_matches_all (Union[str, list[str], None]): A regular expression or list of expressions that the attribute
             name must match. If `None`, this filter is not applied.
         name_matches_none (Union[str, list[str], None]): A regular expression or list of expressions that the attribute
@@ -98,6 +108,15 @@ class AttributeFilter(BaseAttributeFilter):
         _validate_list_of_allowed_values(self.type_in, types.ALL_TYPES, "type_in")  # type: ignore
         _validate_list_of_allowed_values(self.aggregations, types.ALL_AGGREGATIONS, "aggregations")  # type: ignore
 
+    def _to_internal(self) -> _filters._AttributeFilter:
+        return _filters._AttributeFilter(
+            name_eq=self.name_eq,
+            type_in=self.type_in,
+            name_matches_all=self.name_matches_all,
+            name_matches_none=self.name_matches_none,
+            aggregations=self.aggregations,
+        )
+
 
 @dataclass
 class _AttributeFilterAlternative(BaseAttributeFilter):
@@ -106,6 +125,11 @@ class _AttributeFilterAlternative(BaseAttributeFilter):
     def __or__(self, other: "BaseAttributeFilter") -> "BaseAttributeFilter":
         filters = tuple(self.filters) + (other,)
         return _AttributeFilterAlternative(filters)
+
+    def _to_internal(self) -> _filters._AttributeFilterAlternative:
+        return _filters._AttributeFilterAlternative(
+            filters=[f._to_internal() for f in self.filters],
+        )
 
 
 @dataclass
@@ -122,7 +146,7 @@ class Attribute:
         type (Literal["float", "int", "string", "bool", "datetime", "float_series", "string_set"], optional):
             Attribute type. Specify it to resolve ambiguity, in case some of the project's runs contain attributes
             that have the same name but are of a different type.
-            For a reference, see: https://docs-beta.neptune.ai/attribute_types
+            For a reference, see: https://docs.neptune.ai/attribute_types
 
     Example:
 
@@ -162,6 +186,13 @@ class Attribute:
             query = f"{self.aggregation}({query})"
 
         return query
+
+    def _to_internal(self) -> _filters._Attribute:
+        return _filters._Attribute(
+            name=self.name,
+            aggregation=self.aggregation,
+            type=self.type,
+        )
 
     def __str__(self) -> str:
         return self.to_query()
@@ -332,6 +363,10 @@ class Filter(ABC):
     def to_query(self) -> str:
         ...
 
+    @abc.abstractmethod
+    def _to_internal(self) -> _filters._Filter:
+        ...
+
     def __str__(self) -> str:
         return self.to_query()
 
@@ -359,6 +394,13 @@ class _AttributeValuePredicate(Filter):
         value = value.replace("\\", r"\\").replace('"', r"\"")
         return f'"{value}"'
 
+    def _to_internal(self) -> _filters._Filter:
+        return _filters._AttributeValuePredicate(
+            operator=self.operator,
+            attribute=self.attribute._to_internal(),
+            value=self.value,
+        )
+
 
 @dataclass
 class _AttributePredicate(Filter):
@@ -367,6 +409,12 @@ class _AttributePredicate(Filter):
 
     def to_query(self) -> str:
         return f"{self.attribute} {self.postfix_operator}"
+
+    def _to_internal(self) -> _filters._Filter:
+        return _filters._AttributePredicate(
+            postfix_operator=self.postfix_operator,
+            attribute=self.attribute._to_internal(),
+        )
 
 
 @dataclass
@@ -378,6 +426,12 @@ class _AssociativeOperator(Filter):
         filter_queries = [f"({child})" for child in self.filters]
         return f" {self.operator} ".join(filter_queries)
 
+    def _to_internal(self) -> _filters._Filter:
+        return _filters._AssociativeOperator(
+            operator=self.operator,
+            filters=[f._to_internal() for f in self.filters],
+        )
+
 
 @dataclass
 class _PrefixOperator(Filter):
@@ -387,24 +441,8 @@ class _PrefixOperator(Filter):
     def to_query(self) -> str:
         return f"{self.operator} ({self.filter_})"
 
-
-def _validate_string_or_string_list(value: Optional[Union[str, list[str]]], field_name: str) -> None:
-    """Validate that a value is either None, a string, or a list of strings."""
-    if value is not None:
-        if isinstance(value, list):
-            if not all(isinstance(item, str) for item in value):
-                raise ValueError(f"{field_name} must be a string or list of strings")
-        elif not isinstance(value, str):
-            raise ValueError(f"{field_name} must be a string or list of strings")
-
-
-def _validate_list_of_allowed_values(value: list[str], allowed_values: set[str], field_name: str) -> None:
-    """Validate that a value is a list containing only allowed values."""
-    if not isinstance(value, list) or not all(isinstance(v, str) and v in allowed_values for v in value):
-        raise ValueError(f"{field_name} must be a list of valid values: {sorted(allowed_values)}")
-
-
-def _validate_allowed_value(value: Optional[str], allowed_values: set[str], field_name: str) -> None:
-    """Validate that a value is either None or one of the allowed values."""
-    if value is not None and (not isinstance(value, str) or value not in allowed_values):
-        raise ValueError(f"{field_name} must be one of: {sorted(allowed_values)}")
+    def _to_internal(self) -> _filters._Filter:
+        return _filters._PrefixOperator(
+            operator=self.operator,
+            filter_=self.filter_._to_internal(),
+        )

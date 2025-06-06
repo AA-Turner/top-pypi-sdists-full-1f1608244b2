@@ -1,7 +1,15 @@
-from typing import List, Dict, Optional
+def split_list(token: list[str], split_chars: list[str] | None = None) -> list[list[str]]:
+    """
+    Split a list into sublists based on a list of split characters.
 
+    If split_chars is None, the list is split on empty strings.
 
-def split_list(token: List[str], split_chars: Optional[List[str]] = None) -> List[List[str]]:
+    :param token: The list to split.
+    :param split_chars: The characters to split on.
+
+    :returns:
+        A list of lists.
+    """
     if split_chars is None:
         split_chars = [""]
     out = []
@@ -17,7 +25,15 @@ def split_list(token: List[str], split_chars: Optional[List[str]] = None) -> Lis
     return out
 
 
-def conll_to_spans(doc: str) -> List[List[Dict]]:
+def conll_to_spans(doc: str) -> list[list[dict]]:
+    """
+    Convert a CoNLL-formatted string to a list of spans.
+
+    :param doc: The CoNLL-formatted string.
+
+    :returns:
+        A list of spans.
+    """
     out = []
     doc_parts = split_list(doc.split("\n"), split_chars=None)
 
@@ -34,18 +50,27 @@ def conll_to_spans(doc: str) -> List[List[Dict]]:
     return spans
 
 
-def list_to_spans(doc):  # type: ignore
+def list_to_spans(doc: list[list[str]]) -> list[list[dict]]:
+    """
+    Convert a list of tags to a list of spans.
+
+    :param doc: The list of tags.
+
+    :returns:
+        A list of spans.
+    """
     spans = [collect_named_entities(tokens) for tokens in doc]
     return spans
 
 
-def collect_named_entities(tokens: List[str]) -> List[Dict]:
+def collect_named_entities(tokens: list[str]) -> list[dict]:
     """
-    Creates a list of Entity named-tuples, storing the entity type and the
-    start and end offsets of the entity.
+    Creates a list of Entity named-tuples, storing the entity type and the start and end offsets of the entity.
 
     :param tokens: a list of tags
-    :return: a list of Entity named-tuples
+
+    :returns:
+        A list of Entity named-tuples.
     """
 
     named_entities = []
@@ -83,22 +108,35 @@ def collect_named_entities(tokens: List[str]) -> List[Dict]:
 
 
 def find_overlap(true_range: range, pred_range: range) -> set:
-    """Find the overlap between two ranges
+    """
+    Find the overlap between two ranges.
 
-    Find the overlap between two ranges. Return the overlapping values if
-    present, else return an empty set().
+    :param true_range: The true range.
+    :param pred_range: The predicted range.
+
+    :returns:
+        A set of overlapping values.
 
     Examples:
-
-    >>> find_overlap((1, 2), (2, 3))
-    2
-    >>> find_overlap((1, 2), (3, 4))
-    set()
+        >>> find_overlap(range(1, 3), range(2, 4))
+        {2}
+        >>> find_overlap(range(1, 3), range(3, 5))
+        set()
     """
 
     true_set = set(true_range)
     pred_set = set(pred_range)
-
     overlaps = true_set.intersection(pred_set)
 
     return overlaps
+
+
+def clean_entities(ent: dict) -> dict:
+    """
+    Returns just the useful keys if additional keys are present in the entity
+    dict.
+
+    This may happen if passing a list of spans directly from prodigy, which
+    typically may include 'token_start' and 'token_end'.
+    """
+    return {"start": ent["start"], "end": ent["end"], "label": ent["label"]}

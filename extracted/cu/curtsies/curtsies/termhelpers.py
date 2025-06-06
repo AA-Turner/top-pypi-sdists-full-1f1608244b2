@@ -6,7 +6,7 @@ import os
 from typing import IO, ContextManager, Type, List, Union, Optional
 from types import TracebackType
 
-_Attr = List[Union[int, List[Union[bytes, int]]]]
+_Attr = list[Union[int, list[Union[bytes, int]]]]
 
 
 class Nonblocking(ContextManager):
@@ -24,9 +24,9 @@ class Nonblocking(ContextManager):
 
     def __exit__(
         self,
-        type: Optional[Type[BaseException]] = None,
-        value: Optional[BaseException] = None,
-        traceback: Optional[TracebackType] = None,
+        type: type[BaseException] | None = None,
+        value: BaseException | None = None,
+        traceback: TracebackType | None = None,
     ) -> None:
         fcntl.fcntl(self.fd, fcntl.F_SETFL, self.orig_fl)
 
@@ -42,9 +42,9 @@ class Termmode(ContextManager):
 
     def __exit__(
         self,
-        type: Optional[Type[BaseException]] = None,
-        value: Optional[BaseException] = None,
-        traceback: Optional[TracebackType] = None,
+        type: type[BaseException] | None = None,
+        value: BaseException | None = None,
+        traceback: TracebackType | None = None,
     ) -> None:
         termios.tcsetattr(self.stream, termios.TCSANOW, self.original_stty)
 
@@ -60,8 +60,8 @@ class Cbreak(ContextManager[Termmode]):
 
     def __exit__(
         self,
-        type: Optional[Type[BaseException]] = None,
-        value: Optional[BaseException] = None,
-        traceback: Optional[TracebackType] = None,
+        type: type[BaseException] | None = None,
+        value: BaseException | None = None,
+        traceback: TracebackType | None = None,
     ) -> None:
         termios.tcsetattr(self.stream, termios.TCSANOW, self.original_stty)

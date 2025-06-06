@@ -308,6 +308,28 @@ def _create_client_mount(): ...
 def create_client_mount(): ...
 def _get_client_mount(): ...
 def _is_modal_path(remote_path: pathlib.PurePosixPath): ...
+async def _create_single_mount(
+    client: modal.client._Client,
+    builder_version: str,
+    python_version: str,
+    platform: str,
+    arch: str,
+    uv_python_platform: str = None,
+    check_if_exists: bool = True,
+): ...
+async def _create_client_dependency_mounts(
+    client=None, check_if_exists=True, python_versions: list[str] = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+): ...
+
+class __create_client_dependency_mounts_spec(typing_extensions.Protocol):
+    def __call__(
+        self, /, client=None, check_if_exists=True, python_versions: list[str] = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    ): ...
+    async def aio(
+        self, /, client=None, check_if_exists=True, python_versions: list[str] = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    ): ...
+
+create_client_dependency_mounts: __create_client_dependency_mounts_spec
 
 ROOT_DIR: pathlib.PurePosixPath
 

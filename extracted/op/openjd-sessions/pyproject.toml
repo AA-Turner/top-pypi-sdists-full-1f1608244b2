@@ -29,7 +29,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries"
 ]
 dependencies = [
-  "openjd-model >= 0.6,< 0.8",
+  "openjd-model >= 0.8,< 0.9",
   "pywin32 >= 307; platform_system == 'Windows'",
   "psutil >= 5.9,< 7.1; platform_system == 'Windows'",
 ]
@@ -64,11 +64,9 @@ destinations = [
 ]
 
 [tool.hatch.build.targets.sdist]
-packages = [
+include = [
   "src/openjd",
-]
-only-include = [
-  "src/openjd",
+  "hatch_version_hook.py",
 ]
 
 [tool.hatch.build.targets.wheel]

@@ -167,9 +167,6 @@ EC2_HYPERVISOR_URI = os.environ.get("EC2_HYPERVISOR_URI", "").strip() or "qemu:/
 # Flag to enable loading of DMS provider
 ENABLE_DMS = localstack_config.is_env_true("ENABLE_DMS")
 
-# Feature flag to enable the loading of the CodePipeline, CodeBuild, and CodeDeploy providers
-ENABLE_CODEX = localstack_config.is_env_true("ENABLE_CODEX")
-
 # simulated delay (in seconds) before the serverless replication config is deprovisioned (will reset the table stats)
 DMS_SERVERLESS_DEPROVISIONING_DELAY = int(
     os.environ.get("DMS_SERVERLESS_DEPROVISIONING_DELAY", "60").strip()
@@ -215,6 +212,9 @@ EMR_SPARK_VERSION = str(os.getenv("EMR_SPARK_VERSION") or "").strip()
 
 # whether to lazily install and spin up custom Postgres versions
 RDS_PG_CUSTOM_VERSIONS = localstack_config.is_env_not_false("RDS_PG_CUSTOM_VERSIONS")
+
+# override the default postgres max connections
+RDS_PG_MAX_CONNECTIONS = int(os.getenv("RDS_PG_MAX_CONNECTIONS") or 0)
 
 # whether official MySQL is supported, spins up a MySQL docker container
 RDS_MYSQL_DOCKER = localstack_config.is_env_not_false("RDS_MYSQL_DOCKER")
@@ -344,6 +344,9 @@ CI_PROJECT = os.environ.get("LS_CI_PROJECT") or os.environ.get("CI_PROJECT") or 
 # PAT GitHub Token needed by CodePipeline to retrieve the source code from a private repository
 CODEPIPELINE_GH_TOKEN = os.environ.get("CODEPIPELINE_GH_TOKEN")
 
+# Flag to remove a codebuild container after a build is completed. True by default
+CODEBUILD_REMOVE_CONTAINERS = localstack_config.is_env_not_false("CODEBUILD_REMOVE_CONTAINERS")
+
 # Controls the snapshot granularity of the run. The lower the interval, the more snapshot metamodels are created
 COMMIT_INTERVAL_SECS = os.environ.get("COMMIT_INTERVAL_SECS", 10)
 
@@ -380,6 +383,9 @@ NEPTUNE_GREMLIN_DEBUG = is_env_true("NEPTUNE_GREMLIN_DEBUG")
 # Instant job completion for MediaConvert
 MEDIACONVERT_DISABLE_JOB_DURATION = is_env_true("MEDIACONVERT_DISABLE_JOB_DURATION")
 
+# Batch provider override
+BATCH_V2_PROVIDER_OVERRIDE = os.getenv("PROVIDER_OVERRIDE_BATCH") == "v2"
+
 # update variable names that need to be passed as arguments to Docker
 localstack_config.CONFIG_ENV_VARS += [
     "ACTIVATE_PRO",
@@ -390,6 +396,7 @@ localstack_config.CONFIG_ENV_VARS += [
     "AUTO_SSL_CERTS",
     "AUTOSTART_UTIL_CONTAINERS",
     "CI_PROJECT",
+    "CODEBUILD_REMOVE_CONTAINERS",
     "CODEPIPELINE_GH_TOKEN",
     "CLOUDFRONT_STATIC_PORTS",
     "CLOUDFRONT_LAMBDA_EDGE",
@@ -411,7 +418,6 @@ localstack_config.CONFIG_ENV_VARS += [
     "EKS_K8S_PROVIDER",
     "EKS_MOCK_CREATE_CLUSTER_DELAY",
     "EKS_STARTUP_TIMEOUT",
-    "ENABLE_CODEX",
     "EKS_K3S_FLAGS",
     "ENABLE_DMS",
     "ENABLE_POD_RESOURCES",

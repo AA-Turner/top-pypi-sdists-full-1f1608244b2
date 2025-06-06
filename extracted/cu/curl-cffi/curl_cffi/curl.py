@@ -55,6 +55,7 @@ def debug_function(curl, type_: int, data, size: int, clientp) -> int:
     callback(type_, text)
     return 0
 
+
 def debug_function_default(type_: int, text: bytes) -> None:
     if type_ in (CURLINFO_SSL_DATA_IN, CURLINFO_SSL_DATA_OUT):
         print("SSL OUT", text)
@@ -124,10 +125,10 @@ class Curl:
         self._resolve = ffi.NULL
         self._cacert = cacert or DEFAULT_CACERT
         self._is_cert_set = False
-        self._write_handle = None
-        self._header_handle = None
-        self._debug_handle = None
-        self._body_handle = None
+        self._write_handle: Any = None
+        self._header_handle: Any = None
+        self._debug_handle: Any = None
+        self._body_handle: Any = None
         # TODO: use CURL_ERROR_SIZE
         self._error_buffer = ffi.new("char[]", 256)
         self._debug = debug
@@ -209,10 +210,13 @@ class Curl:
         elif option == CurlOpt.HEADERFUNCTION:
             c_value = ffi.new_handle(value)
             self._header_handle = c_value
-            lib._curl_easy_setopt(self._curl, CurlOpt.HEADERFUNCTION, lib.write_callback)
+            lib._curl_easy_setopt(
+                self._curl, CurlOpt.HEADERFUNCTION, lib.write_callback
+            )
             option = CurlOpt.HEADERDATA
         elif option == CurlOpt.DEBUGFUNCTION:
-            if value is True: value = debug_function_default
+            if value is True:
+                value = debug_function_default
             c_value = ffi.new_handle(value)
             self._debug_handle = c_value
             lib._curl_easy_setopt(self._curl, CurlOpt.DEBUGFUNCTION, lib.debug_function)
@@ -433,7 +437,7 @@ class Curl:
             CurlError: if failed.
         """
         buffer = ffi.new("char[]", n)
-        n_recv = ffi.new("int *")
+        n_recv = ffi.new("size_t *")
         p_frame = ffi.new("struct curl_ws_frame **")
 
         ret = lib.curl_ws_recv(self._curl, buffer, n, n_recv, p_frame)
@@ -457,7 +461,7 @@ class Curl:
         Raises:
             CurlError: if failed.
         """
-        n_sent = ffi.new("int *")
+        n_sent = ffi.new("size_t *")
         buffer = ffi.from_buffer(payload)
         ret = lib.curl_ws_send(self._curl, buffer, len(buffer), n_sent, 0, flags)
         self._check_error(ret, "WS_SEND")

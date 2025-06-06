@@ -2,7 +2,7 @@
 """
 :Author: HuangJianYi
 :Date: 2020-08-12 09:06:24
-@LastEditTime: 2025-04-28 14:56:06
+@LastEditTime: 2025-06-04 16:51:42
 @LastEditors: HuangJianYi
 :description: 淘宝top接口基础类
 """
@@ -1477,7 +1477,7 @@ class TopBaseModel():
 
     def get_short_url(self, url, access_token, app_key, app_secret, is_log=False):
         """
-        :description: 获取短链接
+        :description: 获取短链接（提供淘宝小程序短链接生成的能力，只允许对淘宝小程序对应的域名：https://m.duanqu.com/ 生成对应的短链接，其他域名无效 【特别注意：短链接有效期为30天，超过时效短链接将无法正常跳转到原始链接地址，请勿将短链接投放或装修到长期存在的入口】）
         :param url：链接地址
         :param access_token：access_token
         :param app_key:app_key

@@ -184,7 +184,7 @@ class MediastoreDataApi:
 
     @handler("GetObject")
     def get_object(
-        self, context: RequestContext, path: PathNaming, range: RangePattern = None, **kwargs
+        self, context: RequestContext, path: PathNaming, range: RangePattern | None = None, **kwargs
     ) -> GetObjectResponse:
         """Downloads the object at the specified path. If the object’s upload
         availability is set to ``streaming``, AWS Elemental MediaStore downloads
@@ -205,9 +205,9 @@ class MediastoreDataApi:
     def list_items(
         self,
         context: RequestContext,
-        path: ListPathNaming = None,
-        max_results: ListLimit = None,
-        next_token: PaginationToken = None,
+        path: ListPathNaming | None = None,
+        max_results: ListLimit | None = None,
+        next_token: PaginationToken | None = None,
         **kwargs,
     ) -> ListItemsResponse:
         """Provides a list of metadata entries about folders and objects in the
@@ -228,10 +228,10 @@ class MediastoreDataApi:
         context: RequestContext,
         body: IO[PayloadBlob],
         path: PathNaming,
-        content_type: ContentType = None,
-        cache_control: StringPrimitive = None,
-        storage_class: StorageClass = None,
-        upload_availability: UploadAvailability = None,
+        content_type: ContentType | None = None,
+        cache_control: StringPrimitive | None = None,
+        storage_class: StorageClass | None = None,
+        upload_availability: UploadAvailability | None = None,
         **kwargs,
     ) -> PutObjectResponse:
         """Uploads an object to the specified path. Object sizes are limited to 25

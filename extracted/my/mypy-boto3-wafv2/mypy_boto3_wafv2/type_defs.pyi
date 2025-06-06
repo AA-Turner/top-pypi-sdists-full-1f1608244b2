@@ -82,6 +82,9 @@ __all__ = (
     "AndStatementOutputTypeDef",
     "AndStatementTypeDef",
     "AndStatementUnionTypeDef",
+    "AsnMatchStatementOutputTypeDef",
+    "AsnMatchStatementTypeDef",
+    "AsnMatchStatementUnionTypeDef",
     "AssociateWebACLRequestTypeDef",
     "AssociationConfigOutputTypeDef",
     "AssociationConfigTypeDef",
@@ -418,6 +421,10 @@ class AndStatementOutputTypeDef(TypedDict):
 class AndStatementTypeDef(TypedDict):
     Statements: Sequence[Mapping[str, Any]]
 
+class ForwardedIPConfigTypeDef(TypedDict):
+    HeaderName: str
+    FallbackBehavior: FallbackBehaviorType
+
 class AssociateWebACLRequestTypeDef(TypedDict):
     WebACLArn: str
     ResourceArn: str
@@ -624,10 +631,6 @@ class SingleQueryArgumentTypeDef(TypedDict):
 
 class UriFragmentTypeDef(TypedDict):
     FallbackBehavior: NotRequired[FallbackBehaviorType]
-
-class ForwardedIPConfigTypeDef(TypedDict):
-    HeaderName: str
-    FallbackBehavior: FallbackBehaviorType
 
 class GenerateMobileSdkReleaseUrlRequestTypeDef(TypedDict):
     Platform: PlatformType
@@ -918,6 +921,22 @@ class UpdateIPSetRequestTypeDef(TypedDict):
 
 AndStatementUnionTypeDef = Union[AndStatementTypeDef, AndStatementOutputTypeDef]
 
+class AsnMatchStatementOutputTypeDef(TypedDict):
+    AsnList: List[int]
+    ForwardedIPConfig: NotRequired[ForwardedIPConfigTypeDef]
+
+class AsnMatchStatementTypeDef(TypedDict):
+    AsnList: Sequence[int]
+    ForwardedIPConfig: NotRequired[ForwardedIPConfigTypeDef]
+
+class GeoMatchStatementOutputTypeDef(TypedDict):
+    CountryCodes: NotRequired[List[CountryCodeType]]
+    ForwardedIPConfig: NotRequired[ForwardedIPConfigTypeDef]
+
+class GeoMatchStatementTypeDef(TypedDict):
+    CountryCodes: NotRequired[Sequence[CountryCodeType]]
+    ForwardedIPConfig: NotRequired[ForwardedIPConfigTypeDef]
+
 class AssociationConfigOutputTypeDef(TypedDict):
     RequestBody: NotRequired[
         Dict[AssociatedResourceTypeType, RequestBodyAssociatedResourceTypeConfigTypeDef]
@@ -1158,14 +1177,6 @@ class DescribeManagedProductsByVendorResponseTypeDef(TypedDict):
     ManagedProducts: List[ManagedProductDescriptorTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
 
-class GeoMatchStatementOutputTypeDef(TypedDict):
-    CountryCodes: NotRequired[List[CountryCodeType]]
-    ForwardedIPConfig: NotRequired[ForwardedIPConfigTypeDef]
-
-class GeoMatchStatementTypeDef(TypedDict):
-    CountryCodes: NotRequired[Sequence[CountryCodeType]]
-    ForwardedIPConfig: NotRequired[ForwardedIPConfigTypeDef]
-
 class GetIPSetResponseTypeDef(TypedDict):
     IPSet: IPSetTypeDef
     LockToken: str
@@ -1297,6 +1308,8 @@ class UpdateManagedRuleSetVersionExpiryDateRequestTypeDef(TypedDict):
     VersionToExpire: str
     ExpiryTimestamp: TimestampTypeDef
 
+AsnMatchStatementUnionTypeDef = Union[AsnMatchStatementTypeDef, AsnMatchStatementOutputTypeDef]
+GeoMatchStatementUnionTypeDef = Union[GeoMatchStatementTypeDef, GeoMatchStatementOutputTypeDef]
 AssociationConfigUnionTypeDef = Union[AssociationConfigTypeDef, AssociationConfigOutputTypeDef]
 RateLimitCookieUnionTypeDef = Union[RateLimitCookieTypeDef, RateLimitCookieOutputTypeDef]
 RateLimitHeaderUnionTypeDef = Union[RateLimitHeaderTypeDef, RateLimitHeaderOutputTypeDef]
@@ -1319,6 +1332,7 @@ class RateBasedStatementCustomKeyOutputTypeDef(TypedDict):
     UriPath: NotRequired[RateLimitUriPathOutputTypeDef]
     JA3Fingerprint: NotRequired[RateLimitJA3FingerprintTypeDef]
     JA4Fingerprint: NotRequired[RateLimitJA4FingerprintTypeDef]
+    ASN: NotRequired[Dict[str, Any]]
 
 RateLimitUriPathUnionTypeDef = Union[RateLimitUriPathTypeDef, RateLimitUriPathOutputTypeDef]
 
@@ -1377,8 +1391,6 @@ class DataProtectionConfigOutputTypeDef(TypedDict):
 
 class DataProtectionConfigTypeDef(TypedDict):
     DataProtections: Sequence[DataProtectionTypeDef]
-
-GeoMatchStatementUnionTypeDef = Union[GeoMatchStatementTypeDef, GeoMatchStatementOutputTypeDef]
 
 class SampledHTTPRequestTypeDef(TypedDict):
     Request: HTTPRequestTypeDef
@@ -1470,6 +1482,7 @@ class RateBasedStatementCustomKeyTypeDef(TypedDict):
     UriPath: NotRequired[RateLimitUriPathUnionTypeDef]
     JA3Fingerprint: NotRequired[RateLimitJA3FingerprintTypeDef]
     JA4Fingerprint: NotRequired[RateLimitJA4FingerprintTypeDef]
+    ASN: NotRequired[Mapping[str, Any]]
 
 class LoggingFilterOutputTypeDef(TypedDict):
     Filters: List[FilterOutputTypeDef]
@@ -1739,6 +1752,7 @@ class StatementOutputTypeDef(TypedDict):
     ManagedRuleGroupStatement: NotRequired[ManagedRuleGroupStatementOutputTypeDef]
     LabelMatchStatement: NotRequired[LabelMatchStatementTypeDef]
     RegexMatchStatement: NotRequired[RegexMatchStatementOutputTypeDef]
+    AsnMatchStatement: NotRequired[AsnMatchStatementOutputTypeDef]
 
 RuleActionUnionTypeDef = Union[RuleActionTypeDef, RuleActionOutputTypeDef]
 
@@ -1916,6 +1930,7 @@ class StatementTypeDef(TypedDict):
     ManagedRuleGroupStatement: NotRequired[ManagedRuleGroupStatementUnionTypeDef]
     LabelMatchStatement: NotRequired[LabelMatchStatementTypeDef]
     RegexMatchStatement: NotRequired[RegexMatchStatementUnionTypeDef]
+    AsnMatchStatement: NotRequired[AsnMatchStatementUnionTypeDef]
 
 StatementUnionTypeDef = Union[StatementTypeDef, StatementOutputTypeDef]
 

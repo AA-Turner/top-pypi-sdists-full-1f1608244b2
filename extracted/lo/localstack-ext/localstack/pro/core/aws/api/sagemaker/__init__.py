@@ -154,6 +154,7 @@ DomainId = str
 DomainName = str
 Double = float
 DoubleParameterValue = float
+Ec2CapacityReservationId = str
 EdgeDeploymentPlanArn = str
 EdgePackagingJobArn = str
 EdgePresetDeploymentArtifact = str
@@ -333,6 +334,7 @@ MetricName = str
 MetricRegex = str
 MetricValue = float
 MinimumInstanceMetadataServiceVersion = str
+MlReservationArn = str
 MlflowVersion = str
 ModelArn = str
 ModelCardArn = str
@@ -456,6 +458,7 @@ RedshiftDatabase = str
 RedshiftQueryString = str
 RedshiftUserName = str
 ReferenceMinVersion = str
+RegionName = str
 ReleaseNotes = str
 RepositoryCredentialsProviderArn = str
 RepositoryUrl = str
@@ -577,6 +580,9 @@ TrialComponentSourceArn = str
 TrialComponentStatusMessage = str
 TrialSourceArn = str
 TtlDurationValue = int
+UnifiedStudioDomainId = str
+UnifiedStudioEnvironmentId = str
+UnifiedStudioProjectId = str
 Url = str
 UserProfileArn = str
 UserProfileName = str
@@ -1091,6 +1097,10 @@ class CandidateStepType(StrEnum):
     AWS_SageMaker_TrainingJob = "AWS::SageMaker::TrainingJob"
     AWS_SageMaker_TransformJob = "AWS::SageMaker::TransformJob"
     AWS_SageMaker_ProcessingJob = "AWS::SageMaker::ProcessingJob"
+
+
+class CapacityReservationPreference(StrEnum):
+    capacity_reservations_only = "capacity-reservations-only"
 
 
 class CapacitySizeType(StrEnum):
@@ -3316,6 +3326,12 @@ class ThroughputMode(StrEnum):
     Provisioned = "Provisioned"
 
 
+class TrackingServerMaintenanceStatus(StrEnum):
+    MaintenanceInProgress = "MaintenanceInProgress"
+    MaintenanceComplete = "MaintenanceComplete"
+    MaintenanceFailed = "MaintenanceFailed"
+
+
 class TrackingServerSize(StrEnum):
     Small = "Small"
     Medium = "Medium"
@@ -4655,9 +4671,9 @@ class MetricDatum(TypedDict, total=False):
     """Information about the metric for a candidate produced by an AutoML job."""
 
     MetricName: Optional[AutoMLMetricEnum]
+    StandardMetricName: Optional[AutoMLMetricExtendedEnum]
     Value: Optional[Float]
     Set: Optional[MetricSetSource]
-    StandardMetricName: Optional[AutoMLMetricExtendedEnum]
 
 
 MetricDataList = List[MetricDatum]
@@ -6725,6 +6741,21 @@ class DefaultSpaceSettings(TypedDict, total=False):
     CustomFileSystemConfigs: Optional[CustomFileSystemConfigs]
 
 
+class UnifiedStudioSettings(TypedDict, total=False):
+    """The settings that apply to an Amazon SageMaker AI domain when you use it
+    in Amazon SageMaker Unified Studio.
+    """
+
+    StudioWebPortalAccess: Optional[FeatureStatus]
+    DomainAccountId: Optional[AccountId]
+    DomainRegion: Optional[RegionName]
+    DomainId: Optional[UnifiedStudioDomainId]
+    ProjectId: Optional[UnifiedStudioProjectId]
+    EnvironmentId: Optional[UnifiedStudioEnvironmentId]
+    ProjectS3Path: Optional[S3Uri]
+    SingleSignOnApplicationArn: Optional[SingleSignOnApplicationArn]
+
+
 VpcOnlyTrustedAccounts = List[AccountId]
 
 
@@ -6759,6 +6790,7 @@ class DomainSettings(TypedDict, total=False):
     ExecutionRoleIdentityConfig: Optional[ExecutionRoleIdentityConfig]
     DockerSettings: Optional[DockerSettings]
     AmazonQSettings: Optional[AmazonQSettings]
+    UnifiedStudioSettings: Optional[UnifiedStudioSettings]
 
 
 VersionAliasesList = List[ImageVersionAliasPattern]
@@ -6945,6 +6977,15 @@ class CreateEdgePackagingJobRequest(ServiceRequest):
     Tags: Optional[TagList]
 
 
+class ProductionVariantCapacityReservationConfig(TypedDict, total=False):
+    """Settings for the capacity reservation for the compute instances that
+    SageMaker AI reserves for an endpoint.
+    """
+
+    CapacityReservationPreference: Optional[CapacityReservationPreference]
+    MlReservationArn: Optional[MlReservationArn]
+
+
 class ProductionVariantRoutingConfig(TypedDict, total=False):
     """Settings that control how the endpoint routes incoming traffic to the
     instances that the endpoint hosts.
@@ -7006,6 +7047,7 @@ class ProductionVariant(TypedDict, total=False):
     ManagedInstanceScaling: Optional[ProductionVariantManagedInstanceScaling]
     RoutingConfig: Optional[ProductionVariantRoutingConfig]
     InferenceAmiVersion: Optional[ProductionVariantInferenceAmiVersion]
+    CapacityReservationConfig: Optional[ProductionVariantCapacityReservationConfig]
 
 
 ProductionVariantList = List[ProductionVariant]
@@ -9373,6 +9415,7 @@ class SpaceSettings(TypedDict, total=False):
     JupyterLabAppSettings: Optional[SpaceJupyterLabAppSettings]
     AppType: Optional[AppType]
     SpaceStorageSettings: Optional[SpaceStorageSettings]
+    SpaceManagedResources: Optional[FeatureStatus]
     CustomFileSystems: Optional[CustomFileSystems]
 
 
@@ -10739,6 +10782,31 @@ class DescribeEndpointInput(ServiceRequest):
     EndpointName: EndpointName
 
 
+class Ec2CapacityReservation(TypedDict, total=False):
+    """The EC2 capacity reservations that are shared to an ML capacity
+    reservation.
+    """
+
+    Ec2CapacityReservationId: Optional[Ec2CapacityReservationId]
+    TotalInstanceCount: Optional[TaskCount]
+    AvailableInstanceCount: Optional[TaskCount]
+    UsedByCurrentEndpoint: Optional[TaskCount]
+
+
+Ec2CapacityReservationsList = List[Ec2CapacityReservation]
+
+
+class ProductionVariantCapacityReservationSummary(TypedDict, total=False):
+    """Details about an ML capacity reservation."""
+
+    MlReservationArn: Optional[MlReservationArn]
+    CapacityReservationPreference: Optional[CapacityReservationPreference]
+    TotalInstanceCount: Optional[TaskCount]
+    AvailableInstanceCount: Optional[TaskCount]
+    UsedByCurrentEndpoint: Optional[TaskCount]
+    Ec2CapacityReservations: Optional[Ec2CapacityReservationsList]
+
+
 class ProductionVariantStatus(TypedDict, total=False):
     """Describes the status of the production variant."""
 
@@ -10768,6 +10836,7 @@ class ProductionVariantSummary(TypedDict, total=False):
     DesiredServerlessConfig: Optional[ProductionVariantServerlessConfig]
     ManagedInstanceScaling: Optional[ProductionVariantManagedInstanceScaling]
     RoutingConfig: Optional[ProductionVariantRoutingConfig]
+    CapacityReservationConfig: Optional[ProductionVariantCapacityReservationSummary]
 
 
 ProductionVariantSummaryList = List[ProductionVariantSummary]
@@ -11487,6 +11556,7 @@ class DescribeMlflowTrackingServerResponse(TypedDict, total=False):
     MlflowVersion: Optional[MlflowVersion]
     RoleArn: Optional[RoleArn]
     TrackingServerStatus: Optional[TrackingServerStatus]
+    TrackingServerMaintenanceStatus: Optional[TrackingServerMaintenanceStatus]
     IsActive: Optional[IsTrackingServerActive]
     TrackingServerUrl: Optional[TrackingServerUrl]
     WeeklyMaintenanceWindowStart: Optional[WeeklyMaintenanceWindowStart]
@@ -12505,6 +12575,7 @@ class DomainSettingsForUpdate(TypedDict, total=False):
     SecurityGroupIds: Optional[DomainSecurityGroupIds]
     DockerSettings: Optional[DockerSettings]
     AmazonQSettings: Optional[AmazonQSettings]
+    UnifiedStudioSettings: Optional[UnifiedStudioSettings]
 
 
 class PredefinedMetricSpecification(TypedDict, total=False):
@@ -15949,8 +16020,8 @@ TrainingPlanDurationHoursInput = int
 
 
 class SearchTrainingPlanOfferingsRequest(ServiceRequest):
-    InstanceType: ReservedCapacityInstanceType
-    InstanceCount: ReservedCapacityInstanceCount
+    InstanceType: Optional[ReservedCapacityInstanceType]
+    InstanceCount: Optional[ReservedCapacityInstanceCount]
     StartTimeAfter: Optional[Timestamp]
     EndTimeBefore: Optional[Timestamp]
     DurationHours: TrainingPlanDurationHoursInput
@@ -16699,7 +16770,7 @@ class SagemakerApi:
         context: RequestContext,
         source_arn: AssociationEntityArn,
         destination_arn: AssociationEntityArn,
-        association_type: AssociationEdgeType = None,
+        association_type: AssociationEdgeType | None = None,
         **kwargs,
     ) -> AddAssociationResponse:
         """Creates an *association* between the source and the destination. A
@@ -16833,11 +16904,11 @@ class SagemakerApi:
         action_name: ExperimentEntityName,
         source: ActionSource,
         action_type: String256,
-        description: ExperimentDescription = None,
-        status: ActionStatus = None,
-        properties: LineageEntityParameters = None,
-        metadata_properties: MetadataProperties = None,
-        tags: TagList = None,
+        description: ExperimentDescription | None = None,
+        status: ActionStatus | None = None,
+        properties: LineageEntityParameters | None = None,
+        metadata_properties: MetadataProperties | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateActionResponse:
         """Creates an *action*. An action is a lineage tracking entity that
@@ -16865,11 +16936,11 @@ class SagemakerApi:
         context: RequestContext,
         algorithm_name: EntityName,
         training_specification: TrainingSpecification,
-        algorithm_description: EntityDescription = None,
-        inference_specification: InferenceSpecification = None,
-        validation_specification: AlgorithmValidationSpecification = None,
-        certify_for_marketplace: CertifyForMarketplace = None,
-        tags: TagList = None,
+        algorithm_description: EntityDescription | None = None,
+        inference_specification: InferenceSpecification | None = None,
+        validation_specification: AlgorithmValidationSpecification | None = None,
+        certify_for_marketplace: CertifyForMarketplace | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateAlgorithmOutput:
         """Create a machine learning algorithm that you can use in SageMaker and
@@ -16905,11 +16976,11 @@ class SagemakerApi:
         domain_id: DomainId,
         app_type: AppType,
         app_name: AppName,
-        user_profile_name: UserProfileName = None,
-        space_name: SpaceName = None,
-        tags: TagList = None,
-        resource_spec: ResourceSpec = None,
-        recovery_mode: Boolean = None,
+        user_profile_name: UserProfileName | None = None,
+        space_name: SpaceName | None = None,
+        tags: TagList | None = None,
+        resource_spec: ResourceSpec | None = None,
+        recovery_mode: Boolean | None = None,
         **kwargs,
     ) -> CreateAppResponse:
         """Creates a running app for the specified UserProfile. This operation is
@@ -16927,8 +16998,8 @@ class SagemakerApi:
         image created on the instance.
         :param recovery_mode: Indicates whether the application is launched in recovery mode.
         :returns: CreateAppResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -16937,10 +17008,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         app_image_config_name: AppImageConfigName,
-        tags: TagList = None,
-        kernel_gateway_image_config: KernelGatewayImageConfig = None,
-        jupyter_lab_app_image_config: JupyterLabAppImageConfig = None,
-        code_editor_app_image_config: CodeEditorAppImageConfig = None,
+        tags: TagList | None = None,
+        kernel_gateway_image_config: KernelGatewayImageConfig | None = None,
+        jupyter_lab_app_image_config: JupyterLabAppImageConfig | None = None,
+        code_editor_app_image_config: CodeEditorAppImageConfig | None = None,
         **kwargs,
     ) -> CreateAppImageConfigResponse:
         """Creates a configuration for running a SageMaker AI image as a
@@ -16964,10 +17035,10 @@ class SagemakerApi:
         context: RequestContext,
         source: ArtifactSource,
         artifact_type: String256,
-        artifact_name: ExperimentEntityName = None,
-        properties: ArtifactProperties = None,
-        metadata_properties: MetadataProperties = None,
-        tags: TagList = None,
+        artifact_name: ExperimentEntityName | None = None,
+        properties: ArtifactProperties | None = None,
+        metadata_properties: MetadataProperties | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateArtifactResponse:
         """Creates an *artifact*. An artifact is a lineage tracking entity that
@@ -16995,12 +17066,12 @@ class SagemakerApi:
         input_data_config: AutoMLInputDataConfig,
         output_data_config: AutoMLOutputDataConfig,
         role_arn: RoleArn,
-        problem_type: ProblemType = None,
-        auto_ml_job_objective: AutoMLJobObjective = None,
-        auto_ml_job_config: AutoMLJobConfig = None,
-        generate_candidate_definitions_only: GenerateCandidateDefinitionsOnly = None,
-        tags: TagList = None,
-        model_deploy_config: ModelDeployConfig = None,
+        problem_type: ProblemType | None = None,
+        auto_ml_job_objective: AutoMLJobObjective | None = None,
+        auto_ml_job_config: AutoMLJobConfig | None = None,
+        generate_candidate_definitions_only: GenerateCandidateDefinitionsOnly | None = None,
+        tags: TagList | None = None,
+        model_deploy_config: ModelDeployConfig | None = None,
         **kwargs,
     ) -> CreateAutoMLJobResponse:
         """Creates an Autopilot job also referred to as Autopilot experiment or
@@ -17074,12 +17145,12 @@ class SagemakerApi:
         output_data_config: AutoMLOutputDataConfig,
         auto_ml_problem_type_config: AutoMLProblemTypeConfig,
         role_arn: RoleArn,
-        tags: TagList = None,
-        security_config: AutoMLSecurityConfig = None,
-        auto_ml_job_objective: AutoMLJobObjective = None,
-        model_deploy_config: ModelDeployConfig = None,
-        data_split_config: AutoMLDataSplitConfig = None,
-        auto_ml_compute_config: AutoMLComputeConfig = None,
+        tags: TagList | None = None,
+        security_config: AutoMLSecurityConfig | None = None,
+        auto_ml_job_objective: AutoMLJobObjective | None = None,
+        model_deploy_config: ModelDeployConfig | None = None,
+        data_split_config: AutoMLDataSplitConfig | None = None,
+        auto_ml_compute_config: AutoMLComputeConfig | None = None,
         **kwargs,
     ) -> CreateAutoMLJobV2Response:
         """Creates an Autopilot job also referred to as Autopilot experiment or
@@ -17163,10 +17234,10 @@ class SagemakerApi:
         context: RequestContext,
         cluster_name: ClusterName,
         instance_groups: ClusterInstanceGroupSpecifications,
-        vpc_config: VpcConfig = None,
-        tags: TagList = None,
-        orchestrator: ClusterOrchestrator = None,
-        node_recovery: ClusterNodeRecovery = None,
+        vpc_config: VpcConfig | None = None,
+        tags: TagList | None = None,
+        orchestrator: ClusterOrchestrator | None = None,
+        node_recovery: ClusterNodeRecovery | None = None,
         **kwargs,
     ) -> CreateClusterResponse:
         """Creates a SageMaker HyperPod cluster. SageMaker HyperPod is a capability
@@ -17185,8 +17256,8 @@ class SagemakerApi:
         :param orchestrator: The type of orchestrator to use for the SageMaker HyperPod cluster.
         :param node_recovery: The node recovery mode for the SageMaker HyperPod cluster.
         :returns: CreateClusterResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -17197,8 +17268,8 @@ class SagemakerApi:
         name: EntityName,
         cluster_arn: ClusterArn,
         scheduler_config: SchedulerConfig,
-        description: EntityDescription = None,
-        tags: TagList = None,
+        description: EntityDescription | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateClusterSchedulerConfigResponse:
         """Create cluster policy configuration. This policy is used for task
@@ -17212,8 +17283,8 @@ class SagemakerApi:
         :param description: Description of the cluster policy.
         :param tags: Tags of the cluster policy.
         :returns: CreateClusterSchedulerConfigResponse
-        :raises ResourceLimitExceeded:
         :raises ConflictException:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -17223,7 +17294,7 @@ class SagemakerApi:
         context: RequestContext,
         code_repository_name: EntityName,
         git_config: GitConfig,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateCodeRepositoryOutput:
         """Creates a Git repository as a resource in your SageMaker AI account. You
@@ -17254,10 +17325,10 @@ class SagemakerApi:
         role_arn: RoleArn,
         output_config: OutputConfig,
         stopping_condition: StoppingCondition,
-        model_package_version_arn: ModelPackageArn = None,
-        input_config: InputConfig = None,
-        vpc_config: NeoVpcConfig = None,
-        tags: TagList = None,
+        model_package_version_arn: ModelPackageArn | None = None,
+        input_config: InputConfig | None = None,
+        vpc_config: NeoVpcConfig | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateCompilationJobResponse:
         """Starts a model compilation job. After the model has been compiled,
@@ -17319,9 +17390,9 @@ class SagemakerApi:
         cluster_arn: ClusterArn,
         compute_quota_config: ComputeQuotaConfig,
         compute_quota_target: ComputeQuotaTarget,
-        description: EntityDescription = None,
-        activation_state: ActivationState = None,
-        tags: TagList = None,
+        description: EntityDescription | None = None,
+        activation_state: ActivationState | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateComputeQuotaResponse:
         """Create compute allocation definition. This defines how compute is
@@ -17337,8 +17408,8 @@ class SagemakerApi:
         :param activation_state: The state of the compute allocation being described.
         :param tags: Tags of the compute allocation definition.
         :returns: CreateComputeQuotaResponse
-        :raises ResourceLimitExceeded:
         :raises ConflictException:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -17349,9 +17420,9 @@ class SagemakerApi:
         context_name: ContextName,
         source: ContextSource,
         context_type: String256,
-        description: ExperimentDescription = None,
-        properties: LineageEntityParameters = None,
-        tags: TagList = None,
+        description: ExperimentDescription | None = None,
+        properties: LineageEntityParameters | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateContextResponse:
         """Creates a *context*. A context is a lineage tracking entity that
@@ -17381,10 +17452,10 @@ class SagemakerApi:
         data_quality_job_output_config: MonitoringOutputConfig,
         job_resources: MonitoringResources,
         role_arn: RoleArn,
-        data_quality_baseline_config: DataQualityBaselineConfig = None,
-        network_config: MonitoringNetworkConfig = None,
-        stopping_condition: MonitoringStoppingCondition = None,
-        tags: TagList = None,
+        data_quality_baseline_config: DataQualityBaselineConfig | None = None,
+        network_config: MonitoringNetworkConfig | None = None,
+        stopping_condition: MonitoringStoppingCondition | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateDataQualityJobDefinitionResponse:
         """Creates a definition for a job that monitors data quality and drift. For
@@ -17404,8 +17475,8 @@ class SagemakerApi:
         stopping.
         :param tags: (Optional) An array of key-value pairs.
         :returns: CreateDataQualityJobDefinitionResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -17415,10 +17486,10 @@ class SagemakerApi:
         context: RequestContext,
         device_fleet_name: EntityName,
         output_config: EdgeOutputConfig,
-        role_arn: RoleArn = None,
-        description: DeviceFleetDescription = None,
-        tags: TagList = None,
-        enable_iot_role_alias: EnableIotRoleAlias = None,
+        role_arn: RoleArn | None = None,
+        description: DeviceFleetDescription | None = None,
+        tags: TagList | None = None,
+        enable_iot_role_alias: EnableIotRoleAlias | None = None,
         **kwargs,
     ) -> None:
         """Creates a device fleet.
@@ -17445,14 +17516,14 @@ class SagemakerApi:
         default_user_settings: UserSettings,
         subnet_ids: Subnets,
         vpc_id: VpcId,
-        domain_settings: DomainSettings = None,
-        tags: TagList = None,
-        app_network_access_type: AppNetworkAccessType = None,
-        home_efs_file_system_kms_key_id: KmsKeyId = None,
-        kms_key_id: KmsKeyId = None,
-        app_security_group_management: AppSecurityGroupManagement = None,
-        tag_propagation: TagPropagation = None,
-        default_space_settings: DefaultSpaceSettings = None,
+        domain_settings: DomainSettings | None = None,
+        tags: TagList | None = None,
+        app_network_access_type: AppNetworkAccessType | None = None,
+        home_efs_file_system_kms_key_id: KmsKeyId | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        app_security_group_management: AppSecurityGroupManagement | None = None,
+        tag_propagation: TagPropagation | None = None,
+        default_space_settings: DefaultSpaceSettings | None = None,
         **kwargs,
     ) -> CreateDomainResponse:
         """Creates a ``Domain``. A domain consists of an associated Amazon Elastic
@@ -17523,8 +17594,8 @@ class SagemakerApi:
         :param tag_propagation: Indicates whether custom tag propagation is supported for the domain.
         :param default_space_settings: The default settings for shared spaces that users create in the domain.
         :returns: CreateDomainResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -17535,8 +17606,8 @@ class SagemakerApi:
         edge_deployment_plan_name: EntityName,
         model_configs: EdgeDeploymentModelConfigs,
         device_fleet_name: EntityName,
-        stages: DeploymentStages = None,
-        tags: TagList = None,
+        stages: DeploymentStages | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateEdgeDeploymentPlanResponse:
         """Creates an edge deployment plan, consisting of multiple stages. Each
@@ -17578,8 +17649,8 @@ class SagemakerApi:
         model_version: EdgeVersion,
         role_arn: RoleArn,
         output_config: EdgeOutputConfig,
-        resource_key: KmsKeyId = None,
-        tags: TagList = None,
+        resource_key: KmsKeyId | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> None:
         """Starts a SageMaker Edge Manager model packaging job. Edge Manager will
@@ -17609,8 +17680,8 @@ class SagemakerApi:
         context: RequestContext,
         endpoint_name: EndpointName,
         endpoint_config_name: EndpointConfigName,
-        deployment_config: DeploymentConfig = None,
-        tags: TagList = None,
+        deployment_config: DeploymentConfig | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateEndpointOutput:
         """Creates an endpoint using the endpoint configuration specified in the
@@ -17714,15 +17785,15 @@ class SagemakerApi:
         context: RequestContext,
         endpoint_config_name: EndpointConfigName,
         production_variants: ProductionVariantList,
-        data_capture_config: DataCaptureConfig = None,
-        tags: TagList = None,
-        kms_key_id: KmsKeyId = None,
-        async_inference_config: AsyncInferenceConfig = None,
-        explainer_config: ExplainerConfig = None,
-        shadow_production_variants: ProductionVariantList = None,
-        execution_role_arn: RoleArn = None,
-        vpc_config: VpcConfig = None,
-        enable_network_isolation: Boolean = None,
+        data_capture_config: DataCaptureConfig | None = None,
+        tags: TagList | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        async_inference_config: AsyncInferenceConfig | None = None,
+        explainer_config: ExplainerConfig | None = None,
+        shadow_production_variants: ProductionVariantList | None = None,
+        execution_role_arn: RoleArn | None = None,
+        vpc_config: VpcConfig | None = None,
+        enable_network_isolation: Boolean | None = None,
         **kwargs,
     ) -> CreateEndpointConfigOutput:
         """Creates an endpoint configuration that SageMaker hosting services uses
@@ -17794,9 +17865,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         experiment_name: ExperimentEntityName,
-        display_name: ExperimentEntityName = None,
-        description: ExperimentDescription = None,
-        tags: TagList = None,
+        display_name: ExperimentEntityName | None = None,
+        description: ExperimentDescription | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateExperimentResponse:
         """Creates a SageMaker *experiment*. An experiment is a collection of
@@ -17856,12 +17927,12 @@ class SagemakerApi:
         record_identifier_feature_name: FeatureName,
         event_time_feature_name: FeatureName,
         feature_definitions: FeatureDefinitions,
-        online_store_config: OnlineStoreConfig = None,
-        offline_store_config: OfflineStoreConfig = None,
-        throughput_config: ThroughputConfig = None,
-        role_arn: RoleArn = None,
-        description: Description = None,
-        tags: TagList = None,
+        online_store_config: OnlineStoreConfig | None = None,
+        offline_store_config: OfflineStoreConfig | None = None,
+        throughput_config: ThroughputConfig | None = None,
+        role_arn: RoleArn | None = None,
+        description: Description | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateFeatureGroupResponse:
         """Create a new ``FeatureGroup``. A ``FeatureGroup`` is a group of
@@ -17909,10 +17980,10 @@ class SagemakerApi:
         flow_definition_name: FlowDefinitionName,
         output_config: FlowDefinitionOutputConfig,
         role_arn: RoleArn,
-        human_loop_request_source: HumanLoopRequestSource = None,
-        human_loop_activation_config: HumanLoopActivationConfig = None,
-        human_loop_config: HumanLoopConfig = None,
-        tags: TagList = None,
+        human_loop_request_source: HumanLoopRequestSource | None = None,
+        human_loop_activation_config: HumanLoopActivationConfig | None = None,
+        human_loop_config: HumanLoopConfig | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateFlowDefinitionResponse:
         """Creates a flow definition.
@@ -17930,8 +18001,8 @@ class SagemakerApi:
         :param tags: An array of key-value pairs that contain metadata to help you categorize
         and organize a flow definition.
         :returns: CreateFlowDefinitionResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -17941,10 +18012,10 @@ class SagemakerApi:
         context: RequestContext,
         hub_name: HubName,
         hub_description: HubDescription,
-        hub_display_name: HubDisplayName = None,
-        hub_search_keywords: HubSearchKeywordList = None,
-        s3_storage_config: HubS3StorageConfig = None,
-        tags: TagList = None,
+        hub_display_name: HubDisplayName | None = None,
+        hub_search_keywords: HubSearchKeywordList | None = None,
+        s3_storage_config: HubS3StorageConfig | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateHubResponse:
         """Create a hub.
@@ -17967,9 +18038,9 @@ class SagemakerApi:
         context: RequestContext,
         hub_name: HubNameOrArn,
         sage_maker_public_hub_content_arn: SageMakerPublicHubContentArn,
-        hub_content_name: HubContentName = None,
-        min_version: HubContentVersion = None,
-        tags: TagList = None,
+        hub_content_name: HubContentName | None = None,
+        min_version: HubContentVersion | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateHubContentReferenceResponse:
         """Create a hub content reference in order to add a model in the JumpStart
@@ -17993,7 +18064,7 @@ class SagemakerApi:
         context: RequestContext,
         human_task_ui_name: HumanTaskUiName,
         ui_template: UiTemplate,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateHumanTaskUiResponse:
         """Defines the settings you will use for the human review workflow user
@@ -18005,8 +18076,8 @@ class SagemakerApi:
         :param tags: An array of key-value pairs that contain metadata to help you categorize
         and organize a human review workflow user interface.
         :returns: CreateHumanTaskUiResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -18016,11 +18087,11 @@ class SagemakerApi:
         context: RequestContext,
         hyper_parameter_tuning_job_name: HyperParameterTuningJobName,
         hyper_parameter_tuning_job_config: HyperParameterTuningJobConfig,
-        training_job_definition: HyperParameterTrainingJobDefinition = None,
-        training_job_definitions: HyperParameterTrainingJobDefinitions = None,
-        warm_start_config: HyperParameterTuningJobWarmStartConfig = None,
-        tags: TagList = None,
-        autotune: Autotune = None,
+        training_job_definition: HyperParameterTrainingJobDefinition | None = None,
+        training_job_definitions: HyperParameterTrainingJobDefinitions | None = None,
+        warm_start_config: HyperParameterTuningJobWarmStartConfig | None = None,
+        tags: TagList | None = None,
+        autotune: Autotune | None = None,
         **kwargs,
     ) -> CreateHyperParameterTuningJobResponse:
         """Starts a hyperparameter tuning job. A hyperparameter tuning job finds
@@ -18069,9 +18140,9 @@ class SagemakerApi:
         context: RequestContext,
         image_name: ImageName,
         role_arn: RoleArn,
-        description: ImageDescription = None,
-        display_name: ImageDisplayName = None,
-        tags: TagList = None,
+        description: ImageDescription | None = None,
+        display_name: ImageDisplayName | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateImageResponse:
         """Creates a custom SageMaker AI image. A SageMaker AI image is a set of
@@ -18098,14 +18169,14 @@ class SagemakerApi:
         base_image: ImageBaseImage,
         client_token: ClientToken,
         image_name: ImageName,
-        aliases: SageMakerImageVersionAliases = None,
-        vendor_guidance: VendorGuidance = None,
-        job_type: JobType = None,
-        ml_framework: MLFramework = None,
-        programming_lang: ProgrammingLang = None,
-        processor: Processor = None,
-        horovod: Horovod = None,
-        release_notes: ReleaseNotes = None,
+        aliases: SageMakerImageVersionAliases | None = None,
+        vendor_guidance: VendorGuidance | None = None,
+        job_type: JobType | None = None,
+        ml_framework: MLFramework | None = None,
+        programming_lang: ProgrammingLang | None = None,
+        processor: Processor | None = None,
+        horovod: Horovod | None = None,
+        release_notes: ReleaseNotes | None = None,
         **kwargs,
     ) -> CreateImageVersionResponse:
         """Creates a version of the SageMaker AI image specified by ``ImageName``.
@@ -18125,9 +18196,9 @@ class SagemakerApi:
         :param horovod: Indicates Horovod compatibility.
         :param release_notes: The maintainer description of the image version.
         :returns: CreateImageVersionResponse
+        :raises ResourceNotFound:
         :raises ResourceInUse:
         :raises ResourceLimitExceeded:
-        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -18138,9 +18209,9 @@ class SagemakerApi:
         inference_component_name: InferenceComponentName,
         endpoint_name: EndpointName,
         specification: InferenceComponentSpecification,
-        variant_name: VariantName = None,
-        runtime_config: InferenceComponentRuntimeConfig = None,
-        tags: TagList = None,
+        variant_name: VariantName | None = None,
+        runtime_config: InferenceComponentRuntimeConfig | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateInferenceComponentOutput:
         """Creates an inference component, which is a SageMaker AI hosting object
@@ -18221,10 +18292,10 @@ class SagemakerApi:
         job_type: RecommendationJobType,
         role_arn: RoleArn,
         input_config: RecommendationJobInputConfig,
-        job_description: RecommendationJobDescription = None,
-        stopping_conditions: RecommendationJobStoppingConditions = None,
-        output_config: RecommendationJobOutputConfig = None,
-        tags: TagList = None,
+        job_description: RecommendationJobDescription | None = None,
+        stopping_conditions: RecommendationJobStoppingConditions | None = None,
+        output_config: RecommendationJobOutputConfig | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateInferenceRecommendationsJobResponse:
         """Starts a recommendation job. You can create either an instance
@@ -18258,10 +18329,10 @@ class SagemakerApi:
         output_config: LabelingJobOutputConfig,
         role_arn: RoleArn,
         human_task_config: HumanTaskConfig,
-        label_category_config_s3_uri: S3Uri = None,
-        stopping_conditions: LabelingJobStoppingConditions = None,
-        labeling_job_algorithms_config: LabelingJobAlgorithmsConfig = None,
-        tags: TagList = None,
+        label_category_config_s3_uri: S3Uri | None = None,
+        stopping_conditions: LabelingJobStoppingConditions | None = None,
+        labeling_job_algorithms_config: LabelingJobAlgorithmsConfig | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateLabelingJobResponse:
         """Creates a job that uses workers to label the data objects in your input
@@ -18339,11 +18410,11 @@ class SagemakerApi:
         tracking_server_name: TrackingServerName,
         artifact_store_uri: S3Uri,
         role_arn: RoleArn,
-        tracking_server_size: TrackingServerSize = None,
-        mlflow_version: MlflowVersion = None,
-        automatic_model_registration: Boolean = None,
-        weekly_maintenance_window_start: WeeklyMaintenanceWindowStart = None,
-        tags: TagList = None,
+        tracking_server_size: TrackingServerSize | None = None,
+        mlflow_version: MlflowVersion | None = None,
+        automatic_model_registration: Boolean | None = None,
+        weekly_maintenance_window_start: WeeklyMaintenanceWindowStart | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateMlflowTrackingServerResponse:
         """Creates an MLflow Tracking Server using a general purpose Amazon S3
@@ -18374,13 +18445,13 @@ class SagemakerApi:
         self,
         context: RequestContext,
         model_name: ModelName,
-        primary_container: ContainerDefinition = None,
-        containers: ContainerDefinitionList = None,
-        inference_execution_config: InferenceExecutionConfig = None,
-        execution_role_arn: RoleArn = None,
-        tags: TagList = None,
-        vpc_config: VpcConfig = None,
-        enable_network_isolation: Boolean = None,
+        primary_container: ContainerDefinition | None = None,
+        containers: ContainerDefinitionList | None = None,
+        inference_execution_config: InferenceExecutionConfig | None = None,
+        execution_role_arn: RoleArn | None = None,
+        tags: TagList | None = None,
+        vpc_config: VpcConfig | None = None,
+        enable_network_isolation: Boolean | None = None,
         **kwargs,
     ) -> CreateModelOutput:
         """Creates a model in SageMaker. In the request, you name the model and
@@ -18437,10 +18508,10 @@ class SagemakerApi:
         model_bias_job_output_config: MonitoringOutputConfig,
         job_resources: MonitoringResources,
         role_arn: RoleArn,
-        model_bias_baseline_config: ModelBiasBaselineConfig = None,
-        network_config: MonitoringNetworkConfig = None,
-        stopping_condition: MonitoringStoppingCondition = None,
-        tags: TagList = None,
+        model_bias_baseline_config: ModelBiasBaselineConfig | None = None,
+        network_config: MonitoringNetworkConfig | None = None,
+        stopping_condition: MonitoringStoppingCondition | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateModelBiasJobDefinitionResponse:
         """Creates the definition for a model bias job.
@@ -18458,8 +18529,8 @@ class SagemakerApi:
         stopping.
         :param tags: (Optional) An array of key-value pairs.
         :returns: CreateModelBiasJobDefinitionResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -18470,8 +18541,8 @@ class SagemakerApi:
         model_card_name: EntityName,
         content: ModelCardContent,
         model_card_status: ModelCardStatus,
-        security_config: ModelCardSecurityConfig = None,
-        tags: TagList = None,
+        security_config: ModelCardSecurityConfig | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateModelCardResponse:
         """Creates an Amazon SageMaker Model Card.
@@ -18488,8 +18559,8 @@ class SagemakerApi:
         sensitive data.
         :param tags: Key-value pairs used to manage metadata for model cards.
         :returns: CreateModelCardResponse
-        :raises ResourceLimitExceeded:
         :raises ConflictException:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -18500,7 +18571,7 @@ class SagemakerApi:
         model_card_name: ModelCardNameOrArn,
         model_card_export_job_name: EntityName,
         output_config: ModelCardExportOutputConfig,
-        model_card_version: Integer = None,
+        model_card_version: Integer | None = None,
         **kwargs,
     ) -> CreateModelCardExportJobResponse:
         """Creates an Amazon SageMaker Model Card export job.
@@ -18511,9 +18582,9 @@ class SagemakerApi:
         for exporting.
         :param model_card_version: The version of the model card to export.
         :returns: CreateModelCardExportJobResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -18527,10 +18598,10 @@ class SagemakerApi:
         model_explainability_job_output_config: MonitoringOutputConfig,
         job_resources: MonitoringResources,
         role_arn: RoleArn,
-        model_explainability_baseline_config: ModelExplainabilityBaselineConfig = None,
-        network_config: MonitoringNetworkConfig = None,
-        stopping_condition: MonitoringStoppingCondition = None,
-        tags: TagList = None,
+        model_explainability_baseline_config: ModelExplainabilityBaselineConfig | None = None,
+        network_config: MonitoringNetworkConfig | None = None,
+        stopping_condition: MonitoringStoppingCondition | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateModelExplainabilityJobDefinitionResponse:
         """Creates the definition for a model explainability job.
@@ -18549,8 +18620,8 @@ class SagemakerApi:
         stopping.
         :param tags: (Optional) An array of key-value pairs.
         :returns: CreateModelExplainabilityJobDefinitionResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -18558,29 +18629,29 @@ class SagemakerApi:
     def create_model_package(
         self,
         context: RequestContext,
-        model_package_name: EntityName = None,
-        model_package_group_name: ArnOrName = None,
-        model_package_description: EntityDescription = None,
-        inference_specification: InferenceSpecification = None,
-        validation_specification: ModelPackageValidationSpecification = None,
-        source_algorithm_specification: SourceAlgorithmSpecification = None,
-        certify_for_marketplace: CertifyForMarketplace = None,
-        tags: TagList = None,
-        model_approval_status: ModelApprovalStatus = None,
-        metadata_properties: MetadataProperties = None,
-        model_metrics: ModelMetrics = None,
-        client_token: ClientToken = None,
-        domain: String = None,
-        task: String = None,
-        sample_payload_url: S3Uri = None,
-        customer_metadata_properties: CustomerMetadataMap = None,
-        drift_check_baselines: DriftCheckBaselines = None,
-        additional_inference_specifications: AdditionalInferenceSpecifications = None,
-        skip_model_validation: SkipModelValidation = None,
-        source_uri: ModelPackageSourceUri = None,
-        security_config: ModelPackageSecurityConfig = None,
-        model_card: ModelPackageModelCard = None,
-        model_life_cycle: ModelLifeCycle = None,
+        model_package_name: EntityName | None = None,
+        model_package_group_name: ArnOrName | None = None,
+        model_package_description: EntityDescription | None = None,
+        inference_specification: InferenceSpecification | None = None,
+        validation_specification: ModelPackageValidationSpecification | None = None,
+        source_algorithm_specification: SourceAlgorithmSpecification | None = None,
+        certify_for_marketplace: CertifyForMarketplace | None = None,
+        tags: TagList | None = None,
+        model_approval_status: ModelApprovalStatus | None = None,
+        metadata_properties: MetadataProperties | None = None,
+        model_metrics: ModelMetrics | None = None,
+        client_token: ClientToken | None = None,
+        domain: String | None = None,
+        task: String | None = None,
+        sample_payload_url: S3Uri | None = None,
+        customer_metadata_properties: CustomerMetadataMap | None = None,
+        drift_check_baselines: DriftCheckBaselines | None = None,
+        additional_inference_specifications: AdditionalInferenceSpecifications | None = None,
+        skip_model_validation: SkipModelValidation | None = None,
+        source_uri: ModelPackageSourceUri | None = None,
+        security_config: ModelPackageSecurityConfig | None = None,
+        model_card: ModelPackageModelCard | None = None,
+        model_life_cycle: ModelLifeCycle | None = None,
         **kwargs,
     ) -> CreateModelPackageOutput:
         """Creates a model package that you can use to create SageMaker models or
@@ -18646,8 +18717,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         model_package_group_name: EntityName,
-        model_package_group_description: EntityDescription = None,
-        tags: TagList = None,
+        model_package_group_description: EntityDescription | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateModelPackageGroupOutput:
         """Creates a model group. A model group contains a group of model versions.
@@ -18670,10 +18741,10 @@ class SagemakerApi:
         model_quality_job_output_config: MonitoringOutputConfig,
         job_resources: MonitoringResources,
         role_arn: RoleArn,
-        model_quality_baseline_config: ModelQualityBaselineConfig = None,
-        network_config: MonitoringNetworkConfig = None,
-        stopping_condition: MonitoringStoppingCondition = None,
-        tags: TagList = None,
+        model_quality_baseline_config: ModelQualityBaselineConfig | None = None,
+        network_config: MonitoringNetworkConfig | None = None,
+        stopping_condition: MonitoringStoppingCondition | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateModelQualityJobDefinitionResponse:
         """Creates a definition for a job that monitors model quality and drift.
@@ -18693,8 +18764,8 @@ class SagemakerApi:
         stopping.
         :param tags: (Optional) An array of key-value pairs.
         :returns: CreateModelQualityJobDefinitionResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -18704,7 +18775,7 @@ class SagemakerApi:
         context: RequestContext,
         monitoring_schedule_name: MonitoringScheduleName,
         monitoring_schedule_config: MonitoringScheduleConfig,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateMonitoringScheduleResponse:
         """Creates a schedule that regularly starts Amazon SageMaker AI Processing
@@ -18715,8 +18786,8 @@ class SagemakerApi:
         defines the monitoring job.
         :param tags: (Optional) An array of key-value pairs.
         :returns: CreateMonitoringScheduleResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -18727,19 +18798,19 @@ class SagemakerApi:
         notebook_instance_name: NotebookInstanceName,
         instance_type: InstanceType,
         role_arn: RoleArn,
-        subnet_id: SubnetId = None,
-        security_group_ids: SecurityGroupIds = None,
-        kms_key_id: KmsKeyId = None,
-        tags: TagList = None,
-        lifecycle_config_name: NotebookInstanceLifecycleConfigName = None,
-        direct_internet_access: DirectInternetAccess = None,
-        volume_size_in_gb: NotebookInstanceVolumeSizeInGB = None,
-        accelerator_types: NotebookInstanceAcceleratorTypes = None,
-        default_code_repository: CodeRepositoryNameOrUrl = None,
-        additional_code_repositories: AdditionalCodeRepositoryNamesOrUrls = None,
-        root_access: RootAccess = None,
-        platform_identifier: PlatformIdentifier = None,
-        instance_metadata_service_configuration: InstanceMetadataServiceConfiguration = None,
+        subnet_id: SubnetId | None = None,
+        security_group_ids: SecurityGroupIds | None = None,
+        kms_key_id: KmsKeyId | None = None,
+        tags: TagList | None = None,
+        lifecycle_config_name: NotebookInstanceLifecycleConfigName | None = None,
+        direct_internet_access: DirectInternetAccess | None = None,
+        volume_size_in_gb: NotebookInstanceVolumeSizeInGB | None = None,
+        accelerator_types: NotebookInstanceAcceleratorTypes | None = None,
+        default_code_repository: CodeRepositoryNameOrUrl | None = None,
+        additional_code_repositories: AdditionalCodeRepositoryNamesOrUrls | None = None,
+        root_access: RootAccess | None = None,
+        platform_identifier: PlatformIdentifier | None = None,
+        instance_metadata_service_configuration: InstanceMetadataServiceConfiguration | None = None,
         **kwargs,
     ) -> CreateNotebookInstanceOutput:
         """Creates an SageMaker AI notebook instance. A notebook instance is a
@@ -18821,9 +18892,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         notebook_instance_lifecycle_config_name: NotebookInstanceLifecycleConfigName,
-        on_create: NotebookInstanceLifecycleConfigList = None,
-        on_start: NotebookInstanceLifecycleConfigList = None,
-        tags: TagList = None,
+        on_create: NotebookInstanceLifecycleConfigList | None = None,
+        on_start: NotebookInstanceLifecycleConfigList | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateNotebookInstanceLifecycleConfigOutput:
         """Creates a lifecycle configuration that you can associate with a notebook
@@ -18868,9 +18939,9 @@ class SagemakerApi:
         optimization_configs: OptimizationConfigs,
         output_config: OptimizationJobOutputConfig,
         stopping_condition: StoppingCondition,
-        optimization_environment: OptimizationJobEnvironmentVariables = None,
-        tags: TagList = None,
-        vpc_config: OptimizationVpcConfig = None,
+        optimization_environment: OptimizationJobEnvironmentVariables | None = None,
+        tags: TagList | None = None,
+        vpc_config: OptimizationVpcConfig | None = None,
         **kwargs,
     ) -> CreateOptimizationJobResponse:
         """Creates a job that optimizes a model for inference performance. To
@@ -18926,8 +18997,8 @@ class SagemakerApi:
         :param client_token: A unique token that guarantees that the call to this API is idempotent.
         :param tags: Each tag consists of a key and an optional value.
         :returns: CreatePartnerAppResponse
-        :raises ResourceLimitExceeded:
         :raises ConflictException:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -18936,8 +19007,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         arn: PartnerAppArn,
-        expires_in_seconds: ExpiresInSeconds = None,
-        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds = None,
+        expires_in_seconds: ExpiresInSeconds | None = None,
+        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds | None = None,
         **kwargs,
     ) -> CreatePartnerAppPresignedUrlResponse:
         """Creates a presigned URL to access an Amazon SageMaker Partner AI App.
@@ -18958,12 +19029,12 @@ class SagemakerApi:
         pipeline_name: PipelineName,
         client_request_token: IdempotencyToken,
         role_arn: RoleArn,
-        pipeline_display_name: PipelineName = None,
-        pipeline_definition: PipelineDefinition = None,
-        pipeline_definition_s3_location: PipelineDefinitionS3Location = None,
-        pipeline_description: PipelineDescription = None,
-        tags: TagList = None,
-        parallelism_configuration: ParallelismConfiguration = None,
+        pipeline_display_name: PipelineName | None = None,
+        pipeline_definition: PipelineDefinition | None = None,
+        pipeline_definition_s3_location: PipelineDefinitionS3Location | None = None,
+        pipeline_description: PipelineDescription | None = None,
+        tags: TagList | None = None,
+        parallelism_configuration: ParallelismConfiguration | None = None,
         **kwargs,
     ) -> CreatePipelineResponse:
         """Creates a pipeline using a JSON pipeline definition.
@@ -18981,9 +19052,9 @@ class SagemakerApi:
         :param tags: A list of tags to apply to the created pipeline.
         :param parallelism_configuration: This is the configuration that controls the parallelism of the pipeline.
         :returns: CreatePipelineResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -18993,10 +19064,10 @@ class SagemakerApi:
         context: RequestContext,
         domain_id: DomainId,
         user_profile_name: UserProfileName,
-        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds = None,
-        expires_in_seconds: ExpiresInSeconds = None,
-        space_name: SpaceName = None,
-        landing_uri: LandingUri = None,
+        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds | None = None,
+        expires_in_seconds: ExpiresInSeconds | None = None,
+        space_name: SpaceName | None = None,
+        landing_uri: LandingUri | None = None,
         **kwargs,
     ) -> CreatePresignedDomainUrlResponse:
         """Creates a URL for a specified UserProfile in a Domain. When accessed in
@@ -19044,8 +19115,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         tracking_server_name: TrackingServerName,
-        expires_in_seconds: ExpiresInSeconds = None,
-        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds = None,
+        expires_in_seconds: ExpiresInSeconds | None = None,
+        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds | None = None,
         **kwargs,
     ) -> CreatePresignedMlflowTrackingServerUrlResponse:
         """Returns a presigned URL that you can use to connect to the MLflow UI
@@ -19066,7 +19137,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         notebook_instance_name: NotebookInstanceName,
-        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds = None,
+        session_expiration_duration_in_seconds: SessionExpirationDurationInSeconds | None = None,
         **kwargs,
     ) -> CreatePresignedNotebookInstanceUrlOutput:
         """Returns a URL that you can use to connect to the Jupyter server from a
@@ -19109,13 +19180,13 @@ class SagemakerApi:
         processing_resources: ProcessingResources,
         app_specification: AppSpecification,
         role_arn: RoleArn,
-        processing_inputs: ProcessingInputs = None,
-        processing_output_config: ProcessingOutputConfig = None,
-        stopping_condition: ProcessingStoppingCondition = None,
-        environment: ProcessingEnvironmentMap = None,
-        network_config: NetworkConfig = None,
-        tags: TagList = None,
-        experiment_config: ExperimentConfig = None,
+        processing_inputs: ProcessingInputs | None = None,
+        processing_output_config: ProcessingOutputConfig | None = None,
+        stopping_condition: ProcessingStoppingCondition | None = None,
+        environment: ProcessingEnvironmentMap | None = None,
+        network_config: NetworkConfig | None = None,
+        tags: TagList | None = None,
+        experiment_config: ExperimentConfig | None = None,
         **kwargs,
     ) -> CreateProcessingJobResponse:
         """Creates a processing job.
@@ -19139,9 +19210,9 @@ class SagemakerApi:
         :param experiment_config: Associates a SageMaker job as a trial component with an experiment and
         trial.
         :returns: CreateProcessingJobResponse
+        :raises ResourceNotFound:
         :raises ResourceInUse:
         :raises ResourceLimitExceeded:
-        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -19150,9 +19221,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         project_name: ProjectEntityName,
-        project_description: EntityDescription = None,
-        service_catalog_provisioning_details: ServiceCatalogProvisioningDetails = None,
-        tags: TagList = None,
+        project_description: EntityDescription | None = None,
+        service_catalog_provisioning_details: ServiceCatalogProvisioningDetails | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateProjectOutput:
         """Creates a machine learning (ML) project that can contain one or more
@@ -19176,11 +19247,11 @@ class SagemakerApi:
         context: RequestContext,
         domain_id: DomainId,
         space_name: SpaceName,
-        tags: TagList = None,
-        space_settings: SpaceSettings = None,
-        ownership_settings: OwnershipSettings = None,
-        space_sharing_settings: SpaceSharingSettings = None,
-        space_display_name: NonEmptyString64 = None,
+        tags: TagList | None = None,
+        space_settings: SpaceSettings | None = None,
+        ownership_settings: OwnershipSettings | None = None,
+        space_sharing_settings: SpaceSharingSettings | None = None,
+        space_display_name: NonEmptyString64 | None = None,
         **kwargs,
     ) -> CreateSpaceResponse:
         """Creates a private space or a space used for real time collaboration in a
@@ -19194,8 +19265,8 @@ class SagemakerApi:
         :param space_sharing_settings: A collection of space sharing settings.
         :param space_display_name: The name of the space that appears in the SageMaker Studio UI.
         :returns: CreateSpaceResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -19206,7 +19277,7 @@ class SagemakerApi:
         studio_lifecycle_config_name: StudioLifecycleConfigName,
         studio_lifecycle_config_content: StudioLifecycleConfigContent,
         studio_lifecycle_config_app_type: StudioLifecycleConfigAppType,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateStudioLifecycleConfigResponse:
         """Creates a new Amazon SageMaker AI Studio Lifecycle Configuration.
@@ -19232,25 +19303,25 @@ class SagemakerApi:
         output_data_config: OutputDataConfig,
         resource_config: ResourceConfig,
         stopping_condition: StoppingCondition,
-        hyper_parameters: HyperParameters = None,
-        input_data_config: InputDataConfig = None,
-        vpc_config: VpcConfig = None,
-        tags: TagList = None,
-        enable_network_isolation: Boolean = None,
-        enable_inter_container_traffic_encryption: Boolean = None,
-        enable_managed_spot_training: Boolean = None,
-        checkpoint_config: CheckpointConfig = None,
-        debug_hook_config: DebugHookConfig = None,
-        debug_rule_configurations: DebugRuleConfigurations = None,
-        tensor_board_output_config: TensorBoardOutputConfig = None,
-        experiment_config: ExperimentConfig = None,
-        profiler_config: ProfilerConfig = None,
-        profiler_rule_configurations: ProfilerRuleConfigurations = None,
-        environment: TrainingEnvironmentMap = None,
-        retry_strategy: RetryStrategy = None,
-        remote_debug_config: RemoteDebugConfig = None,
-        infra_check_config: InfraCheckConfig = None,
-        session_chaining_config: SessionChainingConfig = None,
+        hyper_parameters: HyperParameters | None = None,
+        input_data_config: InputDataConfig | None = None,
+        vpc_config: VpcConfig | None = None,
+        tags: TagList | None = None,
+        enable_network_isolation: Boolean | None = None,
+        enable_inter_container_traffic_encryption: Boolean | None = None,
+        enable_managed_spot_training: Boolean | None = None,
+        checkpoint_config: CheckpointConfig | None = None,
+        debug_hook_config: DebugHookConfig | None = None,
+        debug_rule_configurations: DebugRuleConfigurations | None = None,
+        tensor_board_output_config: TensorBoardOutputConfig | None = None,
+        experiment_config: ExperimentConfig | None = None,
+        profiler_config: ProfilerConfig | None = None,
+        profiler_rule_configurations: ProfilerRuleConfigurations | None = None,
+        environment: TrainingEnvironmentMap | None = None,
+        retry_strategy: RetryStrategy | None = None,
+        remote_debug_config: RemoteDebugConfig | None = None,
+        infra_check_config: InfraCheckConfig | None = None,
+        session_chaining_config: SessionChainingConfig | None = None,
         **kwargs,
     ) -> CreateTrainingJobResponse:
         """Starts a model training job. After training completes, SageMaker saves
@@ -19363,9 +19434,9 @@ class SagemakerApi:
         :param session_chaining_config: Contains information about attribute-based access control (ABAC) for the
         training job.
         :returns: CreateTrainingJobResponse
+        :raises ResourceNotFound:
         :raises ResourceInUse:
         :raises ResourceLimitExceeded:
-        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -19375,7 +19446,7 @@ class SagemakerApi:
         context: RequestContext,
         training_plan_name: TrainingPlanName,
         training_plan_offering_id: TrainingPlanOfferingId,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateTrainingPlanResponse:
         """Creates a new training plan in SageMaker to reserve compute capacity.
@@ -19430,9 +19501,9 @@ class SagemakerApi:
         this plan.
         :param tags: An array of key-value pairs to apply to this training plan.
         :returns: CreateTrainingPlanResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceNotFound:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -19445,15 +19516,15 @@ class SagemakerApi:
         transform_input: TransformInput,
         transform_output: TransformOutput,
         transform_resources: TransformResources,
-        max_concurrent_transforms: MaxConcurrentTransforms = None,
-        model_client_config: ModelClientConfig = None,
-        max_payload_in_mb: MaxPayloadInMB = None,
-        batch_strategy: BatchStrategy = None,
-        environment: TransformEnvironmentMap = None,
-        data_capture_config: BatchDataCaptureConfig = None,
-        data_processing: DataProcessing = None,
-        tags: TagList = None,
-        experiment_config: ExperimentConfig = None,
+        max_concurrent_transforms: MaxConcurrentTransforms | None = None,
+        model_client_config: ModelClientConfig | None = None,
+        max_payload_in_mb: MaxPayloadInMB | None = None,
+        batch_strategy: BatchStrategy | None = None,
+        environment: TransformEnvironmentMap | None = None,
+        data_capture_config: BatchDataCaptureConfig | None = None,
+        data_processing: DataProcessing | None = None,
+        tags: TagList | None = None,
+        experiment_config: ExperimentConfig | None = None,
         **kwargs,
     ) -> CreateTransformJobResponse:
         """Starts a transform job. A transform job uses a trained model to get
@@ -19509,9 +19580,9 @@ class SagemakerApi:
         :param experiment_config: Associates a SageMaker job as a trial component with an experiment and
         trial.
         :returns: CreateTransformJobResponse
+        :raises ResourceNotFound:
         :raises ResourceInUse:
         :raises ResourceLimitExceeded:
-        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -19521,9 +19592,9 @@ class SagemakerApi:
         context: RequestContext,
         trial_name: ExperimentEntityName,
         experiment_name: ExperimentEntityName,
-        display_name: ExperimentEntityName = None,
-        metadata_properties: MetadataProperties = None,
-        tags: TagList = None,
+        display_name: ExperimentEntityName | None = None,
+        metadata_properties: MetadataProperties | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateTrialResponse:
         """Creates an SageMaker *trial*. A trial is a set of steps called *trial
@@ -19563,15 +19634,15 @@ class SagemakerApi:
         self,
         context: RequestContext,
         trial_component_name: ExperimentEntityName,
-        display_name: ExperimentEntityName = None,
-        status: TrialComponentStatus = None,
-        start_time: Timestamp = None,
-        end_time: Timestamp = None,
-        parameters: TrialComponentParameters = None,
-        input_artifacts: TrialComponentArtifacts = None,
-        output_artifacts: TrialComponentArtifacts = None,
-        metadata_properties: MetadataProperties = None,
-        tags: TagList = None,
+        display_name: ExperimentEntityName | None = None,
+        status: TrialComponentStatus | None = None,
+        start_time: Timestamp | None = None,
+        end_time: Timestamp | None = None,
+        parameters: TrialComponentParameters | None = None,
+        input_artifacts: TrialComponentArtifacts | None = None,
+        output_artifacts: TrialComponentArtifacts | None = None,
+        metadata_properties: MetadataProperties | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateTrialComponentResponse:
         """Creates a *trial component*, which is a stage of a machine learning
@@ -19611,10 +19682,10 @@ class SagemakerApi:
         context: RequestContext,
         domain_id: DomainId,
         user_profile_name: UserProfileName,
-        single_sign_on_user_identifier: SingleSignOnUserIdentifier = None,
-        single_sign_on_user_value: String256 = None,
-        tags: TagList = None,
-        user_settings: UserSettings = None,
+        single_sign_on_user_identifier: SingleSignOnUserIdentifier | None = None,
+        single_sign_on_user_value: String256 | None = None,
+        tags: TagList | None = None,
+        user_settings: UserSettings | None = None,
         **kwargs,
     ) -> CreateUserProfileResponse:
         """Creates a user profile. A user profile represents a single user within a
@@ -19634,8 +19705,8 @@ class SagemakerApi:
         :param tags: Each tag consists of a key and an optional value.
         :param user_settings: A collection of settings.
         :returns: CreateUserProfileResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -19644,11 +19715,11 @@ class SagemakerApi:
         self,
         context: RequestContext,
         workforce_name: WorkforceName,
-        cognito_config: CognitoConfig = None,
-        oidc_config: OidcConfig = None,
-        source_ip_config: SourceIpConfig = None,
-        tags: TagList = None,
-        workforce_vpc_config: WorkforceVpcConfigRequest = None,
+        cognito_config: CognitoConfig | None = None,
+        oidc_config: OidcConfig | None = None,
+        source_ip_config: SourceIpConfig | None = None,
+        tags: TagList | None = None,
+        workforce_vpc_config: WorkforceVpcConfigRequest | None = None,
         **kwargs,
     ) -> CreateWorkforceResponse:
         """Use this operation to create a workforce. This operation will return an
@@ -19695,10 +19766,10 @@ class SagemakerApi:
         workteam_name: WorkteamName,
         member_definitions: MemberDefinitions,
         description: String200,
-        workforce_name: WorkforceName = None,
-        notification_configuration: NotificationConfiguration = None,
-        worker_access_configuration: WorkerAccessConfiguration = None,
-        tags: TagList = None,
+        workforce_name: WorkforceName | None = None,
+        notification_configuration: NotificationConfiguration | None = None,
+        worker_access_configuration: WorkerAccessConfiguration | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> CreateWorkteamResponse:
         """Creates a new work team for labeling your data. A work team is defined
@@ -19753,8 +19824,8 @@ class SagemakerApi:
         domain_id: DomainId,
         app_type: AppType,
         app_name: AppName,
-        user_profile_name: UserProfileName = None,
-        space_name: SpaceName = None,
+        user_profile_name: UserProfileName | None = None,
+        space_name: SpaceName | None = None,
         **kwargs,
     ) -> None:
         """Used to stop and delete an app.
@@ -19764,8 +19835,8 @@ class SagemakerApi:
         :param app_name: The name of the app.
         :param user_profile_name: The user profile name.
         :param space_name: The name of the space.
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -19784,8 +19855,8 @@ class SagemakerApi:
     def delete_artifact(
         self,
         context: RequestContext,
-        artifact_arn: ArtifactArn = None,
-        source: ArtifactSource = None,
+        artifact_arn: ArtifactArn | None = None,
+        source: ArtifactSource | None = None,
         **kwargs,
     ) -> DeleteArtifactResponse:
         """Deletes an artifact. Either ``ArtifactArn`` or ``Source`` must be
@@ -19824,8 +19895,8 @@ class SagemakerApi:
         :param cluster_name: The string name or the Amazon Resource Name (ARN) of the SageMaker
         HyperPod cluster to delete.
         :returns: DeleteClusterResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -19923,7 +19994,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         domain_id: DomainId,
-        retention_policy: RetentionPolicy = None,
+        retention_policy: RetentionPolicy | None = None,
         **kwargs,
     ) -> None:
         """Used to delete a domain. If you onboarded with IAM mode, you will need
@@ -19934,8 +20005,8 @@ class SagemakerApi:
         :param domain_id: The domain ID.
         :param retention_policy: The retention policy for this domain, which specifies whether resources
         will be retained after the Domain is deleted.
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -20053,8 +20124,8 @@ class SagemakerApi:
 
         :param flow_definition_name: The name of the flow definition you are deleting.
         :returns: DeleteFlowDefinitionResponse
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -20063,8 +20134,8 @@ class SagemakerApi:
         """Delete a hub.
 
         :param hub_name: The name of the hub to delete.
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -20084,8 +20155,8 @@ class SagemakerApi:
         :param hub_content_type: The type of content that you want to delete from a hub.
         :param hub_content_name: The name of the content that you want to delete from a hub.
         :param hub_content_version: The version of the content that you want to delete from a hub.
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -20154,8 +20225,8 @@ class SagemakerApi:
 
         :param image_name: The name of the image to delete.
         :returns: DeleteImageResponse
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -20164,8 +20235,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         image_name: ImageName,
-        version: ImageVersionNumber = None,
-        alias: SageMakerImageVersionAlias = None,
+        version: ImageVersionNumber | None = None,
+        alias: SageMakerImageVersionAlias | None = None,
         **kwargs,
     ) -> DeleteImageVersionResponse:
         """Deletes a version of a SageMaker AI image. The container image the
@@ -20175,8 +20246,8 @@ class SagemakerApi:
         :param version: The version to delete.
         :param alias: The alias of the image to delete.
         :returns: DeleteImageVersionResponse
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -20250,8 +20321,8 @@ class SagemakerApi:
         """Deletes an Amazon SageMaker Model Card.
 
         :param model_card_name: The name of the model card to delete.
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -20370,7 +20441,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         arn: PartnerAppArn,
-        client_token: ClientToken = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> DeletePartnerAppResponse:
         """Deletes a SageMaker Partner AI App.
@@ -20378,8 +20449,8 @@ class SagemakerApi:
         :param arn: The ARN of the SageMaker Partner AI App to delete.
         :param client_token: A unique token that guarantees that the call to this API is idempotent.
         :returns: DeletePartnerAppResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -20400,8 +20471,8 @@ class SagemakerApi:
         :param client_request_token: A unique, case-sensitive identifier that you provide to ensure the
         idempotency of the operation.
         :returns: DeletePipelineResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -20424,8 +20495,8 @@ class SagemakerApi:
 
         :param domain_id: The ID of the associated domain.
         :param space_name: The name of the space.
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -20516,8 +20587,8 @@ class SagemakerApi:
 
         :param domain_id: The domain ID.
         :param user_profile_name: The user profile name.
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -20603,8 +20674,8 @@ class SagemakerApi:
         domain_id: DomainId,
         app_type: AppType,
         app_name: AppName,
-        user_profile_name: UserProfileName = None,
-        space_name: SpaceName = None,
+        user_profile_name: UserProfileName | None = None,
+        space_name: SpaceName | None = None,
         **kwargs,
     ) -> DescribeAppResponse:
         """Describes the app.
@@ -20712,7 +20783,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         cluster_scheduler_config_id: ClusterSchedulerConfigId,
-        cluster_scheduler_config_version: Integer = None,
+        cluster_scheduler_config_version: Integer | None = None,
         **kwargs,
     ) -> DescribeClusterSchedulerConfigResponse:
         """Description of the cluster policy. This policy is used for task
@@ -20759,7 +20830,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         compute_quota_id: ComputeQuotaId,
-        compute_quota_version: Integer = None,
+        compute_quota_version: Integer | None = None,
         **kwargs,
     ) -> DescribeComputeQuotaResponse:
         """Description of the compute allocation definition.
@@ -20801,7 +20872,7 @@ class SagemakerApi:
         context: RequestContext,
         device_name: EntityName,
         device_fleet_name: EntityName,
-        next_token: NextToken = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeDeviceResponse:
         """Describes the device.
@@ -20843,8 +20914,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         edge_deployment_plan_name: EntityName,
-        next_token: NextToken = None,
-        max_results: DeploymentStageMaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: DeploymentStageMaxResults | None = None,
         **kwargs,
     ) -> DescribeEdgeDeploymentPlanResponse:
         """Describes an edge deployment plan with deployment status per stage.
@@ -20910,7 +20981,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         feature_group_name: FeatureGroupNameOrArn,
-        next_token: NextToken = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> DescribeFeatureGroupResponse:
         """Use this operation to describe a ``FeatureGroup``. The response includes
@@ -20975,7 +21046,7 @@ class SagemakerApi:
         hub_name: HubNameOrArn,
         hub_content_type: HubContentType,
         hub_content_name: HubContentName,
-        hub_content_version: HubContentVersion = None,
+        hub_content_version: HubContentVersion | None = None,
         **kwargs,
     ) -> DescribeHubContentResponse:
         """Describe the content of a hub.
@@ -21037,8 +21108,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         image_name: ImageName,
-        version: ImageVersionNumber = None,
-        alias: SageMakerImageVersionAlias = None,
+        version: ImageVersionNumber | None = None,
+        alias: SageMakerImageVersionAlias | None = None,
         **kwargs,
     ) -> DescribeImageVersionResponse:
         """Describes a version of a SageMaker AI image.
@@ -21154,7 +21225,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         model_card_name: ModelCardNameOrArn,
-        model_card_version: Integer = None,
+        model_card_version: Integer | None = None,
         **kwargs,
     ) -> DescribeModelCardResponse:
         """Describes the content, creation time, and security configuration of an
@@ -21619,10 +21690,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         inference_recommendations_job_name: RecommendationJobName,
-        recommendation_id: String = None,
-        endpoint_name: EndpointName = None,
-        target_cpu_utilization_per_core: UtilizationPercentagePerCore = None,
-        scaling_policy_objective: ScalingPolicyObjective = None,
+        recommendation_id: String | None = None,
+        endpoint_name: EndpointName | None = None,
+        target_cpu_utilization_per_core: UtilizationPercentagePerCore | None = None,
+        scaling_policy_objective: ScalingPolicyObjective | None = None,
         **kwargs,
     ) -> GetScalingConfigurationRecommendationResponse:
         """Starts an Amazon SageMaker Inference Recommender autoscaling
@@ -21648,7 +21719,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         resource: ResourceType,
-        suggestion_query: SuggestionQuery = None,
+        suggestion_query: SuggestionQuery | None = None,
         **kwargs,
     ) -> GetSearchSuggestionsResponse:
         """An auto-complete API for the search functionality in the SageMaker
@@ -21671,13 +21742,13 @@ class SagemakerApi:
         document_schema_version: DocumentSchemaVersion,
         hub_name: HubNameOrArn,
         hub_content_document: HubContentDocument,
-        hub_content_version: HubContentVersion = None,
-        hub_content_display_name: HubContentDisplayName = None,
-        hub_content_description: HubContentDescription = None,
-        hub_content_markdown: HubContentMarkdown = None,
-        support_status: HubContentSupportStatus = None,
-        hub_content_search_keywords: HubContentSearchKeywordList = None,
-        tags: TagList = None,
+        hub_content_version: HubContentVersion | None = None,
+        hub_content_display_name: HubContentDisplayName | None = None,
+        hub_content_description: HubContentDescription | None = None,
+        hub_content_markdown: HubContentMarkdown | None = None,
+        support_status: HubContentSupportStatus | None = None,
+        hub_content_search_keywords: HubContentSearchKeywordList | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> ImportHubContentResponse:
         """Import hub content.
@@ -21696,9 +21767,9 @@ class SagemakerApi:
         :param hub_content_search_keywords: The searchable keywords of the hub content.
         :param tags: Any tags associated with the hub content.
         :returns: ImportHubContentResponse
+        :raises ResourceNotFound:
         :raises ResourceInUse:
         :raises ResourceLimitExceeded:
-        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -21706,14 +21777,14 @@ class SagemakerApi:
     def list_actions(
         self,
         context: RequestContext,
-        source_uri: SourceUri = None,
-        action_type: String256 = None,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortActionsBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        source_uri: SourceUri | None = None,
+        action_type: String256 | None = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortActionsBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListActionsResponse:
         """Lists the actions in your account and their properties.
@@ -21738,13 +21809,13 @@ class SagemakerApi:
     def list_algorithms(
         self,
         context: RequestContext,
-        creation_time_after: CreationTime = None,
-        creation_time_before: CreationTime = None,
-        max_results: MaxResults = None,
-        name_contains: NameContains = None,
-        next_token: NextToken = None,
-        sort_by: AlgorithmSortBy = None,
-        sort_order: SortOrder = None,
+        creation_time_after: CreationTime | None = None,
+        creation_time_before: CreationTime | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: NameContains | None = None,
+        next_token: NextToken | None = None,
+        sort_by: AlgorithmSortBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListAlgorithmsOutput:
         """Lists the machine learning algorithms that have been created.
@@ -21768,10 +21839,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         image_name: ImageName,
-        alias: SageMakerImageVersionAlias = None,
-        version: ImageVersionNumber = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        alias: SageMakerImageVersionAlias | None = None,
+        version: ImageVersionNumber | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListAliasesResponse:
         """Lists the aliases of a specified image or image version.
@@ -21792,15 +21863,15 @@ class SagemakerApi:
     def list_app_image_configs(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        name_contains: AppImageConfigName = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        modified_time_before: Timestamp = None,
-        modified_time_after: Timestamp = None,
-        sort_by: AppImageConfigSortKey = None,
-        sort_order: SortOrder = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        name_contains: AppImageConfigName | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        modified_time_before: Timestamp | None = None,
+        modified_time_after: Timestamp | None = None,
+        sort_by: AppImageConfigSortKey | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListAppImageConfigsResponse:
         """Lists the AppImageConfigs in your account and their properties. The list
@@ -21831,13 +21902,13 @@ class SagemakerApi:
     def list_apps(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        sort_order: SortOrder = None,
-        sort_by: AppSortKey = None,
-        domain_id_equals: DomainId = None,
-        user_profile_name_equals: UserProfileName = None,
-        space_name_equals: SpaceName = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        sort_order: SortOrder | None = None,
+        sort_by: AppSortKey | None = None,
+        domain_id_equals: DomainId | None = None,
+        user_profile_name_equals: UserProfileName | None = None,
+        space_name_equals: SpaceName | None = None,
         **kwargs,
     ) -> ListAppsResponse:
         """Lists apps.
@@ -21858,14 +21929,14 @@ class SagemakerApi:
     def list_artifacts(
         self,
         context: RequestContext,
-        source_uri: SourceUri = None,
-        artifact_type: String256 = None,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortArtifactsBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        source_uri: SourceUri | None = None,
+        artifact_type: String256 | None = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortArtifactsBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListArtifactsResponse:
         """Lists the artifacts in your account and their properties.
@@ -21891,17 +21962,17 @@ class SagemakerApi:
     def list_associations(
         self,
         context: RequestContext,
-        source_arn: AssociationEntityArn = None,
-        destination_arn: AssociationEntityArn = None,
-        source_type: String256 = None,
-        destination_type: String256 = None,
-        association_type: AssociationEdgeType = None,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortAssociationsBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        source_arn: AssociationEntityArn | None = None,
+        destination_arn: AssociationEntityArn | None = None,
+        source_type: String256 | None = None,
+        destination_type: String256 | None = None,
+        association_type: AssociationEdgeType | None = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortAssociationsBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListAssociationsResponse:
         """Lists the associations in your account and their properties.
@@ -21932,16 +22003,16 @@ class SagemakerApi:
     def list_auto_ml_jobs(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        name_contains: AutoMLNameContains = None,
-        status_equals: AutoMLJobStatus = None,
-        sort_order: AutoMLSortOrder = None,
-        sort_by: AutoMLSortBy = None,
-        max_results: AutoMLMaxResults = None,
-        next_token: NextToken = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        name_contains: AutoMLNameContains | None = None,
+        status_equals: AutoMLJobStatus | None = None,
+        sort_order: AutoMLSortOrder | None = None,
+        sort_by: AutoMLSortBy | None = None,
+        max_results: AutoMLMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListAutoMLJobsResponse:
         """Request a list of jobs.
@@ -21965,12 +22036,12 @@ class SagemakerApi:
         self,
         context: RequestContext,
         auto_ml_job_name: AutoMLJobName,
-        status_equals: CandidateStatus = None,
-        candidate_name_equals: CandidateName = None,
-        sort_order: AutoMLSortOrder = None,
-        sort_by: CandidateSortBy = None,
-        max_results: AutoMLMaxResultsForTrials = None,
-        next_token: NextToken = None,
+        status_equals: CandidateStatus | None = None,
+        candidate_name_equals: CandidateName | None = None,
+        sort_order: AutoMLSortOrder | None = None,
+        sort_by: CandidateSortBy | None = None,
+        max_results: AutoMLMaxResultsForTrials | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListCandidatesForAutoMLJobResponse:
         """List the candidates created for the job.
@@ -21992,13 +22063,13 @@ class SagemakerApi:
         self,
         context: RequestContext,
         cluster_name: ClusterNameOrArn,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        instance_group_name_contains: ClusterInstanceGroupName = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        sort_by: ClusterSortBy = None,
-        sort_order: SortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        instance_group_name_contains: ClusterInstanceGroupName | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        sort_by: ClusterSortBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListClusterNodesResponse:
         """Retrieves the list of instances (also called *nodes* interchangeably) in
@@ -22026,15 +22097,15 @@ class SagemakerApi:
     def list_cluster_scheduler_configs(
         self,
         context: RequestContext,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        name_contains: EntityName = None,
-        cluster_arn: ClusterArn = None,
-        status: SchedulerResourceStatus = None,
-        sort_by: SortClusterSchedulerConfigBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        name_contains: EntityName | None = None,
+        cluster_arn: ClusterArn | None = None,
+        status: SchedulerResourceStatus | None = None,
+        sort_by: SortClusterSchedulerConfigBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListClusterSchedulerConfigsResponse:
         """List the cluster policy configurations.
@@ -22056,14 +22127,14 @@ class SagemakerApi:
     def list_clusters(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        max_results: MaxResults = None,
-        name_contains: NameContains = None,
-        next_token: NextToken = None,
-        sort_by: ClusterSortBy = None,
-        sort_order: SortOrder = None,
-        training_plan_arn: TrainingPlanArn = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: NameContains | None = None,
+        next_token: NextToken | None = None,
+        sort_by: ClusterSortBy | None = None,
+        sort_order: SortOrder | None = None,
+        training_plan_arn: TrainingPlanArn | None = None,
         **kwargs,
     ) -> ListClustersResponse:
         """Retrieves the list of SageMaker HyperPod clusters.
@@ -22087,15 +22158,15 @@ class SagemakerApi:
     def list_code_repositories(
         self,
         context: RequestContext,
-        creation_time_after: CreationTime = None,
-        creation_time_before: CreationTime = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        max_results: MaxResults = None,
-        name_contains: CodeRepositoryNameContains = None,
-        next_token: NextToken = None,
-        sort_by: CodeRepositorySortBy = None,
-        sort_order: CodeRepositorySortOrder = None,
+        creation_time_after: CreationTime | None = None,
+        creation_time_before: CreationTime | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: CodeRepositoryNameContains | None = None,
+        next_token: NextToken | None = None,
+        sort_by: CodeRepositorySortBy | None = None,
+        sort_order: CodeRepositorySortOrder | None = None,
         **kwargs,
     ) -> ListCodeRepositoriesOutput:
         """Gets a list of the Git repositories in your account.
@@ -22122,16 +22193,16 @@ class SagemakerApi:
     def list_compilation_jobs(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        creation_time_after: CreationTime = None,
-        creation_time_before: CreationTime = None,
-        last_modified_time_after: LastModifiedTime = None,
-        last_modified_time_before: LastModifiedTime = None,
-        name_contains: NameContains = None,
-        status_equals: CompilationJobStatus = None,
-        sort_by: ListCompilationJobsSortBy = None,
-        sort_order: SortOrder = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        creation_time_after: CreationTime | None = None,
+        creation_time_before: CreationTime | None = None,
+        last_modified_time_after: LastModifiedTime | None = None,
+        last_modified_time_before: LastModifiedTime | None = None,
+        name_contains: NameContains | None = None,
+        status_equals: CompilationJobStatus | None = None,
+        sort_by: ListCompilationJobsSortBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListCompilationJobsResponse:
         """Lists model compilation jobs that satisfy various filters.
@@ -22167,15 +22238,15 @@ class SagemakerApi:
     def list_compute_quotas(
         self,
         context: RequestContext,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        name_contains: EntityName = None,
-        status: SchedulerResourceStatus = None,
-        cluster_arn: ClusterArn = None,
-        sort_by: SortQuotaBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        name_contains: EntityName | None = None,
+        status: SchedulerResourceStatus | None = None,
+        cluster_arn: ClusterArn | None = None,
+        sort_by: SortQuotaBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListComputeQuotasResponse:
         """List the resource allocation definitions.
@@ -22197,14 +22268,14 @@ class SagemakerApi:
     def list_contexts(
         self,
         context: RequestContext,
-        source_uri: SourceUri = None,
-        context_type: String256 = None,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortContextsBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        source_uri: SourceUri | None = None,
+        context_type: String256 | None = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortContextsBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListContextsResponse:
         """Lists the contexts in your account and their properties.
@@ -22229,14 +22300,14 @@ class SagemakerApi:
     def list_data_quality_job_definitions(
         self,
         context: RequestContext,
-        endpoint_name: EndpointName = None,
-        sort_by: MonitoringJobDefinitionSortKey = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        name_contains: NameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
+        endpoint_name: EndpointName | None = None,
+        sort_by: MonitoringJobDefinitionSortKey | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: NameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
         **kwargs,
     ) -> ListDataQualityJobDefinitionsResponse:
         """Lists the data quality job definitions in your account.
@@ -22262,15 +22333,15 @@ class SagemakerApi:
     def list_device_fleets(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: ListMaxResults = None,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        name_contains: NameContains = None,
-        sort_by: ListDeviceFleetsSortBy = None,
-        sort_order: SortOrder = None,
+        next_token: NextToken | None = None,
+        max_results: ListMaxResults | None = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        name_contains: NameContains | None = None,
+        sort_by: ListDeviceFleetsSortBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListDeviceFleetsResponse:
         """Returns a list of devices in the fleet.
@@ -22294,11 +22365,11 @@ class SagemakerApi:
     def list_devices(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: ListMaxResults = None,
-        latest_heartbeat_after: Timestamp = None,
-        model_name: EntityName = None,
-        device_fleet_name: EntityName = None,
+        next_token: NextToken | None = None,
+        max_results: ListMaxResults | None = None,
+        latest_heartbeat_after: Timestamp | None = None,
+        model_name: EntityName | None = None,
+        device_fleet_name: EntityName | None = None,
         **kwargs,
     ) -> ListDevicesResponse:
         """A list of devices.
@@ -22318,8 +22389,8 @@ class SagemakerApi:
     def list_domains(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListDomainsResponse:
         """Lists the domains.
@@ -22335,16 +22406,16 @@ class SagemakerApi:
     def list_edge_deployment_plans(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: ListMaxResults = None,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        name_contains: NameContains = None,
-        device_fleet_name_contains: NameContains = None,
-        sort_by: ListEdgeDeploymentPlansSortBy = None,
-        sort_order: SortOrder = None,
+        next_token: NextToken | None = None,
+        max_results: ListMaxResults | None = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        name_contains: NameContains | None = None,
+        device_fleet_name_contains: NameContains | None = None,
+        sort_by: ListEdgeDeploymentPlansSortBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListEdgeDeploymentPlansResponse:
         """Lists all edge deployment plans.
@@ -22369,17 +22440,17 @@ class SagemakerApi:
     def list_edge_packaging_jobs(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: ListMaxResults = None,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        name_contains: NameContains = None,
-        model_name_contains: NameContains = None,
-        status_equals: EdgePackagingJobStatus = None,
-        sort_by: ListEdgePackagingJobsSortBy = None,
-        sort_order: SortOrder = None,
+        next_token: NextToken | None = None,
+        max_results: ListMaxResults | None = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        name_contains: NameContains | None = None,
+        model_name_contains: NameContains | None = None,
+        status_equals: EdgePackagingJobStatus | None = None,
+        sort_by: ListEdgePackagingJobsSortBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListEdgePackagingJobsResponse:
         """Returns a list of edge packaging jobs.
@@ -22404,13 +22475,13 @@ class SagemakerApi:
     def list_endpoint_configs(
         self,
         context: RequestContext,
-        sort_by: EndpointConfigSortKey = None,
-        sort_order: OrderKey = None,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
-        name_contains: EndpointConfigNameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
+        sort_by: EndpointConfigSortKey | None = None,
+        sort_order: OrderKey | None = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: EndpointConfigNameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
         **kwargs,
     ) -> ListEndpointConfigsOutput:
         """Lists endpoint configurations.
@@ -22433,16 +22504,16 @@ class SagemakerApi:
     def list_endpoints(
         self,
         context: RequestContext,
-        sort_by: EndpointSortKey = None,
-        sort_order: OrderKey = None,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
-        name_contains: EndpointNameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        status_equals: EndpointStatus = None,
+        sort_by: EndpointSortKey | None = None,
+        sort_order: OrderKey | None = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: EndpointNameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        status_equals: EndpointStatus | None = None,
         **kwargs,
     ) -> ListEndpointsOutput:
         """Lists endpoints.
@@ -22470,12 +22541,12 @@ class SagemakerApi:
     def list_experiments(
         self,
         context: RequestContext,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortExperimentsBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortExperimentsBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListExperimentsResponse:
         """Lists all the experiments in your account. The list can be filtered to
@@ -22499,15 +22570,15 @@ class SagemakerApi:
     def list_feature_groups(
         self,
         context: RequestContext,
-        name_contains: FeatureGroupNameContains = None,
-        feature_group_status_equals: FeatureGroupStatus = None,
-        offline_store_status_equals: OfflineStoreStatusValue = None,
-        creation_time_after: CreationTime = None,
-        creation_time_before: CreationTime = None,
-        sort_order: FeatureGroupSortOrder = None,
-        sort_by: FeatureGroupSortBy = None,
-        max_results: FeatureGroupMaxResults = None,
-        next_token: NextToken = None,
+        name_contains: FeatureGroupNameContains | None = None,
+        feature_group_status_equals: FeatureGroupStatus | None = None,
+        offline_store_status_equals: OfflineStoreStatusValue | None = None,
+        creation_time_after: CreationTime | None = None,
+        creation_time_before: CreationTime | None = None,
+        sort_order: FeatureGroupSortOrder | None = None,
+        sort_by: FeatureGroupSortBy | None = None,
+        max_results: FeatureGroupMaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListFeatureGroupsResponse:
         """List ``FeatureGroup`` s based on given filter and order.
@@ -22531,11 +22602,11 @@ class SagemakerApi:
     def list_flow_definitions(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListFlowDefinitionsResponse:
         """Returns information about the flow definitions in your account.
@@ -22559,14 +22630,14 @@ class SagemakerApi:
         hub_name: HubNameOrArn,
         hub_content_type: HubContentType,
         hub_content_name: HubContentName,
-        min_version: HubContentVersion = None,
-        max_schema_version: DocumentSchemaVersion = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        sort_by: HubContentSortBy = None,
-        sort_order: SortOrder = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        min_version: HubContentVersion | None = None,
+        max_schema_version: DocumentSchemaVersion | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        sort_by: HubContentSortBy | None = None,
+        sort_order: SortOrder | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListHubContentVersionsResponse:
         """List hub content versions.
@@ -22596,14 +22667,14 @@ class SagemakerApi:
         context: RequestContext,
         hub_name: HubNameOrArn,
         hub_content_type: HubContentType,
-        name_contains: NameContains = None,
-        max_schema_version: DocumentSchemaVersion = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        sort_by: HubContentSortBy = None,
-        sort_order: SortOrder = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        name_contains: NameContains | None = None,
+        max_schema_version: DocumentSchemaVersion | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        sort_by: HubContentSortBy | None = None,
+        sort_order: SortOrder | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListHubContentsResponse:
         """List the contents of a hub.
@@ -22628,15 +22699,15 @@ class SagemakerApi:
     def list_hubs(
         self,
         context: RequestContext,
-        name_contains: NameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        sort_by: HubSortBy = None,
-        sort_order: SortOrder = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        name_contains: NameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        sort_by: HubSortBy | None = None,
+        sort_order: SortOrder | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListHubsResponse:
         """List all existing hubs.
@@ -22659,11 +22730,11 @@ class SagemakerApi:
     def list_human_task_uis(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListHumanTaskUisResponse:
         """Returns information about the human task user interfaces in your
@@ -22685,16 +22756,16 @@ class SagemakerApi:
     def list_hyper_parameter_tuning_jobs(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        sort_by: HyperParameterTuningJobSortByOptions = None,
-        sort_order: SortOrder = None,
-        name_contains: NameContains = None,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        status_equals: HyperParameterTuningJobStatus = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        sort_by: HyperParameterTuningJobSortByOptions | None = None,
+        sort_order: SortOrder | None = None,
+        name_contains: NameContains | None = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        status_equals: HyperParameterTuningJobStatus | None = None,
         **kwargs,
     ) -> ListHyperParameterTuningJobsResponse:
         """Gets a list of
@@ -22726,14 +22797,14 @@ class SagemakerApi:
         self,
         context: RequestContext,
         image_name: ImageName,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        sort_by: ImageVersionSortBy = None,
-        sort_order: ImageVersionSortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        sort_by: ImageVersionSortBy | None = None,
+        sort_order: ImageVersionSortOrder | None = None,
         **kwargs,
     ) -> ListImageVersionsResponse:
         """Lists the versions of a specified image and their properties. The list
@@ -22763,15 +22834,15 @@ class SagemakerApi:
     def list_images(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        max_results: MaxResults = None,
-        name_contains: ImageNameContains = None,
-        next_token: NextToken = None,
-        sort_by: ImageSortBy = None,
-        sort_order: ImageSortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: ImageNameContains | None = None,
+        next_token: NextToken | None = None,
+        sort_by: ImageSortBy | None = None,
+        sort_order: ImageSortOrder | None = None,
         **kwargs,
     ) -> ListImagesResponse:
         """Lists the images in your account and their properties. The list can be
@@ -22801,18 +22872,18 @@ class SagemakerApi:
     def list_inference_components(
         self,
         context: RequestContext,
-        sort_by: InferenceComponentSortKey = None,
-        sort_order: OrderKey = None,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
-        name_contains: InferenceComponentNameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        status_equals: InferenceComponentStatus = None,
-        endpoint_name_equals: EndpointName = None,
-        variant_name_equals: VariantName = None,
+        sort_by: InferenceComponentSortKey | None = None,
+        sort_order: OrderKey | None = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: InferenceComponentNameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        status_equals: InferenceComponentStatus | None = None,
+        endpoint_name_equals: EndpointName | None = None,
+        variant_name_equals: VariantName | None = None,
         **kwargs,
     ) -> ListInferenceComponentsOutput:
         """Lists the inference components in your account and their properties.
@@ -22869,10 +22940,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         job_name: RecommendationJobName,
-        status: RecommendationJobStatus = None,
-        step_type: RecommendationStepType = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        status: RecommendationJobStatus | None = None,
+        step_type: RecommendationStepType | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListInferenceRecommendationsJobStepsResponse:
         """Returns a list of the subtasks for an Inference Recommender job.
@@ -22894,18 +22965,18 @@ class SagemakerApi:
     def list_inference_recommendations_jobs(
         self,
         context: RequestContext,
-        creation_time_after: CreationTime = None,
-        creation_time_before: CreationTime = None,
-        last_modified_time_after: LastModifiedTime = None,
-        last_modified_time_before: LastModifiedTime = None,
-        name_contains: NameContains = None,
-        status_equals: RecommendationJobStatus = None,
-        sort_by: ListInferenceRecommendationsJobsSortBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        model_name_equals: ModelName = None,
-        model_package_version_arn_equals: ModelPackageArn = None,
+        creation_time_after: CreationTime | None = None,
+        creation_time_before: CreationTime | None = None,
+        last_modified_time_after: LastModifiedTime | None = None,
+        last_modified_time_before: LastModifiedTime | None = None,
+        name_contains: NameContains | None = None,
+        status_equals: RecommendationJobStatus | None = None,
+        sort_by: ListInferenceRecommendationsJobsSortBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        model_name_equals: ModelName | None = None,
+        model_package_version_arn_equals: ModelPackageArn | None = None,
         **kwargs,
     ) -> ListInferenceRecommendationsJobsResponse:
         """Lists recommendation jobs that satisfy various filters.
@@ -22938,16 +23009,16 @@ class SagemakerApi:
     def list_labeling_jobs(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        name_contains: NameContains = None,
-        sort_by: SortBy = None,
-        sort_order: SortOrder = None,
-        status_equals: LabelingJobStatus = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        name_contains: NameContains | None = None,
+        sort_by: SortBy | None = None,
+        sort_order: SortOrder | None = None,
+        status_equals: LabelingJobStatus | None = None,
         **kwargs,
     ) -> ListLabelingJobsResponse:
         """Gets a list of labeling jobs.
@@ -22977,13 +23048,13 @@ class SagemakerApi:
         self,
         context: RequestContext,
         workteam_arn: WorkteamArn,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        job_reference_code_contains: JobReferenceCodeContains = None,
-        sort_by: ListLabelingJobsForWorkteamSortByOptions = None,
-        sort_order: SortOrder = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        job_reference_code_contains: JobReferenceCodeContains | None = None,
+        sort_by: ListLabelingJobsForWorkteamSortByOptions | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListLabelingJobsForWorkteamResponse:
         """Gets a list of labeling jobs assigned to a specified work team.
@@ -23011,12 +23082,12 @@ class SagemakerApi:
     def list_lineage_groups(
         self,
         context: RequestContext,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortLineageGroupsBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortLineageGroupsBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListLineageGroupsResponse:
         """A list of lineage groups shared with your Amazon Web Services account.
@@ -23040,14 +23111,14 @@ class SagemakerApi:
     def list_mlflow_tracking_servers(
         self,
         context: RequestContext,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        tracking_server_status: TrackingServerStatus = None,
-        mlflow_version: MlflowVersion = None,
-        sort_by: SortTrackingServerBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        tracking_server_status: TrackingServerStatus | None = None,
+        mlflow_version: MlflowVersion | None = None,
+        sort_by: SortTrackingServerBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListMlflowTrackingServersResponse:
         """Lists all MLflow Tracking Servers.
@@ -23071,14 +23142,14 @@ class SagemakerApi:
     def list_model_bias_job_definitions(
         self,
         context: RequestContext,
-        endpoint_name: EndpointName = None,
-        sort_by: MonitoringJobDefinitionSortKey = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        name_contains: NameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
+        endpoint_name: EndpointName | None = None,
+        sort_by: MonitoringJobDefinitionSortKey | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: NameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
         **kwargs,
     ) -> ListModelBiasJobDefinitionsResponse:
         """Lists model bias jobs definitions that satisfy various filters.
@@ -23102,15 +23173,15 @@ class SagemakerApi:
         self,
         context: RequestContext,
         model_card_name: EntityName,
-        model_card_version: Integer = None,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        model_card_export_job_name_contains: EntityName = None,
-        status_equals: ModelCardExportJobStatus = None,
-        sort_by: ModelCardExportJobSortBy = None,
-        sort_order: ModelCardExportJobSortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        model_card_version: Integer | None = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        model_card_export_job_name_contains: EntityName | None = None,
+        status_equals: ModelCardExportJobStatus | None = None,
+        sort_by: ModelCardExportJobSortBy | None = None,
+        sort_order: ModelCardExportJobSortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListModelCardExportJobsResponse:
         """List the export jobs for the Amazon SageMaker Model Card.
@@ -23138,13 +23209,13 @@ class SagemakerApi:
         self,
         context: RequestContext,
         model_card_name: ModelCardNameOrArn,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        max_results: MaxResults = None,
-        model_card_status: ModelCardStatus = None,
-        next_token: NextToken = None,
-        sort_by: ModelCardVersionSortBy = None,
-        sort_order: ModelCardSortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        max_results: MaxResults | None = None,
+        model_card_status: ModelCardStatus | None = None,
+        next_token: NextToken | None = None,
+        sort_by: ModelCardVersionSortBy | None = None,
+        sort_order: ModelCardSortOrder | None = None,
         **kwargs,
     ) -> ListModelCardVersionsResponse:
         """List existing versions of an Amazon SageMaker Model Card.
@@ -23170,14 +23241,14 @@ class SagemakerApi:
     def list_model_cards(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        max_results: MaxResults = None,
-        name_contains: EntityName = None,
-        model_card_status: ModelCardStatus = None,
-        next_token: NextToken = None,
-        sort_by: ModelCardSortBy = None,
-        sort_order: ModelCardSortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: EntityName | None = None,
+        model_card_status: ModelCardStatus | None = None,
+        next_token: NextToken | None = None,
+        sort_by: ModelCardSortBy | None = None,
+        sort_order: ModelCardSortOrder | None = None,
         **kwargs,
     ) -> ListModelCardsResponse:
         """List existing model cards.
@@ -23199,14 +23270,14 @@ class SagemakerApi:
     def list_model_explainability_job_definitions(
         self,
         context: RequestContext,
-        endpoint_name: EndpointName = None,
-        sort_by: MonitoringJobDefinitionSortKey = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        name_contains: NameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
+        endpoint_name: EndpointName | None = None,
+        sort_by: MonitoringJobDefinitionSortKey | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: NameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
         **kwargs,
     ) -> ListModelExplainabilityJobDefinitionsResponse:
         """Lists model explainability job definitions that satisfy various filters.
@@ -23230,9 +23301,9 @@ class SagemakerApi:
     def list_model_metadata(
         self,
         context: RequestContext,
-        search_expression: ModelMetadataSearchExpression = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        search_expression: ModelMetadataSearchExpression | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListModelMetadataResponse:
         """Lists the domain, framework, task, and model name of standard machine
@@ -23251,14 +23322,14 @@ class SagemakerApi:
     def list_model_package_groups(
         self,
         context: RequestContext,
-        creation_time_after: CreationTime = None,
-        creation_time_before: CreationTime = None,
-        max_results: MaxResults = None,
-        name_contains: NameContains = None,
-        next_token: NextToken = None,
-        sort_by: ModelPackageGroupSortBy = None,
-        sort_order: SortOrder = None,
-        cross_account_filter_option: CrossAccountFilterOption = None,
+        creation_time_after: CreationTime | None = None,
+        creation_time_before: CreationTime | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: NameContains | None = None,
+        next_token: NextToken | None = None,
+        sort_by: ModelPackageGroupSortBy | None = None,
+        sort_order: SortOrder | None = None,
+        cross_account_filter_option: CrossAccountFilterOption | None = None,
         **kwargs,
     ) -> ListModelPackageGroupsOutput:
         """Gets a list of the model groups in your Amazon Web Services account.
@@ -23283,16 +23354,16 @@ class SagemakerApi:
     def list_model_packages(
         self,
         context: RequestContext,
-        creation_time_after: CreationTime = None,
-        creation_time_before: CreationTime = None,
-        max_results: MaxResults = None,
-        name_contains: NameContains = None,
-        model_approval_status: ModelApprovalStatus = None,
-        model_package_group_name: ArnOrName = None,
-        model_package_type: ModelPackageType = None,
-        next_token: NextToken = None,
-        sort_by: ModelPackageSortBy = None,
-        sort_order: SortOrder = None,
+        creation_time_after: CreationTime | None = None,
+        creation_time_before: CreationTime | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: NameContains | None = None,
+        model_approval_status: ModelApprovalStatus | None = None,
+        model_package_group_name: ArnOrName | None = None,
+        model_package_type: ModelPackageType | None = None,
+        next_token: NextToken | None = None,
+        sort_by: ModelPackageSortBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListModelPackagesOutput:
         """Lists the model packages that have been created.
@@ -23320,14 +23391,14 @@ class SagemakerApi:
     def list_model_quality_job_definitions(
         self,
         context: RequestContext,
-        endpoint_name: EndpointName = None,
-        sort_by: MonitoringJobDefinitionSortKey = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        name_contains: NameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
+        endpoint_name: EndpointName | None = None,
+        sort_by: MonitoringJobDefinitionSortKey | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: NameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
         **kwargs,
     ) -> ListModelQualityJobDefinitionsResponse:
         """Gets a list of model quality monitoring job definitions in your account.
@@ -23353,13 +23424,13 @@ class SagemakerApi:
     def list_models(
         self,
         context: RequestContext,
-        sort_by: ModelSortKey = None,
-        sort_order: OrderKey = None,
-        next_token: PaginationToken = None,
-        max_results: MaxResults = None,
-        name_contains: ModelNameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
+        sort_by: ModelSortKey | None = None,
+        sort_order: OrderKey | None = None,
+        next_token: PaginationToken | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: ModelNameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
         **kwargs,
     ) -> ListModelsOutput:
         """Lists models created with the ``CreateModel`` API.
@@ -23382,15 +23453,15 @@ class SagemakerApi:
     def list_monitoring_alert_history(
         self,
         context: RequestContext,
-        monitoring_schedule_name: MonitoringScheduleName = None,
-        monitoring_alert_name: MonitoringAlertName = None,
-        sort_by: MonitoringAlertHistorySortKey = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        status_equals: MonitoringAlertStatus = None,
+        monitoring_schedule_name: MonitoringScheduleName | None = None,
+        monitoring_alert_name: MonitoringAlertName | None = None,
+        sort_by: MonitoringAlertHistorySortKey | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        status_equals: MonitoringAlertStatus | None = None,
         **kwargs,
     ) -> ListMonitoringAlertHistoryResponse:
         """Gets a list of past alerts in a model monitoring schedule.
@@ -23418,8 +23489,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         monitoring_schedule_name: MonitoringScheduleName,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListMonitoringAlertsResponse:
         """Gets the alerts for a single monitoring schedule.
@@ -23437,21 +23508,21 @@ class SagemakerApi:
     def list_monitoring_executions(
         self,
         context: RequestContext,
-        monitoring_schedule_name: MonitoringScheduleName = None,
-        endpoint_name: EndpointName = None,
-        sort_by: MonitoringExecutionSortKey = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        scheduled_time_before: Timestamp = None,
-        scheduled_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        status_equals: ExecutionStatus = None,
-        monitoring_job_definition_name: MonitoringJobDefinitionName = None,
-        monitoring_type_equals: MonitoringType = None,
+        monitoring_schedule_name: MonitoringScheduleName | None = None,
+        endpoint_name: EndpointName | None = None,
+        sort_by: MonitoringExecutionSortKey | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        scheduled_time_before: Timestamp | None = None,
+        scheduled_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        status_equals: ExecutionStatus | None = None,
+        monitoring_job_definition_name: MonitoringJobDefinitionName | None = None,
+        monitoring_type_equals: MonitoringType | None = None,
         **kwargs,
     ) -> ListMonitoringExecutionsResponse:
         """Returns list of all monitoring job executions.
@@ -23482,19 +23553,19 @@ class SagemakerApi:
     def list_monitoring_schedules(
         self,
         context: RequestContext,
-        endpoint_name: EndpointName = None,
-        sort_by: MonitoringScheduleSortKey = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        name_contains: NameContains = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        status_equals: ScheduleStatus = None,
-        monitoring_job_definition_name: MonitoringJobDefinitionName = None,
-        monitoring_type_equals: MonitoringType = None,
+        endpoint_name: EndpointName | None = None,
+        sort_by: MonitoringScheduleSortKey | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: NameContains | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        status_equals: ScheduleStatus | None = None,
+        monitoring_job_definition_name: MonitoringJobDefinitionName | None = None,
+        monitoring_type_equals: MonitoringType | None = None,
         **kwargs,
     ) -> ListMonitoringSchedulesResponse:
         """Returns list of all monitoring schedules.
@@ -23528,15 +23599,15 @@ class SagemakerApi:
     def list_notebook_instance_lifecycle_configs(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        sort_by: NotebookInstanceLifecycleConfigSortKey = None,
-        sort_order: NotebookInstanceLifecycleConfigSortOrder = None,
-        name_contains: NotebookInstanceLifecycleConfigNameContains = None,
-        creation_time_before: CreationTime = None,
-        creation_time_after: CreationTime = None,
-        last_modified_time_before: LastModifiedTime = None,
-        last_modified_time_after: LastModifiedTime = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        sort_by: NotebookInstanceLifecycleConfigSortKey | None = None,
+        sort_order: NotebookInstanceLifecycleConfigSortOrder | None = None,
+        name_contains: NotebookInstanceLifecycleConfigNameContains | None = None,
+        creation_time_before: CreationTime | None = None,
+        creation_time_after: CreationTime | None = None,
+        last_modified_time_before: LastModifiedTime | None = None,
+        last_modified_time_after: LastModifiedTime | None = None,
         **kwargs,
     ) -> ListNotebookInstanceLifecycleConfigsOutput:
         """Lists notebook instance lifestyle configurations created with the
@@ -23566,19 +23637,20 @@ class SagemakerApi:
     def list_notebook_instances(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        sort_by: NotebookInstanceSortKey = None,
-        sort_order: NotebookInstanceSortOrder = None,
-        name_contains: NotebookInstanceNameContains = None,
-        creation_time_before: CreationTime = None,
-        creation_time_after: CreationTime = None,
-        last_modified_time_before: LastModifiedTime = None,
-        last_modified_time_after: LastModifiedTime = None,
-        status_equals: NotebookInstanceStatus = None,
-        notebook_instance_lifecycle_config_name_contains: NotebookInstanceLifecycleConfigName = None,
-        default_code_repository_contains: CodeRepositoryContains = None,
-        additional_code_repository_equals: CodeRepositoryNameOrUrl = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        sort_by: NotebookInstanceSortKey | None = None,
+        sort_order: NotebookInstanceSortOrder | None = None,
+        name_contains: NotebookInstanceNameContains | None = None,
+        creation_time_before: CreationTime | None = None,
+        creation_time_after: CreationTime | None = None,
+        last_modified_time_before: LastModifiedTime | None = None,
+        last_modified_time_after: LastModifiedTime | None = None,
+        status_equals: NotebookInstanceStatus | None = None,
+        notebook_instance_lifecycle_config_name_contains: NotebookInstanceLifecycleConfigName
+        | None = None,
+        default_code_repository_contains: CodeRepositoryContains | None = None,
+        additional_code_repository_equals: CodeRepositoryNameOrUrl | None = None,
         **kwargs,
     ) -> ListNotebookInstancesOutput:
         """Returns a list of the SageMaker AI notebook instances in the requester's
@@ -23613,17 +23685,17 @@ class SagemakerApi:
     def list_optimization_jobs(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        creation_time_after: CreationTime = None,
-        creation_time_before: CreationTime = None,
-        last_modified_time_after: LastModifiedTime = None,
-        last_modified_time_before: LastModifiedTime = None,
-        optimization_contains: NameContains = None,
-        name_contains: NameContains = None,
-        status_equals: OptimizationJobStatus = None,
-        sort_by: ListOptimizationJobsSortBy = None,
-        sort_order: SortOrder = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        creation_time_after: CreationTime | None = None,
+        creation_time_before: CreationTime | None = None,
+        last_modified_time_after: LastModifiedTime | None = None,
+        last_modified_time_before: LastModifiedTime | None = None,
+        optimization_contains: NameContains | None = None,
+        name_contains: NameContains | None = None,
+        status_equals: OptimizationJobStatus | None = None,
+        sort_by: ListOptimizationJobsSortBy | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListOptimizationJobsResponse:
         """Lists the optimization jobs in your account and their properties.
@@ -23655,8 +23727,8 @@ class SagemakerApi:
     def list_partner_apps(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListPartnerAppsResponse:
         """Lists all of the SageMaker Partner AI Apps in an account.
@@ -23672,10 +23744,10 @@ class SagemakerApi:
     def list_pipeline_execution_steps(
         self,
         context: RequestContext,
-        pipeline_execution_arn: PipelineExecutionArn = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        sort_order: SortOrder = None,
+        pipeline_execution_arn: PipelineExecutionArn | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListPipelineExecutionStepsResponse:
         """Gets a list of ``PipeLineExecutionStep`` objects.
@@ -23696,12 +23768,12 @@ class SagemakerApi:
         self,
         context: RequestContext,
         pipeline_name: PipelineNameOrArn,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortPipelineExecutionsBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortPipelineExecutionsBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPipelineExecutionsResponse:
         """Gets a list of the pipeline executions.
@@ -23726,8 +23798,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         pipeline_execution_arn: PipelineExecutionArn,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPipelineParametersForExecutionResponse:
         """Gets a list of parameters for a pipeline execution.
@@ -23745,13 +23817,13 @@ class SagemakerApi:
     def list_pipelines(
         self,
         context: RequestContext,
-        pipeline_name_prefix: PipelineName = None,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortPipelinesBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        pipeline_name_prefix: PipelineName | None = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortPipelinesBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListPipelinesResponse:
         """Gets a list of pipelines.
@@ -23774,16 +23846,16 @@ class SagemakerApi:
     def list_processing_jobs(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        name_contains: String = None,
-        status_equals: ProcessingJobStatus = None,
-        sort_by: SortBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        name_contains: String | None = None,
+        status_equals: ProcessingJobStatus | None = None,
+        sort_by: SortBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListProcessingJobsResponse:
         """Lists processing jobs that satisfy various filters.
@@ -23811,13 +23883,13 @@ class SagemakerApi:
     def list_projects(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        max_results: MaxResults = None,
-        name_contains: ProjectEntityName = None,
-        next_token: NextToken = None,
-        sort_by: ProjectSortBy = None,
-        sort_order: ProjectSortOrder = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        max_results: MaxResults | None = None,
+        name_contains: ProjectEntityName | None = None,
+        next_token: NextToken | None = None,
+        sort_by: ProjectSortBy | None = None,
+        sort_order: ProjectSortOrder | None = None,
         **kwargs,
     ) -> ListProjectsOutput:
         """Gets a list of the projects in an Amazon Web Services account.
@@ -23841,13 +23913,13 @@ class SagemakerApi:
     def list_resource_catalogs(
         self,
         context: RequestContext,
-        name_contains: ResourceCatalogName = None,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        sort_order: ResourceCatalogSortOrder = None,
-        sort_by: ResourceCatalogSortBy = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        name_contains: ResourceCatalogName | None = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        sort_order: ResourceCatalogSortOrder | None = None,
+        sort_by: ResourceCatalogSortBy | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListResourceCatalogsResponse:
         """Lists Amazon SageMaker Catalogs based on given filters and orders. The
@@ -23871,12 +23943,12 @@ class SagemakerApi:
     def list_spaces(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        sort_order: SortOrder = None,
-        sort_by: SpaceSortKey = None,
-        domain_id_equals: DomainId = None,
-        space_name_contains: SpaceName = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        sort_order: SortOrder | None = None,
+        sort_by: SpaceSortKey | None = None,
+        domain_id_equals: DomainId | None = None,
+        space_name_contains: SpaceName | None = None,
         **kwargs,
     ) -> ListSpacesResponse:
         """Lists spaces.
@@ -23898,9 +23970,9 @@ class SagemakerApi:
         context: RequestContext,
         edge_deployment_plan_name: EntityName,
         stage_name: EntityName,
-        next_token: NextToken = None,
-        max_results: ListMaxResults = None,
-        exclude_devices_deployed_in_other_stage: Boolean = None,
+        next_token: NextToken | None = None,
+        max_results: ListMaxResults | None = None,
+        exclude_devices_deployed_in_other_stage: Boolean | None = None,
         **kwargs,
     ) -> ListStageDevicesResponse:
         """Lists devices allocated to the stage, containing detailed device
@@ -23920,16 +23992,16 @@ class SagemakerApi:
     def list_studio_lifecycle_configs(
         self,
         context: RequestContext,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
-        name_contains: StudioLifecycleConfigName = None,
-        app_type_equals: StudioLifecycleConfigAppType = None,
-        creation_time_before: Timestamp = None,
-        creation_time_after: Timestamp = None,
-        modified_time_before: Timestamp = None,
-        modified_time_after: Timestamp = None,
-        sort_by: StudioLifecycleConfigSortKey = None,
-        sort_order: SortOrder = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
+        name_contains: StudioLifecycleConfigName | None = None,
+        app_type_equals: StudioLifecycleConfigAppType | None = None,
+        creation_time_before: Timestamp | None = None,
+        creation_time_after: Timestamp | None = None,
+        modified_time_before: Timestamp | None = None,
+        modified_time_after: Timestamp | None = None,
+        sort_by: StudioLifecycleConfigSortKey | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListStudioLifecycleConfigsResponse:
         """Lists the Amazon SageMaker AI Studio Lifecycle Configurations in your
@@ -23961,9 +24033,9 @@ class SagemakerApi:
     def list_subscribed_workteams(
         self,
         context: RequestContext,
-        name_contains: WorkteamName = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        name_contains: WorkteamName | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListSubscribedWorkteamsResponse:
         """Gets a list of the work teams that you are subscribed to in the Amazon
@@ -23983,8 +24055,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         resource_arn: ResourceArn,
-        next_token: NextToken = None,
-        max_results: ListTagsMaxResults = None,
+        next_token: NextToken | None = None,
+        max_results: ListTagsMaxResults | None = None,
         **kwargs,
     ) -> ListTagsOutput:
         """Returns the tags for the specified SageMaker resource.
@@ -24002,18 +24074,18 @@ class SagemakerApi:
     def list_training_jobs(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        name_contains: NameContains = None,
-        status_equals: TrainingJobStatus = None,
-        sort_by: SortBy = None,
-        sort_order: SortOrder = None,
-        warm_pool_status_equals: WarmPoolResourceStatus = None,
-        training_plan_arn_equals: TrainingPlanArn = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        name_contains: NameContains | None = None,
+        status_equals: TrainingJobStatus | None = None,
+        sort_by: SortBy | None = None,
+        sort_order: SortOrder | None = None,
+        warm_pool_status_equals: WarmPoolResourceStatus | None = None,
+        training_plan_arn_equals: TrainingPlanArn | None = None,
         **kwargs,
     ) -> ListTrainingJobsResponse:
         """Lists training jobs.
@@ -24066,11 +24138,11 @@ class SagemakerApi:
         self,
         context: RequestContext,
         hyper_parameter_tuning_job_name: HyperParameterTuningJobName,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        status_equals: TrainingJobStatus = None,
-        sort_by: TrainingJobSortByOptions = None,
-        sort_order: SortOrder = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        status_equals: TrainingJobStatus | None = None,
+        sort_by: TrainingJobSortByOptions | None = None,
+        sort_order: SortOrder | None = None,
         **kwargs,
     ) -> ListTrainingJobsForHyperParameterTuningJobResponse:
         """Gets a list of
@@ -24095,13 +24167,13 @@ class SagemakerApi:
     def list_training_plans(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        start_time_after: Timestamp = None,
-        start_time_before: Timestamp = None,
-        sort_by: TrainingPlanSortBy = None,
-        sort_order: TrainingPlanSortOrder = None,
-        filters: TrainingPlanFilters = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        start_time_after: Timestamp | None = None,
+        start_time_before: Timestamp | None = None,
+        sort_by: TrainingPlanSortBy | None = None,
+        sort_order: TrainingPlanSortOrder | None = None,
+        filters: TrainingPlanFilters | None = None,
         **kwargs,
     ) -> ListTrainingPlansResponse:
         """Retrieves a list of training plans for the current account.
@@ -24123,16 +24195,16 @@ class SagemakerApi:
     def list_transform_jobs(
         self,
         context: RequestContext,
-        creation_time_after: Timestamp = None,
-        creation_time_before: Timestamp = None,
-        last_modified_time_after: Timestamp = None,
-        last_modified_time_before: Timestamp = None,
-        name_contains: NameContains = None,
-        status_equals: TransformJobStatus = None,
-        sort_by: SortBy = None,
-        sort_order: SortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        creation_time_after: Timestamp | None = None,
+        creation_time_before: Timestamp | None = None,
+        last_modified_time_after: Timestamp | None = None,
+        last_modified_time_before: Timestamp | None = None,
+        name_contains: NameContains | None = None,
+        status_equals: TransformJobStatus | None = None,
+        sort_by: SortBy | None = None,
+        sort_order: SortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListTransformJobsResponse:
         """Lists transform jobs.
@@ -24160,15 +24232,15 @@ class SagemakerApi:
     def list_trial_components(
         self,
         context: RequestContext,
-        experiment_name: ExperimentEntityName = None,
-        trial_name: ExperimentEntityName = None,
-        source_arn: String256 = None,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortTrialComponentsBy = None,
-        sort_order: SortOrder = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        experiment_name: ExperimentEntityName | None = None,
+        trial_name: ExperimentEntityName | None = None,
+        source_arn: String256 | None = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortTrialComponentsBy | None = None,
+        sort_order: SortOrder | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTrialComponentsResponse:
         """Lists the trial components in your account. You can sort the list by
@@ -24205,14 +24277,14 @@ class SagemakerApi:
     def list_trials(
         self,
         context: RequestContext,
-        experiment_name: ExperimentEntityName = None,
-        trial_component_name: ExperimentEntityName = None,
-        created_after: Timestamp = None,
-        created_before: Timestamp = None,
-        sort_by: SortTrialsBy = None,
-        sort_order: SortOrder = None,
-        max_results: MaxResults = None,
-        next_token: NextToken = None,
+        experiment_name: ExperimentEntityName | None = None,
+        trial_component_name: ExperimentEntityName | None = None,
+        created_after: Timestamp | None = None,
+        created_before: Timestamp | None = None,
+        sort_by: SortTrialsBy | None = None,
+        sort_order: SortOrder | None = None,
+        max_results: MaxResults | None = None,
+        next_token: NextToken | None = None,
         **kwargs,
     ) -> ListTrialsResponse:
         """Lists the trials in your account. Specify an experiment name to limit
@@ -24242,12 +24314,12 @@ class SagemakerApi:
     def list_user_profiles(
         self,
         context: RequestContext,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        sort_order: SortOrder = None,
-        sort_by: UserProfileSortKey = None,
-        domain_id_equals: DomainId = None,
-        user_profile_name_contains: UserProfileName = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        sort_order: SortOrder | None = None,
+        sort_by: UserProfileSortKey | None = None,
+        domain_id_equals: DomainId | None = None,
+        user_profile_name_contains: UserProfileName | None = None,
         **kwargs,
     ) -> ListUserProfilesResponse:
         """Lists user profiles.
@@ -24267,11 +24339,11 @@ class SagemakerApi:
     def list_workforces(
         self,
         context: RequestContext,
-        sort_by: ListWorkforcesSortByOptions = None,
-        sort_order: SortOrder = None,
-        name_contains: WorkforceName = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        sort_by: ListWorkforcesSortByOptions | None = None,
+        sort_order: SortOrder | None = None,
+        name_contains: WorkforceName | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListWorkforcesResponse:
         """Use this operation to list all private and vendor workforces in an
@@ -24292,11 +24364,11 @@ class SagemakerApi:
     def list_workteams(
         self,
         context: RequestContext,
-        sort_by: ListWorkteamsSortByOptions = None,
-        sort_order: SortOrder = None,
-        name_contains: WorkteamName = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
+        sort_by: ListWorkteamsSortByOptions | None = None,
+        sort_order: SortOrder | None = None,
+        name_contains: WorkteamName | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
         **kwargs,
     ) -> ListWorkteamsResponse:
         """Gets a list of private work teams that you have defined in a region. The
@@ -24338,13 +24410,13 @@ class SagemakerApi:
     def query_lineage(
         self,
         context: RequestContext,
-        start_arns: QueryLineageStartArns = None,
-        direction: Direction = None,
-        include_edges: Boolean = None,
-        filters: QueryFilters = None,
-        max_depth: QueryLineageMaxDepth = None,
-        max_results: QueryLineageMaxResults = None,
-        next_token: String8192 = None,
+        start_arns: QueryLineageStartArns | None = None,
+        direction: Direction | None = None,
+        include_edges: Boolean | None = None,
+        filters: QueryFilters | None = None,
+        max_depth: QueryLineageMaxDepth | None = None,
+        max_results: QueryLineageMaxResults | None = None,
+        next_token: String8192 | None = None,
         **kwargs,
     ) -> QueryLineageResponse:
         """Use this action to inspect your lineage and discover relationships
@@ -24375,7 +24447,7 @@ class SagemakerApi:
         context: RequestContext,
         device_fleet_name: EntityName,
         devices: Devices,
-        tags: TagList = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> None:
         """Register devices.
@@ -24393,8 +24465,8 @@ class SagemakerApi:
         context: RequestContext,
         task: RenderableTask,
         role_arn: RoleArn,
-        ui_template: UiTemplate = None,
-        human_task_ui_arn: HumanTaskUiArn = None,
+        ui_template: UiTemplate | None = None,
+        human_task_ui_arn: HumanTaskUiArn | None = None,
         **kwargs,
     ) -> RenderUiTemplateResponse:
         """Renders the UI template so that you can preview the worker's experience.
@@ -24415,7 +24487,7 @@ class SagemakerApi:
         context: RequestContext,
         pipeline_execution_arn: PipelineExecutionArn,
         client_request_token: IdempotencyToken,
-        parallelism_configuration: ParallelismConfiguration = None,
+        parallelism_configuration: ParallelismConfiguration | None = None,
         **kwargs,
     ) -> RetryPipelineExecutionResponse:
         """Retry the execution of the pipeline.
@@ -24426,9 +24498,9 @@ class SagemakerApi:
         :param parallelism_configuration: This configuration, if specified, overrides the parallelism
         configuration of the parent pipeline.
         :returns: RetryPipelineExecutionResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -24437,13 +24509,13 @@ class SagemakerApi:
         self,
         context: RequestContext,
         resource: ResourceType,
-        search_expression: SearchExpression = None,
-        sort_by: ResourcePropertyName = None,
-        sort_order: SearchSortOrder = None,
-        next_token: NextToken = None,
-        max_results: MaxResults = None,
-        cross_account_filter_option: CrossAccountFilterOption = None,
-        visibility_conditions: VisibilityConditionsList = None,
+        search_expression: SearchExpression | None = None,
+        sort_by: ResourcePropertyName | None = None,
+        sort_order: SearchSortOrder | None = None,
+        next_token: NextToken | None = None,
+        max_results: MaxResults | None = None,
+        cross_account_filter_option: CrossAccountFilterOption | None = None,
+        visibility_conditions: VisibilityConditionsList | None = None,
         **kwargs,
     ) -> SearchResponse:
         """Finds SageMaker resources that match a search query. Matching resources
@@ -24477,12 +24549,12 @@ class SagemakerApi:
     def search_training_plan_offerings(
         self,
         context: RequestContext,
-        instance_type: ReservedCapacityInstanceType,
-        instance_count: ReservedCapacityInstanceCount,
         duration_hours: TrainingPlanDurationHoursInput,
         target_resources: SageMakerResourceNames,
-        start_time_after: Timestamp = None,
-        end_time_before: Timestamp = None,
+        instance_type: ReservedCapacityInstanceType | None = None,
+        instance_count: ReservedCapacityInstanceCount | None = None,
+        start_time_after: Timestamp | None = None,
+        end_time_before: Timestamp | None = None,
         **kwargs,
     ) -> SearchTrainingPlanOfferingsResponse:
         """Searches for available training plan offerings based on specified
@@ -24498,12 +24570,12 @@ class SagemakerApi:
         SageMaker training jobs or SageMaker HyperPod clusters using Amazon
         SageMaker Training Plan , see ``CreateTrainingPlan``.
 
+        :param duration_hours: The desired duration in hours for the training plan offerings.
+        :param target_resources: The target resources (e.
         :param instance_type: The type of instance you want to search for in the available training
         plan offerings.
         :param instance_count: The number of instances you want to reserve in the training plan
         offerings.
-        :param duration_hours: The desired duration in hours for the training plan offerings.
-        :param target_resources: The target resources (e.
         :param start_time_after: A filter to search for training plan offerings with a start time after a
         specified date.
         :param end_time_before: A filter to search for reserved capacity offerings with an end time
@@ -24518,8 +24590,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         callback_token: CallbackToken,
-        failure_reason: String256 = None,
-        client_request_token: IdempotencyToken = None,
+        failure_reason: String256 | None = None,
+        client_request_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> SendPipelineExecutionStepFailureResponse:
         """Notifies the pipeline that the execution of a callback step failed,
@@ -24532,9 +24604,9 @@ class SagemakerApi:
         :param client_request_token: A unique, case-sensitive identifier that you provide to ensure the
         idempotency of the operation.
         :returns: SendPipelineExecutionStepFailureResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -24543,8 +24615,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         callback_token: CallbackToken,
-        output_parameters: OutputParameterList = None,
-        client_request_token: IdempotencyToken = None,
+        output_parameters: OutputParameterList | None = None,
+        client_request_token: IdempotencyToken | None = None,
         **kwargs,
     ) -> SendPipelineExecutionStepSuccessResponse:
         """Notifies the pipeline that the execution of a callback step succeeded
@@ -24557,9 +24629,9 @@ class SagemakerApi:
         :param client_request_token: A unique, case-sensitive identifier that you provide to ensure the
         idempotency of the operation.
         :returns: SendPipelineExecutionStepSuccessResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -24599,8 +24671,8 @@ class SagemakerApi:
 
         :param tracking_server_name: The name of the tracking server to start.
         :returns: StartMlflowTrackingServerResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -24639,11 +24711,11 @@ class SagemakerApi:
         context: RequestContext,
         pipeline_name: PipelineNameOrArn,
         client_request_token: IdempotencyToken,
-        pipeline_execution_display_name: PipelineExecutionName = None,
-        pipeline_parameters: ParameterList = None,
-        pipeline_execution_description: PipelineExecutionDescription = None,
-        parallelism_configuration: ParallelismConfiguration = None,
-        selective_execution_config: SelectiveExecutionConfig = None,
+        pipeline_execution_display_name: PipelineExecutionName | None = None,
+        pipeline_parameters: ParameterList | None = None,
+        pipeline_execution_description: PipelineExecutionDescription | None = None,
+        parallelism_configuration: ParallelismConfiguration | None = None,
+        selective_execution_config: SelectiveExecutionConfig | None = None,
         **kwargs,
     ) -> StartPipelineExecutionResponse:
         """Starts a pipeline execution.
@@ -24658,9 +24730,9 @@ class SagemakerApi:
         configuration of the parent pipeline for this specific run.
         :param selective_execution_config: The selective execution configuration applied to the pipeline run.
         :returns: StartPipelineExecutionResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -24747,9 +24819,9 @@ class SagemakerApi:
         context: RequestContext,
         name: InferenceExperimentName,
         model_variant_actions: ModelVariantActionMap,
-        desired_model_variants: ModelVariantConfigList = None,
-        desired_state: InferenceExperimentStopDesiredState = None,
-        reason: InferenceExperimentStatusReason = None,
+        desired_model_variants: ModelVariantConfigList | None = None,
+        desired_state: InferenceExperimentStopDesiredState | None = None,
+        reason: InferenceExperimentStatusReason | None = None,
         **kwargs,
     ) -> StopInferenceExperimentResponse:
         """Stops an inference experiment.
@@ -24797,8 +24869,8 @@ class SagemakerApi:
 
         :param tracking_server_name: The name of the tracking server to stop.
         :returns: StopMlflowTrackingServerResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -24883,8 +24955,8 @@ class SagemakerApi:
         :param client_request_token: A unique, case-sensitive identifier that you provide to ensure the
         idempotency of the operation.
         :returns: StopPipelineExecutionResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -24939,10 +25011,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         action_name: ExperimentEntityName,
-        description: ExperimentDescription = None,
-        status: ActionStatus = None,
-        properties: LineageEntityParameters = None,
-        properties_to_remove: ListLineageEntityParameterKey = None,
+        description: ExperimentDescription | None = None,
+        status: ActionStatus | None = None,
+        properties: LineageEntityParameters | None = None,
+        properties_to_remove: ListLineageEntityParameterKey | None = None,
         **kwargs,
     ) -> UpdateActionResponse:
         """Updates an action.
@@ -24963,9 +25035,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         app_image_config_name: AppImageConfigName,
-        kernel_gateway_image_config: KernelGatewayImageConfig = None,
-        jupyter_lab_app_image_config: JupyterLabAppImageConfig = None,
-        code_editor_app_image_config: CodeEditorAppImageConfig = None,
+        kernel_gateway_image_config: KernelGatewayImageConfig | None = None,
+        jupyter_lab_app_image_config: JupyterLabAppImageConfig | None = None,
+        code_editor_app_image_config: CodeEditorAppImageConfig | None = None,
         **kwargs,
     ) -> UpdateAppImageConfigResponse:
         """Updates the properties of an AppImageConfig.
@@ -24984,9 +25056,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         artifact_arn: ArtifactArn,
-        artifact_name: ExperimentEntityName = None,
-        properties: ArtifactProperties = None,
-        properties_to_remove: ListLineageEntityParameterKey = None,
+        artifact_name: ExperimentEntityName | None = None,
+        properties: ArtifactProperties | None = None,
+        properties_to_remove: ListLineageEntityParameterKey | None = None,
         **kwargs,
     ) -> UpdateArtifactResponse:
         """Updates an artifact.
@@ -25007,8 +25079,8 @@ class SagemakerApi:
         context: RequestContext,
         cluster_name: ClusterNameOrArn,
         instance_groups: ClusterInstanceGroupSpecifications,
-        node_recovery: ClusterNodeRecovery = None,
-        instance_groups_to_delete: ClusterInstanceGroupsToDelete = None,
+        node_recovery: ClusterNodeRecovery | None = None,
+        instance_groups_to_delete: ClusterInstanceGroupsToDelete | None = None,
         **kwargs,
     ) -> UpdateClusterResponse:
         """Updates a SageMaker HyperPod cluster.
@@ -25018,9 +25090,9 @@ class SagemakerApi:
         :param node_recovery: The node recovery mode to be applied to the SageMaker HyperPod cluster.
         :param instance_groups_to_delete: Specify the names of the instance groups to delete.
         :returns: UpdateClusterResponse
-        :raises ResourceLimitExceeded:
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -25030,8 +25102,8 @@ class SagemakerApi:
         context: RequestContext,
         cluster_scheduler_config_id: ClusterSchedulerConfigId,
         target_version: Integer,
-        scheduler_config: SchedulerConfig = None,
-        description: EntityDescription = None,
+        scheduler_config: SchedulerConfig | None = None,
+        description: EntityDescription | None = None,
         **kwargs,
     ) -> UpdateClusterSchedulerConfigResponse:
         """Update the cluster policy configuration.
@@ -25041,9 +25113,9 @@ class SagemakerApi:
         :param scheduler_config: Cluster policy configuration.
         :param description: Description of the cluster policy.
         :returns: UpdateClusterSchedulerConfigResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -25052,8 +25124,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         cluster_name: ClusterNameOrArn,
-        instance_groups: UpdateClusterSoftwareInstanceGroups = None,
-        deployment_config: DeploymentConfiguration = None,
+        instance_groups: UpdateClusterSoftwareInstanceGroups | None = None,
+        deployment_config: DeploymentConfiguration | None = None,
         **kwargs,
     ) -> UpdateClusterSoftwareResponse:
         """Updates the platform software of a SageMaker HyperPod cluster for
@@ -25070,8 +25142,8 @@ class SagemakerApi:
         :param instance_groups: The array of instance groups for which to update AMI versions.
         :param deployment_config: The configuration to use when updating the AMI versions.
         :returns: UpdateClusterSoftwareResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -25080,7 +25152,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         code_repository_name: EntityName,
-        git_config: GitConfigForUpdate = None,
+        git_config: GitConfigForUpdate | None = None,
         **kwargs,
     ) -> UpdateCodeRepositoryOutput:
         """Updates the specified Git repository with the specified values.
@@ -25100,10 +25172,10 @@ class SagemakerApi:
         context: RequestContext,
         compute_quota_id: ComputeQuotaId,
         target_version: Integer,
-        compute_quota_config: ComputeQuotaConfig = None,
-        compute_quota_target: ComputeQuotaTarget = None,
-        activation_state: ActivationState = None,
-        description: EntityDescription = None,
+        compute_quota_config: ComputeQuotaConfig | None = None,
+        compute_quota_target: ComputeQuotaTarget | None = None,
+        activation_state: ActivationState | None = None,
+        description: EntityDescription | None = None,
         **kwargs,
     ) -> UpdateComputeQuotaResponse:
         """Update the compute allocation definition.
@@ -25115,9 +25187,9 @@ class SagemakerApi:
         :param activation_state: The state of the compute allocation being described.
         :param description: Description of the compute allocation definition.
         :returns: UpdateComputeQuotaResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -25126,9 +25198,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         context_name: ContextName,
-        description: ExperimentDescription = None,
-        properties: LineageEntityParameters = None,
-        properties_to_remove: ListLineageEntityParameterKey = None,
+        description: ExperimentDescription | None = None,
+        properties: LineageEntityParameters | None = None,
+        properties_to_remove: ListLineageEntityParameterKey | None = None,
         **kwargs,
     ) -> UpdateContextResponse:
         """Updates a context.
@@ -25149,9 +25221,9 @@ class SagemakerApi:
         context: RequestContext,
         device_fleet_name: EntityName,
         output_config: EdgeOutputConfig,
-        role_arn: RoleArn = None,
-        description: DeviceFleetDescription = None,
-        enable_iot_role_alias: EnableIotRoleAlias = None,
+        role_arn: RoleArn | None = None,
+        description: DeviceFleetDescription | None = None,
+        enable_iot_role_alias: EnableIotRoleAlias | None = None,
         **kwargs,
     ) -> None:
         """Updates a fleet of devices.
@@ -25182,13 +25254,13 @@ class SagemakerApi:
         self,
         context: RequestContext,
         domain_id: DomainId,
-        default_user_settings: UserSettings = None,
-        domain_settings_for_update: DomainSettingsForUpdate = None,
-        app_security_group_management: AppSecurityGroupManagement = None,
-        default_space_settings: DefaultSpaceSettings = None,
-        subnet_ids: Subnets = None,
-        app_network_access_type: AppNetworkAccessType = None,
-        tag_propagation: TagPropagation = None,
+        default_user_settings: UserSettings | None = None,
+        domain_settings_for_update: DomainSettingsForUpdate | None = None,
+        app_security_group_management: AppSecurityGroupManagement | None = None,
+        default_space_settings: DefaultSpaceSettings | None = None,
+        subnet_ids: Subnets | None = None,
+        app_network_access_type: AppNetworkAccessType | None = None,
+        tag_propagation: TagPropagation | None = None,
         **kwargs,
     ) -> UpdateDomainResponse:
         """Updates the default settings for new user profiles in the domain.
@@ -25203,9 +25275,9 @@ class SagemakerApi:
         :param app_network_access_type: Specifies the VPC used for non-EFS traffic.
         :param tag_propagation: Indicates whether custom tag propagation is supported for the domain.
         :returns: UpdateDomainResponse
-        :raises ResourceLimitExceeded:
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -25215,10 +25287,10 @@ class SagemakerApi:
         context: RequestContext,
         endpoint_name: EndpointName,
         endpoint_config_name: EndpointConfigName,
-        retain_all_variant_properties: Boolean = None,
-        exclude_retained_variant_properties: VariantPropertyList = None,
-        deployment_config: DeploymentConfig = None,
-        retain_deployment_config: Boolean = None,
+        retain_all_variant_properties: Boolean | None = None,
+        exclude_retained_variant_properties: VariantPropertyList | None = None,
+        deployment_config: DeploymentConfig | None = None,
+        retain_deployment_config: Boolean | None = None,
         **kwargs,
     ) -> UpdateEndpointOutput:
         """Deploys the ``EndpointConfig`` specified in the request to a new fleet
@@ -25290,8 +25362,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         experiment_name: ExperimentEntityName,
-        display_name: ExperimentEntityName = None,
-        description: ExperimentDescription = None,
+        display_name: ExperimentEntityName | None = None,
+        description: ExperimentDescription | None = None,
         **kwargs,
     ) -> UpdateExperimentResponse:
         """Adds, updates, or removes the description of an experiment. Updates the
@@ -25311,9 +25383,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         feature_group_name: FeatureGroupNameOrArn,
-        feature_additions: FeatureAdditions = None,
-        online_store_config: OnlineStoreConfigUpdate = None,
-        throughput_config: ThroughputConfigUpdate = None,
+        feature_additions: FeatureAdditions | None = None,
+        online_store_config: OnlineStoreConfigUpdate | None = None,
+        throughput_config: ThroughputConfigUpdate | None = None,
         **kwargs,
     ) -> UpdateFeatureGroupResponse:
         """Updates the feature group by either adding features or updating the
@@ -25351,9 +25423,9 @@ class SagemakerApi:
         context: RequestContext,
         feature_group_name: FeatureGroupNameOrArn,
         feature_name: FeatureName,
-        description: FeatureDescription = None,
-        parameter_additions: FeatureParameterAdditions = None,
-        parameter_removals: FeatureParameterRemovals = None,
+        description: FeatureDescription | None = None,
+        parameter_additions: FeatureParameterAdditions | None = None,
+        parameter_removals: FeatureParameterRemovals | None = None,
         **kwargs,
     ) -> None:
         """Updates the description and parameters of the feature group.
@@ -25375,9 +25447,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         hub_name: HubNameOrArn,
-        hub_description: HubDescription = None,
-        hub_display_name: HubDisplayName = None,
-        hub_search_keywords: HubSearchKeywordList = None,
+        hub_description: HubDescription | None = None,
+        hub_display_name: HubDisplayName | None = None,
+        hub_search_keywords: HubSearchKeywordList | None = None,
         **kwargs,
     ) -> UpdateHubResponse:
         """Update a hub.
@@ -25399,11 +25471,11 @@ class SagemakerApi:
         hub_content_name: HubContentName,
         hub_content_type: HubContentType,
         hub_content_version: HubContentVersion,
-        hub_content_display_name: HubContentDisplayName = None,
-        hub_content_description: HubContentDescription = None,
-        hub_content_markdown: HubContentMarkdown = None,
-        hub_content_search_keywords: HubContentSearchKeywordList = None,
-        support_status: HubContentSupportStatus = None,
+        hub_content_display_name: HubContentDisplayName | None = None,
+        hub_content_description: HubContentDescription | None = None,
+        hub_content_markdown: HubContentMarkdown | None = None,
+        hub_content_search_keywords: HubContentSearchKeywordList | None = None,
+        support_status: HubContentSupportStatus | None = None,
         **kwargs,
     ) -> UpdateHubContentResponse:
         """Updates SageMaker hub content (either a ``Model`` or ``Notebook``
@@ -25453,7 +25525,7 @@ class SagemakerApi:
         hub_name: HubNameOrArn,
         hub_content_name: HubContentName,
         hub_content_type: HubContentType,
-        min_version: HubContentVersion = None,
+        min_version: HubContentVersion | None = None,
         **kwargs,
     ) -> UpdateHubContentReferenceResponse:
         """Updates the contents of a SageMaker hub for a ``ModelReference``
@@ -25489,10 +25561,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         image_name: ImageName,
-        delete_properties: ImageDeletePropertyList = None,
-        description: ImageDescription = None,
-        display_name: ImageDisplayName = None,
-        role_arn: RoleArn = None,
+        delete_properties: ImageDeletePropertyList | None = None,
+        description: ImageDescription | None = None,
+        display_name: ImageDisplayName | None = None,
+        role_arn: RoleArn | None = None,
         **kwargs,
     ) -> UpdateImageResponse:
         """Updates the properties of a SageMaker AI image. To change the image's
@@ -25509,8 +25581,8 @@ class SagemakerApi:
         :param role_arn: The new ARN for the IAM role that enables Amazon SageMaker AI to perform
         tasks on your behalf.
         :returns: UpdateImageResponse
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -25519,17 +25591,17 @@ class SagemakerApi:
         self,
         context: RequestContext,
         image_name: ImageName,
-        alias: SageMakerImageVersionAlias = None,
-        version: ImageVersionNumber = None,
-        aliases_to_add: SageMakerImageVersionAliases = None,
-        aliases_to_delete: SageMakerImageVersionAliases = None,
-        vendor_guidance: VendorGuidance = None,
-        job_type: JobType = None,
-        ml_framework: MLFramework = None,
-        programming_lang: ProgrammingLang = None,
-        processor: Processor = None,
-        horovod: Horovod = None,
-        release_notes: ReleaseNotes = None,
+        alias: SageMakerImageVersionAlias | None = None,
+        version: ImageVersionNumber | None = None,
+        aliases_to_add: SageMakerImageVersionAliases | None = None,
+        aliases_to_delete: SageMakerImageVersionAliases | None = None,
+        vendor_guidance: VendorGuidance | None = None,
+        job_type: JobType | None = None,
+        ml_framework: MLFramework | None = None,
+        programming_lang: ProgrammingLang | None = None,
+        processor: Processor | None = None,
+        horovod: Horovod | None = None,
+        release_notes: ReleaseNotes | None = None,
         **kwargs,
     ) -> UpdateImageVersionResponse:
         """Updates the properties of a SageMaker AI image version.
@@ -25547,8 +25619,8 @@ class SagemakerApi:
         :param horovod: Indicates Horovod compatibility.
         :param release_notes: The maintainer description of the image version.
         :returns: UpdateImageVersionResponse
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
         """
         raise NotImplementedError
 
@@ -25557,9 +25629,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         inference_component_name: InferenceComponentName,
-        specification: InferenceComponentSpecification = None,
-        runtime_config: InferenceComponentRuntimeConfig = None,
-        deployment_config: InferenceComponentDeploymentConfig = None,
+        specification: InferenceComponentSpecification | None = None,
+        runtime_config: InferenceComponentRuntimeConfig | None = None,
+        deployment_config: InferenceComponentDeploymentConfig | None = None,
         **kwargs,
     ) -> UpdateInferenceComponentOutput:
         """Updates an inference component.
@@ -25599,11 +25671,11 @@ class SagemakerApi:
         self,
         context: RequestContext,
         name: InferenceExperimentName,
-        schedule: InferenceExperimentSchedule = None,
-        description: InferenceExperimentDescription = None,
-        model_variants: ModelVariantConfigList = None,
-        data_storage_config: InferenceExperimentDataStorageConfig = None,
-        shadow_mode_config: ShadowModeConfig = None,
+        schedule: InferenceExperimentSchedule | None = None,
+        description: InferenceExperimentDescription | None = None,
+        model_variants: ModelVariantConfigList | None = None,
+        data_storage_config: InferenceExperimentDataStorageConfig | None = None,
+        shadow_mode_config: ShadowModeConfig | None = None,
         **kwargs,
     ) -> UpdateInferenceExperimentResponse:
         """Updates an inference experiment that you created. The status of the
@@ -25629,10 +25701,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         tracking_server_name: TrackingServerName,
-        artifact_store_uri: S3Uri = None,
-        tracking_server_size: TrackingServerSize = None,
-        automatic_model_registration: Boolean = None,
-        weekly_maintenance_window_start: WeeklyMaintenanceWindowStart = None,
+        artifact_store_uri: S3Uri | None = None,
+        tracking_server_size: TrackingServerSize | None = None,
+        automatic_model_registration: Boolean | None = None,
+        weekly_maintenance_window_start: WeeklyMaintenanceWindowStart | None = None,
         **kwargs,
     ) -> UpdateMlflowTrackingServerResponse:
         """Updates properties of an existing MLflow Tracking Server.
@@ -25645,9 +25717,9 @@ class SagemakerApi:
         to the SageMaker Model Registry.
         :param weekly_maintenance_window_start: The new weekly maintenance window start day and time to update.
         :returns: UpdateMlflowTrackingServerResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -25656,8 +25728,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         model_card_name: ModelCardNameOrArn,
-        content: ModelCardContent = None,
-        model_card_status: ModelCardStatus = None,
+        content: ModelCardContent | None = None,
+        model_card_status: ModelCardStatus | None = None,
         **kwargs,
     ) -> UpdateModelCardResponse:
         """Update an Amazon SageMaker Model Card.
@@ -25669,9 +25741,9 @@ class SagemakerApi:
         :param content: The updated model card content.
         :param model_card_status: The approval status of the model card within your organization.
         :returns: UpdateModelCardResponse
+        :raises ConflictException:
         :raises ResourceNotFound:
         :raises ResourceLimitExceeded:
-        :raises ConflictException:
         """
         raise NotImplementedError
 
@@ -25680,16 +25752,16 @@ class SagemakerApi:
         self,
         context: RequestContext,
         model_package_arn: ModelPackageArn,
-        model_approval_status: ModelApprovalStatus = None,
-        approval_description: ApprovalDescription = None,
-        customer_metadata_properties: CustomerMetadataMap = None,
-        customer_metadata_properties_to_remove: CustomerMetadataKeyList = None,
-        additional_inference_specifications_to_add: AdditionalInferenceSpecifications = None,
-        inference_specification: InferenceSpecification = None,
-        source_uri: ModelPackageSourceUri = None,
-        model_card: ModelPackageModelCard = None,
-        model_life_cycle: ModelLifeCycle = None,
-        client_token: ClientToken = None,
+        model_approval_status: ModelApprovalStatus | None = None,
+        approval_description: ApprovalDescription | None = None,
+        customer_metadata_properties: CustomerMetadataMap | None = None,
+        customer_metadata_properties_to_remove: CustomerMetadataKeyList | None = None,
+        additional_inference_specifications_to_add: AdditionalInferenceSpecifications | None = None,
+        inference_specification: InferenceSpecification | None = None,
+        source_uri: ModelPackageSourceUri | None = None,
+        model_card: ModelPackageModelCard | None = None,
+        model_life_cycle: ModelLifeCycle | None = None,
+        client_token: ClientToken | None = None,
         **kwargs,
     ) -> UpdateModelPackageOutput:
         """Updates a versioned model.
@@ -25735,8 +25807,8 @@ class SagemakerApi:
         :param evaluation_period: The number of most recent monitoring executions to consider when
         evaluating alert status.
         :returns: UpdateMonitoringAlertResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceNotFound:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -25754,8 +25826,8 @@ class SagemakerApi:
         :param monitoring_schedule_config: The configuration object that specifies the monitoring schedule and
         defines the monitoring job.
         :returns: UpdateMonitoringScheduleResponse
-        :raises ResourceLimitExceeded:
         :raises ResourceNotFound:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -25764,19 +25836,20 @@ class SagemakerApi:
         self,
         context: RequestContext,
         notebook_instance_name: NotebookInstanceName,
-        instance_type: InstanceType = None,
-        role_arn: RoleArn = None,
-        lifecycle_config_name: NotebookInstanceLifecycleConfigName = None,
-        disassociate_lifecycle_config: DisassociateNotebookInstanceLifecycleConfig = None,
-        volume_size_in_gb: NotebookInstanceVolumeSizeInGB = None,
-        default_code_repository: CodeRepositoryNameOrUrl = None,
-        additional_code_repositories: AdditionalCodeRepositoryNamesOrUrls = None,
-        accelerator_types: NotebookInstanceAcceleratorTypes = None,
-        disassociate_accelerator_types: DisassociateNotebookInstanceAcceleratorTypes = None,
-        disassociate_default_code_repository: DisassociateDefaultCodeRepository = None,
-        disassociate_additional_code_repositories: DisassociateAdditionalCodeRepositories = None,
-        root_access: RootAccess = None,
-        instance_metadata_service_configuration: InstanceMetadataServiceConfiguration = None,
+        instance_type: InstanceType | None = None,
+        role_arn: RoleArn | None = None,
+        lifecycle_config_name: NotebookInstanceLifecycleConfigName | None = None,
+        disassociate_lifecycle_config: DisassociateNotebookInstanceLifecycleConfig | None = None,
+        volume_size_in_gb: NotebookInstanceVolumeSizeInGB | None = None,
+        default_code_repository: CodeRepositoryNameOrUrl | None = None,
+        additional_code_repositories: AdditionalCodeRepositoryNamesOrUrls | None = None,
+        accelerator_types: NotebookInstanceAcceleratorTypes | None = None,
+        disassociate_accelerator_types: DisassociateNotebookInstanceAcceleratorTypes | None = None,
+        disassociate_default_code_repository: DisassociateDefaultCodeRepository | None = None,
+        disassociate_additional_code_repositories: DisassociateAdditionalCodeRepositories
+        | None = None,
+        root_access: RootAccess | None = None,
+        instance_metadata_service_configuration: InstanceMetadataServiceConfiguration | None = None,
         **kwargs,
     ) -> UpdateNotebookInstanceOutput:
         """Updates a notebook instance. NotebookInstance updates include upgrading
@@ -25816,8 +25889,8 @@ class SagemakerApi:
         self,
         context: RequestContext,
         notebook_instance_lifecycle_config_name: NotebookInstanceLifecycleConfigName,
-        on_create: NotebookInstanceLifecycleConfigList = None,
-        on_start: NotebookInstanceLifecycleConfigList = None,
+        on_create: NotebookInstanceLifecycleConfigList | None = None,
+        on_start: NotebookInstanceLifecycleConfigList | None = None,
         **kwargs,
     ) -> UpdateNotebookInstanceLifecycleConfigOutput:
         """Updates a notebook instance lifecycle configuration created with the
@@ -25839,12 +25912,12 @@ class SagemakerApi:
         self,
         context: RequestContext,
         arn: PartnerAppArn,
-        maintenance_config: PartnerAppMaintenanceConfig = None,
-        tier: NonEmptyString64 = None,
-        application_config: PartnerAppConfig = None,
-        enable_iam_session_based_identity: Boolean = None,
-        client_token: ClientToken = None,
-        tags: TagList = None,
+        maintenance_config: PartnerAppMaintenanceConfig | None = None,
+        tier: NonEmptyString64 | None = None,
+        application_config: PartnerAppConfig | None = None,
+        enable_iam_session_based_identity: Boolean | None = None,
+        client_token: ClientToken | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> UpdatePartnerAppResponse:
         """Updates all of the SageMaker Partner AI Apps in an account.
@@ -25860,8 +25933,8 @@ class SagemakerApi:
         :param client_token: A unique token that guarantees that the call to this API is idempotent.
         :param tags: Each tag consists of a key and an optional value.
         :returns: UpdatePartnerAppResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -25870,12 +25943,12 @@ class SagemakerApi:
         self,
         context: RequestContext,
         pipeline_name: PipelineName,
-        pipeline_display_name: PipelineName = None,
-        pipeline_definition: PipelineDefinition = None,
-        pipeline_definition_s3_location: PipelineDefinitionS3Location = None,
-        pipeline_description: PipelineDescription = None,
-        role_arn: RoleArn = None,
-        parallelism_configuration: ParallelismConfiguration = None,
+        pipeline_display_name: PipelineName | None = None,
+        pipeline_definition: PipelineDefinition | None = None,
+        pipeline_definition_s3_location: PipelineDefinitionS3Location | None = None,
+        pipeline_description: PipelineDescription | None = None,
+        role_arn: RoleArn | None = None,
+        parallelism_configuration: ParallelismConfiguration | None = None,
         **kwargs,
     ) -> UpdatePipelineResponse:
         """Updates a pipeline.
@@ -25888,8 +25961,8 @@ class SagemakerApi:
         :param role_arn: The Amazon Resource Name (ARN) that the pipeline uses to execute.
         :param parallelism_configuration: If specified, it applies to all executions of this pipeline by default.
         :returns: UpdatePipelineResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -25898,9 +25971,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         pipeline_execution_arn: PipelineExecutionArn,
-        pipeline_execution_description: PipelineExecutionDescription = None,
-        pipeline_execution_display_name: PipelineExecutionName = None,
-        parallelism_configuration: ParallelismConfiguration = None,
+        pipeline_execution_description: PipelineExecutionDescription | None = None,
+        pipeline_execution_display_name: PipelineExecutionName | None = None,
+        parallelism_configuration: ParallelismConfiguration | None = None,
         **kwargs,
     ) -> UpdatePipelineExecutionResponse:
         """Updates a pipeline execution.
@@ -25911,8 +25984,8 @@ class SagemakerApi:
         :param parallelism_configuration: This configuration, if specified, overrides the parallelism
         configuration of the parent pipeline for this specific run.
         :returns: UpdatePipelineExecutionResponse
-        :raises ResourceNotFound:
         :raises ConflictException:
+        :raises ResourceNotFound:
         """
         raise NotImplementedError
 
@@ -25921,9 +25994,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         project_name: ProjectEntityName,
-        project_description: EntityDescription = None,
-        service_catalog_provisioning_update_details: ServiceCatalogProvisioningUpdateDetails = None,
-        tags: TagList = None,
+        project_description: EntityDescription | None = None,
+        service_catalog_provisioning_update_details: ServiceCatalogProvisioningUpdateDetails
+        | None = None,
+        tags: TagList | None = None,
         **kwargs,
     ) -> UpdateProjectOutput:
         """Updates a machine learning (ML) project that is created from a template
@@ -25951,8 +26025,8 @@ class SagemakerApi:
         context: RequestContext,
         domain_id: DomainId,
         space_name: SpaceName,
-        space_settings: SpaceSettings = None,
-        space_display_name: NonEmptyString64 = None,
+        space_settings: SpaceSettings | None = None,
+        space_display_name: NonEmptyString64 | None = None,
         **kwargs,
     ) -> UpdateSpaceResponse:
         """Updates the settings of a space.
@@ -25964,9 +26038,9 @@ class SagemakerApi:
         :param space_settings: A collection of space settings.
         :param space_display_name: The name of the space that appears in the Amazon SageMaker Studio UI.
         :returns: UpdateSpaceResponse
-        :raises ResourceLimitExceeded:
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -25975,10 +26049,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         training_job_name: TrainingJobName,
-        profiler_config: ProfilerConfigForUpdate = None,
-        profiler_rule_configurations: ProfilerRuleConfigurations = None,
-        resource_config: ResourceConfigForUpdate = None,
-        remote_debug_config: RemoteDebugConfigForUpdate = None,
+        profiler_config: ProfilerConfigForUpdate | None = None,
+        profiler_rule_configurations: ProfilerRuleConfigurations | None = None,
+        resource_config: ResourceConfigForUpdate | None = None,
+        remote_debug_config: RemoteDebugConfigForUpdate | None = None,
         **kwargs,
     ) -> UpdateTrainingJobResponse:
         """Update a model training job to request a new Debugger profiling
@@ -26004,7 +26078,7 @@ class SagemakerApi:
         self,
         context: RequestContext,
         trial_name: ExperimentEntityName,
-        display_name: ExperimentEntityName = None,
+        display_name: ExperimentEntityName | None = None,
         **kwargs,
     ) -> UpdateTrialResponse:
         """Updates the display name of a trial.
@@ -26022,16 +26096,16 @@ class SagemakerApi:
         self,
         context: RequestContext,
         trial_component_name: ExperimentEntityName,
-        display_name: ExperimentEntityName = None,
-        status: TrialComponentStatus = None,
-        start_time: Timestamp = None,
-        end_time: Timestamp = None,
-        parameters: TrialComponentParameters = None,
-        parameters_to_remove: ListTrialComponentKey256 = None,
-        input_artifacts: TrialComponentArtifacts = None,
-        input_artifacts_to_remove: ListTrialComponentKey256 = None,
-        output_artifacts: TrialComponentArtifacts = None,
-        output_artifacts_to_remove: ListTrialComponentKey256 = None,
+        display_name: ExperimentEntityName | None = None,
+        status: TrialComponentStatus | None = None,
+        start_time: Timestamp | None = None,
+        end_time: Timestamp | None = None,
+        parameters: TrialComponentParameters | None = None,
+        parameters_to_remove: ListTrialComponentKey256 | None = None,
+        input_artifacts: TrialComponentArtifacts | None = None,
+        input_artifacts_to_remove: ListTrialComponentKey256 | None = None,
+        output_artifacts: TrialComponentArtifacts | None = None,
+        output_artifacts_to_remove: ListTrialComponentKey256 | None = None,
         **kwargs,
     ) -> UpdateTrialComponentResponse:
         """Updates one or more properties of a trial component.
@@ -26062,7 +26136,7 @@ class SagemakerApi:
         context: RequestContext,
         domain_id: DomainId,
         user_profile_name: UserProfileName,
-        user_settings: UserSettings = None,
+        user_settings: UserSettings | None = None,
         **kwargs,
     ) -> UpdateUserProfileResponse:
         """Updates a user profile.
@@ -26071,9 +26145,9 @@ class SagemakerApi:
         :param user_profile_name: The user profile name.
         :param user_settings: A collection of settings.
         :returns: UpdateUserProfileResponse
-        :raises ResourceLimitExceeded:
-        :raises ResourceInUse:
         :raises ResourceNotFound:
+        :raises ResourceInUse:
+        :raises ResourceLimitExceeded:
         """
         raise NotImplementedError
 
@@ -26082,9 +26156,9 @@ class SagemakerApi:
         self,
         context: RequestContext,
         workforce_name: WorkforceName,
-        source_ip_config: SourceIpConfig = None,
-        oidc_config: OidcConfig = None,
-        workforce_vpc_config: WorkforceVpcConfigRequest = None,
+        source_ip_config: SourceIpConfig | None = None,
+        oidc_config: OidcConfig | None = None,
+        workforce_vpc_config: WorkforceVpcConfigRequest | None = None,
         **kwargs,
     ) -> UpdateWorkforceResponse:
         """Use this operation to update your workforce. You can use this operation
@@ -26142,10 +26216,10 @@ class SagemakerApi:
         self,
         context: RequestContext,
         workteam_name: WorkteamName,
-        member_definitions: MemberDefinitions = None,
-        description: String200 = None,
-        notification_configuration: NotificationConfiguration = None,
-        worker_access_configuration: WorkerAccessConfiguration = None,
+        member_definitions: MemberDefinitions | None = None,
+        description: String200 | None = None,
+        notification_configuration: NotificationConfiguration | None = None,
+        worker_access_configuration: WorkerAccessConfiguration | None = None,
         **kwargs,
     ) -> UpdateWorkteamResponse:
         """Updates an existing work team with new member definitions or

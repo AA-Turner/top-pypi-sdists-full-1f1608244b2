@@ -1,14 +1,14 @@
 Metadata-Version: 2.4
 Name: oracle_ads
-Version: 2.13.9
+Version: 2.13.10
 Summary: Oracle Accelerated Data Science SDK
-Keywords: Oracle Cloud Infrastructure,OCI,Machine Learning,ML,Artificial Intelligence,AI,Data Science,Cloud,Oracle
+Keywords: Oracle Cloud Infrastructure,OCI,Machine Learning,ML,Artificial Intelligence,AI,Data Science,Cloud,Oracle,GenAI,Generative AI,Forecast,Anomaly,Document Understanding,Anomaly Detection
 Author: Oracle Data Science
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
+License-Expression: UPL-1.0
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: Universal Permissive License (UPL)
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10

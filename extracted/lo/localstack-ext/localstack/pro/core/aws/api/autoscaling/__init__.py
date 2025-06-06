@@ -163,6 +163,7 @@ class CpuManufacturer(StrEnum):
     intel = "intel"
     amd = "amd"
     amazon_web_services = "amazon-web-services"
+    apple = "apple"
 
 
 class ImpairedZoneHealthCheckBehavior(StrEnum):
@@ -775,7 +776,7 @@ class NetworkBandwidthGbpsRequest(TypedDict, total=False):
     of your instance might go below the specified minimum at times. For more
     information, see `Available instance
     bandwidth <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html#available-instance-bandwidth>`__
-    in the *Amazon EC2 User Guide for Linux Instances*.
+    in the *Amazon EC2 User Guide*.
     """
 
     Min: Optional[NullablePositiveDouble]
@@ -890,7 +891,7 @@ class InstanceRequirements(TypedDict, total=False):
     instance types match your attributes before you apply them to your Auto
     Scaling group, see `Preview instance types with specified
     attributes <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-fleet-attribute-based-instance-type-selection.html#ec2fleet-get-instance-types-from-instance-requirements>`__
-    in the *Amazon EC2 User Guide for Linux Instances*.
+    in the *Amazon EC2 User Guide*.
     """
 
     VCpuCount: VCpuCountRequest
@@ -2393,7 +2394,7 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        instance_ids: InstanceIds = None,
+        instance_ids: InstanceIds | None = None,
         **kwargs,
     ) -> None:
         """Attaches one or more EC2 instances to the specified Auto Scaling group.
@@ -2517,7 +2518,7 @@ class AutoscalingApi:
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
         traffic_sources: TrafficSources,
-        skip_zonal_shift_validation: SkipZonalShiftValidation = None,
+        skip_zonal_shift_validation: SkipZonalShiftValidation | None = None,
         **kwargs,
     ) -> AttachTrafficSourcesResultType:
         """Attaches one or more traffic sources to the specified Auto Scaling
@@ -2628,8 +2629,8 @@ class AutoscalingApi:
         lifecycle_hook_name: AsciiStringMaxLen255,
         auto_scaling_group_name: ResourceName,
         lifecycle_action_result: LifecycleActionResult,
-        lifecycle_action_token: LifecycleActionToken = None,
-        instance_id: XmlStringMaxLen19 = None,
+        lifecycle_action_token: LifecycleActionToken | None = None,
+        instance_id: XmlStringMaxLen19 | None = None,
         **kwargs,
     ) -> CompleteLifecycleActionAnswer:
         """Completes the lifecycle action for the specified token or instance with
@@ -2768,24 +2769,24 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         launch_configuration_name: XmlStringMaxLen255,
-        image_id: XmlStringMaxLen255 = None,
-        key_name: XmlStringMaxLen255 = None,
-        security_groups: SecurityGroups = None,
-        classic_link_vpc_id: XmlStringMaxLen255 = None,
-        classic_link_vpc_security_groups: ClassicLinkVPCSecurityGroups = None,
-        user_data: XmlStringUserData = None,
-        instance_id: XmlStringMaxLen19 = None,
-        instance_type: XmlStringMaxLen255 = None,
-        kernel_id: XmlStringMaxLen255 = None,
-        ramdisk_id: XmlStringMaxLen255 = None,
-        block_device_mappings: BlockDeviceMappings = None,
-        instance_monitoring: InstanceMonitoring = None,
-        spot_price: SpotPrice = None,
-        iam_instance_profile: XmlStringMaxLen1600 = None,
-        ebs_optimized: EbsOptimized = None,
-        associate_public_ip_address: AssociatePublicIpAddress = None,
-        placement_tenancy: XmlStringMaxLen64 = None,
-        metadata_options: InstanceMetadataOptions = None,
+        image_id: XmlStringMaxLen255 | None = None,
+        key_name: XmlStringMaxLen255 | None = None,
+        security_groups: SecurityGroups | None = None,
+        classic_link_vpc_id: XmlStringMaxLen255 | None = None,
+        classic_link_vpc_security_groups: ClassicLinkVPCSecurityGroups | None = None,
+        user_data: XmlStringUserData | None = None,
+        instance_id: XmlStringMaxLen19 | None = None,
+        instance_type: XmlStringMaxLen255 | None = None,
+        kernel_id: XmlStringMaxLen255 | None = None,
+        ramdisk_id: XmlStringMaxLen255 | None = None,
+        block_device_mappings: BlockDeviceMappings | None = None,
+        instance_monitoring: InstanceMonitoring | None = None,
+        spot_price: SpotPrice | None = None,
+        iam_instance_profile: XmlStringMaxLen1600 | None = None,
+        ebs_optimized: EbsOptimized | None = None,
+        associate_public_ip_address: AssociatePublicIpAddress | None = None,
+        placement_tenancy: XmlStringMaxLen64 | None = None,
+        metadata_options: InstanceMetadataOptions | None = None,
         **kwargs,
     ) -> None:
         """Creates a launch configuration.
@@ -2868,7 +2869,7 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        force_delete: ForceDelete = None,
+        force_delete: ForceDelete | None = None,
         **kwargs,
     ) -> None:
         """Deletes the specified Auto Scaling group.
@@ -2968,7 +2969,7 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         policy_name: ResourceName,
-        auto_scaling_group_name: XmlStringMaxLen255 = None,
+        auto_scaling_group_name: XmlStringMaxLen255 | None = None,
         **kwargs,
     ) -> None:
         """Deletes the specified scaling policy.
@@ -3019,7 +3020,7 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        force_delete: ForceDelete = None,
+        force_delete: ForceDelete | None = None,
         **kwargs,
     ) -> DeleteWarmPoolAnswer:
         """Deletes the warm pool for the specified Auto Scaling group.
@@ -3083,10 +3084,10 @@ class AutoscalingApi:
     def describe_auto_scaling_groups(
         self,
         context: RequestContext,
-        auto_scaling_group_names: AutoScalingGroupNames = None,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
-        filters: Filters = None,
+        auto_scaling_group_names: AutoScalingGroupNames | None = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
+        filters: Filters | None = None,
         **kwargs,
     ) -> AutoScalingGroupsType:
         """Gets information about the Auto Scaling groups in the account and
@@ -3118,9 +3119,9 @@ class AutoscalingApi:
     def describe_auto_scaling_instances(
         self,
         context: RequestContext,
-        instance_ids: InstanceIds = None,
-        max_records: MaxRecords = None,
-        next_token: XmlString = None,
+        instance_ids: InstanceIds | None = None,
+        max_records: MaxRecords | None = None,
+        next_token: XmlString | None = None,
         **kwargs,
     ) -> AutoScalingInstancesType:
         """Gets information about the Auto Scaling instances in the account and
@@ -3152,9 +3153,9 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        instance_refresh_ids: InstanceRefreshIds = None,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
+        instance_refresh_ids: InstanceRefreshIds | None = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
         **kwargs,
     ) -> DescribeInstanceRefreshesAnswer:
         """Gets information about the instance refreshes for the specified Auto
@@ -3188,9 +3189,9 @@ class AutoscalingApi:
     def describe_launch_configurations(
         self,
         context: RequestContext,
-        launch_configuration_names: LaunchConfigurationNames = None,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
+        launch_configuration_names: LaunchConfigurationNames | None = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
         **kwargs,
     ) -> LaunchConfigurationsType:
         """Gets information about the launch configurations in the account and
@@ -3227,7 +3228,7 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        lifecycle_hook_names: LifecycleHookNames = None,
+        lifecycle_hook_names: LifecycleHookNames | None = None,
         **kwargs,
     ) -> DescribeLifecycleHooksAnswer:
         """Gets information about the lifecycle hooks for the specified Auto
@@ -3245,8 +3246,8 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
         **kwargs,
     ) -> DescribeLoadBalancerTargetGroupsResponse:
         """This API operation is superseded by
@@ -3308,8 +3309,8 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
         **kwargs,
     ) -> DescribeLoadBalancersResponse:
         """This API operation is superseded by
@@ -3382,9 +3383,9 @@ class AutoscalingApi:
     def describe_notification_configurations(
         self,
         context: RequestContext,
-        auto_scaling_group_names: AutoScalingGroupNames = None,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
+        auto_scaling_group_names: AutoScalingGroupNames | None = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
         **kwargs,
     ) -> DescribeNotificationConfigurationsAnswer:
         """Gets information about the Amazon SNS notifications that are configured
@@ -3403,11 +3404,11 @@ class AutoscalingApi:
     def describe_policies(
         self,
         context: RequestContext,
-        auto_scaling_group_name: XmlStringMaxLen255 = None,
-        policy_names: PolicyNames = None,
-        policy_types: PolicyTypes = None,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
+        auto_scaling_group_name: XmlStringMaxLen255 | None = None,
+        policy_names: PolicyNames | None = None,
+        policy_types: PolicyTypes | None = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
         **kwargs,
     ) -> PoliciesType:
         """Gets information about the scaling policies in the account and Region.
@@ -3428,11 +3429,11 @@ class AutoscalingApi:
     def describe_scaling_activities(
         self,
         context: RequestContext,
-        activity_ids: ActivityIds = None,
-        auto_scaling_group_name: XmlStringMaxLen255 = None,
-        include_deleted_groups: IncludeDeletedGroups = None,
-        max_records: MaxRecords = None,
-        next_token: XmlString = None,
+        activity_ids: ActivityIds | None = None,
+        auto_scaling_group_name: XmlStringMaxLen255 | None = None,
+        include_deleted_groups: IncludeDeletedGroups | None = None,
+        max_records: MaxRecords | None = None,
+        next_token: XmlString | None = None,
         **kwargs,
     ) -> ActivitiesType:
         """Gets information about the scaling activities in the account and Region.
@@ -3481,12 +3482,12 @@ class AutoscalingApi:
     def describe_scheduled_actions(
         self,
         context: RequestContext,
-        auto_scaling_group_name: XmlStringMaxLen255 = None,
-        scheduled_action_names: ScheduledActionNames = None,
-        start_time: TimestampType = None,
-        end_time: TimestampType = None,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
+        auto_scaling_group_name: XmlStringMaxLen255 | None = None,
+        scheduled_action_names: ScheduledActionNames | None = None,
+        start_time: TimestampType | None = None,
+        end_time: TimestampType | None = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
         **kwargs,
     ) -> ScheduledActionsType:
         """Gets information about the scheduled actions that haven't run or that
@@ -3513,9 +3514,9 @@ class AutoscalingApi:
     def describe_tags(
         self,
         context: RequestContext,
-        filters: Filters = None,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
+        filters: Filters | None = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
         **kwargs,
     ) -> TagsType:
         """Describes the specified tags.
@@ -3563,9 +3564,9 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        traffic_source_type: XmlStringMaxLen255 = None,
-        next_token: XmlString = None,
-        max_records: MaxRecords = None,
+        traffic_source_type: XmlStringMaxLen255 | None = None,
+        next_token: XmlString | None = None,
+        max_records: MaxRecords | None = None,
         **kwargs,
     ) -> DescribeTrafficSourcesResponse:
         """Gets information about the traffic sources for the specified Auto
@@ -3593,8 +3594,8 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        max_records: MaxRecords = None,
-        next_token: XmlString = None,
+        max_records: MaxRecords | None = None,
+        next_token: XmlString | None = None,
         **kwargs,
     ) -> DescribeWarmPoolAnswer:
         """Gets information about a warm pool and its instances.
@@ -3619,7 +3620,7 @@ class AutoscalingApi:
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
         should_decrement_desired_capacity: ShouldDecrementDesiredCapacity,
-        instance_ids: InstanceIds = None,
+        instance_ids: InstanceIds | None = None,
         **kwargs,
     ) -> DetachInstancesAnswer:
         """Removes one or more instances from the specified Auto Scaling group.
@@ -3756,7 +3757,7 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        metrics: Metrics = None,
+        metrics: Metrics | None = None,
         **kwargs,
     ) -> None:
         """Disables group metrics collection for the specified Auto Scaling group.
@@ -3773,7 +3774,7 @@ class AutoscalingApi:
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
         granularity: XmlStringMaxLen255,
-        metrics: Metrics = None,
+        metrics: Metrics | None = None,
         **kwargs,
     ) -> None:
         """Enables group metrics collection for the specified Auto Scaling group.
@@ -3800,7 +3801,7 @@ class AutoscalingApi:
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
         should_decrement_desired_capacity: ShouldDecrementDesiredCapacity,
-        instance_ids: InstanceIds = None,
+        instance_ids: InstanceIds | None = None,
         **kwargs,
     ) -> EnterStandbyAnswer:
         """Moves the specified instances into the standby state.
@@ -3833,10 +3834,10 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         policy_name: ResourceName,
-        auto_scaling_group_name: XmlStringMaxLen255 = None,
-        honor_cooldown: HonorCooldown = None,
-        metric_value: MetricScale = None,
-        breach_threshold: MetricScale = None,
+        auto_scaling_group_name: XmlStringMaxLen255 | None = None,
+        honor_cooldown: HonorCooldown | None = None,
+        metric_value: MetricScale | None = None,
+        breach_threshold: MetricScale | None = None,
         **kwargs,
     ) -> None:
         """Executes the specified policy. This can be useful for testing the design
@@ -3858,7 +3859,7 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        instance_ids: InstanceIds = None,
+        instance_ids: InstanceIds | None = None,
         **kwargs,
     ) -> ExitStandbyAnswer:
         """Moves the specified instances out of the standby state.
@@ -3919,12 +3920,12 @@ class AutoscalingApi:
         context: RequestContext,
         lifecycle_hook_name: AsciiStringMaxLen255,
         auto_scaling_group_name: XmlStringMaxLen255,
-        lifecycle_transition: LifecycleTransition = None,
-        role_arn: XmlStringMaxLen255 = None,
-        notification_target_arn: NotificationTargetResourceName = None,
-        notification_metadata: AnyPrintableAsciiStringMaxLen4000 = None,
-        heartbeat_timeout: HeartbeatTimeout = None,
-        default_result: LifecycleActionResult = None,
+        lifecycle_transition: LifecycleTransition | None = None,
+        role_arn: XmlStringMaxLen255 | None = None,
+        notification_target_arn: NotificationTargetResourceName | None = None,
+        notification_metadata: AnyPrintableAsciiStringMaxLen4000 | None = None,
+        heartbeat_timeout: HeartbeatTimeout | None = None,
+        default_result: LifecycleActionResult | None = None,
         **kwargs,
     ) -> PutLifecycleHookAnswer:
         """Creates or updates a lifecycle hook for the specified Auto Scaling
@@ -4035,18 +4036,18 @@ class AutoscalingApi:
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
         policy_name: XmlStringMaxLen255,
-        policy_type: XmlStringMaxLen64 = None,
-        adjustment_type: XmlStringMaxLen255 = None,
-        min_adjustment_step: MinAdjustmentStep = None,
-        min_adjustment_magnitude: MinAdjustmentMagnitude = None,
-        scaling_adjustment: PolicyIncrement = None,
-        cooldown: Cooldown = None,
-        metric_aggregation_type: XmlStringMaxLen32 = None,
-        step_adjustments: StepAdjustments = None,
-        estimated_instance_warmup: EstimatedInstanceWarmup = None,
-        target_tracking_configuration: TargetTrackingConfiguration = None,
-        enabled: ScalingPolicyEnabled = None,
-        predictive_scaling_configuration: PredictiveScalingConfiguration = None,
+        policy_type: XmlStringMaxLen64 | None = None,
+        adjustment_type: XmlStringMaxLen255 | None = None,
+        min_adjustment_step: MinAdjustmentStep | None = None,
+        min_adjustment_magnitude: MinAdjustmentMagnitude | None = None,
+        scaling_adjustment: PolicyIncrement | None = None,
+        cooldown: Cooldown | None = None,
+        metric_aggregation_type: XmlStringMaxLen32 | None = None,
+        step_adjustments: StepAdjustments | None = None,
+        estimated_instance_warmup: EstimatedInstanceWarmup | None = None,
+        target_tracking_configuration: TargetTrackingConfiguration | None = None,
+        enabled: ScalingPolicyEnabled | None = None,
+        predictive_scaling_configuration: PredictiveScalingConfiguration | None = None,
         **kwargs,
     ) -> PolicyARNType:
         """Creates or updates a scaling policy for an Auto Scaling group. Scaling
@@ -4112,14 +4113,14 @@ class AutoscalingApi:
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
         scheduled_action_name: XmlStringMaxLen255,
-        time: TimestampType = None,
-        start_time: TimestampType = None,
-        end_time: TimestampType = None,
-        recurrence: XmlStringMaxLen255 = None,
-        min_size: AutoScalingGroupMinSize = None,
-        max_size: AutoScalingGroupMaxSize = None,
-        desired_capacity: AutoScalingGroupDesiredCapacity = None,
-        time_zone: XmlStringMaxLen255 = None,
+        time: TimestampType | None = None,
+        start_time: TimestampType | None = None,
+        end_time: TimestampType | None = None,
+        recurrence: XmlStringMaxLen255 | None = None,
+        min_size: AutoScalingGroupMinSize | None = None,
+        max_size: AutoScalingGroupMaxSize | None = None,
+        desired_capacity: AutoScalingGroupDesiredCapacity | None = None,
+        time_zone: XmlStringMaxLen255 | None = None,
         **kwargs,
     ) -> None:
         """Creates or updates a scheduled scaling action for an Auto Scaling group.
@@ -4163,10 +4164,10 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        max_group_prepared_capacity: MaxGroupPreparedCapacity = None,
-        min_size: WarmPoolMinSize = None,
-        pool_state: WarmPoolState = None,
-        instance_reuse_policy: InstanceReusePolicy = None,
+        max_group_prepared_capacity: MaxGroupPreparedCapacity | None = None,
+        min_size: WarmPoolMinSize | None = None,
+        pool_state: WarmPoolState | None = None,
+        instance_reuse_policy: InstanceReusePolicy | None = None,
         **kwargs,
     ) -> PutWarmPoolAnswer:
         """Creates or updates a warm pool for the specified Auto Scaling group. A
@@ -4210,8 +4211,8 @@ class AutoscalingApi:
         context: RequestContext,
         lifecycle_hook_name: AsciiStringMaxLen255,
         auto_scaling_group_name: ResourceName,
-        lifecycle_action_token: LifecycleActionToken = None,
-        instance_id: XmlStringMaxLen19 = None,
+        lifecycle_action_token: LifecycleActionToken | None = None,
+        instance_id: XmlStringMaxLen19 | None = None,
         **kwargs,
     ) -> RecordLifecycleActionHeartbeatAnswer:
         """Records a heartbeat for the lifecycle action associated with the
@@ -4266,7 +4267,7 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        scaling_processes: ProcessNames = None,
+        scaling_processes: ProcessNames | None = None,
         **kwargs,
     ) -> None:
         """Resumes the specified suspended auto scaling processes, or all suspended
@@ -4350,7 +4351,7 @@ class AutoscalingApi:
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
         desired_capacity: AutoScalingGroupDesiredCapacity,
-        honor_cooldown: HonorCooldown = None,
+        honor_cooldown: HonorCooldown | None = None,
         **kwargs,
     ) -> None:
         """Sets the size of the specified Auto Scaling group.
@@ -4381,7 +4382,7 @@ class AutoscalingApi:
         context: RequestContext,
         instance_id: XmlStringMaxLen19,
         health_status: XmlStringMaxLen32,
-        should_respect_grace_period: ShouldRespectGracePeriod = None,
+        should_respect_grace_period: ShouldRespectGracePeriod | None = None,
         **kwargs,
     ) -> None:
         """Sets the health status of the specified instance.
@@ -4434,9 +4435,9 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        strategy: RefreshStrategy = None,
-        desired_configuration: DesiredConfiguration = None,
-        preferences: RefreshPreferences = None,
+        strategy: RefreshStrategy | None = None,
+        desired_configuration: DesiredConfiguration | None = None,
+        preferences: RefreshPreferences | None = None,
         **kwargs,
     ) -> StartInstanceRefreshAnswer:
         """Starts an instance refresh.
@@ -4493,7 +4494,7 @@ class AutoscalingApi:
         self,
         context: RequestContext,
         auto_scaling_group_name: XmlStringMaxLen255,
-        scaling_processes: ProcessNames = None,
+        scaling_processes: ProcessNames | None = None,
         **kwargs,
     ) -> None:
         """Suspends the specified auto scaling processes, or all processes, for the

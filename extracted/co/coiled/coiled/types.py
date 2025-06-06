@@ -195,7 +195,14 @@ def parse_conda_channel(package_name: str, channel: str, subdir: str) -> Tuple[O
         # Strip correct subdir from channel (e.g. "linux-64" or "osx-arm64")
         # We are conservative in this case, because theoretically
         # a private channel could have a different subdir in its name
-        for subdir_suffix in (f"/{subdir}", f"/{subdir}/"):
+        for subdir_suffix in (
+            f"/{subdir}",
+            f"/{subdir}/",
+            # Sometimes non-noarch packages have noarch suffixes because
+            # of that conda bug.
+            "/noarch",
+            "/noarch/",
+        ):
             if channel.endswith(subdir_suffix):
                 channel = channel[: -len(subdir_suffix)]
 

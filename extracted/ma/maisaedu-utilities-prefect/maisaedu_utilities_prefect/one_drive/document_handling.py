@@ -19,7 +19,12 @@ def read_docs(documents):
     df = []
     for document in documents:
         df.append({
-            "sheet_dataframe": pd.read_excel(document['document_name'], sheet_name=document['spreadsheet_tab_name']),
+            "sheet_dataframe": pd.read_excel(
+                document['document_name'], 
+                sheet_name=document['spreadsheet_tab_name'], 
+                keep_default_na=False,
+                na_values=[""]
+            ),
             "document_name": document['document_name'],
             "spreadsheet_tab_name": document['spreadsheet_tab_name']
         })

@@ -28,6 +28,7 @@ class WorkspaceArgs:
                  alias: Optional[pulumi.Input[builtins.str]] = None,
                  kms_key_arn: Optional[pulumi.Input[builtins.str]] = None,
                  logging_configuration: Optional[pulumi.Input['WorkspaceLoggingConfigurationArgs']] = None,
+                 query_logging_configuration: Optional[pulumi.Input['WorkspaceQueryLoggingConfigurationArgs']] = None,
                  tags: Optional[pulumi.Input[Sequence[pulumi.Input['_root_inputs.TagArgs']]]] = None,
                  workspace_configuration: Optional[pulumi.Input['WorkspaceConfigurationArgs']] = None):
         """
@@ -35,7 +36,10 @@ class WorkspaceArgs:
         :param pulumi.Input[builtins.str] alert_manager_definition: The AMP Workspace alert manager definition data
         :param pulumi.Input[builtins.str] alias: AMP Workspace alias.
         :param pulumi.Input[builtins.str] kms_key_arn: KMS Key ARN used to encrypt and decrypt AMP workspace data.
-        :param pulumi.Input['WorkspaceLoggingConfigurationArgs'] logging_configuration: Contains information about the logging configuration for the workspace.
+        :param pulumi.Input['WorkspaceLoggingConfigurationArgs'] logging_configuration: Contains information about the current rules and alerting logging configuration for the workspace.
+               
+               > These logging configurations are only for rules and alerting logs.
+        :param pulumi.Input['WorkspaceQueryLoggingConfigurationArgs'] query_logging_configuration: The definition of logging configuration in an Amazon Managed Service for Prometheus workspace.
         :param pulumi.Input[Sequence[pulumi.Input['_root_inputs.TagArgs']]] tags: An array of key-value pairs to apply to this resource.
         :param pulumi.Input['WorkspaceConfigurationArgs'] workspace_configuration: Use this structure to define label sets and the ingestion limits for time series that match label sets, and to specify the retention period of the workspace.
         """
@@ -47,6 +51,8 @@ class WorkspaceArgs:
             pulumi.set(__self__, "kms_key_arn", kms_key_arn)
         if logging_configuration is not None:
             pulumi.set(__self__, "logging_configuration", logging_configuration)
+        if query_logging_configuration is not None:
+            pulumi.set(__self__, "query_logging_configuration", query_logging_configuration)
         if tags is not None:
             pulumi.set(__self__, "tags", tags)
         if workspace_configuration is not None:
@@ -92,13 +98,27 @@ class WorkspaceArgs:
     @pulumi.getter(name="loggingConfiguration")
     def logging_configuration(self) -> Optional[pulumi.Input['WorkspaceLoggingConfigurationArgs']]:
         """
-        Contains information about the logging configuration for the workspace.
+        Contains information about the current rules and alerting logging configuration for the workspace.
+
+        > These logging configurations are only for rules and alerting logs.
         """
         return pulumi.get(self, "logging_configuration")
 
     @logging_configuration.setter
     def logging_configuration(self, value: Optional[pulumi.Input['WorkspaceLoggingConfigurationArgs']]):
         pulumi.set(self, "logging_configuration", value)
+
+    @property
+    @pulumi.getter(name="queryLoggingConfiguration")
+    def query_logging_configuration(self) -> Optional[pulumi.Input['WorkspaceQueryLoggingConfigurationArgs']]:
+        """
+        The definition of logging configuration in an Amazon Managed Service for Prometheus workspace.
+        """
+        return pulumi.get(self, "query_logging_configuration")
+
+    @query_logging_configuration.setter
+    def query_logging_configuration(self, value: Optional[pulumi.Input['WorkspaceQueryLoggingConfigurationArgs']]):
+        pulumi.set(self, "query_logging_configuration", value)
 
     @property
     @pulumi.getter
@@ -125,10 +145,8 @@ class WorkspaceArgs:
         pulumi.set(self, "workspace_configuration", value)
 
 
+@pulumi.type_token("aws-native:aps:Workspace")
 class Workspace(pulumi.CustomResource):
-
-    pulumi_type = "aws-native:aps:Workspace"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -137,6 +155,7 @@ class Workspace(pulumi.CustomResource):
                  alias: Optional[pulumi.Input[builtins.str]] = None,
                  kms_key_arn: Optional[pulumi.Input[builtins.str]] = None,
                  logging_configuration: Optional[pulumi.Input[Union['WorkspaceLoggingConfigurationArgs', 'WorkspaceLoggingConfigurationArgsDict']]] = None,
+                 query_logging_configuration: Optional[pulumi.Input[Union['WorkspaceQueryLoggingConfigurationArgs', 'WorkspaceQueryLoggingConfigurationArgsDict']]] = None,
                  tags: Optional[pulumi.Input[Sequence[pulumi.Input[Union['_root_inputs.TagArgs', '_root_inputs.TagArgsDict']]]]] = None,
                  workspace_configuration: Optional[pulumi.Input[Union['WorkspaceConfigurationArgs', 'WorkspaceConfigurationArgsDict']]] = None,
                  __props__=None):
@@ -198,7 +217,10 @@ class Workspace(pulumi.CustomResource):
         :param pulumi.Input[builtins.str] alert_manager_definition: The AMP Workspace alert manager definition data
         :param pulumi.Input[builtins.str] alias: AMP Workspace alias.
         :param pulumi.Input[builtins.str] kms_key_arn: KMS Key ARN used to encrypt and decrypt AMP workspace data.
-        :param pulumi.Input[Union['WorkspaceLoggingConfigurationArgs', 'WorkspaceLoggingConfigurationArgsDict']] logging_configuration: Contains information about the logging configuration for the workspace.
+        :param pulumi.Input[Union['WorkspaceLoggingConfigurationArgs', 'WorkspaceLoggingConfigurationArgsDict']] logging_configuration: Contains information about the current rules and alerting logging configuration for the workspace.
+               
+               > These logging configurations are only for rules and alerting logs.
+        :param pulumi.Input[Union['WorkspaceQueryLoggingConfigurationArgs', 'WorkspaceQueryLoggingConfigurationArgsDict']] query_logging_configuration: The definition of logging configuration in an Amazon Managed Service for Prometheus workspace.
         :param pulumi.Input[Sequence[pulumi.Input[Union['_root_inputs.TagArgs', '_root_inputs.TagArgsDict']]]] tags: An array of key-value pairs to apply to this resource.
         :param pulumi.Input[Union['WorkspaceConfigurationArgs', 'WorkspaceConfigurationArgsDict']] workspace_configuration: Use this structure to define label sets and the ingestion limits for time series that match label sets, and to specify the retention period of the workspace.
         """
@@ -280,6 +302,7 @@ class Workspace(pulumi.CustomResource):
                  alias: Optional[pulumi.Input[builtins.str]] = None,
                  kms_key_arn: Optional[pulumi.Input[builtins.str]] = None,
                  logging_configuration: Optional[pulumi.Input[Union['WorkspaceLoggingConfigurationArgs', 'WorkspaceLoggingConfigurationArgsDict']]] = None,
+                 query_logging_configuration: Optional[pulumi.Input[Union['WorkspaceQueryLoggingConfigurationArgs', 'WorkspaceQueryLoggingConfigurationArgsDict']]] = None,
                  tags: Optional[pulumi.Input[Sequence[pulumi.Input[Union['_root_inputs.TagArgs', '_root_inputs.TagArgsDict']]]]] = None,
                  workspace_configuration: Optional[pulumi.Input[Union['WorkspaceConfigurationArgs', 'WorkspaceConfigurationArgsDict']]] = None,
                  __props__=None):
@@ -295,6 +318,7 @@ class Workspace(pulumi.CustomResource):
             __props__.__dict__["alias"] = alias
             __props__.__dict__["kms_key_arn"] = kms_key_arn
             __props__.__dict__["logging_configuration"] = logging_configuration
+            __props__.__dict__["query_logging_configuration"] = query_logging_configuration
             __props__.__dict__["tags"] = tags
             __props__.__dict__["workspace_configuration"] = workspace_configuration
             __props__.__dict__["arn"] = None
@@ -330,6 +354,7 @@ class Workspace(pulumi.CustomResource):
         __props__.__dict__["kms_key_arn"] = None
         __props__.__dict__["logging_configuration"] = None
         __props__.__dict__["prometheus_endpoint"] = None
+        __props__.__dict__["query_logging_configuration"] = None
         __props__.__dict__["tags"] = None
         __props__.__dict__["workspace_configuration"] = None
         __props__.__dict__["workspace_id"] = None
@@ -371,7 +396,9 @@ class Workspace(pulumi.CustomResource):
     @pulumi.getter(name="loggingConfiguration")
     def logging_configuration(self) -> pulumi.Output[Optional['outputs.WorkspaceLoggingConfiguration']]:
         """
-        Contains information about the logging configuration for the workspace.
+        Contains information about the current rules and alerting logging configuration for the workspace.
+
+        > These logging configurations are only for rules and alerting logs.
         """
         return pulumi.get(self, "logging_configuration")
 
@@ -382,6 +409,14 @@ class Workspace(pulumi.CustomResource):
         AMP Workspace prometheus endpoint
         """
         return pulumi.get(self, "prometheus_endpoint")
+
+    @property
+    @pulumi.getter(name="queryLoggingConfiguration")
+    def query_logging_configuration(self) -> pulumi.Output[Optional['outputs.WorkspaceQueryLoggingConfiguration']]:
+        """
+        The definition of logging configuration in an Amazon Managed Service for Prometheus workspace.
+        """
+        return pulumi.get(self, "query_logging_configuration")
 
     @property
     @pulumi.getter
