@@ -12,7 +12,7 @@ def brush_edit(
     stroke: bpy.types.bpy_prop_collection[bpy.types.OperatorStrokeElement]
     | None = None,
     pen_flip: bool | None = False,
-):
+) -> None:
     """Apply a stroke of brush to the particles
 
     :type execution_context: int | str | None
@@ -29,7 +29,7 @@ def connect_hair(
     /,
     *,
     all: bool | None = False,
-):
+) -> None:
     """Connect hair to the emitter mesh
 
     :type execution_context: int | str | None
@@ -46,7 +46,7 @@ def copy_particle_systems(
     space: typing.Literal["OBJECT", "WORLD"] | None = "OBJECT",
     remove_target_particles: bool | None = True,
     use_active: bool | None = False,
-):
+) -> None:
     """Copy particle systems from the active object to selected objects
 
         :type execution_context: int | str | None
@@ -71,7 +71,7 @@ def delete(
     /,
     *,
     type: typing.Literal["PARTICLE", "KEY"] | None = "PARTICLE",
-):
+) -> None:
     """Delete selected particles or keys
 
     :type execution_context: int | str | None
@@ -86,7 +86,7 @@ def disconnect_hair(
     /,
     *,
     all: bool | None = False,
-):
+) -> None:
     """Disconnect hair from the emitter mesh
 
     :type execution_context: int | str | None
@@ -101,7 +101,7 @@ def duplicate_particle_system(
     /,
     *,
     use_duplicate_settings: bool | None = False,
-):
+) -> None:
     """Duplicate particle system within the active object
 
     :type execution_context: int | str | None
@@ -110,7 +110,9 @@ def duplicate_particle_system(
     :type use_duplicate_settings: bool | None
     """
 
-def dupliob_copy(execution_context: int | str | None = None, undo: bool | None = None):
+def dupliob_copy(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Duplicate the current instance object
 
     :type execution_context: int | str | None
@@ -119,7 +121,7 @@ def dupliob_copy(execution_context: int | str | None = None, undo: bool | None =
 
 def dupliob_move_down(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Move instance object down in the list
 
     :type execution_context: int | str | None
@@ -128,7 +130,7 @@ def dupliob_move_down(
 
 def dupliob_move_up(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Move instance object up in the list
 
     :type execution_context: int | str | None
@@ -137,7 +139,7 @@ def dupliob_move_up(
 
 def dupliob_refresh(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Refresh list of instance objects and their weights
 
     :type execution_context: int | str | None
@@ -146,14 +148,16 @@ def dupliob_refresh(
 
 def dupliob_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the selected instance object
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def edited_clear(execution_context: int | str | None = None, undo: bool | None = None):
+def edited_clear(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Undo all edition performed on the particle system
 
     :type execution_context: int | str | None
@@ -168,7 +172,7 @@ def hair_dynamics_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove a Hair Dynamics Preset
 
     :type execution_context: int | str | None
@@ -187,7 +191,7 @@ def hide(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Hide selected particles
 
     :type execution_context: int | str | None
@@ -196,21 +200,25 @@ def hide(
     :type unselected: bool | None
     """
 
-def mirror(execution_context: int | str | None = None, undo: bool | None = None):
+def mirror(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Duplicate and mirror the selected particles along the local X axis
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def new(execution_context: int | str | None = None, undo: bool | None = None):
+def new(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Add new particle settings
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def new_target(execution_context: int | str | None = None, undo: bool | None = None):
+def new_target(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add a new particle target
 
     :type execution_context: int | str | None
@@ -219,7 +227,7 @@ def new_target(execution_context: int | str | None = None, undo: bool | None = N
 
 def particle_edit_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle particle edit mode
 
     :type execution_context: int | str | None
@@ -232,7 +240,7 @@ def rekey(
     /,
     *,
     keys_number: int | None = 2,
-):
+) -> None:
     """Change the number of keys of selected particles (root and tip keys included)
 
     :type execution_context: int | str | None
@@ -247,7 +255,7 @@ def remove_doubles(
     /,
     *,
     threshold: float | None = 0.0002,
-):
+) -> None:
     """Remove selected particles close enough of others
 
     :type execution_context: int | str | None
@@ -262,7 +270,7 @@ def reveal(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Show hidden particles
 
     :type execution_context: int | str | None
@@ -277,7 +285,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """(De)select all particles' keys
 
         :type execution_context: int | str | None
@@ -298,14 +306,18 @@ def select_all(
         :type action: typing.Literal['TOGGLE','SELECT','DESELECT','INVERT'] | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Deselect boundary selected keys of each particle
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_linked(execution_context: int | str | None = None, undo: bool | None = None):
+def select_linked(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select all keys linked to already selected ones
 
     :type execution_context: int | str | None
@@ -319,7 +331,7 @@ def select_linked_pick(
     *,
     deselect: bool | None = False,
     location: collections.abc.Iterable[int] | None = (0, 0),
-):
+) -> None:
     """Select nearest particle from mouse pointer
 
     :type execution_context: int | str | None
@@ -330,7 +342,9 @@ def select_linked_pick(
     :type location: collections.abc.Iterable[int] | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select keys linked to boundary selected keys of each particle
 
     :type execution_context: int | str | None
@@ -346,7 +360,7 @@ def select_random(
     seed: int | None = 0,
     action: typing.Literal["SELECT", "DESELECT"] | None = "SELECT",
     type: typing.Literal["HAIR", "POINTS"] | None = "HAIR",
-):
+) -> None:
     """Select a randomly distributed set of hair or points
 
         :type execution_context: int | str | None
@@ -373,7 +387,7 @@ def select_roots(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "SELECT",
-):
+) -> None:
     """Select roots of all visible particles
 
         :type execution_context: int | str | None
@@ -400,7 +414,7 @@ def select_tips(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "SELECT",
-):
+) -> None:
     """Select tips of all visible particles
 
         :type execution_context: int | str | None
@@ -421,14 +435,18 @@ def select_tips(
         :type action: typing.Literal['TOGGLE','SELECT','DESELECT','INVERT'] | None
     """
 
-def shape_cut(execution_context: int | str | None = None, undo: bool | None = None):
+def shape_cut(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Cut hair to conform to the set shape object
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def subdivide(execution_context: int | str | None = None, undo: bool | None = None):
+def subdivide(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Subdivide selected particles segments (adds keys)
 
     :type execution_context: int | str | None
@@ -437,7 +455,7 @@ def subdivide(execution_context: int | str | None = None, undo: bool | None = No
 
 def target_move_down(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Move particle target down in the list
 
     :type execution_context: int | str | None
@@ -446,21 +464,25 @@ def target_move_down(
 
 def target_move_up(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Move particle target up in the list
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def target_remove(execution_context: int | str | None = None, undo: bool | None = None):
+def target_remove(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove the selected particle target
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def unify_length(execution_context: int | str | None = None, undo: bool | None = None):
+def unify_length(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Make selected hair the same length
 
     :type execution_context: int | str | None
@@ -473,7 +495,7 @@ def weight_set(
     /,
     *,
     factor: float | None = 1.0,
-):
+) -> None:
     """Set the weight of selected keys
 
     :type execution_context: int | str | None

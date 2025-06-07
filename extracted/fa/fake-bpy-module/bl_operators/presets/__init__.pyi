@@ -9,25 +9,25 @@ class AddPresetBase:
     bl_options: typing.Any
 
     @staticmethod
-    def as_filename(name):
+    def as_filename(name) -> None:
         """
 
         :param name:
         """
 
-    def check(self, _context):
+    def check(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -302,7 +302,7 @@ class AddPresetInterfaceTheme(AddPresetBase, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def post_cb(self, context, filepath):
+    def post_cb(self, context, filepath) -> None:
         """
 
         :param context:
@@ -320,7 +320,7 @@ class AddPresetKeyconfig(AddPresetBase, bpy.types.Operator):
     preset_menu: typing.Any
     preset_subdir: typing.Any
 
-    def add(self, _context, filepath):
+    def add(self, _context, filepath) -> None:
         """
 
         :param _context:
@@ -396,7 +396,7 @@ class AddPresetOperator(AddPresetBase, bpy.types.Operator):
         """
 
     @staticmethod
-    def operator_path(operator):
+    def operator_path(operator) -> None:
         """
 
         :param operator:
@@ -559,7 +559,7 @@ class ExecutePreset(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -590,14 +590,14 @@ class RemovePresetInterfaceTheme(AddPresetBase, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
         :param event:
         """
 
-    def post_cb(self, context, _filepath):
+    def post_cb(self, context, _filepath) -> None:
         """
 
         :param context:
@@ -629,21 +629,21 @@ class RemovePresetKeyconfig(AddPresetBase, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
         :param event:
         """
 
-    def post_cb(self, context, _filepath):
+    def post_cb(self, context, _filepath) -> None:
         """
 
         :param context:
         :param _filepath:
         """
 
-    def pre_cb(self, context):
+    def pre_cb(self, context) -> None:
         """
 
         :param context:
@@ -674,13 +674,13 @@ class SavePresetInterfaceTheme(AddPresetBase, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -708,7 +708,7 @@ class WM_MT_operator_presets(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -736,7 +736,7 @@ class WM_OT_operator_presets_cleanup(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -767,7 +767,7 @@ class WM_PT_operator_presets(bl_ui.utils.PresetPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:

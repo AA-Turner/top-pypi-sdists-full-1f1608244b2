@@ -13,7 +13,7 @@ def brush_stroke(
     | None = None,
     mode: typing.Literal["NORMAL", "INVERT", "SMOOTH", "ERASE"] | None = "NORMAL",
     pen_flip: bool | None = False,
-):
+) -> None:
     """Sculpt curves using a brush
 
         :type execution_context: int | str | None
@@ -40,7 +40,7 @@ def brush_stroke(
 
 def min_distance_edit(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Change the minimum distance used by the density brush
 
     :type execution_context: int | str | None
@@ -53,7 +53,7 @@ def select_grow(
     /,
     *,
     distance: float | None = 0.1,
-):
+) -> None:
     """Select curves which are close to curves that are selected already
 
     :type execution_context: int | str | None
@@ -72,7 +72,7 @@ def select_random(
     probability: float | None = 0.5,
     min: float | None = 0.0,
     constant_per_curve: bool | None = True,
-):
+) -> None:
     """Randomizes existing selection or create new random selection
 
     :type execution_context: int | str | None

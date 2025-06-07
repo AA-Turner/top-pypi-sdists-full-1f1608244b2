@@ -29,8 +29,8 @@ class NODE_OT_connect_to_output(
         :rtype: typing.Any
         """
 
-    def cleanup(self): ...
-    def create_links(self, path, node, active_node_socket_id, socket_type):
+    def cleanup(self) -> None: ...
+    def create_links(self, path, node, active_node_socket_id, socket_type) -> None:
         """Create links at each step in the node group path.
 
         :param path:
@@ -40,13 +40,13 @@ class NODE_OT_connect_to_output(
         """
 
     @staticmethod
-    def ensure_group_output(node_tree):
+    def ensure_group_output(node_tree) -> None:
         """Check if a group output node exists, otherwise create it
 
         :param node_tree:
         """
 
-    def ensure_viewer_socket(self, node_tree, socket_type, connect_socket=None):
+    def ensure_viewer_socket(self, node_tree, socket_type, connect_socket=None) -> None:
         """Check if a viewer output already exists in a node group, otherwise create it
 
         :param node_tree:
@@ -56,7 +56,7 @@ class NODE_OT_connect_to_output(
 
     def get_output_index(
         self, node, output_node, is_base_node_tree, socket_type, check_type=False
-    ):
+    ) -> None:
         """Get the next available output socket in the active node
 
         :param node:
@@ -67,53 +67,53 @@ class NODE_OT_connect_to_output(
         """
 
     @staticmethod
-    def get_output_sockets(node_tree):
+    def get_output_sockets(node_tree) -> None:
         """
 
         :param node_tree:
         """
 
-    def has_socket_other_users(self, socket):
+    def has_socket_other_users(self, socket) -> None:
         """List the other users for this socket (other materials or geometry nodes groups)
 
         :param socket:
         """
 
-    def init_shader_variables(self, space, shader_type):
+    def init_shader_variables(self, space, shader_type) -> None:
         """Get correct output node in shader editor
 
         :param space:
         :param shader_type:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
         :param event:
         """
 
-    def is_socket_used_active_tree(self, socket):
+    def is_socket_used_active_tree(self, socket) -> None:
         """Ensure used sockets in active node tree is calculated and check given socket
 
         :param socket:
         """
 
-    def link_leads_to_used_socket(self, link):
+    def link_leads_to_used_socket(self, link) -> None:
         """Return True if link leads to a socket that is already used in this node
 
         :param link:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """Already implemented natively for compositing nodes.
 
         :param context:
         """
 
     @staticmethod
-    def remove_socket(tree, socket):
+    def remove_socket(tree, socket) -> None:
         """
 
         :param tree:
@@ -121,7 +121,9 @@ class NODE_OT_connect_to_output(
         """
 
     @classmethod
-    def search_connected_viewer_sockets(cls, output_node, r_sockets, index=None):
+    def search_connected_viewer_sockets(
+        cls, output_node, r_sockets, index=None
+    ) -> None:
         """From an output node, recursively scan node tree for connected viewer sockets
 
         :param output_node:
@@ -130,7 +132,7 @@ class NODE_OT_connect_to_output(
         """
 
     @classmethod
-    def search_viewer_sockets_in_tree(cls, tree, r_sockets):
+    def search_viewer_sockets_in_tree(cls, tree, r_sockets) -> None:
         """Recursively get all viewer sockets in a node tree
 
         :param tree:

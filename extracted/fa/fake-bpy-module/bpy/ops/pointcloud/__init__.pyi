@@ -16,7 +16,7 @@ def attribute_set(
     value_int_vector_2d: collections.abc.Iterable[int] | None = (0, 0),
     value_color: collections.abc.Iterable[float] | None = (1.0, 1.0, 1.0, 1.0),
     value_bool: bool | None = False,
-):
+) -> None:
     """Set values of the active attribute for selected elements
 
     :type execution_context: int | str | None
@@ -37,14 +37,18 @@ def attribute_set(
     :type value_bool: bool | None
     """
 
-def delete(execution_context: int | str | None = None, undo: bool | None = None):
+def delete(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove selected points
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def duplicate(execution_context: int | str | None = None, undo: bool | None = None):
+def duplicate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy selected points
 
     :type execution_context: int | str | None
@@ -58,7 +62,7 @@ def duplicate_move(
     *,
     POINTCLOUD_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Make copies of selected elements and move them
 
     :type execution_context: int | str | None
@@ -75,7 +79,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """(De)select all point cloud
 
         :type execution_context: int | str | None
@@ -103,7 +107,7 @@ def select_random(
     *,
     seed: int | None = 0,
     probability: float | None = 0.5,
-):
+) -> None:
     """Randomizes existing selection or create new random selection
 
     :type execution_context: int | str | None
@@ -114,7 +118,9 @@ def select_random(
     :type probability: float | None
     """
 
-def separate(execution_context: int | str | None = None, undo: bool | None = None):
+def separate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Separate selected geometry into a new point cloud
 
     :type execution_context: int | str | None

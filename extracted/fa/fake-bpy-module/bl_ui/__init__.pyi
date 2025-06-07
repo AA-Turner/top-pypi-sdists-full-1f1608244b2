@@ -107,7 +107,7 @@ class UI_MT_button_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -138,7 +138,7 @@ class UI_MT_list_item_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -148,12 +148,12 @@ class UI_UL_list(bpy.types.UIList):
     bl_rna: typing.Any
     id_data: typing.Any
 
-    def bl_rna_get_subclass(self): ...
-    def bl_rna_get_subclass_py(self): ...
+    def bl_rna_get_subclass(self) -> None: ...
+    def bl_rna_get_subclass_py(self) -> None: ...
     @staticmethod
     def filter_items_by_name(
         pattern, bitflag, items, propname="name", flags=None, reverse=False
-    ):
+    ) -> None:
         """
 
         :param pattern:
@@ -165,7 +165,7 @@ class UI_UL_list(bpy.types.UIList):
         """
 
     @classmethod
-    def sort_items_by_name(cls, items, propname="name"):
+    def sort_items_by_name(cls, items, propname="name") -> None:
         """
 
         :param items:
@@ -173,7 +173,7 @@ class UI_UL_list(bpy.types.UIList):
         """
 
     @staticmethod
-    def sort_items_helper(sort_data, key, reverse=False):
+    def sort_items_helper(sort_data, key, reverse=False) -> None:
         """
 
         :param sort_data:
@@ -181,6 +181,6 @@ class UI_UL_list(bpy.types.UIList):
         :param reverse:
         """
 
-def register(): ...
-def translation_update(_): ...
-def unregister(): ...
+def register() -> None: ...
+def translation_update(_) -> None: ...
+def unregister() -> None: ...

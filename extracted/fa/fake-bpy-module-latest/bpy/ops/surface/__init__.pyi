@@ -23,7 +23,7 @@ def primitive_nurbs_surface_circle_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Nurbs surface Circle
 
         :type execution_context: int | str | None
@@ -70,7 +70,7 @@ def primitive_nurbs_surface_curve_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Nurbs surface Curve
 
         :type execution_context: int | str | None
@@ -117,7 +117,7 @@ def primitive_nurbs_surface_cylinder_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Nurbs surface Cylinder
 
         :type execution_context: int | str | None
@@ -164,7 +164,7 @@ def primitive_nurbs_surface_sphere_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Nurbs surface Sphere
 
         :type execution_context: int | str | None
@@ -211,7 +211,7 @@ def primitive_nurbs_surface_surface_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Nurbs surface Patch
 
         :type execution_context: int | str | None
@@ -258,7 +258,7 @@ def primitive_nurbs_surface_torus_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Nurbs surface Torus
 
         :type execution_context: int | str | None

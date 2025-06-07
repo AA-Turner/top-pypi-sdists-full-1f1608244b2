@@ -6,7 +6,9 @@ import bpy.ops.transform
 import bpy.stub_internal.rna_enums
 import bpy.types
 
-def bake_keys(execution_context: int | str | None = None, undo: bool | None = None):
+def bake_keys(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add keyframes on every frame between the selected keyframes
 
     :type execution_context: int | str | None
@@ -19,7 +21,7 @@ def blend_offset(
     /,
     *,
     factor: float | None = 0.0,
-):
+) -> None:
     """Shift selected keys to the value of the neighboring keys as a block
 
     :type execution_context: int | str | None
@@ -34,7 +36,7 @@ def blend_to_default(
     /,
     *,
     factor: float | None = 0.0,
-):
+) -> None:
     """Blend selected keys to their default value from their current position
 
     :type execution_context: int | str | None
@@ -49,7 +51,7 @@ def blend_to_ease(
     /,
     *,
     factor: float | None = 0.0,
-):
+) -> None:
     """Blends keyframes from current state to an ease-in or ease-out curve
 
     :type execution_context: int | str | None
@@ -64,7 +66,7 @@ def blend_to_neighbor(
     /,
     *,
     factor: float | None = 0.0,
-):
+) -> None:
     """Blend selected keyframes to their left or right neighbor
 
     :type execution_context: int | str | None
@@ -79,7 +81,7 @@ def breakdown(
     /,
     *,
     factor: float | None = 0.0,
-):
+) -> None:
     """Move selected keyframes to an inbetween position relative to adjacent keys
 
     :type execution_context: int | str | None
@@ -98,7 +100,7 @@ def butterworth_smooth(
     samples_per_frame: int | None = 1,
     blend: float | None = 1.0,
     blend_in_out: int | None = 1,
-):
+) -> None:
     """Smooth an F-Curve while maintaining the general shape of the curve
 
     :type execution_context: int | str | None
@@ -122,7 +124,7 @@ def clean(
     *,
     threshold: float | None = 0.001,
     channels: bool | None = False,
-):
+) -> None:
     """Simplify F-Curves by removing closely spaced keyframes
 
     :type execution_context: int | str | None
@@ -141,7 +143,7 @@ def click_insert(
     frame: float | None = 1.0,
     value: float | None = 1.0,
     extend: bool | None = False,
-):
+) -> None:
     """Insert new keyframe at the cursor position for the active F-Curve
 
     :type execution_context: int | str | None
@@ -166,7 +168,7 @@ def clickselect(
     deselect_all: bool | None = False,
     column: bool | None = False,
     curves: bool | None = False,
-):
+) -> None:
     """Select keyframes by clicking on them
 
     :type execution_context: int | str | None
@@ -187,7 +189,7 @@ def clickselect(
     :type curves: bool | None
     """
 
-def copy(execution_context: int | str | None = None, undo: bool | None = None):
+def copy(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Copy selected keyframes to the internal clipboard
 
     :type execution_context: int | str | None
@@ -201,7 +203,7 @@ def cursor_set(
     *,
     frame: float | None = 0.0,
     value: float | None = 0.0,
-):
+) -> None:
     """Interactively set the current frame and value cursor
 
     :type execution_context: int | str | None
@@ -220,7 +222,7 @@ def decimate(
     mode: typing.Literal["RATIO", "ERROR"] | None = "RATIO",
     factor: float | None = 0.333333,
     remove_error_margin: float | None = 0.0,
-):
+) -> None:
     """Decimate F-Curves by removing keyframes that influence the curve shape the least
 
         :type execution_context: int | str | None
@@ -245,7 +247,7 @@ def delete(
     /,
     *,
     confirm: bool | None = True,
-):
+) -> None:
     """Remove all selected keyframes
 
     :type execution_context: int | str | None
@@ -256,7 +258,7 @@ def delete(
 
 def driver_delete_invalid(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete all visible drivers considered invalid
 
     :type execution_context: int | str | None
@@ -265,7 +267,7 @@ def driver_delete_invalid(
 
 def driver_variables_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy the driver variables of the active driver
 
     :type execution_context: int | str | None
@@ -278,7 +280,7 @@ def driver_variables_paste(
     /,
     *,
     replace: bool | None = False,
-):
+) -> None:
     """Add copied driver variables to the active driver
 
     :type execution_context: int | str | None
@@ -293,7 +295,7 @@ def duplicate(
     /,
     *,
     mode: bpy.stub_internal.rna_enums.TransformModeTypeItems | None = "TRANSLATION",
-):
+) -> None:
     """Make a copy of all selected keyframes
 
     :type execution_context: int | str | None
@@ -309,7 +311,7 @@ def duplicate_move(
     *,
     GRAPH_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Make a copy of all selected keyframes and move them
 
     :type execution_context: int | str | None
@@ -327,7 +329,7 @@ def ease(
     *,
     factor: float | None = 0.0,
     sharpness: float | None = 2.0,
-):
+) -> None:
     """Align keyframes on a ease-in or ease-out curve
 
     :type execution_context: int | str | None
@@ -344,7 +346,7 @@ def easing_type(
     /,
     *,
     type: bpy.stub_internal.rna_enums.BeztripleInterpolationEasingItems | None = "AUTO",
-):
+) -> None:
     """Set easing type for the F-Curve segments starting from the selected keyframes
 
     :type execution_context: int | str | None
@@ -361,7 +363,7 @@ def equalize_handles(
     side: typing.Literal["LEFT", "RIGHT", "BOTH"] | None = "LEFT",
     handle_length: float | None = 5.0,
     flatten: bool | None = False,
-):
+) -> None:
     """Ensure selected keyframes' handles have equal length, optionally making them horizontal. Automatic, Automatic Clamped, or Vector handle types will be converted to Aligned
 
         :type execution_context: int | str | None
@@ -383,7 +385,9 @@ def equalize_handles(
         :type flatten: bool | None
     """
 
-def euler_filter(execution_context: int | str | None = None, undo: bool | None = None):
+def euler_filter(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Fix large jumps and flips in the selected Euler Rotation F-Curves arising from rotation values being clipped when baking physics
 
     :type execution_context: int | str | None
@@ -397,7 +401,7 @@ def extrapolation_type(
     *,
     type: typing.Literal["CONSTANT", "LINEAR", "MAKE_CYCLIC", "CLEAR_CYCLIC"]
     | None = "CONSTANT",
-):
+) -> None:
     """Set extrapolation mode for selected F-Curves
 
         :type execution_context: int | str | None
@@ -425,7 +429,7 @@ def fmodifier_add(
     *,
     type: bpy.stub_internal.rna_enums.FmodifierTypeItems | None = "NULL",
     only_active: bool | None = False,
-):
+) -> None:
     """Add F-Modifier to the active/selected F-Curves
 
     :type execution_context: int | str | None
@@ -438,7 +442,7 @@ def fmodifier_add(
 
 def fmodifier_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy the F-Modifier(s) of the active F-Curve
 
     :type execution_context: int | str | None
@@ -452,7 +456,7 @@ def fmodifier_paste(
     *,
     only_active: bool | None = False,
     replace: bool | None = False,
-):
+) -> None:
     """Add copied F-Modifiers to the selected F-Curves
 
     :type execution_context: int | str | None
@@ -463,7 +467,9 @@ def fmodifier_paste(
     :type replace: bool | None
     """
 
-def frame_jump(execution_context: int | str | None = None, undo: bool | None = None):
+def frame_jump(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Place the cursor on the midpoint of selected keyframes
 
     :type execution_context: int | str | None
@@ -478,7 +484,7 @@ def gaussian_smooth(
     factor: float | None = 1.0,
     sigma: float | None = 0.33,
     filter_width: int | None = 6,
-):
+) -> None:
     """Smooth the curve using a Gaussian filter
 
     :type execution_context: int | str | None
@@ -493,7 +499,7 @@ def gaussian_smooth(
 
 def ghost_curves_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear F-Curve snapshots (Ghosts) for active Graph Editor
 
     :type execution_context: int | str | None
@@ -502,7 +508,7 @@ def ghost_curves_clear(
 
 def ghost_curves_create(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create snapshot (Ghosts) of selected F-Curves as background aid for active Graph Editor
 
     :type execution_context: int | str | None
@@ -515,7 +521,7 @@ def handle_type(
     /,
     *,
     type: bpy.stub_internal.rna_enums.KeyframeHandleTypeItems | None = "FREE",
-):
+) -> None:
     """Set type of handle for selected keyframes
 
     :type execution_context: int | str | None
@@ -530,7 +536,7 @@ def hide(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Hide selected curves from Graph Editor view
 
     :type execution_context: int | str | None
@@ -546,7 +552,7 @@ def interpolation_type(
     *,
     type: bpy.stub_internal.rna_enums.BeztripleInterpolationModeItems
     | None = "CONSTANT",
-):
+) -> None:
     """Set interpolation mode for the F-Curve segments starting from the selected keyframes
 
     :type execution_context: int | str | None
@@ -562,7 +568,7 @@ def keyframe_insert(
     *,
     type: typing.Literal["ALL", "SEL", "ACTIVE", "CURSOR_ACTIVE", "CURSOR_SEL"]
     | None = "ALL",
-):
+) -> None:
     """Insert keyframes for the specified channels
 
         :type execution_context: int | str | None
@@ -592,7 +598,7 @@ def keyframe_jump(
     /,
     *,
     next: bool | None = True,
-):
+) -> None:
     """Jump to previous/next keyframe
 
     :type execution_context: int | str | None
@@ -603,7 +609,7 @@ def keyframe_jump(
 
 def keys_to_samples(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Convert selected channels to an uneditable set of samples to save storage space
 
     :type execution_context: int | str | None
@@ -616,7 +622,7 @@ def match_slope(
     /,
     *,
     factor: float | None = 0.0,
-):
+) -> None:
     """Blend selected keys to the slope of neighboring ones
 
     :type execution_context: int | str | None
@@ -631,7 +637,7 @@ def mirror(
     /,
     *,
     type: typing.Literal["CFRA", "VALUE", "YAXIS", "XAXIS", "MARKER"] | None = "CFRA",
-):
+) -> None:
     """Flip selected keyframes over the selected mirror line
 
         :type execution_context: int | str | None
@@ -665,7 +671,7 @@ def paste(
     | None = "NONE",
     merge: bpy.stub_internal.rna_enums.KeyframePasteMergeItems | None = "MIX",
     flipped: bool | None = False,
-):
+) -> None:
     """Paste keyframes from the internal clipboard for the selected channels, starting on the current frame
 
     :type execution_context: int | str | None
@@ -682,7 +688,7 @@ def paste(
 
 def previewrange_set(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set Preview Range based on range of selected keyframes
 
     :type execution_context: int | str | None
@@ -695,7 +701,7 @@ def push_pull(
     /,
     *,
     factor: float | None = 1.0,
-):
+) -> None:
     """Exaggerate or minimize the value of the selected keys
 
     :type execution_context: int | str | None
@@ -710,7 +716,7 @@ def reveal(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Make previously hidden curves visible again in Graph Editor view
 
     :type execution_context: int | str | None
@@ -721,7 +727,7 @@ def reveal(
 
 def samples_to_keys(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Convert selected channels from samples to keyframes
 
     :type execution_context: int | str | None
@@ -734,7 +740,7 @@ def scale_average(
     /,
     *,
     factor: float | None = 1.0,
-):
+) -> None:
     """Scale selected key values by their combined average
 
     :type execution_context: int | str | None
@@ -750,7 +756,7 @@ def scale_from_neighbor(
     *,
     factor: float | None = 0.0,
     anchor: typing.Literal["LEFT", "RIGHT"] | None = "LEFT",
-):
+) -> None:
     """Increase or decrease the value of selected keys in relationship to the neighboring one
 
     :type execution_context: int | str | None
@@ -767,7 +773,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Toggle selection of all keyframes
 
         :type execution_context: int | str | None
@@ -803,7 +809,7 @@ def select_box(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select all keyframes within the specified region
 
         :type execution_context: int | str | None
@@ -850,7 +856,7 @@ def select_circle(
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
     use_curve_selection: bool | None = True,
-):
+) -> None:
     """Select keyframe points using circle selection
 
         :type execution_context: int | str | None
@@ -885,7 +891,7 @@ def select_column(
     *,
     mode: typing.Literal["KEYS", "CFRA", "MARKERS_COLUMN", "MARKERS_BETWEEN"]
     | None = "KEYS",
-):
+) -> None:
     """Select all keyframes on the specified frame(s)
 
     :type execution_context: int | str | None
@@ -902,7 +908,7 @@ def select_key_handles(
     left_handle_action: typing.Literal["SELECT", "DESELECT", "KEEP"] | None = "SELECT",
     right_handle_action: typing.Literal["SELECT", "DESELECT", "KEEP"] | None = "SELECT",
     key_action: typing.Literal["SELECT", "DESELECT", "KEEP"] | None = "KEEP",
-):
+) -> None:
     """For selected keyframes, select/deselect any combination of the key itself and its handles
 
         :type execution_context: int | str | None
@@ -953,7 +959,7 @@ def select_lasso(
     smooth_stroke_radius: int | None = 35,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
     use_curve_selection: bool | None = True,
-):
+) -> None:
     """Select keyframe points using lasso selection
 
         :type execution_context: int | str | None
@@ -988,7 +994,7 @@ def select_leftright(
     *,
     mode: typing.Literal["CHECK", "LEFT", "RIGHT"] | None = "CHECK",
     extend: bool | None = False,
-):
+) -> None:
     """Select keyframes to the left or the right of the current frame
 
     :type execution_context: int | str | None
@@ -999,21 +1005,27 @@ def select_leftright(
     :type extend: bool | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Deselect keyframes on ends of selection islands
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_linked(execution_context: int | str | None = None, undo: bool | None = None):
+def select_linked(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select keyframes occurring in the same F-Curves as selected ones
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select keyframes beside already selected ones
 
     :type execution_context: int | str | None
@@ -1027,7 +1039,7 @@ def shear(
     *,
     factor: float | None = 0.0,
     direction: typing.Literal["FROM_LEFT", "FROM_RIGHT"] | None = "FROM_LEFT",
-):
+) -> None:
     """Affect the value of the keys linearly, keeping the same relationship between them using either the left or the right key as reference
 
         :type execution_context: int | str | None
@@ -1044,7 +1056,9 @@ def shear(
         :type direction: typing.Literal['FROM_LEFT','FROM_RIGHT'] | None
     """
 
-def smooth(execution_context: int | str | None = None, undo: bool | None = None):
+def smooth(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Apply weighted moving means to make selected F-Curves less bumpy
 
     :type execution_context: int | str | None
@@ -1065,7 +1079,7 @@ def snap(
         "HORIZONTAL",
     ]
     | None = "CFRA",
-):
+) -> None:
     """Snap selected keyframes to the chosen times/values
 
         :type execution_context: int | str | None
@@ -1094,7 +1108,7 @@ def snap(
 
 def snap_cursor_value(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Place the cursor value on the average value of selected keyframes
 
     :type execution_context: int | str | None
@@ -1142,7 +1156,7 @@ def sound_to_samples(
     use_additive: bool | None = False,
     use_square: bool | None = False,
     sthreshold: float | None = 0.1,
-):
+) -> None:
     """Bakes a sound wave to samples on selected channels
 
         :type execution_context: int | str | None
@@ -1233,7 +1247,7 @@ def time_offset(
     /,
     *,
     frame_offset: float | None = 0.0,
-):
+) -> None:
     """Shifts the value of selected keys in time
 
     :type execution_context: int | str | None
@@ -1248,7 +1262,7 @@ def view_all(
     /,
     *,
     include_handles: bool | None = True,
-):
+) -> None:
     """Reset viewable area to show full keyframe range
 
     :type execution_context: int | str | None
@@ -1257,7 +1271,9 @@ def view_all(
     :type include_handles: bool | None
     """
 
-def view_frame(execution_context: int | str | None = None, undo: bool | None = None):
+def view_frame(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Move the view to the current frame
 
     :type execution_context: int | str | None
@@ -1270,7 +1286,7 @@ def view_selected(
     /,
     *,
     include_handles: bool | None = True,
-):
+) -> None:
     """Reset viewable area to show selected keyframe range
 
     :type execution_context: int | str | None

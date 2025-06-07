@@ -13,7 +13,7 @@ import mathutils
 
 class BVHTree:
     @classmethod
-    def FromBMesh(cls, bmesh: bmesh.types.BMesh, epsilon: float = 0.0):
+    def FromBMesh(cls, bmesh: bmesh.types.BMesh, epsilon: float = 0.0) -> None:
         """BVH tree based on `BMesh` data.
 
         :param bmesh: BMesh data.
@@ -31,7 +31,7 @@ class BVHTree:
         render=False,
         cage: bool = False,
         epsilon: float = 0.0,
-    ):
+    ) -> None:
         """BVH tree based on `Object` data.
 
         :param object: Object data.
@@ -54,7 +54,7 @@ class BVHTree:
         polygons: collections.abc.Sequence[collections.abc.Sequence[int]],
         all_triangles: bool = False,
         epsilon: float = 0.0,
-    ):
+    ) -> None:
         """BVH tree constructed geometry passed in as arguments.
 
         :param vertices: float triplets each representing (x, y, z)
@@ -124,7 +124,7 @@ class BVHTree:
                 :rtype: tuple[mathutils.Vector | None, mathutils.Vector | None, int | None, float | None]
         """
 
-    def __init__(self, size):
+    def __init__(self, size) -> None:
         """
 
         :param size:

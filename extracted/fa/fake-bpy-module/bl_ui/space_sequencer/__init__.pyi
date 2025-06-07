@@ -27,7 +27,7 @@ class SEQUENCER_HT_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -53,13 +53,13 @@ class SEQUENCER_HT_tool_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_tool_settings(self, context):
+    def draw_tool_settings(self, context) -> None:
         """
 
         :param context:
@@ -86,7 +86,7 @@ class SEQUENCER_MT_add(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -111,7 +111,7 @@ class SEQUENCER_MT_add_effect(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -136,7 +136,7 @@ class SEQUENCER_MT_add_empty(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -162,7 +162,7 @@ class SEQUENCER_MT_add_scene(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -187,7 +187,7 @@ class SEQUENCER_MT_add_transitions(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -212,7 +212,7 @@ class SEQUENCER_MT_change(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -239,7 +239,7 @@ class SEQUENCER_MT_color_tag_picker(SequencerColorTagPicker, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -264,19 +264,19 @@ class SEQUENCER_MT_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_generic(self, context):
+    def draw_generic(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_retime(self, context):
+    def draw_retime(self, context) -> None:
         """
 
         :param context:
@@ -302,7 +302,7 @@ class SEQUENCER_MT_editor_menus(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -327,7 +327,7 @@ class SEQUENCER_MT_image(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -352,7 +352,7 @@ class SEQUENCER_MT_image_apply(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -377,7 +377,7 @@ class SEQUENCER_MT_image_clear(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -402,7 +402,7 @@ class SEQUENCER_MT_image_transform(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -427,7 +427,7 @@ class SEQUENCER_MT_marker(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -452,7 +452,7 @@ class SEQUENCER_MT_navigation(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -477,7 +477,7 @@ class SEQUENCER_MT_pivot_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -502,7 +502,7 @@ class SEQUENCER_MT_preview_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -527,7 +527,7 @@ class SEQUENCER_MT_preview_view_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -552,7 +552,7 @@ class SEQUENCER_MT_preview_zoom(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -577,7 +577,7 @@ class SEQUENCER_MT_proxy(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -602,7 +602,7 @@ class SEQUENCER_MT_range(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -628,7 +628,7 @@ class SEQUENCER_MT_retiming(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -653,7 +653,7 @@ class SEQUENCER_MT_select(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -678,7 +678,7 @@ class SEQUENCER_MT_select_channel(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -703,7 +703,7 @@ class SEQUENCER_MT_select_handle(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -728,7 +728,7 @@ class SEQUENCER_MT_strip(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -753,7 +753,7 @@ class SEQUENCER_MT_strip_effect(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -778,7 +778,7 @@ class SEQUENCER_MT_strip_effect_change(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -803,7 +803,7 @@ class SEQUENCER_MT_strip_input(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -828,7 +828,7 @@ class SEQUENCER_MT_strip_lock_mute(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -853,7 +853,7 @@ class SEQUENCER_MT_strip_movie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -878,7 +878,7 @@ class SEQUENCER_MT_strip_retiming(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -903,7 +903,7 @@ class SEQUENCER_MT_strip_show_hide(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -928,7 +928,7 @@ class SEQUENCER_MT_strip_text(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -953,7 +953,7 @@ class SEQUENCER_MT_strip_transform(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -978,7 +978,7 @@ class SEQUENCER_MT_view(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1003,7 +1003,7 @@ class SEQUENCER_MT_view_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1056,14 +1056,14 @@ class SEQUENCER_PT_adjust_color(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1091,14 +1091,14 @@ class SEQUENCER_PT_adjust_comp(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1127,14 +1127,14 @@ class SEQUENCER_PT_adjust_crop(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1162,14 +1162,14 @@ class SEQUENCER_PT_adjust_sound(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1198,14 +1198,14 @@ class SEQUENCER_PT_adjust_transform(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1234,14 +1234,14 @@ class SEQUENCER_PT_adjust_video(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1275,14 +1275,14 @@ class SEQUENCER_PT_annotation(
         """
 
     @staticmethod
-    def has_preview(context):
+    def has_preview(context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1317,14 +1317,14 @@ class SEQUENCER_PT_annotation_onion(
         """
 
     @staticmethod
-    def has_preview(context):
+    def has_preview(context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1352,14 +1352,14 @@ class SEQUENCER_PT_cache_settings(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1388,20 +1388,20 @@ class SEQUENCER_PT_cache_view_settings(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1430,7 +1430,7 @@ class SEQUENCER_PT_color_tag_picker(SequencerColorTagPicker, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -1489,14 +1489,14 @@ class SEQUENCER_PT_effect(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1527,20 +1527,20 @@ class SEQUENCER_PT_effect_text_box(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1569,14 +1569,14 @@ class SEQUENCER_PT_effect_text_layout(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1606,20 +1606,20 @@ class SEQUENCER_PT_effect_text_outline(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1649,20 +1649,20 @@ class SEQUENCER_PT_effect_text_shadow(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1691,14 +1691,14 @@ class SEQUENCER_PT_effect_text_style(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1727,20 +1727,20 @@ class SEQUENCER_PT_frame_overlay(SequencerButtonsPanel_Output, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1768,7 +1768,7 @@ class SEQUENCER_PT_gizmo_display(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1796,14 +1796,14 @@ class SEQUENCER_PT_mask(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1831,7 +1831,7 @@ class SEQUENCER_PT_modifiers(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1860,14 +1860,14 @@ class SEQUENCER_PT_movie_clip(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1895,7 +1895,7 @@ class SEQUENCER_PT_overlay(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -1947,7 +1947,7 @@ class SEQUENCER_PT_preview(SequencerButtonsPanel_Output, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1975,14 +1975,14 @@ class SEQUENCER_PT_preview_overlay(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2010,14 +2010,14 @@ class SEQUENCER_PT_preview_snapping(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2045,14 +2045,14 @@ class SEQUENCER_PT_proxy_settings(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2080,14 +2080,14 @@ class SEQUENCER_PT_scene(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2115,14 +2115,14 @@ class SEQUENCER_PT_scene_sound(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2150,14 +2150,14 @@ class SEQUENCER_PT_sequencer_overlay(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2185,14 +2185,14 @@ class SEQUENCER_PT_sequencer_overlay_strips(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2220,14 +2220,14 @@ class SEQUENCER_PT_sequencer_overlay_waveforms(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2255,14 +2255,14 @@ class SEQUENCER_PT_sequencer_snapping(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2290,7 +2290,7 @@ class SEQUENCER_PT_snapping(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -2319,14 +2319,14 @@ class SEQUENCER_PT_source(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2355,7 +2355,7 @@ class SEQUENCER_PT_strip(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2383,20 +2383,20 @@ class SEQUENCER_PT_strip_proxy(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2425,20 +2425,20 @@ class SEQUENCER_PT_time(SequencerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header_preset(self, context):
+    def draw_header_preset(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2466,7 +2466,7 @@ class SEQUENCER_PT_view(SequencerButtonsPanel_Output, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2494,7 +2494,7 @@ class SEQUENCER_PT_view_cursor(SequencerButtonsPanel_Output, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2523,20 +2523,20 @@ class SEQUENCER_PT_view_safe_areas(SequencerButtonsPanel_Output, bpy.types.Panel
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2568,13 +2568,13 @@ class SEQUENCER_PT_view_safe_areas_center_cut(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -2585,14 +2585,14 @@ class SequencerButtonsPanel:
     bl_space_type: typing.Any
 
     @staticmethod
-    def has_sequencer(context):
+    def has_sequencer(context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2603,14 +2603,14 @@ class SequencerButtonsPanel_Output:
     bl_space_type: typing.Any
 
     @staticmethod
-    def has_preview(context):
+    def has_preview(context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2621,18 +2621,18 @@ class SequencerColorTagPicker:
     bl_space_type: typing.Any
 
     @staticmethod
-    def has_sequencer(context):
+    def has_sequencer(context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def draw_color_balance(layout, color_balance): ...
-def selected_strips_count(context): ...
+def draw_color_balance(layout, color_balance) -> None: ...
+def selected_strips_count(context) -> None: ...

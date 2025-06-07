@@ -28,14 +28,14 @@ class BONE_PT_collections(BoneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -64,7 +64,7 @@ class BONE_PT_context_bone(BoneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -93,7 +93,7 @@ class BONE_PT_curved(BoneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -129,7 +129,7 @@ class BONE_PT_custom_props(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -158,13 +158,13 @@ class BONE_PT_deform(BoneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -193,27 +193,27 @@ class BONE_PT_display(BoneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_bone(self, context, layout):
+    def draw_bone(self, context, layout) -> None:
         """
 
         :param context:
         :param layout:
         """
 
-    def draw_bone_color_ui(self, layout, bone_color):
+    def draw_bone_color_ui(self, layout, bone_color) -> None:
         """
 
         :param layout:
         :param bone_color:
         """
 
-    def draw_edit_bone(self, context, layout):
+    def draw_edit_bone(self, context, layout) -> None:
         """
 
         :param context:
@@ -221,7 +221,7 @@ class BONE_PT_display(BoneButtonsPanel, bpy.types.Panel):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -250,14 +250,14 @@ class BONE_PT_display_custom_shape(BoneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -286,14 +286,14 @@ class BONE_PT_inverse_kinematics(BoneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -322,7 +322,7 @@ class BONE_PT_relations(BoneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -350,14 +350,14 @@ class BONE_PT_transform(BoneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -369,7 +369,7 @@ class BoneButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

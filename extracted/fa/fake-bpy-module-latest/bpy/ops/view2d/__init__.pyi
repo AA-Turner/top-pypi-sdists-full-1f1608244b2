@@ -14,7 +14,7 @@ def edge_pan(
     max_speed: float | None = 500.0,
     delay: float | None = 1.0,
     zoom_influence: float | None = 0.0,
-):
+) -> None:
     """Pan the view when the mouse is held at an edge
 
     :type execution_context: int | str | None
@@ -33,7 +33,7 @@ def edge_pan(
     :type zoom_influence: float | None
     """
 
-def ndof(execution_context: int | str | None = None, undo: bool | None = None):
+def ndof(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Use a 3D mouse device to pan/zoom the view
 
     :type execution_context: int | str | None
@@ -47,7 +47,7 @@ def pan(
     *,
     deltax: int | None = 0,
     deltay: int | None = 0,
-):
+) -> None:
     """Pan the view
 
     :type execution_context: int | str | None
@@ -58,7 +58,7 @@ def pan(
     :type deltay: int | None
     """
 
-def reset(execution_context: int | str | None = None, undo: bool | None = None):
+def reset(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Reset the view
 
     :type execution_context: int | str | None
@@ -73,7 +73,7 @@ def scroll_down(
     deltax: int | None = 0,
     deltay: int | None = 0,
     page: bool | None = False,
-):
+) -> None:
     """Scroll the view down
 
     :type execution_context: int | str | None
@@ -93,7 +93,7 @@ def scroll_left(
     *,
     deltax: int | None = 0,
     deltay: int | None = 0,
-):
+) -> None:
     """Scroll the view left
 
     :type execution_context: int | str | None
@@ -111,7 +111,7 @@ def scroll_right(
     *,
     deltax: int | None = 0,
     deltay: int | None = 0,
-):
+) -> None:
     """Scroll the view right
 
     :type execution_context: int | str | None
@@ -130,7 +130,7 @@ def scroll_up(
     deltax: int | None = 0,
     deltay: int | None = 0,
     page: bool | None = False,
-):
+) -> None:
     """Scroll the view up
 
     :type execution_context: int | str | None
@@ -145,7 +145,7 @@ def scroll_up(
 
 def scroller_activate(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Scroll view by mouse click and drag
 
     :type execution_context: int | str | None
@@ -162,7 +162,7 @@ def smoothview(
     ymin: int | None = 0,
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -187,7 +187,7 @@ def zoom(
     deltax: float | None = 0.0,
     deltay: float | None = 0.0,
     use_cursor_init: bool | None = True,
-):
+) -> None:
     """Zoom in/out the view
 
     :type execution_context: int | str | None
@@ -211,7 +211,7 @@ def zoom_border(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     zoom_out: bool | None = False,
-):
+) -> None:
     """Zoom in the view to the nearest item contained in the border
 
     :type execution_context: int | str | None
@@ -237,7 +237,7 @@ def zoom_in(
     *,
     zoomfacx: float | None = 0.0,
     zoomfacy: float | None = 0.0,
-):
+) -> None:
     """Zoom in the view
 
     :type execution_context: int | str | None
@@ -255,7 +255,7 @@ def zoom_out(
     *,
     zoomfacx: float | None = 0.0,
     zoomfacy: float | None = 0.0,
-):
+) -> None:
     """Zoom out the view
 
     :type execution_context: int | str | None

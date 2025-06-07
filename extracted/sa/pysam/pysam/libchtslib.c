@@ -1762,6 +1762,7 @@ struct __pyx_opt_args_7cpython_11contextvars_get_value_no_default {
   PyObject *default_value;
 };
 struct __pyx_opt_args_5pysam_9libcutils_parse_region;
+struct __pyx_opt_args_5pysam_9libcutils_OSError_from_errno;
 struct __pyx_opt_args_5pysam_9libcutils_qualitystring_to_array;
 struct __pyx_opt_args_5pysam_9libcutils_array_to_qualitystring;
 struct __pyx_opt_args_5pysam_9libcutils_qualities_to_qualitystring;
@@ -1789,7 +1790,19 @@ struct __pyx_opt_args_5pysam_9libcutils_parse_region {
   PyObject *end;
 };
 
-/* "pysam/libcutils.pxd":15
+/* "pysam/libcutils.pxd":12
+ * cdef int libc_whence_from_io(int whence)
+ * 
+ * cdef OSError_from_errno(message, filename=*)             # <<<<<<<<<<<<<<
+ * 
+ * #########################################################################
+*/
+struct __pyx_opt_args_5pysam_9libcutils_OSError_from_errno {
+  int __pyx_n;
+  PyObject *filename;
+};
+
+/* "pysam/libcutils.pxd":17
  * # Utility functions for quality string conversions
  * 
  * cpdef c_array.array qualitystring_to_array(input_str, int offset=*)             # <<<<<<<<<<<<<<
@@ -1801,7 +1814,7 @@ struct __pyx_opt_args_5pysam_9libcutils_qualitystring_to_array {
   int offset;
 };
 
-/* "pysam/libcutils.pxd":16
+/* "pysam/libcutils.pxd":18
  * 
  * cpdef c_array.array qualitystring_to_array(input_str, int offset=*)
  * cpdef array_to_qualitystring(c_array.array arr, int offset=*)             # <<<<<<<<<<<<<<
@@ -1813,7 +1826,7 @@ struct __pyx_opt_args_5pysam_9libcutils_array_to_qualitystring {
   int offset;
 };
 
-/* "pysam/libcutils.pxd":17
+/* "pysam/libcutils.pxd":19
  * cpdef c_array.array qualitystring_to_array(input_str, int offset=*)
  * cpdef array_to_qualitystring(c_array.array arr, int offset=*)
  * cpdef qualities_to_qualitystring(qualities, int offset=*)             # <<<<<<<<<<<<<<
@@ -1825,7 +1838,7 @@ struct __pyx_opt_args_5pysam_9libcutils_qualities_to_qualitystring {
   int offset;
 };
 
-/* "pysam/libcutils.pxd":29
+/* "pysam/libcutils.pxd":31
  * ## Python 3 compatibility functions
  * ########################################################################
  * cdef charptr_to_str(const char *s, encoding=*, errors=*)             # <<<<<<<<<<<<<<
@@ -1838,7 +1851,7 @@ struct __pyx_opt_args_5pysam_9libcutils_charptr_to_str {
   PyObject *errors;
 };
 
-/* "pysam/libcutils.pxd":30
+/* "pysam/libcutils.pxd":32
  * ########################################################################
  * cdef charptr_to_str(const char *s, encoding=*, errors=*)
  * cdef bytes charptr_to_bytes(const char *s, encoding=*, errors=*)             # <<<<<<<<<<<<<<
@@ -1851,7 +1864,7 @@ struct __pyx_opt_args_5pysam_9libcutils_charptr_to_bytes {
   PyObject *errors;
 };
 
-/* "pysam/libcutils.pxd":31
+/* "pysam/libcutils.pxd":33
  * cdef charptr_to_str(const char *s, encoding=*, errors=*)
  * cdef bytes charptr_to_bytes(const char *s, encoding=*, errors=*)
  * cdef charptr_to_str_w_len(const char* s, size_t n, encoding=*, errors=*)             # <<<<<<<<<<<<<<
@@ -1864,7 +1877,7 @@ struct __pyx_opt_args_5pysam_9libcutils_charptr_to_str_w_len {
   PyObject *errors;
 };
 
-/* "pysam/libcutils.pxd":32
+/* "pysam/libcutils.pxd":34
  * cdef bytes charptr_to_bytes(const char *s, encoding=*, errors=*)
  * cdef charptr_to_str_w_len(const char* s, size_t n, encoding=*, errors=*)
  * cdef force_str(object s, encoding=*, errors=*)             # <<<<<<<<<<<<<<
@@ -1877,7 +1890,7 @@ struct __pyx_opt_args_5pysam_9libcutils_force_str {
   PyObject *errors;
 };
 
-/* "pysam/libcutils.pxd":33
+/* "pysam/libcutils.pxd":35
  * cdef charptr_to_str_w_len(const char* s, size_t n, encoding=*, errors=*)
  * cdef force_str(object s, encoding=*, errors=*)
  * cdef bytes force_bytes(object s, encoding=*, errors=*)             # <<<<<<<<<<<<<<
@@ -1890,7 +1903,7 @@ struct __pyx_opt_args_5pysam_9libcutils_force_bytes {
   PyObject *errors;
 };
 
-/* "pysam/libcutils.pxd":34
+/* "pysam/libcutils.pxd":36
  * cdef force_str(object s, encoding=*, errors=*)
  * cdef bytes force_bytes(object s, encoding=*, errors=*)
  * cdef decode_bytes(bytes s, encoding=*, errors=*)             # <<<<<<<<<<<<<<
@@ -20351,7 +20364,7 @@ __Pyx_RefNannySetupContext("PyInit_libchtslib", 0);
   (void)__Pyx_modinit_variable_import_code(__pyx_mstate);
   if (unlikely((__Pyx_modinit_function_import_code(__pyx_mstate) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Execution code ---*/
-  __Pyx_TraceStartFunc("PyInit_libchtslib", __pyx_f[0], 1, 0, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
+  __Pyx_TraceStartFunc("PyInit_libchtslib", __pyx_f[0], 1, 1, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
 
   /* "pysam/libchtslib.pyx":25
  * ########################################################################
@@ -21133,7 +21146,7 @@ __Pyx_RefNannySetupContext("PyInit_libchtslib", 0);
   __Pyx_GOTREF(__pyx_t_3);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_TraceReturnValue(Py_None, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
+  __Pyx_TraceReturnValue(Py_None, 1, 0, __PYX_ERR(0, 1, __pyx_L1_error));
   __Pyx_PyMonitoring_ExitScope(0);
 
   /*--- Wrapped vars code ---*/
@@ -21145,7 +21158,7 @@ __Pyx_RefNannySetupContext("PyInit_libchtslib", 0);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_TraceException(__pyx_lineno, 0, 0);
-  __Pyx_TraceExceptionUnwind(0, 0);
+  __Pyx_TraceExceptionUnwind(1, 0);
   if (__pyx_m) {
     if (__pyx_mstate->__pyx_d && stringtab_initialized) {
       __Pyx_AddTraceback("init pysam.libchtslib", __pyx_clineno, __pyx_lineno, __pyx_filename);

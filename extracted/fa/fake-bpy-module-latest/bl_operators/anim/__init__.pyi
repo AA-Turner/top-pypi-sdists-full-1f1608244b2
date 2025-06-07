@@ -26,13 +26,13 @@ class ANIM_OT_keying_set_export(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -66,14 +66,14 @@ class ANIM_OT_slot_new_for_id(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -134,14 +134,14 @@ class ANIM_OT_slot_unassign_from_id(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -199,33 +199,33 @@ class ARMATURE_OT_collection_remove_unused(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def execute_edit_mode(self, context):
+    def execute_edit_mode(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-    def remove_bcolls(self, armature, bcolls_to_remove):
+    def remove_bcolls(self, armature, bcolls_to_remove) -> None:
         """
 
         :param armature:
         :param bcolls_to_remove:
         """
 
-    def visit(self, bcoll, bcolls_with_bones, bcolls_to_remove):
+    def visit(self, bcoll, bcolls_with_bones, bcolls_to_remove) -> None:
         """
 
         :param bcoll:
@@ -256,14 +256,14 @@ class ARMATURE_OT_collection_show_all(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -292,14 +292,14 @@ class ARMATURE_OT_collection_unsolo_all(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -328,14 +328,14 @@ class ARMATURE_OT_copy_bone_color_to_selected(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -364,14 +364,14 @@ class ClearUselessActions(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, _context):
+    def poll(cls, _context) -> None:
         """
 
         :param _context:
@@ -400,13 +400,13 @@ class NLA_OT_bake(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -436,7 +436,7 @@ class UpdateAnimatedTransformConstraint(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -445,14 +445,14 @@ class UpdateAnimatedTransformConstraint(bpy.types.Operator):
 class generic_slot_unassign_mixin:
     context_property_name: typing.Any
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

@@ -27,7 +27,7 @@ def add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add an object to the scene
 
         :type execution_context: int | str | None
@@ -59,7 +59,7 @@ def add(
 
 def add_modifier_menu(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -84,7 +84,7 @@ def add_named(
     ),
     drop_x: int | None = 0,
     drop_y: int | None = 0,
-):
+) -> None:
     """Add named object
 
     :type execution_context: int | str | None
@@ -112,7 +112,7 @@ def align(
     align_mode: typing.Literal["OPT_1", "OPT_2", "OPT_3"] | None = "OPT_2",
     relative_to: typing.Literal["OPT_1", "OPT_2", "OPT_3", "OPT_4"] | None = "OPT_4",
     align_axis: set[typing.Literal["X", "Y", "Z"]] | None = {},
-):
+) -> None:
     """Align objects
 
         :type execution_context: int | str | None
@@ -141,7 +141,7 @@ def align(
 
 def anim_transforms_to_deltas(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Convert object animation for normal transforms to delta transforms
 
     :type execution_context: int | str | None
@@ -167,7 +167,7 @@ def armature_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add an armature object to the scene
 
         :type execution_context: int | str | None
@@ -202,7 +202,7 @@ def assign_property_defaults(
     *,
     process_data: bool | None = True,
     process_bones: bool | None = True,
-):
+) -> None:
     """Assign the current values of custom properties as their defaults, for use as part of the rest pose state in NLA track mixing
 
     :type execution_context: int | str | None
@@ -240,7 +240,7 @@ def bake(
     use_split_materials: bool | None = False,
     use_automatic_name: bool | None = False,
     uv_layer: str = "",
-):
+) -> None:
     """Bake image textures of selected objects
 
     :type execution_context: int | str | None
@@ -291,7 +291,9 @@ def bake(
     :type uv_layer: str
     """
 
-def bake_image(execution_context: int | str | None = None, undo: bool | None = None):
+def bake_image(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Bake image textures of selected objects
 
     :type execution_context: int | str | None
@@ -316,7 +318,7 @@ def camera_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add a camera object to the scene
 
         :type execution_context: int | str | None
@@ -344,7 +346,7 @@ def camera_add(
 
 def camera_custom_update(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Update custom camera with new parameters from the shader
 
     :type execution_context: int | str | None
@@ -353,7 +355,7 @@ def camera_custom_update(
 
 def clear_override_library(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete the selected local overrides and relink their usages to the linked data-blocks if possible, else reset them and mark them as non editable
 
     :type execution_context: int | str | None
@@ -362,7 +364,7 @@ def clear_override_library(
 
 def collection_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add an object to a new collection
 
     :type execution_context: int | str | None
@@ -391,7 +393,7 @@ def collection_external_asset_drop(
     drop_x: int | None = 0,
     drop_y: int | None = 0,
     collection: str | None = "",
-):
+) -> None:
     """Add the dragged collection to the scene
 
         :type execution_context: int | str | None
@@ -447,7 +449,7 @@ def collection_instance_add(
     session_uid: int | None = 0,
     drop_x: int | None = 0,
     drop_y: int | None = 0,
-):
+) -> None:
     """Add a collection instance
 
         :type execution_context: int | str | None
@@ -487,7 +489,7 @@ def collection_link(
     /,
     *,
     collection: str | None = "",
-):
+) -> None:
     """Add an object to an existing collection
 
     :type execution_context: int | str | None
@@ -498,7 +500,7 @@ def collection_link(
 
 def collection_objects_select(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select all objects in collection
 
     :type execution_context: int | str | None
@@ -507,7 +509,7 @@ def collection_objects_select(
 
 def collection_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the active object from this collection
 
     :type execution_context: int | str | None
@@ -516,7 +518,7 @@ def collection_remove(
 
 def collection_unlink(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Unlink the collection from all objects
 
     :type execution_context: int | str | None
@@ -529,7 +531,7 @@ def constraint_add(
     /,
     *,
     type: str | None = "",
-):
+) -> None:
     """Add a constraint to the active object
 
     :type execution_context: int | str | None
@@ -544,7 +546,7 @@ def constraint_add_with_targets(
     /,
     *,
     type: str | None = "",
-):
+) -> None:
     """Add a constraint to the active object, with target (where applicable) set to the selected objects/bones
 
     :type execution_context: int | str | None
@@ -555,7 +557,7 @@ def constraint_add_with_targets(
 
 def constraints_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear all constraints from the selected objects
 
     :type execution_context: int | str | None
@@ -564,7 +566,7 @@ def constraints_clear(
 
 def constraints_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy constraints to other selected objects
 
     :type execution_context: int | str | None
@@ -583,7 +585,7 @@ def convert(
     thickness: int | None = 5,
     faces: bool | None = True,
     offset: float | None = 0.01,
-):
+) -> None:
     """Convert selected objects to another type
 
         :type execution_context: int | str | None
@@ -623,7 +625,7 @@ def correctivesmooth_bind(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Bind base pose in Corrective Smooth modifier
 
     :type execution_context: int | str | None
@@ -649,7 +651,7 @@ def curves_empty_hair_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add an empty curve object to the scene with the selected mesh as surface
 
         :type execution_context: int | str | None
@@ -690,7 +692,7 @@ def curves_random_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add a curves object with random curves to the scene
 
         :type execution_context: int | str | None
@@ -736,7 +738,7 @@ def data_instance_add(
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
     drop_x: int | None = 0,
     drop_y: int | None = 0,
-):
+) -> None:
     """Add an object data instance
 
         :type execution_context: int | str | None
@@ -811,7 +813,7 @@ def data_transfer(
     | None = "ACTIVE",
     mix_mode: bpy.stub_internal.rna_enums.DtMixModeItems | None = "REPLACE",
     mix_factor: float | None = 1.0,
-):
+) -> None:
     """Transfer data layer(s) (weights, edge sharp, etc.) from active to selected meshes
 
         :type execution_context: int | str | None
@@ -920,7 +922,7 @@ def datalayout_transfer(
     | None = "ACTIVE",
     layers_select_dst: bpy.stub_internal.rna_enums.DtLayersSelectDstItems
     | None = "ACTIVE",
-):
+) -> None:
     """Transfer layout of data layer(s) from active to selected meshes
 
         :type execution_context: int | str | None
@@ -983,7 +985,7 @@ def delete(
     *,
     use_global: bool | None = False,
     confirm: bool | None = True,
-):
+) -> None:
     """Delete selected objects
 
     :type execution_context: int | str | None
@@ -1001,7 +1003,7 @@ def drop_geometry_nodes(
     *,
     session_uid: int | None = 0,
     show_datablock_in_modifier: bool | None = True,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1019,7 +1021,7 @@ def drop_named_material(
     *,
     name: str = "",
     session_uid: int | None = 0,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1037,7 +1039,7 @@ def duplicate(
     *,
     linked: bool | None = False,
     mode: bpy.stub_internal.rna_enums.TransformModeTypeItems | None = "TRANSLATION",
-):
+) -> None:
     """Duplicate selected objects
 
     :type execution_context: int | str | None
@@ -1055,7 +1057,7 @@ def duplicate_move(
     *,
     OBJECT_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Duplicate the selected objects and move them
 
     :type execution_context: int | str | None
@@ -1073,7 +1075,7 @@ def duplicate_move_linked(
     *,
     OBJECT_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Duplicate the selected objects, but not their object data, and move them
 
     :type execution_context: int | str | None
@@ -1091,7 +1093,7 @@ def duplicates_make_real(
     *,
     use_base_parent: bool | None = False,
     use_hierarchy: bool | None = False,
-):
+) -> None:
     """Make instanced objects attached to this object real
 
     :type execution_context: int | str | None
@@ -1104,7 +1106,7 @@ def duplicates_make_real(
 
 def editmode_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle object's edit mode
 
     :type execution_context: int | str | None
@@ -1146,7 +1148,7 @@ def effector_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add an empty object with a physics effector to the scene
 
         :type execution_context: int | str | None
@@ -1195,7 +1197,7 @@ def empty_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add an empty object to the scene
 
         :type execution_context: int | str | None
@@ -1280,7 +1282,7 @@ def empty_image_add(
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
     background: bool | None = False,
-):
+) -> None:
     """Add an empty image type to scene with data
 
         :type execution_context: int | str | None
@@ -1398,7 +1400,7 @@ def explode_refresh(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Refresh data in the Explode modifier
 
     :type execution_context: int | str | None
@@ -1409,7 +1411,7 @@ def explode_refresh(
 
 def forcefield_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle object's force field
 
     :type execution_context: int | str | None
@@ -1424,7 +1426,7 @@ def geometry_node_bake_delete_single(
     session_uid: int | None = 0,
     modifier_name: str = "",
     bake_id: int | None = 0,
-):
+) -> None:
     """Delete baked data of a single bake node or simulation
 
     :type execution_context: int | str | None
@@ -1445,7 +1447,7 @@ def geometry_node_bake_pack_single(
     session_uid: int | None = 0,
     modifier_name: str = "",
     bake_id: int | None = 0,
-):
+) -> None:
     """Pack baked data from disk into the .blend file
 
     :type execution_context: int | str | None
@@ -1466,7 +1468,7 @@ def geometry_node_bake_single(
     session_uid: int | None = 0,
     modifier_name: str = "",
     bake_id: int | None = 0,
-):
+) -> None:
     """Bake a single bake node or simulation
 
     :type execution_context: int | str | None
@@ -1489,7 +1491,7 @@ def geometry_node_bake_unpack_single(
     bake_id: int | None = 0,
     method: typing.Literal["USE_LOCAL", "WRITE_LOCAL", "USE_ORIGINAL", "WRITE_ORIGINAL"]
     | None = "USE_LOCAL",
-):
+) -> None:
     """Unpack baked data from the .blend file to disk
 
     :type execution_context: int | str | None
@@ -1506,7 +1508,7 @@ def geometry_node_bake_unpack_single(
 
 def geometry_node_tree_copy_assign(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy the active geometry node group and assign it to the active modifier
 
     :type execution_context: int | str | None
@@ -1520,7 +1522,7 @@ def geometry_nodes_input_attribute_toggle(
     *,
     input_name: str = "",
     modifier_name: str = "",
-):
+) -> None:
     """Switch between an attribute and a single value to define the data for every element
 
     :type execution_context: int | str | None
@@ -1537,7 +1539,7 @@ def geometry_nodes_move_to_nodes(
     /,
     *,
     use_selected_objects: bool | None = False,
-):
+) -> None:
     """Move inputs and outputs from in the modifier to a new node group
 
     :type execution_context: int | str | None
@@ -1569,7 +1571,7 @@ def grease_pencil_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add a Grease Pencil object to the scene
 
         :type execution_context: int | str | None
@@ -1617,7 +1619,7 @@ def grease_pencil_dash_modifier_segment_add(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Add a segment to the dash modifier
 
     :type execution_context: int | str | None
@@ -1633,7 +1635,7 @@ def grease_pencil_dash_modifier_segment_move(
     *,
     modifier: str = "",
     type: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move the active dash segment up or down
 
     :type execution_context: int | str | None
@@ -1651,7 +1653,7 @@ def grease_pencil_dash_modifier_segment_remove(
     *,
     modifier: str = "",
     index: int | None = 0,
-):
+) -> None:
     """Remove the active segment from the dash modifier
 
     :type execution_context: int | str | None
@@ -1668,7 +1670,7 @@ def grease_pencil_time_modifier_segment_add(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Add a segment to the time modifier
 
     :type execution_context: int | str | None
@@ -1684,7 +1686,7 @@ def grease_pencil_time_modifier_segment_move(
     *,
     modifier: str = "",
     type: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move the active time segment up or down
 
     :type execution_context: int | str | None
@@ -1702,7 +1704,7 @@ def grease_pencil_time_modifier_segment_remove(
     *,
     modifier: str = "",
     index: int | None = 0,
-):
+) -> None:
     """Remove the active segment from the time modifier
 
     :type execution_context: int | str | None
@@ -1721,7 +1723,7 @@ def hide_collection(
     collection_index: int | None = -1,
     toggle: bool | None = False,
     extend: bool | None = False,
-):
+) -> None:
     """Show only objects in collection (Shift to extend)
 
     :type execution_context: int | str | None
@@ -1736,7 +1738,7 @@ def hide_collection(
 
 def hide_render_clear_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reveal all render objects by setting the hide render flag
 
     :type execution_context: int | str | None
@@ -1749,7 +1751,7 @@ def hide_view_clear(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Reveal temporarily hidden objects
 
     :type execution_context: int | str | None
@@ -1764,7 +1766,7 @@ def hide_view_set(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Temporarily hide objects from the viewport
 
     :type execution_context: int | str | None
@@ -1775,7 +1777,7 @@ def hide_view_set(
 
 def hook_add_newob(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Hook selected vertices to a newly created object
 
     :type execution_context: int | str | None
@@ -1788,7 +1790,7 @@ def hook_add_selob(
     /,
     *,
     use_bone: bool | None = False,
-):
+) -> None:
     """Hook selected vertices to the first selected object
 
     :type execution_context: int | str | None
@@ -1803,7 +1805,7 @@ def hook_assign(
     /,
     *,
     modifier: str | None = "",
-):
+) -> None:
     """Assign the selected vertices to a hook
 
     :type execution_context: int | str | None
@@ -1818,7 +1820,7 @@ def hook_recenter(
     /,
     *,
     modifier: str | None = "",
-):
+) -> None:
     """Set hook center to cursor position
 
     :type execution_context: int | str | None
@@ -1833,7 +1835,7 @@ def hook_remove(
     /,
     *,
     modifier: str | None = "",
-):
+) -> None:
     """Remove a hook from the active object
 
     :type execution_context: int | str | None
@@ -1848,7 +1850,7 @@ def hook_reset(
     /,
     *,
     modifier: str | None = "",
-):
+) -> None:
     """Recalculate and clear offset transformation
 
     :type execution_context: int | str | None
@@ -1863,7 +1865,7 @@ def hook_select(
     /,
     *,
     modifier: str | None = "",
-):
+) -> None:
     """Select affected vertices on mesh
 
     :type execution_context: int | str | None
@@ -1874,7 +1876,7 @@ def hook_select(
 
 def instance_offset_from_cursor(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set offset used for collection instances based on cursor position
 
     :type execution_context: int | str | None
@@ -1883,7 +1885,7 @@ def instance_offset_from_cursor(
 
 def instance_offset_from_object(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set offset used for collection instances based on the active object position
 
     :type execution_context: int | str | None
@@ -1892,7 +1894,7 @@ def instance_offset_from_object(
 
 def instance_offset_to_cursor(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set cursor position to the offset used for collection instances
 
     :type execution_context: int | str | None
@@ -1901,28 +1903,32 @@ def instance_offset_to_cursor(
 
 def isolate_type_render(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Hide unselected render objects of same type as active by setting the hide render flag
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def join(execution_context: int | str | None = None, undo: bool | None = None):
+def join(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Join selected objects into active object
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def join_shapes(execution_context: int | str | None = None, undo: bool | None = None):
+def join_shapes(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add the vertex positions of selected objects as shape keys or update existing shape keys with matching names
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def join_uvs(execution_context: int | str | None = None, undo: bool | None = None):
+def join_uvs(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Transfer UV Maps from active to selected objects (needs matching geometry)
 
     :type execution_context: int | str | None
@@ -1935,7 +1941,7 @@ def laplaciandeform_bind(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Bind mesh to system in laplacian deform modifier
 
     :type execution_context: int | str | None
@@ -1963,7 +1969,7 @@ def light_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add a light object to the scene
 
         :type execution_context: int | str | None
@@ -1993,7 +1999,7 @@ def light_add(
 
 def light_linking_blocker_collection_new(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create new light linking collection used by the active emitter
 
     :type execution_context: int | str | None
@@ -2006,7 +2012,7 @@ def light_linking_blockers_link(
     /,
     *,
     link_state: typing.Literal["INCLUDE", "EXCLUDE"] | None = "INCLUDE",
-):
+) -> None:
     """Light link selected blockers to the active emitter object
 
         :type execution_context: int | str | None
@@ -2023,7 +2029,7 @@ def light_linking_blockers_link(
 
 def light_linking_blockers_select(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select all objects which block light from this emitter
 
     :type execution_context: int | str | None
@@ -2032,7 +2038,7 @@ def light_linking_blockers_select(
 
 def light_linking_receiver_collection_new(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create new light linking collection used by the active emitter
 
     :type execution_context: int | str | None
@@ -2045,7 +2051,7 @@ def light_linking_receivers_link(
     /,
     *,
     link_state: typing.Literal["INCLUDE", "EXCLUDE"] | None = "INCLUDE",
-):
+) -> None:
     """Light link selected receivers to the active emitter object
 
         :type execution_context: int | str | None
@@ -2062,7 +2068,7 @@ def light_linking_receivers_link(
 
 def light_linking_receivers_select(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select all objects which receive light from this emitter
 
     :type execution_context: int | str | None
@@ -2071,7 +2077,7 @@ def light_linking_receivers_select(
 
 def light_linking_unlink_from_collection(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove this object or collection from the light linking collection
 
     :type execution_context: int | str | None
@@ -2098,7 +2104,7 @@ def lightprobe_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add a light probe object
 
         :type execution_context: int | str | None
@@ -2143,7 +2149,7 @@ def lightprobe_cache_bake(
     /,
     *,
     subset: typing.Literal["ALL", "SELECTED", "ACTIVE"] | None = "ALL",
-):
+) -> None:
     """Bake irradiance volume light cache
 
         :type execution_context: int | str | None
@@ -2167,7 +2173,7 @@ def lightprobe_cache_free(
     /,
     *,
     subset: typing.Literal["ALL", "SELECTED", "ACTIVE"] | None = "SELECTED",
-):
+) -> None:
     """Delete cached indirect lighting
 
         :type execution_context: int | str | None
@@ -2191,7 +2197,7 @@ def lineart_bake_strokes(
     /,
     *,
     bake_all: bool | None = False,
-):
+) -> None:
     """Bake Line Art for current Grease Pencil object
 
     :type execution_context: int | str | None
@@ -2206,7 +2212,7 @@ def lineart_clear(
     /,
     *,
     clear_all: bool | None = False,
-):
+) -> None:
     """Clear all strokes in current Grease Pencil object
 
     :type execution_context: int | str | None
@@ -2223,7 +2229,7 @@ def link_to_collection(
     collection_index: int | None = -1,
     is_new: bool | None = False,
     new_collection_name: str = "",
-):
+) -> None:
     """Link objects to a collection
 
     :type execution_context: int | str | None
@@ -2242,7 +2248,7 @@ def location_clear(
     /,
     *,
     clear_delta: bool | None = False,
-):
+) -> None:
     """Clear the object's location
 
     :type execution_context: int | str | None
@@ -2253,7 +2259,7 @@ def location_clear(
 
 def make_dupli_face(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Convert objects into instanced faces
 
     :type execution_context: int | str | None
@@ -2276,7 +2282,7 @@ def make_links_data(
         "EFFECTS",
     ]
     | None = "OBDATA",
-):
+) -> None:
     """Transfer data from active object to selected objects
 
         :type execution_context: int | str | None
@@ -2315,7 +2321,7 @@ def make_links_scene(
     /,
     *,
     scene: str | None = "",
-):
+) -> None:
     """Link selection to another scene
 
     :type execution_context: int | str | None
@@ -2333,7 +2339,7 @@ def make_local(
         "SELECT_OBJECT", "SELECT_OBDATA", "SELECT_OBDATA_MATERIAL", "ALL"
     ]
     | None = "SELECT_OBJECT",
-):
+) -> None:
     """Make library linked data-blocks local to this file
 
     :type execution_context: int | str | None
@@ -2348,7 +2354,7 @@ def make_override_library(
     /,
     *,
     collection: int | None = 0,
-):
+) -> None:
     """Create a local override of the selected linked objects, and their hierarchy of dependencies
 
     :type execution_context: int | str | None
@@ -2368,7 +2374,7 @@ def make_single_user(
     material: bool | None = False,
     animation: bool | None = False,
     obdata_animation: bool | None = False,
-):
+) -> None:
     """Make linked data local to each object
 
     :type execution_context: int | str | None
@@ -2389,7 +2395,7 @@ def make_single_user(
 
 def material_slot_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a new material slot
 
     :type execution_context: int | str | None
@@ -2398,7 +2404,7 @@ def material_slot_add(
 
 def material_slot_assign(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Assign active material slot to selection
 
     :type execution_context: int | str | None
@@ -2407,7 +2413,7 @@ def material_slot_assign(
 
 def material_slot_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy material to selected objects
 
     :type execution_context: int | str | None
@@ -2416,7 +2422,7 @@ def material_slot_copy(
 
 def material_slot_deselect(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Deselect by active material slot
 
     :type execution_context: int | str | None
@@ -2429,7 +2435,7 @@ def material_slot_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move the active material up/down in the list
 
     :type execution_context: int | str | None
@@ -2440,7 +2446,7 @@ def material_slot_move(
 
 def material_slot_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the selected material slot
 
     :type execution_context: int | str | None
@@ -2449,7 +2455,7 @@ def material_slot_remove(
 
 def material_slot_remove_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove all materials
 
     :type execution_context: int | str | None
@@ -2458,7 +2464,7 @@ def material_slot_remove_all(
 
 def material_slot_remove_unused(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove unused material slots
 
     :type execution_context: int | str | None
@@ -2467,7 +2473,7 @@ def material_slot_remove_unused(
 
 def material_slot_select(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select by active material slot
 
     :type execution_context: int | str | None
@@ -2480,7 +2486,7 @@ def meshdeform_bind(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Bind mesh to cage in mesh deform modifier
 
     :type execution_context: int | str | None
@@ -2509,7 +2515,7 @@ def metaball_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add an metaball object to the scene
 
         :type execution_context: int | str | None
@@ -2546,7 +2552,7 @@ def mode_set(
     *,
     mode: bpy.stub_internal.rna_enums.ObjectModeItems | None = "OBJECT",
     toggle: bool | None = False,
-):
+) -> None:
     """Sets the object interaction mode
 
     :type execution_context: int | str | None
@@ -2565,7 +2571,7 @@ def mode_set_with_submode(
     mode: bpy.stub_internal.rna_enums.ObjectModeItems | None = "OBJECT",
     toggle: bool | None = False,
     mesh_select_mode: set[bpy.stub_internal.rna_enums.MeshSelectModeItems] | None = {},
-):
+) -> None:
     """Sets the object interaction mode
 
     :type execution_context: int | str | None
@@ -2585,7 +2591,7 @@ def modifier_add(
     *,
     type: bpy.stub_internal.rna_enums.ObjectModifierTypeItems | None = "SUBSURF",
     use_selected_objects: bool | None = False,
-):
+) -> None:
     """Add a procedural operation/effect to the active object
 
     :type execution_context: int | str | None
@@ -2607,7 +2613,7 @@ def modifier_add_node_group(
     relative_asset_identifier: str = "",
     session_uid: int | None = 0,
     use_selected_objects: bool | None = False,
-):
+) -> None:
     """Add a procedural operation/effect to the active object
 
     :type execution_context: int | str | None
@@ -2635,7 +2641,7 @@ def modifier_apply(
     single_user: bool | None = False,
     all_keyframes: bool | None = False,
     use_selected_objects: bool | None = False,
-):
+) -> None:
     """Apply modifier and remove from the stack
 
     :type execution_context: int | str | None
@@ -2663,7 +2669,7 @@ def modifier_apply_as_shapekey(
     modifier: str = "",
     report: bool | None = False,
     use_selected_objects: bool | None = False,
-):
+) -> None:
     """Apply modifier as a new shape key and remove from the stack
 
     :type execution_context: int | str | None
@@ -2684,7 +2690,7 @@ def modifier_convert(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Convert particles to a mesh object
 
     :type execution_context: int | str | None
@@ -2700,7 +2706,7 @@ def modifier_copy(
     *,
     modifier: str = "",
     use_selected_objects: bool | None = False,
-):
+) -> None:
     """Duplicate modifier at the same position in the stack
 
     :type execution_context: int | str | None
@@ -2717,7 +2723,7 @@ def modifier_copy_to_selected(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Copy the modifier from the active object to all selected objects
 
     :type execution_context: int | str | None
@@ -2732,7 +2738,7 @@ def modifier_move_down(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Move modifier down in the stack
 
     :type execution_context: int | str | None
@@ -2749,7 +2755,7 @@ def modifier_move_to_index(
     modifier: str = "",
     index: int | None = 0,
     use_selected_objects: bool | None = False,
-):
+) -> None:
     """Change the modifier's index in the stack so it evaluates after the set number of others
 
     :type execution_context: int | str | None
@@ -2768,7 +2774,7 @@ def modifier_move_up(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Move modifier up in the stack
 
     :type execution_context: int | str | None
@@ -2785,7 +2791,7 @@ def modifier_remove(
     modifier: str = "",
     report: bool | None = False,
     use_selected_objects: bool | None = False,
-):
+) -> None:
     """Remove a modifier from the active object
 
     :type execution_context: int | str | None
@@ -2804,7 +2810,7 @@ def modifier_set_active(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Activate the modifier to use as the context
 
     :type execution_context: int | str | None
@@ -2815,7 +2821,7 @@ def modifier_set_active(
 
 def modifiers_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear all modifiers from the selected objects
 
     :type execution_context: int | str | None
@@ -2824,7 +2830,7 @@ def modifiers_clear(
 
 def modifiers_copy_to_selected(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy modifiers to other selected objects
 
     :type execution_context: int | str | None
@@ -2839,7 +2845,7 @@ def move_to_collection(
     collection_index: int | None = -1,
     is_new: bool | None = False,
     new_collection_name: str = "",
-):
+) -> None:
     """Move objects to a collection
 
     :type execution_context: int | str | None
@@ -2858,7 +2864,7 @@ def multires_base_apply(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Modify the base mesh to conform to the displaced mesh
 
     :type execution_context: int | str | None
@@ -2869,7 +2875,7 @@ def multires_base_apply(
 
 def multires_external_pack(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Pack displacements from an external file
 
     :type execution_context: int | str | None
@@ -2909,7 +2915,7 @@ def multires_external_save(
     | None = "DEFAULT",
     sort_method: str | None = "",
     modifier: str = "",
-):
+) -> None:
     """Save displacements to an external file
 
         :type execution_context: int | str | None
@@ -2984,7 +2990,7 @@ def multires_higher_levels_delete(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Deletes the higher resolution mesh, potential loss of detail
 
     :type execution_context: int | str | None
@@ -2999,7 +3005,7 @@ def multires_rebuild_subdiv(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Rebuilds all possible subdivisions levels to generate a lower resolution base mesh
 
     :type execution_context: int | str | None
@@ -3014,7 +3020,7 @@ def multires_reshape(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Copy vertex coordinates from other object
 
     :type execution_context: int | str | None
@@ -3030,7 +3036,7 @@ def multires_subdivide(
     *,
     modifier: str = "",
     mode: typing.Literal["CATMULL_CLARK", "SIMPLE", "LINEAR"] | None = "CATMULL_CLARK",
-):
+) -> None:
     """Add a new level of subdivision
 
         :type execution_context: int | str | None
@@ -3056,7 +3062,7 @@ def multires_unsubdivide(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Rebuild a lower subdivision level of the current base mesh
 
     :type execution_context: int | str | None
@@ -3072,7 +3078,7 @@ def ocean_bake(
     *,
     modifier: str = "",
     free: bool | None = False,
-):
+) -> None:
     """Bake an image sequence of ocean data
 
     :type execution_context: int | str | None
@@ -3083,7 +3089,9 @@ def ocean_bake(
     :type free: bool | None
     """
 
-def origin_clear(execution_context: int | str | None = None, undo: bool | None = None):
+def origin_clear(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Clear the object's origin
 
     :type execution_context: int | str | None
@@ -3104,7 +3112,7 @@ def origin_set(
     ]
     | None = "GEOMETRY_ORIGIN",
     center: typing.Literal["MEDIAN", "BOUNDS"] | None = "MEDIAN",
-):
+) -> None:
     """Set the object's origin, by either moving the data, or set to center of data, or use 3D cursor
 
         :type execution_context: int | str | None
@@ -3137,7 +3145,7 @@ def parent_clear(
     *,
     type: typing.Literal["CLEAR", "CLEAR_KEEP_TRANSFORM", "CLEAR_INVERSE"]
     | None = "CLEAR",
-):
+) -> None:
     """Clear the object's parenting
 
         :type execution_context: int | str | None
@@ -3157,7 +3165,7 @@ def parent_clear(
 
 def parent_inverse_apply(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Apply the object's parent inverse to its data
 
     :type execution_context: int | str | None
@@ -3170,7 +3178,7 @@ def parent_no_inverse_set(
     /,
     *,
     keep_transform: bool | None = False,
-):
+) -> None:
     """Set the object's parenting without setting the inverse parent correction
 
     :type execution_context: int | str | None
@@ -3202,7 +3210,7 @@ def parent_set(
     | None = "OBJECT",
     xmirror: bool | None = False,
     keep_transform: bool | None = False,
-):
+) -> None:
     """Set the object's parenting
 
     :type execution_context: int | str | None
@@ -3217,7 +3225,7 @@ def parent_set(
 
 def particle_system_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a particle system
 
     :type execution_context: int | str | None
@@ -3226,7 +3234,7 @@ def particle_system_add(
 
 def particle_system_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the selected particle system
 
     :type execution_context: int | str | None
@@ -3241,7 +3249,7 @@ def paths_calculate(
     display_type: bpy.stub_internal.rna_enums.MotionpathDisplayTypeItems
     | None = "RANGE",
     range: bpy.stub_internal.rna_enums.MotionpathRangeItems | None = "SCENE",
-):
+) -> None:
     """Generate motion paths for the selected objects
 
     :type execution_context: int | str | None
@@ -3258,7 +3266,7 @@ def paths_clear(
     /,
     *,
     only_selected: bool | None = False,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -3267,7 +3275,9 @@ def paths_clear(
     :type only_selected: bool | None
     """
 
-def paths_update(execution_context: int | str | None = None, undo: bool | None = None):
+def paths_update(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Recalculate motion paths for selected objects
 
     :type execution_context: int | str | None
@@ -3276,7 +3286,7 @@ def paths_update(execution_context: int | str | None = None, undo: bool | None =
 
 def paths_update_visible(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Recalculate all visible motion paths for objects and poses
 
     :type execution_context: int | str | None
@@ -3300,7 +3310,7 @@ def pointcloud_random_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add a point cloud object to the scene
 
         :type execution_context: int | str | None
@@ -3326,7 +3336,7 @@ def pointcloud_random_add(
 
 def posemode_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Enable or disable posing/selecting bones
 
     :type execution_context: int | str | None
@@ -3349,7 +3359,7 @@ def quadriflow_remesh(
     target_faces: int | None = 4000,
     mesh_area: float | None = -1.0,
     seed: int | None = 0,
-):
+) -> None:
     """Create a new quad based mesh using the surface data of the current mesh. All data layers will be lost
 
         :type execution_context: int | str | None
@@ -3399,7 +3409,7 @@ def quick_explode(
     frame_end: int | None = 10,
     velocity: float | None = 1.0,
     fade: bool | None = True,
-):
+) -> None:
     """Make selected objects explode
 
     :type execution_context: int | str | None
@@ -3432,7 +3442,7 @@ def quick_fur(
     apply_hair_guides: bool | None = True,
     use_noise: bool | None = True,
     use_frizz: bool | None = True,
-):
+) -> None:
     """Add a fur setup to the selected objects
 
     :type execution_context: int | str | None
@@ -3459,7 +3469,7 @@ def quick_liquid(
     /,
     *,
     show_flows: bool | None = False,
-):
+) -> None:
     """Make selected objects liquid
 
     :type execution_context: int | str | None
@@ -3475,7 +3485,7 @@ def quick_smoke(
     *,
     style: typing.Literal["SMOKE", "FIRE", "BOTH"] | None = "SMOKE",
     show_flows: bool | None = False,
-):
+) -> None:
     """Use selected objects as smoke emitters
 
     :type execution_context: int | str | None
@@ -3500,7 +3510,7 @@ def randomize_transform(
     use_scale: bool | None = True,
     scale_even: bool | None = False,
     scale: collections.abc.Iterable[float] | None = (1.0, 1.0, 1.0),
-):
+) -> None:
     """Randomize objects location, rotation, and scale
 
     :type execution_context: int | str | None
@@ -3527,7 +3537,7 @@ def randomize_transform(
 
 def reset_override_library(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reset the selected local overrides to their linked references values
 
     :type execution_context: int | str | None
@@ -3540,7 +3550,7 @@ def rotation_clear(
     /,
     *,
     clear_delta: bool | None = False,
-):
+) -> None:
     """Clear the object's rotation
 
     :type execution_context: int | str | None
@@ -3555,7 +3565,7 @@ def scale_clear(
     /,
     *,
     clear_delta: bool | None = False,
-):
+) -> None:
     """Clear the object's scale
 
     :type execution_context: int | str | None
@@ -3570,7 +3580,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection of all visible objects in scene
 
         :type execution_context: int | str | None
@@ -3598,7 +3608,7 @@ def select_by_type(
     *,
     extend: bool | None = False,
     type: bpy.stub_internal.rna_enums.ObjectTypeItems | None = "MESH",
-):
+) -> None:
     """Select all visible objects that are of a type
 
     :type execution_context: int | str | None
@@ -3615,7 +3625,7 @@ def select_camera(
     /,
     *,
     extend: bool | None = False,
-):
+) -> None:
     """Select the active camera
 
     :type execution_context: int | str | None
@@ -3644,7 +3654,7 @@ def select_grouped(
         "LIGHT_TYPE",
     ]
     | None = "CHILDREN_RECURSIVE",
-):
+) -> None:
     """Select all visible objects grouped by various properties
 
         :type execution_context: int | str | None
@@ -3695,7 +3705,7 @@ def select_hierarchy(
     *,
     direction: typing.Literal["PARENT", "CHILD"] | None = "PARENT",
     extend: bool | None = False,
-):
+) -> None:
     """Select object relative to the active object's position in the hierarchy
 
     :type execution_context: int | str | None
@@ -3706,7 +3716,9 @@ def select_hierarchy(
     :type extend: bool | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Deselect objects at the boundaries of parent/child relationships
 
     :type execution_context: int | str | None
@@ -3723,7 +3735,7 @@ def select_linked(
         "OBDATA", "MATERIAL", "DUPGROUP", "PARTICLE", "LIBRARY", "LIBRARY_OBDATA"
     ]
     | None = "OBDATA",
-):
+) -> None:
     """Select all visible objects that are linked
 
     :type execution_context: int | str | None
@@ -3740,7 +3752,7 @@ def select_mirror(
     /,
     *,
     extend: bool | None = False,
-):
+) -> None:
     """Select the mirror objects of the selected object e.g. "L.sword" and "R.sword"
 
     :type execution_context: int | str | None
@@ -3749,7 +3761,9 @@ def select_mirror(
     :type extend: bool | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select connected parent/child objects
 
     :type execution_context: int | str | None
@@ -3764,7 +3778,7 @@ def select_pattern(
     pattern: str = "*",
     case_sensitive: bool | None = False,
     extend: bool | None = True,
-):
+) -> None:
     """Select objects matching a naming pattern
 
     :type execution_context: int | str | None
@@ -3785,7 +3799,7 @@ def select_random(
     ratio: float | None = 0.5,
     seed: int | None = 0,
     action: typing.Literal["SELECT", "DESELECT"] | None = "SELECT",
-):
+) -> None:
     """Select or deselect random visible objects
 
         :type execution_context: int | str | None
@@ -3810,7 +3824,7 @@ def select_same_collection(
     /,
     *,
     collection: str = "",
-):
+) -> None:
     """Select object in the same collection
 
     :type execution_context: int | str | None
@@ -3826,7 +3840,7 @@ def shade_auto_smooth(
     *,
     use_auto_smooth: bool | None = True,
     angle: float | None = 0.523599,
-):
+) -> None:
     """Add modifier to automatically set the sharpness of mesh edges based on the angle between the neighboring faces
 
     :type execution_context: int | str | None
@@ -3843,7 +3857,7 @@ def shade_flat(
     /,
     *,
     keep_sharp_edges: bool | None = True,
-):
+) -> None:
     """Render and display faces uniform, using face normals
 
     :type execution_context: int | str | None
@@ -3858,7 +3872,7 @@ def shade_smooth(
     /,
     *,
     keep_sharp_edges: bool | None = True,
-):
+) -> None:
     """Render and display faces smooth, using interpolated vertex normals
 
     :type execution_context: int | str | None
@@ -3874,7 +3888,7 @@ def shade_smooth_by_angle(
     *,
     angle: float | None = 0.523599,
     keep_sharp_edges: bool | None = True,
-):
+) -> None:
     """Set the sharpness of mesh edges based on the angle between the neighboring faces
 
     :type execution_context: int | str | None
@@ -3891,7 +3905,7 @@ def shaderfx_add(
     /,
     *,
     type: bpy.stub_internal.rna_enums.ObjectShaderfxTypeItems | None = "FX_BLUR",
-):
+) -> None:
     """Add a visual effect to the active object
 
     :type execution_context: int | str | None
@@ -3906,7 +3920,7 @@ def shaderfx_copy(
     /,
     *,
     shaderfx: str = "",
-):
+) -> None:
     """Duplicate effect at the same position in the stack
 
     :type execution_context: int | str | None
@@ -3921,7 +3935,7 @@ def shaderfx_move_down(
     /,
     *,
     shaderfx: str = "",
-):
+) -> None:
     """Move effect down in the stack
 
     :type execution_context: int | str | None
@@ -3937,7 +3951,7 @@ def shaderfx_move_to_index(
     *,
     shaderfx: str = "",
     index: int | None = 0,
-):
+) -> None:
     """Change the effect's position in the list so it evaluates after the set number of others
 
     :type execution_context: int | str | None
@@ -3954,7 +3968,7 @@ def shaderfx_move_up(
     /,
     *,
     shaderfx: str = "",
-):
+) -> None:
     """Move effect up in the stack
 
     :type execution_context: int | str | None
@@ -3970,7 +3984,7 @@ def shaderfx_remove(
     *,
     shaderfx: str = "",
     report: bool | None = False,
-):
+) -> None:
     """Remove a effect from the active Grease Pencil object
 
     :type execution_context: int | str | None
@@ -3987,7 +4001,7 @@ def shape_key_add(
     /,
     *,
     from_mix: bool | None = True,
-):
+) -> None:
     """Add shape key to the object
 
     :type execution_context: int | str | None
@@ -3998,7 +4012,7 @@ def shape_key_add(
 
 def shape_key_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reset the weights of all shape keys to 0 or to the closest value respecting the limits
 
     :type execution_context: int | str | None
@@ -4007,7 +4021,7 @@ def shape_key_clear(
 
 def shape_key_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Duplicate the active shape key
 
     :type execution_context: int | str | None
@@ -4020,7 +4034,7 @@ def shape_key_lock(
     /,
     *,
     action: typing.Literal["LOCK", "UNLOCK"] | None = "LOCK",
-):
+) -> None:
     """Change the lock state of all shape keys of active object
 
         :type execution_context: int | str | None
@@ -4041,7 +4055,7 @@ def shape_key_mirror(
     /,
     *,
     use_topology: bool | None = False,
-):
+) -> None:
     """Mirror the current shape key along the local X axis
 
     :type execution_context: int | str | None
@@ -4056,7 +4070,7 @@ def shape_key_move(
     /,
     *,
     type: typing.Literal["TOP", "UP", "DOWN", "BOTTOM"] | None = "TOP",
-):
+) -> None:
     """Move the active shape key up/down in the list
 
         :type execution_context: int | str | None
@@ -4084,7 +4098,7 @@ def shape_key_remove(
     *,
     all: bool | None = False,
     apply_mix: bool | None = False,
-):
+) -> None:
     """Remove shape key from the object
 
     :type execution_context: int | str | None
@@ -4097,7 +4111,7 @@ def shape_key_remove(
 
 def shape_key_retime(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Resets the timing for absolute shape keys
 
     :type execution_context: int | str | None
@@ -4111,7 +4125,7 @@ def shape_key_transfer(
     *,
     mode: typing.Literal["OFFSET", "RELATIVE_FACE", "RELATIVE_EDGE"] | None = "OFFSET",
     use_clamp: bool | None = False,
-):
+) -> None:
     """Copy the active shape key of another selected object to this one
 
         :type execution_context: int | str | None
@@ -4137,7 +4151,7 @@ def simulation_nodes_cache_bake(
     /,
     *,
     selected: bool | None = False,
-):
+) -> None:
     """Bake simulations in geometry nodes modifiers
 
     :type execution_context: int | str | None
@@ -4152,7 +4166,7 @@ def simulation_nodes_cache_calculate_to_frame(
     /,
     *,
     selected: bool | None = False,
-):
+) -> None:
     """Calculate simulations in geometry nodes modifiers from the start to current frame
 
     :type execution_context: int | str | None
@@ -4167,7 +4181,7 @@ def simulation_nodes_cache_delete(
     /,
     *,
     selected: bool | None = False,
-):
+) -> None:
     """Delete cached/baked simulations in geometry nodes modifiers
 
     :type execution_context: int | str | None
@@ -4182,7 +4196,7 @@ def skin_armature_create(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Create an armature that parallels the skin layout
 
     :type execution_context: int | str | None
@@ -4197,7 +4211,7 @@ def skin_loose_mark_clear(
     /,
     *,
     action: typing.Literal["MARK", "CLEAR"] | None = "MARK",
-):
+) -> None:
     """Mark/clear selected vertices as loose
 
         :type execution_context: int | str | None
@@ -4214,7 +4228,7 @@ def skin_loose_mark_clear(
 
 def skin_radii_equalize(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Make skin radii of selected vertices equal on each axis
 
     :type execution_context: int | str | None
@@ -4223,7 +4237,7 @@ def skin_radii_equalize(
 
 def skin_root_mark(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Mark selected vertices as roots
 
     :type execution_context: int | str | None
@@ -4248,7 +4262,7 @@ def speaker_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add a speaker object to the scene
 
         :type execution_context: int | str | None
@@ -4281,7 +4295,7 @@ def subdivision_set(
     *,
     level: int | None = 1,
     relative: bool | None = False,
-):
+) -> None:
     """Sets a Subdivision Surface level (1 to 5)
 
     :type execution_context: int | str | None
@@ -4298,7 +4312,7 @@ def surfacedeform_bind(
     /,
     *,
     modifier: str = "",
-):
+) -> None:
     """Bind mesh to target in surface deform modifier
 
     :type execution_context: int | str | None
@@ -4326,7 +4340,7 @@ def text_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add a text object to the scene
 
         :type execution_context: int | str | None
@@ -4360,7 +4374,7 @@ def track_clear(
     /,
     *,
     type: typing.Literal["CLEAR", "CLEAR_KEEP_TRANSFORM"] | None = "CLEAR",
-):
+) -> None:
     """Clear tracking constraint or flag from object
 
     :type execution_context: int | str | None
@@ -4375,7 +4389,7 @@ def track_set(
     /,
     *,
     type: typing.Literal["DAMPTRACK", "TRACKTO", "LOCKTRACK"] | None = "DAMPTRACK",
-):
+) -> None:
     """Make the object track another object, using various methods/constraints
 
     :type execution_context: int | str | None
@@ -4390,7 +4404,7 @@ def transfer_mode(
     /,
     *,
     use_flash_on_transfer: bool | None = True,
-):
+) -> None:
     """Switches the active object and assigns the same mode to a new one under the mouse cursor, leaving the active mode in the current one
 
     :type execution_context: int | str | None
@@ -4409,7 +4423,7 @@ def transform_apply(
     scale: bool | None = True,
     properties: bool | None = True,
     isolate_users: bool | None = False,
-):
+) -> None:
     """Apply the object's transformation to its data
 
     :type execution_context: int | str | None
@@ -4428,7 +4442,7 @@ def transform_apply(
 
 def transform_axis_target(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Interactively point cameras and lights to a location (Ctrl translates)
 
     :type execution_context: int | str | None
@@ -4452,7 +4466,7 @@ def transform_to_mouse(
     ),
     drop_x: int | None = 0,
     drop_y: int | None = 0,
-):
+) -> None:
     """Snap selected item(s) to the mouse location
 
     :type execution_context: int | str | None
@@ -4476,7 +4490,7 @@ def transforms_to_deltas(
     *,
     mode: typing.Literal["ALL", "LOC", "ROT", "SCALE"] | None = "ALL",
     reset_values: bool | None = True,
-):
+) -> None:
     """Convert normal object transforms to delta transforms, any existing delta transforms will be included as well
 
         :type execution_context: int | str | None
@@ -4499,14 +4513,18 @@ def transforms_to_deltas(
         :type reset_values: bool | None
     """
 
-def unlink_data(execution_context: int | str | None = None, undo: bool | None = None):
+def unlink_data(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def update_shapes(execution_context: int | str | None = None, undo: bool | None = None):
+def update_shapes(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Update existing shape keys with the vertex positions of selected objects with matching names
 
     :type execution_context: int | str | None
@@ -4515,7 +4533,7 @@ def update_shapes(execution_context: int | str | None = None, undo: bool | None 
 
 def vertex_group_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a new vertex group to the active object
 
     :type execution_context: int | str | None
@@ -4524,7 +4542,7 @@ def vertex_group_add(
 
 def vertex_group_assign(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Assign the selected vertices to the active vertex group
 
     :type execution_context: int | str | None
@@ -4533,7 +4551,7 @@ def vertex_group_assign(
 
 def vertex_group_assign_new(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Assign the selected vertices to a new vertex group
 
     :type execution_context: int | str | None
@@ -4548,7 +4566,7 @@ def vertex_group_clean(
     group_select_mode: str | None = "",
     limit: float | None = 0.0,
     keep_single: bool | None = False,
-):
+) -> None:
     """Remove vertex group assignments which are not required
 
     :type execution_context: int | str | None
@@ -4563,7 +4581,7 @@ def vertex_group_clean(
 
 def vertex_group_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Make a copy of the active vertex group
 
     :type execution_context: int | str | None
@@ -4572,7 +4590,7 @@ def vertex_group_copy(
 
 def vertex_group_copy_to_selected(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Replace vertex groups of selected objects by vertex groups of active object
 
     :type execution_context: int | str | None
@@ -4581,7 +4599,7 @@ def vertex_group_copy_to_selected(
 
 def vertex_group_deselect(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Deselect all selected vertices assigned to the active vertex group
 
     :type execution_context: int | str | None
@@ -4596,7 +4614,7 @@ def vertex_group_invert(
     group_select_mode: str | None = "",
     auto_assign: bool | None = True,
     auto_remove: bool | None = True,
-):
+) -> None:
     """Invert active vertex group's weights
 
     :type execution_context: int | str | None
@@ -4617,7 +4635,7 @@ def vertex_group_levels(
     group_select_mode: str | None = "",
     offset: float | None = 0.0,
     gain: float | None = 1.0,
-):
+) -> None:
     """Add some offset and multiply with some gain the weights of the active vertex group
 
     :type execution_context: int | str | None
@@ -4637,7 +4655,7 @@ def vertex_group_limit_total(
     *,
     group_select_mode: str | None = "",
     limit: int | None = 4,
-):
+) -> None:
     """Limit deform weights associated with a vertex to a specified number by removing lowest weights
 
     :type execution_context: int | str | None
@@ -4656,7 +4674,7 @@ def vertex_group_lock(
     action: typing.Literal["TOGGLE", "LOCK", "UNLOCK", "INVERT"] | None = "TOGGLE",
     mask: typing.Literal["ALL", "SELECTED", "UNSELECTED", "INVERT_UNSELECTED"]
     | None = "ALL",
-):
+) -> None:
     """Change the lock state of all or some vertex groups of active object
 
         :type execution_context: int | str | None
@@ -4700,7 +4718,7 @@ def vertex_group_mirror(
     flip_group_names: bool | None = True,
     all_groups: bool | None = False,
     use_topology: bool | None = False,
-):
+) -> None:
     """Mirror vertex group, flip weights and/or names, editing only selected vertices, flipping when both sides are selected otherwise copy from unselected
 
     :type execution_context: int | str | None
@@ -4721,7 +4739,7 @@ def vertex_group_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move the active vertex group up/down in the list
 
     :type execution_context: int | str | None
@@ -4732,7 +4750,7 @@ def vertex_group_move(
 
 def vertex_group_normalize(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Normalize weights of the active vertex group, so that the highest ones are now 1.0
 
     :type execution_context: int | str | None
@@ -4746,7 +4764,7 @@ def vertex_group_normalize_all(
     *,
     group_select_mode: str | None = "",
     lock_active: bool | None = True,
-):
+) -> None:
     """Normalize all weights of all vertex groups, so that for each vertex, the sum of all weights is 1.0
 
     :type execution_context: int | str | None
@@ -4764,7 +4782,7 @@ def vertex_group_quantize(
     *,
     group_select_mode: str | None = "",
     steps: int | None = 4,
-):
+) -> None:
     """Set weights to a fixed number of steps
 
     :type execution_context: int | str | None
@@ -4782,7 +4800,7 @@ def vertex_group_remove(
     *,
     all: bool | None = False,
     all_unlocked: bool | None = False,
-):
+) -> None:
     """Delete the active or all vertex groups from the active object
 
     :type execution_context: int | str | None
@@ -4800,7 +4818,7 @@ def vertex_group_remove_from(
     *,
     use_all_groups: bool | None = False,
     use_all_verts: bool | None = False,
-):
+) -> None:
     """Remove the selected vertices from active or all vertex group(s)
 
     :type execution_context: int | str | None
@@ -4813,7 +4831,7 @@ def vertex_group_remove_from(
 
 def vertex_group_select(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select all the vertices assigned to the active vertex group
 
     :type execution_context: int | str | None
@@ -4826,7 +4844,7 @@ def vertex_group_set_active(
     /,
     *,
     group: str | None = "",
-):
+) -> None:
     """Set the active vertex group
 
     :type execution_context: int | str | None
@@ -4844,7 +4862,7 @@ def vertex_group_smooth(
     factor: float | None = 0.5,
     repeat: int | None = 1,
     expand: float | None = 0.0,
-):
+) -> None:
     """Smooth weights for selected vertices
 
     :type execution_context: int | str | None
@@ -4865,7 +4883,7 @@ def vertex_group_sort(
     /,
     *,
     sort_type: typing.Literal["NAME", "BONE_HIERARCHY"] | None = "NAME",
-):
+) -> None:
     """Sort vertex groups
 
     :type execution_context: int | str | None
@@ -4876,7 +4894,7 @@ def vertex_group_sort(
 
 def vertex_parent_set(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Parent selected objects to the selected vertices
 
     :type execution_context: int | str | None
@@ -4885,7 +4903,7 @@ def vertex_parent_set(
 
 def vertex_weight_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy weights from active to selected
 
     :type execution_context: int | str | None
@@ -4898,7 +4916,7 @@ def vertex_weight_delete(
     /,
     *,
     weight_group: int | None = -1,
-):
+) -> None:
     """Delete this weight from the vertex (disabled if vertex group is locked)
 
     :type execution_context: int | str | None
@@ -4909,7 +4927,7 @@ def vertex_weight_delete(
 
 def vertex_weight_normalize_active_vertex(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Normalize active vertex's weights
 
     :type execution_context: int | str | None
@@ -4922,7 +4940,7 @@ def vertex_weight_paste(
     /,
     *,
     weight_group: int | None = -1,
-):
+) -> None:
     """Copy this group's weight to other selected vertices (disabled if vertex group is locked)
 
     :type execution_context: int | str | None
@@ -4937,7 +4955,7 @@ def vertex_weight_set_active(
     /,
     *,
     weight_group: int | None = -1,
-):
+) -> None:
     """Set as active vertex group
 
     :type execution_context: int | str | None
@@ -4948,7 +4966,7 @@ def vertex_weight_set_active(
 
 def visual_geometry_to_objects(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Convert geometry and instances into editable objects and collections
 
     :type execution_context: int | str | None
@@ -4957,7 +4975,7 @@ def visual_geometry_to_objects(
 
 def visual_transform_apply(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Apply the object's visual transformation to its data
 
     :type execution_context: int | str | None
@@ -4981,7 +4999,7 @@ def volume_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add a volume object to the scene
 
         :type execution_context: int | str | None
@@ -5053,7 +5071,7 @@ def volume_import(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Import OpenVDB volume file
 
         :type execution_context: int | str | None
@@ -5143,7 +5161,9 @@ def volume_import(
         :type scale: collections.abc.Sequence[float] | mathutils.Vector | None
     """
 
-def voxel_remesh(execution_context: int | str | None = None, undo: bool | None = None):
+def voxel_remesh(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Calculates a new manifold mesh based on the volume of the current mesh. All data layers will be lost
 
     :type execution_context: int | str | None
@@ -5152,7 +5172,7 @@ def voxel_remesh(execution_context: int | str | None = None, undo: bool | None =
 
 def voxel_size_edit(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Modify the mesh voxel size interactively used in the voxel remesher
 
     :type execution_context: int | str | None

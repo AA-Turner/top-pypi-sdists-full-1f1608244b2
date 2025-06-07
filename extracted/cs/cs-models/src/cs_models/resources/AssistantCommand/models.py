@@ -23,6 +23,7 @@ class AssistantCommandTypeEnum(enum.Enum):
     LIST = "LIST"
     SMART_GRID = "SMART_GRID"
     DYNAMIC_TABLE = "DYNAMIC_TABLE"
+    FOLLOW_UP_QUESTIONS = "FOLLOW_UP_QUESTIONS"
 
 
 class AssistantCommandStatusEnum(enum.Enum):

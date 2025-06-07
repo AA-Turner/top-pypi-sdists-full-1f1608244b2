@@ -3,14 +3,16 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 
-def new(execution_context: int | str | None = None, undo: bool | None = None):
+def new(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Add a new texture
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def slot_copy(execution_context: int | str | None = None, undo: bool | None = None):
+def slot_copy(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy the material texture settings and nodes
 
     :type execution_context: int | str | None
@@ -23,7 +25,7 @@ def slot_move(
     /,
     *,
     type: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move texture slots up and down
 
     :type execution_context: int | str | None
@@ -32,7 +34,9 @@ def slot_move(
     :type type: typing.Literal['UP','DOWN'] | None
     """
 
-def slot_paste(execution_context: int | str | None = None, undo: bool | None = None):
+def slot_paste(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy the texture settings and nodes
 
     :type execution_context: int | str | None

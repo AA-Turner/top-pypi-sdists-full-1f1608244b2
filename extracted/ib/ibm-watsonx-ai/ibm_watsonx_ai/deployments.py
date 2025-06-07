@@ -45,6 +45,8 @@ from ibm_watsonx_ai.metanames import (
 from ibm_watsonx_ai.libs.repo.util.library_imports import LibraryChecker
 from ibm_watsonx_ai.utils.autoai.utils import all_logging_disabled
 
+from urllib.parse import urlparse, parse_qs
+
 if TYPE_CHECKING:
     from ibm_watsonx_ai import APIClient
     from ibm_watsonx_ai.lifecycle import SpecStates
@@ -2030,7 +2032,12 @@ class Deployments(WMLResource):
 
         return await d_inference.achat_stream(messages=messages, context=context)
 
-    def run_ai_service(self, deployment_id: str, ai_service_payload: dict) -> Any:
+    def run_ai_service(
+        self,
+        deployment_id: str,
+        ai_service_payload: dict,
+        path_suffix: str | None = None,
+    ) -> Any:
         """Execute an AI service by providing a scoring payload.
 
         :param deployment_id: unique ID of the deployment
@@ -2038,6 +2045,9 @@ class Deployments(WMLResource):
 
         :param ai_service_payload: AI service payload to be passed to generate the method
         :type ai_service_payload: dict
+
+        :param path_suffix: path suffix to be appended to the scoring url, defaults to None
+        :type path_suffix: str, optional
 
         :return: response of the AI service
         :rtype: Any
@@ -2053,6 +2063,10 @@ class Deployments(WMLResource):
             self._client._href_definitions.get_deployment_href(deployment_id)
             + "/ai_service"
         )
+
+        if path_suffix is not None:
+            scoring_url += "/" + path_suffix
+
         response_scoring = self._client.httpx_client.post(
             url=scoring_url,
             json=ai_service_payload,
@@ -2077,7 +2091,9 @@ class Deployments(WMLResource):
         return self._handle_response(200, "AI Service run", response_scoring)
 
     def run_ai_service_stream(
-        self, deployment_id: str, ai_service_payload: dict
+        self,
+        deployment_id: str,
+        ai_service_payload: dict,
     ) -> Generator:
         """Execute an AI service by providing a scoring payload.
 
@@ -2129,6 +2145,12 @@ class RuntimeContext:
     :param request_payload_json: Request payload for testing of generate/ generate_stream call of AI Service.
     :type request_payload_json: dict, optional
 
+    :param method: HTTP request method for testing of generate/ generate_stream call of AI Service.
+    :type method: str, optional
+
+    :param path: Request endpoint path for testing of generate/ generate_stream call of AI Service.
+    :type path: str, optional
+
     ``
     RuntimeContext`` initialized for testing purposes before deployment:
 
@@ -2167,9 +2189,17 @@ class RuntimeContext:
         generate_output = generate(context)  # returns {"body": {"field2": "value2"}}
     """
 
-    def __init__(self, api_client: APIClient, request_payload_json: dict | None = None):
+    def __init__(
+        self,
+        api_client: APIClient,
+        request_payload_json: dict | None = None,
+        method: str | None = None,
+        path: str | None = None,
+    ):
         self._api_client = api_client
         self.request_payload_json = request_payload_json
+        self.method = method
+        self.path = path
 
     @property
     def request_payload_json(self) -> dict | None:
@@ -2206,3 +2236,37 @@ class RuntimeContext:
     def get_space_id(self) -> str:
         """Return default space id."""
         return self._api_client.default_space_id
+
+    def get_method(self) -> str:
+        """Return the HTTP request method: 'GET', 'POST', etc."""
+        return self.method or ""
+
+    def get_path_suffix(self) -> str:
+        """Return the suffix of ai_service endpoint including the query parameters."""
+        try:
+            suffix = self.path.split("ai_service", 1)[1]
+        except IndexError as e:
+            raise ValueError(
+                "Couldn't find the path suffix since endpoint URL is incorrect."
+            ) from e
+        if suffix:
+            suffix = suffix.removeprefix("/")
+        return suffix
+
+    def get_query_parameters(self) -> dict:
+        """Return the query parameters from the ai_service endpoint as a dict."""
+        parsed_url = urlparse(self.path)
+        query = parsed_url.query
+        params = parse_qs(query)
+        if params:
+            flat_params = {k: v[0] for k, v in params.items()}
+            return flat_params
+        else:
+            return {}
+
+    def get_bytes(self) -> bytes:
+        """Return the request data as bytes."""
+        payload_json = self.get_json()
+        payload_str = json.dumps(payload_json)
+        bytes_data = payload_str.encode("utf-8")
+        return bytes_data

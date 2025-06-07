@@ -27,14 +27,14 @@ class PHYSICS_PT_collision(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -64,14 +64,14 @@ class PHYSICS_PT_collision_particle(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -101,14 +101,14 @@ class PHYSICS_PT_collision_softbody(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -137,14 +137,14 @@ class PHYSICS_PT_field(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -174,14 +174,14 @@ class PHYSICS_PT_field_falloff(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -211,14 +211,14 @@ class PHYSICS_PT_field_falloff_angular(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -248,14 +248,14 @@ class PHYSICS_PT_field_falloff_radial(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -285,14 +285,14 @@ class PHYSICS_PT_field_settings(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -322,14 +322,14 @@ class PHYSICS_PT_field_settings_kink(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -359,14 +359,14 @@ class PHYSICS_PT_field_settings_texture_select(PhysicButtonsPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -378,17 +378,17 @@ class PhysicButtonsPanel:
     bl_space_type: typing.Any
 
     @staticmethod
-    def poll_collision(context):
+    def poll_collision(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def poll_force_field(context):
+    def poll_force_field(context) -> None:
         """
 
         :param context:
         """
 
-def collision_warning(layout): ...
+def collision_warning(layout) -> None: ...

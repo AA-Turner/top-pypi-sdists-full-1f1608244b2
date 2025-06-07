@@ -1,7 +1,8 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.1
 Name: wandb-workspaces
-Version: 0.1.14
+Version: 0.1.15
 Summary: A library for programatically working with the Weights & Biases UI.
+Home-page: https://github.com/wandb/wandb-workspaces
 License: Apache-2.0
 Author: Weights & Biases
 Author-email: support@wandb.com
@@ -17,7 +18,6 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
-Classifier: Programming Language :: Python :: 3.13
 Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
@@ -27,7 +27,6 @@ Requires-Dist: pydantic (>=2.7)
 Requires-Dist: wandb (>=0.13.7)
 Project-URL: Bug Reports, https://github.com/wandb/wandb-workspaces/issues
 Project-URL: Documentation, https://docs.wandb.ai/
-Project-URL: Homepage, https://github.com/wandb/wandb-workspaces
 Project-URL: Repository, https://github.com/wandb/wandb-workspaces
 Description-Content-Type: text/markdown
 

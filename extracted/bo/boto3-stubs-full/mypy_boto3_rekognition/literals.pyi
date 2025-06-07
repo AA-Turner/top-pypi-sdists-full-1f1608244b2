@@ -25,6 +25,7 @@ __all__ = (
     "AttributeType",
     "BodyPartType",
     "CelebrityRecognitionSortByType",
+    "ChallengeTypeType",
     "ContentClassifierType",
     "ContentModerationAggregateByType",
     "ContentModerationSortByType",
@@ -102,6 +103,7 @@ AttributeType = Literal[
 ]
 BodyPartType = Literal["FACE", "HEAD", "LEFT_HAND", "RIGHT_HAND"]
 CelebrityRecognitionSortByType = Literal["ID", "TIMESTAMP"]
+ChallengeTypeType = Literal["FaceMovementAndLightChallenge", "FaceMovementChallenge"]
 ContentClassifierType = Literal["FreeOfAdultContent", "FreeOfPersonallyIdentifiableInformation"]
 ContentModerationAggregateByType = Literal["SEGMENTS", "TIMESTAMPS"]
 ContentModerationSortByType = Literal["NAME", "TIMESTAMP"]

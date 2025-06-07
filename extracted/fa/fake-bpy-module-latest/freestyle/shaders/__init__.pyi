@@ -19,14 +19,14 @@ import mathutils
 class BackboneStretcherShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `BackboneStretcherShader`[Geometry shader]"""
 
-    def __init__(self, amount: float = 2.0):
+    def __init__(self, amount: float = 2.0) -> None:
         """Builds a BackboneStretcherShader object.
 
         :param amount: The stretching amount value.
         :type amount: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Stretches the stroke at its two extremities and following the
         respective directions: v(1)v(0) and v(n-1)v(n).
 
@@ -37,7 +37,7 @@ class BackboneStretcherShader:
 class BezierCurveShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `BezierCurveShader`[Geometry shader]"""
 
-    def __init__(self, error: float = 4.0):
+    def __init__(self, error: float = 4.0) -> None:
         """Builds a BezierCurveShader object.
 
                 :param error: The error we're allowing for the approximation. This
@@ -46,7 +46,7 @@ class BezierCurveShader:
                 :type error: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Transforms the stroke backbone geometry so that it corresponds to a
         Bezier Curve approximation of the original backbone geometry.
 
@@ -59,7 +59,7 @@ class BlenderTextureShader:
 
     def __init__(
         self, texture: bpy.types.LineStyleTextureSlot | bpy.types.ShaderNodeTree
-    ):
+    ) -> None:
         """Builds a BlenderTextureShader object.
 
                 :param texture: A line style texture slot or a shader node tree to define
@@ -67,7 +67,7 @@ class BlenderTextureShader:
                 :type texture: bpy.types.LineStyleTextureSlot | bpy.types.ShaderNodeTree
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Assigns a blender texture slot to the stroke  shading in order to
         simulate marks.
 
@@ -84,7 +84,7 @@ class CalligraphicShader:
         thickness_max: float,
         orientation: collections.abc.Sequence[float] | mathutils.Vector,
         clamp: bool,
-    ):
+    ) -> None:
         """Builds a CalligraphicShader object.
 
                 :param thickness_min: The minimum thickness in the direction
@@ -101,7 +101,7 @@ class CalligraphicShader:
                 :type clamp: bool
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Assigns thicknesses to the stroke vertices so that the stroke looks
         like made with a calligraphic tool, i.e. the stroke will be the
         thickest in a main direction, and the thinnest in the direction
@@ -114,7 +114,7 @@ class CalligraphicShader:
 class ColorNoiseShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `ColorNoiseShader`[Color shader]"""
 
-    def __init__(self, amplitude: float, period: float):
+    def __init__(self, amplitude: float, period: float) -> None:
         """Builds a ColorNoiseShader object.
 
         :param amplitude: The amplitude of the noise signal.
@@ -123,7 +123,7 @@ class ColorNoiseShader:
         :type period: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Shader to add noise to the stroke colors.
 
         :param stroke: A Stroke object.
@@ -133,7 +133,9 @@ class ColorNoiseShader:
 class ConstantColorShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `ConstantColorShader`[Color shader]"""
 
-    def __init__(self, red: float, green: float, blue: float, alpha: float = 1.0):
+    def __init__(
+        self, red: float, green: float, blue: float, alpha: float = 1.0
+    ) -> None:
         """Builds a ConstantColorShader object.
 
         :param red: The red component.
@@ -146,7 +148,7 @@ class ConstantColorShader:
         :type alpha: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Assigns a constant color to every vertex of the Stroke.
 
         :param stroke: A Stroke object.
@@ -156,14 +158,14 @@ class ConstantColorShader:
 class ConstantThicknessShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `ConstantThicknessShader`[Thickness shader]"""
 
-    def __init__(self, thickness: float):
+    def __init__(self, thickness: float) -> None:
         """Builds a ConstantThicknessShader object.
 
         :param thickness: The thickness that must be assigned to the stroke.
         :type thickness: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Assigns an absolute constant thickness to every vertex of the Stroke.
 
         :param stroke: A Stroke object.
@@ -173,7 +175,9 @@ class ConstantThicknessShader:
 class ConstrainedIncreasingThicknessShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `ConstrainedIncreasingThicknessShader`[Thickness shader]"""
 
-    def __init__(self, thickness_min: float, thickness_max: float, ratio: float):
+    def __init__(
+        self, thickness_min: float, thickness_max: float, ratio: float
+    ) -> None:
         """Builds a ConstrainedIncreasingThicknessShader object.
 
         :param thickness_min: The minimum thickness.
@@ -184,7 +188,7 @@ class ConstrainedIncreasingThicknessShader:
         :type ratio: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Same as the `IncreasingThicknessShader`, but here we allow
         the user to control the thickness/length ratio so that we don't get
         fat short lines.
@@ -196,7 +200,7 @@ class ConstrainedIncreasingThicknessShader:
 class GuidingLinesShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `GuidingLinesShader`[Geometry shader]"""
 
-    def __init__(self, offset: float):
+    def __init__(self, offset: float) -> None:
         """Builds a GuidingLinesShader object.
 
                 :param offset: The line that replaces the stroke is initially in the
@@ -206,7 +210,7 @@ class GuidingLinesShader:
                 :type offset: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Shader to modify the Stroke geometry so that it corresponds to its
         main direction line. This shader must be used together with the
         splitting operator using the curvature criterion. Indeed, the
@@ -231,7 +235,7 @@ class IncreasingColorShader:
         green_max: float,
         blue_max: float,
         alpha_max: float,
-    ):
+    ) -> None:
         """Builds an IncreasingColorShader object.
 
         :param red_min: The first color red component.
@@ -252,7 +256,7 @@ class IncreasingColorShader:
         :type alpha_max: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Assigns a varying color to the stroke. The user specifies two
         colors A and B. The stroke color will change linearly from A to B
         between the first and the last vertex.
@@ -264,7 +268,7 @@ class IncreasingColorShader:
 class IncreasingThicknessShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `IncreasingThicknessShader`[Thickness shader]"""
 
-    def __init__(self, thickness_A: float, thickness_B: float):
+    def __init__(self, thickness_A: float, thickness_B: float) -> None:
         """Builds an IncreasingThicknessShader object.
 
         :param thickness_A: The first thickness value.
@@ -273,7 +277,7 @@ class IncreasingThicknessShader:
         :type thickness_B: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Assigns thicknesses values such as the thickness increases from a
         thickness value A to a thickness value B between the first vertex
         to the midpoint vertex and then decreases from B to a A between
@@ -287,7 +291,7 @@ class IncreasingThicknessShader:
 class PolygonalizationShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `PolygonalizationShader`[Geometry shader]"""
 
-    def __init__(self, error: float):
+    def __init__(self, error: float) -> None:
         """Builds a PolygonalizationShader object.
 
                 :param error: The error we want our polygonal approximation to have
@@ -297,7 +301,7 @@ class PolygonalizationShader:
                 :type error: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Modifies the Stroke geometry so that it looks more "polygonal".
         The basic idea is to start from the minimal stroke approximation
         consisting in a line joining the first vertex to the last one and
@@ -309,13 +313,13 @@ class PolygonalizationShader:
         """
 
 class RoundCapShader:
-    def round_cap_thickness(self, x):
+    def round_cap_thickness(self, x) -> None:
         """
 
         :param x:
         """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -324,14 +328,14 @@ class RoundCapShader:
 class SamplingShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `SamplingShader`[Geometry shader]"""
 
-    def __init__(self, sampling: float):
+    def __init__(self, sampling: float) -> None:
         """Builds a SamplingShader object.
 
         :param sampling: The sampling to use for the stroke resampling.
         :type sampling: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Resamples the stroke.
 
         :param stroke: A Stroke object.
@@ -351,7 +355,7 @@ class SmoothingShader:
         aniso_normal: float = 0.0,
         aniso_curvature: float = 0.0,
         carricature_factor: float = 1.0,
-    ):
+    ) -> None:
         """Builds a SmoothingShader object.
 
         :param num_iterations: The number of iterations.
@@ -372,7 +376,7 @@ class SmoothingShader:
         :type carricature_factor: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Smooths the stroke by moving the vertices to make the stroke
         smoother. Uses curvature flow to converge towards a curve of
         constant curvature. The diffusion method we use is anisotropic to
@@ -392,7 +396,7 @@ class SpatialNoiseShader:
         num_octaves: int,
         smooth: bool,
         pure_random: bool,
-    ):
+    ) -> None:
         """Builds a SpatialNoiseShader object.
 
         :param amount: The amplitude of the noise.
@@ -407,7 +411,7 @@ class SpatialNoiseShader:
         :type pure_random: bool
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Spatial Noise stroke shader. Moves the vertices to make the stroke
         more noisy.
 
@@ -416,7 +420,7 @@ class SpatialNoiseShader:
         """
 
 class SquareCapShader:
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -425,14 +429,14 @@ class SquareCapShader:
 class StrokeTextureStepShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `StrokeTextureStepShader`[Texture shader]"""
 
-    def __init__(self, step: float):
+    def __init__(self, step: float) -> None:
         """Builds a StrokeTextureStepShader object.
 
         :param step: The spacing along the stroke.
         :type step: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Assigns a spacing factor to the texture coordinates of the Stroke.
 
         :param stroke: A Stroke object.
@@ -442,7 +446,7 @@ class StrokeTextureStepShader:
 class ThicknessNoiseShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `ThicknessNoiseShader`[Thickness shader]"""
 
-    def __init__(self, amplitude: float, period: float):
+    def __init__(self, amplitude: float, period: float) -> None:
         """Builds a ThicknessNoiseShader object.
 
         :param amplitude: The amplitude of the noise signal.
@@ -451,7 +455,7 @@ class ThicknessNoiseShader:
         :type period: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Adds some noise to the stroke thickness.
 
         :param stroke: A Stroke object.
@@ -461,7 +465,7 @@ class ThicknessNoiseShader:
 class TipRemoverShader:
     """Class hierarchy: `freestyle.types.StrokeShader` > `TipRemoverShader`[Geometry shader]"""
 
-    def __init__(self, tip_length: float):
+    def __init__(self, tip_length: float) -> None:
         """Builds a TipRemoverShader object.
 
                 :param tip_length: The length of the piece of stroke we want to remove
@@ -469,7 +473,7 @@ class TipRemoverShader:
                 :type tip_length: float
         """
 
-    def shade(self, stroke: freestyle.types.Stroke):
+    def shade(self, stroke: freestyle.types.Stroke) -> None:
         """Removes the stroke's extremities.
 
         :param stroke: A Stroke object.
@@ -481,7 +485,7 @@ class py2DCurvatureColorShader:
     A higher curvature will yield a brighter color.
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -490,7 +494,7 @@ class py2DCurvatureColorShader:
 class pyBackboneStretcherNoCuspShader:
     """Stretches the stroke's backbone, excluding cusp vertices (end junctions)."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -499,7 +503,7 @@ class pyBackboneStretcherNoCuspShader:
 class pyBackboneStretcherShader:
     """Stretches the stroke's backbone by a given length (in pixels)."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -508,7 +512,7 @@ class pyBackboneStretcherShader:
 class pyBluePrintCirclesShader:
     """Draws the silhouette of the object as a circle."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -517,21 +521,21 @@ class pyBluePrintCirclesShader:
 class pyBluePrintDirectedSquaresShader:
     """Replaces the stroke with a directed square."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
         """
 
 class pyBluePrintEllipsesShader:
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
         """
 
 class pyBluePrintSquaresShader:
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -540,7 +544,7 @@ class pyBluePrintSquaresShader:
 class pyConstantColorShader:
     """Assigns a constant color to the stroke."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -549,7 +553,7 @@ class pyConstantColorShader:
 class pyConstantThicknessShader:
     """Assigns a constant thickness along the stroke."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -560,7 +564,7 @@ class pyConstrainedIncreasingThicknessShader:
     stroke's length.
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -569,7 +573,7 @@ class pyConstrainedIncreasingThicknessShader:
 class pyDecreasingThicknessShader:
     """Inverse of pyIncreasingThicknessShader, decreasingly thickens the stroke."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -580,7 +584,7 @@ class pyDepthDiscontinuityThicknessShader:
     to the camera (Z-value).
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -593,7 +597,7 @@ class pyDiffusion2Shader:
     the stroke curve is) at the point.
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -602,14 +606,14 @@ class pyDiffusion2Shader:
 class pyFXSVaryingThicknessWithDensityShader:
     """Assigns thickness to a stroke based on the density of the diffuse map."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
         """
 
 class pyGuidingLineShader:
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -620,7 +624,7 @@ class pyHLRShader:
     based on hidden line removal (HLR).
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -632,7 +636,7 @@ class pyImportance2DThicknessShader:
     specified point have the lowest thickness.
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -641,7 +645,7 @@ class pyImportance2DThicknessShader:
 class pyImportance3DThicknessShader:
     """Assigns thickness based on distance to a given point in 3D space."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -650,7 +654,7 @@ class pyImportance3DThicknessShader:
 class pyIncreasingColorShader:
     """Fades from one color to another along the stroke."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -659,7 +663,7 @@ class pyIncreasingColorShader:
 class pyIncreasingThicknessShader:
     """Increasingly thickens the stroke."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -668,7 +672,7 @@ class pyIncreasingThicknessShader:
 class pyInterpolateColorShader:
     """Fades from one color to another and back."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -680,7 +684,7 @@ class pyLengthDependingBackboneStretcherShader:
     is too high may yield unexpected results.
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -689,7 +693,7 @@ class pyLengthDependingBackboneStretcherShader:
 class pyMaterialColorShader:
     """Assigns the color of the underlying material to the stroke."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -698,7 +702,7 @@ class pyMaterialColorShader:
 class pyModulateAlphaShader:
     """Limits the stroke's alpha between a min and max value."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -707,7 +711,7 @@ class pyModulateAlphaShader:
 class pyNonLinearVaryingThicknessShader:
     """Assigns thickness to a stroke based on an exponential function."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -719,7 +723,7 @@ class pyPerlinNoise1DShader:
     identically distorted.
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -731,7 +735,7 @@ class pyPerlinNoise2DShader:
     https://freestyleintegration.wordpress.com/2011/09/25/development-updates-on-september-25/
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -740,7 +744,7 @@ class pyPerlinNoise2DShader:
 class pyRandomColorShader:
     """Assigns a color to the stroke based on given seed."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -749,7 +753,7 @@ class pyRandomColorShader:
 class pySLERPThicknessShader:
     """Assigns thickness to a stroke based on spherical linear interpolation."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -760,7 +764,7 @@ class pySamplingShader:
     vertices specified.
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -769,7 +773,7 @@ class pySamplingShader:
 class pySinusDisplacementShader:
     """Displaces the stroke in the shape of a sine wave."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -778,7 +782,7 @@ class pySinusDisplacementShader:
 class pyTVertexRemoverShader:
     """Removes t-vertices from the stroke."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -787,7 +791,7 @@ class pyTVertexRemoverShader:
 class pyTVertexThickenerShader:
     """Thickens TVertices (visual intersections between two edges)."""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -798,7 +802,7 @@ class pyTimeColorShader:
     The brightness will increase along the stroke.
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -807,7 +811,7 @@ class pyTimeColorShader:
 class pyTipRemoverShader:
     """Removes the tips of the stroke.Undocumented"""
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:
@@ -818,7 +822,7 @@ class pyZDependingThicknessShader:
     closest to camera is 1, point furthest from camera is zero).
     """
 
-    def shade(self, stroke):
+    def shade(self, stroke) -> None:
         """
 
         :param stroke:

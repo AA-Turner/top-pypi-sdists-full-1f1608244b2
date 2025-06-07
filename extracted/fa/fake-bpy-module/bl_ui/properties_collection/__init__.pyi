@@ -24,7 +24,7 @@ class COLLECTION_MT_context_menu_instance_offset(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -82,7 +82,7 @@ class COLLECTION_PT_collection_flags(CollectionButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -110,7 +110,7 @@ class COLLECTION_PT_exporters(CollectionButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -138,7 +138,7 @@ class COLLECTION_PT_instancing(CollectionButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -167,7 +167,7 @@ class COLLECTION_PT_lineart_collection(CollectionButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -196,7 +196,7 @@ class COLLECTION_PT_viewlayer_flags(CollectionButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -208,10 +208,12 @@ class CollectionButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def lineart_make_line_type_entry(col, line_type, text_disp, expand, search_from): ...
+def lineart_make_line_type_entry(
+    col, line_type, text_disp, expand, search_from
+) -> None: ...

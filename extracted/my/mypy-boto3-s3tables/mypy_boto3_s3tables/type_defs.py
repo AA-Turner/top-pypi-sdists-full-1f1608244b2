@@ -220,9 +220,10 @@ class GetTablePolicyRequestTypeDef(TypedDict):
 
 
 class GetTableRequestTypeDef(TypedDict):
-    tableBucketARN: str
-    namespace: str
-    name: str
+    tableBucketARN: NotRequired[str]
+    namespace: NotRequired[str]
+    name: NotRequired[str]
+    tableArn: NotRequired[str]
 
 
 class IcebergCompactionSettingsTypeDef(TypedDict):

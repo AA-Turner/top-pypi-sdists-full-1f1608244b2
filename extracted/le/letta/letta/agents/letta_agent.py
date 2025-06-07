@@ -14,9 +14,9 @@ from letta.agents.helpers import (
     _prepare_in_context_messages_no_persist_async,
     generate_step_id,
 )
-from letta.errors import LLMContextWindowExceededError
+from letta.errors import ContextWindowExceededError
 from letta.helpers import ToolRulesSolver
-from letta.helpers.datetime_helpers import get_utc_timestamp_ns
+from letta.helpers.datetime_helpers import AsyncTimer, get_utc_timestamp_ns, ns_to_ms
 from letta.helpers.tool_execution_helper import enable_strict_mode
 from letta.interfaces.anthropic_streaming_interface import AnthropicStreamingInterface
 from letta.interfaces.openai_streaming_interface import OpenAIStreamingInterface
@@ -25,8 +25,12 @@ from letta.llm_api.llm_client_base import LLMClientBase
 from letta.local_llm.constants import INNER_THOUGHTS_KWARG
 from letta.log import get_logger
 from letta.orm.enums import ToolType
+from letta.otel.context import get_ctx_attributes
+from letta.otel.metric_registry import MetricRegistry
+from letta.otel.tracing import log_event, trace_method, tracer
 from letta.schemas.agent import AgentState
 from letta.schemas.enums import MessageRole, MessageStreamStatus
+from letta.schemas.letta_message import MessageType
 from letta.schemas.letta_message_content import OmittedReasoningContent, ReasoningContent, RedactedReasoningContent, TextContent
 from letta.schemas.letta_response import LettaResponse
 from letta.schemas.llm_config import LLMConfig
@@ -48,7 +52,7 @@ from letta.services.telemetry_manager import NoopTelemetryManager, TelemetryMana
 from letta.services.tool_executor.tool_execution_manager import ToolExecutionManager
 from letta.settings import model_settings
 from letta.system import package_function_response
-from letta.tracing import log_event, trace_method, tracer
+from letta.types import JsonDict
 from letta.utils import log_telemetry, validate_function_response
 
 logger = get_logger(__name__)
@@ -118,6 +122,7 @@ class LettaAgent(BaseAgent):
         max_steps: int = 10,
         use_assistant_message: bool = True,
         request_start_timestamp_ns: Optional[int] = None,
+        include_return_message_types: Optional[List[MessageType]] = None,
     ) -> LettaResponse:
         agent_state = await self.agent_manager.get_agent_by_id_async(
             agent_id=self.agent_id, include_relationships=["tools", "memory", "tool_exec_environment_variables"], actor=self.actor
@@ -129,7 +134,10 @@ class LettaAgent(BaseAgent):
             request_start_timestamp_ns=request_start_timestamp_ns,
         )
         return _create_letta_response(
-            new_in_context_messages=new_in_context_messages, use_assistant_message=use_assistant_message, usage=usage
+            new_in_context_messages=new_in_context_messages,
+            use_assistant_message=use_assistant_message,
+            usage=usage,
+            include_return_message_types=include_return_message_types,
         )
 
     @trace_method
@@ -139,6 +147,7 @@ class LettaAgent(BaseAgent):
         max_steps: int = 10,
         use_assistant_message: bool = True,
         request_start_timestamp_ns: Optional[int] = None,
+        include_return_message_types: Optional[List[MessageType]] = None,
     ):
         agent_state = await self.agent_manager.get_agent_by_id_async(
             agent_id=self.agent_id, include_relationships=["tools", "memory", "tool_exec_environment_variables"], actor=self.actor
@@ -178,7 +187,7 @@ class LettaAgent(BaseAgent):
             # log llm request time
             now = get_utc_timestamp_ns()
             llm_request_ns = now - step_start
-            agent_step_span.add_event(name="llm_request_ms", attributes={"duration_ms": llm_request_ns // 1_000_000})
+            agent_step_span.add_event(name="llm_request_ms", attributes={"duration_ms": ns_to_ms(llm_request_ns)})
 
             response = llm_client.convert_response_to_chat_completion(response_data, in_context_messages, agent_state.llm_config)
 
@@ -210,7 +219,7 @@ class LettaAgent(BaseAgent):
             # log LLM request time
             now = get_utc_timestamp_ns()
             llm_request_ns = now - step_start
-            agent_step_span.add_event(name="llm_request_ms", attributes={"duration_ms": llm_request_ns // 1_000_000})
+            agent_step_span.add_event(name="llm_request_ms", attributes={"duration_ms": ns_to_ms(llm_request_ns)})
 
             persisted_messages, should_continue = await self._handle_ai_response(
                 tool_call,
@@ -227,7 +236,7 @@ class LettaAgent(BaseAgent):
             # log step time
             now = get_utc_timestamp_ns()
             step_ns = now - step_start
-            agent_step_span.add_event(name="step_ms", attributes={"duration_ms": step_ns // 1_000_000})
+            agent_step_span.add_event(name="step_ms", attributes={"duration_ms": ns_to_ms(step_ns)})
             agent_step_span.end()
 
             # Log LLM Trace
@@ -247,8 +256,12 @@ class LettaAgent(BaseAgent):
             letta_messages = Message.to_letta_messages_from_list(
                 filter_user_messages, use_assistant_message=use_assistant_message, reverse=False
             )
+
             for message in letta_messages:
-                yield f"data: {message.model_dump_json()}\n\n"
+                if not include_return_message_types:
+                    yield f"data: {message.model_dump_json()}\n\n"
+                elif include_return_message_types and message.message_type in include_return_message_types:
+                    yield f"data: {message.model_dump_json()}\n\n"
 
             if not should_continue:
                 break
@@ -267,7 +280,7 @@ class LettaAgent(BaseAgent):
         if request_start_timestamp_ns:
             now = get_utc_timestamp_ns()
             request_ns = now - request_start_timestamp_ns
-            request_span.add_event(name="letta_request_ms", attributes={"duration_ms": request_ns // 1_000_000})
+            request_span.add_event(name="letta_request_ms", attributes={"duration_ms": ns_to_ms(request_ns)})
         request_span.end()
 
         # Return back usage
@@ -321,7 +334,7 @@ class LettaAgent(BaseAgent):
             # log LLM request time
             now = get_utc_timestamp_ns()
             llm_request_ns = now - step_start
-            agent_step_span.add_event(name="llm_request_ms", attributes={"duration_ms": llm_request_ns // 1_000_000})
+            agent_step_span.add_event(name="llm_request_ms", attributes={"duration_ms": ns_to_ms(llm_request_ns)})
 
             # TODO: add run_id
             usage.step_count += 1
@@ -363,7 +376,7 @@ class LettaAgent(BaseAgent):
             # log step time
             now = get_utc_timestamp_ns()
             step_ns = now - step_start
-            agent_step_span.add_event(name="step_ms", attributes={"duration_ms": step_ns // 1_000_000})
+            agent_step_span.add_event(name="step_ms", attributes={"duration_ms": ns_to_ms(step_ns)})
             agent_step_span.end()
 
             # Log LLM Trace
@@ -384,7 +397,7 @@ class LettaAgent(BaseAgent):
         if request_start_timestamp_ns:
             now = get_utc_timestamp_ns()
             request_ns = now - request_start_timestamp_ns
-            request_span.add_event(name="request_ms", attributes={"duration_ms": request_ns // 1_000_000})
+            request_span.add_event(name="request_ms", attributes={"duration_ms": ns_to_ms(request_ns)})
         request_span.end()
 
         # Extend the in context message ids
@@ -406,6 +419,7 @@ class LettaAgent(BaseAgent):
         max_steps: int = 10,
         use_assistant_message: bool = True,
         request_start_timestamp_ns: Optional[int] = None,
+        include_return_message_types: Optional[List[MessageType]] = None,
     ) -> AsyncGenerator[str, None]:
         """
         Carries out an invocation of the agent loop in a streaming fashion that yields partial tokens.
@@ -480,16 +494,24 @@ class LettaAgent(BaseAgent):
                 if first_chunk and request_span is not None:
                     now = get_utc_timestamp_ns()
                     ttft_ns = now - request_start_timestamp_ns
-                    request_span.add_event(name="time_to_first_token_ms", attributes={"ttft_ms": ttft_ns // 1_000_000})
+                    request_span.add_event(name="time_to_first_token_ms", attributes={"ttft_ms": ns_to_ms(ttft_ns)})
                     first_chunk = False
 
-                yield f"data: {chunk.model_dump_json()}\n\n"
+                if include_return_message_types is None:
+                    # return all data
+                    yield f"data: {chunk.model_dump_json()}\n\n"
+                elif include_return_message_types and chunk.message_type in include_return_message_types:
+                    # filter down returned data
+                    yield f"data: {chunk.model_dump_json()}\n\n"
 
             # update usage
             usage.step_count += 1
             usage.completion_tokens += interface.output_tokens
             usage.prompt_tokens += interface.input_tokens
             usage.total_tokens += interface.input_tokens + interface.output_tokens
+            MetricRegistry().message_output_tokens.record(
+                interface.output_tokens, dict(get_ctx_attributes(), **{"model.name": agent_state.llm_config.model})
+            )
 
             # Persist input messages if not already
             # Special strategy to lower TTFT
@@ -500,7 +522,7 @@ class LettaAgent(BaseAgent):
             # log LLM request time
             now = get_utc_timestamp_ns()
             llm_request_ns = now - step_start
-            agent_step_span.add_event(name="llm_request_ms", attributes={"duration_ms": llm_request_ns // 1_000_000})
+            agent_step_span.add_event(name="llm_request_ms", attributes={"duration_ms": ns_to_ms(llm_request_ns)})
 
             # Process resulting stream content
             tool_call = interface.get_tool_call_object()
@@ -515,8 +537,7 @@ class LettaAgent(BaseAgent):
                     total_tokens=interface.input_tokens + interface.output_tokens,
                 ),
                 reasoning_content=reasoning_content,
-                pre_computed_assistant_message_id=interface.letta_assistant_message_id,
-                pre_computed_tool_message_id=interface.letta_tool_message_id,
+                pre_computed_assistant_message_id=interface.letta_message_id,
                 step_id=step_id,
                 agent_step_span=agent_step_span,
             )
@@ -526,7 +547,7 @@ class LettaAgent(BaseAgent):
             # log total step time
             now = get_utc_timestamp_ns()
             step_ns = now - step_start
-            agent_step_span.add_event(name="step_ms", attributes={"duration_ms": step_ns // 1_000_000})
+            agent_step_span.add_event(name="step_ms", attributes={"duration_ms": ns_to_ms(step_ns)})
             agent_step_span.end()
 
             # TODO (cliandy): the stream POST request span has ended at this point, we should tie this to the stream
@@ -556,9 +577,11 @@ class LettaAgent(BaseAgent):
                 ),
             )
 
-            if not use_assistant_message or should_continue:
-                tool_return = [msg for msg in persisted_messages if msg.role == "tool"][-1].to_letta_messages()[0]
-                yield f"data: {tool_return.model_dump_json()}\n\n"
+            tool_return = [msg for msg in persisted_messages if msg.role == "tool"][-1].to_letta_messages()[0]
+            if not (use_assistant_message and tool_return.name == "send_message"):
+                # Apply message type filtering if specified
+                if include_return_message_types is None or tool_return.message_type in include_return_message_types:
+                    yield f"data: {tool_return.model_dump_json()}\n\n"
 
             if not should_continue:
                 break
@@ -577,7 +600,7 @@ class LettaAgent(BaseAgent):
         if request_start_timestamp_ns:
             now = get_utc_timestamp_ns()
             request_ns = now - request_start_timestamp_ns
-            request_span.add_event(name="letta_request_ms", attributes={"duration_ms": request_ns // 1_000_000})
+            request_span.add_event(name="letta_request_ms", attributes={"duration_ms": ns_to_ms(request_ns)})
         request_span.end()
 
         # TODO: Also yield out a letta usage stats SSE
@@ -604,10 +627,16 @@ class LettaAgent(BaseAgent):
                 )
                 log_event("agent.stream_no_tokens.llm_request.created")
 
+                async with AsyncTimer() as timer:
+                    response = await llm_client.request_async(request_data, agent_state.llm_config)
+                MetricRegistry().llm_execution_time_ms_histogram.record(
+                    timer.elapsed_ms,
+                    dict(get_ctx_attributes(), **{"model.name": agent_state.llm_config.model}),
+                )
                 # Attempt LLM request
                 return (
                     request_data,
-                    await llm_client.request_async(request_data, agent_state.llm_config),
+                    response,
                     current_in_context_messages,
                     new_in_context_messages,
                 )
@@ -654,9 +683,7 @@ class LettaAgent(BaseAgent):
                 if first_chunk and ttft_span is not None:
                     provider_request_start_timestamp_ns = get_utc_timestamp_ns()
                     provider_req_start_ns = provider_request_start_timestamp_ns - request_start_timestamp_ns
-                    ttft_span.add_event(
-                        name="provider_req_start_ns", attributes={"provider_req_start_ms": provider_req_start_ns // 1_000_000}
-                    )
+                    ttft_span.add_event(name="provider_req_start_ns", attributes={"provider_req_start_ms": ns_to_ms(provider_req_start_ns)})
 
                 # Attempt LLM request
                 return (
@@ -692,7 +719,7 @@ class LettaAgent(BaseAgent):
         llm_config: LLMConfig,
         force: bool,
     ) -> List[Message]:
-        if isinstance(e, LLMContextWindowExceededError):
+        if isinstance(e, ContextWindowExceededError):
             return await self._rebuild_context_window(
                 in_context_messages=in_context_messages, new_letta_messages=new_letta_messages, llm_config=llm_config, force=force
             )
@@ -754,7 +781,7 @@ class LettaAgent(BaseAgent):
                 else asyncio.sleep(0, result=self.num_messages)
             ),
             (
-                self.passage_manager.size_async(actor=self.actor, agent_id=agent_state.id)
+                self.passage_manager.agent_passage_size_async(actor=self.actor, agent_id=agent_state.id)
                 if self.num_archival_memories is None
                 else asyncio.sleep(0, result=self.num_archival_memories)
             ),
@@ -775,6 +802,7 @@ class LettaAgent(BaseAgent):
                 ToolType.LETTA_SLEEPTIME_CORE,
                 ToolType.LETTA_VOICE_SLEEPTIME_CORE,
                 ToolType.LETTA_BUILTIN,
+                ToolType.LETTA_FILES_CORE,
                 ToolType.EXTERNAL_COMPOSIO,
                 ToolType.EXTERNAL_MCP,
             }
@@ -810,7 +838,6 @@ class LettaAgent(BaseAgent):
         usage: UsageStatistics,
         reasoning_content: Optional[List[Union[TextContent, ReasoningContent, RedactedReasoningContent, OmittedReasoningContent]]] = None,
         pre_computed_assistant_message_id: Optional[str] = None,
-        pre_computed_tool_message_id: Optional[str] = None,
         step_id: str | None = None,
         new_in_context_messages: Optional[List[Message]] = None,
         agent_step_span: Optional["Span"] = None,
@@ -822,6 +849,9 @@ class LettaAgent(BaseAgent):
         """
         tool_call_name = tool_call.function.name
         tool_call_args_str = tool_call.function.arguments
+        # Temp hack to gracefully handle parallel tool calling attempt, only take first one
+        if "}{" in tool_call_args_str:
+            tool_call_args_str = tool_call_args_str.split("}{", 1)[0] + "}"
 
         try:
             tool_args = json.loads(tool_call_args_str)
@@ -859,6 +889,7 @@ class LettaAgent(BaseAgent):
             tool_args=tool_args,
             agent_state=agent_state,
             agent_step_span=agent_step_span,
+            step_id=step_id,
         )
         log_telemetry(
             self.logger, "_handle_ai_response execute tool finish", tool_execution_result=tool_execution_result, tool_call_id=tool_call_id
@@ -926,7 +957,6 @@ class LettaAgent(BaseAgent):
             add_heartbeat_request_system_message=continue_stepping,
             reasoning_content=reasoning_content,
             pre_computed_assistant_message_id=pre_computed_assistant_message_id,
-            pre_computed_tool_message_id=pre_computed_tool_message_id,
             step_id=logged_step.id if logged_step else None,  # TODO (cliandy): eventually move over other agent loops
         )
 
@@ -937,10 +967,15 @@ class LettaAgent(BaseAgent):
 
     @trace_method
     async def _execute_tool(
-        self, tool_name: str, tool_args: dict, agent_state: AgentState, agent_step_span: Optional["Span"] = None
+        self,
+        tool_name: str,
+        tool_args: JsonDict,
+        agent_state: AgentState,
+        agent_step_span: Optional["Span"] = None,
+        step_id: str | None = None,
     ) -> "ToolExecutionResult":
         """
-        Executes a tool and returns (result, success_flag).
+        Executes a tool and returns the ToolExecutionResult.
         """
         from letta.schemas.tool_execution_result import ToolExecutionResult
 
@@ -972,7 +1007,10 @@ class LettaAgent(BaseAgent):
         # TODO: Integrate sandbox result
         log_event(name=f"start_{tool_name}_execution", attributes=tool_args)
         tool_execution_result = await tool_execution_manager.execute_tool_async(
-            function_name=tool_name, function_args=tool_args, tool=target_tool
+            function_name=tool_name,
+            function_args=tool_args,
+            tool=target_tool,
+            step_id=step_id,
         )
         if agent_step_span:
             end_time = get_utc_timestamp_ns()
@@ -980,7 +1018,7 @@ class LettaAgent(BaseAgent):
                 name="tool_execution_completed",
                 attributes={
                     "tool_name": target_tool.name,
-                    "duration_ms": (end_time - start_time) // 1_000_000,
+                    "duration_ms": ns_to_ms((end_time - start_time)),
                     "success": tool_execution_result.success_flag,
                     "tool_type": target_tool.tool_type,
                     "tool_id": target_tool.id,

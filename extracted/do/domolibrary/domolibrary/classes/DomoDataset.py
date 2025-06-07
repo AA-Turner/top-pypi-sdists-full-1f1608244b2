@@ -16,23 +16,12 @@ from domolibrary.routes.dataset import (
 )
 
 # %% ../../nbs/classes/50_DomoDataset.ipynb 5
-import json
-import io
-
-import httpx
-import asyncio
-
-from dataclasses import dataclass, field
-from typing import List, Optional
-
-from nbdev.showdoc import patch_to
-
 import domolibrary.utils.DictDot as util_dd
 import domolibrary.utils.chunk_execution as dmce
 
 import domolibrary.client.DomoAuth as dmda
-import domolibrary.client.DomoError as de
-import pandas as pd
+import domolibrary.client.DomoError as dmde
+from domolibrary.client.DomoEntity import DomoEntity_w_Lineage
 
 import domolibrary.routes.dataset as dataset_routes
 
@@ -43,15 +32,28 @@ import domolibrary.classes.DomoDataset_Stream as dmdst
 import domolibrary.classes.DomoLineage as dmdl
 import domolibrary.classes.DomoTag as dmtg
 
+import json
+import io
+import pandas as pd
+
+import httpx
+import asyncio
+
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+from nbdev.showdoc import patch_to
+
+
 
 # %% ../../nbs/classes/50_DomoDataset.ipynb 9
 @dataclass
-class DomoDataset:
+class DomoDataset(DomoEntity_w_Lineage):
     "interacts with domo datasets"
 
     auth: dmda.DomoAuth = field(repr=False)
-
     id: str = ""
+
     display_type: str = ""
     data_provider_type: str = ""
     name: str = ""
@@ -72,105 +74,95 @@ class DomoDataset:
     Certification: dmdc.DomoCertification =  field(default=None)
     Lineage : dmdl.DomoLineage = field (default = None , repr = False)
 
-    def __eq__(self, other):
-        if self.__class__.__name__ != other.__class__.__name__:
-            return False
-        
-        return self.id == other.id
 
     def __post_init__(self):
+        self.Lineage = dmdl.DomoLineage.from_parent(
+            auth = self.auth, 
+            parent = self)
+        
         self.Schema = dmdsc.DomoDataset_Schema._from_parent(parent=self)
+        
         self.Tags = dmtg.DomoTags._from_parent(parent=self)
         
         self.Stream = dmdst.DomoStream._from_parent(parent=self)
-        self.PDP = dmpdp.Dataset_PDP_Policies(dataset
-                                              =self)
-        self.Lineage = dmdl.DomoLineage._for_dataset(
-            auth = self.auth, parent = self, parent_id= self.id)
         
-
+        self.PDP = dmpdp.Dataset_PDP_Policies(dataset =self)
 
     def display_url(self):
         return f"https://{self.auth.domo_instance }.domo.com/datasources/{self.id}/details/overview"
-
-# %% ../../nbs/classes/50_DomoDataset.ipynb 15
-@patch_to(DomoDataset, cls_method=True)
-async def get_by_id(
-    cls: DomoDataset,
-    dataset_id: str,
-    auth: dmda.DomoAuth,
-    debug_api: bool = False,
-    return_raw: bool = False,
-    session: httpx.AsyncClient = None,
-    debug_num_stacks_to_drop=2,
-    parent_class: str = None,
-):
-    """retrieves dataset metadata"""
-
-    parent_class = parent_class or cls.__name__
-
-    res = await dataset_routes.get_dataset_by_id(
-        auth=auth,
-        dataset_id=dataset_id,
-        debug_api=debug_api,
-        session=session,
-        debug_num_stacks_to_drop=debug_num_stacks_to_drop,
-        parent_class=parent_class,
-    )
-
-    if return_raw:
-        return res.response
-
-    dd = util_dd.DictDot(res.response)
-    ds = cls(
-        auth=auth,
-        id=dd.id,
-        display_type=dd.displayType,
-        data_provider_type=dd.dataProviderType,
-        name=dd.name,
-        description=dd.description,
-        owner=res.response.get("owner"),
-        stream_id=dd.streamId,
-        row_count=int(dd.rowCount),
-        column_count=int(dd.columnCount),
-    )
-
-    if dd.properties.formulas.formulas.__dict__:
-        # print(dd.properties.formulas.formulas.__dict__)
-        ds.formula = res.response.get("properties").get("formulas").get("formulas")
-
-    if dd.tags:
-        ds.Tags.tag_ls = json.loads(dd.tags)
-
-    if dd.certification:
-        # print('class def certification', dd.certification)
-        ds.certification = dmdc.DomoCertification._from_json(dd.certification)
-
-    return ds
-
-@patch_to(DomoDataset, cls_method=True)
-async def _get_by_id(
-    cls: DomoDataset,
-    id: str,
-    auth: dmda.DomoAuth,
-    debug_api: bool = False,
-    return_raw: bool = False,
-    session: httpx.AsyncClient = None,
-    debug_num_stacks_to_drop=2,
-    parent_class: str = None
-):
-    return await cls.get_by_id(
-    dataset_id = id,
-    auth = auth,
-    debug_api = debug_api,
-    return_raw = return_raw,
-    session = session,
-    debug_num_stacks_to_drop = debug_num_stacks_to_drop,
-    parent_class = parent_class,
-    )
     
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 20
+    
+    @classmethod
+    async def get_by_id(
+        cls,
+        dataset_id: str,
+        auth: dmda.DomoAuth,
+        debug_api: bool = False,
+        return_raw: bool = False,
+        session: httpx.AsyncClient = None,
+        debug_num_stacks_to_drop=2,
+        parent_class: str = None,
+    ):
+        """retrieves dataset metadata"""
+
+        parent_class = parent_class or cls.__name__
+
+        res = await dataset_routes.get_dataset_by_id(
+            auth=auth,
+            dataset_id=dataset_id,
+            debug_api=debug_api,
+            session=session,
+            debug_num_stacks_to_drop=debug_num_stacks_to_drop,
+            parent_class=parent_class,
+        )
+
+        if return_raw:
+            return res.response
+
+        dd = util_dd.DictDot(res.response)
+        ds = cls(
+            auth=auth,
+            id=dd.id,
+            display_type=dd.displayType,
+            data_provider_type=dd.dataProviderType,
+            name=dd.name,
+            description=dd.description,
+            owner=res.response.get("owner"),
+            stream_id=dd.streamId,
+            row_count=int(dd.rowCount),
+            column_count=int(dd.columnCount),
+            Lineage = None
+        )
+
+        if dd.properties.formulas.formulas.__dict__:
+            # print(dd.properties.formulas.formulas.__dict__)
+            ds.formula = res.response.get("properties").get("formulas").get("formulas")
+
+        if dd.tags:
+            ds.Tags.tag_ls = json.loads(dd.tags)
+
+        if dd.certification:
+            # print('class def certification', dd.certification)
+            ds.certification = dmdc.DomoCertification._from_json(dd.certification)
+
+        return ds
+
+    @classmethod
+    async def _get_entity_by_id(
+        cls,
+        entity_id: str,
+        auth: dmda.DomoAuth,
+        **kwargs
+    ):
+        return await cls.get_by_id(
+        dataset_id = entity_id,
+        auth = auth,
+        **kwargs
+        )
+        
+
+# %% ../../nbs/classes/50_DomoDataset.ipynb 19
 @patch_to(DomoDataset, cls_method=True)
 async def query_dataset_private(
     cls: DomoDataset,
@@ -242,7 +234,7 @@ async def query_dataset_private(
     return pd.DataFrame(res.response)
 
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 22
+# %% ../../nbs/classes/50_DomoDataset.ipynb 21
 @patch_to(DomoDataset)
 async def delete(
     self: DomoDataset,
@@ -261,7 +253,7 @@ async def delete(
 
     return res
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 23
+# %% ../../nbs/classes/50_DomoDataset.ipynb 22
 @patch_to(DomoDataset)
 async def share(
     self: DomoDataset,
@@ -291,7 +283,7 @@ async def share(
 
     return res
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 27
+# %% ../../nbs/classes/50_DomoDataset.ipynb 26
 @patch_to(DomoDataset)
 async def index_dataset(
     self: DomoDataset,
@@ -307,7 +299,7 @@ async def index_dataset(
         auth=auth, dataset_id=dataset_id, debug_api=debug_api, session=session
     )
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 28
+# %% ../../nbs/classes/50_DomoDataset.ipynb 27
 @patch_to(DomoDataset)
 async def upload_data(
     self: DomoDataset,
@@ -436,7 +428,7 @@ async def upload_data(
 
     return res
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 30
+# %% ../../nbs/classes/50_DomoDataset.ipynb 29
 @patch_to(DomoDataset)
 async def list_partitions(
     self: DomoDataset,
@@ -457,7 +449,7 @@ async def list_partitions(
 
     return res.response
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 33
+# %% ../../nbs/classes/50_DomoDataset.ipynb 32
 @patch_to(DomoDataset, cls_method=True)
 async def create(
     cls: DomoDataset,
@@ -492,7 +484,7 @@ async def create(
 
     return await cls.get_by_id(dataset_id=dataset_id, auth=auth)
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 36
+# %% ../../nbs/classes/50_DomoDataset.ipynb 35
 @patch_to(DomoDataset)
 async def delete_partition(
     self: DomoDataset,
@@ -565,7 +557,7 @@ async def delete_partition(
 
     return res.response
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 39
+# %% ../../nbs/classes/50_DomoDataset.ipynb 38
 @patch_to(DomoDataset)
 async def reset_dataset(
     self: DomoDataset,
@@ -623,7 +615,7 @@ async def reset_dataset(
 
     return res
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 40
+# %% ../../nbs/classes/50_DomoDataset.ipynb 39
 @patch_to(DomoDataset)
 async def upsert_connector(
     self,

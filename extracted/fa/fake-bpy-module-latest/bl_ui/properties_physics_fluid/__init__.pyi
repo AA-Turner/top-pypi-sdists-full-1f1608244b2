@@ -54,20 +54,20 @@ class PHYSICS_PT_adaptive_domain(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -97,14 +97,14 @@ class PHYSICS_PT_borders(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -134,14 +134,14 @@ class PHYSICS_PT_cache(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -172,14 +172,14 @@ class PHYSICS_PT_collections(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -210,26 +210,26 @@ class PHYSICS_PT_diffusion(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -260,14 +260,14 @@ class PHYSICS_PT_export(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -298,14 +298,14 @@ class PHYSICS_PT_field_weights(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -336,14 +336,14 @@ class PHYSICS_PT_fire(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -373,20 +373,20 @@ class PHYSICS_PT_flow_initial_velocity(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -417,14 +417,14 @@ class PHYSICS_PT_flow_source(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -455,20 +455,20 @@ class PHYSICS_PT_flow_texture(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -497,14 +497,14 @@ class PHYSICS_PT_fluid(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -535,14 +535,14 @@ class PHYSICS_PT_fluid_domain_render(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -573,20 +573,20 @@ class PHYSICS_PT_guide(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -616,20 +616,20 @@ class PHYSICS_PT_liquid(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -660,20 +660,20 @@ class PHYSICS_PT_mesh(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -704,20 +704,20 @@ class PHYSICS_PT_noise(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -748,14 +748,14 @@ class PHYSICS_PT_particles(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -785,14 +785,14 @@ class PHYSICS_PT_settings(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -822,14 +822,14 @@ class PHYSICS_PT_smoke(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -861,20 +861,20 @@ class PHYSICS_PT_smoke_dissolve(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -904,14 +904,14 @@ class PHYSICS_PT_viewport_display(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -941,14 +941,14 @@ class PHYSICS_PT_viewport_display_advanced(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -978,20 +978,20 @@ class PHYSICS_PT_viewport_display_color(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1021,20 +1021,20 @@ class PHYSICS_PT_viewport_display_debug(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1064,20 +1064,20 @@ class PHYSICS_PT_viewport_display_slicing(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1108,20 +1108,20 @@ class PHYSICS_PT_viscosity(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1133,56 +1133,56 @@ class PhysicButtonsPanel:
     bl_space_type: typing.Any
 
     @staticmethod
-    def check_domain_has_unbaked_guide(domain):
+    def check_domain_has_unbaked_guide(domain) -> None:
         """
 
         :param domain:
         """
 
     @staticmethod
-    def poll_fluid(context):
+    def poll_fluid(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def poll_fluid_domain(context):
+    def poll_fluid_domain(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def poll_fluid_flow(context):
+    def poll_fluid_flow(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def poll_fluid_flow_liquid(context):
+    def poll_fluid_flow_liquid(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def poll_fluid_flow_outflow(context):
+    def poll_fluid_flow_outflow(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def poll_gas_domain(context):
+    def poll_gas_domain(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def poll_liquid_domain(context):
+    def poll_liquid_domain(context) -> None:
         """
 
         :param context:

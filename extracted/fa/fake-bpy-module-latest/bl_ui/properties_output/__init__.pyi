@@ -72,20 +72,20 @@ class RENDER_PT_encoding(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -115,14 +115,14 @@ class RENDER_PT_encoding_audio(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -152,20 +152,20 @@ class RENDER_PT_encoding_video(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_vcodec(self, context):
+    def draw_vcodec(self, context) -> None:
         """Video codec options.
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -217,21 +217,21 @@ class RENDER_PT_format(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_framerate(layout, rd):
+    def draw_framerate(layout, rd) -> None:
         """
 
         :param layout:
         :param rd:
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
@@ -284,7 +284,7 @@ class RENDER_PT_frame_range(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -313,7 +313,7 @@ class RENDER_PT_output(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -344,7 +344,7 @@ class RENDER_PT_output_color_management(RenderOutputButtonsPanel, bpy.types.Pane
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -375,14 +375,14 @@ class RENDER_PT_output_pixel_density(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_pixeldensity(layout, rd):
+    def draw_pixeldensity(layout, rd) -> None:
         """
 
         :param layout:
@@ -413,14 +413,14 @@ class RENDER_PT_output_views(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -450,7 +450,7 @@ class RENDER_PT_post_processing(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -480,7 +480,7 @@ class RENDER_PT_stamp(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -511,13 +511,13 @@ class RENDER_PT_stamp_burn(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -548,13 +548,13 @@ class RENDER_PT_stamp_note(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -584,13 +584,13 @@ class RENDER_PT_stereoscopy(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -621,7 +621,7 @@ class RENDER_PT_time_stretching(RenderOutputButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -647,7 +647,7 @@ class RENDER_UL_renderviews(bpy.types.UIList):
 
     def draw_item(
         self, _context, layout, _data, item, icon, _active_data, _active_propname, index
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -666,7 +666,7 @@ class RenderOutputButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

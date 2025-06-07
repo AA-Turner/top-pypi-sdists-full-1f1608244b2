@@ -10,7 +10,7 @@ import bpy.types
 
 def activate_viewer(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Activate selected viewer node in compositor and geometry nodes
 
     :type execution_context: int | str | None
@@ -26,7 +26,7 @@ def add_closure_zone(
     settings: bpy.types.bpy_prop_collection[bl_operators.node.NodeSetting]
     | None = None,
     offset: collections.abc.Iterable[float] | None = (150.0, 0.0),
-):
+) -> None:
     """Add a Closure zone
 
     :type execution_context: int | str | None
@@ -46,7 +46,7 @@ def add_collection(
     *,
     name: str = "",
     session_uid: int | None = 0,
-):
+) -> None:
     """Add a collection info node to the current node editor
 
     :type execution_context: int | str | None
@@ -65,7 +65,7 @@ def add_color(
     color: collections.abc.Iterable[float] | None = (0.0, 0.0, 0.0, 0.0),
     gamma: bool | None = False,
     has_alpha: bool | None = False,
-):
+) -> None:
     """Add a color node to the current node editor
 
     :type execution_context: int | str | None
@@ -86,7 +86,7 @@ def add_empty_group(
     use_transform: bool | None = False,
     settings: bpy.types.bpy_prop_collection[bl_operators.node.NodeSetting]
     | None = None,
-):
+) -> None:
     """Add a group node with an empty group
 
     :type execution_context: int | str | None
@@ -106,7 +106,7 @@ def add_foreach_geometry_element_zone(
     settings: bpy.types.bpy_prop_collection[bl_operators.node.NodeSetting]
     | None = None,
     offset: collections.abc.Iterable[float] | None = (150.0, 0.0),
-):
+) -> None:
     """Add a For Each Geometry Element zone that allows executing nodes e.g. for each vertex separately
 
     :type execution_context: int | str | None
@@ -127,7 +127,7 @@ def add_group(
     name: str = "",
     session_uid: int | None = 0,
     show_datablock_in_node: bool | None = True,
-):
+) -> None:
     """Add an existing node group to the current node editor
 
     :type execution_context: int | str | None
@@ -149,7 +149,7 @@ def add_group_asset(
     | None = "LOCAL",
     asset_library_identifier: str = "",
     relative_asset_identifier: str = "",
-):
+) -> None:
     """Add a node group asset to the active node tree
 
     :type execution_context: int | str | None
@@ -169,7 +169,7 @@ def add_group_input_node(
     *,
     socket_identifier: str = "",
     panel_identifier: int | None = 0,
-):
+) -> None:
     """Add a Group Input node with selected sockets to the current node editor
 
     :type execution_context: int | str | None
@@ -227,7 +227,7 @@ def add_image(
     | None = "",
     name: str = "",
     session_uid: int | None = 0,
-):
+) -> None:
     """Add a image/movie file as node to the current node editor
 
         :type execution_context: int | str | None
@@ -332,7 +332,7 @@ def add_import_node(
     directory: str = "",
     files: bpy.types.bpy_prop_collection[bpy.types.OperatorFileListElement]
     | None = None,
-):
+) -> None:
     """Add an import node to the node tree
 
     :type execution_context: int | str | None
@@ -350,7 +350,7 @@ def add_mask(
     *,
     name: str = "",
     session_uid: int | None = 0,
-):
+) -> None:
     """Add a mask node to the current node editor
 
     :type execution_context: int | str | None
@@ -368,7 +368,7 @@ def add_material(
     *,
     name: str = "",
     session_uid: int | None = 0,
-):
+) -> None:
     """Add a material node to the current node editor
 
     :type execution_context: int | str | None
@@ -389,7 +389,7 @@ def add_node(
     | None = None,
     type: str = "",
     visible_output: str = "",
-):
+) -> None:
     """Add a node to the active tree
 
     :type execution_context: int | str | None
@@ -411,7 +411,7 @@ def add_object(
     *,
     name: str = "",
     session_uid: int | None = 0,
-):
+) -> None:
     """Add an object info node to the current node editor
 
     :type execution_context: int | str | None
@@ -431,7 +431,7 @@ def add_repeat_zone(
     settings: bpy.types.bpy_prop_collection[bl_operators.node.NodeSetting]
     | None = None,
     offset: collections.abc.Iterable[float] | None = (150.0, 0.0),
-):
+) -> None:
     """Add a repeat zone that allows executing nodes a dynamic number of times
 
     :type execution_context: int | str | None
@@ -451,7 +451,7 @@ def add_reroute(
     *,
     path: bpy.types.bpy_prop_collection[bpy.types.OperatorMousePath] | None = None,
     cursor: int | None = 11,
-):
+) -> None:
     """Add a reroute node
 
     :type execution_context: int | str | None
@@ -471,7 +471,7 @@ def add_simulation_zone(
     settings: bpy.types.bpy_prop_collection[bl_operators.node.NodeSetting]
     | None = None,
     offset: collections.abc.Iterable[float] | None = (150.0, 0.0),
-):
+) -> None:
     """Add simulation zone input and output nodes to the active tree
 
     :type execution_context: int | str | None
@@ -484,14 +484,18 @@ def add_simulation_zone(
     :type offset: collections.abc.Iterable[float] | None
     """
 
-def attach(execution_context: int | str | None = None, undo: bool | None = None):
+def attach(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Attach active node to a frame
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def backimage_fit(execution_context: int | str | None = None, undo: bool | None = None):
+def backimage_fit(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Fit the background image to the view
 
     :type execution_context: int | str | None
@@ -500,7 +504,7 @@ def backimage_fit(execution_context: int | str | None = None, undo: bool | None 
 
 def backimage_move(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Move node backdrop
 
     :type execution_context: int | str | None
@@ -509,7 +513,7 @@ def backimage_move(
 
 def backimage_sample(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Use mouse to sample background image
 
     :type execution_context: int | str | None
@@ -522,7 +526,7 @@ def backimage_zoom(
     /,
     *,
     factor: float | None = 1.2,
-):
+) -> None:
     """Zoom in/out the background image
 
     :type execution_context: int | str | None
@@ -533,7 +537,7 @@ def backimage_zoom(
 
 def bake_node_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -546,7 +550,7 @@ def bake_node_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -557,7 +561,7 @@ def bake_node_item_move(
 
 def bake_node_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -566,7 +570,7 @@ def bake_node_item_remove(
 
 def capture_attribute_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -579,7 +583,7 @@ def capture_attribute_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -590,7 +594,7 @@ def capture_attribute_item_move(
 
 def capture_attribute_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -599,7 +603,7 @@ def capture_attribute_item_remove(
 
 def clear_viewer_border(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear the boundaries for viewer operations
 
     :type execution_context: int | str | None
@@ -608,7 +612,7 @@ def clear_viewer_border(
 
 def clipboard_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy the selected nodes to the internal clipboard
 
     :type execution_context: int | str | None
@@ -621,7 +625,7 @@ def clipboard_paste(
     /,
     *,
     offset: collections.abc.Iterable[float] | None = (0.0, 0.0),
-):
+) -> None:
     """Paste nodes from the internal clipboard to the active node tree
 
     :type execution_context: int | str | None
@@ -632,7 +636,7 @@ def clipboard_paste(
 
 def closure_input_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -645,7 +649,7 @@ def closure_input_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -656,7 +660,7 @@ def closure_input_item_move(
 
 def closure_input_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -665,7 +669,7 @@ def closure_input_item_remove(
 
 def closure_output_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -678,7 +682,7 @@ def closure_output_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -689,7 +693,7 @@ def closure_output_item_move(
 
 def closure_output_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -698,7 +702,7 @@ def closure_output_item_remove(
 
 def collapse_hide_unused_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle collapsed nodes and hide unused sockets
 
     :type execution_context: int | str | None
@@ -707,7 +711,7 @@ def collapse_hide_unused_toggle(
 
 def combine_bundle_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -720,7 +724,7 @@ def combine_bundle_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -731,7 +735,7 @@ def combine_bundle_item_move(
 
 def combine_bundle_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -744,7 +748,7 @@ def connect_to_output(
     /,
     *,
     run_in_geometry_nodes: bool | None = True,
-):
+) -> None:
     """Connect active node to the active output node of the node tree
 
     :type execution_context: int | str | None
@@ -755,7 +759,7 @@ def connect_to_output(
 
 def cryptomatte_layer_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a new input layer to a Cryptomatte node
 
     :type execution_context: int | str | None
@@ -764,7 +768,7 @@ def cryptomatte_layer_add(
 
 def cryptomatte_layer_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove layer from a Cryptomatte node
 
     :type execution_context: int | str | None
@@ -773,7 +777,7 @@ def cryptomatte_layer_remove(
 
 def deactivate_viewer(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Deactivate selected viewer node in geometry nodes
 
     :type execution_context: int | str | None
@@ -782,14 +786,16 @@ def deactivate_viewer(
 
 def default_group_width_set(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set the width based on the parent group node in the current context
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def delete(execution_context: int | str | None = None, undo: bool | None = None):
+def delete(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove selected nodes
 
     :type execution_context: int | str | None
@@ -798,14 +804,16 @@ def delete(execution_context: int | str | None = None, undo: bool | None = None)
 
 def delete_reconnect(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove nodes and reconnect nodes as if deletion was muted
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def detach(execution_context: int | str | None = None, undo: bool | None = None):
+def detach(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Detach selected nodes from parents
 
     :type execution_context: int | str | None
@@ -820,7 +828,7 @@ def detach_translate_attach(
     NODE_OT_detach: detach | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
     NODE_OT_attach: attach | None = None,
-):
+) -> None:
     """Detach nodes, move and attach to frame
 
     :type execution_context: int | str | None
@@ -840,7 +848,7 @@ def duplicate(
     *,
     keep_inputs: bool | None = False,
     linked: bool | None = True,
-):
+) -> None:
     """Duplicate selected nodes
 
     :type execution_context: int | str | None
@@ -858,7 +866,7 @@ def duplicate_move(
     *,
     NODE_OT_duplicate: duplicate | None = None,
     NODE_OT_translate_attach: translate_attach | None = None,
-):
+) -> None:
     """Duplicate selected nodes and move them
 
     :type execution_context: int | str | None
@@ -876,7 +884,7 @@ def duplicate_move_keep_inputs(
     *,
     NODE_OT_duplicate: duplicate | None = None,
     NODE_OT_translate_attach: translate_attach | None = None,
-):
+) -> None:
     """Duplicate selected nodes keeping input links and move them
 
     :type execution_context: int | str | None
@@ -894,7 +902,7 @@ def duplicate_move_linked(
     *,
     NODE_OT_duplicate: duplicate | None = None,
     NODE_OT_translate_attach: translate_attach | None = None,
-):
+) -> None:
     """Duplicate selected nodes, but not their node trees, and move them
 
     :type execution_context: int | str | None
@@ -907,7 +915,7 @@ def duplicate_move_linked(
 
 def enum_definition_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -920,7 +928,7 @@ def enum_definition_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -931,7 +939,7 @@ def enum_definition_item_move(
 
 def enum_definition_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -940,7 +948,7 @@ def enum_definition_item_remove(
 
 def evaluate_closure_input_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -953,7 +961,7 @@ def evaluate_closure_input_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -964,7 +972,7 @@ def evaluate_closure_input_item_move(
 
 def evaluate_closure_input_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -973,7 +981,7 @@ def evaluate_closure_input_item_remove(
 
 def evaluate_closure_output_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -986,7 +994,7 @@ def evaluate_closure_output_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -997,14 +1005,16 @@ def evaluate_closure_output_item_move(
 
 def evaluate_closure_output_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def find_node(execution_context: int | str | None = None, undo: bool | None = None):
+def find_node(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Search for a node by name and focus and select it
 
     :type execution_context: int | str | None
@@ -1013,7 +1023,7 @@ def find_node(execution_context: int | str | None = None, undo: bool | None = No
 
 def foreach_geometry_element_zone_generation_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -1026,7 +1036,7 @@ def foreach_geometry_element_zone_generation_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -1037,7 +1047,7 @@ def foreach_geometry_element_zone_generation_item_move(
 
 def foreach_geometry_element_zone_generation_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -1046,7 +1056,7 @@ def foreach_geometry_element_zone_generation_item_remove(
 
 def foreach_geometry_element_zone_input_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -1059,7 +1069,7 @@ def foreach_geometry_element_zone_input_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -1070,7 +1080,7 @@ def foreach_geometry_element_zone_input_item_move(
 
 def foreach_geometry_element_zone_input_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -1079,7 +1089,7 @@ def foreach_geometry_element_zone_input_item_remove(
 
 def foreach_geometry_element_zone_main_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -1092,7 +1102,7 @@ def foreach_geometry_element_zone_main_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -1103,7 +1113,7 @@ def foreach_geometry_element_zone_main_item_move(
 
 def foreach_geometry_element_zone_main_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -1112,7 +1122,7 @@ def foreach_geometry_element_zone_main_item_remove(
 
 def format_string_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -1125,7 +1135,7 @@ def format_string_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -1136,7 +1146,7 @@ def format_string_item_move(
 
 def format_string_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -1145,7 +1155,7 @@ def format_string_item_remove(
 
 def gltf_settings_node_operator(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a node to the active tree for glTF export
 
     :type execution_context: int | str | None
@@ -1158,7 +1168,7 @@ def group_edit(
     /,
     *,
     exit: bool | None = False,
-):
+) -> None:
     """Edit node group
 
     :type execution_context: int | str | None
@@ -1167,14 +1177,18 @@ def group_edit(
     :type exit: bool | None
     """
 
-def group_insert(execution_context: int | str | None = None, undo: bool | None = None):
+def group_insert(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Insert selected nodes into a node group
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def group_make(execution_context: int | str | None = None, undo: bool | None = None):
+def group_make(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Make group from selected nodes
 
     :type execution_context: int | str | None
@@ -1187,7 +1201,7 @@ def group_separate(
     /,
     *,
     type: typing.Literal["COPY", "MOVE"] | None = "COPY",
-):
+) -> None:
     """Separate selected nodes from the node group
 
         :type execution_context: int | str | None
@@ -1202,7 +1216,9 @@ def group_separate(
         :type type: typing.Literal['COPY','MOVE'] | None
     """
 
-def group_ungroup(execution_context: int | str | None = None, undo: bool | None = None):
+def group_ungroup(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Ungroup selected nodes
 
     :type execution_context: int | str | None
@@ -1211,14 +1227,16 @@ def group_ungroup(execution_context: int | str | None = None, undo: bool | None 
 
 def hide_socket_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle unused node socket display
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def hide_toggle(execution_context: int | str | None = None, undo: bool | None = None):
+def hide_toggle(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Toggle hiding of selected nodes
 
     :type execution_context: int | str | None
@@ -1227,7 +1245,7 @@ def hide_toggle(execution_context: int | str | None = None, undo: bool | None = 
 
 def index_switch_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add bake item
 
     :type execution_context: int | str | None
@@ -1240,7 +1258,7 @@ def index_switch_item_remove(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Remove an item from the index switch
 
     :type execution_context: int | str | None
@@ -1249,7 +1267,9 @@ def index_switch_item_remove(
     :type index: int | None
     """
 
-def insert_offset(execution_context: int | str | None = None, undo: bool | None = None):
+def insert_offset(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Automatically offset nodes on insertion
 
     :type execution_context: int | str | None
@@ -1258,7 +1278,7 @@ def insert_offset(execution_context: int | str | None = None, undo: bool | None 
 
 def interface_item_duplicate(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a copy of the active item to the interface
 
     :type execution_context: int | str | None
@@ -1267,7 +1287,7 @@ def interface_item_duplicate(
 
 def interface_item_make_panel_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Make the active boolean socket a toggle for its parent panel
 
     :type execution_context: int | str | None
@@ -1280,7 +1300,7 @@ def interface_item_new(
     /,
     *,
     item_type: str | None = "",
-):
+) -> None:
     """Add a new item to the interface
 
     :type execution_context: int | str | None
@@ -1291,7 +1311,7 @@ def interface_item_new(
 
 def interface_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item from the interface
 
     :type execution_context: int | str | None
@@ -1300,14 +1320,14 @@ def interface_item_remove(
 
 def interface_item_unlink_panel_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Make the panel toggle a stand-alone socket
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def join(execution_context: int | str | None = None, undo: bool | None = None):
+def join(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Attach selected nodes to a new common frame
 
     :type execution_context: int | str | None
@@ -1321,7 +1341,7 @@ def join_named(
     *,
     NODE_OT_join: join | None = None,
     WM_OT_call_panel: bpy.ops.wm.call_panel | None = None,
-):
+) -> None:
     """Create a new frame node around the selected nodes and name it immediately
 
     :type execution_context: int | str | None
@@ -1345,7 +1365,7 @@ def link(
     max_speed: float | None = 26.0,
     delay: float | None = 0.5,
     zoom_influence: float | None = 0.5,
-):
+) -> None:
     """Use the mouse to create a link between two nodes
 
     :type execution_context: int | str | None
@@ -1374,7 +1394,7 @@ def link_make(
     /,
     *,
     replace: bool | None = False,
-):
+) -> None:
     """Make a link between selected output and input sockets
 
     :type execution_context: int | str | None
@@ -1383,7 +1403,9 @@ def link_make(
     :type replace: bool | None
     """
 
-def link_viewer(execution_context: int | str | None = None, undo: bool | None = None):
+def link_viewer(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Link to viewer node
 
     :type execution_context: int | str | None
@@ -1397,7 +1419,7 @@ def links_cut(
     *,
     path: bpy.types.bpy_prop_collection[bpy.types.OperatorMousePath] | None = None,
     cursor: int | None = 15,
-):
+) -> None:
     """Use the mouse to cut (remove) some links
 
     :type execution_context: int | str | None
@@ -1408,7 +1430,9 @@ def links_cut(
     :type cursor: int | None
     """
 
-def links_detach(execution_context: int | str | None = None, undo: bool | None = None):
+def links_detach(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove all links to selected nodes, and try to connect neighbor nodes together
 
     :type execution_context: int | str | None
@@ -1422,7 +1446,7 @@ def links_mute(
     *,
     path: bpy.types.bpy_prop_collection[bpy.types.OperatorMousePath] | None = None,
     cursor: int | None = 39,
-):
+) -> None:
     """Use the mouse to mute links
 
     :type execution_context: int | str | None
@@ -1440,7 +1464,7 @@ def move_detach_links(
     *,
     NODE_OT_links_detach: links_detach | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Move a node to detach links
 
     :type execution_context: int | str | None
@@ -1458,7 +1482,7 @@ def move_detach_links_release(
     *,
     NODE_OT_links_detach: links_detach | None = None,
     NODE_OT_translate_attach: translate_attach | None = None,
-):
+) -> None:
     """Move a node to detach links
 
     :type execution_context: int | str | None
@@ -1469,7 +1493,9 @@ def move_detach_links_release(
     :type NODE_OT_translate_attach: translate_attach | None
     """
 
-def mute_toggle(execution_context: int | str | None = None, undo: bool | None = None):
+def mute_toggle(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Toggle muting of selected nodes
 
     :type execution_context: int | str | None
@@ -1478,7 +1504,7 @@ def mute_toggle(execution_context: int | str | None = None, undo: bool | None = 
 
 def new_geometry_node_group_assign(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create a new geometry node group and assign it to the active modifier
 
     :type execution_context: int | str | None
@@ -1487,7 +1513,7 @@ def new_geometry_node_group_assign(
 
 def new_geometry_node_group_tool(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create a new geometry node group for a tool
 
     :type execution_context: int | str | None
@@ -1496,7 +1522,7 @@ def new_geometry_node_group_tool(
 
 def new_geometry_nodes_modifier(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create a new modifier with a new geometry node group
 
     :type execution_context: int | str | None
@@ -1510,7 +1536,7 @@ def new_node_tree(
     *,
     type: str | None = "",
     name: str = "NodeTree",
-):
+) -> None:
     """Create a new node tree
 
     :type execution_context: int | str | None
@@ -1529,7 +1555,7 @@ def node_color_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove a Node Color Preset
 
     :type execution_context: int | str | None
@@ -1544,7 +1570,7 @@ def node_color_preset_add(
 
 def node_copy_color(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy color to all selected nodes
 
     :type execution_context: int | str | None
@@ -1553,7 +1579,7 @@ def node_copy_color(
 
 def options_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle option buttons display for selected nodes
 
     :type execution_context: int | str | None
@@ -1566,7 +1592,7 @@ def output_file_add_socket(
     /,
     *,
     file_path: str = "Image",
-):
+) -> None:
     """Add a new input to a file output node
 
     :type execution_context: int | str | None
@@ -1581,7 +1607,7 @@ def output_file_move_active_socket(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "DOWN",
-):
+) -> None:
     """Move the active input of a file output node up or down the list
 
     :type execution_context: int | str | None
@@ -1592,14 +1618,16 @@ def output_file_move_active_socket(
 
 def output_file_remove_active_socket(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the active input from a file output node
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def parent_set(execution_context: int | str | None = None, undo: bool | None = None):
+def parent_set(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Attach selected nodes
 
     :type execution_context: int | str | None
@@ -1608,7 +1636,7 @@ def parent_set(execution_context: int | str | None = None, undo: bool | None = N
 
 def preview_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle preview display for selected nodes
 
     :type execution_context: int | str | None
@@ -1617,7 +1645,7 @@ def preview_toggle(
 
 def read_viewlayers(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Read all render layers of all used scenes
 
     :type execution_context: int | str | None
@@ -1626,7 +1654,7 @@ def read_viewlayers(
 
 def render_changed(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Render current scene, when input node's layer has been changed
 
     :type execution_context: int | str | None
@@ -1635,7 +1663,7 @@ def render_changed(
 
 def repeat_zone_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -1648,7 +1676,7 @@ def repeat_zone_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -1659,14 +1687,16 @@ def repeat_zone_item_move(
 
 def repeat_zone_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def resize(execution_context: int | str | None = None, undo: bool | None = None):
+def resize(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Resize a node
 
     :type execution_context: int | str | None
@@ -1686,7 +1716,7 @@ def select(
     location: collections.abc.Iterable[int] | None = (0, 0),
     socket_select: bool | None = False,
     clear_viewer: bool | None = False,
-):
+) -> None:
     """Select the node under the cursor
 
     :type execution_context: int | str | None
@@ -1715,7 +1745,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """(De)select all nodes
 
         :type execution_context: int | str | None
@@ -1748,7 +1778,7 @@ def select_box(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Use box selection to select nodes
 
         :type execution_context: int | str | None
@@ -1788,7 +1818,7 @@ def select_circle(
     radius: int | None = 25,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Use circle selection to select nodes
 
         :type execution_context: int | str | None
@@ -1821,7 +1851,7 @@ def select_grouped(
     *,
     extend: bool | None = False,
     type: typing.Literal["TYPE", "COLOR", "PREFIX", "SUFFIX"] | None = "TYPE",
-):
+) -> None:
     """Select nodes with similar properties
 
     :type execution_context: int | str | None
@@ -1843,7 +1873,7 @@ def select_lasso(
     smooth_stroke_factor: float | None = 0.75,
     smooth_stroke_radius: int | None = 35,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select nodes using lasso selection
 
         :type execution_context: int | str | None
@@ -1878,7 +1908,7 @@ def select_link_viewer(
     *,
     NODE_OT_select: select | None = None,
     NODE_OT_link_viewer: link_viewer | None = None,
-):
+) -> None:
     """Select node and link it to a viewer node
 
     :type execution_context: int | str | None
@@ -1891,7 +1921,7 @@ def select_link_viewer(
 
 def select_linked_from(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select nodes linked from the selected ones
 
     :type execution_context: int | str | None
@@ -1900,7 +1930,7 @@ def select_linked_from(
 
 def select_linked_to(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select nodes linked to the selected ones
 
     :type execution_context: int | str | None
@@ -1913,7 +1943,7 @@ def select_same_type_step(
     /,
     *,
     prev: bool | None = False,
-):
+) -> None:
     """Activate and view same node type, step by step
 
     :type execution_context: int | str | None
@@ -1924,7 +1954,7 @@ def select_same_type_step(
 
 def separate_bundle_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -1937,7 +1967,7 @@ def separate_bundle_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -1948,7 +1978,7 @@ def separate_bundle_item_move(
 
 def separate_bundle_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -1957,7 +1987,7 @@ def separate_bundle_item_remove(
 
 def shader_script_update(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Update shader script node with new sockets and options from the script
 
     :type execution_context: int | str | None
@@ -1966,7 +1996,7 @@ def shader_script_update(
 
 def simulation_zone_item_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add item below active item
 
     :type execution_context: int | str | None
@@ -1979,7 +2009,7 @@ def simulation_zone_item_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move active item
 
     :type execution_context: int | str | None
@@ -1990,7 +2020,7 @@ def simulation_zone_item_move(
 
 def simulation_zone_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active item
 
     :type execution_context: int | str | None
@@ -2004,7 +2034,7 @@ def translate_attach(
     *,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
     NODE_OT_attach: attach | None = None,
-):
+) -> None:
     """Move nodes and attach to frame
 
     :type execution_context: int | str | None
@@ -2022,7 +2052,7 @@ def translate_attach_remove_on_cancel(
     *,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
     NODE_OT_attach: attach | None = None,
-):
+) -> None:
     """Move nodes and attach to frame
 
     :type execution_context: int | str | None
@@ -2035,21 +2065,25 @@ def translate_attach_remove_on_cancel(
 
 def tree_path_parent(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Go to parent node tree
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def view_all(execution_context: int | str | None = None, undo: bool | None = None):
+def view_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Resize view so you can see all nodes
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def view_selected(execution_context: int | str | None = None, undo: bool | None = None):
+def view_selected(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Resize view so you can see selected nodes
 
     :type execution_context: int | str | None
@@ -2066,7 +2100,7 @@ def viewer_border(
     ymin: int | None = 0,
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Set the boundaries for viewer operations
 
     :type execution_context: int | str | None
@@ -2089,7 +2123,7 @@ def viewer_shortcut_get(
     /,
     *,
     viewer_index: int | None = 0,
-):
+) -> None:
     """Activate a specific compositor viewer node using 1,2,..,9 keys
 
     :type execution_context: int | str | None
@@ -2104,7 +2138,7 @@ def viewer_shortcut_set(
     /,
     *,
     viewer_index: int | None = 0,
-):
+) -> None:
     """Create a compositor viewer shortcut for the selected node by pressing ctrl+1,2,..9
 
     :type execution_context: int | str | None

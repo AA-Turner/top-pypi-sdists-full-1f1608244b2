@@ -4,6 +4,20 @@
 __all__ = ['DomoCard', 'Card_DownloadSourceCode']
 
 # %% ../../nbs/classes/50_DomoCard.ipynb 2
+from domolibrary.client.DomoEntity import DomoEntity, DomoEntity_w_Lineage
+import domolibrary.client.DomoAuth as dmda
+import domolibrary.client.DomoError as dmde
+
+import domolibrary.routes.card as card_routes
+
+import domolibrary.classes.DomoLineage as dmdl
+
+
+import domolibrary.utils.DictDot as util_dd
+import domolibrary.utils.chunk_execution as dmce
+import domolibrary.utils.convert as dmut
+import domolibrary.utils.files as dmfi
+
 from dataclasses import dataclass, field
 from typing import List, Any
 from copy import deepcopy
@@ -13,24 +27,14 @@ import json
 import httpx
 from nbdev.showdoc import patch_to
 
-import domolibrary.client.DomoError as de
-
-import domolibrary.utils.DictDot as util_dd
-import domolibrary.utils.chunk_execution as dmce
-import domolibrary.utils.convert as dmut
-import domolibrary.utils.files as dmfi
-
-import domolibrary.routes.card as card_routes
-
-import domolibrary.classes.DomoLineage as dmdl
-
-import domolibrary.client.DomoAuth as dmda
 
 # %% ../../nbs/classes/50_DomoCard.ipynb 5
 @dataclass
-class DomoCard:
-    id: str
+class DomoCard(DomoEntity_w_Lineage):
     auth: dmda.DomoAuth = field(repr=False)
+    id: str
+    Lineage: "dmdl.DomoLineage" = field(repr=False)
+
     title: str = None
     description: str = None
     type: str = None
@@ -38,30 +42,57 @@ class DomoCard:
     chart_type: str = None
     dataset_id: str = None
 
-    datastore_id : str = None
-    
+    datastore_id: str = None
+
     domo_collections: List[Any] = None
-    domo_source_code : Any = None
+    domo_source_code: Any = None
 
     certification: dict = None
     owners: List[any] = None
 
-    datasources : List[Any] = field(repr = False, default = None)
-
-    Lineage : dmdl.DomoLineage = field(repr = False, default = None)
+    datasources: List[Any] = field(repr=False, default=None)
 
     def __post_init__(self):
         # self.Definition = CardDefinition(self)
-        self.Lineage = dmdl.DomoLineage_Card(auth = self.auth, parent = self)
-        pass
+        self.Lineage = dmdl.DomoLineage.from_parent(auth=self.auth, parent=self)
 
     def display_url(self) -> str:
         return f"https://{self.auth.domo_instance}.domo.com/kpis/details/{self.id}"
 
     @classmethod
+    async def get_by_id(
+        cls,
+        card_id: str,
+        auth: dmda.DomoAuth,
+        optional_parts: str = "certification,datasources,drillPath,owners,properties,domoapp",
+        debug_api: bool = False,
+        session: httpx.AsyncClient = None,
+        return_raw: bool = False,
+    ):
+
+        res = await card_routes.get_card_metadata(
+            auth=auth,
+            card_id=card_id,
+            optional_parts=optional_parts,
+            debug_api=debug_api,
+            session=session,
+            parent_class=cls.__name__,
+        )
+
+        if return_raw:
+            return res
+
+        domo_card = await cls._from_json(res.response, auth)
+
+        return domo_card
+
+    async def _get_entity_by_id(cls, entity_id: str, auth: dmda.DomoAuth, **kwargs):
+        return await cls.get_by_id(card_id=entity_id, auth=auth, **kwargs)
+
+    @classmethod
     async def _from_json(cls, card_obj, auth: dmda.DomoAuth):
-        import domolibrary.classes.DomoUser as dmu
-        import domolibrary.classes.DomoGroup as dmg
+        import domolibrary.classes.DomoUser as dmdu
+        import domolibrary.classes.DomoGroup as dmgr
 
         dd = card_obj
         if isinstance(card_obj, dict):
@@ -77,71 +108,24 @@ class DomoCard:
             certification=dd.certification,
             chart_type=dd.metadata and dd.metadata.chartType,
             dataset_id=dd.datasources[0].dataSourceId if dd.datasources else None,
+            Lineage = None
         )
 
         tasks = []
         for user in dd.owners:
             if user.type == "USER":
-                tasks.append(dmu.DomoUser.get_by_id(user_id=user.id, auth=auth))
+                tasks.append(dmdu.DomoUser.get_by_id(user_id=user.id, auth=auth))
             if user.type == "GROUP":
-                tasks.append(dmg.DomoGroup.get_by_id(group_id=user.id, auth=auth))
+                tasks.append(dmgr.DomoGroup.get_by_id(group_id=user.id, auth=auth))
 
         card.owners = await dmce.gather_with_concurrency(n=60, *tasks)
 
-        if card_obj.get('domoapp',{}).get('id'):
-            card.datastore_id = card_obj['domoapp']['id']
+        if card_obj.get("domoapp", {}).get("id"):
+            card.datastore_id = card_obj["domoapp"]["id"]
 
         return card
 
-# %% ../../nbs/classes/50_DomoCard.ipynb 6
-@patch_to(DomoCard, cls_method=True)
-async def get_by_id(
-    cls: DomoCard,
-    card_id: str,
-    auth: dmda.DomoAuth,
-    optional_parts: str = "certification,datasources,drillPath,owners,properties,domoapp",
-    debug_api: bool = False,
-    session: httpx.AsyncClient = None,
-    return_raw: bool = False,
-):
-
-    res = await card_routes.get_card_metadata(
-        auth=auth,
-        card_id=card_id,
-        optional_parts=optional_parts,
-        debug_api=debug_api,
-        session=session,
-        parent_class=cls.__name__,
-    )
-
-    if return_raw:
-        return res
-
-    domo_card = await cls._from_json(res.response, auth)
-
-    return domo_card
-
-
-@patch_to(DomoCard, cls_method=True)
-async def _get_by_id(
-    cls: DomoCard,
-    id: str,
-    auth: dmda.DomoAuth,
-    optional_parts: str = "certification,datasources,drillPath,owners,properties,domoapp",
-    debug_api: bool = False,
-    session: httpx.AsyncClient = None,
-    return_raw: bool = False,
-):
-    return await cls.get_by_id(
-        card_id=id,
-        auth=auth,
-        optional_parts=optional_parts,
-        debug_api=debug_api,
-        session=session,
-        return_raw=return_raw,
-    )
-
-# %% ../../nbs/classes/50_DomoCard.ipynb 8
+# %% ../../nbs/classes/50_DomoCard.ipynb 7
 @patch_to(DomoCard)
 async def get_datasources(
     self,
@@ -176,7 +160,7 @@ async def get_datasources(
 
     return self.datasources
 
-# %% ../../nbs/classes/50_DomoCard.ipynb 10
+# %% ../../nbs/classes/50_DomoCard.ipynb 9
 @patch_to(DomoCard)
 async def share(
     self: DomoCard,
@@ -207,8 +191,8 @@ async def share(
 
     return res
 
-# %% ../../nbs/classes/50_DomoCard.ipynb 13
-class Card_DownloadSourceCode(de.DomoError):
+# %% ../../nbs/classes/50_DomoCard.ipynb 12
+class Card_DownloadSourceCode(dmde.DomoError):
     def __init__(self, cls, auth, message):
         super().__init__(cls=cls, auth=auth, message=message)
 
@@ -279,7 +263,7 @@ async def get_source_code(self, debug_api: bool = False, try_auto_share: bool = 
 
     return self.domo_source_code
 
-# %% ../../nbs/classes/50_DomoCard.ipynb 15
+# %% ../../nbs/classes/50_DomoCard.ipynb 14
 @patch_to(DomoCard)
 async def download_source_code(
     self,

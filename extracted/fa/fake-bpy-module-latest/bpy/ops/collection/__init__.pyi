@@ -9,7 +9,7 @@ def create(
     /,
     *,
     name: str = "Collection",
-):
+) -> None:
     """Create an object collection from selected objects
 
     :type execution_context: int | str | None
@@ -18,7 +18,9 @@ def create(
     :type name: str
     """
 
-def export_all(execution_context: int | str | None = None, undo: bool | None = None):
+def export_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Invoke all configured exporters on this collection
 
     :type execution_context: int | str | None
@@ -31,7 +33,7 @@ def exporter_add(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Add Exporter
 
     :type execution_context: int | str | None
@@ -46,7 +48,7 @@ def exporter_export(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Invoke the export operation
 
     :type execution_context: int | str | None
@@ -61,7 +63,7 @@ def exporter_remove(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Remove Exporter
 
     :type execution_context: int | str | None
@@ -76,7 +78,7 @@ def objects_add_active(
     /,
     *,
     collection: str | None = "",
-):
+) -> None:
     """Add selected objects to one of the collections the active-object is part of. Optionally add to "All Collections" to ensure selected objects are included in the same collections as the active object
 
     :type execution_context: int | str | None
@@ -91,7 +93,7 @@ def objects_remove(
     /,
     *,
     collection: str | None = "",
-):
+) -> None:
     """Remove selected objects from a collection
 
     :type execution_context: int | str | None
@@ -106,7 +108,7 @@ def objects_remove_active(
     /,
     *,
     collection: str | None = "",
-):
+) -> None:
     """Remove the object from an object collection that contains the active object
 
     :type execution_context: int | str | None
@@ -117,7 +119,7 @@ def objects_remove_active(
 
 def objects_remove_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove selected objects from all collections
 
     :type execution_context: int | str | None

@@ -63,8 +63,16 @@ class ElasticsearchVectorStore(LangChainVectorStoreAdapter[ElasticsearchStore]):
     .. note::
 
         For hybrid search (multi-vector search), if no ranker type is specified in strategy, a `weighted` reranker with default weights equal to 1 is used.
-        For more details, see the `langchain_elasticsearch` documentation https://python.langchain.com/docs/integrations/vectorstores/elasticsearch/ and
-        Elasticsearch documentation https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html#_combine_approximate_knn_with_other_features.
+        For more details, see the `langchain-elasticsearch documentation <https://python.langchain.com/docs/integrations/vectorstores/elasticsearch/>`_ and
+        `Elasticsearch documentation <https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html#_combine_approximate_knn_with_other_features>`_.
+
+    .. warning::
+
+        The default retrieval strategy is the same as in ``langchain_elasticsearch.ElasticsearchStore``, i.e. when no strategy is specified the ``elasticsearch.helpers.vectorstore.DenseVectorStrategy``
+        will be used (see `langchain-elasticsearch` `documentation <https://python.langchain.com/api_reference/elasticsearch/vectorstores/langchain_elasticsearch.vectorstores.ElasticsearchStore.html#langchain_elasticsearch.vectorstores.ElasticsearchStore>`_).
+
+        Please note, that this strategy differ from the default one in ``ibm_watsonx.ai.foundation_models.extensions.rag.vector_stores.VectorStore``, where ``elasticsearch.helpers.vectorstore.DenseVectorScriptScoreStrategy`` is used. To ensure the same functionality
+        when migrating from ``VectorStore`` to ``ElasticsearchVectorStore``, you may want to pass ``DenseVectorScriptScoreStrategy(distance=distance_metric)`` explicitly to ``ElasticsearchVectorStore`` constructor.
 
 
     **Example:**

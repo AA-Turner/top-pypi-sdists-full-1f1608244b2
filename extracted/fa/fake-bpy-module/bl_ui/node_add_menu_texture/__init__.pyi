@@ -24,7 +24,7 @@ class NODE_MT_category_texture_color(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -50,7 +50,7 @@ class NODE_MT_category_texture_converter(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -76,7 +76,7 @@ class NODE_MT_category_texture_distort(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -102,7 +102,7 @@ class NODE_MT_category_texture_group(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -128,7 +128,7 @@ class NODE_MT_category_texture_input(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -154,7 +154,7 @@ class NODE_MT_category_texture_output(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -181,7 +181,7 @@ class NODE_MT_category_texture_pattern(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -207,7 +207,7 @@ class NODE_MT_category_texture_texture(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -234,7 +234,7 @@ class NODE_MT_texture_node_add_all(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:

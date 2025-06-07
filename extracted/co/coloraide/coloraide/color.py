@@ -1042,8 +1042,6 @@ class Color(metaclass=ColorMeta):
         if domain is not None:
             interpolate_args['domain'] = interpolate.normalize_domain(domain)
 
-        if not self._is_color(color) and not isinstance(color, (str, Mapping)):
-            raise TypeError(f"Unexpected type '{type(color)}'")
         mixed = self.interpolate([self, color], **interpolate_args)(percent)  # type: Self
         return self._hotswap(mixed) if in_place else mixed
 
@@ -1147,6 +1145,7 @@ class Color(metaclass=ColorMeta):
     def average(
         cls,
         colors: Iterable[ColorInput],
+        weights: Iterable[float] | None = None,
         *,
         space: str | None = None,
         out_space: str | None = None,
@@ -1168,6 +1167,7 @@ class Color(metaclass=ColorMeta):
         return average.average(
             cls,
             colors,
+            weights,
             space,
             premultiplied
         ).convert(out_space, in_place=True)
@@ -1305,9 +1305,9 @@ class Color(metaclass=ColorMeta):
     def get(self,
         name: str,
         *,
-        nans: bool = True,
-        precision: int | Sequence[int] | None = None,
-        rounding: str | None = None
+        nans: bool = ...,
+        precision: int | Sequence[int] | None = ...,
+        rounding: str | None = ...
     ) -> float:
         ...
 
@@ -1316,9 +1316,9 @@ class Color(metaclass=ColorMeta):
         self,
         name: list[str] | tuple[str, ...],
         *,
-        nans: bool = True,
-        precision: int | Sequence[int] | None = None,
-        rounding: str | None = None
+        nans: bool = ...,
+        precision: int | Sequence[int] | None = ...,
+        rounding: str | None = ...
     ) -> Vector:
         ...
 

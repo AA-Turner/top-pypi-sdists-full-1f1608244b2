@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: unitycatalog-client
-Version: 0.2.1
+Version: 0.3.0
 Summary: Official Python SDK for Unity Catalog
 Project-URL: homepage, https://www.unitycatalog.io/
 Project-URL: issues, https://github.com/unitycatalog/unitycatalog/issues
@@ -159,7 +159,7 @@ async def create_catalog(catalog_name, catalog_api, comment=None):
         comment=comment or ""
     )
     return await catalog_api.create_catalog(create_catalog=new_catalog)
-
+        
 await create_catalog("MyNewCatalog", catalog_api=catalogs_api, comment="This is a new catalog.")
 ```
 

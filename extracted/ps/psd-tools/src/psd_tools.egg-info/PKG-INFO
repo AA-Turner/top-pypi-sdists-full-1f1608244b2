@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: psd-tools
-Version: 1.10.7
+Version: 1.10.8
 Summary: Python package for working with Adobe Photoshop PSD files
 Author-email: Mikhail Korobov <kmike84@gmail.com>, Kota Yamaguchi <KotaYamaguchi1984@gmail.com>
 License: MIT License
@@ -19,6 +19,7 @@ Classifier: Topic :: Multimedia :: Graphics
 Classifier: Topic :: Multimedia :: Graphics :: Viewers
 Classifier: Topic :: Multimedia :: Graphics :: Graphics Conversion
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.9
 Description-Content-Type: text/x-rst
 License-File: LICENSE
 Requires-Dist: typing-extensions; python_version < "3.11"
@@ -38,6 +39,7 @@ Requires-Dist: types-docopt; extra == "dev"
 Provides-Extra: docs
 Requires-Dist: sphinx; extra == "docs"
 Requires-Dist: sphinx_rtd_theme; extra == "docs"
+Dynamic: license-file
 
 psd-tools
 =========

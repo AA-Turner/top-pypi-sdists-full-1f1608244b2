@@ -27,13 +27,13 @@ class BakeToKeyframes(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -41,7 +41,7 @@ class BakeToKeyframes(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -70,14 +70,14 @@ class ConnectRigidBodies(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -106,14 +106,14 @@ class CopyRigidbodySettings(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

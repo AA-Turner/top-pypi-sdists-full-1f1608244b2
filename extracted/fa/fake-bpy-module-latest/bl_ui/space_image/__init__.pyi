@@ -13,7 +13,7 @@ class BrushButtonsPanel(bl_ui.properties_paint_common.UnifiedPaintPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -45,7 +45,7 @@ class IMAGE_AST_brush_paint(ImageAssetShelf, bpy.types.AssetShelf):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -70,14 +70,14 @@ class IMAGE_HT_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_xform_template(layout, context):
+    def draw_xform_template(layout, context) -> None:
         """
 
         :param layout:
@@ -104,19 +104,19 @@ class IMAGE_HT_tool_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_mode_settings(self, context):
+    def draw_mode_settings(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_tool_settings(self, context):
+    def draw_tool_settings(self, context) -> None:
         """
 
         :param context:
@@ -142,7 +142,7 @@ class IMAGE_MT_editor_menus(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -167,7 +167,7 @@ class IMAGE_MT_image(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -192,7 +192,7 @@ class IMAGE_MT_image_invert(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -217,7 +217,7 @@ class IMAGE_MT_image_transform(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -242,14 +242,14 @@ class IMAGE_MT_mask_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -274,7 +274,7 @@ class IMAGE_MT_pivot_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -299,7 +299,7 @@ class IMAGE_MT_select(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -324,7 +324,7 @@ class IMAGE_MT_select_linked(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -368,7 +368,7 @@ class IMAGE_MT_uvs_align(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -393,7 +393,7 @@ class IMAGE_MT_uvs_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -418,7 +418,7 @@ class IMAGE_MT_uvs_merge(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -443,7 +443,7 @@ class IMAGE_MT_uvs_mirror(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -468,7 +468,7 @@ class IMAGE_MT_uvs_select_mode(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -493,7 +493,7 @@ class IMAGE_MT_uvs_showhide(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -518,7 +518,7 @@ class IMAGE_MT_uvs_snap(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -543,7 +543,7 @@ class IMAGE_MT_uvs_snap_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -568,7 +568,7 @@ class IMAGE_MT_uvs_split(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -593,7 +593,7 @@ class IMAGE_MT_uvs_transform(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -618,7 +618,7 @@ class IMAGE_MT_uvs_unwrap(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -643,7 +643,7 @@ class IMAGE_MT_view(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -668,7 +668,7 @@ class IMAGE_MT_view_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -693,7 +693,7 @@ class IMAGE_MT_view_zoom(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -818,7 +818,7 @@ class IMAGE_PT_gizmo_display(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -846,14 +846,14 @@ class IMAGE_PT_image_properties(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -976,7 +976,7 @@ class IMAGE_PT_overlay(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1004,14 +1004,14 @@ class IMAGE_PT_overlay_guides(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1039,7 +1039,7 @@ class IMAGE_PT_overlay_image(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1067,14 +1067,14 @@ class IMAGE_PT_overlay_render_guides(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1102,14 +1102,14 @@ class IMAGE_PT_overlay_uv_display(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1137,14 +1137,14 @@ class IMAGE_PT_overlay_uv_edit_geometry(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1172,14 +1172,14 @@ class IMAGE_PT_overlay_uv_stretch(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1372,7 +1372,7 @@ class IMAGE_PT_proportional_edit(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1400,14 +1400,14 @@ class IMAGE_PT_render_slots(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1435,7 +1435,7 @@ class IMAGE_PT_sample_line(ImageScopesPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1464,7 +1464,7 @@ class IMAGE_PT_scope_sample(ImageScopesPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1491,7 +1491,7 @@ class IMAGE_PT_snapping(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1550,7 +1550,7 @@ class IMAGE_PT_tools_brush_texture(BrushButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1580,7 +1580,7 @@ class IMAGE_PT_tools_imagepaint_symmetry(BrushButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1636,14 +1636,14 @@ class IMAGE_PT_udim_tiles(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1671,14 +1671,14 @@ class IMAGE_PT_uv_cursor(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1706,7 +1706,7 @@ class IMAGE_PT_uv_sculpt_curve(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1734,7 +1734,7 @@ class IMAGE_PT_uv_sculpt_options(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1762,14 +1762,14 @@ class IMAGE_PT_view_display(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1797,7 +1797,7 @@ class IMAGE_PT_view_histogram(ImageScopesPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1825,7 +1825,7 @@ class IMAGE_PT_view_vectorscope(ImageScopesPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1853,7 +1853,7 @@ class IMAGE_PT_view_waveform(ImageScopesPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1887,7 +1887,7 @@ class IMAGE_UL_render_slots(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -1928,7 +1928,7 @@ class IMAGE_UL_udim_tiles(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -1952,7 +1952,7 @@ class ImageAssetShelf(bl_ui.properties_paint_common.BrushAssetShelf):
 
 class ImageScopesPanel:
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1960,7 +1960,7 @@ class ImageScopesPanel:
 
 class _draw_tool_settings_context_mode:
     @staticmethod
-    def PAINT(context, layout, tool):
+    def PAINT(context, layout, tool) -> None:
         """
 
         :param context:
@@ -1969,7 +1969,7 @@ class _draw_tool_settings_context_mode:
         """
 
     @staticmethod
-    def UV(context, layout, tool):
+    def UV(context, layout, tool) -> None:
         """
 
         :param context:
@@ -2001,14 +2001,14 @@ class IMAGE_PT_paint_color(bpy.types.Panel, ImagePaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2037,7 +2037,7 @@ class IMAGE_PT_paint_settings(bpy.types.Panel, ImagePaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2068,7 +2068,7 @@ class IMAGE_PT_paint_settings_advanced(bpy.types.Panel, ImagePaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:

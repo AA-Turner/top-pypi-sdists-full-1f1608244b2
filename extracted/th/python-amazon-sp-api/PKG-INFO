@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: python-amazon-sp-api
-Version: 1.9.35
+Version: 1.9.36
 Summary: Python wrapper for the Amazon Selling-Partner API
 Home-page: https://github.com/saleweaver/python-amazon-sp-api
 Author: Michael
@@ -34,15 +34,6 @@ Dynamic: summary
 ## Amazon Selling-Partner API
 
 A wrapper to access **Amazon's Selling Partner API** with an easy-to-use interface.
-
----
-
-🚀 Streamline Your Amazon Seller Reporting!
-
-Automatically download all your Amazon seller reports and effortlessly forward them directly to Google Sheets or your database. 
-If you're looking to download reports from Amazon, or get real-time alerts, [have a look at my service](https://clairinsights.com).
-
-
 
 ---
 

@@ -27,26 +27,26 @@ class SPREADSHEET_OT_toggle_pin(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def pin(self, context):
+    def pin(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-    def unpin(self, context):
+    def unpin(self, context) -> None:
         """
 
         :param context:

@@ -50,12 +50,12 @@ import typing_extensions
 import numpy.typing as npt
 import bpy.types
 
-def clear_by_owner(owner):
+def clear_by_owner(owner) -> None:
     """Clear all subscribers using this owner."""
 
 def publish_rna(
     key: bpy.types.Property | bpy.types.Struct | tuple[bpy.types.Struct, str] | None,
-):
+) -> None:
     """Notify subscribers of changes to this property
     (this typically doesn't need to be called explicitly since changes will automatically publish updates).
     In some cases it may be useful to publish changes explicitly using more general keys.
@@ -75,7 +75,7 @@ def subscribe_rna(
     args,
     notify,
     options=set(),
-):
+) -> None:
     """Register a message bus subscription. It will be cleared when another blend file is
     loaded, or can be cleared explicitly via `bpy.msgbus.clear_by_owner`.
 

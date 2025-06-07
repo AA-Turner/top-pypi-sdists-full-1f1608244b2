@@ -52,13 +52,13 @@ class PHYSICS_PT_cloth(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
@@ -89,7 +89,7 @@ class PHYSICS_PT_cloth_cache(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -120,7 +120,7 @@ class PHYSICS_PT_cloth_collision(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -150,7 +150,7 @@ class PHYSICS_PT_cloth_damping(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -181,7 +181,7 @@ class PHYSICS_PT_cloth_field_weights(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -211,13 +211,13 @@ class PHYSICS_PT_cloth_internal_springs(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -247,13 +247,13 @@ class PHYSICS_PT_cloth_object_collision(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -283,7 +283,7 @@ class PHYSICS_PT_cloth_physical_properties(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -313,13 +313,13 @@ class PHYSICS_PT_cloth_pressure(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -350,7 +350,7 @@ class PHYSICS_PT_cloth_property_weights(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -380,13 +380,13 @@ class PHYSICS_PT_cloth_self_collision(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -417,7 +417,7 @@ class PHYSICS_PT_cloth_shape(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -447,7 +447,7 @@ class PHYSICS_PT_cloth_stiffness(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -459,10 +459,10 @@ class PhysicButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def cloth_panel_enabled(md): ...
+def cloth_panel_enabled(md) -> None: ...

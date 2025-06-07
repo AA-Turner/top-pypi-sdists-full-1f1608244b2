@@ -10,35 +10,35 @@ class ProgressReport:
     steps: typing.Any
     wm: typing.Any
 
-    def enter_substeps(self, nbr, msg=""):
+    def enter_substeps(self, nbr, msg="") -> None:
         """
 
         :param nbr:
         :param msg:
         """
 
-    def finalize(self): ...
-    def initialize(self, wm=None):
+    def finalize(self) -> None: ...
+    def initialize(self, wm=None) -> None:
         """Initialize self.  See help(type(self)) for accurate signature.
 
         :param wm:
         """
 
-    def leave_substeps(self, msg=""):
+    def leave_substeps(self, msg="") -> None:
         """
 
         :param msg:
         """
 
-    def start(self): ...
-    def step(self, msg="", nbr=1):
+    def start(self) -> None: ...
+    def step(self, msg="", nbr=1) -> None:
         """
 
         :param msg:
         :param nbr:
         """
 
-    def update(self, msg=""):
+    def update(self, msg="") -> None:
         """
 
         :param msg:
@@ -56,20 +56,20 @@ class ProgressReportSubstep:
     nbr: typing.Any
     progress: typing.Any
 
-    def enter_substeps(self, nbr, msg=""):
+    def enter_substeps(self, nbr, msg="") -> None:
         """
 
         :param nbr:
         :param msg:
         """
 
-    def leave_substeps(self, msg=""):
+    def leave_substeps(self, msg="") -> None:
         """
 
         :param msg:
         """
 
-    def step(self, msg="", nbr=1):
+    def step(self, msg="", nbr=1) -> None:
         """
 
         :param msg:

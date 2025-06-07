@@ -14,7 +14,7 @@ import mathutils
 class KDTree:
     """KdTree(size) -> new kd-tree initialized to hold size items."""
 
-    def balance(self):
+    def balance(self) -> None:
         """Balance the tree."""
 
     def find(
@@ -58,7 +58,7 @@ class KDTree:
         :rtype: list[tuple[mathutils.Vector, int, float]]
         """
 
-    def insert(self, co: collections.abc.Sequence[float], index: int):
+    def insert(self, co: collections.abc.Sequence[float], index: int) -> None:
         """Insert a point into the KDTree.
 
         :param co: Point 3d position.
@@ -67,7 +67,7 @@ class KDTree:
         :type index: int
         """
 
-    def __init__(self, size):
+    def __init__(self, size) -> None:
         """
 
         :param size:

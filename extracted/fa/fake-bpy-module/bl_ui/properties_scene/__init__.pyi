@@ -44,7 +44,7 @@ class SCENE_PT_animation(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -73,7 +73,7 @@ class SCENE_PT_audio(SceneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -133,14 +133,14 @@ class SCENE_PT_eevee_next_light_probes(SceneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -171,14 +171,14 @@ class SCENE_PT_keyframing_settings(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -209,14 +209,14 @@ class SCENE_PT_keying_set_paths(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -245,7 +245,7 @@ class SCENE_PT_keying_sets(SceneKeyingSetsPanel, SceneButtonsPanel, bpy.types.Pa
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -274,13 +274,13 @@ class SCENE_PT_physics(SceneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -310,7 +310,7 @@ class SCENE_PT_rigid_body_cache(RigidBodySubPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -340,7 +340,7 @@ class SCENE_PT_rigid_body_field_weights(RigidBodySubPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -369,13 +369,13 @@ class SCENE_PT_rigid_body_world(SceneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -404,7 +404,7 @@ class SCENE_PT_rigid_body_world_settings(RigidBodySubPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -432,7 +432,7 @@ class SCENE_PT_scene(SceneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -461,7 +461,7 @@ class SCENE_PT_simulation(SceneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -490,7 +490,7 @@ class SCENE_PT_unit(SceneButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -524,7 +524,7 @@ class SCENE_UL_keying_set_paths(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -539,7 +539,7 @@ class SCENE_UL_keying_set_paths(bpy.types.UIList):
 
 class SceneKeyingSetsPanel:
     @staticmethod
-    def draw_keyframing_settings(context, layout, ks, ksp):
+    def draw_keyframing_settings(context, layout, ks, ksp) -> None:
         """
 
         :param context:
@@ -555,7 +555,7 @@ class RigidBodySubPanel(SceneButtonsPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

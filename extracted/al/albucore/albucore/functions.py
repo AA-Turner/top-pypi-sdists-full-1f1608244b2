@@ -319,7 +319,7 @@ def normalize_lut(img: np.ndarray, mean: float | np.ndarray, denominator: float 
 
     luts = (np.arange(0, max_value + 1, dtype=np.float32) - mean) * denominator
 
-    return cv2.merge([cv2.LUT(img[:, :, i], luts[i]) for i in range(num_channels)])
+    return np.stack([cv2.LUT(img[..., i], luts[i]) for i in range(num_channels)], axis=-1)
 
 
 def normalize(img: np.ndarray, mean: ValueType, denominator: ValueType) -> np.ndarray:
@@ -476,7 +476,39 @@ def multiply_add(img: np.ndarray, factor: ValueType, value: ValueType, inplace: 
 
 
 @preserve_channel_dim
-def normalize_per_image_opencv(img: np.ndarray, normalization: NormalizationType) -> np.ndarray:
+def normalize_per_image_opencv(
+    img: np.ndarray,
+    normalization: NormalizationType,
+    spatial_axes: tuple[int, ...] = (0, 1),
+) -> np.ndarray:
+    """Normalize an image using OpenCV operations based on the specified normalization type.
+
+    This function normalizes an image using various strategies, optimized with OpenCV operations
+    for better performance on standard image types.
+
+    Args:
+        img: Input image as a numpy array. Can be 2D (grayscale) or 3D (multi-channel).
+        normalization: Type of normalization to apply. Options are:
+            - "image": Normalize using global mean and std across all pixels
+            - "image_per_channel": Normalize each channel separately using its own mean and std
+            - "min_max": Scale to [0, 1] using global min and max values
+            - "min_max_per_channel": Scale each channel to [0, 1] using per-channel min and max
+        spatial_axes: Axes over which to compute statistics (default: (0, 1) for height and width).
+            Used for per-channel normalizations to determine which dimensions are spatial vs channel.
+
+    Returns:
+        Normalized image as float32 array with values clipped to [-20, 20] range to prevent
+        extreme values that could cause training instability.
+
+    Raises:
+        ValueError: If an unknown normalization method is specified.
+
+    Notes:
+        - The function automatically converts input to float32
+        - Adds epsilon (1e-4) to std deviation to prevent division by zero
+        - For images with >4 channels, falls back to array operations as OpenCV has limitations
+        - Single channel images treated as "image" normalization when "image_per_channel" is specified
+    """
     img = img.astype(np.float32, copy=False)
     eps = 1e-4
 
@@ -510,8 +542,8 @@ def normalize_per_image_opencv(img: np.ndarray, normalization: NormalizationType
         return cv2.normalize(img, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
     if normalization == "min_max_per_channel":
-        img_min = img.min(axis=(0, 1))
-        img_max = img.max(axis=(0, 1))
+        img_min = img.min(axis=spatial_axes)
+        img_max = img.max(axis=spatial_axes)
 
         if img.shape[-1] > MAX_OPENCV_WORKING_CHANNELS:
             img_min = np.full_like(img, img_min)
@@ -528,7 +560,39 @@ def normalize_per_image_opencv(img: np.ndarray, normalization: NormalizationType
 
 
 @preserve_channel_dim
-def normalize_per_image_numpy(img: np.ndarray, normalization: NormalizationType) -> np.ndarray:
+def normalize_per_image_numpy(
+    img: np.ndarray,
+    normalization: NormalizationType,
+    spatial_axes: tuple[int, ...] = (0, 1),
+) -> np.ndarray:
+    """Normalize an image using pure NumPy operations based on the specified normalization type.
+
+    This function provides the same normalization strategies as normalize_per_image_opencv but uses
+    pure NumPy operations. This can be useful for compatibility or when OpenCV is not available.
+
+    Args:
+        img: Input image as a numpy array. Can be 2D (grayscale) or 3D (multi-channel).
+        normalization: Type of normalization to apply. Options are:
+            - "image": Normalize using global mean and std across all pixels
+            - "image_per_channel": Normalize each channel separately using its own mean and std
+            - "min_max": Scale to [0, 1] using global min and max values
+            - "min_max_per_channel": Scale each channel to [0, 1] using per-channel min and max
+        spatial_axes: Axes over which to compute statistics (default: (0, 1) for height and width).
+            Used for per-channel normalizations to determine which dimensions are spatial vs channel.
+
+    Returns:
+        Normalized image as float32 array with values clipped to [-20, 20] range to prevent
+        extreme values that could cause training instability.
+
+    Raises:
+        ValueError: If an unknown normalization method is specified.
+
+    Notes:
+        - The function automatically converts input to float32
+        - Adds epsilon (1e-4) to std deviation to prevent division by zero
+        - Uses in-place operations where possible for memory efficiency
+        - Generally slower than the OpenCV version but more portable
+    """
     img = img.astype(np.float32, copy=False)
     eps = 1e-4
 
@@ -542,8 +606,8 @@ def normalize_per_image_numpy(img: np.ndarray, normalization: NormalizationType)
         return np.clip(normalized_img, -20, 20, out=normalized_img)
 
     if normalization == "image_per_channel":
-        pixel_mean = img.mean(axis=(0, 1))
-        pixel_std = img.std(axis=(0, 1)) + eps
+        pixel_mean = img.mean(axis=spatial_axes)
+        pixel_std = img.std(axis=spatial_axes) + eps
         normalized_img = (img - pixel_mean) / pixel_std
         return np.clip(normalized_img, -20, 20, out=normalized_img)
 
@@ -553,15 +617,48 @@ def normalize_per_image_numpy(img: np.ndarray, normalization: NormalizationType)
         return np.clip((img - img_min) / (img_max - img_min + eps), -20, 20, out=img)
 
     if normalization == "min_max_per_channel":
-        img_min = img.min(axis=(0, 1))
-        img_max = img.max(axis=(0, 1))
+        img_min = img.min(axis=spatial_axes)
+        img_max = img.max(axis=spatial_axes)
         return np.clip((img - img_min) / (img_max - img_min + eps), -20, 20, out=img)
 
     raise ValueError(f"Unknown normalization method: {normalization}")
 
 
 @preserve_channel_dim
-def normalize_per_image_lut(img: np.ndarray, normalization: NormalizationType) -> np.ndarray:
+def normalize_per_image_lut(
+    img: np.ndarray,
+    normalization: NormalizationType,
+    spatial_axes: tuple[int, ...] = (0, 1),
+) -> np.ndarray:
+    """Normalize an image using lookup tables (LUT) for optimized performance on uint8 images.
+
+    This function implements the same normalization strategies but uses pre-computed lookup tables
+    for extremely fast normalization of uint8 images. This is the fastest method for uint8 data.
+
+    Args:
+        img: Input image as a numpy array with uint8 dtype. Can be 2D (grayscale) or 3D (multi-channel).
+        normalization: Type of normalization to apply. Options are:
+            - "image": Normalize using global mean and std across all pixels
+            - "image_per_channel": Normalize each channel separately using its own mean and std
+            - "min_max": Scale to [0, 1] using global min and max values
+            - "min_max_per_channel": Scale each channel to [0, 1] using per-channel min and max
+        spatial_axes: Axes over which to compute statistics (default: (0, 1) for height and width).
+            Used for per-channel normalizations to determine which dimensions are spatial vs channel.
+
+    Returns:
+        Normalized image as float32 array with values clipped to [-20, 20] range to prevent
+        extreme values that could cause training instability.
+
+    Raises:
+        ValueError: If an unknown normalization method is specified.
+
+    Notes:
+        - Designed specifically for uint8 images for maximum performance
+        - Creates a 256-element lookup table mapping each possible uint8 value to its normalized value
+        - Uses OpenCV's LUT function for fast application of the transformation
+        - For per-channel normalization, creates separate LUTs for each channel
+        - Single channel images treated as "image" normalization when "image_per_channel" is specified
+    """
     dtype = img.dtype
     max_value = MAX_VALUES_BY_DTYPE[dtype]
     eps = 1e-4
@@ -577,12 +674,12 @@ def normalize_per_image_lut(img: np.ndarray, normalization: NormalizationType) -
         return cv2.LUT(img, lut).clip(-20, 20)
 
     if normalization == "image_per_channel":
-        pixel_mean = img.mean(axis=(0, 1))
-        pixel_std = img.std(axis=(0, 1)) + eps
+        pixel_mean = img.mean(axis=spatial_axes)
+        pixel_std = img.std(axis=spatial_axes) + eps
         luts = [
             (np.arange(0, max_value + 1, dtype=np.float32) - pixel_mean[c]) / pixel_std[c] for c in range(num_channels)
         ]
-        return cv2.merge([cv2.LUT(img[:, :, i], luts[i]).clip(-20, 20) for i in range(num_channels)])
+        return np.stack([cv2.LUT(img[..., i], luts[i]).clip(-20, 20) for i in range(num_channels)], axis=-1)
 
     if normalization == "min_max" or (img.shape[-1] == 1 and normalization == "min_max_per_channel"):
         img_min = img.min()
@@ -591,23 +688,88 @@ def normalize_per_image_lut(img: np.ndarray, normalization: NormalizationType) -
         return cv2.LUT(img, lut).clip(-20, 20)
 
     if normalization == "min_max_per_channel":
-        img_min = img.min(axis=(0, 1))
-        img_max = img.max(axis=(0, 1))
+        img_min = img.min(axis=spatial_axes)
+        img_max = img.max(axis=spatial_axes)
         luts = [
             (np.arange(0, max_value + 1, dtype=np.float32) - img_min[c]) / (img_max[c] - img_min[c] + eps)
             for c in range(num_channels)
         ]
-
-        return cv2.merge([cv2.LUT(img[:, :, i], luts[i]) for i in range(num_channels)])
+        return np.stack([cv2.LUT(img[..., i], luts[i]) for i in range(num_channels)], axis=-1)
 
     raise ValueError(f"Unknown normalization method: {normalization}")
 
 
 def normalize_per_image(img: np.ndarray, normalization: NormalizationType) -> np.ndarray:
-    if img.dtype == np.uint8 and normalization != "per_image_per_channel":
+    """Normalize an image using the most efficient method based on image dtype and normalization type.
+
+    This is the main entry point for image normalization that automatically selects the optimal
+    implementation based on the input image data type.
+
+    Args:
+        img: Input image as a numpy array. Can be 2D (grayscale) or 3D (multi-channel).
+        normalization: Type of normalization to apply. Options are:
+            - "image": Normalize using global mean and std across all pixels
+            - "image_per_channel": Normalize each channel separately using its own mean and std
+            - "min_max": Scale to [0, 1] using global min and max values
+            - "min_max_per_channel": Scale each channel to [0, 1] using per-channel min and max
+
+    Returns:
+        Normalized image as float32 array with values clipped to [-20, 20] range.
+
+    Notes:
+        - For uint8 images (except "image_per_channel"), uses LUT method for maximum speed
+        - For other dtypes, uses OpenCV implementation for good performance
+        - The spatial_axes parameter defaults to (0, 1) for standard 2D images
+    """
+    if img.dtype == np.uint8 and normalization != "image_per_channel":
         return normalize_per_image_lut(img, normalization)
 
     return normalize_per_image_opencv(img, normalization)
+
+
+def normalize_per_image_batch(
+    images: np.ndarray,
+    normalization: NormalizationType,
+    spatial_axes: tuple[int, ...],
+) -> np.ndarray:
+    """Normalize each image in a batch independently using per-image statistics.
+
+    This function applies the same normalization as `normalize_per_image` but handles
+    various input dimensions including single images, batches, volumes, and batch of volumes.
+
+    Args:
+        images: Input array that can be:
+            - Single image: (H, W) or (H, W, C)
+            - Batch of images: (N, H, W) or (N, H, W, C)
+            - Volume: (D, H, W) or (D, H, W, C)
+            - Batch of volumes: (N, D, H, W) or (N, D, H, W, C)
+        normalization: Type of normalization to apply:
+            - "image": Normalize using global mean and std across spatial dimensions
+            - "image_per_channel": Normalize each channel separately using its own mean and std
+            - "min_max": Scale to [0, 1] using global min and max values
+            - "min_max_per_channel": Scale each channel to [0, 1] using per-channel min and max
+        spatial_axes: Axes over which to compute statistics for normalization.
+            IMPORTANT: Should include only spatial dimensions, not batch or channel dimensions.
+
+    Examples:
+            - Single image (H, W, C): use spatial_axes=(0, 1)
+            - Batch of images (N, H, W, C): use spatial_axes=(1, 2)
+            - Volume (D, H, W, C): use spatial_axes=(0, 1, 2)
+            - Batch of volumes (N, D, H, W, C): use spatial_axes=(1, 2, 3)
+
+    Returns:
+        Normalized array as float32 with values clipped to [-20, 20] range.
+
+    Notes:
+        - The NumPy implementation uses keepdims=True for correct broadcasting with batches
+        - For uint8 images, uses LUT method for speed (except for per-channel normalizations)
+        - For other dtypes, uses NumPy implementation for proper batch support
+        - Ensure spatial_axes excludes batch and channel dimensions to get correct statistics
+    """
+    if images.dtype == np.uint8:
+        return normalize_per_image_lut(images, normalization, spatial_axes=spatial_axes).astype(np.float32)
+
+    return normalize_per_image_numpy(images, normalization, spatial_axes=spatial_axes).astype(np.float32)
 
 
 def to_float_numpy(img: np.ndarray, max_value: float | None = None) -> np.ndarray:

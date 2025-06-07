@@ -39,7 +39,7 @@ class ContourUP1D:
 class DensityLowerThanUP1D:
     """Class hierarchy: `freestyle.types.UnaryPredicate1D` > `DensityLowerThanUP1D`"""
 
-    def __init__(self, threshold: float, sigma: float = 2.0):
+    def __init__(self, threshold: float, sigma: float = 2.0) -> None:
         """Builds a DensityLowerThanUP1D object.
 
                 :param threshold: The value of the threshold density. Any Interface1D
@@ -63,7 +63,7 @@ class DensityLowerThanUP1D:
 class EqualToChainingTimeStampUP1D:
     """Class hierarchy: `freestyle.types.UnaryPredicate1D` > `freestyle.types.EqualToChainingTimeStampUP1D`"""
 
-    def __init__(self, ts: int):
+    def __init__(self, ts: int) -> None:
         """Builds a EqualToChainingTimeStampUP1D object.
 
         :param ts: A time stamp value.
@@ -83,7 +83,7 @@ class EqualToChainingTimeStampUP1D:
 class EqualToTimeStampUP1D:
     """Class hierarchy: `freestyle.types.UnaryPredicate1D` > `EqualToTimeStampUP1D`"""
 
-    def __init__(self, ts: int):
+    def __init__(self, ts: int) -> None:
         """Builds a EqualToTimeStampUP1D object.
 
         :param ts: A time stamp value.
@@ -185,7 +185,7 @@ class QuantitativeInvisibilityRangeUP1D: ...
 class QuantitativeInvisibilityUP1D:
     """Class hierarchy: `freestyle.types.UnaryPredicate1D` > `QuantitativeInvisibilityUP1D`"""
 
-    def __init__(self, qi: int = 0):
+    def __init__(self, qi: int = 0) -> None:
         """Builds a QuantitativeInvisibilityUP1D object.
 
                 :param qi: The Quantitative Invisibility you want the Interface1D to
@@ -225,7 +225,7 @@ class SameShapeIdBP1D:
 class ShapeUP1D:
     """Class hierarchy: `freestyle.types.UnaryPredicate1D` > `ShapeUP1D`"""
 
-    def __init__(self, first: int, second: int = 0):
+    def __init__(self, first: int, second: int = 0) -> None:
         """Builds a ShapeUP1D object.
 
         :param first: The first Id component.
@@ -293,7 +293,7 @@ class ViewMapGradientNormBP1D:
         level: int,
         integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN,
         sampling: float = 2.0,
-    ):
+    ) -> None:
         """Builds a ViewMapGradientNormBP1D object.
 
                 :param level: The level of the pyramid from which the pixel must be
@@ -326,7 +326,7 @@ class ViewMapGradientNormBP1D:
 class WithinImageBoundaryUP1D:
     """Class hierarchy: `freestyle.types.UnaryPredicate1D` > `WithinImageBoundaryUP1D`"""
 
-    def __init__(self, xmin: float, ymin: float, xmax: float, ymax: float):
+    def __init__(self, xmin: float, ymin: float, xmax: float, ymax: float) -> None:
         """Builds an WithinImageBoundaryUP1D object.
 
         :param xmin: X lower bound of the image boundary.
@@ -339,7 +339,7 @@ class WithinImageBoundaryUP1D:
         :type ymax: float
         """
 
-    def __call__(self, inter):
+    def __call__(self, inter) -> None:
         """Returns true if the Interface1D intersects with image boundary.
 
         :param inter:

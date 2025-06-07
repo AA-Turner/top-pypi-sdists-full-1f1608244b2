@@ -27,7 +27,7 @@ class DATA_PT_shader_fx(ShaderFxButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:

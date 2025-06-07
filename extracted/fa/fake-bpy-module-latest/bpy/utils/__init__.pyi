@@ -19,7 +19,7 @@ import bpy.types
 from . import previews as previews
 from . import units as units
 
-def app_template_paths(*, path: str | None = None):
+def app_template_paths(*, path: str | None = None) -> None:
     """Returns valid application template paths.
 
     :param path: Optional subdir.
@@ -51,7 +51,7 @@ def escape_identifier(string: str) -> str:
     :rtype: str
     """
 
-def execfile(filepath: str, *, mod: None | None = None):
+def execfile(filepath: str, *, mod: None | None = None) -> None:
     """Execute a file path as a Python script.
 
     :param filepath: Path of the script to execute.
@@ -61,7 +61,7 @@ def execfile(filepath: str, *, mod: None | None = None):
     :return: The module which can be passed back in as mod.
     """
 
-def expose_bundled_modules():
+def expose_bundled_modules() -> None:
     """For Blender as a Python module, add bundled VFX library python bindings
     to sys.path. These may be used instead of dedicated packages, to ensure
     the libraries are compatible with Blender.
@@ -109,14 +109,14 @@ def is_path_extension(path: str) -> bool:
     :rtype: bool
     """
 
-def keyconfig_init(): ...
-def keyconfig_set(filepath, *, report=None): ...
+def keyconfig_init() -> None: ...
+def keyconfig_set(filepath, *, report=None) -> None: ...
 def load_scripts(
     *,
     reload_scripts: bool = False,
     refresh_scripts: bool = False,
     extensions: bool = True,
-):
+) -> None:
     """Load scripts and run each modules register function.
 
         :param reload_scripts: Causes all scripts to have their unregister method
@@ -129,7 +129,7 @@ def load_scripts(
         :type extensions: bool
     """
 
-def load_scripts_extensions(*, reload_scripts: bool = False):
+def load_scripts_extensions(*, reload_scripts: bool = False) -> None:
     """Load extensions scripts (add-ons and app-templates)
 
         :param reload_scripts: Causes all scripts to have their unregister method
@@ -162,7 +162,7 @@ def manual_language_code(default="en") -> str:
         :rtype: str
     """
 
-def manual_map(): ...
+def manual_map() -> None: ...
 def modules_from_path(path: str, loaded_modules) -> list:
     """Load all modules in a path and return them as a list.
 
@@ -174,7 +174,7 @@ def modules_from_path(path: str, loaded_modules) -> list:
         :rtype: list
     """
 
-def preset_find(name, preset_path, *, display_name=False, ext=".py"): ...
+def preset_find(name, preset_path, *, display_name=False, ext=".py") -> None: ...
 def preset_paths(subdir: str) -> list[str]:
     """Returns a list of paths for a specific preset.
 
@@ -184,7 +184,7 @@ def preset_paths(subdir: str) -> list[str]:
     :rtype: list[str]
     """
 
-def refresh_script_paths():
+def refresh_script_paths() -> None:
     """Run this after creating new script paths to update sys.path"""
 
 def register_class(
@@ -204,20 +204,20 @@ def register_class(
         | bpy.types.Node
         | bpy.types.NodeSocket
     ],
-):
+) -> None:
     """Register a subclass of a Blender type class.
 
     :param cls: Registerable Blender class type.
     :type cls: type[bpy.types.Panel | bpy.types.UIList | bpy.types.Menu | bpy.types.Header | bpy.types.Operator | bpy.types.KeyingSetInfo | bpy.types.RenderEngine | bpy.types.AssetShelf | bpy.types.FileHandler | bpy.types.PropertyGroup | bpy.types.AddonPreferences | bpy.types.NodeTree | bpy.types.Node | bpy.types.NodeSocket]
     """
 
-def register_classes_factory(classes):
+def register_classes_factory(classes) -> None:
     """Utility function to create register and unregister functions
     which simply registers and unregisters a sequence of classes.
 
     """
 
-def register_cli_command(id: str, execute: collections.abc.Callable):
+def register_cli_command(id: str, execute: collections.abc.Callable) -> None:
     """Register a command, accessible via the (-c / --command) command-line argument.Custom CommandsRegistering commands makes it possible to conveniently expose command line
     functionality via commands passed to (-c / --command).Using Python Argument ParsingThis example shows how the Python argparse module can be used with a custom command.Using argparse is generally recommended as it has many useful utilities and
     generates a --help message for your command.
@@ -235,7 +235,7 @@ def register_cli_command(id: str, execute: collections.abc.Callable):
     This uses Python's capsule type however the result should be considered an opaque handle only used for unregistering.
     """
 
-def register_manual_map(manual_hook): ...
+def register_manual_map(manual_hook) -> None: ...
 def register_preset_path(path: str) -> bool:
     """Register a preset search path.
 
@@ -273,7 +273,7 @@ def register_tool(
     after: None | collections.abc.Sequence[str] | None = None,
     separator: bool = False,
     group: bool = False,
-):
+) -> None:
     """Register a tool in the toolbar.
 
     :param tool_cls: A tool subclass.
@@ -301,7 +301,7 @@ def resource_path(
     :rtype: str
     """
 
-def script_path_user():
+def script_path_user() -> None:
     """returns the env var and falls back to home dir or None"""
 
 def script_paths(
@@ -328,10 +328,10 @@ def script_paths(
     :rtype: list[str]
     """
 
-def script_paths_pref():
+def script_paths_pref() -> None:
     """Returns a list of user preference script directories."""
 
-def script_paths_system_environment():
+def script_paths_system_environment() -> None:
     """Returns a list of system script directories from environment variables."""
 
 def smpte_from_frame(frame: float, *, fps=None, fps_base=None) -> str:
@@ -354,7 +354,7 @@ def smpte_from_seconds(time: float, *, fps=None, fps_base=None) -> str:
         :rtype: str
     """
 
-def time_from_frame(frame: float, *, fps=None, fps_base=None):
+def time_from_frame(frame: float, *, fps=None, fps_base=None) -> None:
     """Returns the time from a frame number .If fps and fps_base are not given the current scene is used.
 
     :param frame: number.
@@ -399,7 +399,7 @@ def unregister_class(
         | bpy.types.Node
         | bpy.types.NodeSocket
     ],
-):
+) -> None:
     """Unload the Python class from blender.
 
         :param cls: Blender type class,
@@ -408,13 +408,13 @@ def unregister_class(
         :type cls: type[bpy.types.Panel | bpy.types.UIList | bpy.types.Menu | bpy.types.Header | bpy.types.Operator | bpy.types.KeyingSetInfo | bpy.types.RenderEngine | bpy.types.AssetShelf | bpy.types.FileHandler | bpy.types.PropertyGroup | bpy.types.AddonPreferences | bpy.types.NodeTree | bpy.types.Node | bpy.types.NodeSocket]
     """
 
-def unregister_cli_command(handle):
+def unregister_cli_command(handle) -> None:
     """Unregister a CLI command.
 
     :param handle: The return value of `register_cli_command`.
     """
 
-def unregister_manual_map(manual_hook): ...
+def unregister_manual_map(manual_hook) -> None: ...
 def unregister_preset_path(path: str) -> bool:
     """Unregister a preset search path.
 
@@ -426,7 +426,7 @@ def unregister_preset_path(path: str) -> bool:
         :rtype: bool
     """
 
-def unregister_tool(tool_cls): ...
+def unregister_tool(tool_cls) -> None: ...
 def user_resource(resource_type: str, *, path: str = "", create: bool = False) -> str:
     """Return a user resource path (normally from the users home directory).
 

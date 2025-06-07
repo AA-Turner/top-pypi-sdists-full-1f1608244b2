@@ -499,7 +499,6 @@ class EncryptResponseTypeDef(TypedDict):
     CiphertextBlob: bytes
     KeyId: str
     EncryptionAlgorithm: EncryptionAlgorithmSpecType
-    KeyMaterialId: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 class GenerateDataKeyPairResponseTypeDef(TypedDict):

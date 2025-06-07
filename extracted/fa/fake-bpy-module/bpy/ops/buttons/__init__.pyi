@@ -3,14 +3,18 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 
-def clear_filter(execution_context: int | str | None = None, undo: bool | None = None):
+def clear_filter(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Clear the search filter
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def context_menu(execution_context: int | str | None = None, undo: bool | None = None):
+def context_menu(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Display properties editor context_menu
 
     :type execution_context: int | str | None
@@ -49,7 +53,7 @@ def directory_browse(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Open a directory browser, hold Shift to open the file, Alt to browse containing directory
 
         :type execution_context: int | str | None
@@ -149,7 +153,7 @@ def file_browse(
     | None = "DEFAULT",
     sort_method: str | None = "",
     filter_glob: str = "",
-):
+) -> None:
     """Open a file browser, hold Shift to open the file, Alt to browse containing directory
 
         :type execution_context: int | str | None
@@ -218,14 +222,18 @@ def file_browse(
         :type filter_glob: str
     """
 
-def start_filter(execution_context: int | str | None = None, undo: bool | None = None):
+def start_filter(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Start entering filter text
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def toggle_pin(execution_context: int | str | None = None, undo: bool | None = None):
+def toggle_pin(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Keep the current data-block displayed
 
     :type execution_context: int | str | None

@@ -16,7 +16,7 @@
 
 from typing import TYPE_CHECKING
 
-from ...neuron.utils import get_hub_cached_entries, synchronize_hub_cache
+from ...neuron.cache import get_hub_cached_entries, synchronize_hub_cache
 from ...neuron.utils.cache_utils import (
     CACHE_REPO_NAME,
     HF_HOME_CACHE_REPO_FILE,
@@ -186,18 +186,17 @@ class LookupRepoCommand(BaseOptimumCLICommand):
             help="The model_id to lookup cached versions for.",
         )
         parser.add_argument(
-            "--mode",
+            "--task",
             type=str,
-            choices=["training", "inference", "all"],
-            default="all",
-            help='The mode you wish to lookup compilation files for. Can be either "training", "inference" or "all"',
+            default=None,
+            help="The optional task to lookup cached versions for models supporting multiple tasks.",
         )
         parser.add_argument("--repo_id", type=str, default=None, help="The name of the repo to use as remote cache.")
 
-    def _list_entries(self, mode: str):
-        entries = get_hub_cached_entries(self.args.model_id, mode, cache_repo_id=self.args.repo_id)
+    def _list_entries(self):
+        entries = get_hub_cached_entries(self.args.model_id, task=self.args.task, cache_repo_id=self.args.repo_id)
         n_entries = len(entries)
-        output = f"\n*** {n_entries} entrie(s) found in cache for {self.args.model_id} for {mode}.***\n\n"
+        output = f"\n*** {n_entries} entrie(s) found in cache for {self.args.model_id}.***\n\n"
         for entry in entries:
             for key, value in entry.items():
                 output += f"\n{key}: {value}"
@@ -205,11 +204,7 @@ class LookupRepoCommand(BaseOptimumCLICommand):
         print(output)
 
     def run(self):
-        if self.args.mode == "all":
-            self._list_entries("training")
-            self._list_entries("inference")
-        else:
-            self._list_entries(self.args.mode)
+        self._list_entries()
 
 
 class CustomCacheRepoCommand(BaseOptimumCLICommand):

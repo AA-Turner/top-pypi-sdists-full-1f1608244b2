@@ -27,7 +27,7 @@ class PHYSICS_PT_softbody(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -58,7 +58,7 @@ class PHYSICS_PT_softbody_cache(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -89,13 +89,13 @@ class PHYSICS_PT_softbody_collision(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -126,13 +126,13 @@ class PHYSICS_PT_softbody_edge(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -163,7 +163,7 @@ class PHYSICS_PT_softbody_edge_aerodynamics(PhysicButtonsPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -194,13 +194,13 @@ class PHYSICS_PT_softbody_edge_stiffness(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -231,7 +231,7 @@ class PHYSICS_PT_softbody_field_weights(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -262,13 +262,13 @@ class PHYSICS_PT_softbody_goal(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -299,7 +299,7 @@ class PHYSICS_PT_softbody_goal_settings(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -330,7 +330,7 @@ class PHYSICS_PT_softbody_goal_strengths(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -361,7 +361,7 @@ class PHYSICS_PT_softbody_object(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -392,7 +392,7 @@ class PHYSICS_PT_softbody_simulation(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -423,7 +423,7 @@ class PHYSICS_PT_softbody_solver(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -454,7 +454,7 @@ class PHYSICS_PT_softbody_solver_diagnostics(PhysicButtonsPanel, bpy.types.Panel
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -485,7 +485,7 @@ class PHYSICS_PT_softbody_solver_helpers(PhysicButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -497,10 +497,10 @@ class PhysicButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def softbody_panel_enabled(md): ...
+def softbody_panel_enabled(md) -> None: ...

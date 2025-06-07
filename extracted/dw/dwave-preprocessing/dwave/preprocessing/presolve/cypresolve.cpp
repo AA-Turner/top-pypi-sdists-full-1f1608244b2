@@ -11,8 +11,8 @@
         ],
         "include_dirs": [
             "dwave/preprocessing/presolve",
-            "dimod/include/",
-            "dwave/preprocessing/include/"
+            "dwave/preprocessing/include/",
+            "dimod/include/"
         ],
         "language": "c++",
         "name": "dwave.preprocessing.presolve.cypresolve",

@@ -27,13 +27,13 @@ class FollowActiveQuads(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -41,11 +41,11 @@ class FollowActiveQuads(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def extend(obj, EXTEND_MODE, use_uv_selection): ...
-def main(context, operator): ...
+def extend(obj, EXTEND_MODE, use_uv_selection) -> None: ...
+def main(context, operator) -> None: ...

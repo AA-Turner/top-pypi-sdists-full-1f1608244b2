@@ -24,7 +24,7 @@ class AddModifierMenu(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def invoke(self, _context, _event):
+    def invoke(self, _context, _event) -> None:
         """
 
         :param _context:
@@ -32,7 +32,7 @@ class AddModifierMenu(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -61,14 +61,14 @@ class DATA_PT_modifiers(ModifierButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -80,7 +80,7 @@ class ModifierAddMenu:
     MODIFIER_TYPES_TO_LABELS: typing.Any
 
     @classmethod
-    def operator_modifier_add(cls, layout, mod_type):
+    def operator_modifier_add(cls, layout, mod_type) -> None:
         """
 
         :param layout:
@@ -116,7 +116,7 @@ class OBJECT_MT_modifier_add(ModifierAddMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -145,7 +145,7 @@ class OBJECT_MT_modifier_add_color(ModifierAddMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -174,7 +174,7 @@ class OBJECT_MT_modifier_add_deform(ModifierAddMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -203,7 +203,7 @@ class OBJECT_MT_modifier_add_edit(ModifierAddMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -232,7 +232,7 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -261,7 +261,7 @@ class OBJECT_MT_modifier_add_normals(ModifierAddMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -290,7 +290,7 @@ class OBJECT_MT_modifier_add_physics(ModifierAddMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:

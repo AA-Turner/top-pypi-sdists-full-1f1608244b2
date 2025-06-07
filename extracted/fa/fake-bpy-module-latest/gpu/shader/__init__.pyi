@@ -122,5 +122,5 @@ def from_builtin(shader_name: str, config: str = "DEFAULT") -> gpu.types.GPUShad
         :rtype: gpu.types.GPUShader
     """
 
-def unbind():
+def unbind() -> None:
     """Unbind the bound shader object."""

@@ -20,10 +20,10 @@ import inspect
 import os
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Tuple, Union
 
 import torch
-from transformers import AutoFeatureExtractor, AutoProcessor, AutoTokenizer, CLIPProcessor, PretrainedConfig
+from transformers import PretrainedConfig
 from transformers.modeling_utils import _add_variant
 from transformers.utils import (
     FLAX_WEIGHTS_NAME,
@@ -65,8 +65,9 @@ def is_precompilation() -> bool:
 def is_main_worker(global_main: bool = True) -> bool:
     if torch.distributed.is_initialized() and is_torch_xla_available():
         import torch_xla.core.xla_model as xm
+        import torch_xla.runtime as xr
 
-        return xm.get_ordinal() == 0 if global_main else xm.get_local_ordinal() == 0
+        return xr.global_ordinal() == 0 if global_main else xm.get_local_ordinal() == 0
     return True
 
 
@@ -596,63 +597,6 @@ def check_if_weights_replacable(
         )
 
 
-# Copied and adapted from https://github.com/huggingface/optimum/blob/d03ab100206cb9f0e62167a36ee6997424bb9bb5/optimum/utils/save_utils.py#L27
-# To remove once we can bump to a transformers release including https://github.com/huggingface/transformers/pull/29169
-def maybe_load_preprocessors(
-    src_name_or_path: Union[str, Path], subfolder: str = "", trust_remote_code: bool = False
-) -> List:
-    preprocessors = []
-
-    try:
-        preprocessors.append(
-            AutoTokenizer.from_pretrained(src_name_or_path, subfolder=subfolder, trust_remote_code=trust_remote_code)
-        )
-    except Exception:
-        pass
-
-    try:
-        preprocessors.append(
-            AutoProcessor.from_pretrained(src_name_or_path, subfolder=subfolder, trust_remote_code=trust_remote_code)
-        )
-    except Exception:
-        pass
-
-    try:
-        preprocessors.append(
-            CLIPProcessor.from_pretrained(src_name_or_path, subfolder=subfolder, trust_remote_code=trust_remote_code)
-        )
-    except Exception:
-        pass
-
-    try:
-        preprocessors.append(
-            AutoFeatureExtractor.from_pretrained(
-                src_name_or_path, subfolder=subfolder, trust_remote_code=trust_remote_code
-            )
-        )
-    except Exception:
-        pass
-    return preprocessors
-
-
-# Copied and adapted from https://github.com/huggingface/optimum/blob/d03ab100206cb9f0e62167a36ee6997424bb9bb5/optimum/utils/save_utils.py#L56
-# To remove once we can bump to a transformers release including https://github.com/huggingface/transformers/pull/29169
-def maybe_save_preprocessors(
-    src_name_or_path: Union[str, Path],
-    dest_dir: Union[str, Path],
-    src_subfolder: str = "",
-    trust_remote_code: bool = False,
-):
-    if not isinstance(dest_dir, Path):
-        dest_dir = Path(dest_dir)
-
-    dest_dir.mkdir(exist_ok=True)
-    for preprocessor in maybe_load_preprocessors(
-        src_name_or_path, subfolder=src_subfolder, trust_remote_code=trust_remote_code
-    ):
-        preprocessor.save_pretrained(dest_dir)
-
-
 class DiffusersPretrainedConfig(PretrainedConfig):
     """override to update `model_type`."""
 
@@ -687,6 +631,9 @@ def map_torch_dtype(dtype: Union[str, torch.dtype]):
         "float64": torch.float64,
         "int32": torch.int32,
         "int64": torch.int64,
+        "bf16": torch.bfloat16,
+        "fp16": torch.float16,
+        "fp32": torch.float32,
     }
 
     if isinstance(dtype, str) and dtype in dtype_mapping:

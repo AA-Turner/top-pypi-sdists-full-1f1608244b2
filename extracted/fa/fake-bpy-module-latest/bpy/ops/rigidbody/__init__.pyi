@@ -12,7 +12,7 @@ def bake_to_keyframes(
     frame_start: int | None = 1,
     frame_end: int | None = 250,
     step: int | None = 1,
-):
+) -> None:
     """Bake rigid body transformations of selected objects to keyframes
 
     :type execution_context: int | str | None
@@ -44,7 +44,7 @@ def connect(
     pivot_type: typing.Literal["CENTER", "ACTIVE", "SELECTED"] | None = "CENTER",
     connection_pattern: typing.Literal["SELECTED_TO_ACTIVE", "CHAIN_DISTANCE"]
     | None = "SELECTED_TO_ACTIVE",
-):
+) -> None:
     """Create rigid body constraints between selected rigid bodies
 
         :type execution_context: int | str | None
@@ -102,7 +102,7 @@ def constraint_add(
     /,
     *,
     type: bpy.stub_internal.rna_enums.RigidbodyConstraintTypeItems | None = "FIXED",
-):
+) -> None:
     """Add Rigid Body Constraint to active object
 
     :type execution_context: int | str | None
@@ -113,7 +113,7 @@ def constraint_add(
 
 def constraint_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove Rigid Body Constraint from Object
 
     :type execution_context: int | str | None
@@ -127,7 +127,7 @@ def mass_calculate(
     *,
     material: str | None = "DEFAULT",
     density: float | None = 1.0,
-):
+) -> None:
     """Automatically calculate mass values for Rigid Body Objects based on volume
 
     :type execution_context: int | str | None
@@ -144,7 +144,7 @@ def object_add(
     /,
     *,
     type: bpy.stub_internal.rna_enums.RigidbodyObjectTypeItems | None = "ACTIVE",
-):
+) -> None:
     """Add active object as Rigid Body
 
     :type execution_context: int | str | None
@@ -153,7 +153,9 @@ def object_add(
     :type type: bpy.stub_internal.rna_enums.RigidbodyObjectTypeItems | None
     """
 
-def object_remove(execution_context: int | str | None = None, undo: bool | None = None):
+def object_remove(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove Rigid Body settings from Object
 
     :type execution_context: int | str | None
@@ -162,7 +164,7 @@ def object_remove(execution_context: int | str | None = None, undo: bool | None 
 
 def object_settings_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy Rigid Body settings from active object to selected
 
     :type execution_context: int | str | None
@@ -175,7 +177,7 @@ def objects_add(
     /,
     *,
     type: bpy.stub_internal.rna_enums.RigidbodyObjectTypeItems | None = "ACTIVE",
-):
+) -> None:
     """Add selected objects as Rigid Bodies
 
     :type execution_context: int | str | None
@@ -186,7 +188,7 @@ def objects_add(
 
 def objects_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove selected objects from Rigid Body simulation
 
     :type execution_context: int | str | None
@@ -199,7 +201,7 @@ def shape_change(
     /,
     *,
     type: bpy.stub_internal.rna_enums.RigidbodyObjectShapeItems | None = "MESH",
-):
+) -> None:
     """Change collision shapes for selected Rigid Body Objects
 
     :type execution_context: int | str | None
@@ -208,14 +210,18 @@ def shape_change(
     :type type: bpy.stub_internal.rna_enums.RigidbodyObjectShapeItems | None
     """
 
-def world_add(execution_context: int | str | None = None, undo: bool | None = None):
+def world_add(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add Rigid Body simulation world to the current scene
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def world_remove(execution_context: int | str | None = None, undo: bool | None = None):
+def world_remove(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove Rigid Body simulation world from the current scene
 
     :type execution_context: int | str | None

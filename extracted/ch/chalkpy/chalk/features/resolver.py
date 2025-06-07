@@ -2109,6 +2109,7 @@ def online(
     assert caller_frame is not None
     caller_globals = caller_frame.f_globals
     caller_locals = caller_frame.f_locals
+    del frame
 
     def decorator(fn: Callable[P, T]):
         caller_filename = inspect.getsourcefile(fn) or "<unknown file>"
@@ -2317,6 +2318,7 @@ def offline(
     caller_globals = caller_frame.f_globals
     caller_locals = caller_frame.f_locals
     caller_line = caller_frame.f_lineno
+    del frame
 
     def decorator(fn: Callable[P, T]):
         caller_filename = inspect.getsourcefile(fn) or "<unknown file>"

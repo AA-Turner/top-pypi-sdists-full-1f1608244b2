@@ -548,6 +548,7 @@ WaiterName = Literal["image_scan_complete", "lifecycle_policy_preview_complete"]
 RegionName = Literal[
     "af-south-1",
     "ap-east-1",
+    "ap-east-2",
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-northeast-3",

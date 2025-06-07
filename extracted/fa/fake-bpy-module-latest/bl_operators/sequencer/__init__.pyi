@@ -12,7 +12,7 @@ class Fade:
     start: typing.Any
     type: typing.Any
 
-    def calculate_max_value(self, strip, fade_fcurve):
+    def calculate_max_value(self, strip, fade_fcurve) -> None:
         """Returns the maximum Y coordinate the fade animation should use for a given strip
         Uses either the strip's value for the animated property, or the next keyframe after the fade
 
@@ -22,7 +22,7 @@ class Fade:
 
 class SequencerFileHandlerBase:
     @classmethod
-    def poll_drop(cls, context):
+    def poll_drop(cls, context) -> None:
         """
 
         :param context:
@@ -51,14 +51,14 @@ class SequencerCrossfadeSounds(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -87,14 +87,14 @@ class SequencerDeinterlaceSelectedMovies(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -123,14 +123,14 @@ class SequencerFadesAdd(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def calculate_fade_duration(self, context, strip):
+    def calculate_fade_duration(self, context, strip) -> None:
         """
 
         :param context:
         :param strip:
         """
 
-    def calculate_fades(self, strip, fade_fcurve, animated_property, duration):
+    def calculate_fades(self, strip, fade_fcurve, animated_property, duration) -> None:
         """Returns a list of Fade objects
 
         :param strip:
@@ -139,13 +139,13 @@ class SequencerFadesAdd(bpy.types.Operator):
         :param duration:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def fade_animation_clear(self, fade_fcurve, fades):
+    def fade_animation_clear(self, fade_fcurve, fades) -> None:
         """Removes existing keyframes in the fades' time range, in fast mode, without
         updating the fcurve
 
@@ -153,7 +153,7 @@ class SequencerFadesAdd(bpy.types.Operator):
                 :param fades:
         """
 
-    def fade_animation_create(self, fade_fcurve, fades):
+    def fade_animation_create(self, fade_fcurve, fades) -> None:
         """Inserts keyframes in the fade_fcurve in fast mode using the Fade objects.
         Updates the fcurve after having inserted all keyframes to finish the animation.
 
@@ -161,7 +161,7 @@ class SequencerFadesAdd(bpy.types.Operator):
                 :param fades:
         """
 
-    def fade_find_or_create_fcurve(self, context, strip, animated_property):
+    def fade_find_or_create_fcurve(self, context, strip, animated_property) -> None:
         """Iterates over all the fcurves until it finds an fcurve with a data path
         that corresponds to the strip.
         Returns the matching FCurve or creates a new one if the function can't find a match.
@@ -171,7 +171,7 @@ class SequencerFadesAdd(bpy.types.Operator):
                 :param animated_property:
         """
 
-    def is_long_enough(self, strip, duration=0.0):
+    def is_long_enough(self, strip, duration=0.0) -> None:
         """
 
         :param strip:
@@ -179,7 +179,7 @@ class SequencerFadesAdd(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -208,14 +208,14 @@ class SequencerFadesClear(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -244,14 +244,14 @@ class SequencerSplitMulticam(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -323,4 +323,4 @@ class SEQUENCER_FH_sound_strip(bpy.types.FileHandler, SequencerFileHandlerBase):
         :rtype: typing.Any
         """
 
-def calculate_duration_frames(scene, duration_seconds): ...
+def calculate_duration_frames(scene, duration_seconds) -> None: ...

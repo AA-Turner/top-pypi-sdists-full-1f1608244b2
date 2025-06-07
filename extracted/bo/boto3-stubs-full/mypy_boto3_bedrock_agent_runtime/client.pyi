@@ -229,7 +229,7 @@ class AgentsforBedrockRuntimeClient(BaseClient):
         self, **kwargs: Unpack[GetExecutionFlowSnapshotRequestTypeDef]
     ) -> GetExecutionFlowSnapshotResponseTypeDef:
         """
-        Retrieves the flow definition snapshot used for an asynchronous execution.
+        Retrieves the flow definition snapshot used for a flow execution.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/get_execution_flow_snapshot.html)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_bedrock_agent_runtime/client/#get_execution_flow_snapshot)
@@ -239,8 +239,8 @@ class AgentsforBedrockRuntimeClient(BaseClient):
         self, **kwargs: Unpack[GetFlowExecutionRequestTypeDef]
     ) -> GetFlowExecutionResponseTypeDef:
         """
-        Retrieves details about a specific asynchronous execution of a flow, including
-        its status, start and end times, and any errors that occurred during execution.
+        Retrieves details about a specific flow execution, including its status, start
+        and end times, and any errors that occurred during execution.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/get_flow_execution.html)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_bedrock_agent_runtime/client/#get_flow_execution)
@@ -299,7 +299,7 @@ class AgentsforBedrockRuntimeClient(BaseClient):
         self, **kwargs: Unpack[ListFlowExecutionEventsRequestTypeDef]
     ) -> ListFlowExecutionEventsResponseTypeDef:
         """
-        Lists events that occurred during an asynchronous execution of a flow.
+        Lists events that occurred during a flow execution.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/list_flow_execution_events.html)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_bedrock_agent_runtime/client/#list_flow_execution_events)
@@ -309,7 +309,7 @@ class AgentsforBedrockRuntimeClient(BaseClient):
         self, **kwargs: Unpack[ListFlowExecutionsRequestTypeDef]
     ) -> ListFlowExecutionsResponseTypeDef:
         """
-        Lists all asynchronous executions for a flow.
+        Lists all executions of a flow.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/list_flow_executions.html)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_bedrock_agent_runtime/client/#list_flow_executions)
@@ -420,7 +420,7 @@ class AgentsforBedrockRuntimeClient(BaseClient):
         self, **kwargs: Unpack[StartFlowExecutionRequestTypeDef]
     ) -> StartFlowExecutionResponseTypeDef:
         """
-        Starts an asynchronous execution of an Amazon Bedrock flow.
+        Starts an execution of an Amazon Bedrock flow.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/start_flow_execution.html)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_bedrock_agent_runtime/client/#start_flow_execution)
@@ -430,7 +430,7 @@ class AgentsforBedrockRuntimeClient(BaseClient):
         self, **kwargs: Unpack[StopFlowExecutionRequestTypeDef]
     ) -> StopFlowExecutionResponseTypeDef:
         """
-        Stops an Amazon Bedrock flow's asynchronous execution.
+        Stops an Amazon Bedrock flow's execution.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/stop_flow_execution.html)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_bedrock_agent_runtime/client/#stop_flow_execution)

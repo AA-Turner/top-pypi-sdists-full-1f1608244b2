@@ -44,7 +44,7 @@ class ImBuf:
         :rtype: typing_extensions.Self
         """
 
-    def crop(self, min: tuple[int, int], max: tuple[int, int]):
+    def crop(self, min: tuple[int, int], max: tuple[int, int]) -> None:
         """Crop the image.
 
         :param min: X, Y minimum.
@@ -53,10 +53,10 @@ class ImBuf:
         :type max: tuple[int, int]
         """
 
-    def free(self):
+    def free(self) -> None:
         """Clear image data immediately (causing an error on re-use)."""
 
-    def resize(self, size: tuple[int, int], method: str = "FAST"):
+    def resize(self, size: tuple[int, int], method: str = "FAST") -> None:
         """Resize the image.
 
         :param size: New size.

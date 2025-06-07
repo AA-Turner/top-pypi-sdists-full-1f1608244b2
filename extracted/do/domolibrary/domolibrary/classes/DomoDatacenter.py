@@ -147,66 +147,6 @@ async def get_accounts(
     return domo_account_ls
 
 # %% ../../nbs/classes/50_DomoDatacenter.ipynb 16
-# class LineageTypes_Enum(Enum):
-#     DomoDataset = "DATA_SOURCE"
-#     DomoDataflow = "DATAFLOW"
-
-
-# @patch_to(DomoDatacenter, cls_method=True)
-# async def get_lineage_upstream(
-#     cls,
-#     auth: dmda.DomoAuth,
-#     domo_entity,  # DomoDataset or DomoDataflow
-#     return_raw: bool = False,
-#     session: httpx.AsyncClient = None,
-#     debug_api: bool = False,
-#     debug_prn: bool = False,
-# ):
-
-#     import domolibrary.classes.DomoDataset as dmds
-#     import domolibrary.classes.DomoDataflow as dmdf
-
-#     if not session:
-#         session = httpx.AsyncClient()
-#         is_close_session = True
-
-#     res = await datacenter_routes.get_lineage_upstream(
-#         auth=auth,
-#         entity_type=LineageTypes_Enum[domo_entity.__class__.__name__].value,
-#         entity_id=domo_entity.id,
-#         session=session,
-#         debug_api=debug_api,
-#     )
-
-#     if return_raw or res.status != 200:
-#         await session.aclose()
-#         return res
-
-#     obj = res.response
-
-#     domo_obj = []
-#     for key, item in obj.items():
-#         if item.get("type") == "DATA_SOURCE":
-#             domo_obj.append(
-#                 await dmds.DomoDataset.get_by_id(
-#                     auth=auth, dataset_id=item.get("id"), session=session
-#                 )
-#             )
-
-#         if item.get("type") == "DATAFLOW":
-#             # print(item.get('id'))
-#             domo_obj.append(
-#                 await dmdf.DomoDataflow.get_by_id(
-#                     auth=auth, dataflow_id=item.get("id"), session=session
-#                 )
-#             )
-#             pass
-
-#     if is_close_session:
-#         await session.aclose()
-#     return domo_obj
-
-# %% ../../nbs/classes/50_DomoDatacenter.ipynb 18
 @patch_to(DomoDatacenter, cls_method=True)
 async def search_cards(
     cls,
@@ -249,7 +189,7 @@ async def search_cards(
         ]
     )
 
-# %% ../../nbs/classes/50_DomoDatacenter.ipynb 20
+# %% ../../nbs/classes/50_DomoDatacenter.ipynb 18
 @patch_to(DomoDatacenter, cls_method=True)
 async def get_cards_admin_summary(
     cls,
@@ -295,7 +235,7 @@ async def get_cards_admin_summary(
 
     return domo_account_ls
 
-# %% ../../nbs/classes/50_DomoDatacenter.ipynb 24
+# %% ../../nbs/classes/50_DomoDatacenter.ipynb 22
 @patch_to(DomoDatacenter, cls_method=True)
 async def search_codeengine(
     cls,

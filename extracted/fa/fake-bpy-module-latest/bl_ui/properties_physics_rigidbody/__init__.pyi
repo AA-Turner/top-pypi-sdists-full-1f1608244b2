@@ -27,14 +27,14 @@ class PHYSICS_PT_rigid_body(PHYSICS_PT_rigidbody_panel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -64,14 +64,14 @@ class PHYSICS_PT_rigid_body_collisions(PHYSICS_PT_rigidbody_panel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -104,14 +104,14 @@ class PHYSICS_PT_rigid_body_collisions_collections(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -144,14 +144,14 @@ class PHYSICS_PT_rigid_body_collisions_sensitivity(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -184,14 +184,14 @@ class PHYSICS_PT_rigid_body_collisions_surface(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -222,14 +222,14 @@ class PHYSICS_PT_rigid_body_dynamics(PHYSICS_PT_rigidbody_panel, bpy.types.Panel
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -262,20 +262,20 @@ class PHYSICS_PT_rigid_body_dynamics_deactivation(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -305,14 +305,14 @@ class PHYSICS_PT_rigid_body_settings(PHYSICS_PT_rigidbody_panel, bpy.types.Panel
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -323,4 +323,4 @@ class PHYSICS_PT_rigidbody_panel:
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-def rigid_body_warning(layout, text): ...
+def rigid_body_warning(layout, text) -> None: ...

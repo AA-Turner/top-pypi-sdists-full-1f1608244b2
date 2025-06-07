@@ -32,7 +32,6 @@ from langgraph_api.js.base import BaseRemotePregel
 from langgraph_api.metadata import HOST, PLAN, USER_API_URL, incr_nodes
 from langgraph_api.schema import Run, StreamMode
 from langgraph_api.serde import json_dumpb
-from langgraph_api.utils import AsyncConnectionProto
 from langgraph_runtime.checkpoint import Checkpointer
 from langgraph_runtime.ops import Runs
 
@@ -79,8 +78,6 @@ async def async_tracing_context(*args, **kwargs):
 
 
 async def astream_state(
-    stack: AsyncExitStack,
-    conn: AsyncConnectionProto,
     run: Run,
     attempt: int,
     done: ValueEvent,
@@ -90,7 +87,6 @@ async def astream_state(
 ) -> AnyStream:
     """Stream messages from the runnable."""
     run_id = str(run["run_id"])
-    await stack.enter_async_context(conn.pipeline())
     # extract args from run
     kwargs = run["kwargs"].copy()
     kwargs.pop("webhook", None)
@@ -98,12 +94,13 @@ async def astream_state(
     subgraphs = kwargs.get("subgraphs", False)
     temporary = kwargs.pop("temporary", False)
     config = kwargs.pop("config")
+    stack = AsyncExitStack()
     graph = await stack.enter_async_context(
         get_graph(
             config["configurable"]["graph_id"],
             config,
             store=(await api_store.get_store()),
-            checkpointer=None if temporary else Checkpointer(conn),
+            checkpointer=None if temporary else Checkpointer(),
         )
     )
     input = kwargs.pop("input")

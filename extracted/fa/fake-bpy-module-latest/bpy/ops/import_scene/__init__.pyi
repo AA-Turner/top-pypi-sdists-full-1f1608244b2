@@ -36,7 +36,7 @@ def fbx(
     use_prepost_rot: bool | None = True,
     axis_forward: typing.Literal["X", "Y", "Z", "-X", "-Y", "-Z"] | None = "-Z",
     axis_up: typing.Literal["X", "Y", "Z", "-X", "-Y", "-Z"] | None = "Y",
-):
+) -> None:
     """Load a FBX file
 
         :type execution_context: int | str | None
@@ -135,7 +135,7 @@ def gltf(
     import_select_created_objects: bool | None = True,
     import_scene_extras: bool | None = True,
     import_scene_as_collection: bool | None = True,
-):
+) -> None:
     """Load a glTF 2.0 file
 
         :type execution_context: int | str | None

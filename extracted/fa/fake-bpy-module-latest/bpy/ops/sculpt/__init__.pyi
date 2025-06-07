@@ -16,7 +16,7 @@ def brush_stroke(
     pen_flip: bool | None = False,
     override_location: bool | None = False,
     ignore_background_click: bool | None = False,
-):
+) -> None:
     """Sculpt a stroke into the geometry
 
         :type execution_context: int | str | None
@@ -64,7 +64,7 @@ def cloth_filter(
     cloth_damping: float | None = 0.0,
     use_face_sets: bool | None = False,
     use_collisions: bool | None = False,
-):
+) -> None:
     """Applies a cloth simulation deformation to the entire mesh
 
         :type execution_context: int | str | None
@@ -156,7 +156,7 @@ def color_filter(
         1.0,
         1.0,
     ),
-):
+) -> None:
     """Applies a filter to modify the active color attribute
 
         :type execution_context: int | str | None
@@ -208,7 +208,7 @@ def color_filter(
 
 def detail_flood_fill(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Flood fill the mesh with the selected detail setting
 
     :type execution_context: int | str | None
@@ -217,7 +217,7 @@ def detail_flood_fill(
 
 def dynamic_topology_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Dynamic topology alters the mesh topology while sculpting
 
     :type execution_context: int | str | None
@@ -226,7 +226,7 @@ def dynamic_topology_toggle(
 
 def dyntopo_detail_size_edit(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Modify the detail size of dyntopo interactively
 
     :type execution_context: int | str | None
@@ -258,7 +258,7 @@ def expand(
     max_geodesic_move_preview: int | None = 10000,
     use_auto_mask: bool | None = False,
     normal_falloff_smooth: int | None = 2,
-):
+) -> None:
     """Generic sculpt expand operator
 
     :type execution_context: int | str | None
@@ -296,7 +296,7 @@ def face_set_box_gesture(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     use_front_faces_only: bool | None = False,
-):
+) -> None:
     """Add a face set in a rectangle defined by the cursor
 
     :type execution_context: int | str | None
@@ -321,7 +321,7 @@ def face_set_change_visibility(
     /,
     *,
     mode: typing.Literal["TOGGLE", "SHOW_ACTIVE", "HIDE_ACTIVE"] | None = "TOGGLE",
-):
+) -> None:
     """Change the visibility of the Face Sets of the sculpt
 
         :type execution_context: int | str | None
@@ -351,7 +351,7 @@ def face_set_edit(
     | None = "GROW",
     strength: float | None = 1.0,
     modify_hidden: bool | None = False,
-):
+) -> None:
     """Edits the current active Face Set
 
         :type execution_context: int | str | None
@@ -390,7 +390,7 @@ def face_set_extract(
     smooth_iterations: int | None = 4,
     apply_shrinkwrap: bool | None = True,
     add_solidify: bool | None = True,
-):
+) -> None:
     """Create a new mesh object from the selected Face Set
 
     :type execution_context: int | str | None
@@ -415,7 +415,7 @@ def face_set_lasso_gesture(
     smooth_stroke_factor: float | None = 0.75,
     smooth_stroke_radius: int | None = 35,
     use_front_faces_only: bool | None = False,
-):
+) -> None:
     """Add a face set in a shape defined by the cursor
 
     :type execution_context: int | str | None
@@ -445,7 +445,7 @@ def face_set_line_gesture(
     cursor: int | None = 5,
     use_front_faces_only: bool | None = False,
     use_limit_to_segment: bool | None = False,
-):
+) -> None:
     """Add a face set to one side of a line defined by the cursor
 
     :type execution_context: int | str | None
@@ -475,7 +475,7 @@ def face_set_polyline_gesture(
     *,
     path: bpy.types.bpy_prop_collection[bpy.types.OperatorMousePath] | None = None,
     use_front_faces_only: bool | None = False,
-):
+) -> None:
     """Add a face set in a shape defined by the cursor
 
     :type execution_context: int | str | None
@@ -492,7 +492,7 @@ def face_sets_create(
     /,
     *,
     mode: typing.Literal["MASKED", "VISIBLE", "ALL", "SELECTION"] | None = "MASKED",
-):
+) -> None:
     """Create a new Face Set
 
         :type execution_context: int | str | None
@@ -530,7 +530,7 @@ def face_sets_init(
     ]
     | None = "LOOSE_PARTS",
     threshold: float | None = 0.5,
-):
+) -> None:
     """Initializes all Face Sets in the mesh
 
         :type execution_context: int | str | None
@@ -567,7 +567,7 @@ def face_sets_init(
 
 def face_sets_randomize_colors(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Generates a new set of random colors to render the Face Sets in the viewport
 
     :type execution_context: int | str | None
@@ -584,7 +584,7 @@ def mask_by_color(
     preserve_previous_mask: bool | None = False,
     threshold: float | None = 0.35,
     location: collections.abc.Iterable[int] | None = (0, 0),
-):
+) -> None:
     """Creates a mask based on the active color attribute
 
     :type execution_context: int | str | None
@@ -612,7 +612,7 @@ def mask_filter(
     | None = "SMOOTH",
     iterations: int | None = 1,
     auto_iteration_count: bool | None = True,
-):
+) -> None:
     """Applies a filter to modify the current mask
 
     :type execution_context: int | str | None
@@ -636,7 +636,7 @@ def mask_from_boundary(
     settings_source: typing.Literal["OPERATOR", "BRUSH", "SCENE"] | None = "OPERATOR",
     boundary_mode: typing.Literal["MESH", "FACE_SETS"] | None = "MESH",
     propagation_steps: int | None = 1,
-):
+) -> None:
     """Creates a mask based on the boundaries of the surface
 
         :type execution_context: int | str | None
@@ -681,7 +681,7 @@ def mask_from_cavity(
     blur_steps: int | None = 2,
     use_curve: bool | None = False,
     invert: bool | None = False,
-):
+) -> None:
     """Creates a mask based on the curvature of the surface
 
         :type execution_context: int | str | None
@@ -720,7 +720,7 @@ def mask_init(
         "RANDOM_PER_VERTEX", "RANDOM_PER_FACE_SET", "RANDOM_PER_LOOSE_PART"
     ]
     | None = "RANDOM_PER_VERTEX",
-):
+) -> None:
     """Creates a new mask for the entire mesh
 
     :type execution_context: int | str | None
@@ -761,7 +761,7 @@ def mesh_filter(
     sharpen_smooth_ratio: float | None = 0.35,
     sharpen_intensify_detail_strength: float | None = 0.0,
     sharpen_curvature_smooth_iterations: int | None = 0,
-):
+) -> None:
     """Applies a filter to modify the current mesh
 
         :type execution_context: int | str | None
@@ -844,7 +844,9 @@ def mesh_filter(
         :type sharpen_curvature_smooth_iterations: int | None
     """
 
-def optimize(execution_context: int | str | None = None, undo: bool | None = None):
+def optimize(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Recalculate the sculpt BVH to improve performance
 
     :type execution_context: int | str | None
@@ -861,7 +863,7 @@ def paint_mask_extract(
     smooth_iterations: int | None = 4,
     apply_shrinkwrap: bool | None = True,
     add_solidify: bool | None = True,
-):
+) -> None:
     """Create a new mesh object from the current paint mask
 
     :type execution_context: int | str | None
@@ -886,7 +888,7 @@ def paint_mask_slice(
     mask_threshold: float | None = 0.5,
     fill_holes: bool | None = True,
     new_object: bool | None = True,
-):
+) -> None:
     """Slices the paint mask from the mesh
 
     :type execution_context: int | str | None
@@ -912,7 +914,7 @@ def project_line_gesture(
     cursor: int | None = 5,
     use_front_faces_only: bool | None = False,
     use_limit_to_segment: bool | None = False,
-):
+) -> None:
     """Project the geometry onto a plane defined by a line
 
     :type execution_context: int | str | None
@@ -935,7 +937,9 @@ def project_line_gesture(
     :type use_limit_to_segment: bool | None
     """
 
-def sample_color(execution_context: int | str | None = None, undo: bool | None = None):
+def sample_color(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Sample the vertex color of the active vertex
 
     :type execution_context: int | str | None
@@ -949,7 +953,7 @@ def sample_detail_size(
     *,
     location: collections.abc.Iterable[int] | None = (0, 0),
     mode: typing.Literal["DYNTOPO", "VOXEL"] | None = "DYNTOPO",
-):
+) -> None:
     """Sample the mesh detail on clicked point
 
         :type execution_context: int | str | None
@@ -968,7 +972,7 @@ def sample_detail_size(
 
 def sculptmode_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle sculpt mode in 3D view
 
     :type execution_context: int | str | None
@@ -977,7 +981,7 @@ def sculptmode_toggle(
 
 def set_persistent_base(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reset the copy of the mesh that is being sculpted on
 
     :type execution_context: int | str | None
@@ -993,7 +997,7 @@ def set_pivot_position(
     | None = "UNMASKED",
     mouse_x: float | None = 0.0,
     mouse_y: float | None = 0.0,
-):
+) -> None:
     """Sets the sculpt transform pivot position
 
         :type execution_context: int | str | None
@@ -1027,7 +1031,7 @@ def symmetrize(
     /,
     *,
     merge_tolerance: float | None = 0.0005,
-):
+) -> None:
     """Symmetrize the topology modifications
 
     :type execution_context: int | str | None
@@ -1053,7 +1057,7 @@ def trim_box_gesture(
     trim_orientation: typing.Literal["VIEW", "SURFACE"] | None = "VIEW",
     trim_extrude_mode: typing.Literal["PROJECT", "FIXED"] | None = "FIXED",
     trim_solver: typing.Literal["EXACT", "FLOAT", "MANIFOLD"] | None = "MANIFOLD",
-):
+) -> None:
     """Execute a boolean operation on the mesh and a rectangle defined by the cursor
 
         :type execution_context: int | str | None
@@ -1130,7 +1134,7 @@ def trim_lasso_gesture(
     trim_orientation: typing.Literal["VIEW", "SURFACE"] | None = "VIEW",
     trim_extrude_mode: typing.Literal["PROJECT", "FIXED"] | None = "FIXED",
     trim_solver: typing.Literal["EXACT", "FLOAT", "MANIFOLD"] | None = "MANIFOLD",
-):
+) -> None:
     """Execute a boolean operation on the mesh and a shape defined by the cursor
 
         :type execution_context: int | str | None
@@ -1208,7 +1212,7 @@ def trim_line_gesture(
     trim_orientation: typing.Literal["VIEW", "SURFACE"] | None = "VIEW",
     trim_extrude_mode: typing.Literal["PROJECT", "FIXED"] | None = "FIXED",
     trim_solver: typing.Literal["EXACT", "FLOAT", "MANIFOLD"] | None = "MANIFOLD",
-):
+) -> None:
     """Remove a portion of the mesh on one side of a line
 
         :type execution_context: int | str | None
@@ -1286,7 +1290,7 @@ def trim_polyline_gesture(
     trim_orientation: typing.Literal["VIEW", "SURFACE"] | None = "VIEW",
     trim_extrude_mode: typing.Literal["PROJECT", "FIXED"] | None = "FIXED",
     trim_solver: typing.Literal["EXACT", "FLOAT", "MANIFOLD"] | None = "MANIFOLD",
-):
+) -> None:
     """Execute a boolean operation on the mesh and a polygonal shape defined by the cursor
 
         :type execution_context: int | str | None
@@ -1345,7 +1349,7 @@ def uv_sculpt_grab(
     /,
     *,
     use_invert: bool | None = False,
-):
+) -> None:
     """Grab UVs
 
     :type execution_context: int | str | None
@@ -1360,7 +1364,7 @@ def uv_sculpt_pinch(
     /,
     *,
     use_invert: bool | None = False,
-):
+) -> None:
     """Pinch UVs
 
     :type execution_context: int | str | None
@@ -1376,7 +1380,7 @@ def uv_sculpt_relax(
     *,
     use_invert: bool | None = False,
     relax_method: typing.Literal["LAPLACIAN", "HC", "COTAN"] | None = "COTAN",
-):
+) -> None:
     """Relax UVs
 
         :type execution_context: int | str | None

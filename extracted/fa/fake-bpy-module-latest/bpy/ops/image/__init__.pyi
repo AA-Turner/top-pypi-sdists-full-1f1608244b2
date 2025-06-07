@@ -8,7 +8,7 @@ import mathutils
 
 def add_render_slot(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a new render slot
 
     :type execution_context: int | str | None
@@ -21,7 +21,7 @@ def change_frame(
     /,
     *,
     frame: int | None = 0,
-):
+) -> None:
     """Interactively change the current frame number
 
     :type execution_context: int | str | None
@@ -32,7 +32,7 @@ def change_frame(
 
 def clear_render_border(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear the boundaries of the render region and disable render region
 
     :type execution_context: int | str | None
@@ -41,7 +41,7 @@ def clear_render_border(
 
 def clear_render_slot(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear the currently selected render slot
 
     :type execution_context: int | str | None
@@ -50,7 +50,7 @@ def clear_render_slot(
 
 def clipboard_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy the image to the clipboard
 
     :type execution_context: int | str | None
@@ -59,7 +59,7 @@ def clipboard_copy(
 
 def clipboard_paste(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Paste new image from the clipboard
 
     :type execution_context: int | str | None
@@ -87,7 +87,7 @@ def convert_to_mesh_plane(
     overwrite_material: bool | None = True,
     name_from: typing.Literal["OBJECT", "IMAGE"] | None = "OBJECT",
     delete_ref: bool | None = True,
-):
+) -> None:
     """Convert selected reference images to textured mesh plane
 
         :type execution_context: int | str | None
@@ -183,7 +183,7 @@ def curves_point_set(
     *,
     point: typing.Literal["BLACK_POINT", "WHITE_POINT"] | None = "BLACK_POINT",
     size: int | None = 1,
-):
+) -> None:
     """Set black point or white point for curves
 
     :type execution_context: int | str | None
@@ -200,7 +200,7 @@ def cycle_render_slot(
     /,
     *,
     reverse: bool | None = False,
-):
+) -> None:
     """Cycle through all non-void render slots
 
     :type execution_context: int | str | None
@@ -215,7 +215,7 @@ def external_edit(
     /,
     *,
     filepath: str = "",
-):
+) -> None:
     """Edit image in an external application
 
     :type execution_context: int | str | None
@@ -258,7 +258,7 @@ def file_browse(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Open an image file browser, hold Shift to open the file, Alt to browse containing directory
 
         :type execution_context: int | str | None
@@ -336,7 +336,7 @@ def flip(
     *,
     use_flip_x: bool | None = False,
     use_flip_y: bool | None = False,
-):
+) -> None:
     """Flip the image
 
     :type execution_context: int | str | None
@@ -400,7 +400,7 @@ def import_as_mesh_planes(
     fill_mode: typing.Literal["FILL", "FIT"] | None = "FILL",
     height: float | None = 1.0,
     factor: float | None = 600.0,
-):
+) -> None:
     """Create mesh plane(s) from image files with the appropriate aspect ratio
 
         :type execution_context: int | str | None
@@ -626,7 +626,7 @@ def invert(
     invert_g: bool | None = False,
     invert_b: bool | None = False,
     invert_a: bool | None = False,
-):
+) -> None:
     """Invert image's channels
 
     :type execution_context: int | str | None
@@ -643,7 +643,7 @@ def invert(
 
 def match_movie_length(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set image's user's length to the one of this video
 
     :type execution_context: int | str | None
@@ -665,7 +665,7 @@ def new(
     float: bool | None = False,
     use_stereo_3d: bool | None = False,
     tiled: bool | None = False,
-):
+) -> None:
     """Create a new image
 
     :type execution_context: int | str | None
@@ -730,7 +730,7 @@ def open(
     sort_method: str | None = "",
     use_sequence_detection: bool | None = True,
     use_udim_detecting: bool | None = True,
-):
+) -> None:
     """Open image
 
         :type execution_context: int | str | None
@@ -822,7 +822,7 @@ def open_images(
     relative_path: bool | None = True,
     use_sequence_detection: bool | None = True,
     use_udim_detection: bool | None = True,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -839,21 +839,25 @@ def open_images(
     :type use_udim_detection: bool | None
     """
 
-def pack(execution_context: int | str | None = None, undo: bool | None = None):
+def pack(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Pack an image as embedded data into the .blend file
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def project_apply(execution_context: int | str | None = None, undo: bool | None = None):
+def project_apply(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Project edited image back onto the object
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def project_edit(execution_context: int | str | None = None, undo: bool | None = None):
+def project_edit(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Edit a snapshot of the 3D Viewport in an external image editor
 
     :type execution_context: int | str | None
@@ -862,14 +866,16 @@ def project_edit(execution_context: int | str | None = None, undo: bool | None =
 
 def read_viewlayers(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Read all the current scene's view layers from cache, as needed
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def reload(execution_context: int | str | None = None, undo: bool | None = None):
+def reload(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Reload current image from disk
 
     :type execution_context: int | str | None
@@ -878,7 +884,7 @@ def reload(execution_context: int | str | None = None, undo: bool | None = None)
 
 def remove_render_slot(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the current render slot
 
     :type execution_context: int | str | None
@@ -895,7 +901,7 @@ def render_border(
     ymin: int | None = 0,
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Set the boundaries of the render region and enable render region
 
     :type execution_context: int | str | None
@@ -946,7 +952,7 @@ def replace(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Replace current image by another one from disk
 
         :type execution_context: int | str | None
@@ -1024,7 +1030,7 @@ def resize(
     *,
     size: collections.abc.Iterable[int] | None = (0, 0),
     all_udims: bool | None = False,
-):
+) -> None:
     """Resize the image
 
     :type execution_context: int | str | None
@@ -1041,7 +1047,7 @@ def rotate_orthogonal(
     /,
     *,
     degrees: typing.Literal["90", "180", "270"] | None = "90",
-):
+) -> None:
     """Rotate the image
 
         :type execution_context: int | str | None
@@ -1065,7 +1071,7 @@ def sample(
     /,
     *,
     size: int | None = 1,
-):
+) -> None:
     """Use mouse to sample a color in current image
 
     :type execution_context: int | str | None
@@ -1085,7 +1091,7 @@ def sample_line(
     yend: int | None = 0,
     flip: bool | None = False,
     cursor: int | None = 5,
-):
+) -> None:
     """Sample a line and show it in Scope panels
 
     :type execution_context: int | str | None
@@ -1104,7 +1110,7 @@ def sample_line(
     :type cursor: int | None
     """
 
-def save(execution_context: int | str | None = None, undo: bool | None = None):
+def save(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Save the image with current name and settings
 
     :type execution_context: int | str | None
@@ -1113,7 +1119,7 @@ def save(execution_context: int | str | None = None, undo: bool | None = None):
 
 def save_all_modified(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Save all modified images
 
     :type execution_context: int | str | None
@@ -1156,7 +1162,7 @@ def save_as(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Save the image with another name and/or settings
 
         :type execution_context: int | str | None
@@ -1231,7 +1237,9 @@ def save_as(
         :type sort_method: str | None
     """
 
-def save_sequence(execution_context: int | str | None = None, undo: bool | None = None):
+def save_sequence(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Save a sequence of images
 
     :type execution_context: int | str | None
@@ -1254,7 +1262,7 @@ def tile_add(
     height: int | None = 1024,
     float: bool | None = False,
     alpha: bool | None = True,
-):
+) -> None:
     """Adds a tile to the image
 
     :type execution_context: int | str | None
@@ -1293,7 +1301,7 @@ def tile_fill(
     height: int | None = 1024,
     float: bool | None = False,
     alpha: bool | None = True,
-):
+) -> None:
     """Fill the current tile with a generated image
 
     :type execution_context: int | str | None
@@ -1312,7 +1320,9 @@ def tile_fill(
     :type alpha: bool | None
     """
 
-def tile_remove(execution_context: int | str | None = None, undo: bool | None = None):
+def tile_remove(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Removes a tile from the image
 
     :type execution_context: int | str | None
@@ -1326,7 +1336,7 @@ def unpack(
     *,
     method: bpy.stub_internal.rna_enums.UnpackMethodItems | None = "USE_LOCAL",
     id: str = "",
-):
+) -> None:
     """Save an image packed in the .blend file to disk
 
     :type execution_context: int | str | None
@@ -1343,7 +1353,7 @@ def view_all(
     /,
     *,
     fit_view: bool | None = False,
-):
+) -> None:
     """View the entire image
 
     :type execution_context: int | str | None
@@ -1354,7 +1364,7 @@ def view_all(
 
 def view_center_cursor(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Center the view so that the cursor is in the middle of the view
 
     :type execution_context: int | str | None
@@ -1367,7 +1377,7 @@ def view_cursor_center(
     /,
     *,
     fit_view: bool | None = False,
-):
+) -> None:
     """Set 2D Cursor To Center View location
 
     :type execution_context: int | str | None
@@ -1376,7 +1386,9 @@ def view_cursor_center(
     :type fit_view: bool | None
     """
 
-def view_ndof(execution_context: int | str | None = None, undo: bool | None = None):
+def view_ndof(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Use a 3D mouse device to pan/zoom the view
 
     :type execution_context: int | str | None
@@ -1389,7 +1401,7 @@ def view_pan(
     /,
     *,
     offset: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Pan the view
 
     :type execution_context: int | str | None
@@ -1398,7 +1410,9 @@ def view_pan(
     :type offset: collections.abc.Sequence[float] | mathutils.Vector | None
     """
 
-def view_selected(execution_context: int | str | None = None, undo: bool | None = None):
+def view_selected(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """View all selected UVs
 
     :type execution_context: int | str | None
@@ -1412,7 +1426,7 @@ def view_zoom(
     *,
     factor: float | None = 0.0,
     use_cursor_init: bool | None = True,
-):
+) -> None:
     """Zoom in/out the image
 
     :type execution_context: int | str | None
@@ -1434,7 +1448,7 @@ def view_zoom_border(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     zoom_out: bool | None = False,
-):
+) -> None:
     """Zoom in the view to the nearest item contained in the border
 
     :type execution_context: int | str | None
@@ -1459,7 +1473,7 @@ def view_zoom_in(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Zoom in the image (centered around 2D cursor)
 
     :type execution_context: int | str | None
@@ -1474,7 +1488,7 @@ def view_zoom_out(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Zoom out the image (centered around 2D cursor)
 
     :type execution_context: int | str | None
@@ -1489,7 +1503,7 @@ def view_zoom_ratio(
     /,
     *,
     ratio: float | None = 0.0,
-):
+) -> None:
     """Set zoom ratio of the view
 
     :type execution_context: int | str | None

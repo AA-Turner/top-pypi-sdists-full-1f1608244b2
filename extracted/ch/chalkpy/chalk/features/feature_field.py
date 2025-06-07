@@ -1872,6 +1872,7 @@ def feature(
         frame = inspect.currentframe()
         assert frame is not None
         _, _, _, values = inspect.getargvalues(frame)
+        del frame
 
         # Get function's default values
         sig = inspect.signature(feature)

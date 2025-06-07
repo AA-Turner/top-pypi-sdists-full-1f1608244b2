@@ -38,13 +38,13 @@ class GreasePencilStroke(AttributeGetterSetter):
     start_cap: typing.Any
     time_start: typing.Any
 
-    def add_points(self, count):
+    def add_points(self, count) -> None:
         """Add new points at the end of the stroke and returns the new points as a list.
 
         :param count:
         """
 
-    def remove_points(self, count):
+    def remove_points(self, count) -> None:
         """Remove points at the end of the stroke.
 
         :param count:
@@ -69,11 +69,11 @@ class GreasePencilStrokePointSlice(SliceHelper):
 class GreasePencilStrokeSlice(SliceHelper):
     """A helper class that represents a slice of GreasePencilStroke's."""
 
-def DefAttributeGetterSetters(attributes_list):
+def DefAttributeGetterSetters(attributes_list) -> None:
     """A class decorator that reads a list of attribute information &
     creates properties on the class with getters & setters.
 
     """
 
-def def_prop_for_attribute(attr_name, type, default, doc):
+def def_prop_for_attribute(attr_name, type, default, doc) -> None:
     """Creates a property that can read and write an attribute."""

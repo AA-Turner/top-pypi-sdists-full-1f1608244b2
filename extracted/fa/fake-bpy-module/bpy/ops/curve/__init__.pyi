@@ -13,7 +13,7 @@ def cyclic_toggle(
     /,
     *,
     direction: typing.Literal["CYCLIC_U", "CYCLIC_V"] | None = "CYCLIC_U",
-):
+) -> None:
     """Make active spline closed/opened loop
 
     :type execution_context: int | str | None
@@ -24,7 +24,7 @@ def cyclic_toggle(
 
 def de_select_first(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """(De)select first of visible part of each NURBS
 
     :type execution_context: int | str | None
@@ -33,7 +33,7 @@ def de_select_first(
 
 def de_select_last(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """(De)select last of visible part of each NURBS
 
     :type execution_context: int | str | None
@@ -46,7 +46,7 @@ def decimate(
     /,
     *,
     ratio: float | None = 1.0,
-):
+) -> None:
     """Simplify selected curves
 
     :type execution_context: int | str | None
@@ -61,7 +61,7 @@ def delete(
     /,
     *,
     type: typing.Literal["VERT", "SEGMENT"] | None = "VERT",
-):
+) -> None:
     """Delete selected control points or segments
 
     :type execution_context: int | str | None
@@ -72,7 +72,7 @@ def delete(
 
 def dissolve_verts(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete selected control points, correcting surrounding handles
 
     :type execution_context: int | str | None
@@ -91,7 +91,7 @@ def draw(
     stroke: bpy.types.bpy_prop_collection[bpy.types.OperatorStrokeElement]
     | None = None,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Draw a freehand spline
 
     :type execution_context: int | str | None
@@ -110,7 +110,9 @@ def draw(
     :type wait_for_input: bool | None
     """
 
-def duplicate(execution_context: int | str | None = None, undo: bool | None = None):
+def duplicate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Duplicate selected control points
 
     :type execution_context: int | str | None
@@ -124,7 +126,7 @@ def duplicate_move(
     *,
     CURVE_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Duplicate curve and move
 
     :type execution_context: int | str | None
@@ -141,7 +143,7 @@ def extrude(
     /,
     *,
     mode: bpy.stub_internal.rna_enums.TransformModeTypeItems | None = "TRANSLATION",
-):
+) -> None:
     """Extrude selected control point(s)
 
     :type execution_context: int | str | None
@@ -157,7 +159,7 @@ def extrude_move(
     *,
     CURVE_OT_extrude: extrude | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Extrude curve and move result
 
     :type execution_context: int | str | None
@@ -177,7 +179,7 @@ def handle_type_set(
         "AUTOMATIC", "VECTOR", "ALIGNED", "FREE_ALIGN", "TOGGLE_FREE_ALIGN"
     ]
     | None = "AUTOMATIC",
-):
+) -> None:
     """Set type of handles for selected control points
 
     :type execution_context: int | str | None
@@ -192,7 +194,7 @@ def hide(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Hide (un)selected control points
 
     :type execution_context: int | str | None
@@ -201,7 +203,9 @@ def hide(
     :type unselected: bool | None
     """
 
-def make_segment(execution_context: int | str | None = None, undo: bool | None = None):
+def make_segment(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Join two curves by their selected ends
 
     :type execution_context: int | str | None
@@ -210,7 +214,7 @@ def make_segment(execution_context: int | str | None = None, undo: bool | None =
 
 def match_texture_space(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Match texture space to object's bounding box
 
     :type execution_context: int | str | None
@@ -223,7 +227,7 @@ def normals_make_consistent(
     /,
     *,
     calc_length: bool | None = False,
-):
+) -> None:
     """Recalculate the direction of selected handles
 
     :type execution_context: int | str | None
@@ -253,7 +257,7 @@ def pen(
     close_spline_method: typing.Literal["OFF", "ON_PRESS", "ON_CLICK"] | None = "OFF",
     toggle_vector: bool | None = False,
     cycle_handle_type: bool | None = False,
-):
+) -> None:
     """Construct and edit splines
 
         :type execution_context: int | str | None
@@ -320,7 +324,7 @@ def primitive_bezier_circle_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Bézier Circle
 
         :type execution_context: int | str | None
@@ -367,7 +371,7 @@ def primitive_bezier_curve_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Bézier Curve
 
         :type execution_context: int | str | None
@@ -414,7 +418,7 @@ def primitive_nurbs_circle_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Nurbs Circle
 
         :type execution_context: int | str | None
@@ -461,7 +465,7 @@ def primitive_nurbs_curve_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Nurbs Curve
 
         :type execution_context: int | str | None
@@ -508,7 +512,7 @@ def primitive_nurbs_path_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Path
 
         :type execution_context: int | str | None
@@ -542,7 +546,7 @@ def radius_set(
     /,
     *,
     radius: float | None = 1.0,
-):
+) -> None:
     """Set per-point radius which is used for bevel tapering
 
     :type execution_context: int | str | None
@@ -557,7 +561,7 @@ def reveal(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Reveal hidden control points
 
     :type execution_context: int | str | None
@@ -572,7 +576,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """(De)select all control points
 
         :type execution_context: int | str | None
@@ -593,14 +597,18 @@ def select_all(
         :type action: typing.Literal['TOGGLE','SELECT','DESELECT','INVERT'] | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Deselect control points at the boundary of each selection region
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_linked(execution_context: int | str | None = None, undo: bool | None = None):
+def select_linked(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select all control points linked to the current selection
 
     :type execution_context: int | str | None
@@ -613,7 +621,7 @@ def select_linked_pick(
     /,
     *,
     deselect: bool | None = False,
-):
+) -> None:
     """Select all control points linked to already selected ones
 
     :type execution_context: int | str | None
@@ -622,14 +630,18 @@ def select_linked_pick(
     :type deselect: bool | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select control points at the boundary of each selection region
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_next(execution_context: int | str | None = None, undo: bool | None = None):
+def select_next(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select control points following already selected ones along the curves
 
     :type execution_context: int | str | None
@@ -644,7 +656,7 @@ def select_nth(
     skip: int | None = 1,
     nth: int | None = 1,
     offset: int | None = 0,
-):
+) -> None:
     """Deselect every Nth point starting from the active one
 
     :type execution_context: int | str | None
@@ -659,7 +671,7 @@ def select_nth(
 
 def select_previous(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select control points preceding already selected ones along the curves
 
     :type execution_context: int | str | None
@@ -674,7 +686,7 @@ def select_random(
     ratio: float | None = 0.5,
     seed: int | None = 0,
     action: typing.Literal["SELECT", "DESELECT"] | None = "SELECT",
-):
+) -> None:
     """Randomly select some control points
 
         :type execution_context: int | str | None
@@ -693,7 +705,9 @@ def select_random(
         :type action: typing.Literal['SELECT','DESELECT'] | None
     """
 
-def select_row(execution_context: int | str | None = None, undo: bool | None = None):
+def select_row(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select a row of control points including active one. Successive use on the same point switches between U/V directions
 
     :type execution_context: int | str | None
@@ -708,7 +722,7 @@ def select_similar(
     type: typing.Literal["TYPE", "RADIUS", "WEIGHT", "DIRECTION"] | None = "WEIGHT",
     compare: typing.Literal["EQUAL", "GREATER", "LESS"] | None = "EQUAL",
     threshold: float | None = 0.1,
-):
+) -> None:
     """Select similar curve points by property type
 
     :type execution_context: int | str | None
@@ -721,21 +735,27 @@ def select_similar(
     :type threshold: float | None
     """
 
-def separate(execution_context: int | str | None = None, undo: bool | None = None):
+def separate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Separate selected points from connected unselected points into a new object
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def shade_flat(execution_context: int | str | None = None, undo: bool | None = None):
+def shade_flat(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Set shading to flat
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def shade_smooth(execution_context: int | str | None = None, undo: bool | None = None):
+def shade_smooth(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Set shading to smooth
 
     :type execution_context: int | str | None
@@ -744,35 +764,43 @@ def shade_smooth(execution_context: int | str | None = None, undo: bool | None =
 
 def shortest_path_pick(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select shortest path between two selections
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def smooth(execution_context: int | str | None = None, undo: bool | None = None):
+def smooth(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Flatten angles of selected points
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def smooth_radius(execution_context: int | str | None = None, undo: bool | None = None):
+def smooth_radius(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Interpolate radii of selected points
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def smooth_tilt(execution_context: int | str | None = None, undo: bool | None = None):
+def smooth_tilt(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Interpolate tilt of selected points
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def smooth_weight(execution_context: int | str | None = None, undo: bool | None = None):
+def smooth_weight(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Interpolate weight of selected points
 
     :type execution_context: int | str | None
@@ -786,7 +814,7 @@ def spin(
     *,
     center: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
     axis: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Extrude selected boundary row around pivot point and current view axis
 
     :type execution_context: int | str | None
@@ -804,7 +832,7 @@ def spline_type_set(
     *,
     type: typing.Literal["POLY", "BEZIER", "NURBS"] | None = "POLY",
     use_handles: bool | None = False,
-):
+) -> None:
     """Set type of active spline
 
     :type execution_context: int | str | None
@@ -821,7 +849,7 @@ def spline_weight_set(
     /,
     *,
     weight: float | None = 1.0,
-):
+) -> None:
     """Set softbody goal weight for selected points
 
     :type execution_context: int | str | None
@@ -830,7 +858,7 @@ def spline_weight_set(
     :type weight: float | None
     """
 
-def split(execution_context: int | str | None = None, undo: bool | None = None):
+def split(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Split off selected points from connected unselected points
 
     :type execution_context: int | str | None
@@ -843,7 +871,7 @@ def subdivide(
     /,
     *,
     number_cuts: int | None = 1,
-):
+) -> None:
     """Subdivide selected segments
 
     :type execution_context: int | str | None
@@ -854,14 +882,16 @@ def subdivide(
 
 def switch_direction(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Switch direction of selected splines
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def tilt_clear(execution_context: int | str | None = None, undo: bool | None = None):
+def tilt_clear(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Clear the tilt of selected control points
 
     :type execution_context: int | str | None
@@ -878,7 +908,7 @@ def vertex_add(
         0.0,
         0.0,
     ),
-):
+) -> None:
     """Add a new control point (linked to only selected end-curve one, if any)
 
     :type execution_context: int | str | None

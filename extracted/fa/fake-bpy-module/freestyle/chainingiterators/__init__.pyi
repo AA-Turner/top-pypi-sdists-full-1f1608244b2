@@ -35,7 +35,7 @@ class ChainPredicateIterator:
         restrict_to_unvisited: bool = True,
         begin: None | freestyle.types.ViewEdge | None = None,
         orientation: bool = True,
-    ):
+    ) -> None:
         """Builds a ChainPredicateIterator from a unary predicate, a binary
         predicate, a starting ViewEdge and its orientation or using the copy constructor.
 
@@ -59,7 +59,7 @@ class ChainPredicateIterator:
                 :type orientation: bool
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a ChainPredicateIterator from a unary predicate, a binary
         predicate, a starting ViewEdge and its orientation or using the copy constructor.
 
@@ -84,7 +84,7 @@ class ChainSilhouetteIterator:
         restrict_to_selection: bool = True,
         begin: None | freestyle.types.ViewEdge | None = None,
         orientation: bool = True,
-    ):
+    ) -> None:
         """Builds a ChainSilhouetteIterator from the first ViewEdge used for
         iteration and its orientation or the copy constructor.
 
@@ -100,7 +100,7 @@ class ChainSilhouetteIterator:
                 :type orientation: bool
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a ChainSilhouetteIterator from the first ViewEdge used for
         iteration and its orientation or the copy constructor.
 
@@ -115,7 +115,9 @@ class pyChainSilhouetteGenericIterator:
     edge types.
     """
 
-    def __init__(self, stayInSelection: bool = True, stayInUnvisited: bool = True):
+    def __init__(
+        self, stayInSelection: bool = True, stayInUnvisited: bool = True
+    ) -> None:
         """Builds a pyChainSilhouetteGenericIterator object.
 
         :param stayInSelection: True if it is allowed to go out of the selection
@@ -124,8 +126,8 @@ class pyChainSilhouetteGenericIterator:
         :type stayInUnvisited: bool
         """
 
-    def init(self): ...
-    def traverse(self, iter):
+    def init(self) -> None: ...
+    def traverse(self, iter) -> None:
         """
 
         :param iter:
@@ -138,8 +140,8 @@ class pyChainSilhouetteIterator:
     types.  A ViewEdge is only chained once.
     """
 
-    def init(self): ...
-    def traverse(self, iter):
+    def init(self) -> None: ...
+    def traverse(self, iter) -> None:
         """
 
         :param iter:
@@ -148,15 +150,15 @@ class pyChainSilhouetteIterator:
 class pyExternalContourChainingIterator:
     """Chains by external contour"""
 
-    def checkViewEdge(self, ve, orientation):
+    def checkViewEdge(self, ve, orientation) -> None:
         """
 
         :param ve:
         :param orientation:
         """
 
-    def init(self): ...
-    def traverse(self, iter):
+    def init(self) -> None: ...
+    def traverse(self, iter) -> None:
         """
 
         :param iter:
@@ -167,7 +169,7 @@ class pyFillOcclusionsAbsoluteAndRelativeChainingIterator:
     selection.
     """
 
-    def __init__(self, percent: float, l: float):
+    def __init__(self, percent: float, l: float) -> None:
         """Builds a pyFillOcclusionsAbsoluteAndRelativeChainingIterator object.
 
                 :param percent: The maximal length of the occluded part as a
@@ -177,8 +179,8 @@ class pyFillOcclusionsAbsoluteAndRelativeChainingIterator:
                 :type l: float
         """
 
-    def init(self): ...
-    def traverse(self, iter):
+    def init(self) -> None: ...
+    def traverse(self, iter) -> None:
         """
 
         :param iter:
@@ -187,15 +189,15 @@ class pyFillOcclusionsAbsoluteAndRelativeChainingIterator:
 class pyFillOcclusionsAbsoluteChainingIterator:
     """Chaining iterator that fills small occlusions"""
 
-    def __init__(self, length: int):
+    def __init__(self, length: int) -> None:
         """Builds a pyFillOcclusionsAbsoluteChainingIterator object.
 
         :param length: The maximum length of the occluded part in pixels.
         :type length: int
         """
 
-    def init(self): ...
-    def traverse(self, iter):
+    def init(self) -> None: ...
+    def traverse(self, iter) -> None:
         """
 
         :param iter:
@@ -204,7 +206,7 @@ class pyFillOcclusionsAbsoluteChainingIterator:
 class pyFillOcclusionsRelativeChainingIterator:
     """Chaining iterator that fills small occlusions"""
 
-    def __init__(self, percent: float):
+    def __init__(self, percent: float) -> None:
         """Builds a pyFillOcclusionsRelativeChainingIterator object.
 
                 :param percent: The maximal length of the occluded part, expressed
@@ -212,8 +214,8 @@ class pyFillOcclusionsRelativeChainingIterator:
                 :type percent: float
         """
 
-    def init(self): ...
-    def traverse(self, iter):
+    def init(self) -> None: ...
+    def traverse(self, iter) -> None:
         """
 
         :param iter:
@@ -224,7 +226,7 @@ class pyFillQi0AbsoluteAndRelativeChainingIterator:
     selection.
     """
 
-    def __init__(self, percent: float, l: float):
+    def __init__(self, percent: float, l: float) -> None:
         """Builds a pyFillQi0AbsoluteAndRelativeChainingIterator object.
 
                 :param percent: The maximal length of the occluded part as a
@@ -234,8 +236,8 @@ class pyFillQi0AbsoluteAndRelativeChainingIterator:
                 :type l: float
         """
 
-    def init(self): ...
-    def traverse(self, iter):
+    def init(self) -> None: ...
+    def traverse(self, iter) -> None:
         """
 
         :param iter:
@@ -248,15 +250,15 @@ class pyNoIdChainSilhouetteIterator:
     types.  It won't chain the same ViewEdge twice.
     """
 
-    def __init__(self, stayInSelection: bool = True):
+    def __init__(self, stayInSelection: bool = True) -> None:
         """Builds a pyNoIdChainSilhouetteIterator object.
 
         :param stayInSelection: True if it is allowed to go out of the selection
         :type stayInSelection: bool
         """
 
-    def init(self): ...
-    def traverse(self, iter):
+    def init(self) -> None: ...
+    def traverse(self, iter) -> None:
         """
 
         :param iter:
@@ -267,7 +269,7 @@ class pySketchyChainSilhouetteIterator:
     same ViewEdge multiple times to achieve a sketchy effect.
     """
 
-    def __init__(self, nRounds: int = 3, stayInSelection: bool = True):
+    def __init__(self, nRounds: int = 3, stayInSelection: bool = True) -> None:
         """Builds a pySketchyChainSilhouetteIterator object.
 
         :param nRounds: Number of times every Viewedge is chained.
@@ -276,15 +278,15 @@ class pySketchyChainSilhouetteIterator:
         :type stayInSelection: bool
         """
 
-    def init(self): ...
-    def make_sketchy(self, ve):
+    def init(self) -> None: ...
+    def make_sketchy(self, ve) -> None:
         """Creates the sketchy effect by causing the chain to run from
         the start again. (loop over itself again)
 
                 :param ve:
         """
 
-    def traverse(self, iter):
+    def traverse(self, iter) -> None:
         """
 
         :param iter:
@@ -296,8 +298,8 @@ class pySketchyChainingIterator:
     ViewEdge.
     """
 
-    def init(self): ...
-    def traverse(self, iter):
+    def init(self) -> None: ...
+    def traverse(self, iter) -> None:
         """
 
         :param iter:

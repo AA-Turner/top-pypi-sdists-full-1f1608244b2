@@ -24,7 +24,7 @@ class VIEWLAYER_MT_lightgroup_sync(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -54,7 +54,7 @@ class VIEWLAYER_PT_eevee_next_layer_passes_data(ViewLayerButtonsPanel, bpy.types
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -87,7 +87,7 @@ class VIEWLAYER_PT_eevee_next_layer_passes_light(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -117,7 +117,7 @@ class VIEWLAYER_PT_filter(ViewLayerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -146,7 +146,7 @@ class VIEWLAYER_PT_layer(ViewLayerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -203,7 +203,7 @@ class VIEWLAYER_PT_layer_passes(ViewLayerButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -309,7 +309,7 @@ class VIEWLAYER_PT_workbench_layer_passes_data(ViewLayerButtonsPanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -335,7 +335,7 @@ class VIEWLAYER_UL_aov(bpy.types.UIList):
 
     def draw_item(
         self, _context, layout, _data, item, icon, _active_data, _active_propname
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -353,7 +353,7 @@ class ViewLayerButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -365,7 +365,7 @@ class ViewLayerAOVPanelHelper(ViewLayerButtonsPanel):
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -377,7 +377,7 @@ class ViewLayerCryptomattePanelHelper(ViewLayerButtonsPanel):
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -389,7 +389,7 @@ class ViewLayerLightgroupsPanelHelper(ViewLayerButtonsPanel):
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:

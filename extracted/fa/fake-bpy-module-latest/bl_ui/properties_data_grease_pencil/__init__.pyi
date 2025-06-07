@@ -29,7 +29,7 @@ class DATA_PT_context_grease_pencil(DataButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -91,7 +91,7 @@ class DATA_PT_grease_pencil_attributes(DataButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -202,14 +202,14 @@ class DATA_PT_grease_pencil_layer_group_display(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -315,14 +315,14 @@ class DATA_PT_grease_pencil_layers(DataButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def draw_settings(cls, layout, grease_pencil):
+    def draw_settings(cls, layout, grease_pencil) -> None:
         """
 
         :param layout:
@@ -351,7 +351,7 @@ class DATA_PT_grease_pencil_onion_skinning(DataButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -383,13 +383,13 @@ class DATA_PT_grease_pencil_onion_skinning_custom_colors(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -419,7 +419,7 @@ class DATA_PT_grease_pencil_onion_skinning_display(DataButtonsPanel, bpy.types.P
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -447,7 +447,7 @@ class DATA_PT_grease_pencil_settings(DataButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -459,7 +459,7 @@ class DataButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -484,7 +484,7 @@ class GREASE_PENCIL_MT_grease_pencil_add_layer_extra(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -509,7 +509,7 @@ class GREASE_PENCIL_MT_group_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -534,7 +534,7 @@ class GREASE_PENCIL_MT_layer_mask_add(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -568,7 +568,7 @@ class GREASE_PENCIL_UL_attributes(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -581,7 +581,7 @@ class GREASE_PENCIL_UL_attributes(bpy.types.UIList):
         :param _index:
         """
 
-    def filter_items(self, _context, data, property):
+    def filter_items(self, _context, data, property) -> None:
         """
 
         :param _context:
@@ -617,7 +617,7 @@ class GREASE_PENCIL_UL_masks(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -631,7 +631,7 @@ class GREASE_PENCIL_UL_masks(bpy.types.UIList):
         """
 
 class GreasePencil_LayerAdjustmentsPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -640,34 +640,34 @@ class GreasePencil_LayerAdjustmentsPanel:
 class GreasePencil_LayerDisplayPanel:
     bl_label: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencil_LayerMaskPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencil_LayerRelationsPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencil_LayerTransformPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -679,7 +679,7 @@ class LayerDataButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

@@ -3622,6 +3622,67 @@ class Trix(QuantConnect.Indicators.Indicator, QuantConnect.Indicators.IIndicator
         ...
 
 
+class KlingerVolumeOscillator(QuantConnect.Indicators.TradeBarIndicator, QuantConnect.Indicators.IIndicatorWarmUpPeriodProvider):
+    """
+    The Klinger Volume Oscillator (KVO) is a technical indicator that analyzes the relationship between
+    price movement and trading volume to assess the strength of market trends and identify potential
+    trend reversals. As a volume-based oscillator, it measures the force behind price movements by
+    incorporating volume data adjusted for price trends and specific conditions. Traders use the KVO
+    to analyze its behavior relative to price action, looking for patterns such as divergences or
+    crossovers that can provide insights into market trends and potential turning points.
+    """
+
+    @property
+    def signal(self) -> QuantConnect.Indicators.ExponentialMovingAverage:
+        """Gets the public signal line (EMA of KVO)"""
+        ...
+
+    @property
+    def warm_up_period(self) -> int:
+        """Gets the warm-up period required for the indicator to be ready."""
+        ...
+
+    @property
+    def is_ready(self) -> bool:
+        """Gets a value indicating whether the indicator is ready and has enough data."""
+        ...
+
+    @overload
+    def __init__(self, name: str, fast_period: int, slow_period: int, signal_period: int) -> None:
+        """
+        Initializes a new instance of the KlingerVolumeOscillator class with specified fast, slow periods.
+        
+        :param name: The name of the indicator.
+        :param fast_period: The fast EMA period.
+        :param slow_period: The slow EMA period.
+        :param signal_period: The signal line period.
+        """
+        ...
+
+    @overload
+    def __init__(self, fast_period: int, slow_period: int, signal_period: int = 13) -> None:
+        """
+        Initializes a new instance of the KlingerVolumeOscillator class with specified fast, slow periods.
+        
+        :param fast_period: The fast EMA period.
+        :param slow_period: The slow EMA period.
+        :param signal_period: The signal line period (default is 13).
+        """
+        ...
+
+    def compute_next_value(self, bar: QuantConnect.Data.Market.TradeBar) -> float:
+        """
+        Computes the next value of the Klinger Volume Oscillator based on the input data point.
+        
+        This method is protected.
+        """
+        ...
+
+    def reset(self) -> None:
+        """Resets the indicator to its initial state."""
+        ...
+
+
 class IndicatorBase(typing.Generic[QuantConnect_Indicators_IndicatorBase_T], QuantConnect_Indicators_IndicatorBase, typing.Iterable[QuantConnect.Indicators.IndicatorDataPoint], metaclass=abc.ABCMeta):
     """Provides a base type for all indicators"""
 

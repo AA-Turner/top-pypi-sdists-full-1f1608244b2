@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: scrapegraphai
-Version: 1.53.0
+Version: 1.54.1
 Summary: A web scraping library based on LangChain which uses LLM and direct graph logic to create scraping pipelines.
 Author-email: Marco Vinciguerra <mvincig11@gmail.com>, Lorenzo Padoan <lorenzo.padoan977@gmail.com>
 Keywords: ai,artificial intelligence,gpt,graph,langchain,llm,machine learning,natural language processing,nlp,openai,rag,scrapegraph,scrapegraphai,scraping,web scraping,web scraping library,web scraping tool,webscraping
@@ -42,7 +42,7 @@ Requires-Dist: pillow>=10.4.0; extra == 'ocr'
 Requires-Dist: surya-ocr>=0.5.0; extra == 'ocr'
 Description-Content-Type: text/markdown
 
-🚀 **Looking for an even faster and simpler way to scrape at scale?** Check out our enhanced version at [**ScrapeGraphAI.com**](https://scrapegraphai.com/?utm_source=github&utm_medium=readme&utm_campaign=oss_cta&utm_content=top_banner)! 🚀
+## 🚀 **Looking for an even faster and simpler way to scrape at scale (only 5 lines of code)?** Check out our enhanced version at [**ScrapeGraphAI.com**](https://scrapegraphai.com/?utm_source=github&utm_medium=readme&utm_campaign=oss_cta&ut#m_content=top_banner)! 🚀
 
 ---
 

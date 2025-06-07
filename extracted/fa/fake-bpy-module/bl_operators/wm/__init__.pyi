@@ -41,14 +41,14 @@ class WM_MT_region_toggle_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -73,7 +73,7 @@ class WM_MT_splash(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -98,7 +98,7 @@ class WM_MT_splash_about(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -123,7 +123,7 @@ class WM_MT_splash_quick_setup(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -152,25 +152,25 @@ class WM_OT_batch_rename(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def check(self, context):
+    def check(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -200,7 +200,7 @@ class WM_OT_context_collection_boolean_set(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -230,14 +230,14 @@ class WM_OT_context_cycle_array(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -267,14 +267,14 @@ class WM_OT_context_cycle_enum(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -304,14 +304,14 @@ class WM_OT_context_cycle_int(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -339,14 +339,14 @@ class WM_OT_context_menu_enum(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -375,14 +375,14 @@ class WM_OT_context_modal_mouse(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
         :param event:
         """
 
-    def modal(self, context, event):
+    def modal(self, context, event) -> None:
         """
 
         :param context:
@@ -411,14 +411,14 @@ class WM_OT_context_pie_enum(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -449,14 +449,14 @@ class WM_OT_context_scale_float(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -486,14 +486,14 @@ class WM_OT_context_scale_int(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -523,7 +523,7 @@ class WM_OT_context_set_boolean(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
@@ -554,7 +554,7 @@ class WM_OT_context_set_enum(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
@@ -585,7 +585,7 @@ class WM_OT_context_set_float(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
@@ -615,7 +615,7 @@ class WM_OT_context_set_id(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -645,7 +645,7 @@ class WM_OT_context_set_int(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
@@ -676,7 +676,7 @@ class WM_OT_context_set_string(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
@@ -707,14 +707,14 @@ class WM_OT_context_set_value(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -744,14 +744,14 @@ class WM_OT_context_toggle(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -781,14 +781,14 @@ class WM_OT_context_toggle_enum(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -816,7 +816,7 @@ class WM_OT_doc_view(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -844,7 +844,7 @@ class WM_OT_doc_view_manual(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -871,14 +871,14 @@ class WM_OT_drop_blend_file(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def draw_menu(self, menu, _context):
+    def draw_menu(self, menu, _context) -> None:
         """
 
         :param menu:
         :param _context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -907,7 +907,7 @@ class WM_OT_operator_cheat_sheet(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -935,14 +935,14 @@ class WM_OT_operator_pie_enum(bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, context, props):
+    def description(cls, context, props) -> None:
         """
 
         :param context:
         :param props:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -971,7 +971,7 @@ class WM_OT_owner_disable(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -999,7 +999,7 @@ class WM_OT_owner_enable(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -1028,7 +1028,7 @@ class WM_OT_path_open(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -1057,7 +1057,7 @@ class WM_OT_properties_add(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -1086,7 +1086,7 @@ class WM_OT_properties_context_change(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -1115,34 +1115,34 @@ class WM_OT_properties_edit(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def check(self, context):
+    def check(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def convert_custom_property_to_string(item, name):
+    def convert_custom_property_to_string(item, name) -> None:
         """
 
         :param item:
         :param name:
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def get_property_id_type(item, property_name):
+    def get_property_id_type(item, property_name) -> None:
         """
 
         :param item:
@@ -1150,27 +1150,27 @@ class WM_OT_properties_edit(bpy.types.Operator):
         """
 
     @staticmethod
-    def get_property_type(item, property_name):
+    def get_property_type(item, property_name) -> None:
         """
 
         :param item:
         :param property_name:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
         :param _event:
         """
 
-    def property_type_update_cb(self, context):
+    def property_type_update_cb(self, context) -> None:
         """
 
         :param context:
         """
 
-    def subtype_items_cb(self, context):
+    def subtype_items_cb(self, context) -> None:
         """
 
         :param context:
@@ -1199,19 +1199,19 @@ class WM_OT_properties_edit_value(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -1241,7 +1241,7 @@ class WM_OT_properties_remove(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -1269,13 +1269,13 @@ class WM_OT_sysinfo(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -1304,7 +1304,7 @@ class WM_OT_tool_set_by_brush_type(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -1332,14 +1332,14 @@ class WM_OT_tool_set_by_id(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def space_type_from_operator(op, context):
+    def space_type_from_operator(op, context) -> None:
         """
 
         :param op:
@@ -1368,7 +1368,7 @@ class WM_OT_tool_set_by_index(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -1394,7 +1394,7 @@ class WM_OT_toolbar(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -1403,7 +1403,7 @@ class WM_OT_toolbar(bpy.types.Operator):
     @staticmethod
     def keymap_from_toolbar(
         context, space_type, *, use_fallback_keys=True, use_reset=True
-    ):
+    ) -> None:
         """
 
         :param context:
@@ -1413,7 +1413,7 @@ class WM_OT_toolbar(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1439,7 +1439,7 @@ class WM_OT_toolbar_fallback_pie(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -1447,7 +1447,7 @@ class WM_OT_toolbar_fallback_pie(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1475,14 +1475,14 @@ class WM_OT_toolbar_prompt(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
         :param event:
         """
 
-    def modal(self, context, event):
+    def modal(self, context, event) -> None:
         """
 
         :param context:
@@ -1512,7 +1512,7 @@ class WM_OT_url_open(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -1543,19 +1543,19 @@ class WM_OT_url_open_preset(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-def context_path_decompose(data_path): ...
-def context_path_to_rna_property(context, data_path): ...
-def context_path_validate(context, data_path): ...
-def description_from_data_path(base, data_path, *, prefix, value=Ellipsis): ...
-def execute_context_assign(self_, context): ...
-def operator_path_is_undo(context, data_path): ...
-def operator_path_undo_return(context, data_path): ...
-def operator_value_is_undo(value): ...
-def operator_value_undo_return(value): ...
-def rna_path_prop_search_for_context(self_, context, edit_text): ...
+def context_path_decompose(data_path) -> None: ...
+def context_path_to_rna_property(context, data_path) -> None: ...
+def context_path_validate(context, data_path) -> None: ...
+def description_from_data_path(base, data_path, *, prefix, value=Ellipsis) -> None: ...
+def execute_context_assign(self_, context) -> None: ...
+def operator_path_is_undo(context, data_path) -> None: ...
+def operator_path_undo_return(context, data_path) -> None: ...
+def operator_value_is_undo(value) -> None: ...
+def operator_value_undo_return(value) -> None: ...
+def rna_path_prop_search_for_context(self_, context, edit_text) -> None: ...

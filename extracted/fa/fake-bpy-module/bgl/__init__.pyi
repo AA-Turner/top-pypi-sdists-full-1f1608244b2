@@ -42,10 +42,10 @@ class Buffer:
     dimensions: typing.Any
     """ The number of dimensions of the Buffer."""
 
-    def to_list(self):
+    def to_list(self) -> None:
         """The contents of the Buffer as a python list."""
 
-    def __init__(self, type: int, dimensions, template=None):
+    def __init__(self, type: int, dimensions, template=None) -> None:
         """This will create a new Buffer object for use with other bgl OpenGL commands.
         Only the type of argument to store in the buffer and the dimensions of the buffer
         are necessary. Buffers are zeroed by default unless a template is supplied, in
@@ -66,14 +66,14 @@ class Buffer:
                 :return: The newly created buffer as a PyObject.
         """
 
-def glActiveTexture(texture: int):
+def glActiveTexture(texture: int) -> None:
     """Select active texture unit.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glActiveTexture.xhtml>`__
 
     :param texture: Constant in GL_TEXTURE0 0 - 8
     :type texture: int
     """
 
-def glAttachShader(program: int, shader: int):
+def glAttachShader(program: int, shader: int) -> None:
     """Attaches a shader object to a program object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glAttachShader.xhtml>`__
 
     :param program: Specifies the program object to which a shader object will be attached.
@@ -82,14 +82,14 @@ def glAttachShader(program: int, shader: int):
     :type shader: int
     """
 
-def glBeginQuery(p0: int, p1: int):
+def glBeginQuery(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glBindAttribLocation(p0: int, p1: int, p2: str):
+def glBindAttribLocation(p0: int, p1: int, p2: str) -> None:
     """
 
     :type p0: int
@@ -97,14 +97,14 @@ def glBindAttribLocation(p0: int, p1: int, p2: str):
     :type p2: str
     """
 
-def glBindBuffer(p0: int, p1: int):
+def glBindBuffer(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glBindBufferBase(p0: int, p1: int, p2: int):
+def glBindBufferBase(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -112,7 +112,7 @@ def glBindBufferBase(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glBindBufferRange(p0: int, p1: int, p2: int, p3: int, p4: int):
+def glBindBufferRange(p0: int, p1: int, p2: int, p3: int, p4: int) -> None:
     """
 
     :type p0: int
@@ -122,21 +122,21 @@ def glBindBufferRange(p0: int, p1: int, p2: int, p3: int, p4: int):
     :type p4: int
     """
 
-def glBindFramebuffer(p0: int, p1: int):
+def glBindFramebuffer(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glBindRenderbuffer(p0: int, p1: int):
+def glBindRenderbuffer(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glBindTexture(target: set[str], texture: int):
+def glBindTexture(target: set[str], texture: int) -> None:
     """Bind a named texture to a texturing target`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glBindTexture.xhtml>`__
 
     :param target: Specifies the target to which the texture is bound.
@@ -145,13 +145,13 @@ def glBindTexture(target: set[str], texture: int):
     :type texture: int
     """
 
-def glBindVertexArray(p0: int):
+def glBindVertexArray(p0: int) -> None:
     """
 
     :type p0: int
     """
 
-def glBlendColor(p0: float, p1: float, p2: float, p3: float):
+def glBlendColor(p0: float, p1: float, p2: float, p3: float) -> None:
     """
 
     :type p0: float
@@ -160,20 +160,20 @@ def glBlendColor(p0: float, p1: float, p2: float, p3: float):
     :type p3: float
     """
 
-def glBlendEquation(p0: int):
+def glBlendEquation(p0: int) -> None:
     """
 
     :type p0: int
     """
 
-def glBlendEquationSeparate(p0: int, p1: int):
+def glBlendEquationSeparate(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glBlendFunc(sfactor: set[str], dfactor: set[str]):
+def glBlendFunc(sfactor: set[str], dfactor: set[str]) -> None:
     """Specify pixel arithmetic`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glBlendFunc.xhtml>`__
 
         :param sfactor: Specifies how the red, green, blue, and alpha source blending factors are
@@ -195,7 +195,7 @@ def glBlitFramebuffer(
     p7: int,
     p8: int,
     p9: int,
-):
+) -> None:
     """
 
     :type p0: int
@@ -210,7 +210,7 @@ def glBlitFramebuffer(
     :type p9: int
     """
 
-def glBufferData(p0: int, p1: int, p2: typing.Any, p3: int):
+def glBufferData(p0: int, p1: int, p2: typing.Any, p3: int) -> None:
     """
 
     :type p0: int
@@ -219,7 +219,7 @@ def glBufferData(p0: int, p1: int, p2: typing.Any, p3: int):
     :type p3: int
     """
 
-def glBufferSubData(p0: int, p1: int, p2: int, p3: typing.Any):
+def glBufferSubData(p0: int, p1: int, p2: int, p3: typing.Any) -> None:
     """
 
     :type p0: int
@@ -235,13 +235,13 @@ def glCheckFramebufferStatus(p0: int) -> int:
     :rtype: int
     """
 
-def glClear(mask):
+def glClear(mask) -> None:
     """Clear buffers to preset values`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glClear.xhtml>`__
 
     :param mask: Bitwise OR of masks that indicate the buffers to be cleared.
     """
 
-def glClearColor(red: float, green, blue, alpha):
+def glClearColor(red: float, green, blue, alpha) -> None:
     """Specify clear values for the color buffers`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glClearColor.xhtml>`__
 
         :param red: Specify the red, green, blue, and alpha values used when the
@@ -249,7 +249,7 @@ def glClearColor(red: float, green, blue, alpha):
         :type red: float
     """
 
-def glClearDepth(depth: int):
+def glClearDepth(depth: int) -> None:
     """Specify the clear value for the depth buffer`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glClearDepth.xhtml>`__
 
         :param depth: Specifies the depth value used when the depth buffer is cleared.
@@ -257,14 +257,14 @@ def glClearDepth(depth: int):
         :type depth: int
     """
 
-def glClearStencil(s: int):
+def glClearStencil(s: int) -> None:
     """Specify the clear value for the stencil buffer`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glClearStencil.xhtml>`__
 
     :param s: Specifies the index used when the stencil buffer is cleared. The initial value is 0.
     :type s: int
     """
 
-def glClipPlane(plane: set[str], equation: Buffer):
+def glClipPlane(plane: set[str], equation: Buffer) -> None:
     """Specify a plane against which all geometry is clipped`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glClipPlane.xhtml>`__
 
         :param plane: Specifies which clipping plane is being positioned.
@@ -274,7 +274,7 @@ def glClipPlane(plane: set[str], equation: Buffer):
         :type equation: Buffer
     """
 
-def glColorMask(red: int, green, blue, alpha):
+def glColorMask(red: int, green, blue, alpha) -> None:
     """Enable and disable writing of frame buffer color components`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glColorMask.xhtml>`__
 
         :param red: Specify whether red, green, blue, and alpha can or cannot be
@@ -283,7 +283,7 @@ def glColorMask(red: int, green, blue, alpha):
         :type red: int
     """
 
-def glCompileShader(shader: int):
+def glCompileShader(shader: int) -> None:
     """Compiles a shader object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glCompileShader.xhtml>`__
 
     :param shader: Specifies the shader object to be compiled.
@@ -292,7 +292,7 @@ def glCompileShader(shader: int):
 
 def glCompressedTexImage1D(
     p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: typing.Any
-):
+) -> None:
     """
 
     :type p0: int
@@ -306,7 +306,7 @@ def glCompressedTexImage1D(
 
 def glCompressedTexImage2D(
     p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: int, p7: typing.Any
-):
+) -> None:
     """
 
     :type p0: int
@@ -329,7 +329,7 @@ def glCompressedTexImage3D(
     p6: int,
     p7: int,
     p8: typing.Any,
-):
+) -> None:
     """
 
     :type p0: int
@@ -345,7 +345,7 @@ def glCompressedTexImage3D(
 
 def glCompressedTexSubImage1D(
     p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: typing.Any
-):
+) -> None:
     """
 
     :type p0: int
@@ -367,7 +367,7 @@ def glCompressedTexSubImage2D(
     p6: int,
     p7: int,
     p8: typing.Any,
-):
+) -> None:
     """
 
     :type p0: int
@@ -381,7 +381,9 @@ def glCompressedTexSubImage2D(
     :type p8: typing.Any
     """
 
-def glCopyTexImage1D(p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: int):
+def glCopyTexImage1D(
+    p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: int
+) -> None:
     """
 
     :type p0: int
@@ -402,7 +404,7 @@ def glCopyTexImage2D(
     width: int,
     height: int,
     border: int,
-):
+) -> None:
     """Copy pixels into a 2D texture image`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glCopyTexImage2D.xhtml>`__
 
         :param target: Specifies the target texture.
@@ -428,7 +430,7 @@ def glCopyTexImage2D(
         :type border: int
     """
 
-def glCopyTexSubImage1D(p0: int, p1: int, p2: int, p3: int, p4: int, p5: int):
+def glCopyTexSubImage1D(p0: int, p1: int, p2: int, p3: int, p4: int, p5: int) -> None:
     """
 
     :type p0: int
@@ -441,7 +443,7 @@ def glCopyTexSubImage1D(p0: int, p1: int, p2: int, p3: int, p4: int, p5: int):
 
 def glCopyTexSubImage2D(
     p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: int, p7: int
-):
+) -> None:
     """
 
     :type p0: int
@@ -456,7 +458,7 @@ def glCopyTexSubImage2D(
 
 def glCopyTexSubImage3D(
     p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: int, p7: int, p8: int
-):
+) -> None:
     """
 
     :type p0: int
@@ -485,56 +487,56 @@ def glCreateShader(shaderType: GL_GEOMETRY_SHADER | typing.Any) -> int:
     :rtype: int
     """
 
-def glCullFace(mode: set[str]):
+def glCullFace(mode: set[str]) -> None:
     """Specify whether front- or back-facing facets can be culled`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glCullFace.xhtml>`__
 
     :param mode: Specifies whether front- or back-facing facets are candidates for culling.
     :type mode: set[str]
     """
 
-def glDeleteBuffers(p0: int, p1: int):
+def glDeleteBuffers(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glDeleteFramebuffers(p0: int, p1: int):
+def glDeleteFramebuffers(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glDeleteProgram(program: int):
+def glDeleteProgram(program: int) -> None:
     """Deletes a program object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glDeleteProgram.xhtml>`__
 
     :param program: Specifies the program object to be deleted.
     :type program: int
     """
 
-def glDeleteQueries(p0: int, p1: int):
+def glDeleteQueries(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glDeleteRenderbuffers(p0: int, p1: int):
+def glDeleteRenderbuffers(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glDeleteShader(shader: int):
+def glDeleteShader(shader: int) -> None:
     """Deletes a shader object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glDeleteShader.xhtml>`__
 
     :param shader: Specifies the shader object to be deleted.
     :type shader: int
     """
 
-def glDeleteTextures(n: int, textures: Buffer):
+def glDeleteTextures(n: int, textures: Buffer) -> None:
     """Delete named textures`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glDeleteTextures.xhtml>`__
 
     :param n: Specifies the number of textures to be deleted
@@ -543,21 +545,21 @@ def glDeleteTextures(n: int, textures: Buffer):
     :type textures: Buffer
     """
 
-def glDeleteVertexArrays(p0: int, p1: int):
+def glDeleteVertexArrays(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glDepthFunc(func: set[str]):
+def glDepthFunc(func: set[str]) -> None:
     """Specify the value used for depth buffer comparisons`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthFunc.xhtml>`__
 
     :param func: Specifies the depth comparison function.
     :type func: set[str]
     """
 
-def glDepthMask(flag: int):
+def glDepthMask(flag: int) -> None:
     """Enable or disable writing into the depth buffer`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthMask.xhtml>`__
 
         :param flag: Specifies whether the depth buffer is enabled for writing. If flag is GL_FALSE,
@@ -566,7 +568,7 @@ def glDepthMask(flag: int):
         :type flag: int
     """
 
-def glDepthRange(zNear: int, zFar: int):
+def glDepthRange(zNear: int, zFar: int) -> None:
     """Specify mapping of depth values from normalized device coordinates to window coordinates`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthRange.xhtml>`__
 
         :param zNear: Specifies the mapping of the near clipping plane to window coordinates.
@@ -577,7 +579,7 @@ def glDepthRange(zNear: int, zFar: int):
         :type zFar: int
     """
 
-def glDetachShader(program: int, shader: int):
+def glDetachShader(program: int, shader: int) -> None:
     """Detaches a shader object from a program object to which it is attached.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glDetachShader.xhtml>`__
 
     :param program: Specifies the program object from which to detach the shader object.
@@ -586,20 +588,20 @@ def glDetachShader(program: int, shader: int):
     :type shader: int
     """
 
-def glDisable(cap: set[str]):
+def glDisable(cap: set[str]) -> None:
     """Disable server-side GL capabilities`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glEnable.xhtml>`__
 
     :param cap: Specifies a symbolic constant indicating a GL capability.
     :type cap: set[str]
     """
 
-def glDisableVertexAttribArray(p0: int):
+def glDisableVertexAttribArray(p0: int) -> None:
     """
 
     :type p0: int
     """
 
-def glDrawArrays(p0: int, p1: int, p2: int):
+def glDrawArrays(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -607,21 +609,21 @@ def glDrawArrays(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glDrawBuffer(mode: set[str]):
+def glDrawBuffer(mode: set[str]) -> None:
     """Specify which color buffers are to be drawn into`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glDrawBuffer.xhtml>`__
 
     :param mode: Specifies up to four color buffers to be drawn into.
     :type mode: set[str]
     """
 
-def glDrawBuffers(p0: int, p1: int):
+def glDrawBuffers(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glDrawElements(p0: int, p1: int, p2: int, p3: typing.Any):
+def glDrawElements(p0: int, p1: int, p2: int, p3: typing.Any) -> None:
     """
 
     :type p0: int
@@ -630,7 +632,9 @@ def glDrawElements(p0: int, p1: int, p2: int, p3: typing.Any):
     :type p3: typing.Any
     """
 
-def glDrawRangeElements(p0: int, p1: int, p2: int, p3: int, p4: int, p5: typing.Any):
+def glDrawRangeElements(
+    p0: int, p1: int, p2: int, p3: int, p4: int, p5: typing.Any
+) -> None:
     """
 
     :type p0: int
@@ -641,32 +645,32 @@ def glDrawRangeElements(p0: int, p1: int, p2: int, p3: int, p4: int, p5: typing.
     :type p5: typing.Any
     """
 
-def glEdgeFlag(flag):
+def glEdgeFlag(flag) -> None:
     """B{glEdgeFlag, glEdgeFlagv}Flag edges as either boundary or non-boundary`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glEdgeFlag.xhtml>`__
 
     :param flag: Specifies the current edge flag value.The initial value is GL_TRUE.
     """
 
-def glEnable(cap: set[str]):
+def glEnable(cap: set[str]) -> None:
     """Enable server-side GL capabilities`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glEnable.xhtml>`__
 
     :param cap: Specifies a symbolic constant indicating a GL capability.
     :type cap: set[str]
     """
 
-def glEnableVertexAttribArray(p0: int):
+def glEnableVertexAttribArray(p0: int) -> None:
     """
 
     :type p0: int
     """
 
-def glEndQuery(p0: int):
+def glEndQuery(p0: int) -> None:
     """
 
     :type p0: int
     """
 
-def glEvalCoord(u: typing.Any, v: typing.Any):
+def glEvalCoord(u: typing.Any, v: typing.Any) -> None:
     """B{glEvalCoord1d, glEvalCoord1f, glEvalCoord2d, glEvalCoord2f, glEvalCoord1dv, glEvalCoord1fv,
     glEvalCoord2dv, glEvalCoord2fv}Evaluate enabled one- and two-dimensional maps`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glEvalCoord.xhtml>`__
 
@@ -680,7 +684,7 @@ def glEvalCoord(u: typing.Any, v: typing.Any):
         :type v: typing.Any
     """
 
-def glEvalMesh(mode: set[str], i1: int, i2):
+def glEvalMesh(mode: set[str], i1: int, i2) -> None:
     """B{glEvalMesh1 or glEvalMesh2}Compute a one- or two-dimensional grid of points or lines`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glEvalMesh.xhtml>`__
 
         :param mode: In glEvalMesh1, specifies whether to compute a one-dimensional
@@ -690,7 +694,7 @@ def glEvalMesh(mode: set[str], i1: int, i2):
         :type i1: int
     """
 
-def glEvalPoint(i: int, j):
+def glEvalPoint(i: int, j) -> None:
     """B{glEvalPoint1 and glEvalPoint2}Generate and evaluate a single point in a mesh`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glEvalPoint.xhtml>`__
 
     :param i: Specifies the integer value for grid domain variable i.
@@ -698,7 +702,7 @@ def glEvalPoint(i: int, j):
     :param j: Specifies the integer value for grid domain variable j (glEvalPoint2 only).
     """
 
-def glFeedbackBuffer(size: int, type: set[str], buffer: Buffer):
+def glFeedbackBuffer(size: int, type: set[str], buffer: Buffer) -> None:
     """Controls feedback mode`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glFeedbackBuffer.xhtml>`__
 
         :param size: Specifies the maximum number of values that can be written into buffer.
@@ -710,13 +714,13 @@ def glFeedbackBuffer(size: int, type: set[str], buffer: Buffer):
         :type buffer: Buffer
     """
 
-def glFinish():
+def glFinish() -> None:
     """Block until all GL execution is complete`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glFinish.xhtml>`__"""
 
-def glFlush():
+def glFlush() -> None:
     """Force Execution of GL commands in finite time`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glFlush.xhtml>`__"""
 
-def glFog(pname: set[str], param: typing.Any):
+def glFog(pname: set[str], param: typing.Any) -> None:
     """B{glFogf, glFogi, glFogfv, glFogiv}Specify fog parameters`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glFog.xhtml>`__
 
         :param pname: Specifies a single-valued fog parameter. If the function prototype
@@ -728,7 +732,7 @@ def glFog(pname: set[str], param: typing.Any):
         :type param: typing.Any
     """
 
-def glFramebufferRenderbuffer(p0: int, p1: int, p2: int, p3: int):
+def glFramebufferRenderbuffer(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
@@ -737,7 +741,7 @@ def glFramebufferRenderbuffer(p0: int, p1: int, p2: int, p3: int):
     :type p3: int
     """
 
-def glFramebufferTexture(p0: int, p1: int, p2: int, p3: int):
+def glFramebufferTexture(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
@@ -746,42 +750,42 @@ def glFramebufferTexture(p0: int, p1: int, p2: int, p3: int):
     :type p3: int
     """
 
-def glFrontFace(mode: set[str]):
+def glFrontFace(mode: set[str]) -> None:
     """Define front- and back-facing polygons`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glFrontFace.xhtml>`__
 
     :param mode: Specifies the orientation of front-facing polygons.
     :type mode: set[str]
     """
 
-def glGenBuffers(p0: int, p1: int):
+def glGenBuffers(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glGenFramebuffers(p0: int, p1: int):
+def glGenFramebuffers(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glGenQueries(p0: int, p1: int):
+def glGenQueries(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glGenRenderbuffers(p0: int, p1: int):
+def glGenRenderbuffers(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glGenTextures(n: int, textures: Buffer):
+def glGenTextures(n: int, textures: Buffer) -> None:
     """Generate texture names`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGenTextures.xhtml>`__
 
     :param n: Specifies the number of textures name to be generated.
@@ -790,14 +794,14 @@ def glGenTextures(n: int, textures: Buffer):
     :type textures: Buffer
     """
 
-def glGenVertexArrays(p0: int, p1: int):
+def glGenVertexArrays(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glGet(pname: set[str], param: typing.Any):
+def glGet(pname: set[str], param: typing.Any) -> None:
     """B{glGetBooleanv, glGetfloatv, glGetFloatv, glGetIntegerv}Return the value or values of a selected parameter`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGet.xhtml>`__
 
     :param pname: Specifies the parameter value to be returned.
@@ -806,7 +810,9 @@ def glGet(pname: set[str], param: typing.Any):
     :type param: typing.Any
     """
 
-def glGetActiveAttrib(p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: int):
+def glGetActiveAttrib(
+    p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: int
+) -> None:
     """
 
     :type p0: int
@@ -818,7 +824,9 @@ def glGetActiveAttrib(p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: 
     :type p6: int
     """
 
-def glGetActiveUniform(p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: int):
+def glGetActiveUniform(
+    p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: int
+) -> None:
     """
 
     :type p0: int
@@ -830,7 +838,7 @@ def glGetActiveUniform(p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6:
     :type p6: int
     """
 
-def glGetActiveUniformBlockName(p0: int, p1: int, p2: int, p3: int, p4: int):
+def glGetActiveUniformBlockName(p0: int, p1: int, p2: int, p3: int, p4: int) -> None:
     """
 
     :type p0: int
@@ -840,7 +848,7 @@ def glGetActiveUniformBlockName(p0: int, p1: int, p2: int, p3: int, p4: int):
     :type p4: int
     """
 
-def glGetActiveUniformBlockiv(p0: int, p1: int, p2: int, p3: int):
+def glGetActiveUniformBlockiv(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
@@ -849,17 +857,7 @@ def glGetActiveUniformBlockiv(p0: int, p1: int, p2: int, p3: int):
     :type p3: int
     """
 
-def glGetActiveUniformName(p0: int, p1: int, p2: int, p3: int, p4: int):
-    """
-
-    :type p0: int
-    :type p1: int
-    :type p2: int
-    :type p3: int
-    :type p4: int
-    """
-
-def glGetActiveUniformsiv(p0: int, p1: int, p2: int, p3: int, p4: int):
+def glGetActiveUniformName(p0: int, p1: int, p2: int, p3: int, p4: int) -> None:
     """
 
     :type p0: int
@@ -869,7 +867,19 @@ def glGetActiveUniformsiv(p0: int, p1: int, p2: int, p3: int, p4: int):
     :type p4: int
     """
 
-def glGetAttachedShaders(program: int, maxCount: int, count: Buffer, shaders: Buffer):
+def glGetActiveUniformsiv(p0: int, p1: int, p2: int, p3: int, p4: int) -> None:
+    """
+
+    :type p0: int
+    :type p1: int
+    :type p2: int
+    :type p3: int
+    :type p4: int
+    """
+
+def glGetAttachedShaders(
+    program: int, maxCount: int, count: Buffer, shaders: Buffer
+) -> None:
     """Returns the handles of the shader objects attached to a program object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetAttachedShaders.xhtml>`__
 
     :param program: Specifies the program object to be queried.
@@ -890,14 +900,14 @@ def glGetAttribLocation(p0: int, p1: str) -> int:
     :rtype: int
     """
 
-def glGetBooleanv(p0: int, p1: bool):
+def glGetBooleanv(p0: int, p1: bool) -> None:
     """
 
     :type p0: int
     :type p1: bool
     """
 
-def glGetBufferParameteri64v(p0: int, p1: int, p2: int):
+def glGetBufferParameteri64v(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -905,7 +915,7 @@ def glGetBufferParameteri64v(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glGetBufferParameteriv(p0: int, p1: int, p2: int):
+def glGetBufferParameteriv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -913,7 +923,7 @@ def glGetBufferParameteriv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glGetBufferPointerv(p0: int, p1: int, p2: typing.Any):
+def glGetBufferPointerv(p0: int, p1: int, p2: typing.Any) -> None:
     """
 
     :type p0: int
@@ -921,7 +931,7 @@ def glGetBufferPointerv(p0: int, p1: int, p2: typing.Any):
     :type p2: typing.Any
     """
 
-def glGetBufferSubData(p0: int, p1: int, p2: int, p3: typing.Any):
+def glGetBufferSubData(p0: int, p1: int, p2: int, p3: typing.Any) -> None:
     """
 
     :type p0: int
@@ -930,7 +940,7 @@ def glGetBufferSubData(p0: int, p1: int, p2: int, p3: typing.Any):
     :type p3: typing.Any
     """
 
-def glGetCompressedTexImage(p0: int, p1: int, p2: typing.Any):
+def glGetCompressedTexImage(p0: int, p1: int, p2: typing.Any) -> None:
     """
 
     :type p0: int
@@ -938,31 +948,31 @@ def glGetCompressedTexImage(p0: int, p1: int, p2: typing.Any):
     :type p2: typing.Any
     """
 
-def glGetDoublev(p0: int, p1: float):
+def glGetDoublev(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glGetError():
+def glGetError() -> None:
     """Return error information`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetError.xhtml>`__"""
 
-def glGetFloatv(p0: int, p1: float):
+def glGetFloatv(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glGetIntegerv(p0: int, p1: int):
+def glGetIntegerv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glGetLight(light: set[str], pname: set[str], params: Buffer):
+def glGetLight(light: set[str], pname: set[str], params: Buffer) -> None:
     """B{glGetLightfv and glGetLightiv}Return light source parameter values`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetLight.xhtml>`__
 
         :param light: Specifies a light source. The number of possible lights depends on the
@@ -975,7 +985,7 @@ def glGetLight(light: set[str], pname: set[str], params: Buffer):
         :type params: Buffer
     """
 
-def glGetMap(target: set[str], query: set[str], v: Buffer):
+def glGetMap(target: set[str], query: set[str], v: Buffer) -> None:
     """B{glGetMapdv, glGetMapfv, glGetMapiv}Return evaluator parameters`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetMap.xhtml>`__
 
     :param target: Specifies the symbolic name of a map.
@@ -986,7 +996,7 @@ def glGetMap(target: set[str], query: set[str], v: Buffer):
     :type v: Buffer
     """
 
-def glGetMaterial(face: set[str], pname: set[str], params: Buffer):
+def glGetMaterial(face: set[str], pname: set[str], params: Buffer) -> None:
     """B{glGetMaterialfv, glGetMaterialiv}Return material parameters`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetMaterial.xhtml>`__
 
         :param face: Specifies which of the two materials is being queried.
@@ -998,7 +1008,7 @@ def glGetMaterial(face: set[str], pname: set[str], params: Buffer):
         :type params: Buffer
     """
 
-def glGetMultisamplefv(p0: int, p1: int, p2: float):
+def glGetMultisamplefv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -1006,7 +1016,7 @@ def glGetMultisamplefv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glGetPixelMap(map: set[str], values: Buffer):
+def glGetPixelMap(map: set[str], values: Buffer) -> None:
     """B{glGetPixelMapfv, glGetPixelMapuiv, glGetPixelMapusv}Return the specified pixel map`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetPixelMap.xhtml>`__
 
     :param map: Specifies the name of the pixel map to return.
@@ -1015,7 +1025,9 @@ def glGetPixelMap(map: set[str], values: Buffer):
     :type values: Buffer
     """
 
-def glGetProgramInfoLog(program: int, maxLength: int, length: Buffer, infoLog: Buffer):
+def glGetProgramInfoLog(
+    program: int, maxLength: int, length: Buffer, infoLog: Buffer
+) -> None:
     """Returns the information log for a program object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetProgramInfoLog.xhtml>`__
 
     :param program: Specifies the program object whose information log is to be queried.
@@ -1028,7 +1040,7 @@ def glGetProgramInfoLog(program: int, maxLength: int, length: Buffer, infoLog: B
     :type infoLog: Buffer
     """
 
-def glGetProgramiv(program: int, pname: int, params: Buffer):
+def glGetProgramiv(program: int, pname: int, params: Buffer) -> None:
     """Returns a parameter from a program object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetProgram.xhtml>`__
 
     :param program: Specifies the program object to be queried.
@@ -1039,7 +1051,7 @@ def glGetProgramiv(program: int, pname: int, params: Buffer):
     :type params: Buffer
     """
 
-def glGetQueryObjectiv(p0: int, p1: int, p2: int):
+def glGetQueryObjectiv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -1047,7 +1059,7 @@ def glGetQueryObjectiv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glGetQueryObjectuiv(p0: int, p1: int, p2: int):
+def glGetQueryObjectuiv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -1055,7 +1067,7 @@ def glGetQueryObjectuiv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glGetQueryiv(p0: int, p1: int, p2: int):
+def glGetQueryiv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -1063,7 +1075,9 @@ def glGetQueryiv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glGetShaderInfoLog(program, maxLength: int, length: Buffer, infoLog: Buffer):
+def glGetShaderInfoLog(
+    program, maxLength: int, length: Buffer, infoLog: Buffer
+) -> None:
     """Returns the information log for a shader object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetShaderInfoLog.xhtml>`__
 
     :param maxLength: Specifies the size of the character buffer for storing the returned information log.
@@ -1074,7 +1088,9 @@ def glGetShaderInfoLog(program, maxLength: int, length: Buffer, infoLog: Buffer)
     :type infoLog: Buffer
     """
 
-def glGetShaderSource(shader: int, bufSize: int, length: Buffer, source: Buffer):
+def glGetShaderSource(
+    shader: int, bufSize: int, length: Buffer, source: Buffer
+) -> None:
     """Returns the source code string from a shader object`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetShaderSource.xhtml>`__
 
     :param shader: Specifies the shader object to be queried.
@@ -1087,7 +1103,7 @@ def glGetShaderSource(shader: int, bufSize: int, length: Buffer, source: Buffer)
     :type source: Buffer
     """
 
-def glGetShaderiv(p0: int, p1: int, p2: int):
+def glGetShaderiv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -1095,7 +1111,7 @@ def glGetShaderiv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glGetString(name: set[str]):
+def glGetString(name: set[str]) -> None:
     """Return a string describing the current GL connection`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetString.xhtml>`__
 
     :param name: Specifies a symbolic constant.
@@ -1110,7 +1126,7 @@ def glGetStringi(p0: int, p1: int) -> str:
     :rtype: str
     """
 
-def glGetTexEnv(target: set[str], pname: set[str], params: Buffer):
+def glGetTexEnv(target: set[str], pname: set[str], params: Buffer) -> None:
     """B{glGetTexEnvfv, glGetTexEnviv}Return texture environment parameters`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetTexEnv.xhtml>`__
 
     :param target: Specifies a texture environment. Must be GL_TEXTURE_ENV.
@@ -1121,7 +1137,7 @@ def glGetTexEnv(target: set[str], pname: set[str], params: Buffer):
     :type params: Buffer
     """
 
-def glGetTexGen(coord: set[str], pname: set[str], params: Buffer):
+def glGetTexGen(coord: set[str], pname: set[str], params: Buffer) -> None:
     """B{glGetTexGendv, glGetTexGenfv, glGetTexGeniv}Return texture coordinate generation parameters`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetTexGen.xhtml>`__
 
     :param coord: Specifies a texture coordinate.
@@ -1134,7 +1150,7 @@ def glGetTexGen(coord: set[str], pname: set[str], params: Buffer):
 
 def glGetTexImage(
     target: set[str], level: int, format: set[str], type: set[str], pixels: Buffer
-):
+) -> None:
     """Return a texture image`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetTexImage.xhtml>`__
 
         :param target: Specifies which texture is to be obtained.
@@ -1153,7 +1169,7 @@ def glGetTexImage(
 
 def glGetTexLevelParameter(
     target: set[str], level: int, pname: set[str], params: Buffer
-):
+) -> None:
     """B{glGetTexLevelParameterfv, glGetTexLevelParameteriv}return texture parameter values for a specific level of detail`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetTexLevelParameter.xhtml>`__
 
         :param target: Specifies the symbolic name of the target texture.
@@ -1167,7 +1183,7 @@ def glGetTexLevelParameter(
         :type params: Buffer
     """
 
-def glGetTexLevelParameterfv(p0: int, p1: int, p2: int, p3: float):
+def glGetTexLevelParameterfv(p0: int, p1: int, p2: int, p3: float) -> None:
     """
 
     :type p0: int
@@ -1176,7 +1192,7 @@ def glGetTexLevelParameterfv(p0: int, p1: int, p2: int, p3: float):
     :type p3: float
     """
 
-def glGetTexLevelParameteriv(p0: int, p1: int, p2: int, p3: int):
+def glGetTexLevelParameteriv(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
@@ -1185,7 +1201,7 @@ def glGetTexLevelParameteriv(p0: int, p1: int, p2: int, p3: int):
     :type p3: int
     """
 
-def glGetTexParameter(target: set[str], pname: set[str], params: Buffer):
+def glGetTexParameter(target: set[str], pname: set[str], params: Buffer) -> None:
     """B{glGetTexParameterfv, glGetTexParameteriv}Return texture parameter values`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glGetTexParameter.xhtml>`__
 
     :param target: Specifies the symbolic name of the target texture.
@@ -1196,7 +1212,7 @@ def glGetTexParameter(target: set[str], pname: set[str], params: Buffer):
     :type params: Buffer
     """
 
-def glGetTexParameterfv(p0: int, p1: int, p2: float):
+def glGetTexParameterfv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -1204,7 +1220,7 @@ def glGetTexParameterfv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glGetTexParameteriv(p0: int, p1: int, p2: int):
+def glGetTexParameteriv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -1220,7 +1236,7 @@ def glGetUniformBlockIndex(p0: int, p1: str) -> int:
     :rtype: int
     """
 
-def glGetUniformIndices(p0: int, p1: int, p2: int, p3: int):
+def glGetUniformIndices(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
@@ -1237,7 +1253,7 @@ def glGetUniformLocation(p0: int, p1: str) -> int:
     :rtype: int
     """
 
-def glGetUniformfv(p0: int, p1: int, p2: float):
+def glGetUniformfv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -1245,7 +1261,7 @@ def glGetUniformfv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glGetUniformiv(p0: int, p1: int, p2: int):
+def glGetUniformiv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -1253,7 +1269,7 @@ def glGetUniformiv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glGetVertexAttribPointerv(p0: int, p1: int, p2: typing.Any):
+def glGetVertexAttribPointerv(p0: int, p1: int, p2: typing.Any) -> None:
     """
 
     :type p0: int
@@ -1261,7 +1277,7 @@ def glGetVertexAttribPointerv(p0: int, p1: int, p2: typing.Any):
     :type p2: typing.Any
     """
 
-def glGetVertexAttribdv(p0: int, p1: int, p2: float):
+def glGetVertexAttribdv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -1269,7 +1285,7 @@ def glGetVertexAttribdv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glGetVertexAttribfv(p0: int, p1: int, p2: float):
+def glGetVertexAttribfv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -1277,7 +1293,7 @@ def glGetVertexAttribfv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glGetVertexAttribiv(p0: int, p1: int, p2: int):
+def glGetVertexAttribiv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -1285,7 +1301,7 @@ def glGetVertexAttribiv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glHint(target: set[str], mode: set[str]):
+def glHint(target: set[str], mode: set[str]) -> None:
     """Specify implementation-specific hints`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glHint.xhtml>`__
 
         :param target: Specifies a symbolic constant indicating the behavior to be
@@ -1302,14 +1318,14 @@ def glIsBuffer(p0: int) -> bool:
     :rtype: bool
     """
 
-def glIsEnabled(cap: set[str]):
+def glIsEnabled(cap: set[str]) -> None:
     """Test whether a capability is enabled`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glIsEnabled.xhtml>`__
 
     :param cap: Specifies a constant representing a GL capability.
     :type cap: set[str]
     """
 
-def glIsProgram(program: int):
+def glIsProgram(program: int) -> None:
     """Determines if a name corresponds to a program object`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glIsProgram.xhtml>`__
 
     :param program: Specifies a potential program object.
@@ -1323,14 +1339,14 @@ def glIsQuery(p0: int) -> bool:
     :rtype: bool
     """
 
-def glIsShader(shader: int):
+def glIsShader(shader: int) -> None:
     """Determines if a name corresponds to a shader object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glIsShader.xhtml>`__
 
     :param shader: Specifies a potential shader object.
     :type shader: int
     """
 
-def glIsTexture(texture: int):
+def glIsTexture(texture: int) -> None:
     """Determine if a name corresponds to a texture`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glIsTexture.xhtml>`__
 
     :param texture: Specifies a value that may be the name of a texture.
@@ -1344,7 +1360,7 @@ def glIsVertexArray(p0: int) -> bool:
     :rtype: bool
     """
 
-def glLight(light: set[str], pname: set[str], param: typing.Any):
+def glLight(light: set[str], pname: set[str], param: typing.Any) -> None:
     """B{glLightf,glLighti, glLightfv, glLightiv}Set the light source parameters`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glLight.xhtml>`__
 
         :param light: Specifies a light. The number of lights depends on the implementation,
@@ -1359,7 +1375,7 @@ def glLight(light: set[str], pname: set[str], param: typing.Any):
         :type param: typing.Any
     """
 
-def glLightModel(pname: set[str], param: typing.Any):
+def glLightModel(pname: set[str], param: typing.Any) -> None:
     """B{glLightModelf, glLightModeli, glLightModelfv, glLightModeliv}Set the lighting model parameters`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glLightModel.xhtml>`__
 
         :param pname: Specifies a single-value light model parameter.
@@ -1369,21 +1385,21 @@ def glLightModel(pname: set[str], param: typing.Any):
         :type param: typing.Any
     """
 
-def glLineWidth(width: float):
+def glLineWidth(width: float) -> None:
     """Specify the width of rasterized lines.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glLineWidth.xhtml>`__
 
     :param width: Specifies the width of rasterized lines. The initial value is 1.
     :type width: float
     """
 
-def glLinkProgram(program: int):
+def glLinkProgram(program: int) -> None:
     """Links a program object.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glLinkProgram.xhtml>`__
 
     :param program: Specifies the handle of the program object to be linked.
     :type program: int
     """
 
-def glLoadMatrix(m: Buffer):
+def glLoadMatrix(m: Buffer) -> None:
     """B{glLoadMatrixd, glLoadMatixf}Replace the current matrix with the specified matrix`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glLoadMatrix.xhtml>`__
 
         :param m: Specifies a pointer to 16 consecutive values, which are used as the elements
@@ -1391,7 +1407,7 @@ def glLoadMatrix(m: Buffer):
         :type m: Buffer
     """
 
-def glLogicOp(opcode: set[str]):
+def glLogicOp(opcode: set[str]) -> None:
     """Specify a logical pixel operation for color index rendering`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glLogicOp.xhtml>`__
 
     :param opcode: Specifies a symbolic constant that selects a logical operation.
@@ -1400,7 +1416,7 @@ def glLogicOp(opcode: set[str]):
 
 def glMap1(
     target: set[str], u1: typing.Any, u2, stride: int, order: int, points: Buffer
-):
+) -> None:
     """B{glMap1d, glMap1f}Define a one-dimensional evaluator`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glMap1.xhtml>`__
 
         :param target: Specifies the kind of values that are generated by the evaluator.
@@ -1431,7 +1447,7 @@ def glMap2(
     vstride: int,
     vorder: int,
     points: Buffer,
-):
+) -> None:
     """B{glMap2d, glMap2f}Define a two-dimensional evaluator`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glMap2.xhtml>`__
 
         :param target: Specifies the kind of values that are generated by the evaluator.
@@ -1467,14 +1483,14 @@ def glMap2(
         :type points: Buffer
     """
 
-def glMapBuffer(p0: int, p1: int):
+def glMapBuffer(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glMapGrid(un: int, u1: typing.Any, u2, vn: int, v1: typing.Any, v2):
+def glMapGrid(un: int, u1: typing.Any, u2, vn: int, v1: typing.Any, v2) -> None:
     """B{glMapGrid1d, glMapGrid1f, glMapGrid2d, glMapGrid2f}Define a one- or two-dimensional mesh`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glMapGrid.xhtml>`__
 
         :param un: Specifies the number of partitions in the grid range interval
@@ -1490,7 +1506,7 @@ def glMapGrid(un: int, u1: typing.Any, u2, vn: int, v1: typing.Any, v2):
         :type v1: typing.Any
     """
 
-def glMaterial(face: set[str], pname: set[str], params: int):
+def glMaterial(face: set[str], pname: set[str], params: int) -> None:
     """Specify material parameters for the lighting model.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glMaterial.xhtml>`__
 
         :param face: Specifies which face or faces are being updated. Must be one of:
@@ -1504,7 +1520,7 @@ def glMaterial(face: set[str], pname: set[str], params: int):
         :type params: int
     """
 
-def glMultMatrix(m: Buffer):
+def glMultMatrix(m: Buffer) -> None:
     """B{glMultMatrixd, glMultMatrixf}Multiply the current matrix with the specified matrix`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glMultMatrix.xhtml>`__
 
         :param m: Points to 16 consecutive values that are used as the elements of a 4x4 column
@@ -1512,7 +1528,7 @@ def glMultMatrix(m: Buffer):
         :type m: Buffer
     """
 
-def glNormal3(nx: typing.Any, ny, nz, v: Buffer):
+def glNormal3(nx: typing.Any, ny, nz, v: Buffer) -> None:
     """B{Normal3b, Normal3bv, Normal3d, Normal3dv, Normal3f, Normal3fv, Normal3i, Normal3iv,
     Normal3s, Normal3sv}Set the current normal vector`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glNormal.xhtml>`__
 
@@ -1524,7 +1540,7 @@ def glNormal3(nx: typing.Any, ny, nz, v: Buffer):
         :type v: Buffer
     """
 
-def glPixelMap(map: set[str], mapsize: int, values: Buffer):
+def glPixelMap(map: set[str], mapsize: int, values: Buffer) -> None:
     """B{glPixelMapfv, glPixelMapuiv, glPixelMapusv}Set up pixel transfer maps`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelMap.xhtml>`__
 
     :param map: Specifies a symbolic map name.
@@ -1535,7 +1551,7 @@ def glPixelMap(map: set[str], mapsize: int, values: Buffer):
     :type values: Buffer
     """
 
-def glPixelStore(pname: set[str], param: typing.Any):
+def glPixelStore(pname: set[str], param: typing.Any) -> None:
     """B{glPixelStoref, glPixelStorei}Set pixel storage modes`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelStore.xhtml>`__
 
         :param pname: Specifies the symbolic name of the parameter to be set.
@@ -1546,21 +1562,21 @@ def glPixelStore(pname: set[str], param: typing.Any):
         :type param: typing.Any
     """
 
-def glPixelStoref(p0: int, p1: float):
+def glPixelStoref(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glPixelStorei(p0: int, p1: int):
+def glPixelStorei(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glPixelTransfer(pname: set[str], param: typing.Any):
+def glPixelTransfer(pname: set[str], param: typing.Any) -> None:
     """B{glPixelTransferf, glPixelTransferi}Set pixel transfer modes`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glPixelTransfer.xhtml>`__
 
     :param pname: Specifies the symbolic name of the pixel transfer parameter to be set.
@@ -1569,14 +1585,14 @@ def glPixelTransfer(pname: set[str], param: typing.Any):
     :type param: typing.Any
     """
 
-def glPointSize(size: float):
+def glPointSize(size: float) -> None:
     """Specify the diameter of rasterized points`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glPointSize.xhtml>`__
 
     :param size: Specifies the diameter of rasterized points. The initial value is 1.
     :type size: float
     """
 
-def glPolygonMode(face: set[str], mode: set[str]):
+def glPolygonMode(face: set[str], mode: set[str]) -> None:
     """Select a polygon rasterization mode`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glPolygonMode.xhtml>`__
 
         :param face: Specifies the polygons that mode applies to.
@@ -1588,7 +1604,7 @@ def glPolygonMode(face: set[str], mode: set[str]):
         :type mode: set[str]
     """
 
-def glPolygonOffset(factor: float, units: float):
+def glPolygonOffset(factor: float, units: float) -> None:
     """Set the scale and units used to calculate depth values`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glPolygonOffset.xhtml>`__
 
         :param factor: Specifies a scale factor that is used to create a variable depth
@@ -1599,7 +1615,7 @@ def glPolygonOffset(factor: float, units: float):
         :type units: float
     """
 
-def glRasterPos(x: typing.Any, y, z, w):
+def glRasterPos(x: typing.Any, y, z, w) -> None:
     """B{glRasterPos2d, glRasterPos2f, glRasterPos2i, glRasterPos2s, glRasterPos3d,
     glRasterPos3f, glRasterPos3i, glRasterPos3s, glRasterPos4d, glRasterPos4f,
     glRasterPos4i, glRasterPos4s, glRasterPos2dv, glRasterPos2fv, glRasterPos2iv,
@@ -1612,7 +1628,7 @@ def glRasterPos(x: typing.Any, y, z, w):
         :type x: typing.Any
     """
 
-def glReadBuffer(mode: set[str]):
+def glReadBuffer(mode: set[str]) -> None:
     """Select a color buffer source for pixels.`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glReadBuffer.xhtml>`__
 
     :param mode: Specifies a color buffer.
@@ -1621,7 +1637,7 @@ def glReadBuffer(mode: set[str]):
 
 def glReadPixels(
     x: int, y, width: int, height, format: set[str], type: set[str], pixels: Buffer
-):
+) -> None:
     """Read a block of pixels from the frame buffer`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glReadPixels.xhtml>`__
 
         :param x: Specify the window coordinates of the first pixel that is read
@@ -1639,7 +1655,7 @@ def glReadPixels(
         :type pixels: Buffer
     """
 
-def glRect(x1: typing.Any, y1, x2: typing.Any, y2, v1: typing.Any, v2):
+def glRect(x1: typing.Any, y1, x2: typing.Any, y2, v1: typing.Any, v2) -> None:
     """B{glRectd, glRectf, glRecti, glRects, glRectdv, glRectfv, glRectiv, glRectsv}Draw a rectangle`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glRect.xhtml>`__
 
         :param x1: Specify one vertex of a rectangle
@@ -1651,7 +1667,7 @@ def glRect(x1: typing.Any, y1, x2: typing.Any, y2, v1: typing.Any, v2):
         :type v1: typing.Any
     """
 
-def glRenderbufferStorage(p0: int, p1: int, p2: int, p3: int):
+def glRenderbufferStorage(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
@@ -1660,7 +1676,7 @@ def glRenderbufferStorage(p0: int, p1: int, p2: int, p3: int):
     :type p3: int
     """
 
-def glRotate(angle: typing.Any, x: typing.Any, y, z):
+def glRotate(angle: typing.Any, x: typing.Any, y, z) -> None:
     """B{glRotated, glRotatef}Multiply the current matrix by a rotation matrix`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glRotate.xhtml>`__
 
     :param angle: Specifies the angle of rotation in degrees.
@@ -1669,28 +1685,28 @@ def glRotate(angle: typing.Any, x: typing.Any, y, z):
     :type x: typing.Any
     """
 
-def glSampleCoverage(p0: float, p1: bool):
+def glSampleCoverage(p0: float, p1: bool) -> None:
     """
 
     :type p0: float
     :type p1: bool
     """
 
-def glSampleMaski(p0: int, p1: int):
+def glSampleMaski(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glScale(x: typing.Any, y, z):
+def glScale(x: typing.Any, y, z) -> None:
     """B{glScaled, glScalef}Multiply the current matrix by a general scaling matrix`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glScale.xhtml>`__
 
     :param x: Specify scale factors along the x, y, and z axes, respectively.
     :type x: typing.Any
     """
 
-def glScissor(x: int, y, width: int, height):
+def glScissor(x: int, y, width: int, height) -> None:
     """Define the scissor box`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glScissor.xhtml>`__
 
         :param x: Specify the lower left corner of the scissor box. Initially (0, 0).
@@ -1701,7 +1717,7 @@ def glScissor(x: int, y, width: int, height):
         :type width: int
     """
 
-def glShaderSource(shader: int, shader_string: str):
+def glShaderSource(shader: int, shader_string: str) -> None:
     """Replaces the source code in a shader object.`OpenGL Docs <https://www.opengl.org/sdk/docs/man/html/glShaderSource.xhtml>`__
 
     :param shader: Specifies the handle of the shader object whose source code is to be replaced.
@@ -1710,7 +1726,7 @@ def glShaderSource(shader: int, shader_string: str):
     :type shader_string: str
     """
 
-def glStencilFunc(func: set[str], ref: int, mask: int):
+def glStencilFunc(func: set[str], ref: int, mask: int) -> None:
     """Set function and reference value for stencil testing`OpenGL Docs <https://www.opengl.org/sdk/docs/man/docbook4/xhtml/glStencilFunc.xhtml>`__
 
         :param func: Specifies the test function.
@@ -1724,7 +1740,7 @@ def glStencilFunc(func: set[str], ref: int, mask: int):
         :type mask: int
     """
 
-def glStencilFuncSeparate(p0: int, p1: int, p2: int, p3: int):
+def glStencilFuncSeparate(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
@@ -1733,7 +1749,7 @@ def glStencilFuncSeparate(p0: int, p1: int, p2: int, p3: int):
     :type p3: int
     """
 
-def glStencilMask(mask: int):
+def glStencilMask(mask: int) -> None:
     """Control the writing of individual bits in the stencil planes`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glStencilMask.xhtml>`__
 
         :param mask: Specifies a bit mask to enable and disable writing of individual bits
@@ -1741,14 +1757,14 @@ def glStencilMask(mask: int):
         :type mask: int
     """
 
-def glStencilMaskSeparate(p0: int, p1: int):
+def glStencilMaskSeparate(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glStencilOp(fail: set[str], zfail: set[str], zpass: set[str]):
+def glStencilOp(fail: set[str], zfail: set[str], zpass: set[str]) -> None:
     """Set stencil test actions`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glStencilOp.xhtml>`__
 
         :param fail: Specifies the action to take when the stencil test fails.
@@ -1766,7 +1782,7 @@ def glStencilOp(fail: set[str], zfail: set[str], zpass: set[str]):
         :type zpass: set[str]
     """
 
-def glStencilOpSeparate(p0: int, p1: int, p2: int, p3: int):
+def glStencilOpSeparate(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
@@ -1775,7 +1791,7 @@ def glStencilOpSeparate(p0: int, p1: int, p2: int, p3: int):
     :type p3: int
     """
 
-def glTexCoord(s: typing.Any, t, r, q, v: Buffer):
+def glTexCoord(s: typing.Any, t, r, q, v: Buffer) -> None:
     """B{glTexCoord1d, glTexCoord1f, glTexCoord1i, glTexCoord1s, glTexCoord2d, glTexCoord2f,
     glTexCoord2i, glTexCoord2s, glTexCoord3d, glTexCoord3f, glTexCoord3i, glTexCoord3s,
     glTexCoord4d, glTexCoord4f, glTexCoord4i, glTexCoord4s, glTexCoord1dv, glTexCoord1fv,
@@ -1791,7 +1807,7 @@ def glTexCoord(s: typing.Any, t, r, q, v: Buffer):
         :type v: Buffer
     """
 
-def glTexEnv(target: set[str], pname: set[str], param: typing.Any):
+def glTexEnv(target: set[str], pname: set[str], param: typing.Any) -> None:
     """B{glTextEnvf, glTextEnvi, glTextEnvfv, glTextEnviv}Set texture environment parameters`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glTexEnv.xhtml>`__
 
         :param target: Specifies a texture environment. Must be GL_TEXTURE_ENV.
@@ -1805,7 +1821,7 @@ def glTexEnv(target: set[str], pname: set[str], param: typing.Any):
         :type param: typing.Any
     """
 
-def glTexGen(coord: set[str], pname: set[str], param: typing.Any):
+def glTexGen(coord: set[str], pname: set[str], param: typing.Any) -> None:
     """B{glTexGend, glTexGenf, glTexGeni, glTexGendv, glTexGenfv, glTexGeniv}Control the generation of texture coordinates`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glTexGen.xhtml>`__
 
         :param coord: Specifies a texture coordinate.
@@ -1829,7 +1845,7 @@ def glTexImage1D(
     format: set[str],
     type: set[str],
     pixels: Buffer,
-):
+) -> None:
     """Specify a one-dimensional texture image`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage1D.xhtml>`__
 
         :param target: Specifies the target texture.
@@ -1863,7 +1879,7 @@ def glTexImage2D(
     format: set[str],
     type: set[str],
     pixels: Buffer,
-):
+) -> None:
     """Specify a two-dimensional texture image`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml>`__
 
         :param target: Specifies the target texture.
@@ -1891,7 +1907,9 @@ def glTexImage2D(
         :type pixels: Buffer
     """
 
-def glTexImage2DMultisample(p0: int, p1: int, p2: int, p3: int, p4: int, p5: bool):
+def glTexImage2DMultisample(
+    p0: int, p1: int, p2: int, p3: int, p4: int, p5: bool
+) -> None:
     """
 
     :type p0: int
@@ -1913,7 +1931,7 @@ def glTexImage3D(
     p7: int,
     p8: int,
     p9: typing.Any,
-):
+) -> None:
     """
 
     :type p0: int
@@ -1930,7 +1948,7 @@ def glTexImage3D(
 
 def glTexImage3DMultisample(
     p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: bool
-):
+) -> None:
     """
 
     :type p0: int
@@ -1942,7 +1960,7 @@ def glTexImage3DMultisample(
     :type p6: bool
     """
 
-def glTexParameter(target: set[str], pname: set[str], param: typing.Any):
+def glTexParameter(target: set[str], pname: set[str], param: typing.Any) -> None:
     """B{glTexParameterf, glTexParameteri, glTexParameterfv, glTexParameteriv}Set texture parameters`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glTexParameter.xhtml>`__
 
         :param target: Specifies the target texture.
@@ -1954,7 +1972,7 @@ def glTexParameter(target: set[str], pname: set[str], param: typing.Any):
         :type param: typing.Any
     """
 
-def glTexParameterf(p0: int, p1: int, p2: float):
+def glTexParameterf(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -1962,7 +1980,7 @@ def glTexParameterf(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glTexParameterfv(p0: int, p1: int, p2: float):
+def glTexParameterfv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -1970,7 +1988,7 @@ def glTexParameterfv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glTexParameteri(p0: int, p1: int, p2: int):
+def glTexParameteri(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -1978,7 +1996,7 @@ def glTexParameteri(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glTexParameteriv(p0: int, p1: int, p2: int):
+def glTexParameteriv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -1988,7 +2006,7 @@ def glTexParameteriv(p0: int, p1: int, p2: int):
 
 def glTexSubImage1D(
     p0: int, p1: int, p2: int, p3: int, p4: int, p5: int, p6: typing.Any
-):
+) -> None:
     """
 
     :type p0: int
@@ -2010,7 +2028,7 @@ def glTexSubImage2D(
     p6: int,
     p7: int,
     p8: typing.Any,
-):
+) -> None:
     """
 
     :type p0: int
@@ -2036,7 +2054,7 @@ def glTexSubImage3D(
     p8: int,
     p9: int,
     p10: typing.Any,
-):
+) -> None:
     """
 
     :type p0: int
@@ -2052,21 +2070,21 @@ def glTexSubImage3D(
     :type p10: typing.Any
     """
 
-def glTranslate(x: typing.Any, y, z):
+def glTranslate(x: typing.Any, y, z) -> None:
     """B{glTranslatef, glTranslated}Multiply the current matrix by a translation matrix`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glTranslate.xhtml>`__
 
     :param x: Specify the x, y, and z coordinates of a translation vector.
     :type x: typing.Any
     """
 
-def glUniform1f(p0: int, p1: float):
+def glUniform1f(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glUniform1fv(p0: int, p1: int, p2: float):
+def glUniform1fv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -2074,14 +2092,14 @@ def glUniform1fv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glUniform1i(p0: int, p1: int):
+def glUniform1i(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glUniform1iv(p0: int, p1: int, p2: int):
+def glUniform1iv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -2089,7 +2107,7 @@ def glUniform1iv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glUniform2f(p0: int, p1: float, p2: float):
+def glUniform2f(p0: int, p1: float, p2: float) -> None:
     """
 
     :type p0: int
@@ -2097,7 +2115,7 @@ def glUniform2f(p0: int, p1: float, p2: float):
     :type p2: float
     """
 
-def glUniform2fv(p0: int, p1: int, p2: float):
+def glUniform2fv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -2105,7 +2123,7 @@ def glUniform2fv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glUniform2i(p0: int, p1: int, p2: int):
+def glUniform2i(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -2113,7 +2131,7 @@ def glUniform2i(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glUniform2iv(p0: int, p1: int, p2: int):
+def glUniform2iv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -2121,7 +2139,7 @@ def glUniform2iv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glUniform3f(p0: int, p1: float, p2: float, p3: float):
+def glUniform3f(p0: int, p1: float, p2: float, p3: float) -> None:
     """
 
     :type p0: int
@@ -2130,7 +2148,7 @@ def glUniform3f(p0: int, p1: float, p2: float, p3: float):
     :type p3: float
     """
 
-def glUniform3fv(p0: int, p1: int, p2: float):
+def glUniform3fv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -2138,7 +2156,7 @@ def glUniform3fv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glUniform3i(p0: int, p1: int, p2: int, p3: int):
+def glUniform3i(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
@@ -2147,7 +2165,7 @@ def glUniform3i(p0: int, p1: int, p2: int, p3: int):
     :type p3: int
     """
 
-def glUniform3iv(p0: int, p1: int, p2: int):
+def glUniform3iv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -2155,7 +2173,7 @@ def glUniform3iv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glUniform4f(p0: int, p1: float, p2: float, p3: float, p4: float):
+def glUniform4f(p0: int, p1: float, p2: float, p3: float, p4: float) -> None:
     """
 
     :type p0: int
@@ -2165,7 +2183,7 @@ def glUniform4f(p0: int, p1: float, p2: float, p3: float, p4: float):
     :type p4: float
     """
 
-def glUniform4fv(p0: int, p1: int, p2: float):
+def glUniform4fv(p0: int, p1: int, p2: float) -> None:
     """
 
     :type p0: int
@@ -2173,7 +2191,7 @@ def glUniform4fv(p0: int, p1: int, p2: float):
     :type p2: float
     """
 
-def glUniform4i(p0: int, p1: int, p2: int, p3: int, p4: int):
+def glUniform4i(p0: int, p1: int, p2: int, p3: int, p4: int) -> None:
     """
 
     :type p0: int
@@ -2183,7 +2201,7 @@ def glUniform4i(p0: int, p1: int, p2: int, p3: int, p4: int):
     :type p4: int
     """
 
-def glUniform4iv(p0: int, p1: int, p2: int):
+def glUniform4iv(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -2191,7 +2209,7 @@ def glUniform4iv(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glUniformBlockBinding(p0: int, p1: int, p2: int):
+def glUniformBlockBinding(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -2199,7 +2217,7 @@ def glUniformBlockBinding(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glUniformMatrix2fv(p0: int, p1: int, p2: bool, p3: float):
+def glUniformMatrix2fv(p0: int, p1: int, p2: bool, p3: float) -> None:
     """
 
     :type p0: int
@@ -2208,7 +2226,7 @@ def glUniformMatrix2fv(p0: int, p1: int, p2: bool, p3: float):
     :type p3: float
     """
 
-def glUniformMatrix2x3fv(p0: int, p1: int, p2: bool, p3: float):
+def glUniformMatrix2x3fv(p0: int, p1: int, p2: bool, p3: float) -> None:
     """
 
     :type p0: int
@@ -2217,7 +2235,7 @@ def glUniformMatrix2x3fv(p0: int, p1: int, p2: bool, p3: float):
     :type p3: float
     """
 
-def glUniformMatrix2x4fv(p0: int, p1: int, p2: bool, p3: float):
+def glUniformMatrix2x4fv(p0: int, p1: int, p2: bool, p3: float) -> None:
     """
 
     :type p0: int
@@ -2226,7 +2244,7 @@ def glUniformMatrix2x4fv(p0: int, p1: int, p2: bool, p3: float):
     :type p3: float
     """
 
-def glUniformMatrix3fv(p0: int, p1: int, p2: bool, p3: float):
+def glUniformMatrix3fv(p0: int, p1: int, p2: bool, p3: float) -> None:
     """
 
     :type p0: int
@@ -2235,7 +2253,7 @@ def glUniformMatrix3fv(p0: int, p1: int, p2: bool, p3: float):
     :type p3: float
     """
 
-def glUniformMatrix3x2fv(p0: int, p1: int, p2: bool, p3: float):
+def glUniformMatrix3x2fv(p0: int, p1: int, p2: bool, p3: float) -> None:
     """
 
     :type p0: int
@@ -2244,7 +2262,7 @@ def glUniformMatrix3x2fv(p0: int, p1: int, p2: bool, p3: float):
     :type p3: float
     """
 
-def glUniformMatrix3x4fv(p0: int, p1: int, p2: bool, p3: float):
+def glUniformMatrix3x4fv(p0: int, p1: int, p2: bool, p3: float) -> None:
     """
 
     :type p0: int
@@ -2253,7 +2271,7 @@ def glUniformMatrix3x4fv(p0: int, p1: int, p2: bool, p3: float):
     :type p3: float
     """
 
-def glUniformMatrix4fv(p0: int, p1: int, p2: bool, p3: float):
+def glUniformMatrix4fv(p0: int, p1: int, p2: bool, p3: float) -> None:
     """
 
     :type p0: int
@@ -2262,7 +2280,7 @@ def glUniformMatrix4fv(p0: int, p1: int, p2: bool, p3: float):
     :type p3: float
     """
 
-def glUniformMatrix4x2fv(p0: int, p1: int, p2: bool, p3: float):
+def glUniformMatrix4x2fv(p0: int, p1: int, p2: bool, p3: float) -> None:
     """
 
     :type p0: int
@@ -2271,7 +2289,7 @@ def glUniformMatrix4x2fv(p0: int, p1: int, p2: bool, p3: float):
     :type p3: float
     """
 
-def glUniformMatrix4x3fv(p0: int, p1: int, p2: bool, p3: float):
+def glUniformMatrix4x3fv(p0: int, p1: int, p2: bool, p3: float) -> None:
     """
 
     :type p0: int
@@ -2287,63 +2305,63 @@ def glUnmapBuffer(p0: int) -> bool:
     :rtype: bool
     """
 
-def glUseProgram(program: int):
+def glUseProgram(program: int) -> None:
     """Installs a program object as part of current rendering state`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glUseProgram.xhtml>`__
 
     :param program: Specifies the handle of the program object whose executables are to be used as part of current rendering state.
     :type program: int
     """
 
-def glValidateProgram(program: int):
+def glValidateProgram(program: int) -> None:
     """Validates a program object`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glValidateProgram.xhtml>`__
 
     :param program: Specifies the handle of the program object to be validated.
     :type program: int
     """
 
-def glVertexAttrib1d(p0: int, p1: float):
+def glVertexAttrib1d(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glVertexAttrib1dv(p0: int, p1: float):
+def glVertexAttrib1dv(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glVertexAttrib1f(p0: int, p1: float):
+def glVertexAttrib1f(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glVertexAttrib1fv(p0: int, p1: float):
+def glVertexAttrib1fv(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glVertexAttrib1s(p0: int, p1: int):
+def glVertexAttrib1s(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib1sv(p0: int, p1: int):
+def glVertexAttrib1sv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib2d(p0: int, p1: float, p2: float):
+def glVertexAttrib2d(p0: int, p1: float, p2: float) -> None:
     """
 
     :type p0: int
@@ -2351,14 +2369,14 @@ def glVertexAttrib2d(p0: int, p1: float, p2: float):
     :type p2: float
     """
 
-def glVertexAttrib2dv(p0: int, p1: float):
+def glVertexAttrib2dv(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glVertexAttrib2f(p0: int, p1: float, p2: float):
+def glVertexAttrib2f(p0: int, p1: float, p2: float) -> None:
     """
 
     :type p0: int
@@ -2366,14 +2384,14 @@ def glVertexAttrib2f(p0: int, p1: float, p2: float):
     :type p2: float
     """
 
-def glVertexAttrib2fv(p0: int, p1: float):
+def glVertexAttrib2fv(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glVertexAttrib2s(p0: int, p1: int, p2: int):
+def glVertexAttrib2s(p0: int, p1: int, p2: int) -> None:
     """
 
     :type p0: int
@@ -2381,14 +2399,14 @@ def glVertexAttrib2s(p0: int, p1: int, p2: int):
     :type p2: int
     """
 
-def glVertexAttrib2sv(p0: int, p1: int):
+def glVertexAttrib2sv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib3d(p0: int, p1: float, p2: float, p3: float):
+def glVertexAttrib3d(p0: int, p1: float, p2: float, p3: float) -> None:
     """
 
     :type p0: int
@@ -2397,14 +2415,14 @@ def glVertexAttrib3d(p0: int, p1: float, p2: float, p3: float):
     :type p3: float
     """
 
-def glVertexAttrib3dv(p0: int, p1: float):
+def glVertexAttrib3dv(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glVertexAttrib3f(p0: int, p1: float, p2: float, p3: float):
+def glVertexAttrib3f(p0: int, p1: float, p2: float, p3: float) -> None:
     """
 
     :type p0: int
@@ -2413,130 +2431,51 @@ def glVertexAttrib3f(p0: int, p1: float, p2: float, p3: float):
     :type p3: float
     """
 
-def glVertexAttrib3fv(p0: int, p1: float):
+def glVertexAttrib3fv(p0: int, p1: float) -> None:
     """
 
     :type p0: int
     :type p1: float
     """
 
-def glVertexAttrib3s(p0: int, p1: int, p2: int, p3: int):
-    """
-
-    :type p0: int
-    :type p1: int
-    :type p2: int
-    :type p3: int
-    """
-
-def glVertexAttrib3sv(p0: int, p1: int):
-    """
-
-    :type p0: int
-    :type p1: int
-    """
-
-def glVertexAttrib4Nbv(p0: int, p1: int):
-    """
-
-    :type p0: int
-    :type p1: int
-    """
-
-def glVertexAttrib4Niv(p0: int, p1: int):
-    """
-
-    :type p0: int
-    :type p1: int
-    """
-
-def glVertexAttrib4Nsv(p0: int, p1: int):
-    """
-
-    :type p0: int
-    :type p1: int
-    """
-
-def glVertexAttrib4Nub(p0: int, p1: int, p2: int, p3: int, p4: int):
+def glVertexAttrib3s(p0: int, p1: int, p2: int, p3: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     :type p2: int
     :type p3: int
-    :type p4: int
     """
 
-def glVertexAttrib4Nubv(p0: int, p1: int):
-    """
-
-    :type p0: int
-    :type p1: int
-    """
-
-def glVertexAttrib4Nuiv(p0: int, p1: int):
+def glVertexAttrib3sv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib4Nusv(p0: int, p1: int):
+def glVertexAttrib4Nbv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib4bv(p0: int, p1: int):
+def glVertexAttrib4Niv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib4d(p0: int, p1: float, p2: float, p3: float, p4: float):
-    """
-
-    :type p0: int
-    :type p1: float
-    :type p2: float
-    :type p3: float
-    :type p4: float
-    """
-
-def glVertexAttrib4dv(p0: int, p1: float):
-    """
-
-    :type p0: int
-    :type p1: float
-    """
-
-def glVertexAttrib4f(p0: int, p1: float, p2: float, p3: float, p4: float):
-    """
-
-    :type p0: int
-    :type p1: float
-    :type p2: float
-    :type p3: float
-    :type p4: float
-    """
-
-def glVertexAttrib4fv(p0: int, p1: float):
-    """
-
-    :type p0: int
-    :type p1: float
-    """
-
-def glVertexAttrib4iv(p0: int, p1: int):
+def glVertexAttrib4Nsv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib4s(p0: int, p1: int, p2: int, p3: int, p4: int):
+def glVertexAttrib4Nub(p0: int, p1: int, p2: int, p3: int, p4: int) -> None:
     """
 
     :type p0: int
@@ -2546,35 +2485,114 @@ def glVertexAttrib4s(p0: int, p1: int, p2: int, p3: int, p4: int):
     :type p4: int
     """
 
-def glVertexAttrib4sv(p0: int, p1: int):
+def glVertexAttrib4Nubv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib4ubv(p0: int, p1: int):
+def glVertexAttrib4Nuiv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib4uiv(p0: int, p1: int):
+def glVertexAttrib4Nusv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttrib4usv(p0: int, p1: int):
+def glVertexAttrib4bv(p0: int, p1: int) -> None:
     """
 
     :type p0: int
     :type p1: int
     """
 
-def glVertexAttribIPointer(p0: int, p1: int, p2: int, p3: int, p4: typing.Any):
+def glVertexAttrib4d(p0: int, p1: float, p2: float, p3: float, p4: float) -> None:
+    """
+
+    :type p0: int
+    :type p1: float
+    :type p2: float
+    :type p3: float
+    :type p4: float
+    """
+
+def glVertexAttrib4dv(p0: int, p1: float) -> None:
+    """
+
+    :type p0: int
+    :type p1: float
+    """
+
+def glVertexAttrib4f(p0: int, p1: float, p2: float, p3: float, p4: float) -> None:
+    """
+
+    :type p0: int
+    :type p1: float
+    :type p2: float
+    :type p3: float
+    :type p4: float
+    """
+
+def glVertexAttrib4fv(p0: int, p1: float) -> None:
+    """
+
+    :type p0: int
+    :type p1: float
+    """
+
+def glVertexAttrib4iv(p0: int, p1: int) -> None:
+    """
+
+    :type p0: int
+    :type p1: int
+    """
+
+def glVertexAttrib4s(p0: int, p1: int, p2: int, p3: int, p4: int) -> None:
+    """
+
+    :type p0: int
+    :type p1: int
+    :type p2: int
+    :type p3: int
+    :type p4: int
+    """
+
+def glVertexAttrib4sv(p0: int, p1: int) -> None:
+    """
+
+    :type p0: int
+    :type p1: int
+    """
+
+def glVertexAttrib4ubv(p0: int, p1: int) -> None:
+    """
+
+    :type p0: int
+    :type p1: int
+    """
+
+def glVertexAttrib4uiv(p0: int, p1: int) -> None:
+    """
+
+    :type p0: int
+    :type p1: int
+    """
+
+def glVertexAttrib4usv(p0: int, p1: int) -> None:
+    """
+
+    :type p0: int
+    :type p1: int
+    """
+
+def glVertexAttribIPointer(p0: int, p1: int, p2: int, p3: int, p4: typing.Any) -> None:
     """
 
     :type p0: int
@@ -2584,7 +2602,9 @@ def glVertexAttribIPointer(p0: int, p1: int, p2: int, p3: int, p4: typing.Any):
     :type p4: typing.Any
     """
 
-def glVertexAttribPointer(p0: int, p1: int, p2: int, p3: bool, p4: int, p5: typing.Any):
+def glVertexAttribPointer(
+    p0: int, p1: int, p2: int, p3: bool, p4: int, p5: typing.Any
+) -> None:
     """
 
     :type p0: int
@@ -2595,7 +2615,7 @@ def glVertexAttribPointer(p0: int, p1: int, p2: int, p3: bool, p4: int, p5: typi
     :type p5: typing.Any
     """
 
-def glViewport(x: int, y, width: int, height):
+def glViewport(x: int, y, width: int, height) -> None:
     """Set the viewport`OpenGL Docs <https://khronos.org/registry/OpenGL-Refpages/gl4/html/glViewport.xhtml>`__
 
         :param x: Specify the lower left corner of the viewport rectangle,

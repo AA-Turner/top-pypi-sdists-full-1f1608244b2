@@ -3,14 +3,16 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 
-def add(execution_context: int | str | None = None, undo: bool | None = None):
+def add(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Add a new time marker
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def camera_bind(execution_context: int | str | None = None, undo: bool | None = None):
+def camera_bind(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Bind the selected camera to a marker on the current frame
 
     :type execution_context: int | str | None
@@ -23,7 +25,7 @@ def delete(
     /,
     *,
     confirm: bool | None = True,
-):
+) -> None:
     """Delete selected time marker(s)
 
     :type execution_context: int | str | None
@@ -38,7 +40,7 @@ def duplicate(
     /,
     *,
     frames: int | None = 0,
-):
+) -> None:
     """Duplicate selected time marker(s)
 
     :type execution_context: int | str | None
@@ -53,7 +55,7 @@ def make_links_scene(
     /,
     *,
     scene: str | None = "",
-):
+) -> None:
     """Copy selected markers to another scene
 
     :type execution_context: int | str | None
@@ -69,7 +71,7 @@ def move(
     *,
     frames: int | None = 0,
     tweak: bool | None = False,
-):
+) -> None:
     """Move selected time marker(s)
 
     :type execution_context: int | str | None
@@ -86,7 +88,7 @@ def rename(
     /,
     *,
     name: str = "RenamedMarker",
-):
+) -> None:
     """Rename first selected time marker
 
     :type execution_context: int | str | None
@@ -105,7 +107,7 @@ def select(
     mouse_y: int | None = 0,
     extend: bool | None = False,
     camera: bool | None = False,
-):
+) -> None:
     """Select time marker(s)
 
     :type execution_context: int | str | None
@@ -128,7 +130,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection of all time markers
 
         :type execution_context: int | str | None
@@ -161,7 +163,7 @@ def select_box(
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
     tweak: bool | None = False,
-):
+) -> None:
     """Select all time markers using box selection
 
         :type execution_context: int | str | None
@@ -198,7 +200,7 @@ def select_leftright(
     *,
     mode: typing.Literal["LEFT", "RIGHT"] | None = "LEFT",
     extend: bool | None = False,
-):
+) -> None:
     """Select markers on and left/right of the current frame
 
     :type execution_context: int | str | None

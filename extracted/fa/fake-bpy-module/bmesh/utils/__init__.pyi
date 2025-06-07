@@ -36,7 +36,7 @@ def edge_split(
     :rtype: tuple[bmesh.types.BMEdge, bmesh.types.BMVert]
     """
 
-def face_flip(faces):
+def face_flip(faces) -> None:
     """Flip the faces direction."""
 
 def face_join(faces: bmesh.types.BMFace, remove: bool = True) -> bmesh.types.BMFace:
@@ -163,7 +163,7 @@ def vert_separate(
     :rtype: tuple[bmesh.types.BMVert, ...]
     """
 
-def vert_splice(vert: bmesh.types.BMVert, vert_target: bmesh.types.BMVert):
+def vert_splice(vert: bmesh.types.BMVert, vert_target: bmesh.types.BMVert) -> None:
     """Splice vert into vert_target.
 
     :param vert: The vertex to be removed.

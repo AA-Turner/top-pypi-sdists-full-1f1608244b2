@@ -25,7 +25,7 @@ class MASK_MT_add(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -50,7 +50,7 @@ class MASK_MT_animation(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -75,7 +75,7 @@ class MASK_MT_mask(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -100,7 +100,7 @@ class MASK_MT_select(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -125,7 +125,7 @@ class MASK_MT_transform(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -150,7 +150,7 @@ class MASK_MT_visibility(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -160,14 +160,14 @@ class MASK_PT_animation:
     bl_label: typing.Any
     bl_options: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -176,14 +176,14 @@ class MASK_PT_animation:
 class MASK_PT_display:
     bl_label: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -192,14 +192,14 @@ class MASK_PT_display:
 class MASK_PT_layers:
     bl_label: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -209,14 +209,14 @@ class MASK_PT_mask:
     bl_label: typing.Any
     bl_options: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -225,14 +225,14 @@ class MASK_PT_mask:
 class MASK_PT_point:
     bl_label: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -241,14 +241,14 @@ class MASK_PT_point:
 class MASK_PT_spline:
     bl_label: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -258,14 +258,14 @@ class MASK_PT_tools:
     bl_category: typing.Any
     bl_label: typing.Any
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -275,14 +275,14 @@ class MASK_PT_transforms:
     bl_category: typing.Any
     bl_label: typing.Any
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -316,7 +316,7 @@ class MASK_UL_layers(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -329,4 +329,4 @@ class MASK_UL_layers(bpy.types.UIList):
         :param _index:
         """
 
-def draw_mask_context_menu(layout, _context): ...
+def draw_mask_context_menu(layout, _context) -> None: ...

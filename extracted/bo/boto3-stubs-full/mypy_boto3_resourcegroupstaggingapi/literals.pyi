@@ -466,6 +466,7 @@ PaginatorName = Literal["get_compliance_summary", "get_resources", "get_tag_keys
 RegionName = Literal[
     "af-south-1",
     "ap-east-1",
+    "ap-east-2",
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-northeast-3",

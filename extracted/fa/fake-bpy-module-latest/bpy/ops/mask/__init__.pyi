@@ -12,7 +12,7 @@ def add_feather_vertex(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Add vertex to feather
 
     :type execution_context: int | str | None
@@ -28,7 +28,7 @@ def add_feather_vertex_slide(
     *,
     MASK_OT_add_feather_vertex: add_feather_vertex | None = None,
     MASK_OT_slide_point: slide_point | None = None,
-):
+) -> None:
     """Add new vertex to feather and slide it
 
     :type execution_context: int | str | None
@@ -45,7 +45,7 @@ def add_vertex(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Add vertex to active spline
 
     :type execution_context: int | str | None
@@ -61,7 +61,7 @@ def add_vertex_slide(
     *,
     MASK_OT_add_vertex: add_vertex | None = None,
     MASK_OT_slide_point: slide_point | None = None,
-):
+) -> None:
     """Add new vertex and slide it
 
     :type execution_context: int | str | None
@@ -72,14 +72,18 @@ def add_vertex_slide(
     :type MASK_OT_slide_point: slide_point | None
     """
 
-def copy_splines(execution_context: int | str | None = None, undo: bool | None = None):
+def copy_splines(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy the selected splines to the internal clipboard
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def cyclic_toggle(execution_context: int | str | None = None, undo: bool | None = None):
+def cyclic_toggle(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Toggle cyclic for selected splines
 
     :type execution_context: int | str | None
@@ -92,7 +96,7 @@ def delete(
     /,
     *,
     confirm: bool | None = True,
-):
+) -> None:
     """Delete selected control points or splines
 
     :type execution_context: int | str | None
@@ -101,7 +105,9 @@ def delete(
     :type confirm: bool | None
     """
 
-def duplicate(execution_context: int | str | None = None, undo: bool | None = None):
+def duplicate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Duplicate selected control points and segments between them
 
     :type execution_context: int | str | None
@@ -115,7 +121,7 @@ def duplicate_move(
     *,
     MASK_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Duplicate mask and move
 
     :type execution_context: int | str | None
@@ -128,7 +134,7 @@ def duplicate_move(
 
 def feather_weight_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reset the feather weight to zero
 
     :type execution_context: int | str | None
@@ -142,7 +148,7 @@ def handle_type_set(
     *,
     type: typing.Literal["AUTO", "VECTOR", "ALIGNED", "ALIGNED_DOUBLESIDE", "FREE"]
     | None = "AUTO",
-):
+) -> None:
     """Set type of handles for selected control points
 
     :type execution_context: int | str | None
@@ -157,7 +163,7 @@ def hide_view_clear(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Reveal temporarily hidden mask layers
 
     :type execution_context: int | str | None
@@ -172,7 +178,7 @@ def hide_view_set(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Temporarily hide mask layers
 
     :type execution_context: int | str | None
@@ -187,7 +193,7 @@ def layer_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move the active layer up/down in the list
 
     :type execution_context: int | str | None
@@ -202,7 +208,7 @@ def layer_new(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Add new mask layer for masking
 
     :type execution_context: int | str | None
@@ -211,7 +217,9 @@ def layer_new(
     :type name: str
     """
 
-def layer_remove(execution_context: int | str | None = None, undo: bool | None = None):
+def layer_remove(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove mask layer
 
     :type execution_context: int | str | None
@@ -224,7 +232,7 @@ def new(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Create new mask
 
     :type execution_context: int | str | None
@@ -235,28 +243,34 @@ def new(
 
 def normals_make_consistent(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Recalculate the direction of selected handles
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def parent_clear(execution_context: int | str | None = None, undo: bool | None = None):
+def parent_clear(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Clear the mask's parenting
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def parent_set(execution_context: int | str | None = None, undo: bool | None = None):
+def parent_set(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Set the mask's parenting
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def paste_splines(execution_context: int | str | None = None, undo: bool | None = None):
+def paste_splines(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Paste splines from the internal clipboard
 
     :type execution_context: int | str | None
@@ -270,7 +284,7 @@ def primitive_circle_add(
     *,
     size: float | None = 100.0,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Add new circle-shaped spline
 
     :type execution_context: int | str | None
@@ -288,7 +302,7 @@ def primitive_square_add(
     *,
     size: float | None = 100.0,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Add new square-shaped spline
 
     :type execution_context: int | str | None
@@ -310,7 +324,7 @@ def select(
     deselect_all: bool | None = False,
     select_passthrough: bool | None = False,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Select spline points
 
     :type execution_context: int | str | None
@@ -335,7 +349,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection of all curve points
 
         :type execution_context: int | str | None
@@ -367,7 +381,7 @@ def select_box(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select curve points using box selection
 
         :type execution_context: int | str | None
@@ -405,7 +419,7 @@ def select_circle(
     radius: int | None = 25,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select curve points using circle selection
 
         :type execution_context: int | str | None
@@ -441,7 +455,7 @@ def select_lasso(
     smooth_stroke_factor: float | None = 0.75,
     smooth_stroke_radius: int | None = 35,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select curve points using lasso selection
 
         :type execution_context: int | str | None
@@ -467,14 +481,18 @@ def select_lasso(
         :type mode: typing.Literal['SET','ADD','SUB'] | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Deselect spline points at the boundary of each selection region
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_linked(execution_context: int | str | None = None, undo: bool | None = None):
+def select_linked(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select all curve points linked to already selected ones
 
     :type execution_context: int | str | None
@@ -487,7 +505,7 @@ def select_linked_pick(
     /,
     *,
     deselect: bool | None = False,
-):
+) -> None:
     """(De)select all points linked to the curve under the mouse cursor
 
     :type execution_context: int | str | None
@@ -496,7 +514,9 @@ def select_linked_pick(
     :type deselect: bool | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select more spline points connected to initial selection
 
     :type execution_context: int | str | None
@@ -505,7 +525,7 @@ def select_more(execution_context: int | str | None = None, undo: bool | None = 
 
 def shape_key_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove mask shape keyframe for active mask layer at the current frame
 
     :type execution_context: int | str | None
@@ -514,7 +534,7 @@ def shape_key_clear(
 
 def shape_key_feather_reset(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reset feather weights on all selected points animation values
 
     :type execution_context: int | str | None
@@ -523,7 +543,7 @@ def shape_key_feather_reset(
 
 def shape_key_insert(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Insert mask shape keyframe for active mask layer at the current frame
 
     :type execution_context: int | str | None
@@ -537,7 +557,7 @@ def shape_key_rekey(
     *,
     location: bool | None = True,
     feather: bool | None = True,
-):
+) -> None:
     """Recalculate animation data on selected points for frames selected in the dopesheet
 
     :type execution_context: int | str | None
@@ -555,7 +575,7 @@ def slide_point(
     *,
     slide_feather: bool | None = False,
     is_new_point: bool | None = False,
-):
+) -> None:
     """Slide control points
 
     :type execution_context: int | str | None
@@ -568,7 +588,7 @@ def slide_point(
 
 def slide_spline_curvature(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Slide a point on the spline to define its curvature
 
     :type execution_context: int | str | None
@@ -577,7 +597,7 @@ def slide_spline_curvature(
 
 def switch_direction(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Switch direction of selected splines
 
     :type execution_context: int | str | None

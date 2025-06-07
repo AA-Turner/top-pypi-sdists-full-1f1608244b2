@@ -27,14 +27,14 @@ class CLIP_OT_bundles_to_mesh(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -63,7 +63,7 @@ class CLIP_OT_constraint_to_fcurve(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -92,13 +92,13 @@ class CLIP_OT_delete_proxy(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -106,7 +106,7 @@ class CLIP_OT_delete_proxy(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -135,14 +135,14 @@ class CLIP_OT_filter_tracks(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -168,14 +168,14 @@ class CLIP_OT_set_active_clip(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -204,14 +204,14 @@ class CLIP_OT_set_viewport_background(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -241,21 +241,21 @@ class CLIP_OT_setup_tracking_scene(bpy.types.Operator):
         """
 
     @staticmethod
-    def createCollection(context, collection_name):
+    def createCollection(context, collection_name) -> None:
         """
 
         :param context:
         :param collection_name:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -284,14 +284,14 @@ class CLIP_OT_track_settings_as_default(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -320,14 +320,14 @@ class CLIP_OT_track_settings_to_track(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -356,21 +356,21 @@ class CLIP_OT_track_to_empty(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def CLIP_camera_for_clip(context, clip): ...
-def CLIP_default_settings_from_track(clip, track, framenr): ...
-def CLIP_set_viewport_background(context, clip, clip_user): ...
-def CLIP_spaces_walk(context, all_screens, tarea, tspace, callback, *args): ...
-def CLIP_track_view_selected(sc, track): ...
+def CLIP_camera_for_clip(context, clip) -> None: ...
+def CLIP_default_settings_from_track(clip, track, framenr) -> None: ...
+def CLIP_set_viewport_background(context, clip, clip_user) -> None: ...
+def CLIP_spaces_walk(context, all_screens, tarea, tspace, callback, *args) -> None: ...
+def CLIP_track_view_selected(sc, track) -> None: ...

@@ -51,7 +51,7 @@ The speed of sound in air is typically 343.3 m/s."""
     volume: typing.Any
     """ The overall volume of the device."""
 
-    def lock(self):
+    def lock(self) -> None:
         """Locks the device so that it's guaranteed, that no samples are
         read from the streams until `unlock` is called.
         This is useful if you want to do start/stop/pause/resume some
@@ -71,10 +71,10 @@ The speed of sound in air is typically 343.3 m/s."""
                 :rtype: Handle
         """
 
-    def stopAll(self):
+    def stopAll(self) -> None:
         """Stops all playing and paused sounds."""
 
-    def unlock(self):
+    def unlock(self) -> None:
         """Unlocks the device after a lock call, see `lock` for
         details.
 
@@ -278,7 +278,7 @@ class PlaybackManager:
         :rtype: int
         """
 
-    def clean(self):
+    def clean(self) -> None:
         """Cleans all the invalid and finished sound from the playback manager."""
 
     def getVolume(self, catKey: int) -> float:
@@ -373,10 +373,10 @@ The speed of sound in air is typically 343.3 m/s."""
         :rtype: SequenceEntry
         """
 
-    def remove(self):
+    def remove(self) -> None:
         """Removes an entry from the sequence."""
 
-    def setAnimationData(self):
+    def setAnimationData(self) -> None:
         """Writes animation data to a sequence."""
 
 class SequenceEntry:
@@ -418,10 +418,10 @@ At this distance the volume will be exactly `volume`.:attr:`Device.distance_mode
     volume_minimum: typing.Any
     """ The minimum volume of the source.:attr:`Device.distance_model`"""
 
-    def move(self):
+    def move(self) -> None:
         """Moves the entry."""
 
-    def setAnimationData(self):
+    def setAnimationData(self) -> None:
         """Writes animation data to a sequenced entry."""
 
 class Sound:
@@ -554,7 +554,7 @@ class Sound:
                 :rtype: typing_extensions.Self
         """
 
-    def addSound(self, sound: typing_extensions.Self):
+    def addSound(self, sound: typing_extensions.Self) -> None:
         """Adds a new sound to a sound list.
 
         :param sound: The sound that will be added to the list.
@@ -584,7 +584,7 @@ class Sound:
         :rtype: typing_extensions.Self
         """
 
-    def data(self):
+    def data(self) -> None:
         """Retrieves the data of the sound as numpy array.
 
         :return: A two dimensional numpy float array.
@@ -817,7 +817,7 @@ class Sound:
         codec: int,
         bitrate: int,
         buffersize: int,
-    ):
+    ) -> None:
         """Writes the sound to a file.
 
         :param filename: The path to write to.

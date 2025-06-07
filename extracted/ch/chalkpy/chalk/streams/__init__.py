@@ -120,6 +120,7 @@ def stream(
     assert caller_frame is not None
     caller_globals = caller_frame.f_globals
     caller_locals = caller_frame.f_locals
+    del frame
     from chalk.features.resolver import parse_and_register_stream_resolver
 
     def decorator(fn: Callable[P, T]) -> "StreamResolver[P,T]":

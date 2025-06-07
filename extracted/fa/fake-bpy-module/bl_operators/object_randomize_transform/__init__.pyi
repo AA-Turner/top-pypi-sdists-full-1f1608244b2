@@ -27,14 +27,14 @@ class RandomizeLocRotSize(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -42,4 +42,4 @@ class RandomizeLocRotSize(bpy.types.Operator):
 
 def randomize_selected(
     context, seed, delta, loc, rot, scale, scale_even, _scale_min
-): ...
+) -> None: ...

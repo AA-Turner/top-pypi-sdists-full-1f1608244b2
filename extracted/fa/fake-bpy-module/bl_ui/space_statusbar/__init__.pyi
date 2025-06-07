@@ -23,7 +23,7 @@ class STATUSBAR_HT_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:

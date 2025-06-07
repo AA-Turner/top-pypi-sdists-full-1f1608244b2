@@ -27,7 +27,7 @@ class ClearAllRestrictRender(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -56,7 +56,7 @@ class DupliOffsetFromCursor(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -85,14 +85,14 @@ class DupliOffsetFromObject(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -121,7 +121,7 @@ class DupliOffsetToCursor(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -150,14 +150,14 @@ class IsolateTypeRender(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -186,14 +186,14 @@ class JoinUVs(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -222,7 +222,7 @@ class MakeDupliFace(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -238,7 +238,7 @@ class OBJECT_OT_assign_property_defaults(bpy.types.Operator):
     id_data: typing.Any
 
     @staticmethod
-    def assign_defaults(obj):
+    def assign_defaults(obj) -> None:
         """
 
         :param obj:
@@ -258,14 +258,14 @@ class OBJECT_OT_assign_property_defaults(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -294,7 +294,7 @@ class SelectCamera(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -323,14 +323,14 @@ class SelectHierarchy(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -360,19 +360,19 @@ class SelectPattern(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -380,7 +380,7 @@ class SelectPattern(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -409,14 +409,14 @@ class ShapeTransfer(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -445,14 +445,14 @@ class SubdivisionSet(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -481,32 +481,32 @@ class TransformsToDeltas(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-    def transfer_location(self, obj):
+    def transfer_location(self, obj) -> None:
         """
 
         :param obj:
         """
 
-    def transfer_rotation(self, obj):
+    def transfer_rotation(self, obj) -> None:
         """
 
         :param obj:
         """
 
-    def transfer_scale(self, obj):
+    def transfer_scale(self, obj) -> None:
         """
 
         :param obj:
@@ -535,14 +535,14 @@ class TransformsToDeltasAnim(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

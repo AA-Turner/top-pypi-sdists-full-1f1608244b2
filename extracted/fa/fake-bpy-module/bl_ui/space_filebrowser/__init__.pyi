@@ -24,7 +24,7 @@ class ASSETBROWSER_MT_catalog(AssetBrowserMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -88,7 +88,7 @@ class ASSETBROWSER_MT_metadata_preview_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -113,7 +113,7 @@ class ASSETBROWSER_MT_select(AssetBrowserMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -138,7 +138,7 @@ class ASSETBROWSER_MT_view(AssetBrowserMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -168,7 +168,7 @@ class ASSETBROWSER_PT_display(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -196,7 +196,7 @@ class ASSETBROWSER_PT_filter(bpy_extras.asset_utils.AssetBrowserPanel, bpy.types
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -228,7 +228,7 @@ class ASSETBROWSER_PT_import_settings(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -258,14 +258,14 @@ class ASSETBROWSER_PT_metadata(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def metadata_prop(layout, asset_metadata, propname):
+    def metadata_prop(layout, asset_metadata, propname) -> None:
         """Only display properties that are either set or can be modified (i.e. the
         asset is in the current file). Empty, non-editable fields are not really useful.
 
@@ -297,7 +297,7 @@ class ASSETBROWSER_PT_metadata_preview(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -326,7 +326,7 @@ class ASSETBROWSER_PT_metadata_tags(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -360,7 +360,7 @@ class ASSETBROWSER_UL_metadata_tags(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -375,7 +375,7 @@ class ASSETBROWSER_UL_metadata_tags(bpy.types.UIList):
 
 class AssetBrowserMenu:
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -400,13 +400,13 @@ class FILEBROWSER_HT_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_asset_browser_buttons(self, context):
+    def draw_asset_browser_buttons(self, context) -> None:
         """
 
         :param context:
@@ -431,7 +431,7 @@ class FILEBROWSER_MT_bookmarks_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -456,7 +456,7 @@ class FILEBROWSER_MT_bookmarks_recents_specials_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -481,7 +481,7 @@ class FILEBROWSER_MT_context_menu(FileBrowserMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -507,7 +507,7 @@ class FILEBROWSER_MT_editor_menus(FileBrowserMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -532,7 +532,7 @@ class FILEBROWSER_MT_select(FileBrowserMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -557,7 +557,7 @@ class FILEBROWSER_MT_view(FileBrowserMenu, bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -583,7 +583,7 @@ class FILEBROWSER_MT_view_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -611,14 +611,14 @@ class FILEBROWSER_PT_advanced_filter(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -646,14 +646,14 @@ class FILEBROWSER_PT_bookmarks_favorites(FileBrowserPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -681,14 +681,14 @@ class FILEBROWSER_PT_bookmarks_recents(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -716,14 +716,14 @@ class FILEBROWSER_PT_bookmarks_system(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -752,14 +752,14 @@ class FILEBROWSER_PT_bookmarks_volumes(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -788,20 +788,20 @@ class FILEBROWSER_PT_directory_path(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def is_header_visible(self, context):
+    def is_header_visible(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -829,7 +829,7 @@ class FILEBROWSER_PT_display(FileBrowserPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -857,7 +857,7 @@ class FILEBROWSER_PT_filter(FileBrowserPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -891,7 +891,7 @@ class FILEBROWSER_UL_dir(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -906,7 +906,7 @@ class FILEBROWSER_UL_dir(bpy.types.UIList):
 
 class FileBrowserMenu:
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -916,14 +916,14 @@ class FileBrowserPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def asset_path_str_get(_self): ...
-def is_option_region_visible(context, space): ...
-def panel_poll_is_asset_browsing(context): ...
-def panel_poll_is_upper_region(region): ...
-def register_props(): ...
+def asset_path_str_get(_self) -> None: ...
+def is_option_region_visible(context, space) -> None: ...
+def panel_poll_is_asset_browsing(context) -> None: ...
+def panel_poll_is_upper_region(region) -> None: ...
+def register_props() -> None: ...

@@ -10,7 +10,7 @@ def denoise_animation(
     *,
     input_filepath: str = "",
     output_filepath: str = "",
-):
+) -> None:
     """Denoise rendered animation sequence using current scene and view layer settings. Requires denoising data passes and output to OpenEXR multilayer files
 
     :type execution_context: int | str | None
@@ -29,7 +29,7 @@ def merge_images(
     input_filepath1: str = "",
     input_filepath2: str = "",
     output_filepath: str = "",
-):
+) -> None:
     """Combine OpenEXR multi-layer images rendered with different sample ranges into one image with reduced noise
 
     :type execution_context: int | str | None
@@ -44,7 +44,7 @@ def merge_images(
 
 def use_shading_nodes(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Enable nodes on a material, world or light
 
     :type execution_context: int | str | None

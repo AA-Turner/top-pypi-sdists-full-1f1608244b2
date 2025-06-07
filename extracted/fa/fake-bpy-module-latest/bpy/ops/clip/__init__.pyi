@@ -13,7 +13,7 @@ def add_marker(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Place new marker at specified location
 
     :type execution_context: int | str | None
@@ -24,7 +24,7 @@ def add_marker(
 
 def add_marker_at_click(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Place new marker at the desired (clicked) position
 
     :type execution_context: int | str | None
@@ -38,7 +38,7 @@ def add_marker_move(
     *,
     CLIP_OT_add_marker: add_marker | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Add new marker and move it on movie
 
     :type execution_context: int | str | None
@@ -56,7 +56,7 @@ def add_marker_slide(
     *,
     CLIP_OT_add_marker: add_marker | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Add new marker and slide it with mouse until mouse button release
 
     :type execution_context: int | str | None
@@ -73,7 +73,7 @@ def apply_solution_scale(
     /,
     *,
     distance: float | None = 0.0,
-):
+) -> None:
     """Apply scale on solution itself to make distance between selected tracks equals to desired
 
     :type execution_context: int | str | None
@@ -88,7 +88,7 @@ def average_tracks(
     /,
     *,
     keep_original: bool | None = True,
-):
+) -> None:
     """Average selected tracks into active
 
     :type execution_context: int | str | None
@@ -99,7 +99,7 @@ def average_tracks(
 
 def bundles_to_mesh(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create vertex cloud using coordinates of reconstructed tracks
 
     :type execution_context: int | str | None
@@ -115,7 +115,7 @@ def camera_preset_add(
     remove_name: bool | None = False,
     remove_active: bool | None = False,
     use_focal_length: bool | None = True,
-):
+) -> None:
     """Add or remove a Tracking Camera Intrinsics Preset
 
     :type execution_context: int | str | None
@@ -136,7 +136,7 @@ def change_frame(
     /,
     *,
     frame: int | None = 0,
-):
+) -> None:
     """Interactively change the current frame number
 
     :type execution_context: int | str | None
@@ -154,7 +154,7 @@ def clean_tracks(
     error: float | None = 0.0,
     action: typing.Literal["SELECT", "DELETE_TRACK", "DELETE_SEGMENTS"]
     | None = "SELECT",
-):
+) -> None:
     """Clean tracks with high error values or few frames
 
         :type execution_context: int | str | None
@@ -178,7 +178,7 @@ def clean_tracks(
 
 def clear_solution(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear all calculated data
 
     :type execution_context: int | str | None
@@ -192,7 +192,7 @@ def clear_track_path(
     *,
     action: typing.Literal["UPTO", "REMAINED", "ALL"] | None = "REMAINED",
     clear_active: bool | None = False,
-):
+) -> None:
     """Clear tracks after/before current position or clear the whole track
 
         :type execution_context: int | str | None
@@ -214,14 +214,16 @@ def clear_track_path(
 
 def constraint_to_fcurve(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create F-Curves for object which will copy object's movement caused by this constraint
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def copy_tracks(execution_context: int | str | None = None, undo: bool | None = None):
+def copy_tracks(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy the selected tracks to the internal clipboard
 
     :type execution_context: int | str | None
@@ -230,7 +232,7 @@ def copy_tracks(execution_context: int | str | None = None, undo: bool | None = 
 
 def create_plane_track(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create new plane track out of selected point tracks
 
     :type execution_context: int | str | None
@@ -243,7 +245,7 @@ def cursor_set(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Set 2D cursor location
 
     :type execution_context: int | str | None
@@ -258,7 +260,7 @@ def delete_marker(
     /,
     *,
     confirm: bool | None = True,
-):
+) -> None:
     """Delete marker for current frame from selected tracks
 
     :type execution_context: int | str | None
@@ -267,7 +269,9 @@ def delete_marker(
     :type confirm: bool | None
     """
 
-def delete_proxy(execution_context: int | str | None = None, undo: bool | None = None):
+def delete_proxy(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Delete movie clip proxy files from the hard drive
 
     :type execution_context: int | str | None
@@ -280,7 +284,7 @@ def delete_track(
     /,
     *,
     confirm: bool | None = True,
-):
+) -> None:
     """Delete selected tracks
 
     :type execution_context: int | str | None
@@ -299,7 +303,7 @@ def detect_features(
     margin: int | None = 16,
     threshold: float | None = 0.5,
     min_distance: int | None = 120,
-):
+) -> None:
     """Automatically detect features and place markers to track
 
         :type execution_context: int | str | None
@@ -329,7 +333,7 @@ def disable_markers(
     /,
     *,
     action: typing.Literal["DISABLE", "ENABLE", "TOGGLE"] | None = "DISABLE",
-):
+) -> None:
     """Disable/enable selected markers
 
         :type execution_context: int | str | None
@@ -354,7 +358,7 @@ def dopesheet_select_channel(
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
     extend: bool | None = False,
-):
+) -> None:
     """Select movie tracking channel
 
     :type execution_context: int | str | None
@@ -367,7 +371,7 @@ def dopesheet_select_channel(
 
 def dopesheet_view_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reset viewable area to show full keyframe range
 
     :type execution_context: int | str | None
@@ -380,7 +384,7 @@ def filter_tracks(
     /,
     *,
     track_threshold: float | None = 5.0,
-):
+) -> None:
     """Filter tracks which has weirdly looking spikes in motion curves
 
     :type execution_context: int | str | None
@@ -396,7 +400,7 @@ def frame_jump(
     *,
     position: typing.Literal["PATHSTART", "PATHEND", "FAILEDPREV", "FAILNEXT"]
     | None = "PATHSTART",
-):
+) -> None:
     """Jump to special frame
 
         :type execution_context: int | str | None
@@ -419,7 +423,7 @@ def frame_jump(
 
 def graph_center_current_frame(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Scroll view so current frame would be centered
 
     :type execution_context: int | str | None
@@ -432,7 +436,7 @@ def graph_delete_curve(
     /,
     *,
     confirm: bool | None = True,
-):
+) -> None:
     """Delete track corresponding to the selected curve
 
     :type execution_context: int | str | None
@@ -443,7 +447,7 @@ def graph_delete_curve(
 
 def graph_delete_knot(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete curve knots
 
     :type execution_context: int | str | None
@@ -456,7 +460,7 @@ def graph_disable_markers(
     /,
     *,
     action: typing.Literal["DISABLE", "ENABLE", "TOGGLE"] | None = "DISABLE",
-):
+) -> None:
     """Disable/enable selected markers
 
         :type execution_context: int | str | None
@@ -481,7 +485,7 @@ def graph_select(
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
     extend: bool | None = False,
-):
+) -> None:
     """Select graph curves
 
     :type execution_context: int | str | None
@@ -498,7 +502,7 @@ def graph_select_all_markers(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection of all markers of active track
 
         :type execution_context: int | str | None
@@ -531,7 +535,7 @@ def graph_select_box(
     wait_for_input: bool | None = True,
     deselect: bool | None = False,
     extend: bool | None = True,
-):
+) -> None:
     """Select curve points using box selection
 
     :type execution_context: int | str | None
@@ -554,7 +558,7 @@ def graph_select_box(
 
 def graph_view_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """View all curves in editor
 
     :type execution_context: int | str | None
@@ -567,7 +571,7 @@ def hide_tracks(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Hide selected tracks
 
     :type execution_context: int | str | None
@@ -578,14 +582,16 @@ def hide_tracks(
 
 def hide_tracks_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear hide selected tracks
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def join_tracks(execution_context: int | str | None = None, undo: bool | None = None):
+def join_tracks(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Join selected tracks
 
     :type execution_context: int | str | None
@@ -594,7 +600,7 @@ def join_tracks(execution_context: int | str | None = None, undo: bool | None = 
 
 def keyframe_delete(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete a keyframe from selected tracks at current frame
 
     :type execution_context: int | str | None
@@ -603,7 +609,7 @@ def keyframe_delete(
 
 def keyframe_insert(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Insert a keyframe to selected tracks at current frame
 
     :type execution_context: int | str | None
@@ -612,7 +618,7 @@ def keyframe_insert(
 
 def lock_selection_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle Lock Selection option of the current clip editor
 
     :type execution_context: int | str | None
@@ -625,7 +631,7 @@ def lock_tracks(
     /,
     *,
     action: typing.Literal["LOCK", "UNLOCK", "TOGGLE"] | None = "LOCK",
-):
+) -> None:
     """Lock/unlock selected tracks
 
         :type execution_context: int | str | None
@@ -649,7 +655,7 @@ def mode_set(
     /,
     *,
     mode: bpy.stub_internal.rna_enums.ClipEditorModeItems | None = "TRACKING",
-):
+) -> None:
     """Set the clip interaction mode
 
     :type execution_context: int | str | None
@@ -660,7 +666,7 @@ def mode_set(
 
 def new_image_from_plane_marker(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create new image from the content of the plane marker
 
     :type execution_context: int | str | None
@@ -711,7 +717,7 @@ def open(
         "ASSET_CATALOG",
     ]
     | None = "",
-):
+) -> None:
     """Load a sequence of frames or a movie file
 
         :type execution_context: int | str | None
@@ -802,21 +808,27 @@ def open(
         :type sort_method: typing.Literal['DEFAULT','FILE_SORT_ALPHA','FILE_SORT_EXTENSION','FILE_SORT_TIME','FILE_SORT_SIZE','ASSET_CATALOG'] | None
     """
 
-def paste_tracks(execution_context: int | str | None = None, undo: bool | None = None):
+def paste_tracks(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Paste tracks from the internal clipboard
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def prefetch(execution_context: int | str | None = None, undo: bool | None = None):
+def prefetch(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Prefetch frames from disk for faster playback/tracking
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def rebuild_proxy(execution_context: int | str | None = None, undo: bool | None = None):
+def rebuild_proxy(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Rebuild all selected proxies and timecode indices in the background
 
     :type execution_context: int | str | None
@@ -829,7 +841,7 @@ def refine_markers(
     /,
     *,
     backwards: bool | None = False,
-):
+) -> None:
     """Refine selected markers positions by running the tracker from track's reference to current frame
 
     :type execution_context: int | str | None
@@ -838,7 +850,9 @@ def refine_markers(
     :type backwards: bool | None
     """
 
-def reload(execution_context: int | str | None = None, undo: bool | None = None):
+def reload(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Reload clip
 
     :type execution_context: int | str | None
@@ -853,7 +867,7 @@ def select(
     extend: bool | None = False,
     deselect_all: bool | None = False,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Select tracking markers
 
     :type execution_context: int | str | None
@@ -872,7 +886,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection of all tracking markers
 
         :type execution_context: int | str | None
@@ -904,7 +918,7 @@ def select_box(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select markers using box selection
 
         :type execution_context: int | str | None
@@ -942,7 +956,7 @@ def select_circle(
     radius: int | None = 25,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select markers using circle selection
 
         :type execution_context: int | str | None
@@ -977,7 +991,7 @@ def select_grouped(
         "KEYFRAMED", "ESTIMATED", "TRACKED", "LOCKED", "DISABLED", "COLOR", "FAILED"
     ]
     | None = "ESTIMATED",
-):
+) -> None:
     """Select all tracks from specified group
 
         :type execution_context: int | str | None
@@ -1017,7 +1031,7 @@ def select_lasso(
     smooth_stroke_factor: float | None = 0.75,
     smooth_stroke_radius: int | None = 35,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select markers using lasso selection
 
         :type execution_context: int | str | None
@@ -1045,7 +1059,7 @@ def select_lasso(
 
 def set_active_clip(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1058,7 +1072,7 @@ def set_axis(
     /,
     *,
     axis: typing.Literal["X", "Y"] | None = "X",
-):
+) -> None:
     """Set the direction of a scene axis by rotating the camera (or its parent if present). This assumes that the selected track lies on a real axis connecting it to the origin
 
         :type execution_context: int | str | None
@@ -1079,7 +1093,7 @@ def set_origin(
     /,
     *,
     use_median: bool | None = False,
-):
+) -> None:
     """Set active marker as origin by moving camera (or its parent if present) in 3D space
 
     :type execution_context: int | str | None
@@ -1094,7 +1108,7 @@ def set_plane(
     /,
     *,
     plane: typing.Literal["FLOOR", "WALL"] | None = "FLOOR",
-):
+) -> None:
     """Set plane based on 3 selected bundles by moving camera (or its parent if present) in 3D space
 
         :type execution_context: int | str | None
@@ -1115,7 +1129,7 @@ def set_scale(
     /,
     *,
     distance: float | None = 0.0,
-):
+) -> None:
     """Set scale of scene by scaling camera (or its parent if present)
 
     :type execution_context: int | str | None
@@ -1126,7 +1140,7 @@ def set_scale(
 
 def set_scene_frames(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set scene's start and end frame to match clip's start frame and length
 
     :type execution_context: int | str | None
@@ -1139,7 +1153,7 @@ def set_solution_scale(
     /,
     *,
     distance: float | None = 0.0,
-):
+) -> None:
     """Set object solution scale using distance between two selected tracks
 
     :type execution_context: int | str | None
@@ -1154,7 +1168,7 @@ def set_solver_keyframe(
     /,
     *,
     keyframe: typing.Literal["KEYFRAME_A", "KEYFRAME_B"] | None = "KEYFRAME_A",
-):
+) -> None:
     """Set keyframe used by solver
 
     :type execution_context: int | str | None
@@ -1165,7 +1179,7 @@ def set_solver_keyframe(
 
 def set_viewport_background(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set current movie clip as a camera background in 3D Viewport (works only when a 3D Viewport is visible)
 
     :type execution_context: int | str | None
@@ -1174,7 +1188,7 @@ def set_viewport_background(
 
 def setup_tracking_scene(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Prepare scene for compositing 3D objects into this footage
 
     :type execution_context: int | str | None
@@ -1187,7 +1201,7 @@ def slide_marker(
     /,
     *,
     offset: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Slide marker areas
 
     :type execution_context: int | str | None
@@ -1198,14 +1212,16 @@ def slide_marker(
 
 def slide_plane_marker(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Slide plane marker areas
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def solve_camera(execution_context: int | str | None = None, undo: bool | None = None):
+def solve_camera(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Solve camera motion from tracks
 
     :type execution_context: int | str | None
@@ -1214,7 +1230,7 @@ def solve_camera(execution_context: int | str | None = None, undo: bool | None =
 
 def stabilize_2d_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add selected tracks to 2D translation stabilization
 
     :type execution_context: int | str | None
@@ -1223,7 +1239,7 @@ def stabilize_2d_add(
 
 def stabilize_2d_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove selected track from translation stabilization
 
     :type execution_context: int | str | None
@@ -1232,7 +1248,7 @@ def stabilize_2d_remove(
 
 def stabilize_2d_rotation_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add selected tracks to 2D rotation stabilization
 
     :type execution_context: int | str | None
@@ -1241,7 +1257,7 @@ def stabilize_2d_rotation_add(
 
 def stabilize_2d_rotation_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove selected track from rotation stabilization
 
     :type execution_context: int | str | None
@@ -1250,7 +1266,7 @@ def stabilize_2d_rotation_remove(
 
 def stabilize_2d_rotation_select(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select tracks which are used for rotation stabilization
 
     :type execution_context: int | str | None
@@ -1259,7 +1275,7 @@ def stabilize_2d_rotation_select(
 
 def stabilize_2d_select(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select tracks which are used for translation stabilization
 
     :type execution_context: int | str | None
@@ -1274,7 +1290,7 @@ def track_color_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove a Clip Track Color Preset
 
     :type execution_context: int | str | None
@@ -1289,7 +1305,7 @@ def track_color_preset_add(
 
 def track_copy_color(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy color to all selected tracks
 
     :type execution_context: int | str | None
@@ -1303,7 +1319,7 @@ def track_markers(
     *,
     backwards: bool | None = False,
     sequence: bool | None = False,
-):
+) -> None:
     """Track selected markers
 
     :type execution_context: int | str | None
@@ -1316,7 +1332,7 @@ def track_markers(
 
 def track_settings_as_default(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy tracking settings from active track to default settings
 
     :type execution_context: int | str | None
@@ -1325,7 +1341,7 @@ def track_settings_as_default(
 
 def track_settings_to_track(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy tracking settings from active track to selected tracks
 
     :type execution_context: int | str | None
@@ -1334,7 +1350,7 @@ def track_settings_to_track(
 
 def track_to_empty(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create an Empty object which will be copying movement of active track
 
     :type execution_context: int | str | None
@@ -1343,7 +1359,7 @@ def track_to_empty(
 
 def tracking_object_new(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add new object for tracking
 
     :type execution_context: int | str | None
@@ -1352,7 +1368,7 @@ def tracking_object_new(
 
 def tracking_object_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove object for tracking
 
     :type execution_context: int | str | None
@@ -1367,7 +1383,7 @@ def tracking_settings_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove a motion tracking settings preset
 
     :type execution_context: int | str | None
@@ -1382,7 +1398,7 @@ def tracking_settings_preset_add(
 
 def update_image_from_plane_marker(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Update current image used by plane marker from the content of the plane marker
 
     :type execution_context: int | str | None
@@ -1395,7 +1411,7 @@ def view_all(
     /,
     *,
     fit_view: bool | None = False,
-):
+) -> None:
     """View whole image with markers
 
     :type execution_context: int | str | None
@@ -1406,14 +1422,16 @@ def view_all(
 
 def view_center_cursor(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Center the view so that the cursor is in the middle of the view
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def view_ndof(execution_context: int | str | None = None, undo: bool | None = None):
+def view_ndof(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Use a 3D mouse device to pan/zoom the view
 
     :type execution_context: int | str | None
@@ -1426,7 +1444,7 @@ def view_pan(
     /,
     *,
     offset: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Pan the view
 
     :type execution_context: int | str | None
@@ -1435,7 +1453,9 @@ def view_pan(
     :type offset: collections.abc.Sequence[float] | mathutils.Vector | None
     """
 
-def view_selected(execution_context: int | str | None = None, undo: bool | None = None):
+def view_selected(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """View all selected elements
 
     :type execution_context: int | str | None
@@ -1449,7 +1469,7 @@ def view_zoom(
     *,
     factor: float | None = 0.0,
     use_cursor_init: bool | None = True,
-):
+) -> None:
     """Zoom in/out the view
 
     :type execution_context: int | str | None
@@ -1466,7 +1486,7 @@ def view_zoom_in(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Zoom in the view
 
     :type execution_context: int | str | None
@@ -1481,7 +1501,7 @@ def view_zoom_out(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Zoom out the view
 
     :type execution_context: int | str | None
@@ -1496,7 +1516,7 @@ def view_zoom_ratio(
     /,
     *,
     ratio: float | None = 0.0,
-):
+) -> None:
     """Set the zoom ratio (based on clip size)
 
     :type execution_context: int | str | None

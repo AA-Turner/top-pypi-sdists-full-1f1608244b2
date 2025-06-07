@@ -20,7 +20,7 @@ class GreasePencilV3PaintPanel:
     bl_context: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -40,7 +40,7 @@ class SelectPaintSlotHelper:
     canvas_image_attr_name: typing.Any
     canvas_source_attr_name: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -74,7 +74,7 @@ class TEXTURE_UL_texpaintslots(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -106,7 +106,7 @@ class VIEW3D_MT_brush_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -131,7 +131,7 @@ class VIEW3D_MT_brush_gpencil_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -156,7 +156,7 @@ class VIEW3D_MT_tools_projectpaint_stencil(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -181,7 +181,7 @@ class VIEW3D_MT_tools_projectpaint_uvlayer(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -261,7 +261,7 @@ class VIEW3D_PT_mask(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -311,13 +311,13 @@ class VIEW3D_PT_slots_color_attributes(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -346,26 +346,26 @@ class VIEW3D_PT_slots_paint_canvas(View3DPanel, SelectPaintSlotHelper, bpy.types
         :rtype: typing.Any
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_image_interpolation(self, **_kwargs):
+    def draw_image_interpolation(self, **_kwargs) -> None:
         """
 
         :param _kwargs:
         """
 
-    def get_mode_settings(self, context):
+    def get_mode_settings(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -394,27 +394,27 @@ class VIEW3D_PT_slots_projectpaint(View3DPanel, SelectPaintSlotHelper, bpy.types
         :rtype: typing.Any
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_image_interpolation(self, layout, mode_settings):
+    def draw_image_interpolation(self, layout, mode_settings) -> None:
         """
 
         :param layout:
         :param mode_settings:
         """
 
-    def get_mode_settings(self, context):
+    def get_mode_settings(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -442,13 +442,13 @@ class VIEW3D_PT_slots_vertex_groups(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -478,20 +478,20 @@ class VIEW3D_PT_stencil_projectpaint(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -520,7 +520,7 @@ class VIEW3D_PT_tools_armatureedit_options(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -633,20 +633,20 @@ class VIEW3D_PT_tools_brush_falloff_frontface(View3DPaintPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -677,20 +677,20 @@ class VIEW3D_PT_tools_brush_falloff_normal(View3DPaintPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -831,14 +831,14 @@ class VIEW3D_PT_tools_grease_pencil_brush_advanced(View3DPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -868,14 +868,14 @@ class VIEW3D_PT_tools_grease_pencil_brush_eraser(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -905,14 +905,14 @@ class VIEW3D_PT_tools_grease_pencil_brush_gap_closure(View3DPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -942,14 +942,14 @@ class VIEW3D_PT_tools_grease_pencil_brush_mix_palette(View3DPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -978,14 +978,14 @@ class VIEW3D_PT_tools_grease_pencil_brush_mixcolor(View3DPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1016,20 +1016,20 @@ class VIEW3D_PT_tools_grease_pencil_brush_post_processing(View3DPanel, bpy.types
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1060,20 +1060,20 @@ class VIEW3D_PT_tools_grease_pencil_brush_random(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1134,14 +1134,14 @@ class VIEW3D_PT_tools_grease_pencil_brush_vertex_color(View3DPanel, bpy.types.Pa
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1171,14 +1171,14 @@ class VIEW3D_PT_tools_grease_pencil_brush_vertex_palette(View3DPanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1214,7 +1214,7 @@ class VIEW3D_PT_tools_grease_pencil_sculpt_brush_advanced(
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1248,7 +1248,7 @@ class VIEW3D_PT_tools_grease_pencil_sculpt_brush_popover(
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1308,14 +1308,14 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_advanced(View3DPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1345,14 +1345,14 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_eraser(View3DPanel, bpy.types.Panel
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1386,14 +1386,14 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_fill_advanced(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1423,14 +1423,14 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_gap_closure(View3DPanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1460,14 +1460,14 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_mix_palette(View3DPanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1496,14 +1496,14 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_mixcolor(View3DPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1536,20 +1536,20 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_post_processing(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1580,20 +1580,20 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_random(View3DPanel, bpy.types.Panel
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1707,14 +1707,14 @@ class VIEW3D_PT_tools_imagepaint_options(View3DPaintPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1743,13 +1743,13 @@ class VIEW3D_PT_tools_imagepaint_options_cavity(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -1782,14 +1782,14 @@ class VIEW3D_PT_tools_mask_texture(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1820,7 +1820,7 @@ class VIEW3D_PT_tools_meshedit_options(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -1850,14 +1850,14 @@ class VIEW3D_PT_tools_meshedit_options_transform(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1887,7 +1887,7 @@ class VIEW3D_PT_tools_meshedit_options_uvs(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1916,7 +1916,7 @@ class VIEW3D_PT_tools_object_options(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1946,7 +1946,7 @@ class VIEW3D_PT_tools_object_options_transform(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1978,7 +1978,7 @@ class VIEW3D_PT_tools_particlemode_options(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2009,7 +2009,7 @@ class VIEW3D_PT_tools_particlemode_options_display(View3DPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2041,7 +2041,7 @@ class VIEW3D_PT_tools_particlemode_options_shapecut(View3DPanel, bpy.types.Panel
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2070,7 +2070,7 @@ class VIEW3D_PT_tools_posemode_options(View3DPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2144,13 +2144,13 @@ class VIEW3D_PT_tools_grease_pencil_brush_settings(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
@@ -2181,7 +2181,7 @@ class VIEW3D_PT_tools_grease_pencil_sculpt_settings(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2213,13 +2213,13 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_settings(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
@@ -2250,7 +2250,7 @@ class VIEW3D_PT_tools_grease_pencil_vertex_paint_settings(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2282,7 +2282,7 @@ class VIEW3D_PT_tools_grease_pencil_weight_options(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2313,7 +2313,7 @@ class VIEW3D_PT_tools_grease_pencil_weight_paint_settings(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2343,14 +2343,14 @@ class VIEW3D_PT_curves_sculpt_symmetry(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2362,14 +2362,14 @@ class VIEW3D_PT_imagepaint_options(View3DPaintPanel):
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, _context):
+    def poll(cls, _context) -> None:
         """
 
         :param _context:
@@ -2400,20 +2400,20 @@ class VIEW3D_PT_sculpt_dyntopo(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2444,14 +2444,14 @@ class VIEW3D_PT_sculpt_options(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2481,14 +2481,14 @@ class VIEW3D_PT_sculpt_options_gravity(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2518,14 +2518,14 @@ class VIEW3D_PT_sculpt_symmetry(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2556,14 +2556,14 @@ class VIEW3D_PT_sculpt_voxel_remesh(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2593,14 +2593,14 @@ class VIEW3D_PT_tools_brush_color(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2631,14 +2631,14 @@ class VIEW3D_PT_tools_brush_texture(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2673,7 +2673,7 @@ class VIEW3D_PT_tools_grease_pencil_brush_paint_falloff(
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2708,7 +2708,7 @@ class VIEW3D_PT_tools_grease_pencil_brush_sculpt_falloff(
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2743,7 +2743,7 @@ class VIEW3D_PT_tools_grease_pencil_brush_vertex_falloff(
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2779,7 +2779,7 @@ class VIEW3D_PT_tools_grease_pencil_brush_weight_falloff(
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2810,7 +2810,7 @@ class VIEW3D_PT_tools_imagepaint_options_external(bpy.types.Panel, View3DPaintPa
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2840,14 +2840,14 @@ class VIEW3D_PT_tools_imagepaint_symmetry(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2877,14 +2877,14 @@ class VIEW3D_PT_tools_particlemode(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2914,14 +2914,14 @@ class VIEW3D_PT_tools_vertexpaint_options(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, _context):
+    def poll(cls, _context) -> None:
         """
 
         :param _context:
@@ -2951,14 +2951,14 @@ class VIEW3D_PT_tools_vertexpaint_symmetry(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2987,14 +2987,14 @@ class VIEW3D_PT_tools_weight_gradient(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -3024,7 +3024,7 @@ class VIEW3D_PT_tools_weightpaint_options(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -3054,14 +3054,14 @@ class VIEW3D_PT_tools_weightpaint_symmetry(bpy.types.Panel, View3DPaintPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -3073,7 +3073,7 @@ class View3DPaintBrushPanel(View3DPaintPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -3104,20 +3104,20 @@ class VIEW3D_PT_tools_grease_pencil_brush_stabilizer(bpy.types.Panel, View3DPane
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -3149,14 +3149,14 @@ class VIEW3D_PT_tools_grease_pencil_brush_stroke(bpy.types.Panel, View3DPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -3246,20 +3246,20 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_stabilizer(bpy.types.Panel, View3DP
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -3291,14 +3291,14 @@ class VIEW3D_PT_tools_grease_pencil_v3_brush_stroke(bpy.types.Panel, View3DPanel
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -3385,14 +3385,14 @@ class VIEW3D_PT_tools_brush_settings(bpy.types.Panel, View3DPaintBrushPanel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -3424,19 +3424,18 @@ class VIEW3D_PT_tools_brush_settings_advanced(bpy.types.Panel, View3DPaintBrushP
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def draw_vpaint_symmetry(layout, vpaint, obj): ...
-def is_not_gpencil_edit_mode(context): ...
-def tool_use_brush(context): ...
+def draw_vpaint_symmetry(layout, vpaint, obj) -> None: ...
+def tool_use_brush(context) -> None: ...

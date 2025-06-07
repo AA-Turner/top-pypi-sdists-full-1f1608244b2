@@ -115,6 +115,7 @@ class DomoPublication_Content_Enum(Enum):
     PAGE = dmpg.DomoPage
 
 
+
 # %% ../../nbs/classes/50_DomoPublish.ipynb 11
 @dataclass
 class DomoPublication_Content:
@@ -214,7 +215,7 @@ class DomoPublication:
     Lineage: dmdl.DomoLineage_Publication = None
 
     def __post_init__(self):
-        self.Lineage = dmdl.DomoLineage_Publication._for_publication(parent=self, auth=self.auth)
+        self.Lineage = dmdl.DomoLineage_Publication.from_parent(parent=self, auth=self.auth)
 
     def _generate_subscription_authorizations(
         self, subscription_authorizations_ls, auth

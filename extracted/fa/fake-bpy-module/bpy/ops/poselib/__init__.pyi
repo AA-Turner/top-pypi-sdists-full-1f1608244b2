@@ -10,7 +10,7 @@ def apply_pose_asset(
     *,
     blend_factor: float | None = 1.0,
     flipped: bool | None = False,
-):
+) -> None:
     """Apply the given Pose Action to the rig
 
     :type execution_context: int | str | None
@@ -21,7 +21,9 @@ def apply_pose_asset(
     :type flipped: bool | None
     """
 
-def asset_delete(execution_context: int | str | None = None, undo: bool | None = None):
+def asset_delete(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Delete the selected Pose Asset
 
     :type execution_context: int | str | None
@@ -34,7 +36,7 @@ def asset_modify(
     /,
     *,
     mode: typing.Literal["ADJUST", "REPLACE", "ADD", "REMOVE"] | None = "ADJUST",
-):
+) -> None:
     """Update the selected pose asset in the asset library from the currently selected bones. The mode defines how the asset is updated
 
         :type execution_context: int | str | None
@@ -63,7 +65,7 @@ def blend_pose_asset(
     blend_factor: float | None = 0.0,
     flipped: bool | None = False,
     release_confirm: bool | None = False,
-):
+) -> None:
     """Blend the given Pose Action to the rig
 
     :type execution_context: int | str | None
@@ -78,7 +80,7 @@ def blend_pose_asset(
 
 def convert_old_object_poselib(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create a pose asset for each pose marker in this legacy pose library data-block
 
     :type execution_context: int | str | None
@@ -87,14 +89,16 @@ def convert_old_object_poselib(
 
 def convert_old_poselib(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create a pose asset for each pose marker in the current action
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def copy_as_asset(execution_context: int | str | None = None, undo: bool | None = None):
+def copy_as_asset(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Create a new pose asset on the clipboard, to be pasted into an Asset Browser
 
     :type execution_context: int | str | None
@@ -110,7 +114,7 @@ def create_pose_asset(
     asset_library_reference: str | None = "",
     catalog_path: str = "",
     activate_new_action: bool | None = False,
-):
+) -> None:
     """Create a new asset from the selected bones in the scene
 
     :type execution_context: int | str | None
@@ -125,7 +129,9 @@ def create_pose_asset(
     :type activate_new_action: bool | None
     """
 
-def paste_asset(execution_context: int | str | None = None, undo: bool | None = None):
+def paste_asset(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Paste the Asset that was previously copied using Copy As Asset
 
     :type execution_context: int | str | None
@@ -139,7 +145,7 @@ def pose_asset_select_bones(
     *,
     select: bool | None = True,
     flipped: bool | None = False,
-):
+) -> None:
     """Select those bones that are used in this pose
 
     :type execution_context: int | str | None
@@ -152,7 +158,7 @@ def pose_asset_select_bones(
 
 def restore_previous_action(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Switch back to the previous Action, after creating a pose asset
 
     :type execution_context: int | str | None

@@ -14,6 +14,7 @@ from meutils.str_utils.regular_expression import parse_url
 from pydantic import constr
 from openai.types import ImagesResponse as _ImagesResponse, Image
 
+# {v:k for k, v in ASPECT_RATIOS.items()}
 ASPECT_RATIOS = {
     "1:1": "1024x1024",
 
@@ -33,6 +34,24 @@ ASPECT_RATIOS = {
     "9:16": "768x1366",
 
     "21:9": "1344x576",
+
+    '1024x1024': '1:1',
+    '512x1024': '1:2',
+    '1024x512': '2:1',
+    '768x512': '2:3',
+    '512x768': '3:2',
+
+    '1280x960': '4:3',
+    '960x1280': '3:4',
+    "1024x768": '4:3',
+    "768x1024": '3:4',
+
+    '1366x768': '16:9',
+    '768x1366': '9:16',
+    '1024x576': '16:9',
+    '576x1024': '9:16',
+
+    '1344x576': '21:9'
 
 }
 
@@ -76,7 +95,9 @@ class ImageRequest(BaseModel):  # openai
 
     quality: Optional[Literal["standard", "hd"]] = None
     style: Union[str, Literal["vivid", "natural"]] = None
-    size: str = '1024x1024'  # 测试默认值 Optional[Literal["256x256", "512x512", "1024x1024", "1792x1024", "1024x1792"]]
+
+    # 测试默认值 Optional[Literal["256x256", "512x512", "1024x1024", "1792x1024", "1024x1792"]]
+    size: Optional[str] = '1024x1024'
 
     response_format: Optional[Literal["oss_url", "url", "b64_json"]] = "url"
 
@@ -93,11 +114,20 @@ class ImageRequest(BaseModel):  # openai
 
     aspect_ratio: Optional[str] = None
 
-    user: Optional[str] = None # to_url_fal
+    user: Optional[str] = None  # to_url_fal
 
     def __init__(self, /, **data: Any):
         super().__init__(**data)
-        if self.size:
+        if self.aspect_ratio:  # 适配比例
+            self.size = ASPECT_RATIOS.get(self.aspect_ratio, '1024x1024')
+
+        elif self.size:  # 适配尺寸
+            if ':' in self.size:
+                self.aspect_ratio = self.size
+
+            else:
+                self.aspect_ratio = ASPECT_RATIOS.get(self.size, '1:1')
+
             self.size = self.size if 'x' in self.size else '512x512'
 
     @cached_property
@@ -502,10 +532,13 @@ class ImageEditRequest(BaseModel):
     mask: Optional[Any] = None  # 图片
     background: Optional[Literal["transparent", "opaque", "auto"]] = None
 
-    n: Optional[int] = None
+    n: Optional[int] = 1
     quality: Optional[Literal["standard", "low", "medium", "high", "auto"]] = None
-    size: Optional[Union[str, Literal["256x256", "512x512", "1024x1024", "1536x1024", "1024x1536", "auto"]]] = None
+    size: Optional[
+        Union[str, Literal["256x256", "512x512", "1024x1024", "1536x1024", "1024x1536", "auto"]]] = "1024x1024"
     response_format: Optional[Literal["url", "b64_json"]] = None
+
+    aspect_ratio: Optional[str] = None
 
     user: Optional[str] = None
 
@@ -513,6 +546,15 @@ class ImageEditRequest(BaseModel):
         super().__init__(**data)
         if not isinstance(self.image, list):
             self.image = [self.image]
+
+        if self.aspect_ratio:  # 适配比例
+            self.size = ASPECT_RATIOS.get(self.aspect_ratio, '1024x1024')
+
+        elif self.size:  # 适配尺寸
+            if ':' in self.size:
+                self.aspect_ratio = self.size
+
+            self.size = self.size if 'x' in self.size else '512x512'
 
 
 if __name__ == '__main__':

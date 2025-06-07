@@ -27,13 +27,13 @@ class MoveModifierToNodes(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -41,7 +41,7 @@ class MoveModifierToNodes(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -70,14 +70,14 @@ class NewGeometryNodeGroupTool(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -106,14 +106,14 @@ class NewGeometryNodeTreeAssign(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -142,14 +142,14 @@ class NewGeometryNodesModifier(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -157,29 +157,29 @@ class NewGeometryNodesModifier(bpy.types.Operator):
 
 class ZoneOperator:
     @classmethod
-    def get_node(cls, context):
+    def get_node(cls, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def add_empty_geometry_node_group(name): ...
-def create_wrapper_group(operator, modifier, old_group): ...
-def edit_geometry_nodes_modifier_poll(context): ...
-def geometry_modifier_poll(context): ...
-def geometry_node_group_empty_modifier_new(name): ...
-def geometry_node_group_empty_new(name): ...
-def geometry_node_group_empty_tool_new(context): ...
-def get_context_modifier(context): ...
-def get_enabled_socket_with_name(sockets, name): ...
-def get_socket_with_identifier(sockets, identifier): ...
-def modifier_attribute_name_get(modifier, identifier): ...
-def modifier_input_use_attribute(modifier, identifier): ...
-def socket_idname_to_attribute_type(idname): ...
+def add_empty_geometry_node_group(name) -> None: ...
+def create_wrapper_group(operator, modifier, old_group) -> None: ...
+def edit_geometry_nodes_modifier_poll(context) -> None: ...
+def geometry_modifier_poll(context) -> None: ...
+def geometry_node_group_empty_modifier_new(name) -> None: ...
+def geometry_node_group_empty_new(name) -> None: ...
+def geometry_node_group_empty_tool_new(context) -> None: ...
+def get_context_modifier(context) -> None: ...
+def get_enabled_socket_with_name(sockets, name) -> None: ...
+def get_socket_with_identifier(sockets, identifier) -> None: ...
+def modifier_attribute_name_get(modifier, identifier) -> None: ...
+def modifier_input_use_attribute(modifier, identifier) -> None: ...
+def socket_idname_to_attribute_type(idname) -> None: ...

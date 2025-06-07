@@ -9,7 +9,7 @@ import rna_prop_ui
 class ColorAttributesListBase:
     display_domain_names: typing.Any
 
-    def filter_items(self, _context, data, property):
+    def filter_items(self, _context, data, property) -> None:
         """
 
         :param _context:
@@ -41,7 +41,7 @@ class DATA_PT_context_mesh(MeshButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -102,7 +102,7 @@ class DATA_PT_customdata(MeshButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -142,7 +142,7 @@ class DATA_PT_mesh_animation(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -172,7 +172,7 @@ class DATA_PT_mesh_attributes(MeshButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -202,7 +202,7 @@ class DATA_PT_remesh(MeshButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -231,14 +231,14 @@ class DATA_PT_shape_keys(MeshButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -268,7 +268,7 @@ class DATA_PT_texture_space(MeshButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -298,7 +298,7 @@ class DATA_PT_uv_texture(MeshButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -328,7 +328,7 @@ class DATA_PT_vertex_colors(MeshButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -357,14 +357,14 @@ class DATA_PT_vertex_groups(MeshButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -389,7 +389,7 @@ class MESH_MT_attribute_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -414,7 +414,7 @@ class MESH_MT_color_attribute_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -439,7 +439,7 @@ class MESH_MT_shape_key_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -464,7 +464,7 @@ class MESH_MT_vertex_group_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -499,7 +499,7 @@ class MESH_UL_attributes(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -512,7 +512,7 @@ class MESH_UL_attributes(bpy.types.UIList):
         :param _index:
         """
 
-    def filter_items(self, _context, data, property):
+    def filter_items(self, _context, data, property) -> None:
         """
 
         :param _context:
@@ -540,7 +540,7 @@ class MESH_UL_shape_keys(bpy.types.UIList):
 
     def draw_item(
         self, _context, layout, _data, item, icon, active_data, _active_propname, index
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -581,7 +581,7 @@ class MESH_UL_uvmaps(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -622,7 +622,7 @@ class MESH_UL_vgroups(bpy.types.UIList):
         _active_data_,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -641,7 +641,7 @@ class MeshButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -676,7 +676,7 @@ class MESH_UL_color_attributes(bpy.types.UIList, ColorAttributesListBase):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -718,7 +718,7 @@ class MESH_UL_color_attributes_selector(bpy.types.UIList, ColorAttributesListBas
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -731,4 +731,4 @@ class MESH_UL_color_attributes_selector(bpy.types.UIList, ColorAttributesListBas
         :param _index:
         """
 
-def draw_attribute_warnings(context, layout, attributes): ...
+def draw_attribute_warnings(context, layout, attributes) -> None: ...

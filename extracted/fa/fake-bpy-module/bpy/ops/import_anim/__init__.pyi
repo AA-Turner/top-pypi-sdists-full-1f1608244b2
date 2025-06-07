@@ -23,7 +23,7 @@ def bvh(
     | None = "NATIVE",
     axis_forward: typing.Literal["X", "Y", "Z", "-X", "-Y", "-Z"] | None = "-Z",
     axis_up: typing.Literal["X", "Y", "Z", "-X", "-Y", "-Z"] | None = "Y",
-):
+) -> None:
     """Load a BVH motion capture file
 
         :type execution_context: int | str | None

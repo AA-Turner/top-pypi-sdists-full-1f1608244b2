@@ -6,7 +6,7 @@ import bpy.stub_internal.rna_enums
 
 def bake_animation(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Update the audio animation cache
 
     :type execution_context: int | str | None
@@ -66,7 +66,7 @@ def mixdown(
     mixrate: int | None = 48000,
     bitrate: int | None = 192,
     split_channels: bool | None = False,
-):
+) -> None:
     """Mix the scene's audio to a sound file
 
         :type execution_context: int | str | None
@@ -270,7 +270,7 @@ def open(
     sort_method: str | None = "",
     cache: bool | None = False,
     mono: bool | None = False,
-):
+) -> None:
     """Load a sound file
 
         :type execution_context: int | str | None
@@ -381,7 +381,7 @@ def open_mono(
     sort_method: str | None = "",
     cache: bool | None = False,
     mono: bool | None = True,
-):
+) -> None:
     """Load a sound file as mono
 
         :type execution_context: int | str | None
@@ -456,7 +456,7 @@ def open_mono(
         :type mono: bool | None
     """
 
-def pack(execution_context: int | str | None = None, undo: bool | None = None):
+def pack(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Pack the sound into the current blend file
 
     :type execution_context: int | str | None
@@ -470,7 +470,7 @@ def unpack(
     *,
     method: bpy.stub_internal.rna_enums.UnpackMethodItems | None = "USE_LOCAL",
     id: str = "",
-):
+) -> None:
     """Unpack the sound to the samples filename
 
     :type execution_context: int | str | None
@@ -483,7 +483,7 @@ def unpack(
 
 def update_animation_flags(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Update animation flags
 
     :type execution_context: int | str | None

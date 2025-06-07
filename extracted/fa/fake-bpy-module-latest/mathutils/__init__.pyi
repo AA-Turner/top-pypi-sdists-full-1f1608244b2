@@ -172,7 +172,7 @@ class Color:
         :rtype: typing_extensions.Self
         """
 
-    def __init__(self, rgb: collections.abc.Sequence[float] = (0.0, 0.0, 0.0)):
+    def __init__(self, rgb: collections.abc.Sequence[float] = (0.0, 0.0, 0.0)) -> None:
         """
 
         :param rgb:
@@ -190,7 +190,7 @@ class Color:
 
     def __set__(
         self, instance, value: collections.abc.Sequence[float] | typing_extensions.Self
-    ):
+    ) -> None:
         """
 
         :param instance:
@@ -339,7 +339,7 @@ class Color:
         """
 
     @typing.overload
-    def __setitem__(self, key: int, value: float):
+    def __setitem__(self, key: int, value: float) -> None:
         """
 
         :param key:
@@ -349,7 +349,9 @@ class Color:
         """
 
     @typing.overload
-    def __setitem__(self, key: slice, value: collections.abc.Iterable[float] | Color):
+    def __setitem__(
+        self, key: slice, value: collections.abc.Iterable[float] | Color
+    ) -> None:
         """
 
         :param key:
@@ -417,7 +419,7 @@ class Euler:
         :rtype: typing_extensions.Self
         """
 
-    def make_compatible(self, other):
+    def make_compatible(self, other) -> None:
         """Make this euler compatible with another,
         so interpolating between them works as intended.
 
@@ -431,14 +433,14 @@ class Euler:
         | collections.abc.Sequence[collections.abc.Sequence[float]]
         | collections.abc.Sequence[float]
         | typing_extensions.Self,
-    ):
+    ) -> None:
         """Rotates the euler by another mathutils value.
 
         :param other: rotation component of mathutils value
         :type other: Matrix | Quaternion | collections.abc.Sequence[collections.abc.Sequence[float]] | collections.abc.Sequence[float] | typing_extensions.Self
         """
 
-    def rotate_axis(self, axis: str, angle: float):
+    def rotate_axis(self, axis: str, angle: float) -> None:
         """Rotates the euler a certain amount and returning a unique euler rotation
         (no 720 degree pitches).
 
@@ -462,14 +464,14 @@ class Euler:
         :rtype: Quaternion
         """
 
-    def zero(self):
+    def zero(self) -> None:
         """Set all values to zero."""
 
     def __init__(
         self,
         angles: collections.abc.Sequence[float] = (0.0, 0.0, 0.0),
         order: str = "XYZ",
-    ):
+    ) -> None:
         """
 
         :param angles:
@@ -489,7 +491,7 @@ class Euler:
 
     def __set__(
         self, instance, value: collections.abc.Sequence[float] | typing_extensions.Self
-    ):
+    ) -> None:
         """
 
         :param instance:
@@ -518,7 +520,7 @@ class Euler:
         """
 
     @typing.overload
-    def __setitem__(self, key: int, value: float):
+    def __setitem__(self, key: int, value: float) -> None:
         """
 
         :param key:
@@ -528,7 +530,9 @@ class Euler:
         """
 
     @typing.overload
-    def __setitem__(self, key: slice, value: collections.abc.Iterable[float] | Euler):
+    def __setitem__(
+        self, key: slice, value: collections.abc.Iterable[float] | Euler
+    ) -> None:
         """
 
         :param key:
@@ -736,7 +740,7 @@ class Matrix:
         :rtype: typing_extensions.Self
         """
 
-    def adjugate(self):
+    def adjugate(self) -> None:
         """Set the matrix to its adjugate.`Adjugate matrix <https://en.wikipedia.org/wiki/Adjugate_matrix>`__ on Wikipedia."""
 
     def adjugated(self) -> typing_extensions.Self:
@@ -774,7 +778,7 @@ class Matrix:
         :rtype: typing_extensions.Self
         """
 
-    def identity(self):
+    def identity(self) -> None:
         """Set the matrix to the identity matrix.`Identity matrix <https://en.wikipedia.org/wiki/Identity_matrix>`__ on Wikipedia."""
 
     def invert(
@@ -782,7 +786,7 @@ class Matrix:
         fallback: collections.abc.Sequence[collections.abc.Sequence[float]]
         | typing_extensions.Self
         | None = None,
-    ):
+    ) -> None:
         """Set the matrix to its inverse.`Inverse matrix <https://en.wikipedia.org/wiki/Inverse_matrix>`__ on Wikipedia.
 
                 :param fallback: Set the matrix to this value when the inverse cannot be calculated
@@ -790,7 +794,7 @@ class Matrix:
                 :type fallback: collections.abc.Sequence[collections.abc.Sequence[float]] | typing_extensions.Self | None
         """
 
-    def invert_safe(self):
+    def invert_safe(self) -> None:
         """Set the matrix to its inverse, will never error.
         If degenerated (e.g. zero scale on an axis), add some epsilon to its diagonal, to get an invertible one.
         If tweaked matrix is still degenerated, set to the identity matrix instead.`Inverse Matrix <https://en.wikipedia.org/wiki/Inverse_matrix>`__ on Wikipedia.
@@ -834,7 +838,7 @@ class Matrix:
         :rtype: typing_extensions.Self
         """
 
-    def normalize(self):
+    def normalize(self) -> None:
         """Normalize each of the matrix columns."""
 
     def normalized(self) -> typing_extensions.Self:
@@ -844,7 +848,7 @@ class Matrix:
         :rtype: typing_extensions.Self
         """
 
-    def resize_4x4(self):
+    def resize_4x4(self) -> None:
         """Resize the matrix to 4x4."""
 
     def rotate(
@@ -854,7 +858,7 @@ class Matrix:
         | collections.abc.Sequence[collections.abc.Sequence[float]]
         | collections.abc.Sequence[float]
         | typing_extensions.Self,
-    ):
+    ) -> None:
         """Rotates the matrix by another mathutils value.
 
         :param other: rotation component of mathutils value
@@ -922,7 +926,7 @@ class Matrix:
         :rtype: Vector
         """
 
-    def transpose(self):
+    def transpose(self) -> None:
         """Set the matrix to its transpose.`Transpose <https://en.wikipedia.org/wiki/Transpose>`__ on Wikipedia."""
 
     def transposed(self) -> typing_extensions.Self:
@@ -932,7 +936,7 @@ class Matrix:
         :rtype: typing_extensions.Self
         """
 
-    def zero(self):
+    def zero(self) -> None:
         """Set all the matrix values to zero."""
 
     def __init__(
@@ -943,7 +947,7 @@ class Matrix:
             (0.0, 0.0, 1.0, 0.0),
             (0.0, 0.0, 0.0, 1.0),
         ),
-    ):
+    ) -> None:
         """
 
         :param rows:
@@ -964,7 +968,7 @@ class Matrix:
         instance,
         value: collections.abc.Sequence[collections.abc.Sequence[float]]
         | typing_extensions.Self,
-    ):
+    ) -> None:
         """
 
         :param instance:
@@ -993,7 +997,9 @@ class Matrix:
         """
 
     @typing.overload
-    def __setitem__(self, key: int, value: Vector | collections.abc.Iterable[float]):
+    def __setitem__(
+        self, key: int, value: Vector | collections.abc.Iterable[float]
+    ) -> None:
         """
 
         :param key:
@@ -1008,7 +1014,7 @@ class Matrix:
         key: slice,
         value: collections.abc.Iterable[Vector | collections.abc.Iterable[float]]
         | Matrix,
-    ):
+    ) -> None:
         """
 
         :param key:
@@ -1193,7 +1199,7 @@ class Quaternion:
     :type: float
     """
 
-    def conjugate(self):
+    def conjugate(self) -> None:
         """Set the quaternion to its conjugate (negate x, y, z)."""
 
     def conjugated(self) -> typing_extensions.Self:
@@ -1239,10 +1245,10 @@ class Quaternion:
         :rtype: typing_extensions.Self
         """
 
-    def identity(self):
+    def identity(self) -> None:
         """Set the quaternion to an identity quaternion."""
 
-    def invert(self):
+    def invert(self) -> None:
         """Set the quaternion to its inverse."""
 
     def inverted(self) -> typing_extensions.Self:
@@ -1252,17 +1258,17 @@ class Quaternion:
         :rtype: typing_extensions.Self
         """
 
-    def make_compatible(self, other):
+    def make_compatible(self, other) -> None:
         """Make this quaternion compatible with another,
         so interpolating between them works as intended.
 
                 :param other:
         """
 
-    def negate(self):
+    def negate(self) -> None:
         """Set the quaternion to its negative."""
 
-    def normalize(self):
+    def normalize(self) -> None:
         """Normalize the quaternion."""
 
     def normalized(self) -> typing_extensions.Self:
@@ -1279,7 +1285,7 @@ class Quaternion:
         | collections.abc.Sequence[collections.abc.Sequence[float]]
         | collections.abc.Sequence[float]
         | typing_extensions.Self,
-    ):
+    ) -> None:
         """Rotates the quaternion by another mathutils value.
 
         :param other: rotation component of mathutils value
@@ -1337,7 +1343,7 @@ class Quaternion:
                 :rtype: Euler
         """
 
-    def to_exponential_map(self):
+    def to_exponential_map(self) -> None:
         """Return the exponential map representation of the quaternion.This representation consist of the rotation axis multiplied by the rotation angle.
         Such a representation is useful for interpolation between multiple orientations.To convert back to a quaternion, pass it to the `Quaternion` constructor.
 
@@ -1365,7 +1371,7 @@ class Quaternion:
         self,
         seq: Vector | collections.abc.Sequence[float] = (1.0, 0.0, 0.0, 0.0),
         angle: float = 0.0,
-    ):
+    ) -> None:
         """
 
         :param seq:
@@ -1385,7 +1391,7 @@ class Quaternion:
 
     def __set__(
         self, instance, value: collections.abc.Sequence[float] | typing_extensions.Self
-    ):
+    ) -> None:
         """
 
         :param instance:
@@ -1421,7 +1427,7 @@ class Quaternion:
         """
 
     @typing.overload
-    def __setitem__(self, key: int, value: float):
+    def __setitem__(self, key: int, value: float) -> None:
         """
 
         :param key:
@@ -1433,7 +1439,7 @@ class Quaternion:
     @typing.overload
     def __setitem__(
         self, key: slice, value: collections.abc.Iterable[float] | Quaternion
-    ):
+    ) -> None:
         """
 
         :param key:
@@ -3622,7 +3628,7 @@ class Vector:
     """
 
     @classmethod
-    def Fill(cls, size: int, fill: float = 0.0):
+    def Fill(cls, size: int, fill: float = 0.0) -> None:
         """Create a vector of length size with all values set to fill.
 
         :param size: The length of the vector to be created.
@@ -3632,7 +3638,7 @@ class Vector:
         """
 
     @classmethod
-    def Linspace(cls, start: int, stop: int, size: int):
+    def Linspace(cls, start: int, stop: int, size: int) -> None:
         """Create a vector of the specified size which is filled with linearly spaced values between start and stop values.
 
         :param start: The start of the range used to fill the vector.
@@ -3644,7 +3650,7 @@ class Vector:
         """
 
     @classmethod
-    def Range(cls, start: int, stop: int, step: int = 1):
+    def Range(cls, start: int, stop: int, step: int = 1) -> None:
         """Create a filled with a range of values.
 
         :param start: The start of the range used to fill the vector.
@@ -3658,7 +3664,7 @@ class Vector:
     @classmethod
     def Repeat(
         cls, vector: collections.abc.Sequence[float] | typing_extensions.Self, size: int
-    ):
+    ) -> None:
         """Create a vector by repeating the values in vector until the required size is reached.
 
         :param vector: The vector to draw values from.
@@ -3750,10 +3756,10 @@ class Vector:
         :rtype: typing_extensions.Self
         """
 
-    def negate(self):
+    def negate(self) -> None:
         """Set all values to their negative."""
 
-    def normalize(self):
+    def normalize(self) -> None:
         """Normalize the vector, making the length of the vector always 1.0."""
 
     def normalized(self) -> typing_extensions.Self:
@@ -3792,19 +3798,19 @@ class Vector:
         :rtype: typing_extensions.Self
         """
 
-    def resize(self, size=3):
+    def resize(self, size=3) -> None:
         """Resize the vector to have size number of elements.
 
         :param size:
         """
 
-    def resize_2d(self):
+    def resize_2d(self) -> None:
         """Resize the vector to 2D  (x, y)."""
 
-    def resize_3d(self):
+    def resize_3d(self) -> None:
         """Resize the vector to 3D  (x, y, z)."""
 
-    def resize_4d(self):
+    def resize_4d(self) -> None:
         """Resize the vector to 4D (x, y, z, w)."""
 
     def resized(self, size=3) -> typing_extensions.Self:
@@ -3822,7 +3828,7 @@ class Vector:
         | Quaternion
         | collections.abc.Sequence[collections.abc.Sequence[float]]
         | collections.abc.Sequence[float],
-    ):
+    ) -> None:
         """Rotate the vector by a rotation value.
 
         :param other: rotation component of mathutils value
@@ -3901,10 +3907,10 @@ class Vector:
         :rtype: tuple[float, ...]
         """
 
-    def zero(self):
+    def zero(self) -> None:
         """Set all values to zero."""
 
-    def __init__(self, seq: collections.abc.Sequence[float] = (0.0, 0.0, 0.0)):
+    def __init__(self, seq: collections.abc.Sequence[float] = (0.0, 0.0, 0.0)) -> None:
         """
 
         :param seq:
@@ -3922,7 +3928,7 @@ class Vector:
 
     def __set__(
         self, instance, value: collections.abc.Sequence[float] | typing_extensions.Self
-    ):
+    ) -> None:
         """
 
         :param instance:
@@ -3958,7 +3964,7 @@ class Vector:
         """
 
     @typing.overload
-    def __setitem__(self, key: int, value: float):
+    def __setitem__(self, key: int, value: float) -> None:
         """
 
         :param key:
@@ -3968,7 +3974,9 @@ class Vector:
         """
 
     @typing.overload
-    def __setitem__(self, key: slice, value: collections.abc.Iterable[float] | Vector):
+    def __setitem__(
+        self, key: slice, value: collections.abc.Iterable[float] | Vector
+    ) -> None:
         """
 
         :param key:

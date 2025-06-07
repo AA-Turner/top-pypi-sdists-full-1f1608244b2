@@ -19,12 +19,14 @@ from seeq.spy._status import Status
 def archive(items: pd.DataFrame,
             *,
             note: Optional[str] = None,
+            undo: bool = False,
             errors: Optional[str] = None,
             quiet: Optional[bool] = None,
             status: Optional[Status] = None,
             session: Optional[Session] = None) -> pd.DataFrame:
     """
-    Archives (moves to the trash) the items whose IDs are in the input DataFrame.
+    Archives (moves to the trash) the items whose IDs are in the input
+    DataFrame.
 
     Parameters
     ----------
@@ -33,7 +35,12 @@ def archive(items: pd.DataFrame,
         must include a valid GUID in the "ID" column.
 
     note : str, default 'Archived from SPy by <username> at <timestamp>.'
-        The note that will be added to the archival event for historic observability.
+        The note that will be added to the archival event for historic
+        observability.
+
+    undo : bool, default False
+        If True, the items will be unarchived (moved out of the trash) instead
+        of archived. The 'note' argument will be ignored.
 
     errors : {'raise', 'catalog'}, default 'raise'
         If 'raise', any errors encountered will cause an exception. If
@@ -106,6 +113,7 @@ def archive(items: pd.DataFrame,
     session = Session.validate(session)
     status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
+    activity = 'archiv' if not undo else 'unarchiv'
 
     if not _common.present(items, 'ID'):
         raise SPyValueError('The items DataFrame must contain an "ID" column.')
@@ -139,8 +147,16 @@ def archive(items: pd.DataFrame,
             _row['Result'] = 'Success'
             results_list.append(_row)
 
-        safely(lambda: _archive_row(),
-               action_description=f'archive item with ID {_item_id}',
+        def _unarchive_row():
+            if not _common.is_guid(_item_id):
+                raise SPyValueError(f'ID "{_item_id}" is not a valid GUID')
+            items_api.set_property(id=_item_id, property_name='Archived', body=PropertyInputV1(value=False))
+            _row['Result'] = 'Success'
+            results_list.append(_row)
+
+        _func = _unarchive_row if undo else _archive_row
+        safely(lambda: _func(),
+               action_description=f'{activity}e item with ID {_item_id}',
                additional_errors=[400, 409],
                on_error=_add_error_message_and_warn,
                status=status)
@@ -150,7 +166,8 @@ def archive(items: pd.DataFrame,
         if completion_count % 100 == 0:
             status.df.at[0, 'Count'] = completion_count
             status.df.at[0, 'Time'] = status.get_timer()
-            status.update(f'Archiving {completion_count} of {item_count} items', Status.RUNNING)
+            status.update(f'{activity.capitalize()}ing {completion_count} of {item_count} items',
+                          Status.RUNNING)
 
     for index, row in items.iterrows():
         status.add_job(index, (_handle_row, row), _update_status)
@@ -165,7 +182,8 @@ def archive(items: pd.DataFrame,
         success_count = len(archive_result_df[archive_result_df['Result'] == 'Success'])
     else:
         success_count = 0
-    status.update(f'Successfully archived {success_count} of {item_count} items', Status.SUCCESS)
+
+    status.update(f'Successfully {activity}ed {success_count} of {item_count} items', Status.SUCCESS)
     archive_df_properties = types.SimpleNamespace(func='spy.archive', kwargs=input_args, status=status)
     _common.put_properties_on_df(archive_result_df, archive_df_properties)
 

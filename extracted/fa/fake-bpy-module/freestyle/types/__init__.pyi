@@ -96,13 +96,13 @@ False otherwise.
     :type: ViewEdge
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds an `AdjacencyIterator` using the default constructor,
         copy constructor or the overloaded constructor.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds an `AdjacencyIterator` using the default constructor,
         copy constructor or the overloaded constructor.
 
@@ -115,7 +115,7 @@ False otherwise.
         vertex: ViewVertex,
         restrict_to_selection: bool = True,
         restrict_to_unvisited: bool = True,
-    ):
+    ) -> None:
         """Builds an `AdjacencyIterator` using the default constructor,
         copy constructor or the overloaded constructor.
 
@@ -132,7 +132,7 @@ False otherwise.
 class BBox:
     """Class for representing a bounding box."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class BinaryPredicate0D:
@@ -149,7 +149,7 @@ class BinaryPredicate0D:
     :type: str
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
     def __call__(self, inter1: Interface0D, inter2: Interface0D) -> bool:
@@ -178,7 +178,7 @@ class BinaryPredicate1D:
     :type: str
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
     def __call__(self, inter1: Interface1D, inter2: Interface1D) -> bool:
@@ -199,13 +199,13 @@ class Chain:
     Splitting and Creation processes.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a `Chain` using the default constructor,
         copy constructor or from an `Id`.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a `Chain` using the default constructor,
         copy constructor or from an `Id`.
 
@@ -213,7 +213,7 @@ class Chain:
                 :type brother: typing_extensions.Self
         """
 
-    def __init__(self, id: Id):
+    def __init__(self, id: Id) -> None:
         """Builds a `Chain` using the default constructor,
         copy constructor or from an `Id`.
 
@@ -221,7 +221,7 @@ class Chain:
                 :type id: Id
         """
 
-    def push_viewedge_back(self, viewedge: ViewEdge, orientation: bool):
+    def push_viewedge_back(self, viewedge: ViewEdge, orientation: bool) -> None:
         """Adds a ViewEdge at the end of the Chain.
 
                 :param viewedge: The ViewEdge that must be added.
@@ -231,7 +231,7 @@ class Chain:
                 :type orientation: bool
         """
 
-    def push_viewedge_front(self, viewedge: ViewEdge, orientation: bool):
+    def push_viewedge_front(self, viewedge: ViewEdge, orientation: bool) -> None:
         """Adds a ViewEdge at the beginning of the Chain.
 
                 :param viewedge: The ViewEdge that must be added.
@@ -276,7 +276,7 @@ class ChainingIterator:
         restrict_to_unvisited: bool = True,
         begin: None | ViewEdge | None = None,
         orientation: bool = True,
-    ):
+    ) -> None:
         """Builds a Chaining Iterator from the first ViewEdge used for
         iteration and its orientation or by using the copy constructor.
 
@@ -293,7 +293,7 @@ class ChainingIterator:
                 :type orientation: bool
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a Chaining Iterator from the first ViewEdge used for
         iteration and its orientation or by using the copy constructor.
 
@@ -301,7 +301,7 @@ class ChainingIterator:
                 :type brother: typing_extensions.Self
         """
 
-    def init(self):
+    def init(self) -> None:
         """Initializes the iterator context. This method is called each
         time a new chain is started. It can be used to reset some
         history information that you might want to keep.
@@ -339,13 +339,13 @@ class Curve:
     :type: int
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a `FrsCurve` using a default constructor,
         copy constructor or from an `Id`.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a `FrsCurve` using a default constructor,
         copy constructor or from an `Id`.
 
@@ -353,7 +353,7 @@ class Curve:
                 :type brother: typing_extensions.Self
         """
 
-    def __init__(self, id: Id):
+    def __init__(self, id: Id) -> None:
         """Builds a `FrsCurve` using a default constructor,
         copy constructor or from an `Id`.
 
@@ -361,14 +361,14 @@ class Curve:
                 :type id: Id
         """
 
-    def push_vertex_back(self, vertex: CurvePoint | SVertex):
+    def push_vertex_back(self, vertex: CurvePoint | SVertex) -> None:
         """Adds a single vertex at the end of the Curve.
 
         :param vertex: A vertex object.
         :type vertex: CurvePoint | SVertex
         """
 
-    def push_vertex_front(self, vertex: CurvePoint | SVertex):
+    def push_vertex_front(self, vertex: CurvePoint | SVertex) -> None:
         """Adds a single vertex at the front of the Curve.
 
         :param vertex: A vertex object.
@@ -411,7 +411,7 @@ A shortcut for CurvePoint.first_svertex.get_fedge(CurvePoint.second_svertex).
     :type: float
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a CurvePoint using the default constructor, copy constructor,
         or one of the overloaded constructors. The over loaded constructors
         can either take two `SVertex` or two `CurvePoint`
@@ -419,7 +419,7 @@ A shortcut for CurvePoint.first_svertex.get_fedge(CurvePoint.second_svertex).
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a CurvePoint using the default constructor, copy constructor,
         or one of the overloaded constructors. The over loaded constructors
         can either take two `SVertex` or two `CurvePoint`
@@ -429,7 +429,9 @@ A shortcut for CurvePoint.first_svertex.get_fedge(CurvePoint.second_svertex).
                 :type brother: typing_extensions.Self
         """
 
-    def __init__(self, first_vertex: SVertex, second_vertex: SVertex, t2d: float):
+    def __init__(
+        self, first_vertex: SVertex, second_vertex: SVertex, t2d: float
+    ) -> None:
         """Builds a CurvePoint using the default constructor, copy constructor,
         or one of the overloaded constructors. The over loaded constructors
         can either take two `SVertex` or two `CurvePoint`
@@ -449,7 +451,7 @@ A shortcut for CurvePoint.first_svertex.get_fedge(CurvePoint.second_svertex).
         first_point: typing_extensions.Self,
         second_point: typing_extensions.Self,
         t2d: float,
-    ):
+    ) -> None:
         """Builds a CurvePoint using the default constructor, copy constructor,
         or one of the overloaded constructors. The over loaded constructors
         can either take two `SVertex` or two `CurvePoint`
@@ -488,13 +490,13 @@ class CurvePointIterator:
     :type: float
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a CurvePointIterator object using either the default constructor,
         copy constructor, or the overloaded constructor.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a CurvePointIterator object using either the default constructor,
         copy constructor, or the overloaded constructor.
 
@@ -502,7 +504,7 @@ class CurvePointIterator:
                 :type brother: typing_extensions.Self
         """
 
-    def __init__(self, step: float = 0.0):
+    def __init__(self, step: float = 0.0) -> None:
         """Builds a CurvePointIterator object using either the default constructor,
         copy constructor, or the overloaded constructor.
 
@@ -574,13 +576,13 @@ this FEdge is the first one of the ViewEdge.
     :type: ViewEdge
     """
 
-    def FEdge(self):
+    def FEdge(self) -> None:
         """Builds an `FEdge` using the default constructor,
         copy constructor, or between two `SVertex` objects.
 
         """
 
-    def FEdge(self, brother: typing_extensions.Self):
+    def FEdge(self, brother: typing_extensions.Self) -> None:
         """Builds an `FEdge` using the default constructor,
         copy constructor, or between two `SVertex` objects.
 
@@ -651,13 +653,13 @@ is a border, it has no Face on its right and therefore no normal.
     :type: mathutils.Vector
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds an `FEdgeSharp` using the default constructor,
         copy constructor, or between two `SVertex` objects.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds an `FEdgeSharp` using the default constructor,
         copy constructor, or between two `SVertex` objects.
 
@@ -665,7 +667,7 @@ is a border, it has no Face on its right and therefore no normal.
                 :type brother: typing_extensions.Self
         """
 
-    def __init__(self, first_vertex: SVertex, second_vertex: SVertex):
+    def __init__(self, first_vertex: SVertex, second_vertex: SVertex) -> None:
         """Builds an `FEdgeSharp` using the default constructor,
         copy constructor, or between two `SVertex` objects.
 
@@ -705,13 +707,13 @@ class FEdgeSmooth:
     :type: mathutils.Vector
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds an `FEdgeSmooth` using the default constructor,
         copy constructor, or between two `SVertex`.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds an `FEdgeSmooth` using the default constructor,
         copy constructor, or between two `SVertex`.
 
@@ -719,7 +721,7 @@ class FEdgeSmooth:
                 :type brother: typing_extensions.Self
         """
 
-    def __init__(self, first_vertex: SVertex, second_vertex: SVertex):
+    def __init__(self, first_vertex: SVertex, second_vertex: SVertex) -> None:
         """Builds an `FEdgeSmooth` using the default constructor,
         copy constructor, or between two `SVertex`.
 
@@ -744,13 +746,13 @@ class Id:
     :type: int
     """
 
-    def __init__(self, brother):
+    def __init__(self, brother) -> None:
         """Build the Id from two numbers or another `Id` using the copy constructor.
 
         :param brother: An Id object.
         """
 
-    def __init__(self, first: int = 0, second: int = 0):
+    def __init__(self, first: int = 0, second: int = 0) -> None:
         """Build the Id from two numbers or another `Id` using the copy constructor.
 
         :param first:
@@ -816,7 +818,7 @@ class Interface0D:
     :type: float
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
     def get_fedge(self, inter: typing_extensions.Self) -> FEdge:
@@ -862,7 +864,7 @@ class, the .object property refers to a `StrokeVertex` object.
     :type: float
     """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Construct a nested Interface0DIterator using either the copy constructor
         or the constructor that takes an he argument of a Function0D.
 
@@ -873,7 +875,7 @@ class, the .object property refers to a `StrokeVertex` object.
     def __init__(
         self,
         it: CurvePointIterator | SVertexIterator | StrokeVertexIterator | typing.Any,
-    ):
+    ) -> None:
         """Construct a nested Interface0DIterator using either the copy constructor
         or the constructor that takes an he argument of a Function0D.
 
@@ -914,7 +916,7 @@ class Interface1D:
     :type: int
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
     def points_begin(self, t: float = 0.0) -> Interface0DIterator:
@@ -980,13 +982,13 @@ class Iterator:
     :type: str
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
-    def decrement(self):
+    def decrement(self) -> None:
         """Makes the iterator point the previous element."""
 
-    def increment(self):
+    def increment(self) -> None:
         """Makes the iterator point the next element."""
 
 class Material:
@@ -1034,13 +1036,13 @@ class Material:
     :type: mathutils.Vector
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Creates a `FrsMaterial` using either default constructor,
         copy constructor, or an overloaded constructor
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Creates a `FrsMaterial` using either default constructor,
         copy constructor, or an overloaded constructor
 
@@ -1069,7 +1071,7 @@ class Material:
         | tuple[float, float, float, float],
         shininess: float,
         priority: int,
-    ):
+    ) -> None:
         """Creates a `FrsMaterial` using either default constructor,
         copy constructor, or an overloaded constructor
 
@@ -1100,7 +1102,7 @@ class Nature:
 class Noise:
     """Class to provide Perlin noise functionalities.Undocumented, consider contributing.Undocumented, consider contributing."""
 
-    def __init__(self, seed: int = -1):
+    def __init__(self, seed: int = -1) -> None:
         """Builds a Noise object. Seed is an optional argument. The seed value is used
         as a seed for random number generation if it is equal to or greater than zero;
         otherwise, time is used as a seed.
@@ -1222,10 +1224,10 @@ class NonTVertex:
     :type: SVertex
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a `NonTVertex` using the default constructor or a `SVertex`."""
 
-    def __init__(self, svertex: SVertex):
+    def __init__(self, svertex: SVertex) -> None:
         """Builds a `NonTVertex` using the default constructor or a `SVertex`.
 
         :param svertex: An SVertex object.
@@ -1240,7 +1242,7 @@ class Operators:
     """
 
     @staticmethod
-    def bidirectional_chain(it: ChainingIterator, pred: UnaryPredicate1D):
+    def bidirectional_chain(it: ChainingIterator, pred: UnaryPredicate1D) -> None:
         """Builds a set of chains from the current set of ViewEdges. Each
         ViewEdge of the current list potentially starts a new chain. The
         chaining operator then iterates over the ViewEdges of the ViewMap
@@ -1263,7 +1265,7 @@ class Operators:
         """
 
     @staticmethod
-    def bidirectional_chain(it: ChainingIterator):
+    def bidirectional_chain(it: ChainingIterator) -> None:
         """Builds a set of chains from the current set of ViewEdges. Each
         ViewEdge of the current list potentially starts a new chain. The
         chaining operator then iterates over the ViewEdges of the ViewMap
@@ -1284,7 +1286,7 @@ class Operators:
     @staticmethod
     def chain(
         it: ViewEdgeIterator, pred: UnaryPredicate1D, modifier: UnaryFunction1DVoid
-    ):
+    ) -> None:
         """Builds a set of chains from the current set of ViewEdges. Each
         ViewEdge of the current list starts a new chain. The chaining
         operator then iterates over the ViewEdges of the ViewMap using the
@@ -1305,7 +1307,7 @@ class Operators:
         """
 
     @staticmethod
-    def chain(it: ViewEdgeIterator, pred: UnaryPredicate1D):
+    def chain(it: ViewEdgeIterator, pred: UnaryPredicate1D) -> None:
         """Builds a set of chains from the current set of ViewEdges. Each
         ViewEdge of the current list starts a new chain. The chaining
         operator then iterates over the ViewEdges of the ViewMap using the
@@ -1321,7 +1323,7 @@ class Operators:
         """
 
     @staticmethod
-    def create(pred: UnaryPredicate1D, shaders: list[StrokeShader]):
+    def create(pred: UnaryPredicate1D, shaders: list[StrokeShader]) -> None:
         """Creates and shades the strokes from the current set of chains. A
         predicate can be specified to make a selection pass on the chains.
 
@@ -1389,7 +1391,7 @@ class Operators:
     @staticmethod
     def recursive_split(
         func: UnaryFunction0DDouble, pred_1d: UnaryPredicate1D, sampling: float = 0.0
-    ):
+    ) -> None:
         """Splits the current set of chains in a recursive way. We process the
         points of each chain (with a specified sampling) to find the point
         minimizing a specified function. The chain is split in two at this
@@ -1420,7 +1422,7 @@ class Operators:
         pred_0d: UnaryPredicate0D,
         pred_1d: UnaryPredicate1D,
         sampling: float = 0.0,
-    ):
+    ) -> None:
         """Splits the current set of chains in a recursive way. We process the
         points of each chain (with a specified sampling) to find the point
         minimizing a specified function. The chain is split in two at this
@@ -1452,7 +1454,7 @@ class Operators:
         """
 
     @staticmethod
-    def reset(delete_strokes: bool = True):
+    def reset(delete_strokes: bool = True) -> None:
         """Resets the line stylization process to the initial state. The results of
         stroke creation are accumulated if delete_strokes is set to False.
 
@@ -1461,7 +1463,7 @@ class Operators:
         """
 
     @staticmethod
-    def select(pred: UnaryPredicate1D):
+    def select(pred: UnaryPredicate1D) -> None:
         """Selects the ViewEdges of the ViewMap verifying a specified
         condition.
 
@@ -1474,7 +1476,7 @@ class Operators:
         starting_pred: UnaryPredicate0D,
         stopping_pred: UnaryPredicate0D,
         sampling: float = 0.0,
-    ):
+    ) -> None:
         """Splits each chain of the current set of chains in a sequential way.
         The points of each chain are processed (with a specified sampling)
         sequentially. The first point of the initial chain is the
@@ -1495,7 +1497,7 @@ class Operators:
         """
 
     @staticmethod
-    def sequential_split(pred: UnaryPredicate0D, sampling: float = 0.0):
+    def sequential_split(pred: UnaryPredicate0D, sampling: float = 0.0) -> None:
         """Splits each chain of the current set of chains in a sequential way.
         The points of each chain are processed (with a specified sampling)
         sequentially. The first point of the initial chain is the
@@ -1514,7 +1516,7 @@ class Operators:
         """
 
     @staticmethod
-    def sort(pred: BinaryPredicate1D):
+    def sort(pred: BinaryPredicate1D) -> None:
         """Sorts the current set of chains (or viewedges) according to the
         comparison predicate given as argument.
 
@@ -1557,24 +1559,24 @@ class SShape:
     :type: list[SVertex]
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Creates a `SShape` class using either a default constructor or copy constructor."""
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Creates a `SShape` class using either a default constructor or copy constructor.
 
         :param brother: An SShape object.
         :type brother: typing_extensions.Self
         """
 
-    def add_edge(self, edge: FEdge):
+    def add_edge(self, edge: FEdge) -> None:
         """Adds an FEdge to the list of FEdges.
 
         :param edge: An FEdge object.
         :type edge: FEdge
         """
 
-    def add_vertex(self, vertex: SVertex):
+    def add_vertex(self, vertex: SVertex) -> None:
         """Adds an SVertex to the list of SVertex of this Shape. The SShape
         attribute of the SVertex is also set to this SShape.
 
@@ -1582,7 +1584,7 @@ class SShape:
                 :type vertex: SVertex
         """
 
-    def compute_bbox(self):
+    def compute_bbox(self) -> None:
         """Compute the bbox of the SShape."""
 
 class SVertex:
@@ -1641,13 +1643,13 @@ ViewVertex, and None otherwise.
     :type: ViewVertex
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a `SVertex` using the default constructor,
         copy constructor or the overloaded constructor which builds   a `SVertex` from 3D coordinates and an Id.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a `SVertex` using the default constructor,
         copy constructor or the overloaded constructor which builds   a `SVertex` from 3D coordinates and an Id.
 
@@ -1657,7 +1659,7 @@ ViewVertex, and None otherwise.
 
     def __init__(
         self, point_3d: collections.abc.Sequence[float] | mathutils.Vector, id: Id
-    ):
+    ) -> None:
         """Builds a `SVertex` using the default constructor,
         copy constructor or the overloaded constructor which builds   a `SVertex` from 3D coordinates and an Id.
 
@@ -1667,7 +1669,7 @@ ViewVertex, and None otherwise.
                 :type id: Id
         """
 
-    def add_fedge(self, fedge: FEdge):
+    def add_fedge(self, fedge: FEdge) -> None:
         """Add an FEdge to the list of edges emanating from this SVertex.
 
         :param fedge: An FEdge.
@@ -1680,7 +1682,7 @@ ViewVertex, and None otherwise.
         | list[float]
         | mathutils.Vector
         | tuple[float, float, float],
-    ):
+    ) -> None:
         """Adds a normal to the SVertex's set of normals. If the same normal
         is already in the set, nothing changes.
 
@@ -1712,10 +1714,10 @@ class SVertexIterator:
     :type: float
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Build an SVertexIterator using either the default constructor, copy constructor,or the overloaded constructor that starts iteration from an SVertex object vertex."""
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Build an SVertexIterator using either the default constructor, copy constructor,or the overloaded constructor that starts iteration from an SVertex object vertex.
 
         :param brother: An SVertexIterator object.
@@ -1729,7 +1731,7 @@ class SVertexIterator:
         previous_edge: FEdge,
         next_edge: FEdge,
         t: float,
-    ):
+    ) -> None:
         """Build an SVertexIterator using either the default constructor, copy constructor,or the overloaded constructor that starts iteration from an SVertex object vertex.
 
         :param vertex: The SVertex from which the iterator starts iteration.
@@ -1781,10 +1783,10 @@ class Stroke:
     :type: bool
     """
 
-    def Stroke(self):
+    def Stroke(self) -> None:
         """Creates a `Stroke` using the default constructor or copy constructor"""
 
-    def Stroke(self, brother):
+    def Stroke(self, brother) -> None:
         """Creates a `Stroke` using the default constructor or copy constructor
 
         :param brother:
@@ -1804,7 +1806,7 @@ class Stroke:
                 :rtype: float
         """
 
-    def insert_vertex(self, vertex: StrokeVertex, next: StrokeVertexIterator):
+    def insert_vertex(self, vertex: StrokeVertex, next: StrokeVertexIterator) -> None:
         """Inserts the StrokeVertex given as argument into the Stroke before the
         point specified by next. The length and curvilinear abscissa are
         updated consequently.
@@ -1816,10 +1818,10 @@ class Stroke:
                 :type next: StrokeVertexIterator
         """
 
-    def remove_all_vertices(self):
+    def remove_all_vertices(self) -> None:
         """Removes all vertices from the Stroke."""
 
-    def remove_vertex(self, vertex: StrokeVertex):
+    def remove_vertex(self, vertex: StrokeVertex) -> None:
         """Removes the StrokeVertex given as argument from the Stroke. The length
         and curvilinear abscissa are updated consequently.
 
@@ -1827,7 +1829,7 @@ class Stroke:
                 :type vertex: StrokeVertex
         """
 
-    def resample(self, n: int):
+    def resample(self, n: int) -> None:
         """Resamples the stroke so using one of two methods with the goal
         of creating a stroke with fewer points and the same shape.
 
@@ -1838,7 +1840,7 @@ class Stroke:
                 :type n: int
         """
 
-    def resample(self, sampling: float):
+    def resample(self, sampling: float) -> None:
         """Resamples the stroke so using one of two methods with the goal
         of creating a stroke with fewer points and the same shape.
 
@@ -1874,7 +1876,7 @@ class Stroke:
         :rtype: int
         """
 
-    def update_length(self):
+    def update_length(self) -> None:
         """Updates the 2D length of the Stroke."""
 
 class StrokeAttribute:
@@ -1909,14 +1911,14 @@ when following the stroke.
     :type: bool
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Creates a `StrokeAttribute` object using either a default constructor,
         copy constructor, overloaded constructor, or and interpolation constructor
         to interpolate between two `StrokeAttribute` objects.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Creates a `StrokeAttribute` object using either a default constructor,
         copy constructor, overloaded constructor, or and interpolation constructor
         to interpolate between two `StrokeAttribute` objects.
@@ -1933,7 +1935,7 @@ when following the stroke.
         alpha: float,
         thickness_right: float,
         thickness_left: float,
-    ):
+    ) -> None:
         """Creates a `StrokeAttribute` object using either a default constructor,
         copy constructor, overloaded constructor, or and interpolation constructor
         to interpolate between two `StrokeAttribute` objects.
@@ -1957,7 +1959,7 @@ when following the stroke.
         attribute1: typing_extensions.Self,
         attribute2: typing_extensions.Self,
         t: float,
-    ):
+    ) -> None:
         """Creates a `StrokeAttribute` object using either a default constructor,
         copy constructor, overloaded constructor, or and interpolation constructor
         to interpolate between two `StrokeAttribute` objects.
@@ -2026,7 +2028,7 @@ when following the stroke.
                 :rtype: bool
         """
 
-    def set_attribute_real(self, name: str, value: float):
+    def set_attribute_real(self, name: str, value: float) -> None:
         """Adds a user-defined attribute of float type. If there is no
         attribute of the given name, it is added. Otherwise, the new value
         replaces the old one.
@@ -2044,7 +2046,7 @@ when following the stroke.
         | list[float]
         | mathutils.Vector
         | tuple[float, float, float],
-    ):
+    ) -> None:
         """Adds a user-defined attribute of two-dimensional vector type. If
         there is no attribute of the given name, it is added. Otherwise,
         the new value replaces the old one.
@@ -2062,7 +2064,7 @@ when following the stroke.
         | list[float]
         | mathutils.Vector
         | tuple[float, float, float],
-    ):
+    ) -> None:
         """Adds a user-defined attribute of three-dimensional vector type.
         If there is no attribute of the given name, it is added.
         Otherwise, the new value replaces the old one.
@@ -2089,10 +2091,10 @@ class StrokeShader:
     :type: str
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
-    def shade(self, stroke: Stroke):
+    def shade(self, stroke: Stroke) -> None:
         """The shading method. Must be overloaded by inherited classes.
 
         :param stroke: A Stroke object.
@@ -2133,14 +2135,14 @@ and it won't change the real stroke length).
     :type: float
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a `StrokeVertex` using the default constructor,
         copy constructor, from 2 `StrokeVertex` and an interpolation parameter,
         from a CurvePoint, from a SVertex, or a `SVertex`   and a `StrokeAttribute` object.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a `StrokeVertex` using the default constructor,
         copy constructor, from 2 `StrokeVertex` and an interpolation parameter,
         from a CurvePoint, from a SVertex, or a `SVertex`   and a `StrokeAttribute` object.
@@ -2154,7 +2156,7 @@ and it won't change the real stroke length).
         first_vertex: typing_extensions.Self,
         second_vertex: typing_extensions.Self,
         t3d: float,
-    ):
+    ) -> None:
         """Builds a `StrokeVertex` using the default constructor,
         copy constructor, from 2 `StrokeVertex` and an interpolation parameter,
         from a CurvePoint, from a SVertex, or a `SVertex`   and a `StrokeAttribute` object.
@@ -2167,7 +2169,7 @@ and it won't change the real stroke length).
                 :type t3d: float
         """
 
-    def __init__(self, point: CurvePoint):
+    def __init__(self, point: CurvePoint) -> None:
         """Builds a `StrokeVertex` using the default constructor,
         copy constructor, from 2 `StrokeVertex` and an interpolation parameter,
         from a CurvePoint, from a SVertex, or a `SVertex`   and a `StrokeAttribute` object.
@@ -2176,7 +2178,7 @@ and it won't change the real stroke length).
                 :type point: CurvePoint
         """
 
-    def __init__(self, svertex: SVertex):
+    def __init__(self, svertex: SVertex) -> None:
         """Builds a `StrokeVertex` using the default constructor,
         copy constructor, from 2 `StrokeVertex` and an interpolation parameter,
         from a CurvePoint, from a SVertex, or a `SVertex`   and a `StrokeAttribute` object.
@@ -2185,7 +2187,7 @@ and it won't change the real stroke length).
                 :type svertex: SVertex
         """
 
-    def __init__(self, svertex: SVertex, attribute: StrokeAttribute):
+    def __init__(self, svertex: SVertex, attribute: StrokeAttribute) -> None:
         """Builds a `StrokeVertex` using the default constructor,
         copy constructor, from 2 `StrokeVertex` and an interpolation parameter,
         from a CurvePoint, from a SVertex, or a `SVertex`   and a `StrokeAttribute` object.
@@ -2235,13 +2237,13 @@ For its counterpart (pointing to the first valid element), use it.is_begin.
     :type: float
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Creates a `StrokeVertexIterator` using either the
         default constructor or the copy constructor.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Creates a `StrokeVertexIterator` using either the
         default constructor or the copy constructor.
 
@@ -2297,7 +2299,7 @@ class TVertex:
     :type: Id
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
     def get_mate(self, viewedge: ViewEdge) -> ViewEdge:
@@ -2341,7 +2343,7 @@ class UnaryFunction0DDouble:
     `Interface0DIterator` and return a float value.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction0DEdgeNature:
@@ -2349,7 +2351,7 @@ class UnaryFunction0DEdgeNature:
     `Interface0DIterator` and return a `Nature` object.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction0DFloat:
@@ -2357,7 +2359,7 @@ class UnaryFunction0DFloat:
     `Interface0DIterator` and return a float value.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction0DId:
@@ -2365,7 +2367,7 @@ class UnaryFunction0DId:
     `Interface0DIterator` and return an `Id` object.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction0DMaterial:
@@ -2373,7 +2375,7 @@ class UnaryFunction0DMaterial:
     `Interface0DIterator` and return a `Material` object.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction0DUnsigned:
@@ -2381,7 +2383,7 @@ class UnaryFunction0DUnsigned:
     `Interface0DIterator` and return an int value.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction0DVec2f:
@@ -2389,7 +2391,7 @@ class UnaryFunction0DVec2f:
     `Interface0DIterator` and return a 2D vector.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction0DVec3f:
@@ -2397,7 +2399,7 @@ class UnaryFunction0DVec3f:
     `Interface0DIterator` and return a 3D vector.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction0DVectorViewShape:
@@ -2406,7 +2408,7 @@ class UnaryFunction0DVectorViewShape:
     objects.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction0DViewShape:
@@ -2414,7 +2416,7 @@ class UnaryFunction0DViewShape:
     `Interface0DIterator` and return a `ViewShape` object.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
 class UnaryFunction1D:
@@ -2444,13 +2446,13 @@ class UnaryFunction1DDouble:
     :type: IntegrationType
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
         """
 
-    def __init__(self, integration_type: IntegrationType):
+    def __init__(self, integration_type: IntegrationType) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
@@ -2469,13 +2471,13 @@ class UnaryFunction1DEdgeNature:
     :type: IntegrationType
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
         """
 
-    def __init__(self, integration_type: IntegrationType):
+    def __init__(self, integration_type: IntegrationType) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
@@ -2494,13 +2496,13 @@ class UnaryFunction1DFloat:
     :type: IntegrationType
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
         """
 
-    def __init__(self, integration_type: IntegrationType):
+    def __init__(self, integration_type: IntegrationType) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
@@ -2519,13 +2521,13 @@ class UnaryFunction1DUnsigned:
     :type: IntegrationType
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
         """
 
-    def __init__(self, integration_type: IntegrationType):
+    def __init__(self, integration_type: IntegrationType) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
@@ -2544,13 +2546,13 @@ class UnaryFunction1DVec2f:
     :type: IntegrationType
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
         """
 
-    def __init__(self, integration_type: IntegrationType):
+    def __init__(self, integration_type: IntegrationType) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
@@ -2569,13 +2571,13 @@ class UnaryFunction1DVec3f:
     :type: IntegrationType
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
         """
 
-    def __init__(self, integration_type: IntegrationType):
+    def __init__(self, integration_type: IntegrationType) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
@@ -2595,13 +2597,13 @@ class UnaryFunction1DVectorViewShape:
     :type: IntegrationType
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
         """
 
-    def __init__(self, integration_type: IntegrationType):
+    def __init__(self, integration_type: IntegrationType) -> None:
         """Builds a unary 1D function using the default constructor
         or the integration method given as an argument.
 
@@ -2620,13 +2622,13 @@ class UnaryFunction1DVoid:
     :type: IntegrationType
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a unary 1D function using either a default constructor
         or the integration method given as an argument.
 
         """
 
-    def __init__(self, integration_type: IntegrationType):
+    def __init__(self, integration_type: IntegrationType) -> None:
         """Builds a unary 1D function using either a default constructor
         or the integration method given as an argument.
 
@@ -2649,7 +2651,7 @@ class UnaryPredicate0D:
     :type: str
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
     def __call__(self, it: Interface0DIterator) -> bool:
@@ -2677,7 +2679,7 @@ class UnaryPredicate1D:
     :type: str
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
     def __call__(self, inter: Interface1D) -> bool:
@@ -2762,17 +2764,17 @@ belongs to. If no object is occluded, this property is set to None.
     :type: ViewShape
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a `ViewEdge` using the default constructor or the copy constructor."""
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a `ViewEdge` using the default constructor or the copy constructor.
 
         :param brother: A ViewEdge object.
         :type brother: typing_extensions.Self
         """
 
-    def update_fedges(self):
+    def update_fedges(self) -> None:
         """Sets Viewedge to this for all embedded fedges."""
 
 class ViewEdgeIterator:
@@ -2810,7 +2812,9 @@ of the "begin" ViewEdge.
     :type: bool
     """
 
-    def __init__(self, begin: None | ViewEdge | None = None, orientation: bool = True):
+    def __init__(
+        self, begin: None | ViewEdge | None = None, orientation: bool = True
+    ) -> None:
         """Builds a ViewEdgeIterator from a starting ViewEdge and its
         orientation or the copy constructor.
 
@@ -2823,7 +2827,7 @@ of the "begin" ViewEdge.
                 :type orientation: bool
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a ViewEdgeIterator from a starting ViewEdge and its
         orientation or the copy constructor.
 
@@ -2831,7 +2835,7 @@ of the "begin" ViewEdge.
                 :type brother: typing_extensions.Self
         """
 
-    def change_orientation(self):
+    def change_orientation(self) -> None:
         """Changes the current orientation."""
 
 class ViewMap:
@@ -2843,7 +2847,7 @@ class ViewMap:
     :type: BBox
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Default constructor."""
 
     def get_closest_fedge(self, x: float, y: float) -> FEdge:
@@ -2909,13 +2913,13 @@ class ViewShape:
     :type: list[ViewVertex]
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a `ViewShape` using the default constructor,
         copy constructor, or from a `SShape`.
 
         """
 
-    def __init__(self, brother: typing_extensions.Self):
+    def __init__(self, brother: typing_extensions.Self) -> None:
         """Builds a `ViewShape` using the default constructor,
         copy constructor, or from a `SShape`.
 
@@ -2923,7 +2927,7 @@ class ViewShape:
                 :type brother: typing_extensions.Self
         """
 
-    def __init__(self, sshape: SShape):
+    def __init__(self, sshape: SShape) -> None:
         """Builds a `ViewShape` using the default constructor,
         copy constructor, or from a `SShape`.
 
@@ -2931,14 +2935,14 @@ class ViewShape:
                 :type sshape: SShape
         """
 
-    def add_edge(self, edge: ViewEdge):
+    def add_edge(self, edge: ViewEdge) -> None:
         """Adds a ViewEdge to the list of ViewEdge objects.
 
         :param edge: A ViewEdge object.
         :type edge: ViewEdge
         """
 
-    def add_vertex(self, vertex: ViewVertex):
+    def add_vertex(self, vertex: ViewVertex) -> None:
         """Adds a ViewVertex to the list of the ViewVertex objects.
 
         :param vertex: A ViewVertex object.
@@ -3007,13 +3011,13 @@ the ViewEdge is incoming.
     :type: tuple[ViewEdge, bool]
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Creates an `orientedViewEdgeIterator` using either the
         default constructor or the copy constructor.
 
         """
 
-    def __init__(self, iBrother: typing_extensions.Self):
+    def __init__(self, iBrother: typing_extensions.Self) -> None:
         """Creates an `orientedViewEdgeIterator` using either the
         default constructor or the copy constructor.
 

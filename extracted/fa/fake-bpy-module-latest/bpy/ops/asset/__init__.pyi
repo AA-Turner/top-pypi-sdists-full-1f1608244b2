@@ -3,7 +3,9 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 
-def assign_action(execution_context: int | str | None = None, undo: bool | None = None):
+def assign_action(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Set this pose Action as active Action on the active Object
 
     :type execution_context: int | str | None
@@ -42,7 +44,7 @@ def bundle_install(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Copy the current .blend file into an Asset Library. Only works on standalone .blend files (i.e. when no other files are referenced)
 
         :type execution_context: int | str | None
@@ -115,7 +117,7 @@ def catalog_delete(
     /,
     *,
     catalog_id: str = "",
-):
+) -> None:
     """Remove an asset catalog from the asset library (contained assets will not be affected and show up as unassigned)
 
     :type execution_context: int | str | None
@@ -130,7 +132,7 @@ def catalog_new(
     /,
     *,
     parent_path: str = "",
-):
+) -> None:
     """Create a new catalog to put assets in
 
     :type execution_context: int | str | None
@@ -139,14 +141,18 @@ def catalog_new(
     :type parent_path: str
     """
 
-def catalog_redo(execution_context: int | str | None = None, undo: bool | None = None):
+def catalog_redo(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Redo the last undone edit to the asset catalogs
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def catalog_undo(execution_context: int | str | None = None, undo: bool | None = None):
+def catalog_undo(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Undo the last edit to the asset catalogs
 
     :type execution_context: int | str | None
@@ -155,14 +161,16 @@ def catalog_undo(execution_context: int | str | None = None, undo: bool | None =
 
 def catalog_undo_push(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Store the current state of the asset catalogs in the undo buffer
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def catalogs_save(execution_context: int | str | None = None, undo: bool | None = None):
+def catalogs_save(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Make any edits to any catalogs permanent by writing the current set up to the asset library
 
     :type execution_context: int | str | None
@@ -175,7 +183,7 @@ def clear(
     /,
     *,
     set_fake_user: bool | None = False,
-):
+) -> None:
     """Delete all asset metadata and turn the selected asset data-blocks back into normal data-blocks
 
     :type execution_context: int | str | None
@@ -190,7 +198,7 @@ def clear_single(
     /,
     *,
     set_fake_user: bool | None = False,
-):
+) -> None:
     """Delete all asset metadata and turn the asset data-block back into a normal data-block
 
     :type execution_context: int | str | None
@@ -201,21 +209,23 @@ def clear_single(
 
 def library_refresh(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reread assets and asset catalogs from the asset library on disk
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def mark(execution_context: int | str | None = None, undo: bool | None = None):
+def mark(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Enable easier reuse of selected data-blocks through the Asset Browser, with the help of customizable metadata (like previews, descriptions and tags)
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def mark_single(execution_context: int | str | None = None, undo: bool | None = None):
+def mark_single(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Enable easier reuse of a data-block through the Asset Browser, with the help of customizable metadata (like previews, descriptions and tags)
 
     :type execution_context: int | str | None
@@ -224,7 +234,7 @@ def mark_single(execution_context: int | str | None = None, undo: bool | None = 
 
 def open_containing_blend_file(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Open the blend file that contains the active asset
 
     :type execution_context: int | str | None
@@ -239,7 +249,7 @@ def screenshot_preview(
     p1: collections.abc.Iterable[int] | None = (0, 0),
     p2: collections.abc.Iterable[int] | None = (0, 0),
     force_square: bool | None = True,
-):
+) -> None:
     """Capture a screenshot to use as a preview for the selected asset
 
     :type execution_context: int | str | None
@@ -252,14 +262,18 @@ def screenshot_preview(
     :type force_square: bool | None
     """
 
-def tag_add(execution_context: int | str | None = None, undo: bool | None = None):
+def tag_add(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add a new keyword tag to the active asset
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def tag_remove(execution_context: int | str | None = None, undo: bool | None = None):
+def tag_remove(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove an existing keyword tag from the active asset
 
     :type execution_context: int | str | None

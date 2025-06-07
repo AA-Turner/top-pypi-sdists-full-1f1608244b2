@@ -26,6 +26,7 @@ def init() -> None:
 
     template_dir = templates.init_template()
     conflicting_files = []
+    files_to_overwrite = set()
 
     try:
         # First pass: check for conflicts
@@ -40,11 +41,17 @@ def init() -> None:
                     with open(source_file, 'rb') as fsrc, open(destination_file, 'rb') as fdest:
                         if fsrc.read() != fdest.read():
                             conflicting_files.append(os.path.relpath(destination_file, cwd))
+
         if conflicting_files:
-            print('The following files were not overwritten. Use --force to override them:', file=sys.stderr)
+            print('The following files already exist and would be overwritten:')
             for conflicting_file in conflicting_files:
-                print(f'  {conflicting_file}', file=sys.stderr)
-            exit(1)
+                print(f'  {conflicting_file}')
+            print()
+
+            for conflicting_file in conflicting_files:
+                choice = input(f'Overwrite {conflicting_file}? [y/N]: ').lower().strip()
+                if choice in ['y', 'yes']:
+                    files_to_overwrite.add(conflicting_file)
 
         replace_app_uri = app_uri if app_uri else 'PUT_APP_URI_HERE'
 
@@ -61,8 +68,9 @@ def init() -> None:
 
                 source_file = os.path.join(root, filename)
                 destination_file = os.path.join(destination_dir, filename)
+                relative_file_path = os.path.relpath(destination_file, cwd)
 
-                if not os.path.exists(destination_file):
+                if not os.path.exists(destination_file) or relative_file_path in files_to_overwrite:
                     try:
                         with open(source_file) as f:
                             content = f.read()

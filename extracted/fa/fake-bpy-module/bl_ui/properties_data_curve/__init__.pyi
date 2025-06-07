@@ -12,7 +12,7 @@ class CurveButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -41,7 +41,7 @@ class DATA_PT_context_curve(CurveButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -80,7 +80,7 @@ class DATA_PT_curve_animation(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -109,7 +109,7 @@ class DATA_PT_curve_texture_space(CurveButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -168,7 +168,7 @@ class DATA_PT_font(CurveButtonsPanelText, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -197,7 +197,7 @@ class DATA_PT_font_transform(CurveButtonsPanelText, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -226,14 +226,14 @@ class DATA_PT_geometry_curve(CurveButtonsPanelCurve, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -262,14 +262,14 @@ class DATA_PT_geometry_curve_bevel(CurveButtonsPanelCurve, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -299,14 +299,14 @@ class DATA_PT_geometry_curve_start_end(CurveButtonsPanelCurve, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -334,7 +334,7 @@ class DATA_PT_paragraph(CurveButtonsPanelText, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -363,7 +363,7 @@ class DATA_PT_paragraph_alignment(CurveButtonsPanelText, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -392,7 +392,7 @@ class DATA_PT_paragraph_spacing(CurveButtonsPanelText, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -421,13 +421,13 @@ class DATA_PT_pathanim(CurveButtonsPanelCurve, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -455,7 +455,7 @@ class DATA_PT_shape_curve(CurveButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -484,7 +484,7 @@ class DATA_PT_text_boxes(CurveButtonsPanelText, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -498,7 +498,7 @@ class CurveButtonsPanelActive(CurveButtonsPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -510,7 +510,7 @@ class CurveButtonsPanelCurve(CurveButtonsPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -522,7 +522,7 @@ class CurveButtonsPanelSurface(CurveButtonsPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -534,7 +534,7 @@ class CurveButtonsPanelText(CurveButtonsPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

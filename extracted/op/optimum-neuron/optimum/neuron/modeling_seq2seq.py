@@ -46,6 +46,13 @@ from .utils import (
     is_neuronx_available,
     is_neuronx_distributed_available,
 )
+from .utils.doc import (
+    _TOKENIZER_FOR_DOC,
+    NEURON_SEQ2SEQ_INPUTS_DOCSTRING,
+    NEURON_SEQ2SEQ_MODEL_START_DOCSTRING,
+    NEURON_TRANSLATION_EXAMPLE,
+    NEURON_TRANSLATION_TP_EXAMPLE,
+)
 
 
 if TYPE_CHECKING:
@@ -59,39 +66,101 @@ if is_neuronx_distributed_available():
 
 logger = logging.getLogger(__name__)
 
-_TOKENIZER_FOR_DOC = "AutoTokenizer"
 
-NEURON_SEQ2SEQ_MODEL_START_DOCSTRING = r"""
-    This model inherits from [`~neuron.modeling.NeuronTracedModel`]. Check the superclass documentation for the generic methods the
-    library implements for all its model (such as downloading or saving)
+class _NeuronSeq2SeqModelPart:
+    """
+    For Seq2Seq architecture, we usually compile it to multiple neuron models. Each represents a part of the model.
+    """
 
-    Args:
-        encoder (`torch.jit._script.ScriptModule`): [torch.jit._script.ScriptModule](https://pytorch.org/docs/stable/generated/torch.jit.ScriptModule.html) is the TorchScript module of the encoder with embedded NEFF(Neuron Executable File Format) compiled by neuron(x) compiler.
-        decoder (`torch.jit._script.ScriptModule`): [torch.jit._script.ScriptModule](https://pytorch.org/docs/stable/generated/torch.jit.ScriptModule.html) is the TorchScript module of the decoder with embedded NEFF(Neuron Executable File Format) compiled by neuron(x) compiler.
-        config (`transformers.PretrainedConfig`): [PretrainedConfig](https://huggingface.co/docs/transformers/main_classes/configuration#transformers.PretrainedConfig) is the Model configuration class with all the parameters of the model.
-            Initializing with a config file does not load the weights associated with the model, only the
-            configuration. Check out the [`optimum.neuron.modeling.NeuronTracedModel.from_pretrained`] method to load the model weights.
-"""
+    def __init__(
+        self,
+        model: torch.jit._script.ScriptModule,
+        parent_model: NeuronTracedModel,
+        config: Optional["PretrainedConfig"] = None,
+        neuron_config: Optional["NeuronDefaultConfig"] = None,
+        model_type: str = "encoder",
+        device: Optional[str] = None,
+    ):
+        self.model = model
+        self.parent_model = parent_model
+        self.config = config
+        self.neuron_config = neuron_config
+        self.model_type = model_type
+        self.device = device
 
-NEURON_SEQ2SEQ_INPUTS_DOCSTRING = r"""
-    Args:
-        input_ids (`torch.Tensor` of shape `({0})`):
-            Indices of input sequence tokens in the vocabulary.
-            Indices can be obtained using [`AutoTokenizer`](https://huggingface.co/docs/transformers/autoclass_tutorial#autotokenizer).
-            See [`PreTrainedTokenizer.encode`](https://huggingface.co/docs/transformers/main_classes/tokenizer#transformers.PreTrainedTokenizerBase.encode) and
-            [`PreTrainedTokenizer.__call__`](https://huggingface.co/docs/transformers/main_classes/tokenizer#transformers.PreTrainedTokenizerBase.__call__) for details.
-            [What are input IDs?](https://huggingface.co/docs/transformers/glossary#input-ids)
-        attention_mask (`Union[torch.Tensor, None]` of shape `({0})`, defaults to `None`):
-            Mask to avoid performing attention on padding token indices. Mask values selected in `[0, 1]`:
-            - 1 for tokens that are **not masked**,
-            - 0 for tokens that are **masked**.
-            [What are attention masks?](https://huggingface.co/docs/transformers/glossary#attention-mask)
-"""
+    @abstractmethod
+    def forward(self, *args, **kwargs):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        return self.forward(*args, **kwargs)
+
+
+class NeuronEncoder(_NeuronSeq2SeqModelPart):
+    """
+    Encoder part of the encoder-decoder model for Neuron inference. (Actually it's a monolith of encoder + decoder without past_key_values to workaround the control flow in the decoder).
+    """
+
+    main_input_name = "input_ids"
+
+    def __init__(
+        self,
+        model: torch.jit._script.ScriptModule,
+        parent_model: NeuronTracedModel,
+        config: Optional["PretrainedConfig"] = None,
+        neuron_config: Optional[Dict[str, str]] = None,
+    ):
+        super().__init__(model, parent_model, config, neuron_config, "encoder")
+
+    def forward(self, input_ids: torch.LongTensor, attention_mask: torch.FloatTensor):
+        inputs = (
+            input_ids,
+            attention_mask,
+        )
+        outputs = self.model(*inputs)
+        return outputs
+
+
+class NeuronDecoder(_NeuronSeq2SeqModelPart):
+    """
+    Decoder part of the encoder-decoder model for Neuron inference. (Actually it's decoder with past_key_values).
+    """
+
+    def __init__(
+        self,
+        model: torch.jit._script.ScriptModule,
+        parent_model: NeuronTracedModel,
+        config: Optional["PretrainedConfig"] = None,
+        neuron_config: Optional[Dict[str, str]] = None,
+    ):
+        super().__init__(model, parent_model, config, neuron_config, "decoder")
+
+    def forward(
+        self,
+        input_ids: torch.LongTensor,
+        decoder_attention_mask: torch.FloatTensor,
+        encoder_hidden_states: torch.FloatTensor,
+        encoder_attention_mask: torch.FloatTensor,
+        beam_idx: torch.LongTensor,
+        beam_scores: torch.FloatTensor,
+    ):
+        inputs = (
+            input_ids,
+            decoder_attention_mask,
+            encoder_hidden_states,
+            encoder_attention_mask,
+            beam_idx,
+            beam_scores,
+        )
+        outputs = self.model(*inputs)
+        return outputs
 
 
 class NeuronModelForConditionalGeneration(NeuronTracedModel, ABC):
     base_model_prefix = "neuron_model"
     config_name = "config.json"
+    encoder_class = NeuronEncoder
+    decoder_class = NeuronDecoder
 
     def __init__(
         self,
@@ -114,13 +183,13 @@ class NeuronModelForConditionalGeneration(NeuronTracedModel, ABC):
             self.neuron_configs[ENCODER_NAME]
         )  # only for the encoder
         self._attributes_init(model_save_dir, preprocessors, **kwargs)
-        self.encoder = NeuronEncoder(
+        self.encoder = self.encoder_class(
             encoder,
             self,
             self.configs[ENCODER_NAME],
             self.neuron_configs[ENCODER_NAME],
         )
-        self.decoder = NeuronDecoder(
+        self.decoder = self.decoder_class(
             decoder,
             self,
             self.configs[DECODER_NAME],
@@ -363,57 +432,6 @@ class NeuronModelForConditionalGeneration(NeuronTracedModel, ABC):
         return combined_config
 
 
-TRANSLATION_EXAMPLE = r"""
-    *(Following models are compiled with neuronx compiler and can only be run on INF2.)*
-    Example of text-to-text generation with small T5 model:
-
-    ```python
-    from transformers import {processor_class}
-    from optimum.neuron import {model_class}
-
-    neuron_model = {model_class}.from_pretrained({checkpoint_regular}, export=True, dynamic_batch_size=False, batch_size=1, sequence_length=64, num_beams=4)
-    neuron_model.save_pretrained("t5_small_neuronx")
-    del neuron_model
-
-    neuron_model = {model_class}.from_pretrained("t5_small_neuronx")
-    tokenizer = {processor_class}.from_pretrained("t5_small_neuronx")
-    inputs = tokenizer("translate English to German: Lets eat good food.", return_tensors="pt")
-
-    output = neuron_model.generate(
-        **inputs,
-        num_return_sequences=1,
-    )
-    results = [tokenizer.decode(t, skip_special_tokens=True) for t in output]
-    ```
-    
-    *(For large models, in order to fit into Neuron cores, we need to apply tensor parallelism. Here below is an example ran on `inf2.24xlarge`.)*
-    Example of text-to-text generation with tensor parallelism:
-    
-    ```python
-    from transformers import {processor_class}
-    from optimum.neuron import {model_class}
-    # 1. compile
-    if __name__ == "__main__":  # compulsory for parallel tracing since the API will spawn multiple processes.
-        neuron_model = {model_class}.from_pretrained(
-            {checkpoint_tp}, export=True, tensor_parallel_size=8, dynamic_batch_size=False, batch_size=1, sequence_length=128, num_beams=4,
-        )
-        neuron_model.save_pretrained("flan_t5_xl_neuronx_tp8/")
-        del neuron_model
-
-    # 2. inference
-    neuron_model = {model_class}.from_pretrained("flan_t5_xl_neuronx_tp8")
-    tokenizer = {processor_class}.from_pretrained("flan_t5_xl_neuronx_tp8")
-    inputs = tokenizer("translate English to German: Lets eat good food.", return_tensors="pt")
-
-    output = neuron_model.generate(
-        **inputs,
-        num_return_sequences=1,
-    )
-    results = [tokenizer.decode(t, skip_special_tokens=True) for t in output]
-    ```
-"""  # noqa: W293
-
-
 @add_start_docstrings(
     """
     Neuron Sequence-to-sequence model with a language modeling head for text2text-generation tasks.
@@ -426,11 +444,17 @@ class NeuronModelForSeq2SeqLM(NeuronModelForConditionalGeneration, NeuronGenerat
 
     @add_start_docstrings_to_model_forward(
         NEURON_SEQ2SEQ_INPUTS_DOCSTRING.format("batch_size, sequence_length")
-        + TRANSLATION_EXAMPLE.format(
+        + NEURON_TRANSLATION_EXAMPLE.format(
             processor_class=_TOKENIZER_FOR_DOC,
             model_class="NeuronModelForSeq2SeqLM",
-            checkpoint_regular="google-t5/t5-small",
-            checkpoint_tp="google/flan-t5-xl",
+            checkpoint="google-t5/t5-small",
+            save_dir="t5_small_neuronx",
+        )
+        + NEURON_TRANSLATION_TP_EXAMPLE.format(
+            processor_class=_TOKENIZER_FOR_DOC,
+            model_class="NeuronModelForSeq2SeqLM",
+            checkpoint="google/flan-t5-xl",
+            save_dir="flan_t5_xl_neuronx_tp8",
         )
     )
     def forward(
@@ -607,92 +631,3 @@ class NeuronModelForSeq2SeqLM(NeuronModelForConditionalGeneration, NeuronGenerat
     def can_generate(self):
         """Returns True to validate the check that the model using `GenerationMixin.generate()` can indeed generate."""
         return True
-
-
-class _NeuronSeq2SeqModelPart:
-    """
-    For Seq2Seq architecture, we usually compile it to multiple neuron models. Each represents a part of the model.
-    """
-
-    def __init__(
-        self,
-        model: torch.jit._script.ScriptModule,
-        parent_model: NeuronTracedModel,
-        config: Optional["PretrainedConfig"] = None,
-        neuron_config: Optional["NeuronDefaultConfig"] = None,
-        model_type: str = "encoder",
-        device: Optional[int] = None,
-    ):
-        self.model = model
-        self.parent_model = parent_model
-        self.config = config
-        self.neuron_config = neuron_config
-        self.model_type = model_type
-        self.device = device
-
-    @abstractmethod
-    def forward(self, *args, **kwargs):
-        pass
-
-    def __call__(self, *args, **kwargs):
-        return self.forward(*args, **kwargs)
-
-
-class NeuronEncoder(_NeuronSeq2SeqModelPart):
-    """
-    Encoder part of the encoder-decoder model for Neuron inference. (Actually it's a monolith of encoder + decoder without past_key_values to workaround the control flow in the decoder).
-    """
-
-    main_input_name = "input_ids"
-
-    def __init__(
-        self,
-        model: torch.jit._script.ScriptModule,
-        parent_model: NeuronTracedModel,
-        config: Optional["PretrainedConfig"] = None,
-        neuron_config: Optional[Dict[str, str]] = None,
-    ):
-        super().__init__(model, parent_model, config, neuron_config, "encoder")
-
-    def forward(self, input_ids: torch.LongTensor, attention_mask: torch.FloatTensor):
-        inputs = (
-            input_ids,
-            attention_mask,
-        )
-        outputs = self.model(*inputs)
-        return outputs
-
-
-class NeuronDecoder(_NeuronSeq2SeqModelPart):
-    """
-    Decoder part of the encoder-decoder model for Neuron inference. (Actually it's decoder with past_key_values).
-    """
-
-    def __init__(
-        self,
-        model: torch.jit._script.ScriptModule,
-        parent_model: NeuronTracedModel,
-        config: Optional["PretrainedConfig"] = None,
-        neuron_config: Optional[Dict[str, str]] = None,
-    ):
-        super().__init__(model, parent_model, config, neuron_config, "decoder")
-
-    def forward(
-        self,
-        input_ids: torch.LongTensor,
-        decoder_attention_mask: torch.FloatTensor,
-        encoder_hidden_states: torch.FloatTensor,
-        encoder_attention_mask: torch.FloatTensor,
-        beam_idx: torch.LongTensor,
-        beam_scores: torch.FloatTensor,
-    ):
-        inputs = (
-            input_ids,
-            decoder_attention_mask,
-            encoder_hidden_states,
-            encoder_attention_mask,
-            beam_idx,
-            beam_scores,
-        )
-        outputs = self.model(*inputs)
-        return outputs

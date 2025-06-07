@@ -44,8 +44,8 @@ def complete_names(word: str, namespace: dict[str, typing.Any]) -> list[str]:
     :rtype: list[str]
     """
 
-def is_dict(obj):
+def is_dict(obj) -> None:
     """Returns whether obj is a dictionary"""
 
-def is_struct_seq(obj):
+def is_struct_seq(obj) -> None:
     """Returns whether obj is a structured sequence subclass: sys.float_info"""

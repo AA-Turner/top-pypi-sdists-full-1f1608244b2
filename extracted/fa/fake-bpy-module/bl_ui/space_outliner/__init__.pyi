@@ -23,7 +23,7 @@ class OUTLINER_HT_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -48,14 +48,14 @@ class OUTLINER_MT_asset(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -80,7 +80,7 @@ class OUTLINER_MT_collection(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -105,14 +105,14 @@ class OUTLINER_MT_collection_new(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_without_context_menu(_context, layout):
+    def draw_without_context_menu(_context, layout) -> None:
         """
 
         :param _context:
@@ -138,7 +138,7 @@ class OUTLINER_MT_collection_view_layer(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -163,7 +163,7 @@ class OUTLINER_MT_collection_visibility(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -188,14 +188,14 @@ class OUTLINER_MT_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_common_operators(layout):
+    def draw_common_operators(layout) -> None:
         """
 
         :param layout:
@@ -220,7 +220,7 @@ class OUTLINER_MT_context_menu_view(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -245,7 +245,7 @@ class OUTLINER_MT_edit_datablocks(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -271,7 +271,7 @@ class OUTLINER_MT_editor_menus(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -296,14 +296,14 @@ class OUTLINER_MT_id_data(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -328,14 +328,14 @@ class OUTLINER_MT_liboverride(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -360,7 +360,7 @@ class OUTLINER_MT_object(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -385,7 +385,7 @@ class OUTLINER_MT_view_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -412,10 +412,10 @@ class OUTLINER_PT_filter(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-def has_selected_ids_in_context(context): ...
+def has_selected_ids_in_context(context) -> None: ...

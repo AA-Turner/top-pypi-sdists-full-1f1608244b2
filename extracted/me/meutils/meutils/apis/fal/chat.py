@@ -16,11 +16,17 @@ from fal_client.client import AsyncClient, SyncClient, Status, FalClientError
 
 models = "anthropic/claude-3.7-sonnet,anthropic/claude-3.5-sonnet, anthropic/claude-3-5-haiku, anthropic/claude-3-haiku, google/gemini-pro-1.5, google/gemini-flash-1.5, google/gemini-flash-1.5-8b, meta-llama/llama-3.2-1b-instruct, meta-llama/llama-3.2-3b-instruct, meta-llama/llama-3.1-8b-instruct, meta-llama/llama-3.1-70b-instruct, openai/gpt-4o-mini, openai/gpt-4o, deepseek/deepseek-r1"
 
-
 async def create(
         request: CompletionRequest,
         api_key: Optional[str] = None,
 ):
+    """
+    Prompt length must be less than 5000 characters
+
+    :param request:
+    :param api_key:
+    :return:
+    """
     if (not request.stream and request.max_tokens and request.max_tokens < 11):
         yield " "
         return
@@ -40,6 +46,8 @@ async def create(
     client = AsyncClient(key=api_key)
 
     if request.stream:
+        yield ""
+
         stream = client.stream("fal-ai/any-llm", arguments=arguments)
         prefix = ""
         i = 0
@@ -67,11 +75,11 @@ if __name__ == '__main__':
             {"role": "user",
              "content": [{
                  "type": "text",
-                 "text": "1+1"
+                 "text": "1+1"*10000
              }]
              },
 
         ],
-        # stream=True,
+        stream=True,
     )
     arun(create(request))

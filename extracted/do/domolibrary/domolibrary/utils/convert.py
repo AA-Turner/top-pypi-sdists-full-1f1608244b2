@@ -3,7 +3,8 @@
 # %% auto 0
 __all__ = ['print_md', 'convert_epoch_millisecond_to_datetime', 'convert_datetime_to_epoch_millisecond',
            'convert_string_to_datetime', 'convert_snake_to_pascal', 'convert_str_to_snake_case', 'InvalidEmail',
-           'test_valid_email', 'convert_string_to_bool', 'ConcatDataframe_InvalidElement', 'concat_list_dataframe']
+           'test_valid_email', 'convert_string_to_bool', 'ConcatDataframe_InvalidElement', 'concat_list_dataframe',
+           'merge_dict']
 
 # %% ../../nbs/utils/convert.ipynb 2
 import datetime as dt
@@ -105,3 +106,16 @@ def concat_list_dataframe(df_ls: list[pd.DataFrame]) -> pd.DataFrame:
         else:
             df = pd.concat([df, elem], join="inner").reset_index(drop=True)
     return df
+
+# %% ../../nbs/utils/convert.ipynb 27
+def merge_dict(source : dict, destination: dict):
+    """merge source dict into destination dict, merging values in destination"""
+    for key, value in source.items():
+        if isinstance(value, dict):
+            # get node or create one
+            node = destination.setdefault(key, {})
+            merge_dict(value, node)
+        else:
+            destination[key] = value
+            
+    return destination

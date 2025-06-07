@@ -189,40 +189,40 @@ async def get_assistant_graph(
     async with connect() as conn:
         assistant_ = await Assistants.get(conn, assistant_id)
         assistant = await fetchone(assistant_)
-        config = await ajson_loads(assistant["config"])
-        async with get_graph(
-            assistant["graph_id"],
-            config,
-            checkpointer=Checkpointer(conn),
-            store=(await api_store.get_store()),
-        ) as graph:
-            xray: bool | int = False
-            xray_query = request.query_params.get("xray")
-            if xray_query:
-                if xray_query in ("true", "True"):
-                    xray = True
-                elif xray_query in ("false", "False"):
-                    xray = False
-                else:
-                    try:
-                        xray = int(xray_query)
-                    except ValueError:
-                        raise HTTPException(422, detail="Invalid xray value") from None
+    config = await ajson_loads(assistant["config"])
+    async with get_graph(
+        assistant["graph_id"],
+        config,
+        checkpointer=Checkpointer(),
+        store=(await api_store.get_store()),
+    ) as graph:
+        xray: bool | int = False
+        xray_query = request.query_params.get("xray")
+        if xray_query:
+            if xray_query in ("true", "True"):
+                xray = True
+            elif xray_query in ("false", "False"):
+                xray = False
+            else:
+                try:
+                    xray = int(xray_query)
+                except ValueError:
+                    raise HTTPException(422, detail="Invalid xray value") from None
 
-                    if xray <= 0:
-                        raise HTTPException(422, detail="Invalid xray value") from None
+                if xray <= 0:
+                    raise HTTPException(422, detail="Invalid xray value") from None
 
-            if isinstance(graph, BaseRemotePregel):
-                drawable_graph = await graph.fetch_graph(xray=xray)
-                return ApiResponse(drawable_graph.to_json())
+        if isinstance(graph, BaseRemotePregel):
+            drawable_graph = await graph.fetch_graph(xray=xray)
+            return ApiResponse(drawable_graph.to_json())
 
-            try:
-                drawable_graph = await graph.aget_graph(xray=xray)
-                return ApiResponse(drawable_graph.to_json())
-            except NotImplementedError:
-                raise HTTPException(
-                    422, detail="The graph does not support visualization"
-                ) from None
+        try:
+            drawable_graph = await graph.aget_graph(xray=xray)
+            return ApiResponse(drawable_graph.to_json())
+        except NotImplementedError:
+            raise HTTPException(
+                422, detail="The graph does not support visualization"
+            ) from None
 
 
 @retry_db
@@ -239,7 +239,7 @@ async def get_assistant_subgraphs(
         async with get_graph(
             assistant["graph_id"],
             config,
-            checkpointer=Checkpointer(conn),
+            checkpointer=Checkpointer(),
             store=(await api_store.get_store()),
         ) as graph:
             namespace = request.path_params.get("namespace")
@@ -285,7 +285,7 @@ async def get_assistant_schemas(
         async with get_graph(
             assistant["graph_id"],
             config,
-            checkpointer=Checkpointer(conn),
+            checkpointer=Checkpointer(),
             store=(await api_store.get_store()),
         ) as graph:
             if isinstance(graph, BaseRemotePregel):

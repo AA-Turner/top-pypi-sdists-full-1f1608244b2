@@ -27,14 +27,14 @@ class VertexPaintDirt(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -42,5 +42,5 @@ class VertexPaintDirt(bpy.types.Operator):
 
 def applyVertexDirt(
     me, blur_iterations, blur_strength, clamp_dirt, clamp_clean, dirt_only, normalize
-): ...
-def ensure_active_color_attribute(me): ...
+) -> None: ...
+def ensure_active_color_attribute(me) -> None: ...

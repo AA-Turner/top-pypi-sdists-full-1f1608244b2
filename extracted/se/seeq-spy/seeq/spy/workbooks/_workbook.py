@@ -9,6 +9,7 @@ from typing import Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
+
 from seeq.base import util
 from seeq.base.seeq_names import SeeqNames
 from seeq.sdk import *
@@ -854,7 +855,7 @@ class Workbook(ItemWithOwnerAndAcl):
         metadata_df = pd.DataFrame.from_dict(new_metadata, orient='index')
         return _metadata.push(self._push_context.session, metadata_df, workbook_context, datasource_output,
                               inner_status, cleanse_data_ids=self._push_context.reconcile_inventory_by == 'name',
-                              global_inventory='copy global', validate_ui_configs=False)
+                              default_to_local=False, validate_ui_configs=False)
 
     def push_containing_folders(self, session: Session, item_map: ItemMap, datasource_output, use_full_path,
                                 parent_folder_id, owner, label, access_control, status: Status):

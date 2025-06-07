@@ -4,7 +4,9 @@ import typing_extensions
 import numpy.typing as npt
 import bpy.stub_internal.rna_enums
 
-def delete(execution_context: int | str | None = None, undo: bool | None = None):
+def delete(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Delete active scene
 
     :type execution_context: int | str | None
@@ -13,7 +15,7 @@ def delete(execution_context: int | str | None = None, undo: bool | None = None)
 
 def freestyle_add_edge_marks_to_keying_set(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add the data paths to the Freestyle Edge Mark property of selected edges to the active keying set
 
     :type execution_context: int | str | None
@@ -22,7 +24,7 @@ def freestyle_add_edge_marks_to_keying_set(
 
 def freestyle_add_face_marks_to_keying_set(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add the data paths to the Freestyle Face Mark property of selected polygons to the active keying set
 
     :type execution_context: int | str | None
@@ -36,7 +38,7 @@ def freestyle_alpha_modifier_add(
     *,
     type: bpy.stub_internal.rna_enums.LinestyleAlphaModifierTypeItems
     | None = "ALONG_STROKE",
-):
+) -> None:
     """Add an alpha transparency modifier to the line style associated with the active lineset
 
     :type execution_context: int | str | None
@@ -52,7 +54,7 @@ def freestyle_color_modifier_add(
     *,
     type: bpy.stub_internal.rna_enums.LinestyleColorModifierTypeItems
     | None = "ALONG_STROKE",
-):
+) -> None:
     """Add a line color modifier to the line style associated with the active lineset
 
     :type execution_context: int | str | None
@@ -68,7 +70,7 @@ def freestyle_fill_range_by_selection(
     *,
     type: typing.Literal["COLOR", "ALPHA", "THICKNESS"] | None = "COLOR",
     name: str = "",
-):
+) -> None:
     """Fill the Range Min/Max entries by the min/max distance between selected mesh objects and the source object (either a user-specified object or the active camera)
 
         :type execution_context: int | str | None
@@ -95,7 +97,7 @@ def freestyle_geometry_modifier_add(
     *,
     type: bpy.stub_internal.rna_enums.LinestyleGeometryModifierTypeItems
     | None = "2D_OFFSET",
-):
+) -> None:
     """Add a stroke geometry modifier to the line style associated with the active lineset
 
     :type execution_context: int | str | None
@@ -106,7 +108,7 @@ def freestyle_geometry_modifier_add(
 
 def freestyle_lineset_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a line set into the list of line sets
 
     :type execution_context: int | str | None
@@ -115,7 +117,7 @@ def freestyle_lineset_add(
 
 def freestyle_lineset_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy the active line set to the internal clipboard
 
     :type execution_context: int | str | None
@@ -128,7 +130,7 @@ def freestyle_lineset_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Change the position of the active line set within the list of line sets
 
     :type execution_context: int | str | None
@@ -139,7 +141,7 @@ def freestyle_lineset_move(
 
 def freestyle_lineset_paste(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Paste the internal clipboard content to the active line set
 
     :type execution_context: int | str | None
@@ -148,7 +150,7 @@ def freestyle_lineset_paste(
 
 def freestyle_lineset_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the active line set from the list of line sets
 
     :type execution_context: int | str | None
@@ -157,7 +159,7 @@ def freestyle_lineset_remove(
 
 def freestyle_linestyle_new(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create a new line style, reusable by multiple line sets
 
     :type execution_context: int | str | None
@@ -166,7 +168,7 @@ def freestyle_linestyle_new(
 
 def freestyle_modifier_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Duplicate the modifier within the list of modifiers
 
     :type execution_context: int | str | None
@@ -179,7 +181,7 @@ def freestyle_modifier_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move the modifier within the list of modifiers
 
     :type execution_context: int | str | None
@@ -190,7 +192,7 @@ def freestyle_modifier_move(
 
 def freestyle_modifier_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the modifier from the list of modifiers
 
     :type execution_context: int | str | None
@@ -199,7 +201,7 @@ def freestyle_modifier_remove(
 
 def freestyle_module_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a style module into the list of modules
 
     :type execution_context: int | str | None
@@ -212,7 +214,7 @@ def freestyle_module_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Change the position of the style module within in the list of style modules
 
     :type execution_context: int | str | None
@@ -228,7 +230,7 @@ def freestyle_module_open(
     *,
     filepath: str = "",
     make_internal: bool | None = True,
-):
+) -> None:
     """Open a style module file
 
     :type execution_context: int | str | None
@@ -241,7 +243,7 @@ def freestyle_module_open(
 
 def freestyle_module_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the style module from the stack
 
     :type execution_context: int | str | None
@@ -250,7 +252,7 @@ def freestyle_module_remove(
 
 def freestyle_stroke_material_create(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create Freestyle stroke material for testing
 
     :type execution_context: int | str | None
@@ -264,7 +266,7 @@ def freestyle_thickness_modifier_add(
     *,
     type: bpy.stub_internal.rna_enums.LinestyleThicknessModifierTypeItems
     | None = "ALONG_STROKE",
-):
+) -> None:
     """Add a line thickness modifier to the line style associated with the active lineset
 
     :type execution_context: int | str | None
@@ -275,7 +277,7 @@ def freestyle_thickness_modifier_add(
 
 def gltf2_action_filter_refresh(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Refresh list of actions
 
     :type execution_context: int | str | None
@@ -290,7 +292,7 @@ def gpencil_brush_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove grease pencil brush preset
 
     :type execution_context: int | str | None
@@ -311,7 +313,7 @@ def gpencil_material_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove Grease Pencil material preset
 
     :type execution_context: int | str | None
@@ -330,7 +332,7 @@ def new(
     /,
     *,
     type: typing.Literal["NEW", "EMPTY", "LINK_COPY", "FULL_COPY"] | None = "NEW",
-):
+) -> None:
     """Add new scene by type
 
         :type execution_context: int | str | None
@@ -357,7 +359,7 @@ def new_sequencer(
     /,
     *,
     type: typing.Literal["NEW", "EMPTY", "LINK_COPY", "FULL_COPY"] | None = "NEW",
-):
+) -> None:
     """Add new scene by type in the sequence editor and assign to active strip
 
         :type execution_context: int | str | None
@@ -380,7 +382,7 @@ def new_sequencer(
 
 def render_view_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a render view
 
     :type execution_context: int | str | None
@@ -389,7 +391,7 @@ def render_view_add(
 
 def render_view_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the selected render view
 
     :type execution_context: int | str | None
@@ -402,7 +404,7 @@ def view_layer_add(
     /,
     *,
     type: typing.Literal["NEW", "COPY", "EMPTY"] | None = "NEW",
-):
+) -> None:
     """Add a view layer
 
         :type execution_context: int | str | None
@@ -422,7 +424,7 @@ def view_layer_add(
 
 def view_layer_add_aov(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a Shader AOV
 
     :type execution_context: int | str | None
@@ -435,7 +437,7 @@ def view_layer_add_lightgroup(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Add a Light Group
 
     :type execution_context: int | str | None
@@ -446,7 +448,7 @@ def view_layer_add_lightgroup(
 
 def view_layer_add_used_lightgroups(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add all used Light Groups
 
     :type execution_context: int | str | None
@@ -455,7 +457,7 @@ def view_layer_add_used_lightgroups(
 
 def view_layer_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the selected view layer
 
     :type execution_context: int | str | None
@@ -464,7 +466,7 @@ def view_layer_remove(
 
 def view_layer_remove_aov(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove Active AOV
 
     :type execution_context: int | str | None
@@ -473,7 +475,7 @@ def view_layer_remove_aov(
 
 def view_layer_remove_lightgroup(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove Active Lightgroup
 
     :type execution_context: int | str | None
@@ -482,7 +484,7 @@ def view_layer_remove_lightgroup(
 
 def view_layer_remove_unused_lightgroups(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove all unused Light Groups
 
     :type execution_context: int | str | None

@@ -14,7 +14,7 @@ class Buffer:
 class GPUBatch:
     """Reusable container for drawable geometry."""
 
-    def draw(self, shader=None):
+    def draw(self, shader=None) -> None:
         """Run the drawing shader with the parameters assigned to the batch.
 
                 :param shader: Shader that performs the drawing operations.
@@ -23,7 +23,7 @@ class GPUBatch:
 
     def draw_instanced(
         self, program: GPUShader, *, instance_start: int = 0, instance_count: int = 0
-    ):
+    ) -> None:
         """Draw multiple instances of the drawing program with the parameters assigned
         to the batch. In the vertex shader, gl_InstanceID will contain the instance
         number being drawn.
@@ -40,7 +40,7 @@ class GPUBatch:
 
     def draw_range(
         self, program: GPUShader, *, elem_start: int = 0, elem_count: int = 0
-    ):
+    ) -> None:
         """Run the drawing program with the parameters assigned to the batch. Only draw the elem_count elements of the index buffer starting at elem_start.
 
                 :param program: Program that performs the drawing operations.
@@ -54,7 +54,7 @@ class GPUBatch:
                 :type elem_count: int
         """
 
-    def program_set(self, program: GPUShader):
+    def program_set(self, program: GPUShader) -> None:
         """Assign a shader to this batch that will be used for drawing when not overwritten later.
         Note: This method has to be called in the draw context that the batch will be drawn in.
         This function does not need to be called when you always
@@ -64,7 +64,7 @@ class GPUBatch:
                 :type program: GPUShader
         """
 
-    def vertbuf_add(self, buf: GPUVertBuf):
+    def vertbuf_add(self, buf: GPUVertBuf) -> None:
         """Add another vertex buffer to the Batch.
         It is not possible to add more vertices to the batch using this method.
         Instead it can be used to add more attributes to the existing vertices.
@@ -85,7 +85,7 @@ class GPUFrameBuffer:
     is_bound: typing.Any
     """ Checks if this is the active framebuffer in the context."""
 
-    def bind(self):
+    def bind(self) -> None:
         """Context manager to ensure balanced bind calls, even in the case of an error."""
 
     def clear(
@@ -93,7 +93,7 @@ class GPUFrameBuffer:
         color: collections.abc.Sequence[float] | None = None,
         depth: float | None = None,
         stencil: int | None = None,
-    ):
+    ) -> None:
         """Fill color, depth and stencil textures with specific value.
         Common values: color=(0.0, 0.0, 0.0, 1.0), depth=1.0, stencil=0.
 
@@ -151,10 +151,10 @@ class GPUFrameBuffer:
         :rtype: Buffer
         """
 
-    def viewport_get(self):
+    def viewport_get(self) -> None:
         """Returns position and dimension to current viewport."""
 
-    def viewport_set(self, x: int, y, xsize: int, ysize):
+    def viewport_set(self, x: int, y, xsize: int, ysize) -> None:
         """Set the viewport for this framebuffer object.
         Note: The viewport state is not saved upon framebuffer rebind.
 
@@ -196,7 +196,7 @@ class GPUOffScreen:
     :type: int
     """
 
-    def bind(self):
+    def bind(self) -> None:
         """Context manager to ensure balanced bind calls, even in the case of an error."""
 
     def draw_view3d(
@@ -211,7 +211,7 @@ class GPUOffScreen:
         | mathutils.Matrix,
         do_color_management: bool = False,
         draw_background: bool = True,
-    ):
+    ) -> None:
         """Draw the 3d viewport in the offscreen object.
 
         :param scene: Scene to draw.
@@ -232,13 +232,13 @@ class GPUOffScreen:
         :type draw_background: bool
         """
 
-    def free(self):
+    def free(self) -> None:
         """Free the offscreen object.
         The framebuffer, texture and render objects will no longer be accessible.
 
         """
 
-    def unbind(self, restore: bool = True):
+    def unbind(self, restore: bool = True) -> None:
         """Unbind the offscreen object.
 
         :param restore: Restore the OpenGL state, can only be used when the state has been saved before.
@@ -285,7 +285,7 @@ This is deprecated and will always return -1.
         :rtype: tuple[tuple[str, str | None], ...]
         """
 
-    def bind(self):
+    def bind(self) -> None:
         """Bind the shader object. Required to be able to change uniforms of this shader."""
 
     def format_calc(self) -> GPUVertFormat:
@@ -295,7 +295,7 @@ This is deprecated and will always return -1.
         :rtype: GPUVertFormat
         """
 
-    def image(self, name: str, texture: GPUTexture):
+    def image(self, name: str, texture: GPUTexture) -> None:
         """Specify the value of an image variable for the current GPUShader.
 
         :param name: Name of the image variable to which the texture is to be bound.
@@ -304,7 +304,7 @@ This is deprecated and will always return -1.
         :type texture: GPUTexture
         """
 
-    def uniform_block(self, name: str, ubo):
+    def uniform_block(self, name: str, ubo) -> None:
         """Specify the value of an uniform buffer object variable for the current GPUShader.
 
         :param name: name of the uniform variable whose UBO is to be specified.
@@ -321,7 +321,9 @@ This is deprecated and will always return -1.
         :rtype: int
         """
 
-    def uniform_bool(self, name: str, value: bool | collections.abc.Sequence[bool]):
+    def uniform_bool(
+        self, name: str, value: bool | collections.abc.Sequence[bool]
+    ) -> None:
         """Specify the value of a uniform variable for the current program object.
 
         :param name: Name of the uniform variable whose value is to be changed.
@@ -330,7 +332,9 @@ This is deprecated and will always return -1.
         :type value: bool | collections.abc.Sequence[bool]
         """
 
-    def uniform_float(self, name: str, value: collections.abc.Sequence[float] | float):
+    def uniform_float(
+        self, name: str, value: collections.abc.Sequence[float] | float
+    ) -> None:
         """Specify the value of a uniform variable for the current program object.
 
         :param name: Name of the uniform variable whose value is to be changed.
@@ -348,7 +352,7 @@ This is deprecated and will always return -1.
         :rtype: int
         """
 
-    def uniform_int(self, name: str, seq: collections.abc.Sequence[int]):
+    def uniform_int(self, name: str, seq: collections.abc.Sequence[int]) -> None:
         """Specify the value of a uniform variable for the current program object.
 
         :param name: name of the uniform variable whose value is to be changed.
@@ -357,7 +361,7 @@ This is deprecated and will always return -1.
         :type seq: collections.abc.Sequence[int]
         """
 
-    def uniform_sampler(self, name: str, texture: GPUTexture):
+    def uniform_sampler(self, name: str, texture: GPUTexture) -> None:
         """Specify the value of a texture uniform variable for the current GPUShader.
 
         :param name: name of the uniform variable whose texture is to be specified.
@@ -372,7 +376,7 @@ This is deprecated and will always return -1.
         buffer: collections.abc.Sequence[float],
         length: int,
         count: int,
-    ):
+    ) -> None:
         """Set the buffer to fill the uniform.
 
                 :param location: Location of the uniform variable to be modified.
@@ -397,7 +401,7 @@ This is deprecated and will always return -1.
                 :type count: int
         """
 
-    def uniform_vector_int(self, location, buffer, length, count):
+    def uniform_vector_int(self, location, buffer, length, count) -> None:
         """See GPUShader.uniform_vector_float(...) description.
 
         :param location:
@@ -409,21 +413,21 @@ This is deprecated and will always return -1.
 class GPUShaderCreateInfo:
     """Stores and describes types and variables that are used in shader sources."""
 
-    def compute_source(self, source: str):
+    def compute_source(self, source: str) -> None:
         """compute shader source code written in GLSL.Example:`GLSL Cross Compilation <https://developer.blender.org/docs/features/gpu/glsl_cross_compilation/>`__
 
         :param source: The compute shader source code.
         :type source: str
         """
 
-    def define(self, name, value):
+    def define(self, name, value) -> None:
         """Add a preprocessing define directive. In GLSL it would be something like:
 
         :param name:
         :param value:
         """
 
-    def depth_write(self, value):
+    def depth_write(self, value) -> None:
         """Specify a depth write behavior when modifying gl_FragDepth.There is a common optimization for GPUs that relies on an early depth
         test to be run before the fragment shader so that the shader evaluation
         can be skipped if the fragment ends up being discarded because it is occluded.This optimization does not affect the final rendering, and is typically
@@ -439,7 +443,9 @@ class GPUShaderCreateInfo:
         :LESS: enables depth write in a fragment shader for depth values thatare less than the depth value in the output buffer.
         """
 
-    def fragment_out(self, slot: int, type: str, name: str, blend: str = "NONE"):
+    def fragment_out(
+        self, slot: int, type: str, name: str, blend: str = "NONE"
+    ) -> None:
         """Specify a fragment output corresponding to a framebuffer target slot.
 
                 :param slot: The attribute index.
@@ -482,7 +488,7 @@ class GPUShaderCreateInfo:
                 :type blend: str
         """
 
-    def fragment_source(self, source: str):
+    def fragment_source(self, source: str) -> None:
         """Fragment shader source code written in GLSL.Example:`GLSL Cross Compilation <https://developer.blender.org/docs/features/gpu/glsl_cross_compilation/>`__
 
         :param source: The fragment shader source code.
@@ -491,7 +497,7 @@ class GPUShaderCreateInfo:
 
     def image(
         self, slot: int, format: str, type: str, name: str, qualifiers={"NO_RESTRICT"}
-    ):
+    ) -> None:
         """Specify an image resource used for arbitrary load and store operations.
 
                 :param slot: The image resource index.
@@ -660,7 +666,7 @@ class GPUShaderCreateInfo:
         - WRITE
         """
 
-    def local_group_size(self, x: int, y: int = -1, z: int = -1):
+    def local_group_size(self, x: int, y: int = -1, z: int = -1) -> None:
         """Specify the local group size for compute shaders.
 
         :param x: The local group size in the x dimension.
@@ -671,7 +677,7 @@ class GPUShaderCreateInfo:
         :type z: int
         """
 
-    def push_constant(self, type: str, name: str, size: int = 0):
+    def push_constant(self, type: str, name: str, size: int = 0) -> None:
         """Specify a global access constant.
 
                 :param type: One of these types:
@@ -712,7 +718,7 @@ class GPUShaderCreateInfo:
                 :type size: int
         """
 
-    def sampler(self, slot: int, type: str, name: str):
+    def sampler(self, slot: int, type: str, name: str) -> None:
         """Specify an image texture sampler.
 
                 :param slot: The image texture sampler index.
@@ -787,13 +793,13 @@ class GPUShaderCreateInfo:
                 :type name: str
         """
 
-    def typedef_source(self, source):
+    def typedef_source(self, source) -> None:
         """Source code included before resource declaration. Useful for defining structs used by Uniform Buffers.Example:
 
         :param source:
         """
 
-    def uniform_buf(self, slot: int, type_name: str, name: str):
+    def uniform_buf(self, slot: int, type_name: str, name: str) -> None:
         """Specify a uniform variable whose type can be one of those declared in `gpu.types.GPUShaderCreateInfo.typedef_source`.
 
         :param slot: The uniform variable index.
@@ -804,7 +810,7 @@ class GPUShaderCreateInfo:
         :type name: str
         """
 
-    def vertex_in(self, slot: int, type: str, name: str):
+    def vertex_in(self, slot: int, type: str, name: str) -> None:
         """Add a vertex shader input attribute.
 
                 :param slot: The attribute index.
@@ -845,14 +851,14 @@ class GPUShaderCreateInfo:
                 :type name: str
         """
 
-    def vertex_out(self, interface: GPUStageInterfaceInfo):
+    def vertex_out(self, interface: GPUStageInterfaceInfo) -> None:
         """Add a vertex shader output interface block.
 
         :param interface: Object describing the block.
         :type interface: GPUStageInterfaceInfo
         """
 
-    def vertex_source(self, source: str):
+    def vertex_source(self, source: str) -> None:
         """Vertex shader source code written in GLSL.Example:`GLSL Cross Compilation <https://developer.blender.org/docs/features/gpu/glsl_cross_compilation/>`__
 
         :param source: The vertex shader source code.
@@ -868,7 +874,7 @@ class GPUStageInterfaceInfo:
     :type: str
     """
 
-    def flat(self, type: str, name: str):
+    def flat(self, type: str, name: str) -> None:
         """Add an attribute with qualifier of type flat to the interface block.
 
                 :param type: One of these types:
@@ -907,7 +913,7 @@ class GPUStageInterfaceInfo:
                 :type name: str
         """
 
-    def no_perspective(self, type: str, name: str):
+    def no_perspective(self, type: str, name: str) -> None:
         """Add an attribute with qualifier of type no_perspective to the interface block.
 
                 :param type: One of these types:
@@ -946,7 +952,7 @@ class GPUStageInterfaceInfo:
                 :type name: str
         """
 
-    def smooth(self, type: str, name: str):
+    def smooth(self, type: str, name: str) -> None:
         """Add an attribute with qualifier of type smooth to the interface block.
 
                 :param type: One of these types:
@@ -1010,7 +1016,7 @@ class GPUTexture:
         self,
         format: str = "FLOAT",
         value: collections.abc.Sequence[float] = (0.0, 0.0, 0.0, 1.0),
-    ):
+    ) -> None:
         """Fill texture with specific value.
 
                 :param format: The format that describes the content of a single item.
@@ -1020,13 +1026,13 @@ class GPUTexture:
                 :type value: collections.abc.Sequence[float]
         """
 
-    def read(self):
+    def read(self) -> None:
         """Creates a buffer with the value of all pixels."""
 
 class GPUUniformBuf:
     """This object gives access to off uniform buffers."""
 
-    def update(self, data):
+    def update(self, data) -> None:
         """Update the data of the uniform buffer object.
 
         :param data:
@@ -1043,7 +1049,7 @@ class GPUVertBuf:
         | collections.abc.Sequence[collections.abc.Sequence[int]]
         | collections.abc.Sequence[float]
         | collections.abc.Sequence[int],
-    ):
+    ) -> None:
         """Insert data into the buffer for a single attribute.
 
         :param id: Either the name or the id of the attribute.
@@ -1055,7 +1061,7 @@ class GPUVertBuf:
 class GPUVertFormat:
     """This object contains information about the structure of a vertex buffer."""
 
-    def attr_add(self, id: str, comp_type: str, len: int, fetch_mode: str):
+    def attr_add(self, id: str, comp_type: str, len: int, fetch_mode: str) -> None:
         """Add a new attribute to the format.
 
                 :param id: Name the attribute. Often position, normal, ...

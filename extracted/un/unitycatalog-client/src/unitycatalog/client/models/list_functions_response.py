@@ -73,9 +73,9 @@ class ListFunctionsResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in functions (list)
         _items = []
         if self.functions:
-            for _item in self.functions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_functions in self.functions:
+                if _item_functions:
+                    _items.append(_item_functions.to_dict())
             _dict['functions'] = _items
         return _dict
 

@@ -25,7 +25,7 @@ def annotate(
     stroke: bpy.types.bpy_prop_collection[bpy.types.OperatorStrokeElement]
     | None = None,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Make annotations on the active data
 
         :type execution_context: int | str | None
@@ -92,7 +92,7 @@ def annotate(
 
 def annotation_active_frame_delete(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete the active frame for the active Annotation Layer
 
     :type execution_context: int | str | None
@@ -101,14 +101,16 @@ def annotation_active_frame_delete(
 
 def annotation_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add new Annotation data-block
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def data_unlink(execution_context: int | str | None = None, undo: bool | None = None):
+def data_unlink(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Unlink active Annotation data-block
 
     :type execution_context: int | str | None
@@ -117,7 +119,7 @@ def data_unlink(execution_context: int | str | None = None, undo: bool | None = 
 
 def layer_annotation_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add new Annotation layer or note for the active data-block
 
     :type execution_context: int | str | None
@@ -130,7 +132,7 @@ def layer_annotation_move(
     /,
     *,
     type: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move the active Annotation layer up/down in the list
 
     :type execution_context: int | str | None
@@ -141,14 +143,16 @@ def layer_annotation_move(
 
 def layer_annotation_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove active Annotation layer
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def tint_flip(execution_context: int | str | None = None, undo: bool | None = None):
+def tint_flip(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Switch tint colors
 
     :type execution_context: int | str | None

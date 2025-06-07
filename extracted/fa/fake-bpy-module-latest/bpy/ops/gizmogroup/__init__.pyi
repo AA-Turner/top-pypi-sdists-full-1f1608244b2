@@ -13,7 +13,7 @@ def gizmo_select(
     toggle: bool | None = False,
     deselect_all: bool | None = False,
     select_passthrough: bool | None = False,
-):
+) -> None:
     """Select the currently highlighted gizmo
 
     :type execution_context: int | str | None
@@ -30,7 +30,9 @@ def gizmo_select(
     :type select_passthrough: bool | None
     """
 
-def gizmo_tweak(execution_context: int | str | None = None, undo: bool | None = None):
+def gizmo_tweak(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Tweak the active gizmo
 
     :type execution_context: int | str | None

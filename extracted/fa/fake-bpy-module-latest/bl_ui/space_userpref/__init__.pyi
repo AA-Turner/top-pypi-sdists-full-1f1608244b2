@@ -20,7 +20,7 @@ class CenterAlignMixIn:
     Deriving classes need to implement a draw_centered(context, layout) function.
     """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -38,7 +38,7 @@ class ExperimentalPanel:
     url_prefix: typing.Any
 
     @classmethod
-    def poll(cls, _context):
+    def poll(cls, _context) -> None:
         """
 
         :param _context:
@@ -75,13 +75,13 @@ class NavigationPanel:
     bl_space_type: typing.Any
 
 class PreferenceThemeSpacePanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, _context):
+    def draw_header(self, _context) -> None:
         """
 
         :param _context:
@@ -90,20 +90,20 @@ class PreferenceThemeSpacePanel:
 class PreferenceThemeWidgetColorPanel:
     bl_parent_id: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
 class PreferenceThemeWidgetShadePanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -120,27 +120,27 @@ class StudioLightPanel:
     bl_space_type: typing.Any
 
 class StudioLightPanelMixin:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_light_list(self, layout, lights):
+    def draw_light_list(self, layout, lights) -> None:
         """
 
         :param layout:
         :param lights:
         """
 
-    def draw_studio_light(self, layout, studio_light):
+    def draw_studio_light(self, layout, studio_light) -> None:
         """
 
         :param layout:
         :param studio_light:
         """
 
-    def get_error_message(self): ...
+    def get_error_message(self) -> None: ...
 
 class SystemPanel:
     bl_context: typing.Any
@@ -149,13 +149,13 @@ class SystemPanel:
 
 class ThemeGenericClassGenerator:
     @staticmethod
-    def generate_panel_classes_for_wcols(): ...
+    def generate_panel_classes_for_wcols() -> None: ...
     @staticmethod
-    def generate_panel_classes_from_theme_areas(): ...
+    def generate_panel_classes_from_theme_areas() -> None: ...
     @staticmethod
     def generate_theme_area_child_panel_classes(
         parent_id, rna_type, theme_area, datapath
-    ):
+    ) -> None:
         """
 
         :param parent_id:
@@ -188,14 +188,14 @@ class USERPREF_HT_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_buttons(layout, context):
+    def draw_buttons(layout, context) -> None:
         """
 
         :param layout:
@@ -222,7 +222,7 @@ class USERPREF_MT_editor_menus(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -266,7 +266,7 @@ class USERPREF_MT_extensions_active_repo_remove(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -297,7 +297,7 @@ class USERPREF_MT_interface_theme_presets(bpy.types.Menu):
         """
 
     @staticmethod
-    def post_cb(context, filepath):
+    def post_cb(context, filepath) -> None:
         """
 
         :param context:
@@ -305,7 +305,7 @@ class USERPREF_MT_interface_theme_presets(bpy.types.Menu):
         """
 
     @staticmethod
-    def reset_cb(_context, _filepath):
+    def reset_cb(_context, _filepath) -> None:
         """
 
         :param _context:
@@ -333,7 +333,7 @@ class USERPREF_MT_keyconfigs(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -358,7 +358,7 @@ class USERPREF_MT_save_load(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -383,7 +383,7 @@ class USERPREF_MT_view(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -413,7 +413,7 @@ class USERPREF_PT_addons(AddOnPanel, bpy.types.Panel):
         """
 
     @staticmethod
-    def draw_addon_preferences(layout, context, addon_preferences):
+    def draw_addon_preferences(layout, context, addon_preferences) -> None:
         """
 
         :param layout:
@@ -422,7 +422,7 @@ class USERPREF_PT_addons(AddOnPanel, bpy.types.Panel):
         """
 
     @staticmethod
-    def draw_error(layout, message):
+    def draw_error(layout, message) -> None:
         """
 
         :param layout:
@@ -430,7 +430,7 @@ class USERPREF_PT_addons(AddOnPanel, bpy.types.Panel):
         """
 
     @staticmethod
-    def is_user_addon(mod, user_addon_paths):
+    def is_user_addon(mod, user_addon_paths) -> None:
         """
 
         :param mod:
@@ -459,7 +459,7 @@ class USERPREF_PT_addons_filter(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -491,7 +491,7 @@ class USERPREF_PT_animation_fcurves(CenterAlignMixIn, AnimationPanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -526,7 +526,7 @@ class USERPREF_PT_animation_keyframes(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -559,7 +559,7 @@ class USERPREF_PT_animation_timeline(CenterAlignMixIn, AnimationPanel, bpy.types
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -592,7 +592,7 @@ class USERPREF_PT_edit_annotations(CenterAlignMixIn, EditingPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -625,7 +625,7 @@ class USERPREF_PT_edit_cursor(CenterAlignMixIn, EditingPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -659,7 +659,7 @@ class USERPREF_PT_edit_gpencil(CenterAlignMixIn, EditingPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -693,7 +693,7 @@ class USERPREF_PT_edit_misc(CenterAlignMixIn, EditingPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -727,7 +727,7 @@ class USERPREF_PT_edit_node_editor(CenterAlignMixIn, EditingPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -756,7 +756,7 @@ class USERPREF_PT_edit_objects(EditingPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -792,7 +792,7 @@ class USERPREF_PT_edit_objects_duplicate_data(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -826,7 +826,7 @@ class USERPREF_PT_edit_objects_new(CenterAlignMixIn, EditingPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -860,7 +860,7 @@ class USERPREF_PT_edit_sequence_editor(CenterAlignMixIn, EditingPanel, bpy.types
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -894,7 +894,7 @@ class USERPREF_PT_edit_text_editor(CenterAlignMixIn, EditingPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -928,7 +928,7 @@ class USERPREF_PT_edit_weight_paint(CenterAlignMixIn, EditingPanel, bpy.types.Pa
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -958,14 +958,14 @@ class USERPREF_PT_experimental_debugging(ExperimentalPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, _context):
+    def poll(cls, _context) -> None:
         """
 
         :param _context:
@@ -994,7 +994,7 @@ class USERPREF_PT_experimental_new_features(ExperimentalPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1023,7 +1023,7 @@ class USERPREF_PT_experimental_prototypes(ExperimentalPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1075,7 +1075,7 @@ class USERPREF_PT_extensions_repos(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1104,7 +1104,7 @@ class USERPREF_PT_file_paths_applications(FilePathsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1132,7 +1132,7 @@ class USERPREF_PT_file_paths_asset_libraries(FilePathsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1160,7 +1160,7 @@ class USERPREF_PT_file_paths_data(FilePathsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1189,14 +1189,14 @@ class USERPREF_PT_file_paths_development(FilePathsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1225,7 +1225,7 @@ class USERPREF_PT_file_paths_render(FilePathsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1253,7 +1253,7 @@ class USERPREF_PT_file_paths_script_directories(FilePathsPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1285,7 +1285,7 @@ class USERPREF_PT_input_keyboard(CenterAlignMixIn, InputPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1318,7 +1318,7 @@ class USERPREF_PT_input_mouse(CenterAlignMixIn, InputPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1352,7 +1352,7 @@ class USERPREF_PT_input_ndof(CenterAlignMixIn, InputPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1360,7 +1360,7 @@ class USERPREF_PT_input_ndof(CenterAlignMixIn, InputPanel, bpy.types.Panel):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1392,7 +1392,7 @@ class USERPREF_PT_input_tablet(CenterAlignMixIn, InputPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1426,7 +1426,7 @@ class USERPREF_PT_input_touchpad(CenterAlignMixIn, InputPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1434,7 +1434,7 @@ class USERPREF_PT_input_touchpad(CenterAlignMixIn, InputPanel, bpy.types.Panel):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1466,7 +1466,7 @@ class USERPREF_PT_interface_display(CenterAlignMixIn, InterfacePanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1499,7 +1499,7 @@ class USERPREF_PT_interface_editors(CenterAlignMixIn, InterfacePanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1529,7 +1529,7 @@ class USERPREF_PT_interface_menus(InterfacePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1564,14 +1564,14 @@ class USERPREF_PT_interface_menus_mouse_over(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
         :param layout:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -1606,7 +1606,7 @@ class USERPREF_PT_interface_menus_pie(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1643,7 +1643,7 @@ class USERPREF_PT_interface_statusbar(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1680,7 +1680,7 @@ class USERPREF_PT_interface_temporary_windows(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1714,7 +1714,7 @@ class USERPREF_PT_interface_text(CenterAlignMixIn, InterfacePanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1750,7 +1750,7 @@ class USERPREF_PT_interface_translation(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1758,7 +1758,7 @@ class USERPREF_PT_interface_translation(
         """
 
     @classmethod
-    def poll(cls, _context):
+    def poll(cls, _context) -> None:
         """
 
         :param _context:
@@ -1787,7 +1787,7 @@ class USERPREF_PT_keymap(KeymapPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1815,7 +1815,7 @@ class USERPREF_PT_navigation_bar(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1849,7 +1849,7 @@ class USERPREF_PT_navigation_fly_walk(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1886,21 +1886,21 @@ class USERPREF_PT_navigation_fly_walk_gravity(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
         :param layout:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1936,7 +1936,7 @@ class USERPREF_PT_navigation_fly_walk_navigation(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -1944,7 +1944,7 @@ class USERPREF_PT_navigation_fly_walk_navigation(
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1976,7 +1976,7 @@ class USERPREF_PT_navigation_orbit(CenterAlignMixIn, NavigationPanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2009,7 +2009,7 @@ class USERPREF_PT_navigation_zoom(CenterAlignMixIn, NavigationPanel, bpy.types.P
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2038,14 +2038,14 @@ class USERPREF_PT_ndof_settings(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_settings(layout, props, show_3dview_settings=True):
+    def draw_settings(layout, props, show_3dview_settings=True) -> None:
         """
 
         :param layout:
@@ -2075,14 +2075,14 @@ class USERPREF_PT_save_preferences(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -2111,13 +2111,13 @@ class USERPREF_PT_saveload_autorun(FilePathsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -2149,7 +2149,7 @@ class USERPREF_PT_saveload_blend(CenterAlignMixIn, SaveLoadPanel, bpy.types.Pane
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2184,7 +2184,7 @@ class USERPREF_PT_saveload_file_browser(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2215,14 +2215,14 @@ class USERPREF_PT_studiolight_light_editor(StudioLightPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def opengl_light_buttons(layout, light):
+    def opengl_light_buttons(layout, light) -> None:
         """
 
         :param layout:
@@ -2254,13 +2254,13 @@ class USERPREF_PT_studiolight_lights(
         :rtype: typing.Any
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def get_error_message(self): ...
+    def get_error_message(self) -> None: ...
 
 class USERPREF_PT_studiolight_matcaps(
     StudioLightPanelMixin, StudioLightPanel, bpy.types.Panel
@@ -2287,13 +2287,13 @@ class USERPREF_PT_studiolight_matcaps(
         :rtype: typing.Any
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def get_error_message(self): ...
+    def get_error_message(self) -> None: ...
 
 class USERPREF_PT_studiolight_world(
     StudioLightPanelMixin, StudioLightPanel, bpy.types.Panel
@@ -2320,13 +2320,13 @@ class USERPREF_PT_studiolight_world(
         :rtype: typing.Any
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def get_error_message(self): ...
+    def get_error_message(self) -> None: ...
 
 class USERPREF_PT_system_cycles_devices(CenterAlignMixIn, SystemPanel, bpy.types.Panel):
     """Base class for panels to center align contents with some horizontal margin.
@@ -2354,7 +2354,7 @@ class USERPREF_PT_system_cycles_devices(CenterAlignMixIn, SystemPanel, bpy.types
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2389,7 +2389,7 @@ class USERPREF_PT_system_display_graphics(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2397,7 +2397,7 @@ class USERPREF_PT_system_display_graphics(
         """
 
     @classmethod
-    def poll(cls, _context):
+    def poll(cls, _context) -> None:
         """
 
         :param _context:
@@ -2429,7 +2429,7 @@ class USERPREF_PT_system_memory(CenterAlignMixIn, SystemPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2462,7 +2462,7 @@ class USERPREF_PT_system_network(CenterAlignMixIn, SystemPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2495,7 +2495,7 @@ class USERPREF_PT_system_os_settings(CenterAlignMixIn, SystemPanel, bpy.types.Pa
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2503,7 +2503,7 @@ class USERPREF_PT_system_os_settings(CenterAlignMixIn, SystemPanel, bpy.types.Pa
         """
 
     @classmethod
-    def poll(cls, _context):
+    def poll(cls, _context) -> None:
         """
 
         :param _context:
@@ -2536,7 +2536,7 @@ class USERPREF_PT_system_sound(CenterAlignMixIn, SystemPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2571,7 +2571,7 @@ class USERPREF_PT_system_video_sequencer(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2601,13 +2601,13 @@ class USERPREF_PT_text_editor(FilePathsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header_preset(self, _context):
+    def draw_header_preset(self, _context) -> None:
         """
 
         :param _context:
@@ -2660,7 +2660,7 @@ class USERPREF_PT_theme(ThemePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2693,14 +2693,14 @@ class USERPREF_PT_theme_bone_color_sets(CenterAlignMixIn, ThemePanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
         :param layout:
         """
 
-    def draw_header(self, _context):
+    def draw_header(self, _context) -> None:
         """
 
         :param _context:
@@ -2735,14 +2735,14 @@ class USERPREF_PT_theme_collection_colors(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
         :param layout:
         """
 
-    def draw_header(self, _context):
+    def draw_header(self, _context) -> None:
         """
 
         :param _context:
@@ -2776,7 +2776,7 @@ class USERPREF_PT_theme_interface_gizmos(CenterAlignMixIn, ThemePanel, bpy.types
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2811,7 +2811,7 @@ class USERPREF_PT_theme_interface_icons(CenterAlignMixIn, ThemePanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2846,7 +2846,7 @@ class USERPREF_PT_theme_interface_state(CenterAlignMixIn, ThemePanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2881,7 +2881,7 @@ class USERPREF_PT_theme_interface_styles(CenterAlignMixIn, ThemePanel, bpy.types
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2918,7 +2918,7 @@ class USERPREF_PT_theme_interface_transparent_checker(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -2952,14 +2952,14 @@ class USERPREF_PT_theme_strip_colors(CenterAlignMixIn, ThemePanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
         :param layout:
         """
 
-    def draw_header(self, _context):
+    def draw_header(self, _context) -> None:
         """
 
         :param _context:
@@ -2992,14 +2992,14 @@ class USERPREF_PT_theme_text_style(CenterAlignMixIn, ThemePanel, bpy.types.Panel
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
         :param layout:
         """
 
-    def draw_header(self, _context):
+    def draw_header(self, _context) -> None:
         """
 
         :param _context:
@@ -3032,13 +3032,13 @@ class USERPREF_PT_theme_user_interface(CenterAlignMixIn, ThemePanel, bpy.types.P
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, _context):
+    def draw_header(self, _context) -> None:
         """
 
         :param _context:
@@ -3070,7 +3070,7 @@ class USERPREF_PT_viewport_display(CenterAlignMixIn, ViewportPanel, bpy.types.Pa
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -3103,7 +3103,7 @@ class USERPREF_PT_viewport_quality(CenterAlignMixIn, ViewportPanel, bpy.types.Pa
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -3137,7 +3137,7 @@ class USERPREF_PT_viewport_selection(CenterAlignMixIn, ViewportPanel, bpy.types.
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -3173,7 +3173,7 @@ class USERPREF_PT_viewport_subdivision(
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -3206,7 +3206,7 @@ class USERPREF_PT_viewport_textures(CenterAlignMixIn, ViewportPanel, bpy.types.P
         :rtype: typing.Any
         """
 
-    def draw_centered(self, context, layout):
+    def draw_centered(self, context, layout) -> None:
         """
 
         :param context:
@@ -3241,7 +3241,7 @@ class USERPREF_UL_asset_libraries(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -3282,7 +3282,7 @@ class USERPREF_UL_extension_repos(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -3295,7 +3295,7 @@ class USERPREF_UL_extension_repos(bpy.types.UIList):
         :param _index:
         """
 
-    def filter_items(self, _context, data, propname):
+    def filter_items(self, _context, data, propname) -> None:
         """
 
         :param _context:

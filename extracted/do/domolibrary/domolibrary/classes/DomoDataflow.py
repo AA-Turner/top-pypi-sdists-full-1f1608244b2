@@ -3,19 +3,21 @@
 # %% ../../nbs/classes/50_DomoDataflow.ipynb 2
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import List
-
 import domolibrary.utils.DictDot as util_dd
 import domolibrary.utils.chunk_execution as dmce
 
-import domolibrary.routes.dataflow as dataflow_routes
-
+from domolibrary.client.DomoEntity import DomoEntity_w_Lineage
 import domolibrary.client.DomoError as dmde
 import domolibrary.client.DomoAuth as dmda
 
+import domolibrary.routes.dataflow as dataflow_routes
+
 import domolibrary.classes.DomoLineage as dmdl
 import domolibrary.classes.DomoJupyter as dmdj
+
+from dataclasses import dataclass, field
+from typing import List
+
 
 import httpx
 
@@ -33,10 +35,12 @@ from domolibrary.classes.DomoDataflow_History import (
 
 # %% ../../nbs/classes/50_DomoDataflow.ipynb 6
 @dataclass
-class DomoDataflow:
+class DomoDataflow(DomoEntity_w_Lineage):
     id: str
+    auth: dmda.DomoAuth = field( repr=False)
+    Lineage : dmdl.DomoLineage = field(repr= False)
+    
     name: str = None
-    auth: dmda.DomoAuth = field(default=None, repr=False)
     owner: str = None
     description: str = None
     tags: list[str] = None
@@ -50,17 +54,7 @@ class DomoDataflow:
 
     History: DomoDataflow_History = None  # class for managing the history of a dataflow
 
-    Lineage : dmdl.DomoLineage = None
-
     JupyterWorkspace : dmdj.DomoJupyterWorkspace = None
-
-    
-
-    def __eq__(self, other):
-        if self.__class__.__name__ != other.__class__.__name__:
-            return False
-        
-        return self.id == other.id
 
 
     def __post_init__(self):
@@ -68,7 +62,7 @@ class DomoDataflow:
             dataflow=self, dataflow_id=self.id, auth=self.auth
         )
 
-        self.Lineage = dmdl.DomoLineage._for_dataflow(
+        self.Lineage = dmdl.DomoLineage.from_parent(
             auth = self.auth,
             parent = self
         )
@@ -86,6 +80,7 @@ class DomoDataflow:
             tags=dd.tags,
             version_id=version_id,
             version_number=version_number,
+            Lineage = None
         )
 
         if dd.actions:
@@ -103,39 +98,47 @@ class DomoDataflow:
 
     def display_url(self):
         return f"https://{self.auth.domo_instance}.domo.com/datacenter/dataflows/{self.id}/details"
+    
+    @classmethod
+    async def get_by_id(
+        cls: DomoDataflow,
+        dataflow_id: int,
+        auth: dmda.DomoAuth,
+        return_raw: bool = False,
+        session: httpx.AsyncClient = None,
+        debug_api: bool = False,
+        debug_num_stacks_to_drop=2,
+        id = None
+    ):
+        dataflow_id = dataflow_id or id
+        res = await dataflow_routes.get_dataflow_by_id(
+            auth=auth,
+            dataflow_id=dataflow_id,
+            debug_api=debug_api,
+            debug_num_stacks_to_drop=debug_num_stacks_to_drop,
+            parent_class=cls.__name__,
+            session=session,
+        )
 
-# %% ../../nbs/classes/50_DomoDataflow.ipynb 7
-@patch_to(DomoDataflow, cls_method=True)
-async def get_by_id(
-    cls: DomoDataflow,
-    dataflow_id: int,
-    auth: dmda.DomoAuth,
-    return_raw: bool = False,
-    session: httpx.AsyncClient = None,
-    debug_api: bool = False,
-    debug_num_stacks_to_drop=2,
-    id = None
-):
-    dataflow_id = dataflow_id or id
-    res = await dataflow_routes.get_dataflow_by_id(
-        auth=auth,
-        dataflow_id=dataflow_id,
-        debug_api=debug_api,
-        debug_num_stacks_to_drop=debug_num_stacks_to_drop,
-        parent_class=cls.__name__,
-        session=session,
-    )
+        if return_raw:
+            return res
 
-    if return_raw:
-        return res
+        if not res.is_success:
+            return None
+            
 
-    if not res.is_success:
-        return None
-        
+        return cls._from_json(res.response, auth=auth)
+    
+    @classmethod
+    async def _get_entity_by_id(cls, auth, entity_id, **kwargs):
+        return await cls.get_by_id(
+            dataflow_id=entity_id,
+            auth=auth,
+            return_raw=False,
+            **kwargs
+        )
 
-    return cls._from_json(res.response, auth=auth)
-
-# %% ../../nbs/classes/50_DomoDataflow.ipynb 10
+# %% ../../nbs/classes/50_DomoDataflow.ipynb 9
 @patch_to(DomoDataflow)
 async def get_definition(
     self,
@@ -184,7 +187,7 @@ async def update_dataflow_definition(
 
     return await self.get_definition(return_raw=False)
 
-# %% ../../nbs/classes/50_DomoDataflow.ipynb 17
+# %% ../../nbs/classes/50_DomoDataflow.ipynb 15
 @patch_to(DomoDataflow)
 async def get_jupyter_config(
     self,
@@ -215,7 +218,7 @@ async def get_jupyter_config(
 
     return self.jupyter_workspace
 
-# %% ../../nbs/classes/50_DomoDataflow.ipynb 19
+# %% ../../nbs/classes/50_DomoDataflow.ipynb 17
 @patch_to(DomoDataflow)
 async def execute(
     self: DomoDataflow,
@@ -231,7 +234,7 @@ async def execute(
         debug_num_stacks_to_drop=debug_num_stacks_to_drop,
     )
 
-# %% ../../nbs/classes/50_DomoDataflow.ipynb 23
+# %% ../../nbs/classes/50_DomoDataflow.ipynb 21
 @patch_to(DomoDataflow, cls_method=True)
 async def get_by_version_id(
     cls: DomoDataflow,
@@ -265,7 +268,7 @@ async def get_by_version_id(
 
     return domo_dataflow
 
-# %% ../../nbs/classes/50_DomoDataflow.ipynb 25
+# %% ../../nbs/classes/50_DomoDataflow.ipynb 23
 @patch_to(DomoDataflow)
 async def get_versions(
     self: DomoDataflow,
@@ -305,7 +308,7 @@ async def get_versions(
 
     return self.versions
 
-# %% ../../nbs/classes/50_DomoDataflow.ipynb 27
+# %% ../../nbs/classes/50_DomoDataflow.ipynb 25
 @dataclass
 class DomoDataflows:
     auth: dmda.DomoAuth = field(repr = False)

@@ -46,7 +46,7 @@ class CreateFunction(BaseModel):
     security_type: StrictStr = Field(description="Function security type.")
     specific_name: StrictStr = Field(description="Specific name of the function; Reserved for future use.")
     comment: Optional[StrictStr] = Field(default=None, description="User-provided free-form text description.")
-    properties: StrictStr = Field(description="JSON-serialized key-value pair map, encoded (escaped) as a string.")
+    properties: Optional[StrictStr] = Field(default=None, description="JSON-serialized key-value pair map, encoded (escaped) as a string.")
     external_language: Optional[StrictStr] = Field(default=None, description="External language of the function.")
     __properties: ClassVar[List[str]] = ["name", "catalog_name", "schema_name", "input_params", "data_type", "full_data_type", "return_params", "routine_body", "routine_definition", "routine_dependencies", "parameter_style", "is_deterministic", "sql_data_access", "is_null_call", "security_type", "specific_name", "comment", "properties", "external_language"]
 

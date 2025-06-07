@@ -26,6 +26,11 @@ def flatten_used_parameters(used_parameters: dict, keep_list: bool = True):
                 used_parameters[k] = v[0]
 
 
+# Copied this from django5 to be backward compatible.
+def get_last_value_from_parameters(parameters, key):
+    value = parameters.get(key)
+    return value[-1] if isinstance(value, list) else value
+
 
 # Generic filter using a dropdown widget instead of a list.
 class DropdownFilter(AllValuesFieldListFilter):
@@ -393,8 +398,8 @@ class BooleanAnnotationFilter(BaseAnnotationFilter):
     def __init__(self, request, params, model, model_admin):
         self.lookup_kwarg = '%s__exact' % self.attribute_name
         self.lookup_kwarg2 = '%s__isnull' % self.attribute_name
-        self.lookup_val = params.get(self.lookup_kwarg)
-        self.lookup_val2 = params.get(self.lookup_kwarg2)
+        self.lookup_val = get_last_value_from_parameters(params, self.lookup_kwarg)
+        self.lookup_val2 = get_last_value_from_parameters(params, self.lookup_kwarg2)
         super().__init__(request, params, model, model_admin)
         flatten_used_parameters(self.used_parameters, False)
         if (self.used_parameters and self.lookup_kwarg in self.used_parameters and

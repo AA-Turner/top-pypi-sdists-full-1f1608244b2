@@ -93,6 +93,7 @@ class FeatureWrapper:
         frame = inspect.currentframe()
         if frame and frame.f_back and frame.f_back.f_globals["__name__"] in ("typing", "typing_extensions"):
             return 0
+        del frame
         return hash(self._chalk_get_underlying())
 
     def __gt__(self, other: object):

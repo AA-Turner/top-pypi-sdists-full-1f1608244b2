@@ -27,5 +27,5 @@ def new_triangles_from_file(filepath: str | None) -> int:
     :rtype: int
     """
 
-def release(icon_id):
+def release(icon_id) -> None:
     """Release the icon."""

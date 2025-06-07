@@ -73,9 +73,9 @@ class ListVolumesResponseContent(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in volumes (list)
         _items = []
         if self.volumes:
-            for _item in self.volumes:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_volumes in self.volumes:
+                if _item_volumes:
+                    _items.append(_item_volumes.to_dict())
             _dict['volumes'] = _items
         return _dict
 

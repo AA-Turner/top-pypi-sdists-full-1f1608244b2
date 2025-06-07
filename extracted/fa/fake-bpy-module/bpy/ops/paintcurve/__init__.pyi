@@ -9,7 +9,7 @@ def add_point(
     /,
     *,
     location: collections.abc.Iterable[int] | None = (0, 0),
-):
+) -> None:
     """Add New Paint Curve Point
 
     :type execution_context: int | str | None
@@ -25,7 +25,7 @@ def add_point_slide(
     *,
     PAINTCURVE_OT_add_point: add_point | None = None,
     PAINTCURVE_OT_slide: slide | None = None,
-):
+) -> None:
     """Add new curve point and slide it
 
     :type execution_context: int | str | None
@@ -36,28 +36,32 @@ def add_point_slide(
     :type PAINTCURVE_OT_slide: slide | None
     """
 
-def cursor(execution_context: int | str | None = None, undo: bool | None = None):
+def cursor(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Place cursor
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def delete_point(execution_context: int | str | None = None, undo: bool | None = None):
+def delete_point(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove Paint Curve Point
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def draw(execution_context: int | str | None = None, undo: bool | None = None):
+def draw(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Draw curve
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def new(execution_context: int | str | None = None, undo: bool | None = None):
+def new(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Add new paint curve
 
     :type execution_context: int | str | None
@@ -72,7 +76,7 @@ def select(
     location: collections.abc.Iterable[int] | None = (0, 0),
     toggle: bool | None = False,
     extend: bool | None = False,
-):
+) -> None:
     """Select a paint curve point
 
     :type execution_context: int | str | None
@@ -92,7 +96,7 @@ def slide(
     *,
     align: bool | None = False,
     select: bool | None = True,
-):
+) -> None:
     """Select and slide paint curve point
 
     :type execution_context: int | str | None

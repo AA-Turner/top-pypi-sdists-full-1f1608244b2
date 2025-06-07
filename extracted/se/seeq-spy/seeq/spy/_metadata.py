@@ -10,6 +10,7 @@ from typing import Callable, Dict, Optional, List, Tuple, Set, Union
 
 import numpy as np
 import pandas as pd
+
 from seeq.base import util
 from seeq.base.seeq_names import SeeqNames
 from seeq.sdk import *
@@ -32,7 +33,7 @@ class PushContext:
 
     planning_to_archive: bool
     cleanse_data_ids: bool
-    override_scope: bool
+    default_to_local: bool
     validate_ui_configs: bool
     sync_token: str
     batch_size: int
@@ -61,7 +62,7 @@ class SkippedPush(Exception):
 def push(session: Session, metadata, workbook_context: WorkbookContext, datasource_output,
          status: Status, *, sync_token: Optional[str] = None, row_filter: Optional[Callable] = None,
          cleanse_df_first: bool = True, state_file: Optional[str] = None, planning_to_archive: bool = False,
-         cleanse_data_ids: bool = True, global_inventory: str = 'copy local',
+         cleanse_data_ids: bool = True, default_to_local: bool = True,
          validate_ui_configs: bool = True) -> pd.DataFrame:
     items_api = ItemsApi(session.client)
     trees_api = TreesApi(session.client)
@@ -164,7 +165,7 @@ def push(session: Session, metadata, workbook_context: WorkbookContext, datasour
         flush_now=False,
         planning_to_archive=planning_to_archive,
         cleanse_data_ids=cleanse_data_ids,
-        override_scope=(global_inventory == 'copy local'),
+        default_to_local=default_to_local,
         validate_ui_configs=validate_ui_configs,
         sync_token=sync_token,
         workbook_context=workbook_context,
@@ -313,7 +314,7 @@ def _process_push_row(session: Session, status: Status, push_context: PushContex
     if isinstance(_common.get(row_dict, 'Formula'), str) and re.match(r'^\s*\$\w+\s*$', row_dict['Formula']):
         row_dict['Cache Enabled'] = False
 
-    if push_context.override_scope:
+    if push_context.default_to_local and pd.isna(row_dict.get('Scoped To', None)):
         row_dict['Scoped To'] = push_context.workbook_context.workbook_id
 
     if not _common.present(row_dict, 'Type') or not _is_handled_type(row_dict['Type']):

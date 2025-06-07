@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dwave_networkx
-Version: 0.8.17
+Version: 0.8.18
 Summary: A NetworkX extension providing graphs and algorithms relevant to working with the D-Wave System
 Home-page: https://github.com/dwavesystems/dwave_networkx
 Download-URL: https://github.com/dwavesystems/dwave_networkx/releases

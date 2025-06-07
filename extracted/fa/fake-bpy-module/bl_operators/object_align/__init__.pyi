@@ -27,14 +27,14 @@ class AlignObjects(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -42,6 +42,6 @@ class AlignObjects(bpy.types.Operator):
 
 def align_objects(
     context, align_x, align_y, align_z, align_mode, relative_to, bb_quality
-): ...
-def worldspace_bounds_from_object_bounds(bb_world): ...
-def worldspace_bounds_from_object_data(depsgraph, obj): ...
+) -> None: ...
+def worldspace_bounds_from_object_bounds(bb_world) -> None: ...
+def worldspace_bounds_from_object_data(depsgraph, obj) -> None: ...

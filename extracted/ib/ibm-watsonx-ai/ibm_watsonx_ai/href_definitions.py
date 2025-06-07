@@ -62,7 +62,7 @@ AI_SERVICES_HREF_PATTERN = "{}/v4/ai_services"
 
 IAM_TOKEN_API = "{}&grant_type=urn%3Aibm%3Aparams%3Aoauth%3Agrant-type%3Aapikey"
 IAM_TOKEN_URL = "{}/oidc/token"
-AWS_TOKEN_HREF = "{}/api/2.0/apikeys/token"
+AWS_TOKEN_URL = "{}/api/2.0/apikeys/token"
 PROD_SVT_URL = [
     "https://ca-tor.ml.cloud.ibm.com",
     "https://private.ca-tor.ml.cloud.ibm.com",
@@ -244,6 +244,24 @@ SYNTHETIC_DATA_GENERATION = "{}/ml/v1/tuning/synthetic_data/{}"
 
 UTILITY_AGENT_TOOLS_BETA = "{}/wx/v1-beta/utility_agent_tools"
 UTILITY_AGENT_TOOLS_RUN_BETA = "{}/wx/v1-beta/utility_agent_tools/run"
+
+VECTOR_INDEXES = "{}/wx/v1/vector_indexes"
+VECTOR_INDEX = "{}/wx/v1/vector_indexes/{}"
+
+VECTOR_INDEXES_GET_ALL = "{}/v2/asset_types/vector_index/search"
+# AI GATEWAY
+GATEWAY_TENANT = "{}/ml/gateway/v1/tenant"
+GATEWAY_PROVIDERS = "{}/ml/gateway/v1/providers"
+GATEWAY_PROVIDER = "{}/ml/gateway/v1/providers/{}"
+GATEWAY_PROVIDER_AVAILABLE_MODELS = "{}/ml/gateway/v1/providers/{}/models/available"
+GATEWAY_UPDATE_PROVIDER = "{}/ml/gateway/v1/providers/{}/{}"
+GATEWAY_MODELS = "{}/ml/gateway/v1/providers/{}/models"
+GATEWAY_ALL_TENANT_MODELS = "{}/ml/gateway/v1/models"
+GATEWAY_MODEL = "{}/ml/gateway/v1/models/{}"
+GATEWAY_POLICY = "{}/ml/gateway/v1/policy"
+GATEWAY_EMBEDDINGS = "{}/ml/gateway/v1/embeddings"
+GATEWAY_TEXT_COMPLETIONS = "{}/ml/gateway/v1/completions"
+GATEWAY_CHAT_COMPLETIONS = "{}/ml/gateway/v1/chat/completions"
 
 
 def is_url(s: str) -> bool:
@@ -451,7 +469,7 @@ class HrefDefinitions:
         return IAM_TOKEN_API.format(apikey)
 
     def get_aws_token_url(self) -> str:
-        return AWS_TOKEN_HREF.format(
+        return AWS_TOKEN_URL.format(
             "https://account-iam.platform.saas.ibm.com"
             if self.url in PROD_SVT_URL
             else "https://account-iam.platform.test.saas.ibm.com"
@@ -873,3 +891,48 @@ class HrefDefinitions:
 
     def get_jobs_runs_href(self, job_id: str, run_id: str):
         return JOBS_RUNS.format(self._get_platform_url_if_exists(), job_id, run_id)
+
+    def get_vector_indexes_href(self):
+        return VECTOR_INDEXES.format(self._get_platform_url_if_exists())
+
+    def get_vector_index_href(self, vector_index_id: str):
+        return VECTOR_INDEX.format(self._get_platform_url_if_exists(), vector_index_id)
+
+    def get_vector_indexes_all_href(self):
+        return VECTOR_INDEXES_GET_ALL.format(self._get_platform_url_if_exists())
+
+    def get_gateway_tenant_href(self):
+        return GATEWAY_TENANT.format(self.url)
+
+    def get_gateway_providers_href(self):
+        return GATEWAY_PROVIDERS.format(self.url)
+
+    def get_gateway_provider_href(self, provider_id):
+        return GATEWAY_PROVIDER.format(self.url, provider_id)
+
+    def get_gateway_provider_available_models_href(self, provider_id):
+        return GATEWAY_PROVIDER_AVAILABLE_MODELS.format(self.url, provider_id)
+
+    def get_gateway_update_provider_href(self, provider_id, provider):
+        return GATEWAY_UPDATE_PROVIDER.format(self.url, provider_id, provider)
+
+    def get_gateway_models_href(self, provider_id):
+        return GATEWAY_MODELS.format(self.url, provider_id)
+
+    def get_gateway_all_tenant_models_href(self):
+        return GATEWAY_ALL_TENANT_MODELS.format(self.url)
+
+    def get_gateway_model_href(self, model_id: str) -> str:
+        return GATEWAY_MODEL.format(self.url, model_id)
+
+    def get_gateway_policy_href(self):
+        return GATEWAY_POLICY.format(self.url)
+
+    def get_gateway_embeddings_href(self):
+        return GATEWAY_EMBEDDINGS.format(self.url)
+
+    def get_gateway_text_completions_href(self):
+        return GATEWAY_TEXT_COMPLETIONS.format(self.url)
+
+    def get_gateway_chat_completions_href(self):
+        return GATEWAY_CHAT_COMPLETIONS.format(self.url)

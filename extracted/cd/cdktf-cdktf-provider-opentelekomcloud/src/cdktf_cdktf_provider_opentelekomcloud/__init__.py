@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for opentelekomcloud/opentelekomcloud provider version 1.36.39
+# CDKTF prebuilt bindings for opentelekomcloud/opentelekomcloud provider version 1.36.40
 
-This repo builds and publishes the [Terraform opentelekomcloud provider](https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform opentelekomcloud provider](https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.40/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform opentelekomcloud provider 
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform opentelekomcloud provider](https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39)
+* [Terraform opentelekomcloud provider](https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.40)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -264,6 +264,8 @@ __all__ = [
     "data_opentelekomcloud_lb_listener_v3",
     "data_opentelekomcloud_lb_loadbalancer_v3",
     "data_opentelekomcloud_lb_member_ids_v2",
+    "data_opentelekomcloud_lts_groups_v2",
+    "data_opentelekomcloud_lts_streams_v2",
     "data_opentelekomcloud_nat_dnat_rules_v2",
     "data_opentelekomcloud_nat_gateway_v2",
     "data_opentelekomcloud_nat_snat_rules_v2",
@@ -677,6 +679,8 @@ from . import data_opentelekomcloud_lb_flavors_v3
 from . import data_opentelekomcloud_lb_listener_v3
 from . import data_opentelekomcloud_lb_loadbalancer_v3
 from . import data_opentelekomcloud_lb_member_ids_v2
+from . import data_opentelekomcloud_lts_groups_v2
+from . import data_opentelekomcloud_lts_streams_v2
 from . import data_opentelekomcloud_nat_dnat_rules_v2
 from . import data_opentelekomcloud_nat_gateway_v2
 from . import data_opentelekomcloud_nat_snat_rules_v2

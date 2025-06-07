@@ -24,10 +24,10 @@ class ImagePreviewCollection(dict[str, bpy.types.ImagePreview]):
     used to store multiple image previews.
     """
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear all previews."""
 
-    def close(self):
+    def close(self) -> None:
         """Close the collection and clear all previews."""
 
     def load(
@@ -67,7 +67,7 @@ def new() -> ImagePreviewCollection:
     :rtype: ImagePreviewCollection
     """
 
-def remove(pcoll: ImagePreviewCollection | None):
+def remove(pcoll: ImagePreviewCollection | None) -> None:
     """Remove the specified previews collection.
 
     :param pcoll: Preview collection to close.

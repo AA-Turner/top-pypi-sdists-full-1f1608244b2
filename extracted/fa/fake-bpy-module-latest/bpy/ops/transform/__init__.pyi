@@ -20,7 +20,7 @@ def bbone_resize(
     mirror: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Scale selected bendy bones display size
 
     :type execution_context: int | str | None
@@ -65,7 +65,7 @@ def bend(
     ),
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Bend selected items between the 3D cursor and the mouse
 
     :type execution_context: int | str | None
@@ -105,7 +105,7 @@ def create_orientation(
     use_view: bool | None = False,
     use: bool | None = False,
     overwrite: bool | None = False,
-):
+) -> None:
     """Create transformation orientation from selection
 
     :type execution_context: int | str | None
@@ -122,7 +122,7 @@ def create_orientation(
 
 def delete_orientation(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete transformation orientation
 
     :type execution_context: int | str | None
@@ -138,7 +138,7 @@ def edge_bevelweight(
     snap: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Change the bevel weight of edges
 
     :type execution_context: int | str | None
@@ -162,7 +162,7 @@ def edge_crease(
     snap: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Change the crease of edges
 
     :type execution_context: int | str | None
@@ -206,7 +206,7 @@ def edge_slide(
     correct_uv: bool | None = True,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Slide an edge loop along a mesh
 
     :type execution_context: int | str | None
@@ -249,7 +249,9 @@ def edge_slide(
     :type use_accurate: bool | None
     """
 
-def from_gizmo(execution_context: int | str | None = None, undo: bool | None = None):
+def from_gizmo(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Transform selected items by mode type
 
     :type execution_context: int | str | None
@@ -275,7 +277,7 @@ def mirror(
     ),
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Mirror selected items around one or more axes
 
     :type execution_context: int | str | None
@@ -319,7 +321,7 @@ def push_pull(
     ),
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Push/Pull selected items
 
     :type execution_context: int | str | None
@@ -398,7 +400,7 @@ def resize(
     ),
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Scale (resize) selected items
 
     :type execution_context: int | str | None
@@ -504,7 +506,7 @@ def rotate(
     ),
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Rotate selected items
 
     :type execution_context: int | str | None
@@ -577,7 +579,7 @@ def rotate_normal(
     mirror: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Rotate split normal of selected items
 
     :type execution_context: int | str | None
@@ -608,7 +610,7 @@ def select_orientation(
     /,
     *,
     orientation: str | None = "GLOBAL",
-):
+) -> None:
     """Select transformation orientation
 
     :type execution_context: int | str | None
@@ -628,7 +630,7 @@ def seq_slide(
     view2d_edge_pan: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Slide a sequence strip in time
 
     :type execution_context: int | str | None
@@ -671,7 +673,7 @@ def shear(
     gpencil_strokes: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Shear selected items along the given axis
 
     :type execution_context: int | str | None
@@ -727,7 +729,7 @@ def shrink_fatten(
     snap: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Shrink/fatten selected vertices along normals
 
     :type execution_context: int | str | None
@@ -792,7 +794,7 @@ def skin_resize(
     ),
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Scale selected vertices' skin radii
 
     :type execution_context: int | str | None
@@ -859,7 +861,7 @@ def tilt(
     snap: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Tilt selected control vertices of 3D curve
 
     :type execution_context: int | str | None
@@ -908,7 +910,7 @@ def tosphere(
     ),
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Move selected items outward in a spherical shape around geometric center
 
     :type execution_context: int | str | None
@@ -961,7 +963,7 @@ def trackball(
     ),
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Trackball style rotation of selected items
 
     :type execution_context: int | str | None
@@ -1053,7 +1055,7 @@ def transform(
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
     use_automerge_and_split: bool | None = False,
-):
+) -> None:
     """Transform selected items by mode type
 
     :type execution_context: int | str | None
@@ -1176,7 +1178,7 @@ def translate(
     use_accurate: bool | None = False,
     use_automerge_and_split: bool | None = False,
     translate_origin: bool | None = False,
-):
+) -> None:
     """Move selected items
 
     :type execution_context: int | str | None
@@ -1256,7 +1258,7 @@ def vert_crease(
     snap: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Change the crease of vertices
 
     :type execution_context: int | str | None
@@ -1299,7 +1301,7 @@ def vert_slide(
     correct_uv: bool | None = True,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Slide a vertex along a mesh
 
     :type execution_context: int | str | None
@@ -1350,7 +1352,7 @@ def vertex_random(
     normal: float | None = 0.0,
     seed: int | None = 0,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Randomize vertices
 
     :type execution_context: int | str | None
@@ -1385,7 +1387,7 @@ def vertex_warp(
         (0.0, 0.0, 0.0, 0.0),
     ),
     center: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Warp vertices around the cursor
 
     :type execution_context: int | str | None

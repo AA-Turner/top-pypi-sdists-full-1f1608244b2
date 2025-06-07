@@ -9,19 +9,19 @@ class AnnotationDataPanel:
     bl_options: typing.Any
     bl_region_type: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_layers(self, context, layout, gpd):
+    def draw_layers(self, context, layout, gpd) -> None:
         """
 
         :param context:
@@ -34,7 +34,7 @@ class AnnotationDrawingToolsPanel:
     bl_label: typing.Any
     bl_region_type: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -45,20 +45,20 @@ class AnnotationOnionSkin:
     bl_options: typing.Any
     bl_region_type: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -92,7 +92,7 @@ class GPENCIL_UL_annotation_layer(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -133,7 +133,7 @@ class GPENCIL_UL_layer(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -174,7 +174,7 @@ class GPENCIL_UL_masks(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -206,7 +206,7 @@ class GREASE_PENCIL_MT_draw_delete(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -231,7 +231,7 @@ class GREASE_PENCIL_MT_layer_active(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -256,7 +256,7 @@ class GREASE_PENCIL_MT_move_to_layer(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -281,7 +281,7 @@ class GREASE_PENCIL_MT_snap(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -306,7 +306,7 @@ class GREASE_PENCIL_MT_snap_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -331,7 +331,7 @@ class GREASE_PENCIL_MT_stroke_simplify(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -341,7 +341,7 @@ class GreasePencilBrushFalloff:
     bl_label: typing.Any
     bl_options: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -351,20 +351,20 @@ class GreasePencilDisplayPanel:
     bl_label: typing.Any
     bl_options: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -392,69 +392,69 @@ class GreasePencilFlipTintColors(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencilLayerAdjustmentsPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencilLayerDisplayPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencilLayerRelationsPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencilLayerTransformPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencilMaterialsPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencilSculptAdvancedPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
 class GreasePencilSimplifyPanel:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:

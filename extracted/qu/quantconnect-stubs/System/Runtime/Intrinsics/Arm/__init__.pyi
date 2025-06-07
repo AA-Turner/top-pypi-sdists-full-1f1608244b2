@@ -5479,6 +5479,54 @@ class Sve(System.Runtime.Intrinsics.Arm.AdvSimd, metaclass=abc.ABCMeta):
 
     @staticmethod
     @overload
+    def extract_after_last_active_element(mask: System.Numerics.Vector[int], data: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """svuint8_t svlasta[_u8](svbool_t pg, svuint8_t data)  LASTA Btied, Pg, Zdata.B"""
+        ...
+
+    @staticmethod
+    @overload
+    def extract_after_last_active_element(mask: System.Numerics.Vector[float], data: System.Numerics.Vector[float]) -> System.Numerics.Vector[float]:
+        """svfloat64_t svlasta[_f64](svbool_t pg, svfloat64_t data)  LASTA Dtied, Pg, Dtied, Zdata.D"""
+        ...
+
+    @staticmethod
+    @overload
+    def extract_after_last_active_element_scalar(mask: System.Numerics.Vector[int], data: System.Numerics.Vector[int]) -> int:
+        """uint8_t svlasta[_n_u8](svbool_t pg, svuint8_t data)  LASTA Wtied, Pg, Wtied, Zdata.B"""
+        ...
+
+    @staticmethod
+    @overload
+    def extract_after_last_active_element_scalar(mask: System.Numerics.Vector[float], data: System.Numerics.Vector[float]) -> float:
+        """float64_t svlasta[_n_f64](svbool_t pg, svfloat64_t data)  LASTA Dtied, Pg, Dtied, Zdata.D"""
+        ...
+
+    @staticmethod
+    @overload
+    def extract_last_active_element(mask: System.Numerics.Vector[int], data: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """svuint8_t svlastb[_u8](svbool_t pg, svuint8_t data)  LASTB Btied, Pg, Zdata.B"""
+        ...
+
+    @staticmethod
+    @overload
+    def extract_last_active_element(mask: System.Numerics.Vector[float], data: System.Numerics.Vector[float]) -> System.Numerics.Vector[float]:
+        """svfloat64_t svlastb[_f64](svbool_t pg, svfloat64_t data)  LASTB Dtied, Pg, Dtied, Zdata.D"""
+        ...
+
+    @staticmethod
+    @overload
+    def extract_last_active_element_scalar(mask: System.Numerics.Vector[int], data: System.Numerics.Vector[int]) -> int:
+        """uint8_t svlastb[_n_u8](svbool_t pg, svuint8_t data)  LASTA Wtied, Pg, Wtied, Zdata.B"""
+        ...
+
+    @staticmethod
+    @overload
+    def extract_last_active_element_scalar(mask: System.Numerics.Vector[float], data: System.Numerics.Vector[float]) -> float:
+        """float64_t svlastb[_n_f64](svbool_t pg, svfloat64_t data)  LASTB Dtied, Pg, Dtied, Zdata.D"""
+        ...
+
+    @staticmethod
+    @overload
     def extract_vector(upper: System.Numerics.Vector[int], lower: System.Numerics.Vector[int], index: int) -> System.Numerics.Vector[int]:
         """svuint8_t svext[_u8](svuint8_t op1, svuint8_t op2, uint64_t imm3)  EXT Ztied1.B, Ztied1.B, Zop2.B, #imm3"""
         ...
@@ -7039,6 +7087,30 @@ class Sve2(System.Runtime.Intrinsics.Arm.Sve, metaclass=abc.ABCMeta):
         """
         svuint8_t svbsl2n[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)
           BSL2N Ztied1.D, Ztied1.D, Zop2.D, Zop3.D
+        """
+        ...
+
+    @staticmethod
+    def shift_arithmetic_rounded(value: System.Numerics.Vector[int], count: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svint16_t svrshl[_s16]_m(svbool_t pg, svint16_t op1, svint16_t op2)
+          SRSHL Ztied1.H, Pg/M, Ztied1.H, Zop2.H
+        """
+        ...
+
+    @staticmethod
+    def shift_arithmetic_rounded_saturate(value: System.Numerics.Vector[int], count: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svint16_t svqrshl[_s16]_m(svbool_t pg, svint16_t op1, svint16_t op2)
+          SQRSHL Ztied1.H, Pg/M, Ztied1.H, Zop2.H
+        """
+        ...
+
+    @staticmethod
+    def shift_arithmetic_saturate(value: System.Numerics.Vector[int], count: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svint16_t svqshl[_s16]_m(svbool_t pg, svint16_t op1, svint16_t op2)
+          SQSHL Ztied1.H, Pg/M, Ztied1.H, Zop2.H
         """
         ...
 

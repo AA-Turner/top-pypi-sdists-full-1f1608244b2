@@ -3,7 +3,9 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 
-def add_target(execution_context: int | str | None = None, undo: bool | None = None):
+def add_target(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add a target to the constraint
 
     :type execution_context: int | str | None
@@ -18,7 +20,7 @@ def apply(
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
     report: bool | None = False,
-):
+) -> None:
     """Apply constraint and remove from the stack
 
         :type execution_context: int | str | None
@@ -44,7 +46,7 @@ def childof_clear_inverse(
     *,
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
-):
+) -> None:
     """Clear inverse correction for Child Of constraint
 
         :type execution_context: int | str | None
@@ -68,7 +70,7 @@ def childof_set_inverse(
     *,
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
-):
+) -> None:
     """Set inverse correction for Child Of constraint
 
         :type execution_context: int | str | None
@@ -93,7 +95,7 @@ def copy(
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
     report: bool | None = False,
-):
+) -> None:
     """Duplicate constraint at the same position in the stack
 
         :type execution_context: int | str | None
@@ -119,7 +121,7 @@ def copy_to_selected(
     *,
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
-):
+) -> None:
     """Copy constraint to other selected objects/bones
 
         :type execution_context: int | str | None
@@ -144,7 +146,7 @@ def delete(
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
     report: bool | None = False,
-):
+) -> None:
     """Remove constraint from constraint stack
 
         :type execution_context: int | str | None
@@ -165,7 +167,7 @@ def delete(
 
 def disable_keep_transform(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set the influence of this constraint to zero while trying to maintain the object's transformation. Other active constraints can still influence the final transformation
 
     :type execution_context: int | str | None
@@ -181,7 +183,7 @@ def followpath_path_animate(
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
     frame_start: int | None = 1,
     length: int | None = 100,
-):
+) -> None:
     """Add default animation for path used by constraint if it isn't animated already
 
         :type execution_context: int | str | None
@@ -209,7 +211,7 @@ def limitdistance_reset(
     *,
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
-):
+) -> None:
     """Reset limiting distance for Limit Distance Constraint
 
         :type execution_context: int | str | None
@@ -233,7 +235,7 @@ def move_down(
     *,
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
-):
+) -> None:
     """Move constraint down in constraint stack
 
         :type execution_context: int | str | None
@@ -258,7 +260,7 @@ def move_to_index(
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
     index: int | None = 0,
-):
+) -> None:
     """Change the constraint's position in the list so it evaluates after the set number of others
 
         :type execution_context: int | str | None
@@ -284,7 +286,7 @@ def move_up(
     *,
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
-):
+) -> None:
     """Move constraint up in constraint stack
 
         :type execution_context: int | str | None
@@ -303,7 +305,7 @@ def move_up(
 
 def normalize_target_weights(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Normalize weights of all target bones
 
     :type execution_context: int | str | None
@@ -317,7 +319,7 @@ def objectsolver_clear_inverse(
     *,
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
-):
+) -> None:
     """Clear inverse correction for Object Solver constraint
 
         :type execution_context: int | str | None
@@ -341,7 +343,7 @@ def objectsolver_set_inverse(
     *,
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
-):
+) -> None:
     """Set inverse correction for Object Solver constraint
 
         :type execution_context: int | str | None
@@ -364,7 +366,7 @@ def remove_target(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Remove the target from the constraint
 
     :type execution_context: int | str | None
@@ -380,7 +382,7 @@ def stretchto_reset(
     *,
     constraint: str = "",
     owner: typing.Literal["OBJECT", "BONE"] | None = "OBJECT",
-):
+) -> None:
     """Reset original length of bone for Stretch To Constraint
 
         :type execution_context: int | str | None

@@ -1,31 +1,30 @@
 Metadata-Version: 2.4
 Name: django-modeltranslation
-Version: 0.19.14
+Version: 0.19.15
 Summary: Translates Django models using a registration approach.
-Author-email: Peter Eschler <peschler@gmail.com>, Dirk Eschler <eschler@gmail.com>
-Maintainer-email: Sergiy Tereshchenko <serg.partizan+modeltranslation@gmail.com>
-License-Expression: BSD-3-Clause
 Project-URL: Homepage, https://github.com/deschler/django-modeltranslation
 Project-URL: Source, https://github.com/deschler/django-modeltranslation
 Project-URL: Documentation, https://django-modeltranslation.readthedocs.org/en/latest
 Project-URL: Mailing List, http://groups.google.com/group/django-modeltranslation
 Project-URL: Changelog, https://github.com/deschler/django-modeltranslation/blob/master/CHANGELOG.md
+Author-email: Peter Eschler <peschler@gmail.com>, Dirk Eschler <eschler@gmail.com>
+Maintainer-email: Sergiy Tereshchenko <serg.partizan+modeltranslation@gmail.com>
+License-Expression: BSD-3-Clause
+License-File: AUTHORS.rst
+License-File: LICENSE.txt
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
-Classifier: Operating System :: OS Independent
-Classifier: Environment :: Web Environment
-Classifier: Intended Audience :: Developers
-Classifier: Framework :: Django
 Requires-Python: <4,>=3.9
+Requires-Dist: django>=4.2
+Requires-Dist: typing-extensions>=4.0.1; python_version < '3.11'
 Description-Content-Type: text/x-rst
-License-File: LICENSE.txt
-License-File: AUTHORS.rst
-Requires-Dist: Django>=4.2
-Requires-Dist: typing-extensions>=4.0.1; python_version < "3.11"
-Dynamic: license-file
 
 ================
 Modeltranslation

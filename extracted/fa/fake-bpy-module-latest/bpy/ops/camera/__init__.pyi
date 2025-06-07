@@ -12,7 +12,7 @@ def preset_add(
     remove_name: bool | None = False,
     remove_active: bool | None = False,
     use_focal_length: bool | None = False,
-):
+) -> None:
     """Add or remove a Camera Preset
 
     :type execution_context: int | str | None
@@ -35,7 +35,7 @@ def safe_areas_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove a Safe Areas Preset
 
     :type execution_context: int | str | None
