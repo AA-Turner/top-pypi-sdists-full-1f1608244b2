@@ -32,19 +32,19 @@ class IMAGE_OT_convert_to_mesh_plane(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -52,7 +52,7 @@ class IMAGE_OT_convert_to_mesh_plane(
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -76,20 +76,20 @@ class IMAGE_OT_import_as_mesh_planes(
     id_data: typing.Any
     t: typing.Any
 
-    def align_plane(self, context, plane):
+    def align_plane(self, context, plane) -> None:
         """
 
         :param context:
         :param plane:
         """
 
-    def apply_image_options(self, image):
+    def apply_image_options(self, image) -> None:
         """
 
         :param image:
         """
 
-    def apply_material_options(self, material, slot):
+    def apply_material_options(self, material, slot) -> None:
         """
 
         :param material:
@@ -110,14 +110,14 @@ class IMAGE_OT_import_as_mesh_planes(
         :rtype: typing.Any
         """
 
-    def compute_plane_size(self, context, img_spec):
+    def compute_plane_size(self, context, img_spec) -> None:
         """
 
         :param context:
         :param img_spec:
         """
 
-    def create_image_plane(self, context, name, img_spec):
+    def create_image_plane(self, context, name, img_spec) -> None:
         """
 
         :param context:
@@ -125,51 +125,51 @@ class IMAGE_OT_import_as_mesh_planes(
         :param img_spec:
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_import_config(self, _context):
+    def draw_import_config(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def draw_spatial_config(self, _context):
+    def draw_spatial_config(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def import_images(self, context):
+    def import_images(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
         :param _event:
         """
 
-    def single_image_spec_to_plane(self, context, img_spec):
+    def single_image_spec_to_plane(self, context, img_spec) -> None:
         """
 
         :param context:
         :param img_spec:
         """
 
-    def update_size_mode(self, _context):
+    def update_size_mode(self, _context) -> None:
         """
 
         :param _context:
@@ -185,7 +185,7 @@ class ImageSpec:
     size: typing.Any
 
 class MaterialProperties_MixIn:
-    def draw_material_config(self, context):
+    def draw_material_config(self, context) -> None:
         """
 
         :param context:
@@ -194,24 +194,24 @@ class MaterialProperties_MixIn:
 class TextureProperties_MixIn:
     t: typing.Any
 
-    def draw_texture_config(self, context):
+    def draw_texture_config(self, context) -> None:
         """
 
         :param context:
         """
 
-def apply_texture_options(self_, texture, img_spec): ...
-def auto_align_nodes(node_tree): ...
-def center_in_camera(camera, ob, axis=(1, 1)): ...
-def clean_node_tree(node_tree): ...
-def compute_camera_size(context, center, fill_mode, aspect): ...
-def create_cycles_material(self_, context, img_spec, name): ...
-def create_cycles_texnode(self_, node_tree, img_spec): ...
-def find_image_sequences(files): ...
-def get_input_nodes(node, links): ...
-def get_ref_object_space_coord(ob): ...
-def get_shadeless_node(dest_node_tree): ...
+def apply_texture_options(self_, texture, img_spec) -> None: ...
+def auto_align_nodes(node_tree) -> None: ...
+def center_in_camera(camera, ob, axis=(1, 1)) -> None: ...
+def clean_node_tree(node_tree) -> None: ...
+def compute_camera_size(context, center, fill_mode, aspect) -> None: ...
+def create_cycles_material(self_, context, img_spec, name) -> None: ...
+def create_cycles_texnode(self_, node_tree, img_spec) -> None: ...
+def find_image_sequences(files) -> None: ...
+def get_input_nodes(node, links) -> None: ...
+def get_ref_object_space_coord(ob) -> None: ...
+def get_shadeless_node(dest_node_tree) -> None: ...
 def load_images(
     filenames, directory, force_reload=False, frame_start=1, find_sequences=False
-): ...
-def offset_planes(planes, gap, axis): ...
+) -> None: ...
+def offset_planes(planes, gap, axis) -> None: ...

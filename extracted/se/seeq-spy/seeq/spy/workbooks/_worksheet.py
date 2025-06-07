@@ -542,7 +542,7 @@ class AnalysisWorksheet(Worksheet):
 
         if context.include_annotations:
             self.journal.push(context.session, pushed_workbook_id, worksheet_output.id, item_map, datasource_output,
-                              context.access_control, push_images=True, label=label)
+                              context.access_control, push_images=True, label=label, status=context.status)
 
         return worksheet_output
 
@@ -976,7 +976,7 @@ class TopicDocument(Worksheet):
 
         if context.include_annotations:
             self.report.push(context.session, pushed_workbook_id, worksheet_output.id, item_map, datasource_output,
-                             context.access_control, push_images=True, label=label)
+                             context.access_control, push_images=True, label=label, status=context.status)
 
         return worksheet_output
 

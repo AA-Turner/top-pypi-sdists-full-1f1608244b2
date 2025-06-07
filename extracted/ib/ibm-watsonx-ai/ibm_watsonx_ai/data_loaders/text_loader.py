@@ -80,6 +80,7 @@ class TextLoader:
             "application/vnd.ms-powerpoint": self._pptx_to_string,
             "application/json": self._json_to_string,
             "application/x-yaml": self._yaml_to_string,
+            "application/xml": self._xml_to_string,
         }
 
         try:
@@ -119,6 +120,8 @@ class TextLoader:
             return "application/json"
         elif filename.endswith(".yaml"):
             return "application/x-yaml"
+        elif filename.endswith(".xml"):
+            return "application/xml"
         else:
             raise WMLClientError(f"Cannot identify file type.")
 
@@ -226,3 +229,46 @@ class TextLoader:
 
         loaded_yaml = yaml.load(binary_data, Loader=yaml.Loader)
         return "\n\n".join(cls._extract_content_from_py_structure(loaded_yaml))
+
+    @classmethod
+    def _xml_to_string(cls, binary_data: bytes) -> str:
+        from xml.etree import ElementTree
+
+        def xml_element_parser(elem: ElementTree.Element) -> list[dict | str]:
+            result = [dict(elem.attrib), {}]
+
+            children = list(elem)
+            if children:
+                for child in children:
+                    child_tag = child.tag
+                    child_data = xml_element_parser(child)
+
+                    if child_tag in result[1]:
+                        if isinstance(result[1][child_tag], list):
+                            result[1][child_tag].append(child_data)
+                        else:
+                            result[1][child_tag] = [result[1][child_tag], child_data]
+                    else:
+                        result[1][child_tag] = child_data
+
+            # Add element text to the result list if exists, at 2nd place after attribute
+            if text := (elem.text or "").strip():
+                result.insert(1, text)
+
+            return result
+
+        root = ElementTree.fromstring(binary_data)
+        root_result = []
+
+        if root.attrib:
+            root_result.append(root.attrib)
+        if root.text is not None and (text := root.text.strip()):
+            root_result.append(text)
+
+        for child in root:
+            parsed_child = xml_element_parser(child)
+            root_result.append({child.tag: parsed_child})
+
+        result = {root.tag: root_result}
+
+        return "\n\n".join(cls._extract_content_from_py_structure(result))

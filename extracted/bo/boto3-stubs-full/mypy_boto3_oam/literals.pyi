@@ -468,6 +468,7 @@ PaginatorName = Literal["list_attached_links", "list_links", "list_sinks"]
 RegionName = Literal[
     "af-south-1",
     "ap-east-1",
+    "ap-east-2",
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-northeast-3",

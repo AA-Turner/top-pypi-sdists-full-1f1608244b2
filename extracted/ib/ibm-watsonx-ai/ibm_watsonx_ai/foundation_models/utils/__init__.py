@@ -13,6 +13,7 @@ from ibm_watsonx_ai.foundation_models.utils.toolkit import (
     convert_to_watsonx_tool,
     convert_to_utility_tool_call,
 )
+from ibm_watsonx_ai.foundation_models.utils.vector_indexes import VectorIndexes
 from ibm_watsonx_ai.foundation_models.utils.utils import HAPDetectionWarning
 from ibm_watsonx_ai.foundation_models.utils.utils import (
     get_model_specs,

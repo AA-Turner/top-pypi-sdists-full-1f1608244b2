@@ -17,12 +17,12 @@ class IMAGE_PT_tools_active(
     keymap_prefix: typing.Any
     tool_fallback_id: typing.Any
 
-    def bl_rna_get_subclass(self): ...
-    def bl_rna_get_subclass_py(self): ...
+    def bl_rna_get_subclass(self) -> None: ...
+    def bl_rna_get_subclass_py(self) -> None: ...
     @classmethod
-    def tools_all(cls): ...
+    def tools_all(cls) -> None: ...
     @classmethod
-    def tools_from_context(cls, context, mode=None):
+    def tools_from_context(cls, context, mode=None) -> None:
         """
 
         :param context:
@@ -41,12 +41,12 @@ class NODE_PT_tools_active(
     keymap_prefix: typing.Any
     tool_fallback_id: typing.Any
 
-    def bl_rna_get_subclass(self): ...
-    def bl_rna_get_subclass_py(self): ...
+    def bl_rna_get_subclass(self) -> None: ...
+    def bl_rna_get_subclass_py(self) -> None: ...
     @classmethod
-    def tools_all(cls): ...
+    def tools_all(cls) -> None: ...
     @classmethod
-    def tools_from_context(cls, context, mode=None):
+    def tools_from_context(cls, context, mode=None) -> None:
         """
 
         :param context:
@@ -65,12 +65,12 @@ class SEQUENCER_PT_tools_active(
     keymap_prefix: typing.Any
     tool_fallback_id: typing.Any
 
-    def bl_rna_get_subclass(self): ...
-    def bl_rna_get_subclass_py(self): ...
+    def bl_rna_get_subclass(self) -> None: ...
+    def bl_rna_get_subclass_py(self) -> None: ...
     @classmethod
-    def tools_all(cls): ...
+    def tools_all(cls) -> None: ...
     @classmethod
-    def tools_from_context(cls, context, mode=None):
+    def tools_from_context(cls, context, mode=None) -> None:
         """
 
         :param context:
@@ -89,12 +89,12 @@ class VIEW3D_PT_tools_active(
     keymap_prefix: typing.Any
     tool_fallback_id: typing.Any
 
-    def bl_rna_get_subclass(self): ...
-    def bl_rna_get_subclass_py(self): ...
+    def bl_rna_get_subclass(self) -> None: ...
+    def bl_rna_get_subclass_py(self) -> None: ...
     @classmethod
-    def tools_all(cls): ...
+    def tools_all(cls) -> None: ...
     @classmethod
-    def tools_from_context(cls, context, mode=None):
+    def tools_from_context(cls, context, mode=None) -> None:
         """
 
         :param context:
@@ -107,7 +107,7 @@ class _defs_annotate:
     poly: typing.Any
     scribble: typing.Any
 
-    def draw_settings_common(self, context, layout, tool):
+    def draw_settings_common(self, context, layout, tool) -> None:
         """
 
         :param context:
@@ -188,7 +188,7 @@ class _defs_grease_pencil_paint:
     trim: typing.Any
 
     @staticmethod
-    def grease_pencil_primitive_toolbar(context, layout, _tool, props):
+    def grease_pencil_primitive_toolbar(context, layout, _tool, props) -> None:
         """
 
         :param context:
@@ -201,7 +201,7 @@ class _defs_grease_pencil_sculpt:
     clone: typing.Any
 
     @staticmethod
-    def poll_select_mask(context):
+    def poll_select_mask(context) -> None:
         """
 
         :param context:
@@ -214,7 +214,7 @@ class _defs_grease_pencil_vertex:
     smear: typing.Any
 
     @staticmethod
-    def poll_select_mask(context):
+    def poll_select_mask(context) -> None:
         """
 
         :param context:
@@ -230,7 +230,7 @@ class _defs_image_generic:
     sample: typing.Any
 
     @staticmethod
-    def poll_uvedit(context):
+    def poll_uvedit(context) -> None:
         """
 
         :param context:
@@ -267,7 +267,7 @@ class _defs_node_select:
 
 class _defs_particle:
     @staticmethod
-    def generate_from_brushes(context):
+    def generate_from_brushes(context) -> None:
         """
 
         :param context:
@@ -309,7 +309,7 @@ class _defs_sculpt:
     trim_polyline: typing.Any
 
     @staticmethod
-    def draw_lasso_stroke_settings(layout, props, draw_inline, draw_popover):
+    def draw_lasso_stroke_settings(layout, props, draw_inline, draw_popover) -> None:
         """
 
         :param layout:
@@ -319,14 +319,14 @@ class _defs_sculpt:
         """
 
     @staticmethod
-    def poll_dyntopo(context):
+    def poll_dyntopo(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def poll_multires(context):
+    def poll_multires(context) -> None:
         """
 
         :param context:
@@ -355,7 +355,7 @@ class _defs_texture_paint:
     smear: typing.Any
 
     @staticmethod
-    def poll_select_mask(context):
+    def poll_select_mask(context) -> None:
         """
 
         :param context:
@@ -370,7 +370,7 @@ class _defs_transform:
     transform: typing.Any
     translate: typing.Any
 
-    def draw_transform_sculpt_tool_settings(self, context, layout):
+    def draw_transform_sculpt_tool_settings(self, context, layout) -> None:
         """
 
         :param context:
@@ -383,7 +383,7 @@ class _defs_vertex_paint:
     smear: typing.Any
 
     @staticmethod
-    def poll_select_mask(context):
+    def poll_select_mask(context) -> None:
         """
 
         :param context:
@@ -397,7 +397,7 @@ class _defs_view3d_add:
     uv_sphere_add: typing.Any
 
     @staticmethod
-    def description_interactive_add(context, _item, _km, *, prefix):
+    def description_interactive_add(context, _item, _km, *, prefix) -> None:
         """
 
         :param context:
@@ -407,7 +407,7 @@ class _defs_view3d_add:
         """
 
     @staticmethod
-    def draw_settings_interactive_add(layout, tool_settings, tool, extra):
+    def draw_settings_interactive_add(layout, tool_settings, tool, extra) -> None:
         """
 
         :param layout:
@@ -436,17 +436,17 @@ class _defs_weight_paint:
     smear: typing.Any
 
     @staticmethod
-    def poll_select_tools(context):
+    def poll_select_tools(context) -> None:
         """
 
         :param context:
         """
 
 class _template_widget:
-    def VIEW3D_GGT_xform_extrude(self): ...
-    def VIEW3D_GGT_xform_gizmo(self): ...
+    def VIEW3D_GGT_xform_extrude(self) -> None: ...
+    def VIEW3D_GGT_xform_gizmo(self) -> None: ...
 
-def curve_draw_settings(context, layout, tool, *, extra=False): ...
+def curve_draw_settings(context, layout, tool, *, extra=False) -> None: ...
 def generate_from_enum_ex(
     _context,
     *,
@@ -459,5 +459,5 @@ def generate_from_enum_ex(
     tooldef_keywords=None,
     icon_map=None,
     use_separators=True,
-): ...
-def kmi_to_string_or_none(kmi): ...
+) -> None: ...
+def kmi_to_string_or_none(kmi) -> None: ...

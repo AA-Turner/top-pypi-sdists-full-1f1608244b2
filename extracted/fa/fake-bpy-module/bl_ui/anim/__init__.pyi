@@ -23,13 +23,13 @@ class ANIM_MT_keyframe_insert_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
-def draw_action_and_slot_selector_for_id(layout, animated_id):
+def draw_action_and_slot_selector_for_id(layout, animated_id) -> None:
     """Draw the action and slot selector for an ID, using the given layout.The ID must be an animatable ID.Note that the slot selector is only drawn when the ID has an assigned
     Action.
 

@@ -1585,6 +1585,32 @@ https://docs.chalk.ai/cli/apply
 
         return errors
 
+    def _display_feature_search(self, features: dict[str, Any]):
+        if not notebook.is_notebook():
+            return
+        from IPython.core.display_functions import display
+        from ipywidgets import widgets
+
+        layout = widgets.Layout(width="auto")
+        search = widgets.Combobox(
+            placeholder="Select A Feature",
+            options=list(features.keys()),
+            ensure_option=True,
+            disabled=False,
+            continuous_update=False,
+            layout=layout,
+        )
+        output0 = widgets.Output()
+        display(search, output0)
+
+        def on_feature_select(_):
+            with output0:
+                output0.clear_output()
+                table = features[search.value]
+                display(table)
+
+        search.observe(on_feature_select, names="value")
+
     def load_features(
         self,
         branch: BranchIdParam = None,
@@ -1642,6 +1668,8 @@ https://docs.chalk.ai/cli/apply
                 if has_descriptions or f.description:
                     has_descriptions = True
 
+        features_processed: dict[str, Table] = {}
+
         for k, v in feature_sets.items():
             seen = set()
             table = Table(title=k, title_justify="left", width=max_name_len + max_type_len + 10)
@@ -1674,8 +1702,14 @@ https://docs.chalk.ai/cli/apply
                     table.add_row(name, escape(feature_type).strip("'"), f.description)
                 table.add_row(name, escape(feature_type).strip("'"))
 
-            console.print(table)
+            features_processed[k] = table
+
         caller_frame.f_globals.update(features_raw)
+        try:
+            self._display_feature_search(features_processed)
+        except Exception:
+            for _, table in features_processed.items():
+                console.print(table)
 
     def query(
         self,

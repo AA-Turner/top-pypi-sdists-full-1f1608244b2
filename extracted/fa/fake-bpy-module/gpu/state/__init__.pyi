@@ -8,13 +8,13 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 
-def active_framebuffer_get(enable):
+def active_framebuffer_get(enable) -> None:
     """Return the active frame-buffer in context."""
 
-def blend_get():
+def blend_get() -> None:
     """Current blending equation."""
 
-def blend_set(mode: str):
+def blend_set(mode: str) -> None:
     """Defines the fixed pipeline blending equation.
 
         :param mode: The type of blend mode.
@@ -37,33 +37,33 @@ def blend_set(mode: str):
         :type mode: str
     """
 
-def clip_distances_set(distances_enabled: int):
+def clip_distances_set(distances_enabled: int) -> None:
     """Sets the number of gl_ClipDistance planes used for clip geometry.
 
     :param distances_enabled: Number of clip distances enabled.
     :type distances_enabled: int
     """
 
-def color_mask_set(r: bool, g, b, a):
+def color_mask_set(r: bool, g, b, a) -> None:
     """Enable or disable writing of frame buffer color components.
 
     :param r: components red, green, blue, and alpha.
     :type r: bool
     """
 
-def depth_mask_get():
+def depth_mask_get() -> None:
     """Writing status in the depth component."""
 
-def depth_mask_set(value):
+def depth_mask_set(value) -> None:
     """Write to depth component.
 
     :param value: True for writing to the depth component.
     """
 
-def depth_test_get():
+def depth_test_get() -> None:
     """Current depth_test equation."""
 
-def depth_test_set(mode: str):
+def depth_test_set(mode: str) -> None:
     """Defines the depth_test equation.
 
         :param mode: The depth test equation name.
@@ -71,28 +71,28 @@ def depth_test_set(mode: str):
         :type mode: str
     """
 
-def face_culling_set(culling):
+def face_culling_set(culling) -> None:
     """Specify whether none, front-facing or back-facing facets can be culled."""
 
-def front_facing_set(invert):
+def front_facing_set(invert) -> None:
     """Specifies the orientation of front-facing polygons.
 
     :param invert: True for clockwise polygons as front-facing.
     """
 
-def line_width_get():
+def line_width_get() -> None:
     """Current width of rasterized lines."""
 
-def line_width_set(width):
+def line_width_set(width) -> None:
     """Specify the width of rasterized lines."""
 
-def point_size_set(size):
+def point_size_set(size) -> None:
     """Specify the diameter of rasterized points.
 
     :param size: New diameter.
     """
 
-def program_point_size_set(enable: bool):
+def program_point_size_set(enable: bool) -> None:
     """If enabled, the derived point size is taken from the (potentially clipped) shader builtin gl_PointSize.
 
     :param enable: True for shader builtin gl_PointSize.
@@ -110,7 +110,7 @@ def scissor_get() -> tuple[int, int, int, int]:
         :rtype: tuple[int, int, int, int]
     """
 
-def scissor_set(x: int, y, xsize: int, ysize):
+def scissor_set(x: int, y, xsize: int, ysize) -> None:
     """Specifies the scissor area of the active framebuffer.
     Note: The scissor state is not saved upon framebuffer rebind.
 
@@ -120,7 +120,7 @@ def scissor_set(x: int, y, xsize: int, ysize):
         :type xsize: int
     """
 
-def scissor_test_set(enable: bool):
+def scissor_test_set(enable: bool) -> None:
     """Enable/disable scissor testing on the active framebuffer.
 
         :param enable: True - enable scissor testing.
@@ -128,10 +128,10 @@ def scissor_test_set(enable: bool):
         :type enable: bool
     """
 
-def viewport_get():
+def viewport_get() -> None:
     """Viewport of the active framebuffer."""
 
-def viewport_set(x: int, y, xsize: int, ysize):
+def viewport_set(x: int, y, xsize: int, ysize) -> None:
     """Specifies the viewport of the active framebuffer.
     Note: The viewport state is not saved upon framebuffer rebind.
 

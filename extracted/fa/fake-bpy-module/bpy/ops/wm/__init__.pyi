@@ -70,7 +70,7 @@ def alembic_export(
     as_background_job: bool | None = False,
     evaluation_mode: typing.Literal["RENDER", "VIEWPORT"] | None = "RENDER",
     init_scene_frame_range: bool | None = True,
-):
+) -> None:
     """Export current scene in an Alembic archive
 
         :type execution_context: int | str | None
@@ -240,7 +240,7 @@ def alembic_import(
     always_add_cache_reader: bool | None = False,
     is_sequence: bool | None = False,
     as_background_job: bool | None = False,
-):
+) -> None:
     """Load an Alembic archive
 
         :type execution_context: int | str | None
@@ -365,7 +365,7 @@ def append(
     instance_object_data: bool | None = True,
     set_fake: bool | None = False,
     use_recursive: bool | None = True,
-):
+) -> None:
     """Append from a Library .blend file
 
         :type execution_context: int | str | None
@@ -483,7 +483,7 @@ def batch_rename(
     data_source: typing.Literal["SELECT", "ALL"] | None = "SELECT",
     actions: bpy.types.bpy_prop_collection[bl_operators.wm.BatchRenameAction]
     | None = None,
-):
+) -> None:
     """Rename multiple items at once
 
     :type execution_context: int | str | None
@@ -498,7 +498,7 @@ def batch_rename(
 
 def blend_strings_utf8_validate(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Check and fix all strings in current .blend file to be valid UTF-8 Unicode (needed for some old, 2.4x area files)
 
     :type execution_context: int | str | None
@@ -511,7 +511,7 @@ def call_asset_shelf_popover(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Open a predefined asset shelf in a popup
 
     :type execution_context: int | str | None
@@ -526,7 +526,7 @@ def call_menu(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Open a predefined menu
 
     :type execution_context: int | str | None
@@ -541,7 +541,7 @@ def call_menu_pie(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Open a predefined pie menu
 
     :type execution_context: int | str | None
@@ -557,7 +557,7 @@ def call_panel(
     *,
     name: str = "",
     keep_open: bool | None = True,
-):
+) -> None:
     """Open a predefined panel
 
     :type execution_context: int | str | None
@@ -574,7 +574,7 @@ def clear_recent_files(
     /,
     *,
     remove: typing.Literal["ALL", "MISSING"] | None = "ALL",
-):
+) -> None:
     """Clear the recent files list
 
     :type execution_context: int | str | None
@@ -655,7 +655,7 @@ def collada_export(
     open_sim: bool | None = False,
     limit_precision: bool | None = False,
     keep_bind_info: bool | None = False,
-):
+) -> None:
     """Save a Collada file (Deprecated)
 
         :type execution_context: int | str | None
@@ -896,7 +896,7 @@ def collada_import(
     auto_connect: bool | None = False,
     min_chain_length: int | None = 0,
     keep_bind_info: bool | None = False,
-):
+) -> None:
     """Load a Collada file (Deprecated)
 
         :type execution_context: int | str | None
@@ -976,7 +976,7 @@ def collada_import(
 
 def collection_export_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Invoke all configured exporters for all collections
 
     :type execution_context: int | str | None
@@ -991,7 +991,7 @@ def context_collection_boolean_set(
     data_path_iter: str = "",
     data_path_item: str = "",
     type: typing.Literal["TOGGLE", "ENABLE", "DISABLE"] | None = "TOGGLE",
-):
+) -> None:
     """Set boolean values for a collection of items
 
     :type execution_context: int | str | None
@@ -1011,7 +1011,7 @@ def context_cycle_array(
     *,
     data_path: str = "",
     reverse: bool | None = False,
-):
+) -> None:
     """Set a context array value (useful for cycling the active mesh edit mode)
 
     :type execution_context: int | str | None
@@ -1030,7 +1030,7 @@ def context_cycle_enum(
     data_path: str = "",
     reverse: bool | None = False,
     wrap: bool | None = False,
-):
+) -> None:
     """Toggle a context value
 
     :type execution_context: int | str | None
@@ -1051,7 +1051,7 @@ def context_cycle_int(
     data_path: str = "",
     reverse: bool | None = False,
     wrap: bool | None = False,
-):
+) -> None:
     """Set a context value (useful for cycling active material, shape keys, groups, etc.)
 
     :type execution_context: int | str | None
@@ -1070,7 +1070,7 @@ def context_menu_enum(
     /,
     *,
     data_path: str = "",
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1090,7 +1090,7 @@ def context_modal_mouse(
     input_scale: float | None = 0.01,
     invert: bool | None = False,
     initial_x: int | None = 0,
-):
+) -> None:
     """Adjust arbitrary values with mouse input
 
     :type execution_context: int | str | None
@@ -1115,7 +1115,7 @@ def context_pie_enum(
     /,
     *,
     data_path: str = "",
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1131,7 +1131,7 @@ def context_scale_float(
     *,
     data_path: str = "",
     value: float | None = 1.0,
-):
+) -> None:
     """Scale a float context value
 
     :type execution_context: int | str | None
@@ -1150,7 +1150,7 @@ def context_scale_int(
     data_path: str = "",
     value: float | None = 1.0,
     always_step: bool | None = True,
-):
+) -> None:
     """Scale an int context value
 
     :type execution_context: int | str | None
@@ -1170,7 +1170,7 @@ def context_set_boolean(
     *,
     data_path: str = "",
     value: bool | None = True,
-):
+) -> None:
     """Set a context value
 
     :type execution_context: int | str | None
@@ -1188,7 +1188,7 @@ def context_set_enum(
     *,
     data_path: str = "",
     value: str = "",
-):
+) -> None:
     """Set a context value
 
     :type execution_context: int | str | None
@@ -1207,7 +1207,7 @@ def context_set_float(
     data_path: str = "",
     value: float | None = 0.0,
     relative: bool | None = False,
-):
+) -> None:
     """Set a context value
 
     :type execution_context: int | str | None
@@ -1227,7 +1227,7 @@ def context_set_id(
     *,
     data_path: str = "",
     value: str = "",
-):
+) -> None:
     """Set a context value to an ID data-block
 
     :type execution_context: int | str | None
@@ -1246,7 +1246,7 @@ def context_set_int(
     data_path: str = "",
     value: int | None = 0,
     relative: bool | None = False,
-):
+) -> None:
     """Set a context value
 
     :type execution_context: int | str | None
@@ -1266,7 +1266,7 @@ def context_set_string(
     *,
     data_path: str = "",
     value: str = "",
-):
+) -> None:
     """Set a context value
 
     :type execution_context: int | str | None
@@ -1284,7 +1284,7 @@ def context_set_value(
     *,
     data_path: str = "",
     value: str = "",
-):
+) -> None:
     """Set a context value
 
     :type execution_context: int | str | None
@@ -1302,7 +1302,7 @@ def context_toggle(
     *,
     data_path: str = "",
     module: str = "",
-):
+) -> None:
     """Toggle a context value
 
     :type execution_context: int | str | None
@@ -1321,7 +1321,7 @@ def context_toggle_enum(
     data_path: str = "",
     value_1: str = "",
     value_2: str = "",
-):
+) -> None:
     """Toggle a context value
 
     :type execution_context: int | str | None
@@ -1340,7 +1340,7 @@ def debug_menu(
     /,
     *,
     debug_value: int | None = 0,
-):
+) -> None:
     """Open a popup to set the debug level
 
     :type execution_context: int | str | None
@@ -1355,7 +1355,7 @@ def doc_view(
     /,
     *,
     doc_id: str = "",
-):
+) -> None:
     """Open online reference docs in a web browser
 
     :type execution_context: int | str | None
@@ -1370,7 +1370,7 @@ def doc_view_manual(
     /,
     *,
     doc_id: str = "",
-):
+) -> None:
     """Load online manual
 
     :type execution_context: int | str | None
@@ -1381,7 +1381,7 @@ def doc_view_manual(
 
 def doc_view_manual_ui_context(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """View a context based online manual in a web browser
 
     :type execution_context: int | str | None
@@ -1394,7 +1394,7 @@ def drop_blend_file(
     /,
     *,
     filepath: str = "",
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1411,7 +1411,7 @@ def drop_import_file(
     directory: str = "",
     files: bpy.types.bpy_prop_collection[bpy.types.OperatorFileListElement]
     | None = None,
-):
+) -> None:
     """Operator that allows file handlers to receive file drops
 
     :type execution_context: int | str | None
@@ -1466,7 +1466,7 @@ def fbx_import(
     use_anim: bool | None = True,
     anim_offset: float | None = 1.0,
     filter_glob: str = "*.fbx",
-):
+) -> None:
     """Import FBX file into current scene
 
         :type execution_context: int | str | None
@@ -1600,7 +1600,7 @@ def grease_pencil_export_pdf(
     frame_mode: typing.Literal["ACTIVE", "SELECTED", "SCENE"] | None = "ACTIVE",
     stroke_sample: float | None = 0.0,
     use_uniform_width: bool | None = False,
-):
+) -> None:
     """Export Grease Pencil to PDF
 
         :type execution_context: int | str | None
@@ -1728,7 +1728,7 @@ def grease_pencil_export_svg(
     stroke_sample: float | None = 0.0,
     use_uniform_width: bool | None = False,
     use_clip_camera: bool | None = False,
-):
+) -> None:
     """Export Grease Pencil to SVG
 
         :type execution_context: int | str | None
@@ -1858,7 +1858,7 @@ def grease_pencil_import_svg(
     resolution: int | None = 10,
     scale: float | None = 10.0,
     use_scene_unit: bool | None = False,
-):
+) -> None:
     """Import SVG into Grease Pencil
 
         :type execution_context: int | str | None
@@ -1974,7 +1974,7 @@ def id_linked_relocate(
     active_collection: bool | None = False,
     instance_collections: bool | None = False,
     instance_object_data: bool | None = False,
-):
+) -> None:
     """Relocate a linked ID, i.e. select another ID to link, and remap its local usages to that newly linked data-block). Currently only designed as an internal operator, not directly exposed to the user
 
         :type execution_context: int | str | None
@@ -2067,7 +2067,7 @@ def interface_theme_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add a custom theme to the preset list
 
     :type execution_context: int | str | None
@@ -2088,7 +2088,7 @@ def interface_theme_preset_remove(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = True,
-):
+) -> None:
     """Remove a custom theme from the preset list
 
     :type execution_context: int | str | None
@@ -2109,7 +2109,7 @@ def interface_theme_preset_save(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = True,
-):
+) -> None:
     """Save a custom theme in the preset list
 
     :type execution_context: int | str | None
@@ -2130,7 +2130,7 @@ def keyconfig_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add a custom keymap configuration to the preset list
 
     :type execution_context: int | str | None
@@ -2151,7 +2151,7 @@ def keyconfig_preset_remove(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = True,
-):
+) -> None:
     """Remove a custom keymap configuration from the preset list
 
     :type execution_context: int | str | None
@@ -2199,7 +2199,7 @@ def lib_reload(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Reload the given library
 
         :type execution_context: int | str | None
@@ -2309,7 +2309,7 @@ def lib_relocate(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Relocate the given library to one or several others
 
         :type execution_context: int | str | None
@@ -2426,7 +2426,7 @@ def link(
     active_collection: bool | None = True,
     instance_collections: bool | None = True,
     instance_object_data: bool | None = True,
-):
+) -> None:
     """Link from a Library .blend file
 
         :type execution_context: int | str | None
@@ -2513,7 +2513,7 @@ def link(
 
 def memory_statistics(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Print memory statistics to the console
 
     :type execution_context: int | str | None
@@ -2580,7 +2580,7 @@ def obj_export(
     smooth_group_bitflags: bool | None = False,
     filter_glob: str = "*.obj;*.mtl",
     collection: str = "",
-):
+) -> None:
     """Save the scene to a Wavefront OBJ file
 
         :type execution_context: int | str | None
@@ -2799,7 +2799,7 @@ def obj_import(
     close_spline_loops: bool | None = True,
     collection_separator: str = "",
     filter_glob: str = "*.obj;*.mtl",
-):
+) -> None:
     """Load a Wavefront OBJ scene
 
         :type execution_context: int | str | None
@@ -2959,7 +2959,7 @@ def open_mainfile(
     use_scripts: bool | None = False,
     display_file_selector: bool | None = True,
     state: int | None = 0,
-):
+) -> None:
     """Open a Blender file
 
         :type execution_context: int | str | None
@@ -3034,7 +3034,7 @@ def open_mainfile(
 
 def operator_cheat_sheet(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """List all the operators in a text-block, useful for scripting
 
     :type execution_context: int | str | None
@@ -3043,7 +3043,7 @@ def operator_cheat_sheet(
 
 def operator_defaults(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set the active operator to its default values
 
     :type execution_context: int | str | None
@@ -3057,7 +3057,7 @@ def operator_pie_enum(
     *,
     data_path: str = "",
     prop_string: str = "",
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -3077,7 +3077,7 @@ def operator_preset_add(
     remove_name: bool | None = False,
     remove_active: bool | None = False,
     operator: str = "",
-):
+) -> None:
     """Add or remove an Operator Preset
 
     :type execution_context: int | str | None
@@ -3100,7 +3100,7 @@ def operator_presets_cleanup(
     operator: str = "",
     properties: bpy.types.bpy_prop_collection[bpy.types.OperatorFileListElement]
     | None = None,
-):
+) -> None:
     """Remove outdated operator properties from presets that may cause problems
 
     :type execution_context: int | str | None
@@ -3117,7 +3117,7 @@ def owner_disable(
     /,
     *,
     owner_id: str = "",
-):
+) -> None:
     """Disable add-on for workspace
 
     :type execution_context: int | str | None
@@ -3132,7 +3132,7 @@ def owner_enable(
     /,
     *,
     owner_id: str = "",
-):
+) -> None:
     """Enable add-on for workspace
 
     :type execution_context: int | str | None
@@ -3147,7 +3147,7 @@ def path_open(
     /,
     *,
     filepath: str = "",
-):
+) -> None:
     """Open a path in a file browser
 
     :type execution_context: int | str | None
@@ -3203,7 +3203,7 @@ def ply_export(
     export_triangulated_mesh: bool | None = False,
     ascii_format: bool | None = False,
     filter_glob: str = "*.ply",
-):
+) -> None:
     """Save the scene to a PLY file
 
         :type execution_context: int | str | None
@@ -3382,7 +3382,7 @@ def ply_import(
     import_colors: typing.Literal["NONE", "SRGB", "LINEAR"] | None = "SRGB",
     import_attributes: bool | None = True,
     filter_glob: str = "*.ply",
-):
+) -> None:
     """Import an PLY file as an object
 
         :type execution_context: int | str | None
@@ -3526,7 +3526,7 @@ def previews_batch_clear(
     use_intern_data: bool | None = True,
     use_trusted: bool | None = False,
     use_backups: bool | None = True,
-):
+) -> None:
     """Clear selected .blend file's previews
 
     :type execution_context: int | str | None
@@ -3569,7 +3569,7 @@ def previews_batch_generate(
     use_intern_data: bool | None = True,
     use_trusted: bool | None = False,
     use_backups: bool | None = True,
-):
+) -> None:
     """Generate selected .blend file's previews
 
     :type execution_context: int | str | None
@@ -3617,7 +3617,7 @@ def previews_clear(
         ]
     ]
     | None = {},
-):
+) -> None:
     """Clear data-block previews (only for some types like objects, materials, textures, etc.)
 
         :type execution_context: int | str | None
@@ -3661,7 +3661,7 @@ def previews_clear(
 
 def previews_ensure(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Ensure data-block previews are available and up-to-date (to be saved in .blend file, only for some types like materials, textures, etc.)
 
     :type execution_context: int | str | None
@@ -3674,7 +3674,7 @@ def properties_add(
     /,
     *,
     data_path: str = "",
-):
+) -> None:
     """Add your own property to the data-block
 
     :type execution_context: int | str | None
@@ -3689,7 +3689,7 @@ def properties_context_change(
     /,
     *,
     context: str = "",
-):
+) -> None:
     """Jump to a different tab inside the properties editor
 
     :type execution_context: int | str | None
@@ -3879,7 +3879,7 @@ def properties_edit(
     ]
     | None = "OBJECT",
     eval_string: str = "",
-):
+) -> None:
     """Change a custom property's type, or adjust how it is displayed in the interface
 
         :type execution_context: int | str | None
@@ -3971,7 +3971,7 @@ def properties_edit_value(
     data_path: str = "",
     property_name: str = "",
     eval_string: str = "",
-):
+) -> None:
     """Edit the value of a custom property
 
     :type execution_context: int | str | None
@@ -3991,7 +3991,7 @@ def properties_remove(
     *,
     data_path: str = "",
     property_name: str = "",
-):
+) -> None:
     """Internal use (edit a property data_path)
 
     :type execution_context: int | str | None
@@ -4002,7 +4002,9 @@ def properties_remove(
     :type property_name: str
     """
 
-def quit_blender(execution_context: int | str | None = None, undo: bool | None = None):
+def quit_blender(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Quit Blender
 
     :type execution_context: int | str | None
@@ -4026,7 +4028,7 @@ def radial_control(
     image_id: str = "",
     secondary_tex: bool | None = False,
     release_confirm: bool | None = False,
-):
+) -> None:
     """Set some size property (e.g. brush size) with mouse wheel
 
     :type execution_context: int | str | None
@@ -4065,7 +4067,7 @@ def read_factory_settings(
     use_factory_startup_app_template_only: bool | None = False,
     app_template: str = "Template",
     use_empty: bool | None = False,
-):
+) -> None:
     """Load factory default startup file and preferences. To make changes permanent, use "Save Startup File" and "Save Preferences"
 
     :type execution_context: int | str | None
@@ -4083,7 +4085,7 @@ def read_factory_userpref(
     /,
     *,
     use_factory_startup_app_template_only: bool | None = False,
-):
+) -> None:
     """Load factory default preferences. To make changes to preferences permanent, use "Save Preferences"
 
     :type execution_context: int | str | None
@@ -4092,7 +4094,9 @@ def read_factory_userpref(
     :type use_factory_startup_app_template_only: bool | None
     """
 
-def read_history(execution_context: int | str | None = None, undo: bool | None = None):
+def read_history(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Reloads history and bookmarks
 
     :type execution_context: int | str | None
@@ -4111,7 +4115,7 @@ def read_homefile(
     use_factory_startup_app_template_only: bool | None = False,
     app_template: str = "Template",
     use_empty: bool | None = False,
-):
+) -> None:
     """Open the default file
 
     :type execution_context: int | str | None
@@ -4131,7 +4135,9 @@ def read_homefile(
     :type use_empty: bool | None
     """
 
-def read_userpref(execution_context: int | str | None = None, undo: bool | None = None):
+def read_userpref(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Load last saved preferences
 
     :type execution_context: int | str | None
@@ -4170,7 +4176,7 @@ def recover_auto_save(
     | None = "LIST_VERTICAL",
     sort_method: str | None = "",
     use_scripts: bool | None = False,
-):
+) -> None:
     """Open an automatically saved file to recover it
 
         :type execution_context: int | str | None
@@ -4243,7 +4249,7 @@ def recover_last_session(
     /,
     *,
     use_scripts: bool | None = False,
-):
+) -> None:
     """Open the last closed file ("quit.blend")
 
     :type execution_context: int | str | None
@@ -4269,7 +4275,7 @@ def redraw_timer(
     | None = "DRAW",
     iterations: int | None = 10,
     time_limit: float | None = 0.0,
-):
+) -> None:
     """Simple redraw timer to test the speed of updating the interface
 
         :type execution_context: int | str | None
@@ -4309,7 +4315,7 @@ def revert_mainfile(
     /,
     *,
     use_scripts: bool | None = False,
-):
+) -> None:
     """Reload the saved file
 
     :type execution_context: int | str | None
@@ -4352,7 +4358,7 @@ def save_as_mainfile(
     compress: bool | None = False,
     relative_remap: bool | None = True,
     copy: bool | None = False,
-):
+) -> None:
     """Save the current file in the desired location
 
         :type execution_context: int | str | None
@@ -4423,7 +4429,9 @@ def save_as_mainfile(
         :type copy: bool | None
     """
 
-def save_homefile(execution_context: int | str | None = None, undo: bool | None = None):
+def save_homefile(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Make the current file the default startup file
 
     :type execution_context: int | str | None
@@ -4465,7 +4473,7 @@ def save_mainfile(
     relative_remap: bool | None = False,
     exit: bool | None = False,
     incremental: bool | None = False,
-):
+) -> None:
     """Save the current Blender file
 
         :type execution_context: int | str | None
@@ -4538,14 +4546,18 @@ def save_mainfile(
         :type incremental: bool | None
     """
 
-def save_userpref(execution_context: int | str | None = None, undo: bool | None = None):
+def save_userpref(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Make the current preferences default
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def search_menu(execution_context: int | str | None = None, undo: bool | None = None):
+def search_menu(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Pop-up a search over all menus in the current context
 
     :type execution_context: int | str | None
@@ -4554,7 +4566,7 @@ def search_menu(execution_context: int | str | None = None, undo: bool | None = 
 
 def search_operator(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Pop-up a search over all available operators in current context
 
     :type execution_context: int | str | None
@@ -4568,7 +4580,7 @@ def search_single_menu(
     *,
     menu_idname: str = "",
     initial_query: str = "",
-):
+) -> None:
     """Pop-up a search for a menu in current context
 
     :type execution_context: int | str | None
@@ -4591,7 +4603,7 @@ def set_stereo_3d(
     | None = "ROW_INTERLEAVED",
     use_interlace_swap: bool | None = False,
     use_sidebyside_crosseyed: bool | None = False,
-):
+) -> None:
     """Toggle 3D stereo support for current window (or change the display mode)
 
     :type execution_context: int | str | None
@@ -4608,14 +4620,18 @@ def set_stereo_3d(
     :type use_sidebyside_crosseyed: bool | None
     """
 
-def splash(execution_context: int | str | None = None, undo: bool | None = None):
+def splash(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Open the splash screen with release info
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def splash_about(execution_context: int | str | None = None, undo: bool | None = None):
+def splash_about(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Open a window with information about Blender
 
     :type execution_context: int | str | None
@@ -4666,7 +4682,7 @@ def stl_export(
     | None = "Z",
     apply_modifiers: bool | None = True,
     filter_glob: str = "*.stl",
-):
+) -> None:
     """Save the scene to an STL file
 
         :type execution_context: int | str | None
@@ -4829,7 +4845,7 @@ def stl_import(
     | None = "Z",
     use_mesh_validate: bool | None = True,
     filter_glob: str = "*.stl",
-):
+) -> None:
     """Import an STL file as an object
 
         :type execution_context: int | str | None
@@ -4952,7 +4968,7 @@ def sysinfo(
     /,
     *,
     filepath: str = "",
-):
+) -> None:
     """Generate system information, saved into a text file
 
     :type execution_context: int | str | None
@@ -4989,7 +5005,7 @@ def tool_set_by_brush_type(
         "PREFERENCES",
     ]
     | None = "EMPTY",
-):
+) -> None:
     """Look up the most appropriate tool for the given brush type and activate that
 
     :type execution_context: int | str | None
@@ -5030,7 +5046,7 @@ def tool_set_by_id(
         "PREFERENCES",
     ]
     | None = "EMPTY",
-):
+) -> None:
     """Set the tool by name (for key-maps)
 
     :type execution_context: int | str | None
@@ -5076,7 +5092,7 @@ def tool_set_by_index(
         "PREFERENCES",
     ]
     | None = "EMPTY",
-):
+) -> None:
     """Set the tool by index (for key-maps)
 
     :type execution_context: int | str | None
@@ -5093,7 +5109,9 @@ def tool_set_by_index(
     :type space_type: typing.Literal['EMPTY','VIEW_3D','IMAGE_EDITOR','NODE_EDITOR','SEQUENCE_EDITOR','CLIP_EDITOR','DOPESHEET_EDITOR','GRAPH_EDITOR','NLA_EDITOR','TEXT_EDITOR','CONSOLE','INFO','TOPBAR','STATUSBAR','OUTLINER','PROPERTIES','FILE_BROWSER','SPREADSHEET','PREFERENCES'] | None
     """
 
-def toolbar(execution_context: int | str | None = None, undo: bool | None = None):
+def toolbar(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -5102,7 +5120,7 @@ def toolbar(execution_context: int | str | None = None, undo: bool | None = None
 
 def toolbar_fallback_pie(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -5111,7 +5129,7 @@ def toolbar_fallback_pie(
 
 def toolbar_prompt(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Leader key like functionality for accessing tools
 
     :type execution_context: int | str | None
@@ -5124,7 +5142,7 @@ def url_open(
     /,
     *,
     url: str = "",
-):
+) -> None:
     """Open a website in the web browser
 
     :type execution_context: int | str | None
@@ -5139,7 +5157,7 @@ def url_open_preset(
     /,
     *,
     type: str | None = "",
-):
+) -> None:
     """Open a preset website in the web browser
 
     :type execution_context: int | str | None
@@ -5247,7 +5265,7 @@ def usd_export(
     ]
     | None = "METERS",
     meters_per_unit: float | None = 1.0,
-):
+) -> None:
     """Export current scene in a USD archive
 
         :type execution_context: int | str | None
@@ -5592,7 +5610,7 @@ def usd_import(
     import_defined_only: bool | None = True,
     merge_parent_xform: bool | None = True,
     apply_unit_conversion_scale: bool | None = True,
-):
+) -> None:
     """Import USD stage into current scene
 
         :type execution_context: int | str | None
@@ -5773,7 +5791,9 @@ def usd_import(
         :type apply_unit_conversion_scale: bool | None
     """
 
-def window_close(execution_context: int | str | None = None, undo: bool | None = None):
+def window_close(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Close the current window
 
     :type execution_context: int | str | None
@@ -5782,14 +5802,16 @@ def window_close(execution_context: int | str | None = None, undo: bool | None =
 
 def window_fullscreen_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle the current window full-screen
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def window_new(execution_context: int | str | None = None, undo: bool | None = None):
+def window_new(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Create a new window
 
     :type execution_context: int | str | None
@@ -5798,7 +5820,7 @@ def window_new(execution_context: int | str | None = None, undo: bool | None = N
 
 def window_new_main(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create a new main window with its own workspace and scene selection
 
     :type execution_context: int | str | None
@@ -5839,7 +5861,7 @@ def xr_navigation_fly(
         1.0,
         1.0,
     ),
-):
+) -> None:
     """Move/turn relative to the VR viewer or controller
 
         :type execution_context: int | str | None
@@ -5911,7 +5933,7 @@ def xr_navigation_grab(
     lock_rotation: bool | None = False,
     lock_rotation_z: bool | None = False,
     lock_scale: bool | None = False,
-):
+) -> None:
     """Navigate the VR scene by grabbing with controllers
 
     :type execution_context: int | str | None
@@ -5936,7 +5958,7 @@ def xr_navigation_reset(
     location: bool | None = True,
     rotation: bool | None = True,
     scale: bool | None = True,
-):
+) -> None:
     """Reset VR navigation deltas relative to session base pose
 
     :type execution_context: int | str | None
@@ -5962,7 +5984,7 @@ def xr_navigation_teleport(
     from_viewer: bool | None = False,
     axis: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, -1.0),
     color: collections.abc.Iterable[float] | None = (0.35, 0.35, 1.0, 1.0),
-):
+) -> None:
     """Set VR viewer location to controller raycast hit location
 
     :type execution_context: int | str | None
@@ -5987,7 +6009,7 @@ def xr_navigation_teleport(
 
 def xr_session_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Open a view for use with virtual reality headsets, or close it if already opened
 
     :type execution_context: int | str | None

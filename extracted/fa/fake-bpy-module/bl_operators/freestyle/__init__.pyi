@@ -27,14 +27,14 @@ class SCENE_OT_freestyle_add_edge_marks_to_keying_set(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -63,14 +63,14 @@ class SCENE_OT_freestyle_add_face_marks_to_keying_set(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -99,14 +99,14 @@ class SCENE_OT_freestyle_fill_range_by_selection(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -135,13 +135,13 @@ class SCENE_OT_freestyle_module_open(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -149,7 +149,7 @@ class SCENE_OT_freestyle_module_open(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

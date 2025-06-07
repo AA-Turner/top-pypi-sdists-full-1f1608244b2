@@ -29,7 +29,7 @@ class MATERIAL_PT_freestyle_line(MaterialFreestyleButtonsPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -41,7 +41,7 @@ class MaterialFreestyleButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -66,7 +66,7 @@ class RENDER_MT_lineset_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -97,13 +97,13 @@ class RENDER_PT_freestyle(RenderFreestyleButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -115,7 +115,7 @@ class RenderFreestyleButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -145,13 +145,13 @@ class VIEWLAYER_PT_freestyle(ViewLayerFreestyleButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -217,7 +217,7 @@ class VIEWLAYER_PT_freestyle_edge_detection(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -249,13 +249,13 @@ class VIEWLAYER_PT_freestyle_lineset(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_edge_type_buttons(self, box, lineset, edge_type):
+    def draw_edge_type_buttons(self, box, lineset, edge_type) -> None:
         """
 
         :param box:
@@ -291,13 +291,13 @@ class VIEWLAYER_PT_freestyle_lineset_collection(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -330,13 +330,13 @@ class VIEWLAYER_PT_freestyle_lineset_edgetype(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_edge_type_buttons(self, box, lineset, edge_type):
+    def draw_edge_type_buttons(self, box, lineset, edge_type) -> None:
         """
 
         :param box:
@@ -344,7 +344,7 @@ class VIEWLAYER_PT_freestyle_lineset_edgetype(
         :param edge_type:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -378,13 +378,13 @@ class VIEWLAYER_PT_freestyle_lineset_facemarks(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -417,13 +417,13 @@ class VIEWLAYER_PT_freestyle_lineset_visibilty(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -456,13 +456,13 @@ class VIEWLAYER_PT_freestyle_linestyle_alpha(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_alpha_modifier(self, context, modifier):
+    def draw_alpha_modifier(self, context, modifier) -> None:
         """
 
         :param context:
@@ -496,13 +496,13 @@ class VIEWLAYER_PT_freestyle_linestyle_color(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_color_modifier(self, context, modifier):
+    def draw_color_modifier(self, context, modifier) -> None:
         """
 
         :param context:
@@ -536,13 +536,13 @@ class VIEWLAYER_PT_freestyle_linestyle_geometry(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_geometry_modifier(self, _context, modifier):
+    def draw_geometry_modifier(self, _context, modifier) -> None:
         """
 
         :param _context:
@@ -576,7 +576,7 @@ class VIEWLAYER_PT_freestyle_linestyle_strokes(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -609,13 +609,13 @@ class VIEWLAYER_PT_freestyle_linestyle_strokes_chaining(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -649,13 +649,13 @@ class VIEWLAYER_PT_freestyle_linestyle_strokes_dashedline(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -689,7 +689,7 @@ class VIEWLAYER_PT_freestyle_linestyle_strokes_selection(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -723,13 +723,13 @@ class VIEWLAYER_PT_freestyle_linestyle_strokes_sorting(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -763,7 +763,7 @@ class VIEWLAYER_PT_freestyle_linestyle_strokes_splitting(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -797,13 +797,13 @@ class VIEWLAYER_PT_freestyle_linestyle_strokes_splitting_pattern(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -836,7 +836,7 @@ class VIEWLAYER_PT_freestyle_linestyle_texture(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -869,13 +869,13 @@ class VIEWLAYER_PT_freestyle_linestyle_thickness(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_thickness_modifier(self, context, modifier):
+    def draw_thickness_modifier(self, context, modifier) -> None:
         """
 
         :param context:
@@ -909,14 +909,14 @@ class VIEWLAYER_PT_freestyle_style_modules(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -942,7 +942,7 @@ class VIEWLAYER_UL_linesets(bpy.types.UIList):
 
     def draw_item(
         self, _context, layout, _data, item, icon, _active_data, _active_propname, index
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -962,7 +962,7 @@ class ViewLayerFreestyleButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -975,7 +975,7 @@ class ViewLayerFreestyleEditorButtonsPanel(ViewLayerFreestyleButtonsPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -989,7 +989,7 @@ class ViewLayerFreestyleLineStyle(ViewLayerFreestyleEditorButtonsPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1003,8 +1003,8 @@ class ViewLayerFreestyleLinestyleStrokesSubPanel(ViewLayerFreestyleLineStyle):
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-def draw_modifier_box_error(box, _modifier, message): ...
-def draw_modifier_box_header(box, modifier): ...
-def draw_modifier_color_ramp_common(box, modifier, has_range): ...
-def draw_modifier_common(box, modifier): ...
-def draw_modifier_curve_common(box, modifier, has_range, has_value): ...
+def draw_modifier_box_error(box, _modifier, message) -> None: ...
+def draw_modifier_box_header(box, modifier) -> None: ...
+def draw_modifier_color_ramp_common(box, modifier, has_range) -> None: ...
+def draw_modifier_common(box, modifier) -> None: ...
+def draw_modifier_curve_common(box, modifier, has_range, has_value) -> None: ...

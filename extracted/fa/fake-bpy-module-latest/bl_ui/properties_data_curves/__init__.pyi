@@ -12,7 +12,7 @@ class CURVES_MT_add_attribute(bpy.types.Menu):
     id_data: typing.Any
 
     @staticmethod
-    def add_standard_attribute(layout, curves, name, data_type, domain):
+    def add_standard_attribute(layout, curves, name, data_type, domain) -> None:
         """
 
         :param layout:
@@ -36,7 +36,7 @@ class CURVES_MT_add_attribute(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -61,7 +61,7 @@ class CURVES_MT_attribute_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -95,7 +95,7 @@ class CURVES_UL_attributes(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -108,7 +108,7 @@ class CURVES_UL_attributes(bpy.types.UIList):
         :param _index:
         """
 
-    def filter_items(self, _context, data, property):
+    def filter_items(self, _context, data, property) -> None:
         """
 
         :param _context:
@@ -139,7 +139,7 @@ class DATA_PT_CURVES_attributes(DataButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -169,7 +169,7 @@ class DATA_PT_context_curves(DataButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -232,7 +232,7 @@ class DATA_PT_curves_surface(DataButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -275,7 +275,7 @@ class DataButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

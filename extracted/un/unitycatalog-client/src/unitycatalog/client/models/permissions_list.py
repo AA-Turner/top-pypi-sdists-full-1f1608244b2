@@ -72,9 +72,9 @@ class PermissionsList(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in privilege_assignments (list)
         _items = []
         if self.privilege_assignments:
-            for _item in self.privilege_assignments:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_privilege_assignments in self.privilege_assignments:
+                if _item_privilege_assignments:
+                    _items.append(_item_privilege_assignments.to_dict())
             _dict['privilege_assignments'] = _items
         return _dict
 

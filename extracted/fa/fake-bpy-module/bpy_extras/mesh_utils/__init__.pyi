@@ -19,7 +19,7 @@ def edge_face_count_dict(mesh) -> dict[tuple[int, int], int]:
     :rtype: dict[tuple[int, int], int]
     """
 
-def edge_loops_from_edges(mesh, edges=None):
+def edge_loops_from_edges(mesh, edges=None) -> None:
     """Edge loops defined by edgesTakes me.edges or a list of edges and returns the edge loopsreturn a list of vertex indices.
     [ [1, 6, 7, 2], ...]closed loops have matching start and end values.
 
@@ -53,7 +53,7 @@ def ngon_tessellate(
     indices: list[int],
     fix_loops: bool = True,
     debug_print=True,
-):
+) -> None:
     """Takes a poly-line of indices (ngon) and returns a list of face
     index lists. Designed to be used for importers that need indices for an
     ngon to create from existing verts.

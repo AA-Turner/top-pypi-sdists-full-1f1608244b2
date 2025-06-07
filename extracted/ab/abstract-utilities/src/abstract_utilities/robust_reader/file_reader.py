@@ -10,12 +10,17 @@ from werkzeug.datastructures import FileStorage
 from datetime import datetime
 from typing import Dict, Union, List
 from .pdf_utils import *
+import pdfplumber
+from pdf2image import convert_from_path   # only used for OCR fallback
+import pytesseract
+from pathlib import Path
 # ---------------------------------------------------------------------------
 # NOTE: The following helper functions must be provided elsewhere:
 #   - convert_date_string(s: str) -> datetime
 #   - read_from_file(path: str) -> pd.DataFrame
 # ---------------------------------------------------------------------------
-
+DEFAULT_EXCLUDE_DIRS = {"node_modules", "__pycache__","backups","backup"}
+DEFAULT_EXCLUDE_FILE_PATTERNS = {"__init__*", "*.tmp", "*.log"}
 def convert_date_string(s):
     # … your existing stub or real implementation …
     try:
@@ -195,9 +200,9 @@ def collect_filepaths(
     """
 
     if exclude_dirs is None:
-        exclude_dirs = DEFAULT_EXCLUDE_DIRS.copy()
+        exclude_dirs = exclude_dirs.copy()
     if exclude_file_patterns is None:
-        exclude_file_patterns = DEFAULT_EXCLUDE_FILE_PATTERNS.copy()
+        exclude_file_patterns = exclude_file_patterns.copy()
 
     # Normalize to list
     if isinstance(inputs, str):
@@ -239,7 +244,36 @@ def collect_filepaths(
 
     return all_files
 
+# requirements:
+#   pip install pdfplumber pdf2image pytesseract pillow
+#   # plus Tesseract binary (apt install tesseract-ocr or brew install tesseract)
 
+
+
+def pdf_to_text(path, keep_page_breaks=True, ocr_if_empty=True):
+    """
+    Return the full text of *path* (str or Path) as a single string.
+
+    keep_page_breaks → insert "\f" between pages so you can split later.
+    ocr_if_empty     → any page with no text layer is rasterised & OCR'd.
+    """
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(path)
+
+    all_pages = []
+
+    with pdfplumber.open(path) as pdf:
+        for i, page in enumerate(pdf.pages, start=1):
+            text = page.extract_text() or ""   # might be None
+            if (not text.strip()) and ocr_if_empty:
+                # rasterise at 300 dpi then Tesseract
+                img = convert_from_path(str(path), dpi=300, first_page=i, last_page=i)[0]
+                text = pytesseract.image_to_string(img, lang="eng")
+            all_pages.append(text)
+
+    sep = "\f" if keep_page_breaks else "\n"
+    return sep.join(all_pages)
 def get_df(
     source: Union[
         str,
@@ -293,6 +327,9 @@ def get_df(
                 df = pd.read_parquet(source)
             elif ext in ('.shp', '.cpg', '.dbf', '.shx', '.geojson', '.prj'):
                 return read_shape_file(source)
+            elif ext in ['.pdf']:
+                df = pdf_to_text(source)
+                return df
             else:
                 df = read_from_file(source)
                 return df
@@ -446,9 +483,9 @@ def read_directory(
     exclude_file_patterns: set[str] = None,
 ) -> Dict[str, Union[pd.DataFrame, str]]:
     if exclude_dirs is None:
-        exclude_dirs = DEFAULT_EXCLUDE_DIRS.copy()
+        exclude_dirs = exclude_dirs.copy()
     if exclude_file_patterns is None:
-        exclude_file_patterns = DEFAULT_EXCLUDE_FILE_PATTERNS.copy()
+        exclude_file_patterns = exclude_file_patterns.copy()
 
     if not os.path.isdir(root_path):
         raise FileNotFoundError(f"Not a valid directory: {root_path!r}")

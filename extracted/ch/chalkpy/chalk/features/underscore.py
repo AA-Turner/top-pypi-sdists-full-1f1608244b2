@@ -84,11 +84,15 @@ class Underscore:
                     definition_location.line = source_node.lineno  # pyright: ignore
                 if hasattr(source_node, "col_offset") and source_node.col_offset is not None:  # pyright: ignore
                     definition_location.column = source_node.col_offset  # pyright: ignore
+            del current_frame
         else:
             definition_location = None
 
         self._chalk_definition_location: Optional[UnderscoreDefinitionLocation] = definition_location
         self._chalk__expr_id = expr_id if expr_id is not None else str(uuid.uuid4())
+
+    def definition_location(self) -> Optional[UnderscoreDefinitionLocation]:
+        return self._chalk_definition_location
 
     def __getattr__(self, attr: str) -> "Underscore":
         if attr.startswith("__") or attr.startswith("_chalk__"):

@@ -26,6 +26,7 @@ __all__ = (
     "AttributeType",
     "BodyPartType",
     "CelebrityRecognitionSortByType",
+    "ChallengeTypeType",
     "ContentClassifierType",
     "ContentModerationAggregateByType",
     "ContentModerationSortByType",
@@ -104,6 +105,7 @@ AttributeType = Literal[
 ]
 BodyPartType = Literal["FACE", "HEAD", "LEFT_HAND", "RIGHT_HAND"]
 CelebrityRecognitionSortByType = Literal["ID", "TIMESTAMP"]
+ChallengeTypeType = Literal["FaceMovementAndLightChallenge", "FaceMovementChallenge"]
 ContentClassifierType = Literal["FreeOfAdultContent", "FreeOfPersonallyIdentifiableInformation"]
 ContentModerationAggregateByType = Literal["SEGMENTS", "TIMESTAMPS"]
 ContentModerationSortByType = Literal["NAME", "TIMESTAMP"]
@@ -392,6 +394,7 @@ ServiceName = Literal[
     "es",
     "events",
     "evidently",
+    "evs",
     "finspace",
     "finspace-data",
     "firehose",
@@ -544,7 +547,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -605,7 +607,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -613,6 +614,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

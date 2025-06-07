@@ -734,6 +734,7 @@ def _get_sql_string(path: str) -> SQLStringResult:
         frame = inspect.currentframe()
         assert frame is not None, "could not inspect current frame"
         caller_frame = frame.f_back
+        del frame
         assert caller_frame is not None, "could not inspect caller frame"
         caller_filename = inspect.getsourcefile(caller_frame)
         assert caller_filename is not None, "could not find caller filename"
@@ -1688,23 +1689,21 @@ def make_sql_file_resolver(
     """
     if name.endswith(CHALK_SQL_FILE_RESOLVER_FILENAME_SUFFIX):
         name = name.replace(CHALK_SQL_FILE_RESOLVER_FILENAME_SUFFIX, "")
-    frame = inspect.stack()[1]
-    module = inspect.getmodule(frame[0])
+    filename = None
+    frame = inspect.currentframe()
+    assert frame is not None, "Failed to get current frame"
+    caller_frame = frame.f_back
+    assert caller_frame is not None, "Failed to get caller frame"
+    filename = caller_frame.f_code.co_filename
+    del frame
     is_defined_in_notebook: bool = False
     if notebook.is_notebook():
+        module = inspect.getmodule(caller_frame)
         if module is not None:
             filename = module.__name__
         else:
             filename = "<notebook>"
             is_defined_in_notebook = True
-    else:
-        # the resolver filename will be where 'make_sql_file_resolver' was called
-        if module is None:
-            raise ValueError("Could not get caller module for 'make_sql_file_resolver'")
-        module_file = module.__file__
-        if module_file is None:
-            raise ValueError("Could not get caller file for 'make_sql_file_resolver'")
-        filename = module_file
 
     comment_dict = CommentDict(
         source=source if isinstance(source, str) or source is None else source.name,

@@ -72,6 +72,7 @@ class Filter:
             frame = frame.f_back
             if frame.f_code.co_name == "<lambda>":
                 raise ClauseJoinWithAndException()  # must join with '&', not 'and'
+        del frame
         return bool(self.rhs == self.lhs)
 
 

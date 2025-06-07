@@ -730,6 +730,7 @@ WaiterName = Literal["bucket_exists", "bucket_not_exists", "object_exists", "obj
 RegionName = Literal[
     "af-south-1",
     "ap-east-1",
+    "ap-east-2",
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-northeast-3",

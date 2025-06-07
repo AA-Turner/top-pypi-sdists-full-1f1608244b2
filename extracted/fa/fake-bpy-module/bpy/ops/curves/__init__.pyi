@@ -26,7 +26,7 @@ def add_bezier(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add new bezier curve
 
         :type execution_context: int | str | None
@@ -73,7 +73,7 @@ def add_circle(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add new circle curve
 
         :type execution_context: int | str | None
@@ -113,7 +113,7 @@ def attribute_set(
     value_int_vector_2d: collections.abc.Iterable[int] | None = (0, 0),
     value_color: collections.abc.Iterable[float] | None = (1.0, 1.0, 1.0, 1.0),
     value_bool: bool | None = False,
-):
+) -> None:
     """Set values of the active attribute for selected elements
 
     :type execution_context: int | str | None
@@ -136,7 +136,7 @@ def attribute_set(
 
 def convert_from_particle_system(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a new curves object based on the current state of the particle system
 
     :type execution_context: int | str | None
@@ -145,7 +145,7 @@ def convert_from_particle_system(
 
 def convert_to_particle_system(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a new or update an existing hair particle system on the surface object
 
     :type execution_context: int | str | None
@@ -159,7 +159,7 @@ def curve_type_set(
     *,
     type: bpy.stub_internal.rna_enums.CurvesTypeItems | None = "POLY",
     use_handles: bool | None = False,
-):
+) -> None:
     """Set type of selected curves
 
     :type execution_context: int | str | None
@@ -170,14 +170,18 @@ def curve_type_set(
     :type use_handles: bool | None
     """
 
-def cyclic_toggle(execution_context: int | str | None = None, undo: bool | None = None):
+def cyclic_toggle(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Make active curve closed/opened loop
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def delete(execution_context: int | str | None = None, undo: bool | None = None):
+def delete(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove selected control points or curves
 
     :type execution_context: int | str | None
@@ -198,7 +202,7 @@ def draw(
     wait_for_input: bool | None = True,
     is_curve_2d: bool | None = False,
     bezier_as_nurbs: bool | None = False,
-):
+) -> None:
     """Draw a freehand curve
 
     :type execution_context: int | str | None
@@ -221,7 +225,9 @@ def draw(
     :type bezier_as_nurbs: bool | None
     """
 
-def duplicate(execution_context: int | str | None = None, undo: bool | None = None):
+def duplicate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy selected points or curves
 
     :type execution_context: int | str | None
@@ -235,7 +241,7 @@ def duplicate_move(
     *,
     CURVES_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Make copies of selected elements and move them
 
     :type execution_context: int | str | None
@@ -246,7 +252,9 @@ def duplicate_move(
     :type TRANSFORM_OT_translate: bpy.ops.transform.translate | None
     """
 
-def extrude(execution_context: int | str | None = None, undo: bool | None = None):
+def extrude(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Extrude selected control point(s)
 
     :type execution_context: int | str | None
@@ -260,7 +268,7 @@ def extrude_move(
     *,
     CURVES_OT_extrude: extrude | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Extrude curve and move result
 
     :type execution_context: int | str | None
@@ -277,7 +285,7 @@ def handle_type_set(
     /,
     *,
     type: bpy.stub_internal.rna_enums.CurvesHandleTypeItems | None = "AUTO",
-):
+) -> None:
     """Set the handle type for bezier curves
 
     :type execution_context: int | str | None
@@ -288,7 +296,7 @@ def handle_type_set(
 
 def sculptmode_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Enter/Exit sculpt mode for curves
 
     :type execution_context: int | str | None
@@ -301,7 +309,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """(De)select all control points
 
         :type execution_context: int | str | None
@@ -329,7 +337,7 @@ def select_ends(
     *,
     amount_start: int | None = 0,
     amount_end: int | None = 1,
-):
+) -> None:
     """Select end points of curves
 
     :type execution_context: int | str | None
@@ -340,14 +348,18 @@ def select_ends(
     :type amount_end: int | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Shrink the selection by one point
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_linked(execution_context: int | str | None = None, undo: bool | None = None):
+def select_linked(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select all points in curves with any point selection
 
     :type execution_context: int | str | None
@@ -360,7 +372,7 @@ def select_linked_pick(
     /,
     *,
     deselect: bool | None = False,
-):
+) -> None:
     """Select all points in the curve under the cursor
 
     :type execution_context: int | str | None
@@ -369,7 +381,9 @@ def select_linked_pick(
     :type deselect: bool | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Grow the selection by one point
 
     :type execution_context: int | str | None
@@ -383,7 +397,7 @@ def select_random(
     *,
     seed: int | None = 0,
     probability: float | None = 0.5,
-):
+) -> None:
     """Randomizes existing selection or create new random selection
 
     :type execution_context: int | str | None
@@ -394,7 +408,9 @@ def select_random(
     :type probability: float | None
     """
 
-def separate(execution_context: int | str | None = None, undo: bool | None = None):
+def separate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Separate selected geometry into a new object
 
     :type execution_context: int | str | None
@@ -407,7 +423,7 @@ def set_selection_domain(
     /,
     *,
     domain: bpy.stub_internal.rna_enums.AttributeCurvesDomainItems | None = "POINT",
-):
+) -> None:
     """Change the mode used for selection masking in curves sculpt mode
 
     :type execution_context: int | str | None
@@ -422,7 +438,7 @@ def snap_curves_to_surface(
     /,
     *,
     attach_mode: typing.Literal["NEAREST", "DEFORM"] | None = "NEAREST",
-):
+) -> None:
     """Move curves so that the first point is exactly on the surface mesh
 
         :type execution_context: int | str | None
@@ -437,7 +453,7 @@ def snap_curves_to_surface(
         :type attach_mode: typing.Literal['NEAREST','DEFORM'] | None
     """
 
-def split(execution_context: int | str | None = None, undo: bool | None = None):
+def split(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Split selected points
 
     :type execution_context: int | str | None
@@ -450,7 +466,7 @@ def subdivide(
     /,
     *,
     number_cuts: int | None = 1,
-):
+) -> None:
     """Subdivide selected curve segments
 
     :type execution_context: int | str | None
@@ -459,7 +475,9 @@ def subdivide(
     :type number_cuts: int | None
     """
 
-def surface_set(execution_context: int | str | None = None, undo: bool | None = None):
+def surface_set(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Use the active object as surface for selected curves objects and set it as the parent
 
     :type execution_context: int | str | None
@@ -468,14 +486,16 @@ def surface_set(execution_context: int | str | None = None, undo: bool | None = 
 
 def switch_direction(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reverse the direction of the selected curves
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def tilt_clear(execution_context: int | str | None = None, undo: bool | None = None):
+def tilt_clear(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Clear the tilt of selected control points
 
     :type execution_context: int | str | None

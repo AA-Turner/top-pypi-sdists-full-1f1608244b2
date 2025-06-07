@@ -13,7 +13,7 @@ def bone_select_menu(
     extend: bool | None = False,
     deselect: bool | None = False,
     toggle: bool | None = False,
-):
+) -> None:
     """Menu bone selection
 
     :type execution_context: int | str | None
@@ -37,7 +37,7 @@ def camera_background_image_add(
     relative_path: bool | None = True,
     name: str = "",
     session_uid: int | None = 0,
-):
+) -> None:
     """Add a new background image to the active camera
 
     :type execution_context: int | str | None
@@ -58,7 +58,7 @@ def camera_background_image_remove(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Remove a background image from the camera
 
     :type execution_context: int | str | None
@@ -69,7 +69,7 @@ def camera_background_image_remove(
 
 def camera_to_view(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set camera view to active view
 
     :type execution_context: int | str | None
@@ -78,7 +78,7 @@ def camera_to_view(
 
 def camera_to_view_selected(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Move the camera so selected objects are framed
 
     :type execution_context: int | str | None
@@ -87,7 +87,7 @@ def camera_to_view_selected(
 
 def clear_render_border(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear the boundaries of the border render and disable border render
 
     :type execution_context: int | str | None
@@ -104,7 +104,7 @@ def clip_border(
     ymin: int | None = 0,
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Set the view clipping region
 
     :type execution_context: int | str | None
@@ -121,7 +121,9 @@ def clip_border(
     :type wait_for_input: bool | None
     """
 
-def copybuffer(execution_context: int | str | None = None, undo: bool | None = None):
+def copybuffer(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy the selected objects to the internal clipboard
 
     :type execution_context: int | str | None
@@ -135,7 +137,7 @@ def cursor3d(
     *,
     use_depth: bool | None = True,
     orientation: typing.Literal["NONE", "VIEW", "XFORM", "GEOM"] | None = "VIEW",
-):
+) -> None:
     """Set the location of the 3D cursor
 
         :type execution_context: int | str | None
@@ -167,7 +169,7 @@ def dolly(
     my: int | None = 0,
     delta: int | None = 0,
     use_cursor_init: bool | None = True,
-):
+) -> None:
     """Dolly in/out in the view
 
     :type execution_context: int | str | None
@@ -189,7 +191,7 @@ def drop_world(
     *,
     name: str = "",
     session_uid: int | None = 0,
-):
+) -> None:
     """Drop a world into the scene
 
     :type execution_context: int | str | None
@@ -202,7 +204,7 @@ def drop_world(
 
 def edit_mesh_extrude_individual_move(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Extrude each individual face separately along local normals
 
     :type execution_context: int | str | None
@@ -211,7 +213,7 @@ def edit_mesh_extrude_individual_move(
 
 def edit_mesh_extrude_manifold_normal(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Extrude manifold region along normals
 
     :type execution_context: int | str | None
@@ -224,7 +226,7 @@ def edit_mesh_extrude_move_normal(
     /,
     *,
     dissolve_and_intersect: bool | None = False,
-):
+) -> None:
     """Extrude region together along the average normal
 
     :type execution_context: int | str | None
@@ -235,14 +237,14 @@ def edit_mesh_extrude_move_normal(
 
 def edit_mesh_extrude_move_shrink_fatten(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Extrude region together along local normals
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def fly(execution_context: int | str | None = None, undo: bool | None = None):
+def fly(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Interactively fly around the scene
 
     :type execution_context: int | str | None
@@ -263,7 +265,7 @@ def interactive_add(
     plane_aspect_base: typing.Literal["FREE", "FIXED"] | None = "FREE",
     plane_aspect_depth: typing.Literal["FREE", "FIXED"] | None = "FREE",
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Interactively add an object
 
         :type execution_context: int | str | None
@@ -312,7 +314,7 @@ def localview(
     /,
     *,
     frame_selected: bool | None = True,
-):
+) -> None:
     """Toggle display of selected object(s) separately and centered in view
 
     :type execution_context: int | str | None
@@ -323,7 +325,7 @@ def localview(
 
 def localview_remove_from(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Move selected objects out of local view
 
     :type execution_context: int | str | None
@@ -336,7 +338,7 @@ def move(
     /,
     *,
     use_cursor_init: bool | None = True,
-):
+) -> None:
     """Move the view
 
     :type execution_context: int | str | None
@@ -345,21 +347,27 @@ def move(
     :type use_cursor_init: bool | None
     """
 
-def navigate(execution_context: int | str | None = None, undo: bool | None = None):
+def navigate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Interactively navigate around the scene (uses the mode (walk/fly) preference)
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def ndof_all(execution_context: int | str | None = None, undo: bool | None = None):
+def ndof_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Pan and rotate the view with the 3D mouse
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def ndof_orbit(execution_context: int | str | None = None, undo: bool | None = None):
+def ndof_orbit(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Orbit the view using the 3D mouse
 
     :type execution_context: int | str | None
@@ -368,14 +376,16 @@ def ndof_orbit(execution_context: int | str | None = None, undo: bool | None = N
 
 def ndof_orbit_zoom(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Orbit and zoom the view using the 3D mouse
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def ndof_pan(execution_context: int | str | None = None, undo: bool | None = None):
+def ndof_pan(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Pan the view with the 3D mouse
 
     :type execution_context: int | str | None
@@ -384,7 +394,7 @@ def ndof_pan(execution_context: int | str | None = None, undo: bool | None = Non
 
 def object_as_camera(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set the active object as the active camera for this view or scene
 
     :type execution_context: int | str | None
@@ -393,7 +403,7 @@ def object_as_camera(
 
 def object_mode_pie_or_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -407,7 +417,7 @@ def pastebuffer(
     *,
     autoselect: bool | None = True,
     active_collection: bool | None = True,
-):
+) -> None:
     """Paste objects from the internal clipboard
 
     :type execution_context: int | str | None
@@ -428,7 +438,7 @@ def render_border(
     ymin: int | None = 0,
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Set the boundaries of the border render and enable border render
 
     :type execution_context: int | str | None
@@ -451,7 +461,7 @@ def rotate(
     /,
     *,
     use_cursor_init: bool | None = True,
-):
+) -> None:
     """Rotate the view
 
     :type execution_context: int | str | None
@@ -460,14 +470,18 @@ def rotate(
     :type use_cursor_init: bool | None
     """
 
-def ruler_add(execution_context: int | str | None = None, undo: bool | None = None):
+def ruler_add(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add ruler
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def ruler_remove(execution_context: int | str | None = None, undo: bool | None = None):
+def ruler_remove(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -488,7 +502,7 @@ def select(
     enumerate: bool | None = False,
     object: bool | None = False,
     location: collections.abc.Iterable[int] | None = (0, 0),
-):
+) -> None:
     """Select and activate item(s)
 
     :type execution_context: int | str | None
@@ -524,7 +538,7 @@ def select_box(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB", "XOR", "AND"] | None = "SET",
-):
+) -> None:
     """Select items using box selection
 
         :type execution_context: int | str | None
@@ -568,7 +582,7 @@ def select_circle(
     radius: int | None = 25,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select items using circle selection
 
         :type execution_context: int | str | None
@@ -604,7 +618,7 @@ def select_lasso(
     smooth_stroke_factor: float | None = 0.75,
     smooth_stroke_radius: int | None = 35,
     mode: typing.Literal["SET", "ADD", "SUB", "XOR", "AND"] | None = "SET",
-):
+) -> None:
     """Select items using lasso selection
 
         :type execution_context: int | str | None
@@ -645,7 +659,7 @@ def select_menu(
     extend: bool | None = False,
     deselect: bool | None = False,
     toggle: bool | None = False,
-):
+) -> None:
     """Menu object selection
 
     :type execution_context: int | str | None
@@ -660,7 +674,9 @@ def select_menu(
     :type toggle: bool | None
     """
 
-def smoothview(execution_context: int | str | None = None, undo: bool | None = None):
+def smoothview(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -669,7 +685,7 @@ def smoothview(execution_context: int | str | None = None, undo: bool | None = N
 
 def snap_cursor_to_active(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Snap 3D cursor to the active item
 
     :type execution_context: int | str | None
@@ -678,7 +694,7 @@ def snap_cursor_to_active(
 
 def snap_cursor_to_center(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Snap 3D cursor to the world origin
 
     :type execution_context: int | str | None
@@ -687,7 +703,7 @@ def snap_cursor_to_center(
 
 def snap_cursor_to_grid(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Snap 3D cursor to the nearest grid division
 
     :type execution_context: int | str | None
@@ -696,7 +712,7 @@ def snap_cursor_to_grid(
 
 def snap_cursor_to_selected(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Snap 3D cursor to the middle of the selected item(s)
 
     :type execution_context: int | str | None
@@ -705,7 +721,7 @@ def snap_cursor_to_selected(
 
 def snap_selected_to_active(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Snap selected item(s) to the active item
 
     :type execution_context: int | str | None
@@ -719,7 +735,7 @@ def snap_selected_to_cursor(
     *,
     use_offset: bool | None = True,
     use_rotation: bool | None = False,
-):
+) -> None:
     """Snap selected item(s) to the 3D cursor
 
     :type execution_context: int | str | None
@@ -732,7 +748,7 @@ def snap_selected_to_cursor(
 
 def snap_selected_to_grid(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Snap selected item(s) to their nearest grid division
 
     :type execution_context: int | str | None
@@ -741,7 +757,7 @@ def snap_selected_to_grid(
 
 def toggle_matcap_flip(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Flip MatCap
 
     :type execution_context: int | str | None
@@ -755,7 +771,7 @@ def toggle_shading(
     *,
     type: typing.Literal["WIREFRAME", "SOLID", "MATERIAL", "RENDERED"]
     | None = "WIREFRAME",
-):
+) -> None:
     """Toggle shading type in 3D viewport
 
         :type execution_context: int | str | None
@@ -776,7 +792,9 @@ def toggle_shading(
         :type type: typing.Literal['WIREFRAME','SOLID','MATERIAL','RENDERED'] | None
     """
 
-def toggle_xray(execution_context: int | str | None = None, undo: bool | None = None):
+def toggle_xray(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Transparent scene display. Allow selecting through items
 
     :type execution_context: int | str | None
@@ -790,7 +808,7 @@ def transform_gizmo_set(
     *,
     extend: bool | None = False,
     type: set[typing.Literal["TRANSLATE", "ROTATE", "SCALE"]] | None = {},
-):
+) -> None:
     """Set the current transform gizmo
 
     :type execution_context: int | str | None
@@ -808,7 +826,7 @@ def view_all(
     *,
     use_all_regions: bool | None = False,
     center: bool | None = False,
-):
+) -> None:
     """View all objects in scene
 
     :type execution_context: int | str | None
@@ -828,7 +846,7 @@ def view_axis(
     | None = "LEFT",
     align_active: bool | None = False,
     relative: bool | None = False,
-):
+) -> None:
     """Use a preset viewpoint
 
         :type execution_context: int | str | None
@@ -859,7 +877,9 @@ def view_axis(
         :type relative: bool | None
     """
 
-def view_camera(execution_context: int | str | None = None, undo: bool | None = None):
+def view_camera(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Toggle the camera view
 
     :type execution_context: int | str | None
@@ -868,7 +888,7 @@ def view_camera(execution_context: int | str | None = None, undo: bool | None = 
 
 def view_center_camera(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Center the camera view, resizing the view to fit its bounds
 
     :type execution_context: int | str | None
@@ -877,7 +897,7 @@ def view_center_camera(
 
 def view_center_cursor(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Center the view so that the cursor is in the middle of the view
 
     :type execution_context: int | str | None
@@ -886,7 +906,7 @@ def view_center_cursor(
 
 def view_center_lock(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Center the view lock offset
 
     :type execution_context: int | str | None
@@ -895,7 +915,7 @@ def view_center_lock(
 
 def view_center_pick(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Center the view to the Z-depth position under the mouse cursor
 
     :type execution_context: int | str | None
@@ -904,7 +924,7 @@ def view_center_pick(
 
 def view_lock_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear all view locking
 
     :type execution_context: int | str | None
@@ -913,7 +933,7 @@ def view_lock_clear(
 
 def view_lock_to_active(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Lock the view to the active object/bone
 
     :type execution_context: int | str | None
@@ -928,7 +948,7 @@ def view_orbit(
     angle: float | None = 0.0,
     type: typing.Literal["ORBITLEFT", "ORBITRIGHT", "ORBITUP", "ORBITDOWN"]
     | None = "ORBITLEFT",
-):
+) -> None:
     """Orbit the view
 
         :type execution_context: int | str | None
@@ -957,7 +977,7 @@ def view_pan(
     /,
     *,
     type: typing.Literal["PANLEFT", "PANRIGHT", "PANUP", "PANDOWN"] | None = "PANLEFT",
-):
+) -> None:
     """Pan the view in a given direction
 
         :type execution_context: int | str | None
@@ -980,7 +1000,7 @@ def view_pan(
 
 def view_persportho(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Switch the current view from perspective/orthographic projection
 
     :type execution_context: int | str | None
@@ -994,7 +1014,7 @@ def view_roll(
     *,
     angle: float | None = 0.0,
     type: typing.Literal["ANGLE", "LEFT", "RIGHT"] | None = "ANGLE",
-):
+) -> None:
     """Roll the view
 
         :type execution_context: int | str | None
@@ -1020,7 +1040,7 @@ def view_selected(
     /,
     *,
     use_all_regions: bool | None = False,
-):
+) -> None:
     """Move the view to the selection center
 
     :type execution_context: int | str | None
@@ -1029,7 +1049,7 @@ def view_selected(
     :type use_all_regions: bool | None
     """
 
-def walk(execution_context: int | str | None = None, undo: bool | None = None):
+def walk(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Interactively walk around the scene
 
     :type execution_context: int | str | None
@@ -1045,7 +1065,7 @@ def zoom(
     my: int | None = 0,
     delta: int | None = 0,
     use_cursor_init: bool | None = True,
-):
+) -> None:
     """Zoom in/out in the view
 
     :type execution_context: int | str | None
@@ -1071,7 +1091,7 @@ def zoom_border(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     zoom_out: bool | None = False,
-):
+) -> None:
     """Zoom in the view to the nearest object contained in the border
 
     :type execution_context: int | str | None
@@ -1092,7 +1112,7 @@ def zoom_border(
 
 def zoom_camera_1_to_1(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Match the camera to 1:1 to the render output
 
     :type execution_context: int | str | None

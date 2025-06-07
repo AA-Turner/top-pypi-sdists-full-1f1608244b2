@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: mlserver
-Version: 1.7.0
+Version: 1.7.1
 Summary: MLServer
 License: Apache-2.0
 Author: Seldon Technologies Ltd.
@@ -20,7 +20,7 @@ Requires-Dist: click
 Requires-Dist: fastapi (>=0.88.0,!=0.89.0,<0.116.0)
 Requires-Dist: gevent
 Requires-Dist: geventhttpclient
-Requires-Dist: grpcio
+Requires-Dist: grpcio (>=1.67.1)
 Requires-Dist: importlib-resources (>=5.12,<7.0)
 Requires-Dist: numpy
 Requires-Dist: opentelemetry-exporter-otlp-proto-grpc (>=1.22.0,<2.0.0)
@@ -29,7 +29,7 @@ Requires-Dist: opentelemetry-instrumentation-grpc (>=0.43b0)
 Requires-Dist: opentelemetry-sdk (>=1.22.0,<2.0.0)
 Requires-Dist: orjson
 Requires-Dist: pandas
-Requires-Dist: protobuf
+Requires-Dist: protobuf (>=5.27.2,<7.0.0)
 Requires-Dist: py-grpc-prometheus
 Requires-Dist: pydantic (>=2.7.1,<3.0.0)
 Requires-Dist: pydantic-settings (>=2.3.0,<3.0.0)

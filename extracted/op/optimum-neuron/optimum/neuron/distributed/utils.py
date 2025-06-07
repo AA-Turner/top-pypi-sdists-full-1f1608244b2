@@ -1364,14 +1364,14 @@ def initialize_parallel_linear(mod: "layers.BaseParallelLinear", parameter_names
         if "weight" in parameter_names:
             delete_tensor_model_parallel_attributes(mod.weight)
             # It is needed to use `init_weight_cpu` instead of `_init_weights` because the initialization
-            # needs to happen on the full parameter and then scatter it accross TP ranks otherwise it will
+            # needs to happen on the full parameter and then scatter it across TP ranks otherwise it will
             # not be equivalent to the non-parallel case.
             mod.init_weight_cpu()
         if mod.bias is not None and "bias" in parameter_names:
             mod._init_bias()
     elif isinstance(mod, GQAQKVColumnParallelLinear):
         # It ignores parameter_names, so it might initialize some parameters that should be left unchanged.
-        # To improve if it becomes neeeded.
+        # To improve if it becomes needed.
         mod.initialize_weight_biases()
     else:
         raise RuntimeError(f"This kind of parallel linear is not supported yet: {mod.__class__.__name__}")
@@ -1429,6 +1429,16 @@ def parameter_can_be_initialized(model: torch.nn.Module, parent_module: torch.nn
     )
 
 
+def _check_meta(model: torch.nn.Module):
+    """
+    Check if any parameter in the model is on the meta device. Usually indicates lazy loading.
+    """
+    for name, param in model.named_parameters():
+        if param.device == torch.device("meta"):
+            return True
+    return False
+
+
 def create_wrapper_for_resize_token_embedding(orig_resize_token_embeddings):
     @functools.wraps(orig_resize_token_embeddings)
     def wrapper(
@@ -1476,6 +1486,10 @@ def create_wrapper_for_resize_token_embedding(orig_resize_token_embeddings):
             else:
                 self._init_weights(lm_head)
 
+        lazy_loading = _check_meta(self)
+        tied_embeddings = getattr(self.config, "tie_word_embeddings", False)
+        if lazy_loading and not tied_embeddings:
+            raise RuntimeError("Cannot resize token embeddings when using untied embeddings with lazy loading.")
         return orig_resize_token_embeddings(new_num_tokens=new_num_tokens, pad_to_multiple_of=pad_to_multiple_of)
 
     bound_wrapper = wrapper.__get__(orig_resize_token_embeddings.__self__)
@@ -1602,7 +1616,7 @@ def from_pretrained_for_mp(
         from safetensors import safe_open
 
         with safe_open(filename, framework="pt", device="cpu") as fp:
-            weight_map = {weight_name: filename for weight_name in fp.keys()}
+            weight_map = dict.fromkeys(fp.keys(), filename)
 
         # If the model checkpoint used is from a base model but our model is "task-specific", for instance a checkpoint
         # from `GPTNeoModel` when using `GPTNeoForCausalLM`, then our model weight names might not match the names in

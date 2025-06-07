@@ -10,7 +10,7 @@ def action_set(
     /,
     *,
     action: str | None = "",
-):
+) -> None:
     """Change the active action used
 
     :type execution_context: int | str | None
@@ -28,7 +28,7 @@ def animdata_operation(
         "CLEAR_ANIMDATA", "SET_ACT", "CLEAR_ACT", "REFRESH_DRIVERS", "CLEAR_DRIVERS"
     ]
     | None = "CLEAR_ANIMDATA",
-):
+) -> None:
     """Undocumented, consider contributing.
 
         :type execution_context: int | str | None
@@ -52,7 +52,9 @@ def animdata_operation(
         :type type: typing.Literal['CLEAR_ANIMDATA','SET_ACT','CLEAR_ACT','REFRESH_DRIVERS','CLEAR_DRIVERS'] | None
     """
 
-def clear_filter(execution_context: int | str | None = None, undo: bool | None = None):
+def clear_filter(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Clear the search filter
 
     :type execution_context: int | str | None
@@ -65,7 +67,7 @@ def collection_color_tag_set(
     /,
     *,
     color: bpy.stub_internal.rna_enums.CollectionColorItems | None = "NONE",
-):
+) -> None:
     """Set a color tag for the selected collections
 
     :type execution_context: int | str | None
@@ -76,7 +78,7 @@ def collection_color_tag_set(
 
 def collection_disable(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Disable viewport display in the view layers
 
     :type execution_context: int | str | None
@@ -85,7 +87,7 @@ def collection_disable(
 
 def collection_disable_render(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Do not render this collection
 
     :type execution_context: int | str | None
@@ -94,7 +96,7 @@ def collection_disable_render(
 
 def collection_drop(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Drag to move to collection in Outliner
 
     :type execution_context: int | str | None
@@ -103,7 +105,7 @@ def collection_drop(
 
 def collection_duplicate(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Recursively duplicate the collection, all its children, objects and object data
 
     :type execution_context: int | str | None
@@ -112,7 +114,7 @@ def collection_duplicate(
 
 def collection_duplicate_linked(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Recursively duplicate the collection, all its children and objects, with linked object data
 
     :type execution_context: int | str | None
@@ -121,7 +123,7 @@ def collection_duplicate_linked(
 
 def collection_enable(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Enable viewport display in the view layers
 
     :type execution_context: int | str | None
@@ -130,7 +132,7 @@ def collection_enable(
 
 def collection_enable_render(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Render the collection
 
     :type execution_context: int | str | None
@@ -139,7 +141,7 @@ def collection_enable_render(
 
 def collection_exclude_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Include collection in the active view layer
 
     :type execution_context: int | str | None
@@ -148,7 +150,7 @@ def collection_exclude_clear(
 
 def collection_exclude_set(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Exclude collection from the active view layer
 
     :type execution_context: int | str | None
@@ -157,7 +159,7 @@ def collection_exclude_set(
 
 def collection_hide(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Hide the collection in this view layer
 
     :type execution_context: int | str | None
@@ -166,7 +168,7 @@ def collection_hide(
 
 def collection_hide_inside(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Hide all the objects and collections inside the collection
 
     :type execution_context: int | str | None
@@ -175,7 +177,7 @@ def collection_hide_inside(
 
 def collection_hierarchy_delete(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete selected collection hierarchies
 
     :type execution_context: int | str | None
@@ -184,7 +186,7 @@ def collection_hierarchy_delete(
 
 def collection_holdout_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear masking of collection in the active view layer
 
     :type execution_context: int | str | None
@@ -193,7 +195,7 @@ def collection_holdout_clear(
 
 def collection_holdout_set(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Mask collection in the active view layer
 
     :type execution_context: int | str | None
@@ -202,7 +204,7 @@ def collection_holdout_set(
 
 def collection_indirect_only_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear collection contributing only indirectly in the view layer
 
     :type execution_context: int | str | None
@@ -211,7 +213,7 @@ def collection_indirect_only_clear(
 
 def collection_indirect_only_set(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set collection to only contribute indirectly (through shadows and reflections) in the view layer
 
     :type execution_context: int | str | None
@@ -220,7 +222,7 @@ def collection_indirect_only_set(
 
 def collection_instance(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Instance selected collections to active scene
 
     :type execution_context: int | str | None
@@ -233,7 +235,7 @@ def collection_isolate(
     /,
     *,
     extend: bool | None = False,
-):
+) -> None:
     """Hide all but this collection and its parents
 
     :type execution_context: int | str | None
@@ -244,7 +246,7 @@ def collection_isolate(
 
 def collection_link(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Link selected collections to active scene
 
     :type execution_context: int | str | None
@@ -257,7 +259,7 @@ def collection_new(
     /,
     *,
     nested: bool | None = True,
-):
+) -> None:
     """Add a new collection inside selected collection
 
     :type execution_context: int | str | None
@@ -268,7 +270,7 @@ def collection_new(
 
 def collection_objects_deselect(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Deselect objects in collection
 
     :type execution_context: int | str | None
@@ -277,7 +279,7 @@ def collection_objects_deselect(
 
 def collection_objects_select(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select objects in collection
 
     :type execution_context: int | str | None
@@ -286,7 +288,7 @@ def collection_objects_select(
 
 def collection_show(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Show the collection in this view layer
 
     :type execution_context: int | str | None
@@ -295,7 +297,7 @@ def collection_show(
 
 def collection_show_inside(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Show all the objects and collections inside the collection
 
     :type execution_context: int | str | None
@@ -308,7 +310,7 @@ def constraint_operation(
     /,
     *,
     type: typing.Literal["ENABLE", "DISABLE", "DELETE"] | None = "ENABLE",
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -323,7 +325,7 @@ def data_operation(
     /,
     *,
     type: str | None = "DEFAULT",
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -334,7 +336,7 @@ def data_operation(
 
 def datastack_drop(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy or reorder modifiers, constraints, and effects
 
     :type execution_context: int | str | None
@@ -347,7 +349,7 @@ def delete(
     /,
     *,
     hierarchy: bool | None = False,
-):
+) -> None:
     """Delete selected objects and collections
 
     :type execution_context: int | str | None
@@ -358,7 +360,7 @@ def delete(
 
 def drivers_add_selected(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add drivers to selected items
 
     :type execution_context: int | str | None
@@ -367,7 +369,7 @@ def drivers_add_selected(
 
 def drivers_delete_selected(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete drivers assigned to selected items
 
     :type execution_context: int | str | None
@@ -376,14 +378,14 @@ def drivers_delete_selected(
 
 def expanded_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Expand/Collapse all items
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def hide(execution_context: int | str | None = None, undo: bool | None = None):
+def hide(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Hide selected objects and collections
 
     :type execution_context: int | str | None
@@ -392,21 +394,25 @@ def hide(execution_context: int | str | None = None, undo: bool | None = None):
 
 def highlight_update(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Update the item highlight based on the current mouse position
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def id_copy(execution_context: int | str | None = None, undo: bool | None = None):
+def id_copy(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy the selected data-blocks to the internal clipboard
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def id_delete(execution_context: int | str | None = None, undo: bool | None = None):
+def id_delete(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Delete the ID under cursor
 
     :type execution_context: int | str | None
@@ -415,7 +421,7 @@ def id_delete(execution_context: int | str | None = None, undo: bool | None = No
 
 def id_linked_relocate(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Replace the active linked ID (and its dependencies if any) by another one, from the same or a different library
 
     :type execution_context: int | str | None
@@ -441,7 +447,7 @@ def id_operation(
         "SELECT_LINKED",
     ]
     | None = "UNLINK",
-):
+) -> None:
     """General data-block management operations
 
         :type execution_context: int | str | None
@@ -483,7 +489,9 @@ def id_operation(
         :type type: typing.Literal['UNLINK','LOCAL','SINGLE','DELETE','REMAP','COPY','PASTE','ADD_FAKE','CLEAR_FAKE','RENAME','SELECT_LINKED'] | None
     """
 
-def id_paste(execution_context: int | str | None = None, undo: bool | None = None):
+def id_paste(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Paste data-blocks from the internal clipboard
 
     :type execution_context: int | str | None
@@ -498,7 +506,7 @@ def id_remap(
     id_type: bpy.stub_internal.rna_enums.IdTypeItems | None = "OBJECT",
     old_id: str | None = "",
     new_id: str | None = "",
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -520,7 +528,7 @@ def item_activate(
     extend_range: bool | None = False,
     deselect_all: bool | None = False,
     recurse: bool | None = False,
-):
+) -> None:
     """Handle mouse clicks to select and activate items
 
     :type execution_context: int | str | None
@@ -537,7 +545,7 @@ def item_activate(
 
 def item_drag_drop(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Drag and drop element to another place
 
     :type execution_context: int | str | None
@@ -550,7 +558,7 @@ def item_openclose(
     /,
     *,
     all: bool | None = False,
-):
+) -> None:
     """Toggle whether item under cursor is enabled or closed
 
     :type execution_context: int | str | None
@@ -565,7 +573,7 @@ def item_rename(
     /,
     *,
     use_active: bool | None = False,
-):
+) -> None:
     """Rename the active element
 
     :type execution_context: int | str | None
@@ -576,7 +584,7 @@ def item_rename(
 
 def keyingset_add_selected(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add selected items (blue-gray rows) to active Keying Set
 
     :type execution_context: int | str | None
@@ -585,7 +593,7 @@ def keyingset_add_selected(
 
 def keyingset_remove_selected(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove selected items (blue-gray rows) from active Keying Set
 
     :type execution_context: int | str | None
@@ -598,7 +606,7 @@ def lib_operation(
     /,
     *,
     type: typing.Literal["DELETE", "RELOCATE", "RELOAD"] | None = "DELETE",
-):
+) -> None:
     """Undocumented, consider contributing.
 
         :type execution_context: int | str | None
@@ -616,7 +624,9 @@ def lib_operation(
         :type type: typing.Literal['DELETE','RELOCATE','RELOAD'] | None
     """
 
-def lib_relocate(execution_context: int | str | None = None, undo: bool | None = None):
+def lib_relocate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Relocate the library under cursor
 
     :type execution_context: int | str | None
@@ -636,7 +646,7 @@ def liboverride_operation(
     | None = "OVERRIDE_LIBRARY_CREATE_HIERARCHY",
     selection_set: typing.Literal["SELECTED", "CONTENT", "SELECTED_AND_CONTENT"]
     | None = "SELECTED",
-):
+) -> None:
     """Create, reset or clear library override hierarchies
 
         :type execution_context: int | str | None
@@ -678,7 +688,7 @@ def liboverride_troubleshoot_operation(
     | None = "OVERRIDE_LIBRARY_RESYNC_HIERARCHY",
     selection_set: typing.Literal["SELECTED", "CONTENT", "SELECTED_AND_CONTENT"]
     | None = "SELECTED",
-):
+) -> None:
     """Advanced operations over library override to help fix broken hierarchies
 
         :type execution_context: int | str | None
@@ -707,7 +717,9 @@ def liboverride_troubleshoot_operation(
         :type selection_set: typing.Literal['SELECTED','CONTENT','SELECTED_AND_CONTENT'] | None
     """
 
-def material_drop(execution_context: int | str | None = None, undo: bool | None = None):
+def material_drop(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Drag material to object in Outliner
 
     :type execution_context: int | str | None
@@ -720,7 +732,7 @@ def modifier_operation(
     /,
     *,
     type: typing.Literal["APPLY", "DELETE", "TOGVIS", "TOGREN"] | None = "APPLY",
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -736,7 +748,7 @@ def object_operation(
     *,
     type: typing.Literal["SELECT", "DESELECT", "SELECT_HIERARCHY", "REMAP", "RENAME"]
     | None = "SELECT",
-):
+) -> None:
     """Undocumented, consider contributing.
 
         :type execution_context: int | str | None
@@ -760,7 +772,9 @@ def object_operation(
         :type type: typing.Literal['SELECT','DESELECT','SELECT_HIERARCHY','REMAP','RENAME'] | None
     """
 
-def operation(execution_context: int | str | None = None, undo: bool | None = None):
+def operation(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Context menu for item operations
 
     :type execution_context: int | str | None
@@ -769,7 +783,7 @@ def operation(execution_context: int | str | None = None, undo: bool | None = No
 
 def orphans_manage(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Open a window to manage unused data
 
     :type execution_context: int | str | None
@@ -784,7 +798,7 @@ def orphans_purge(
     do_local_ids: bool | None = True,
     do_linked_ids: bool | None = True,
     do_recursive: bool | None = True,
-):
+) -> None:
     """Clear all orphaned data-blocks without any users from the file
 
     :type execution_context: int | str | None
@@ -797,21 +811,27 @@ def orphans_purge(
     :type do_recursive: bool | None
     """
 
-def parent_clear(execution_context: int | str | None = None, undo: bool | None = None):
+def parent_clear(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Drag to clear parent in Outliner
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def parent_drop(execution_context: int | str | None = None, undo: bool | None = None):
+def parent_drop(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Drag to parent in Outliner
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def scene_drop(execution_context: int | str | None = None, undo: bool | None = None):
+def scene_drop(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Drag object to scene in Outliner
 
     :type execution_context: int | str | None
@@ -824,7 +844,7 @@ def scene_operation(
     /,
     *,
     type: typing.Literal["DELETE"] | None = "DELETE",
-):
+) -> None:
     """Context menu for scene operations
 
     :type execution_context: int | str | None
@@ -839,7 +859,7 @@ def scroll_page(
     /,
     *,
     up: bool | None = False,
-):
+) -> None:
     """Scroll page up or down
 
     :type execution_context: int | str | None
@@ -854,7 +874,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Toggle the Outliner selection of items
 
         :type execution_context: int | str | None
@@ -887,7 +907,7 @@ def select_box(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Use box selection to select tree elements
 
         :type execution_context: int | str | None
@@ -925,7 +945,7 @@ def select_walk(
     direction: typing.Literal["UP", "DOWN", "LEFT", "RIGHT"] | None = "UP",
     extend: bool | None = False,
     toggle_all: bool | None = False,
-):
+) -> None:
     """Use walk navigation to select tree elements
 
     :type execution_context: int | str | None
@@ -938,7 +958,9 @@ def select_walk(
     :type toggle_all: bool | None
     """
 
-def show_active(execution_context: int | str | None = None, undo: bool | None = None):
+def show_active(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Open up the tree and adjust the view so that the active object is shown centered
 
     :type execution_context: int | str | None
@@ -947,7 +969,7 @@ def show_active(execution_context: int | str | None = None, undo: bool | None = 
 
 def show_hierarchy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Open all object entries and close all others
 
     :type execution_context: int | str | None
@@ -960,7 +982,7 @@ def show_one_level(
     /,
     *,
     open: bool | None = True,
-):
+) -> None:
     """Expand/collapse all entries by one level
 
     :type execution_context: int | str | None
@@ -969,14 +991,18 @@ def show_one_level(
     :type open: bool | None
     """
 
-def start_filter(execution_context: int | str | None = None, undo: bool | None = None):
+def start_filter(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Start entering filter text
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def unhide_all(execution_context: int | str | None = None, undo: bool | None = None):
+def unhide_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Unhide all objects and collections
 
     :type execution_context: int | str | None

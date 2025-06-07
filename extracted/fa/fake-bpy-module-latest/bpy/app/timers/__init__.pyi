@@ -39,7 +39,7 @@ def register(
     function: collections.abc.Callable[[], float | None],
     first_interval: float | None = 0,
     persistent: bool | None = False,
-):
+) -> None:
     """Add a new function that will be called after the specified amount of seconds.
     The function gets no arguments and is expected to return either None or a float.
     If None is returned, the timer will be unregistered.
@@ -54,7 +54,7 @@ def register(
         :type persistent: bool | None
     """
 
-def unregister(function: collections.abc.Callable[[], float | None]):
+def unregister(function: collections.abc.Callable[[], float | None]) -> None:
     """Unregister timer.
 
     :param function: Function to unregister.

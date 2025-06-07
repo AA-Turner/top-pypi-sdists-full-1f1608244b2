@@ -5,11 +5,11 @@ import numpy.typing as npt
 
 def apply_action(
     *, local_dir, local_dir_site_packages, wheel_list, error_fn, remove_error_fn, debug
-): ...
-def wheel_list_deduplicate_as_skip_set(wheel_list):
+) -> None: ...
+def wheel_list_deduplicate_as_skip_set(wheel_list) -> None:
     """Return all wheel paths to skip."""
 
-def wheel_version_from_filename_for_cmp(filename):
+def wheel_version_from_filename_for_cmp(filename) -> None:
     """Extract the version number for comparison.
     Note that this only handled the first 3 numbers,
     the trailing text is compared as a string which is not technically correct

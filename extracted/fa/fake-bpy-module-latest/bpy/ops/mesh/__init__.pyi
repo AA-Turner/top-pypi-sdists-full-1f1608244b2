@@ -18,7 +18,7 @@ def attribute_set(
     value_int_vector_2d: collections.abc.Iterable[int] | None = (0, 0),
     value_color: collections.abc.Iterable[float] | None = (1.0, 1.0, 1.0, 1.0),
     value_bool: bool | None = False,
-):
+) -> None:
     """Set values of the active attribute for selected elements
 
     :type execution_context: int | str | None
@@ -48,7 +48,7 @@ def average_normals(
     | None = "CUSTOM_NORMAL",
     weight: int | None = 50,
     threshold: float | None = 0.01,
-):
+) -> None:
     """Average custom normals of selected vertices
 
         :type execution_context: int | str | None
@@ -76,7 +76,7 @@ def beautify_fill(
     /,
     *,
     angle_limit: float | None = 3.14159,
-):
+) -> None:
     """Rearrange some faces to try to get less degenerated geometry
 
     :type execution_context: int | str | None
@@ -111,7 +111,7 @@ def bevel(
     spread: float | None = 0.1,
     vmesh_method: typing.Literal["ADJ", "CUTOFF"] | None = "ADJ",
     release_confirm: bool | None = False,
-):
+) -> None:
     """Cut into selected items at an angle to create bevel or chamfer
 
         :type execution_context: int | str | None
@@ -241,7 +241,7 @@ def bisect(
     yend: int | None = 0,
     flip: bool | None = False,
     cursor: int | None = 5,
-):
+) -> None:
     """Cut geometry along a plane (click-drag to define plane)
 
     :type execution_context: int | str | None
@@ -280,7 +280,7 @@ def blend_from_shape(
     shape: str | None = "",
     blend: float | None = 1.0,
     add: bool | None = True,
-):
+) -> None:
     """Blend in shape from a shape key
 
     :type execution_context: int | str | None
@@ -308,7 +308,7 @@ def bridge_edge_loops(
     profile_shape_factor: float | None = 0.0,
     profile_shape: bpy.stub_internal.rna_enums.ProportionalFalloffCurveOnlyItems
     | None = "SMOOTH",
-):
+) -> None:
     """Create a bridge of faces between two or more selected edge loops
 
     :type execution_context: int | str | None
@@ -335,7 +335,7 @@ def bridge_edge_loops(
 
 def colors_reverse(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Flip direction of face corner color attribute inside faces
 
     :type execution_context: int | str | None
@@ -348,7 +348,7 @@ def colors_rotate(
     /,
     *,
     use_ccw: bool | None = False,
-):
+) -> None:
     """Rotate face corner color attribute inside faces
 
     :type execution_context: int | str | None
@@ -375,7 +375,7 @@ def convex_hull(
     sharp: bool | None = False,
     materials: bool | None = False,
     deselect_joined: bool | None = False,
-):
+) -> None:
     """Enclose selected vertices in a convex polyhedron
 
     :type execution_context: int | str | None
@@ -410,7 +410,7 @@ def convex_hull(
 
 def customdata_custom_splitnormals_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a custom split normals layer, if none exists yet
 
     :type execution_context: int | str | None
@@ -419,7 +419,7 @@ def customdata_custom_splitnormals_add(
 
 def customdata_custom_splitnormals_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the custom split normals layer, if it exists
 
     :type execution_context: int | str | None
@@ -428,7 +428,7 @@ def customdata_custom_splitnormals_clear(
 
 def customdata_mask_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear vertex sculpt masking data from the mesh
 
     :type execution_context: int | str | None
@@ -437,7 +437,7 @@ def customdata_mask_clear(
 
 def customdata_skin_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a vertex skin layer
 
     :type execution_context: int | str | None
@@ -446,7 +446,7 @@ def customdata_skin_add(
 
 def customdata_skin_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear vertex skin layer
 
     :type execution_context: int | str | None
@@ -464,7 +464,7 @@ def decimate(
     invert_vertex_group: bool | None = False,
     use_symmetry: bool | None = False,
     symmetry_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None = "Y",
-):
+) -> None:
     """Simplify geometry by collapsing edges
 
     :type execution_context: int | str | None
@@ -490,7 +490,7 @@ def delete(
     *,
     type: typing.Literal["VERT", "EDGE", "FACE", "EDGE_FACE", "ONLY_FACE"]
     | None = "VERT",
-):
+) -> None:
     """Delete selected vertices, edges or faces
 
     :type execution_context: int | str | None
@@ -505,7 +505,7 @@ def delete_edgeloop(
     /,
     *,
     use_face_split: bool | None = True,
-):
+) -> None:
     """Delete an edge loop by merging the faces on each side
 
     :type execution_context: int | str | None
@@ -522,7 +522,7 @@ def delete_loose(
     use_verts: bool | None = True,
     use_edges: bool | None = True,
     use_faces: bool | None = False,
-):
+) -> None:
     """Delete loose vertices, edges or faces
 
     :type execution_context: int | str | None
@@ -541,7 +541,7 @@ def dissolve_degenerate(
     /,
     *,
     threshold: float | None = 0.0001,
-):
+) -> None:
     """Dissolve zero area faces and zero length edges
 
     :type execution_context: int | str | None
@@ -556,14 +556,17 @@ def dissolve_edges(
     /,
     *,
     use_verts: bool | None = True,
+    angle_threshold: float | None = 0.349066,
     use_face_split: bool | None = False,
-):
+) -> None:
     """Dissolve edges, merging faces
 
     :type execution_context: int | str | None
     :type undo: bool | None
-    :param use_verts: Dissolve Vertices, Dissolve remaining vertices
+    :param use_verts: Dissolve Vertices, Dissolve remaining vertices which connect to only two edges
     :type use_verts: bool | None
+    :param angle_threshold: Angle Threshold, Remaining vertices which separate edge pairs are preserved if their edge angle exceeds this threshold.
+    :type angle_threshold: float | None
     :param use_face_split: Face Split, Split off face corners to maintain surrounding geometry
     :type use_face_split: bool | None
     """
@@ -574,12 +577,12 @@ def dissolve_faces(
     /,
     *,
     use_verts: bool | None = False,
-):
+) -> None:
     """Dissolve faces
 
     :type execution_context: int | str | None
     :type undo: bool | None
-    :param use_verts: Dissolve Vertices, Dissolve remaining vertices
+    :param use_verts: Dissolve Vertices, Dissolve remaining vertices which connect to only two edges
     :type use_verts: bool | None
     """
 
@@ -591,7 +594,7 @@ def dissolve_limited(
     angle_limit: float | None = 0.0872665,
     use_dissolve_boundaries: bool | None = False,
     delimit: set[bpy.stub_internal.rna_enums.MeshDelimitModeItems] | None = {"NORMAL"},
-):
+) -> None:
     """Dissolve selected edges and vertices, limited by the angle of surrounding geometry
 
     :type execution_context: int | str | None
@@ -612,17 +615,20 @@ def dissolve_mode(
     use_verts: bool | None = False,
     use_face_split: bool | None = False,
     use_boundary_tear: bool | None = False,
-):
+    angle_threshold: float | None = 0.349066,
+) -> None:
     """Dissolve geometry based on the selection mode
 
     :type execution_context: int | str | None
     :type undo: bool | None
-    :param use_verts: Dissolve Vertices, Dissolve remaining vertices
+    :param use_verts: Dissolve Vertices, Dissolve remaining vertices which connect to only two edges
     :type use_verts: bool | None
     :param use_face_split: Face Split, Split off face corners to maintain surrounding geometry
     :type use_face_split: bool | None
     :param use_boundary_tear: Tear Boundary, Split off face corners instead of merging faces
     :type use_boundary_tear: bool | None
+    :param angle_threshold: Angle Threshold, Remaining vertices which separate edge pairs are preserved if their edge angle exceeds this threshold.
+    :type angle_threshold: float | None
     """
 
 def dissolve_verts(
@@ -632,7 +638,7 @@ def dissolve_verts(
     *,
     use_face_split: bool | None = False,
     use_boundary_tear: bool | None = False,
-):
+) -> None:
     """Dissolve vertices, merge edges and faces
 
     :type execution_context: int | str | None
@@ -649,7 +655,7 @@ def dupli_extrude_cursor(
     /,
     *,
     rotate_source: bool | None = True,
-):
+) -> None:
     """Duplicate and extrude selected vertices, edges or faces towards the mouse cursor
 
     :type execution_context: int | str | None
@@ -664,7 +670,7 @@ def duplicate(
     /,
     *,
     mode: int | None = 1,
-):
+) -> None:
     """Duplicate selected vertices, edges or faces
 
     :type execution_context: int | str | None
@@ -680,7 +686,7 @@ def duplicate_move(
     *,
     MESH_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Duplicate mesh and move
 
     :type execution_context: int | str | None
@@ -691,14 +697,18 @@ def duplicate_move(
     :type TRANSFORM_OT_translate: bpy.ops.transform.translate | None
     """
 
-def edge_collapse(execution_context: int | str | None = None, undo: bool | None = None):
+def edge_collapse(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Collapse isolated edge and face regions, merging data such as UVs and color attributes. This can collapse edge-rings as well as regions of connected faces into vertices
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def edge_face_add(execution_context: int | str | None = None, undo: bool | None = None):
+def edge_face_add(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add an edge or face to selected
 
     :type execution_context: int | str | None
@@ -711,7 +721,7 @@ def edge_rotate(
     /,
     *,
     use_ccw: bool | None = False,
-):
+) -> None:
     """Rotate selected edge or adjoining faces
 
     :type execution_context: int | str | None
@@ -726,7 +736,7 @@ def edge_split(
     /,
     *,
     type: typing.Literal["EDGE", "VERT"] | None = "EDGE",
-):
+) -> None:
     """Split selected edges so that each neighbor face gets its own copy
 
         :type execution_context: int | str | None
@@ -750,7 +760,7 @@ def edgering_select(
     deselect: bool | None = False,
     toggle: bool | None = False,
     ring: bool | None = True,
-):
+) -> None:
     """Select an edge ring
 
     :type execution_context: int | str | None
@@ -771,7 +781,7 @@ def edges_select_sharp(
     /,
     *,
     sharpness: float | None = 0.523599,
-):
+) -> None:
     """Select all sharp enough edges
 
     :type execution_context: int | str | None
@@ -788,7 +798,7 @@ def extrude_context(
     use_normal_flip: bool | None = False,
     use_dissolve_ortho_edges: bool | None = False,
     mirror: bool | None = False,
-):
+) -> None:
     """Extrude selection
 
     :type execution_context: int | str | None
@@ -808,7 +818,7 @@ def extrude_context_move(
     *,
     MESH_OT_extrude_context: extrude_context | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Extrude region together along the average normal
 
     :type execution_context: int | str | None
@@ -826,7 +836,7 @@ def extrude_edges_indiv(
     *,
     use_normal_flip: bool | None = False,
     mirror: bool | None = False,
-):
+) -> None:
     """Extrude individual edges only
 
     :type execution_context: int | str | None
@@ -844,7 +854,7 @@ def extrude_edges_move(
     *,
     MESH_OT_extrude_edges_indiv: extrude_edges_indiv | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Extrude edges and move result
 
     :type execution_context: int | str | None
@@ -861,7 +871,7 @@ def extrude_faces_indiv(
     /,
     *,
     mirror: bool | None = False,
-):
+) -> None:
     """Extrude individual faces only
 
     :type execution_context: int | str | None
@@ -877,7 +887,7 @@ def extrude_faces_move(
     *,
     MESH_OT_extrude_faces_indiv: extrude_faces_indiv | None = None,
     TRANSFORM_OT_shrink_fatten: bpy.ops.transform.shrink_fatten | None = None,
-):
+) -> None:
     """Extrude each individual face separately along local normals
 
     :type execution_context: int | str | None
@@ -895,7 +905,7 @@ def extrude_manifold(
     *,
     MESH_OT_extrude_region: extrude_region | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Extrude, dissolves edges whose faces form a flat surface and intersect new edges
 
     :type execution_context: int | str | None
@@ -914,7 +924,7 @@ def extrude_region(
     use_normal_flip: bool | None = False,
     use_dissolve_ortho_edges: bool | None = False,
     mirror: bool | None = False,
-):
+) -> None:
     """Extrude region of faces
 
     :type execution_context: int | str | None
@@ -934,7 +944,7 @@ def extrude_region_move(
     *,
     MESH_OT_extrude_region: extrude_region | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Extrude region and move result
 
     :type execution_context: int | str | None
@@ -952,7 +962,7 @@ def extrude_region_shrink_fatten(
     *,
     MESH_OT_extrude_region: extrude_region | None = None,
     TRANSFORM_OT_shrink_fatten: bpy.ops.transform.shrink_fatten | None = None,
-):
+) -> None:
     """Extrude region together along local normals
 
     :type execution_context: int | str | None
@@ -971,7 +981,7 @@ def extrude_repeat(
     steps: int | None = 10,
     offset: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
     scale_offset: float | None = 1.0,
-):
+) -> None:
     """Extrude selected vertices, edges or faces repeatedly
 
     :type execution_context: int | str | None
@@ -991,7 +1001,7 @@ def extrude_vertices_move(
     *,
     MESH_OT_extrude_verts_indiv: extrude_verts_indiv | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Extrude vertices and move result
 
     :type execution_context: int | str | None
@@ -1008,7 +1018,7 @@ def extrude_verts_indiv(
     /,
     *,
     mirror: bool | None = False,
-):
+) -> None:
     """Extrude individual vertices only
 
     :type execution_context: int | str | None
@@ -1024,7 +1034,7 @@ def face_make_planar(
     *,
     factor: float | None = 1.0,
     repeat: int | None = 1,
-):
+) -> None:
     """Flatten selected faces
 
     :type execution_context: int | str | None
@@ -1037,7 +1047,7 @@ def face_make_planar(
 
 def face_split_by_edges(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Weld loose edges into faces (splitting them into new faces)
 
     :type execution_context: int | str | None
@@ -1051,7 +1061,7 @@ def faces_mirror_uv(
     *,
     direction: typing.Literal["POSITIVE", "NEGATIVE"] | None = "POSITIVE",
     precision: int | None = 3,
-):
+) -> None:
     """Copy mirror UV coordinates on the X axis based on a mirrored mesh
 
     :type execution_context: int | str | None
@@ -1068,7 +1078,7 @@ def faces_select_linked_flat(
     /,
     *,
     sharpness: float | None = 0.0174533,
-):
+) -> None:
     """Select linked faces by angle
 
     :type execution_context: int | str | None
@@ -1079,7 +1089,7 @@ def faces_select_linked_flat(
 
 def faces_shade_flat(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Display faces flat
 
     :type execution_context: int | str | None
@@ -1088,7 +1098,7 @@ def faces_shade_flat(
 
 def faces_shade_smooth(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Display faces smooth (using vertex normals)
 
     :type execution_context: int | str | None
@@ -1101,7 +1111,7 @@ def fill(
     /,
     *,
     use_beauty: bool | None = True,
-):
+) -> None:
     """Fill a selected edge loop with faces
 
     :type execution_context: int | str | None
@@ -1118,7 +1128,7 @@ def fill_grid(
     span: int | None = 1,
     offset: int | None = 0,
     use_interp_simple: bool | None = False,
-):
+) -> None:
     """Fill grid from two loops
 
     :type execution_context: int | str | None
@@ -1137,7 +1147,7 @@ def fill_holes(
     /,
     *,
     sides: int | None = 4,
-):
+) -> None:
     """Fill in holes (boundary edge loops)
 
     :type execution_context: int | str | None
@@ -1152,7 +1162,7 @@ def flip_normals(
     /,
     *,
     only_clnors: bool | None = False,
-):
+) -> None:
     """Flip the direction of selected faces' normals (and of their vertices)
 
     :type execution_context: int | str | None
@@ -1163,7 +1173,7 @@ def flip_normals(
 
 def flip_quad_tessellation(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Flips the tessellation of selected quads
 
     :type execution_context: int | str | None
@@ -1176,7 +1186,7 @@ def hide(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Hide (un)selected vertices, edges or faces
 
     :type execution_context: int | str | None
@@ -1201,7 +1211,7 @@ def inset(
     use_individual: bool | None = False,
     use_interpolate: bool | None = True,
     release_confirm: bool | None = False,
-):
+) -> None:
     """Inset new faces into selected faces
 
     :type execution_context: int | str | None
@@ -1239,7 +1249,7 @@ def intersect(
     separate_mode: typing.Literal["ALL", "CUT", "NONE"] | None = "CUT",
     threshold: float | None = 1e-06,
     solver: typing.Literal["FAST", "EXACT"] | None = "EXACT",
-):
+) -> None:
     """Cut an intersection into faces
 
         :type execution_context: int | str | None
@@ -1285,7 +1295,7 @@ def intersect_boolean(
     use_self: bool | None = False,
     threshold: float | None = 1e-06,
     solver: typing.Literal["FAST", "EXACT"] | None = "EXACT",
-):
+) -> None:
     """Cut solid geometry from selected to unselected
 
         :type execution_context: int | str | None
@@ -1314,7 +1324,7 @@ def knife_project(
     /,
     *,
     cut_through: bool | None = False,
-):
+) -> None:
     """Use other objects outlines and boundaries to project knife cuts
 
     :type execution_context: int | str | None
@@ -1336,7 +1346,7 @@ def knife_tool(
     angle_snapping: typing.Literal["NONE", "SCREEN", "RELATIVE"] | None = "NONE",
     angle_snapping_increment: float | None = 0.523599,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Cut new topology
 
         :type execution_context: int | str | None
@@ -1384,7 +1394,7 @@ def loop_multi_select(
     /,
     *,
     ring: bool | None = False,
-):
+) -> None:
     """Select a loop of connected edges by connection type
 
     :type execution_context: int | str | None
@@ -1402,7 +1412,7 @@ def loop_select(
     deselect: bool | None = False,
     toggle: bool | None = False,
     ring: bool | None = False,
-):
+) -> None:
     """Select a loop of connected edges
 
     :type execution_context: int | str | None
@@ -1423,7 +1433,7 @@ def loop_to_region(
     /,
     *,
     select_bigger: bool | None = False,
-):
+) -> None:
     """Select region of faces inside of a selected loop of edges
 
     :type execution_context: int | str | None
@@ -1448,7 +1458,7 @@ def loopcut(
         False,
         False,
     ),
-):
+) -> None:
     """Add a new loop between existing loops
 
     :type execution_context: int | str | None
@@ -1473,7 +1483,7 @@ def loopcut_slide(
     *,
     MESH_OT_loopcut: loopcut | None = None,
     TRANSFORM_OT_edge_slide: bpy.ops.transform.edge_slide | None = None,
-):
+) -> None:
     """Cut mesh loop and slide it
 
     :type execution_context: int | str | None
@@ -1490,7 +1500,7 @@ def mark_freestyle_edge(
     /,
     *,
     clear: bool | None = False,
-):
+) -> None:
     """(Un)mark selected edges as Freestyle feature edges
 
     :type execution_context: int | str | None
@@ -1505,7 +1515,7 @@ def mark_freestyle_face(
     /,
     *,
     clear: bool | None = False,
-):
+) -> None:
     """(Un)mark selected faces for exclusion from Freestyle feature edge detection
 
     :type execution_context: int | str | None
@@ -1520,7 +1530,7 @@ def mark_seam(
     /,
     *,
     clear: bool | None = False,
-):
+) -> None:
     """(Un)mark selected edges as a seam
 
     :type execution_context: int | str | None
@@ -1536,7 +1546,7 @@ def mark_sharp(
     *,
     clear: bool | None = False,
     use_verts: bool | None = False,
-):
+) -> None:
     """(Un)mark selected edges as sharp
 
     :type execution_context: int | str | None
@@ -1555,7 +1565,7 @@ def merge(
     type: typing.Literal["CENTER", "CURSOR", "COLLAPSE", "FIRST", "LAST"]
     | None = "CENTER",
     uvs: bool | None = False,
-):
+) -> None:
     """Merge selected vertices
 
     :type execution_context: int | str | None
@@ -1566,7 +1576,9 @@ def merge(
     :type uvs: bool | None
     """
 
-def merge_normals(execution_context: int | str | None = None, undo: bool | None = None):
+def merge_normals(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Merge custom normals of selected vertices
 
     :type execution_context: int | str | None
@@ -1580,7 +1592,7 @@ def mod_weighted_strength(
     *,
     set: bool | None = False,
     face_strength: typing.Literal["WEAK", "MEDIUM", "STRONG"] | None = "MEDIUM",
-):
+) -> None:
     """Set/Get strength of face (used in Weighted Normal modifier)
 
     :type execution_context: int | str | None
@@ -1597,7 +1609,7 @@ def normals_make_consistent(
     /,
     *,
     inside: bool | None = False,
-):
+) -> None:
     """Make face and vertex normals point either outside or inside the mesh
 
     :type execution_context: int | str | None
@@ -1613,7 +1625,7 @@ def normals_tools(
     *,
     mode: typing.Literal["COPY", "PASTE", "ADD", "MULTIPLY", "RESET"] | None = "COPY",
     absolute: bool | None = False,
-):
+) -> None:
     """Custom normals tools using Normal Vector of UI
 
         :type execution_context: int | str | None
@@ -1645,7 +1657,7 @@ def offset_edge_loops(
     /,
     *,
     use_cap_endpoint: bool | None = False,
-):
+) -> None:
     """Create offset edge loop from the current selection
 
     :type execution_context: int | str | None
@@ -1661,7 +1673,7 @@ def offset_edge_loops_slide(
     *,
     MESH_OT_offset_edge_loops: offset_edge_loops | None = None,
     TRANSFORM_OT_edge_slide: bpy.ops.transform.edge_slide | None = None,
-):
+) -> None:
     """Offset edge loop slide
 
     :type execution_context: int | str | None
@@ -1687,7 +1699,7 @@ def point_normals(
     ),
     spherize: bool | None = False,
     spherize_strength: float | None = 0.1,
-):
+) -> None:
     """Point selected custom normals to specified Target
 
         :type execution_context: int | str | None
@@ -1721,7 +1733,7 @@ def poke(
     use_relative_offset: bool | None = False,
     center_mode: typing.Literal["MEDIAN_WEIGHTED", "MEDIAN", "BOUNDS"]
     | None = "MEDIAN_WEIGHTED",
-):
+) -> None:
     """Split a face into a fan
 
         :type execution_context: int | str | None
@@ -1757,7 +1769,7 @@ def polybuild_delete_at_cursor(
     use_proportional_projected: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1782,7 +1794,7 @@ def polybuild_delete_at_cursor(
 
 def polybuild_dissolve_at_cursor(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1797,7 +1809,7 @@ def polybuild_extrude_at_cursor_move(
     MESH_OT_polybuild_transform_at_cursor: polybuild_transform_at_cursor | None = None,
     MESH_OT_extrude_edges_indiv: extrude_edges_indiv | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1825,7 +1837,7 @@ def polybuild_face_at_cursor(
     use_proportional_projected: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1857,7 +1869,7 @@ def polybuild_face_at_cursor_move(
     *,
     MESH_OT_polybuild_face_at_cursor: polybuild_face_at_cursor | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1882,7 +1894,7 @@ def polybuild_split_at_cursor(
     use_proportional_projected: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1912,7 +1924,7 @@ def polybuild_split_at_cursor_move(
     *,
     MESH_OT_polybuild_split_at_cursor: polybuild_split_at_cursor | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1937,7 +1949,7 @@ def polybuild_transform_at_cursor(
     use_proportional_projected: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -1967,7 +1979,7 @@ def polybuild_transform_at_cursor_move(
     *,
     MESH_OT_polybuild_transform_at_cursor: polybuild_transform_at_cursor | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -2000,7 +2012,7 @@ def primitive_circle_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a circle mesh
 
         :type execution_context: int | str | None
@@ -2067,7 +2079,7 @@ def primitive_cone_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a conic mesh
 
         :type execution_context: int | str | None
@@ -2134,7 +2146,7 @@ def primitive_cube_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a cube mesh that consists of six square faces
 
         :type execution_context: int | str | None
@@ -2191,7 +2203,7 @@ def primitive_cube_add_gizmo(
         (0.0, 0.0, 0.0, 0.0),
         (0.0, 0.0, 0.0, 0.0),
     ),
-):
+) -> None:
     """Construct a cube mesh
 
         :type execution_context: int | str | None
@@ -2244,7 +2256,7 @@ def primitive_cylinder_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a cylinder mesh
 
         :type execution_context: int | str | None
@@ -2311,7 +2323,7 @@ def primitive_grid_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a subdivided plane mesh
 
         :type execution_context: int | str | None
@@ -2366,7 +2378,7 @@ def primitive_ico_sphere_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a spherical mesh that consists of equally sized triangles
 
         :type execution_context: int | str | None
@@ -2418,7 +2430,7 @@ def primitive_monkey_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a Suzanne mesh
 
         :type execution_context: int | str | None
@@ -2468,7 +2480,7 @@ def primitive_plane_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a filled planar mesh with 4 vertices
 
         :type execution_context: int | str | None
@@ -2522,7 +2534,7 @@ def primitive_torus_add(
     abso_major_rad: float | None = 1.25,
     abso_minor_rad: float | None = 0.75,
     generate_uvs: bool | None = True,
-):
+) -> None:
     """Construct a torus mesh
 
         :type execution_context: int | str | None
@@ -2588,7 +2600,7 @@ def primitive_uv_sphere_add(
         0.0,
     ),
     scale: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Construct a spherical mesh with quad faces, except for triangle faces at the top and bottom
 
         :type execution_context: int | str | None
@@ -2631,7 +2643,7 @@ def quads_convert_to_tris(
     | None = "BEAUTY",
     ngon_method: bpy.stub_internal.rna_enums.ModifierTriangulateNgonMethodItems
     | None = "BEAUTY",
-):
+) -> None:
     """Triangulate selected faces
 
     :type execution_context: int | str | None
@@ -2644,7 +2656,7 @@ def quads_convert_to_tris(
 
 def region_to_loop(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select boundary edges around the selected faces
 
     :type execution_context: int | str | None
@@ -2659,7 +2671,7 @@ def remove_doubles(
     threshold: float | None = 0.0001,
     use_unselected: bool | None = False,
     use_sharp_edge_from_normals: bool | None = False,
-):
+) -> None:
     """Merge vertices based on their proximity
 
     :type execution_context: int | str | None
@@ -2678,7 +2690,7 @@ def reveal(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Reveal all hidden vertices, edges and faces
 
     :type execution_context: int | str | None
@@ -2702,7 +2714,7 @@ def rip(
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
     use_fill: bool | None = False,
-):
+) -> None:
     """Disconnect vertex or edges from connected geometry
 
     :type execution_context: int | str | None
@@ -2741,7 +2753,7 @@ def rip_edge(
     use_proportional_projected: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
-):
+) -> None:
     """Extend vertices along the edge closest to the cursor
 
     :type execution_context: int | str | None
@@ -2771,7 +2783,7 @@ def rip_edge_move(
     *,
     MESH_OT_rip_edge: rip_edge | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Extend vertices and move the result
 
     :type execution_context: int | str | None
@@ -2789,7 +2801,7 @@ def rip_move(
     *,
     MESH_OT_rip: rip | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Rip polygons and move the result
 
     :type execution_context: int | str | None
@@ -2809,7 +2821,7 @@ def screw(
     turns: int | None = 1,
     center: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
     axis: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Extrude selected vertices in screw-shaped rotation around the cursor in indicated viewport
 
     :type execution_context: int | str | None
@@ -2830,7 +2842,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """(De)select all vertices, edges or faces
 
         :type execution_context: int | str | None
@@ -2860,7 +2872,7 @@ def select_axis(
     sign: typing.Literal["POS", "NEG", "ALIGN"] | None = "POS",
     axis: bpy.stub_internal.rna_enums.AxisXyzItems | None = "X",
     threshold: float | None = 0.0001,
-):
+) -> None:
     """Select all data in the mesh on a single axis
 
     :type execution_context: int | str | None
@@ -2877,7 +2889,7 @@ def select_axis(
 
 def select_by_attribute(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select elements based on the active boolean attribute
 
     :type execution_context: int | str | None
@@ -2893,7 +2905,7 @@ def select_by_pole_count(
     type: typing.Literal["LESS", "EQUAL", "GREATER", "NOTEQUAL"] | None = "NOTEQUAL",
     extend: bool | None = False,
     exclude_nonmanifold: bool | None = True,
-):
+) -> None:
     """Select vertices at poles by the number of connected edges. In edge and face mode the geometry connected to the vertices is selected
 
     :type execution_context: int | str | None
@@ -2916,7 +2928,7 @@ def select_face_by_sides(
     number: int | None = 4,
     type: typing.Literal["LESS", "EQUAL", "GREATER", "NOTEQUAL"] | None = "EQUAL",
     extend: bool | None = True,
-):
+) -> None:
     """Select vertices or faces by the number of face sides
 
     :type execution_context: int | str | None
@@ -2931,7 +2943,7 @@ def select_face_by_sides(
 
 def select_interior_faces(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select faces where all edges have more than 2 face users
 
     :type execution_context: int | str | None
@@ -2944,7 +2956,7 @@ def select_less(
     /,
     *,
     use_face_step: bool | None = True,
-):
+) -> None:
     """Deselect vertices, edges or faces at the boundary of each selection region
 
     :type execution_context: int | str | None
@@ -2959,7 +2971,7 @@ def select_linked(
     /,
     *,
     delimit: set[bpy.stub_internal.rna_enums.MeshDelimitModeItems] | None = {"SEAM"},
-):
+) -> None:
     """Select all vertices connected to the current selection
 
     :type execution_context: int | str | None
@@ -2977,7 +2989,7 @@ def select_linked_pick(
     delimit: set[bpy.stub_internal.rna_enums.MeshDelimitModeItems] | None = {"SEAM"},
     object_index: int | None = -1,
     index: int | None = -1,
-):
+) -> None:
     """(De)select all vertices linked to the edge under the mouse cursor
 
     :type execution_context: int | str | None
@@ -2996,7 +3008,7 @@ def select_loose(
     /,
     *,
     extend: bool | None = False,
-):
+) -> None:
     """Select loose geometry based on the selection mode
 
     :type execution_context: int | str | None
@@ -3012,7 +3024,7 @@ def select_mirror(
     *,
     axis: set[bpy.stub_internal.rna_enums.AxisFlagXyzItems] | None = {"X"},
     extend: bool | None = False,
-):
+) -> None:
     """Select mesh items at mirrored locations
 
     :type execution_context: int | str | None
@@ -3032,7 +3044,7 @@ def select_mode(
     use_expand: bool | None = False,
     type: bpy.stub_internal.rna_enums.MeshSelectModeItems | None = "VERT",
     action: typing.Literal["DISABLE", "ENABLE", "TOGGLE"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection mode
 
         :type execution_context: int | str | None
@@ -3062,7 +3074,7 @@ def select_more(
     /,
     *,
     use_face_step: bool | None = True,
-):
+) -> None:
     """Select more vertices, edges or faces connected to initial selection
 
     :type execution_context: int | str | None
@@ -3073,7 +3085,7 @@ def select_more(
 
 def select_next_item(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select the next element (using selection order)
 
     :type execution_context: int | str | None
@@ -3091,7 +3103,7 @@ def select_non_manifold(
     use_multi_face: bool | None = True,
     use_non_contiguous: bool | None = True,
     use_verts: bool | None = True,
-):
+) -> None:
     """Select all non-manifold vertices or edges
 
     :type execution_context: int | str | None
@@ -3118,7 +3130,7 @@ def select_nth(
     skip: int | None = 1,
     nth: int | None = 1,
     offset: int | None = 0,
-):
+) -> None:
     """Deselect every Nth element starting from the active vertex, edge or face
 
     :type execution_context: int | str | None
@@ -3133,7 +3145,7 @@ def select_nth(
 
 def select_prev_item(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select the previous element (using selection order)
 
     :type execution_context: int | str | None
@@ -3148,7 +3160,7 @@ def select_random(
     ratio: float | None = 0.5,
     seed: int | None = 0,
     action: typing.Literal["SELECT", "DESELECT"] | None = "SELECT",
-):
+) -> None:
     """Randomly select vertices
 
         :type execution_context: int | str | None
@@ -3199,7 +3211,7 @@ def select_similar(
     | None = "VERT_NORMAL",
     compare: typing.Literal["EQUAL", "GREATER", "LESS"] | None = "EQUAL",
     threshold: float | None = 0.0,
-):
+) -> None:
     """Select similar vertices, edges or faces by property types
 
     :type execution_context: int | str | None
@@ -3214,7 +3226,7 @@ def select_similar(
 
 def select_similar_region(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select similar face regions to the current selection
 
     :type execution_context: int | str | None
@@ -3227,7 +3239,7 @@ def select_ungrouped(
     /,
     *,
     extend: bool | None = False,
-):
+) -> None:
     """Select vertices without a group
 
     :type execution_context: int | str | None
@@ -3242,7 +3254,7 @@ def separate(
     /,
     *,
     type: typing.Literal["SELECTED", "MATERIAL", "LOOSE"] | None = "SELECTED",
-):
+) -> None:
     """Separate selected geometry into a new mesh
 
     :type execution_context: int | str | None
@@ -3257,7 +3269,7 @@ def set_normals_from_faces(
     /,
     *,
     keep_sharp: bool | None = False,
-):
+) -> None:
     """Set the custom normals from the selected faces ones
 
     :type execution_context: int | str | None
@@ -3273,7 +3285,7 @@ def set_sharpness_by_angle(
     *,
     angle: float | None = 0.523599,
     extend: bool | None = False,
-):
+) -> None:
     """Set edge sharpness based on the angle between neighboring faces
 
     :type execution_context: int | str | None
@@ -3286,7 +3298,7 @@ def set_sharpness_by_angle(
 
 def shape_propagate_to_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Apply selected vertex locations to all other shape keys
 
     :type execution_context: int | str | None
@@ -3307,7 +3319,7 @@ def shortest_path_pick(
     nth: int | None = 1,
     offset: int | None = 0,
     index: int | None = -1,
-):
+) -> None:
     """Select shortest path between two selections
 
     :type execution_context: int | str | None
@@ -3342,7 +3354,7 @@ def shortest_path_select(
     skip: int | None = 0,
     nth: int | None = 1,
     offset: int | None = 0,
-):
+) -> None:
     """Selected shortest path between two vertices/edges/faces
 
     :type execution_context: int | str | None
@@ -3369,7 +3381,7 @@ def smooth_normals(
     /,
     *,
     factor: float | None = 0.5,
-):
+) -> None:
     """Smooth custom normals based on adjacent vertex normals
 
     :type execution_context: int | str | None
@@ -3384,7 +3396,7 @@ def solidify(
     /,
     *,
     thickness: float | None = 0.01,
-):
+) -> None:
     """Create a solid skin by extruding, compensating for sharp angles
 
     :type execution_context: int | str | None
@@ -3411,7 +3423,7 @@ def sort_elements(
     elements: set[typing.Literal["VERT", "EDGE", "FACE"]] | None = {"VERT"},
     reverse: bool | None = False,
     seed: int | None = 0,
-):
+) -> None:
     """The order of selected vertices/edges/faces is modified, based on a given method
 
         :type execution_context: int | str | None
@@ -3460,7 +3472,7 @@ def spin(
     use_normal_flip: bool | None = False,
     center: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
     axis: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Extrude selected vertices in a circle around the cursor in indicated viewport
 
     :type execution_context: int | str | None
@@ -3481,14 +3493,16 @@ def spin(
     :type axis: collections.abc.Sequence[float] | mathutils.Vector | None
     """
 
-def split(execution_context: int | str | None = None, undo: bool | None = None):
+def split(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Split off selected geometry from connected unselected geometry
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def split_normals(execution_context: int | str | None = None, undo: bool | None = None):
+def split_normals(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Split custom normals of selected vertices
 
     :type execution_context: int | str | None
@@ -3508,7 +3522,7 @@ def subdivide(
     fractal: float | None = 0.0,
     fractal_along_normal: float | None = 0.0,
     seed: int | None = 0,
-):
+) -> None:
     """Subdivide selected edges
 
     :type execution_context: int | str | None
@@ -3540,7 +3554,7 @@ def subdivide_edgering(
     profile_shape_factor: float | None = 0.0,
     profile_shape: bpy.stub_internal.rna_enums.ProportionalFalloffCurveOnlyItems
     | None = "SMOOTH",
-):
+) -> None:
     """Subdivide perpendicular edges to the selected edge-ring
 
     :type execution_context: int | str | None
@@ -3565,7 +3579,7 @@ def symmetrize(
     direction: bpy.stub_internal.rna_enums.SymmetrizeDirectionItems
     | None = "NEGATIVE_X",
     threshold: float | None = 0.0001,
-):
+) -> None:
     """Enforce symmetry (both form and topological) across an axis
 
     :type execution_context: int | str | None
@@ -3586,7 +3600,7 @@ def symmetry_snap(
     threshold: float | None = 0.05,
     factor: float | None = 0.5,
     use_center: bool | None = True,
-):
+) -> None:
     """Snap vertex pairs to their mirrored locations
 
     :type execution_context: int | str | None
@@ -3615,7 +3629,7 @@ def tris_convert_to_quads(
     sharp: bool | None = False,
     materials: bool | None = False,
     deselect_joined: bool | None = False,
-):
+) -> None:
     """Merge triangles into four sided polygons where possible
 
     :type execution_context: int | str | None
@@ -3646,7 +3660,7 @@ def unsubdivide(
     /,
     *,
     iterations: int | None = 2,
-):
+) -> None:
     """Un-subdivide selected edges and faces
 
     :type execution_context: int | str | None
@@ -3657,7 +3671,7 @@ def unsubdivide(
 
 def uv_texture_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add UV map
 
     :type execution_context: int | str | None
@@ -3666,14 +3680,16 @@ def uv_texture_add(
 
 def uv_texture_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove UV map
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def uvs_reverse(execution_context: int | str | None = None, undo: bool | None = None):
+def uvs_reverse(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Flip direction of UV coordinates inside faces
 
     :type execution_context: int | str | None
@@ -3686,7 +3702,7 @@ def uvs_rotate(
     /,
     *,
     use_ccw: bool | None = False,
-):
+) -> None:
     """Rotate UV coordinates inside faces
 
     :type execution_context: int | str | None
@@ -3695,7 +3711,9 @@ def uvs_rotate(
     :type use_ccw: bool | None
     """
 
-def vert_connect(execution_context: int | str | None = None, undo: bool | None = None):
+def vert_connect(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Connect selected vertices of faces, splitting the face
 
     :type execution_context: int | str | None
@@ -3704,7 +3722,7 @@ def vert_connect(execution_context: int | str | None = None, undo: bool | None =
 
 def vert_connect_concave(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Make all faces convex
 
     :type execution_context: int | str | None
@@ -3717,7 +3735,7 @@ def vert_connect_nonplanar(
     /,
     *,
     angle_limit: float | None = 0.0872665,
-):
+) -> None:
     """Split non-planar faces that exceed the angle threshold
 
     :type execution_context: int | str | None
@@ -3728,7 +3746,7 @@ def vert_connect_nonplanar(
 
 def vert_connect_path(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Connect vertices by their selection order, creating edges, splitting faces
 
     :type execution_context: int | str | None
@@ -3746,7 +3764,7 @@ def vertices_smooth(
     yaxis: bool | None = True,
     zaxis: bool | None = True,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Flatten angles of selected vertices
 
     :type execution_context: int | str | None
@@ -3777,7 +3795,7 @@ def vertices_smooth_laplacian(
     use_y: bool | None = True,
     use_z: bool | None = True,
     preserve_volume: bool | None = True,
-):
+) -> None:
     """Laplacian smooth of selected vertices
 
     :type execution_context: int | str | None
@@ -3811,7 +3829,7 @@ def wireframe(
     offset: float | None = 0.01,
     use_crease: bool | None = False,
     crease_weight: float | None = 0.01,
-):
+) -> None:
     """Create a solid wireframe from faces
 
     :type execution_context: int | str | None

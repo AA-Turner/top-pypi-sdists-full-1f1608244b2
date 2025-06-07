@@ -6,7 +6,7 @@ import bpy.types
 import mathutils
 
 class AddObjectHelper:
-    def align_update_callback(self, _context):
+    def align_update_callback(self, _context) -> None:
         """
 
         :param _context:
@@ -25,13 +25,13 @@ def add_object_align_init(
     :rtype: mathutils.Matrix
     """
 
-def object_add_grid_scale(context):
+def object_add_grid_scale(context) -> None:
     """Return scale which should be applied on object
     data to align it to grid scale
 
     """
 
-def object_add_grid_scale_apply_operator(operator, context):
+def object_add_grid_scale_apply_operator(operator, context) -> None:
     """Scale an operators distance values by the grid size."""
 
 def object_data_add(
@@ -57,7 +57,7 @@ def object_data_add(
 
 def object_report_if_active_shape_key_is_locked(
     obj: bpy.types.Object, operator: bpy.types.Operator
-):
+) -> None:
     """Checks if the active shape key of the specified object is locked, and reports an error if so.If the object has no shape keys, there is nothing to lock, and the function returns False.
 
     :param obj: Object to check.

@@ -27,21 +27,21 @@ class PHYSICS_PT_geometry_nodes(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def geometry_nodes_objects(cls, context):
+    def geometry_nodes_objects(cls, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

@@ -9,7 +9,7 @@ def case_set(
     /,
     *,
     case: typing.Literal["LOWER", "UPPER"] | None = "LOWER",
-):
+) -> None:
     """Set font case
 
     :type execution_context: int | str | None
@@ -18,7 +18,9 @@ def case_set(
     :type case: typing.Literal['LOWER','UPPER'] | None
     """
 
-def case_toggle(execution_context: int | str | None = None, undo: bool | None = None):
+def case_toggle(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Toggle font case
 
     :type execution_context: int | str | None
@@ -31,7 +33,7 @@ def change_character(
     /,
     *,
     delta: int | None = 1,
-):
+) -> None:
     """Change font character code
 
     :type execution_context: int | str | None
@@ -46,7 +48,7 @@ def change_spacing(
     /,
     *,
     delta: float | None = 1.0,
-):
+) -> None:
     """Change font spacing
 
     :type execution_context: int | str | None
@@ -70,7 +72,7 @@ def delete(
         "PREVIOUS_OR_SELECTION",
     ]
     | None = "PREVIOUS_CHARACTER",
-):
+) -> None:
     """Delete text by cursor position
 
     :type execution_context: int | str | None
@@ -79,7 +81,9 @@ def delete(
     :type type: typing.Literal['NEXT_CHARACTER','PREVIOUS_CHARACTER','NEXT_WORD','PREVIOUS_WORD','SELECTION','NEXT_OR_SELECTION','PREVIOUS_OR_SELECTION'] | None
     """
 
-def line_break(execution_context: int | str | None = None, undo: bool | None = None):
+def line_break(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Insert line break at cursor position
 
     :type execution_context: int | str | None
@@ -106,7 +110,7 @@ def move(
         "NEXT_PAGE",
     ]
     | None = "LINE_BEGIN",
-):
+) -> None:
     """Move cursor to position type
 
     :type execution_context: int | str | None
@@ -135,7 +139,7 @@ def move_select(
         "NEXT_PAGE",
     ]
     | None = "LINE_BEGIN",
-):
+) -> None:
     """Move the cursor while selecting
 
     :type execution_context: int | str | None
@@ -176,7 +180,7 @@ def open(
     ]
     | None = "THUMBNAIL",
     sort_method: str | None = "",
-):
+) -> None:
     """Load a new font from a file
 
         :type execution_context: int | str | None
@@ -243,21 +247,27 @@ def open(
         :type sort_method: str | None
     """
 
-def select_all(execution_context: int | str | None = None, undo: bool | None = None):
+def select_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select all text
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_word(execution_context: int | str | None = None, undo: bool | None = None):
+def select_word(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select word under cursor
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def selection_set(execution_context: int | str | None = None, undo: bool | None = None):
+def selection_set(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Set cursor selection
 
     :type execution_context: int | str | None
@@ -271,7 +281,7 @@ def style_set(
     *,
     style: typing.Literal["BOLD", "ITALIC", "UNDERLINE", "SMALL_CAPS"] | None = "BOLD",
     clear: bool | None = False,
-):
+) -> None:
     """Set font style
 
     :type execution_context: int | str | None
@@ -288,7 +298,7 @@ def style_toggle(
     /,
     *,
     style: typing.Literal["BOLD", "ITALIC", "UNDERLINE", "SMALL_CAPS"] | None = "BOLD",
-):
+) -> None:
     """Toggle font style
 
     :type execution_context: int | str | None
@@ -297,14 +307,18 @@ def style_toggle(
     :type style: typing.Literal['BOLD','ITALIC','UNDERLINE','SMALL_CAPS'] | None
     """
 
-def text_copy(execution_context: int | str | None = None, undo: bool | None = None):
+def text_copy(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy selected text to clipboard
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def text_cut(execution_context: int | str | None = None, undo: bool | None = None):
+def text_cut(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Cut selected text to clipboard
 
     :type execution_context: int | str | None
@@ -318,7 +332,7 @@ def text_insert(
     *,
     text: str = "",
     accent: bool | None = False,
-):
+) -> None:
     """Insert text at cursor position
 
     :type execution_context: int | str | None
@@ -331,7 +345,7 @@ def text_insert(
 
 def text_insert_unicode(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Insert Unicode Character
 
     :type execution_context: int | str | None
@@ -344,7 +358,7 @@ def text_paste(
     /,
     *,
     selection: bool | None = False,
-):
+) -> None:
     """Paste text from clipboard
 
     :type execution_context: int | str | None
@@ -384,7 +398,7 @@ def text_paste_from_file(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Paste contents from file
 
         :type execution_context: int | str | None
@@ -449,7 +463,9 @@ def text_paste_from_file(
         :type sort_method: str | None
     """
 
-def textbox_add(execution_context: int | str | None = None, undo: bool | None = None):
+def textbox_add(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add a new text box
 
     :type execution_context: int | str | None
@@ -462,7 +478,7 @@ def textbox_remove(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Remove the text box
 
     :type execution_context: int | str | None
@@ -471,7 +487,9 @@ def textbox_remove(
     :type index: int | None
     """
 
-def unlink(execution_context: int | str | None = None, undo: bool | None = None):
+def unlink(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Unlink active font data-block
 
     :type execution_context: int | str | None

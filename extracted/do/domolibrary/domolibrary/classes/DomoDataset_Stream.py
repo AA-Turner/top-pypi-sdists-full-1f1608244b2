@@ -17,21 +17,22 @@ import domolibrary.client.DomoError as dmde
 import domolibrary.routes.stream as stream_routes
 
 # %% auto 0
-__all__ = ['StreamConfig_Mapping_amazon_s3_assumerole', 'StreamConfig_Mapping_snowflake_unload_v2',
-           'StreamConfig_Mapping_snowflake_federated', 'StreamConfig_Mapping_snowflake',
-           'StreamConfig_Mapping_adobe_analytics_v2', 'StreamConfig_Mapping_amazon_athena_high_bandwidth',
-           'StreamConfig_Mapping_aws_athena', 'StreamConfig_Mapping_dataset_copy', 'StreamConfig_Mapping_default',
-           'StreamConfig_Mapping_domo_csv', 'StreamConfig_Mapping_google_sheets',
-           'StreamConfig_Mapping_google_spreadsheets', 'StreamConfig_Mapping_postgresql',
-           'StreamConfig_Mapping_qualtrics', 'StreamConfig_Mapping_sharepointonline',
+__all__ = ['StreamConfig_Mapping_snowflake', 'StreamConfig_Mapping_snowflake_federated',
            'StreamConfig_Mapping_snowflake_internal_unload', 'StreamConfig_Mapping_snowflakekeypairauthentication',
-           'StreamConfig_Mapping_snowflake_writeback', 'StreamConfig_Mapping', 'StreamConfig_Mappings', 'StreamConfig',
-           'Dataset_Stream_GET_Error', 'DomoStream']
+           'StreamConfig_Mapping_snowflake_keypair_internal_managed_unload', 'StreamConfig_Mapping_snowflake_unload_v2',
+           'StreamConfig_Mapping_snowflake_writeback', 'StreamConfig_Mapping_aws_athena',
+           'StreamConfig_Mapping_amazon_athena_high_bandwidth', 'StreamConfig_Mapping_amazon_s3_assumerole',
+           'StreamConfig_Mapping_adobe_analytics_v2', 'StreamConfig_Mapping_dataset_copy',
+           'StreamConfig_Mapping_default', 'StreamConfig_Mapping_domo_csv', 'StreamConfig_Mapping_google_sheets',
+           'StreamConfig_Mapping_google_spreadsheets', 'StreamConfig_Mapping_postgresql',
+           'StreamConfig_Mapping_qualtrics', 'StreamConfig_Mapping_sharepointonline', 'StreamConfig_Mapping',
+           'StreamConfig_Mappings', 'StreamConfig', 'Dataset_Stream_GET_Error', 'DomoStream']
 
 # %% ../../nbs/classes/50_DomoDataset_Stream.ipynb 7
 @dataclass
 class StreamConfig_Mapping:
     data_provider_type: str
+
     sql: str = None
     warehouse: str = None
     database_name: str = None
@@ -59,9 +60,38 @@ class StreamConfig_Mapping:
             None,
         )
 
+# %% ../../nbs/classes/50_DomoDataset_Stream.ipynb 9
+StreamConfig_Mapping_snowflake = StreamConfig_Mapping(
+    data_provider_type="snowflake",
+    sql="query",
+    warehouse="warehouseName",
+    database_name="databaseName",
+    s3_bucket_category=None,
+)
+StreamConfig_Mapping_snowflake_federated = StreamConfig_Mapping(
+    data_provider_type="snowflake_federated", sql=None
+)
 
-StreamConfig_Mapping_amazon_s3_assumerole = StreamConfig_Mapping(
-    data_provider_type="amazon_s3_assumerole", s3_bucket_category="filesDiscovery"
+
+StreamConfig_Mapping_snowflake_internal_unload = StreamConfig_Mapping(
+    data_provider_type="snowflake-internal-unload",
+    sql="customQuery",
+    database_name="databaseName",
+    warehouse="warehouseName",
+)
+
+StreamConfig_Mapping_snowflakekeypairauthentication = StreamConfig_Mapping(
+    data_provider_type="snowflakekeypairauthentication",
+    sql="query",
+    database_name="databaseName",
+    warehouse="warehouseName",
+)
+
+StreamConfig_Mapping_snowflake_keypair_internal_managed_unload = StreamConfig_Mapping(
+    data_provider_type="snowflake-keypair-internal-managed-unload",
+    sql="customQuery",
+    database_name="databaseName",
+    warehouse="warehouseName",
 )
 
 StreamConfig_Mapping_snowflake_unload_v2 = StreamConfig_Mapping(
@@ -71,22 +101,19 @@ StreamConfig_Mapping_snowflake_unload_v2 = StreamConfig_Mapping(
     database_name="databaseName",
 )
 
-StreamConfig_Mapping_snowflake_federated = StreamConfig_Mapping(
-    data_provider_type="snowflake_federated", sql=None
-)
-
-StreamConfig_Mapping_snowflake = StreamConfig_Mapping(
-    data_provider_type="snowflake",
-    sql="query",
-    warehouse="warehouseName",
+StreamConfig_Mapping_snowflake_writeback = StreamConfig_Mapping(
+    data_provider_type="snowflake-writeback",
+    table_name="enterTableName",
     database_name="databaseName",
-    s3_bucket_category=None,
+    warehouse="warehouseName",
 )
 
-StreamConfig_Mapping_adobe_analytics_v2 = StreamConfig_Mapping(
-    data_provider_type="adobe-analytics-v2",
+# %% ../../nbs/classes/50_DomoDataset_Stream.ipynb 11
+StreamConfig_Mapping_aws_athena = StreamConfig_Mapping(
+    data_provider_type="aws-athena",
     sql="query",
-    adobe_report_suite_id="report_suite_id",
+    database_name="databaseName",
+    table_name="tableName",
 )
 
 StreamConfig_Mapping_amazon_athena_high_bandwidth = StreamConfig_Mapping(
@@ -95,12 +122,18 @@ StreamConfig_Mapping_amazon_athena_high_bandwidth = StreamConfig_Mapping(
     database_name="databaseName",
 )
 
-StreamConfig_Mapping_aws_athena = StreamConfig_Mapping(
-    data_provider_type="aws-athena",
-    sql="query",
-    database_name="databaseName",
-    table_name="tableName",
+
+StreamConfig_Mapping_amazon_s3_assumerole = StreamConfig_Mapping(
+    data_provider_type="amazon_s3_assumerole", s3_bucket_category="filesDiscovery"
 )
+
+# %% ../../nbs/classes/50_DomoDataset_Stream.ipynb 13
+StreamConfig_Mapping_adobe_analytics_v2 = StreamConfig_Mapping(
+    data_provider_type="adobe-analytics-v2",
+    sql="query",
+    adobe_report_suite_id="report_suite_id",
+)
+
 
 StreamConfig_Mapping_dataset_copy = StreamConfig_Mapping(
     data_provider_type="dataset-copy", src_url="datasourceUrl"
@@ -138,35 +171,18 @@ StreamConfig_Mapping_sharepointonline = StreamConfig_Mapping(
     src_url="relativeURL",
 )
 
-StreamConfig_Mapping_snowflake_internal_unload = StreamConfig_Mapping(
-    data_provider_type="snowflake-internal-unload",
-    sql="customQuery",
-    database_name="databaseName",
-    warehouse="warehouseName",
-)
-
-StreamConfig_Mapping_snowflakekeypairauthentication = StreamConfig_Mapping(
-    data_provider_type="snowflakekeypairauthentication",
-    sql="query",
-    database_name="databaseName",
-    warehouse="warehouseName",
-)
-
-StreamConfig_Mapping_snowflake_writeback = StreamConfig_Mapping(
-    data_provider_type="snowflake-writeback",
-    table_name="enterTableName",
-    database_name="databaseName",
-    warehouse="warehouseName",
-)
-
 
 class StreamConfig_Mappings(Enum):
-    amazon_s3_assumerole = StreamConfig_Mapping_amazon_s3_assumerole
-    snowflake_unload_v2 = StreamConfig_Mapping_snowflake_unload_v2
-    snowflake_federated = StreamConfig_Mapping_snowflake_federated
     snowflake = StreamConfig_Mapping_snowflake
-    adobe_analytics_v2 = StreamConfig_Mapping_adobe_analytics_v2
+    snowflake_federated = StreamConfig_Mapping_snowflake_federated
+    snowflake_internal_unload = StreamConfig_Mapping_snowflake_internal_unload
+    snowflakekeypairauthentication = StreamConfig_Mapping_snowflakekeypairauthentication
+    snowflake_keypair_internal_managed_unload = StreamConfig_Mapping_snowflake_keypair_internal_managed_unload
+    snowflake_unload_v2 = StreamConfig_Mapping_snowflake_unload_v2
+    snowflake_writeback = StreamConfig_Mapping_snowflake_writeback
     amazon_athena_high_bandwidth = StreamConfig_Mapping_amazon_athena_high_bandwidth
+    amazon_s3_assumerole = StreamConfig_Mapping_amazon_s3_assumerole
+    adobe_analytics_v2 = StreamConfig_Mapping_adobe_analytics_v2
     aws_athena = StreamConfig_Mapping_aws_athena
     dataset_copy = StreamConfig_Mapping_dataset_copy
     domo_csv = StreamConfig_Mapping_domo_csv
@@ -175,9 +191,6 @@ class StreamConfig_Mappings(Enum):
     postgresql = StreamConfig_Mapping_postgresql
     qualtrics = StreamConfig_Mapping_qualtrics
     sharepointonline = StreamConfig_Mapping_sharepointonline
-    snowflake_internal_unload = StreamConfig_Mapping_snowflake_internal_unload
-    snowflakekeypairauthentication = StreamConfig_Mapping_snowflakekeypairauthentication
-    snowflake_writeback = StreamConfig_Mapping_snowflake_writeback
 
     default = StreamConfig_Mapping_default
 
@@ -205,7 +218,7 @@ class StreamConfig_Mappings(Enum):
                 print(f"{value} has not been added to enum config, must implement")
             return cls.default
 
-# %% ../../nbs/classes/50_DomoDataset_Stream.ipynb 9
+# %% ../../nbs/classes/50_DomoDataset_Stream.ipynb 15
 @dataclass
 class StreamConfig:
     stream_category: str
@@ -266,7 +279,7 @@ class StreamConfig:
     def to_json(self):
         return {"field": self.stream_category, "key": self.name, "value": self.value}
 
-# %% ../../nbs/classes/50_DomoDataset_Stream.ipynb 10
+# %% ../../nbs/classes/50_DomoDataset_Stream.ipynb 16
 class Dataset_Stream_GET_Error(dmde.ClassError):
     def __init__(self, cls_instance, message):
 
@@ -431,27 +444,13 @@ class DomoStream:
         import domolibrary.classes.DomoDatacenter as dmdc
         import domolibrary.classes.DomoDataset as dmds
 
-        search_body = dmdc.DomoDatacenter.generate_search_datacenter_body_by_name(
-            entity_name=match_name
+        datasets = await dmdc.DomoDatacenter.search_datasets(
+            auth=auth, search_text=match_name, session=session, debug_api=debug_api
         )
 
-        search_res = await dmdc.DomoDatacenter.search_datacenter(
-            auth=auth, body=search_body, session=session, debug_api=debug_api
-        )
+        existing_ds = next((ds for ds in datasets if ds.name == match_name), None)
 
-        existing_ds_obj = next(
-            (ds for ds in search_res if ds.get("name").lower() == match_name.lower()),
-            None,
-        )
-
-        # if debug_api:
-        #     print(
-        #         f"existing_ds - {existing_ds.id if existing_ds else ' not found '}")
-
-        if existing_ds_obj:
-            existing_ds = await dmds.DomoDataset.get_by_id(
-                dataset_id=existing_ds.get("databaseId"), auth=auth
-            )
+        if existing_ds:
             return await cls.update_stream(
                 cnfg_body,
                 stream_id=existing_ds.stream_id,

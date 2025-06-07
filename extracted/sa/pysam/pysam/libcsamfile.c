@@ -1674,6 +1674,7 @@ struct __pyx_obj_5pysam_9libcfaidx_FastxRecord;
 struct __pyx_obj_5pysam_9libcfaidx_FastxFile;
 struct __pyx_obj_5pysam_9libcfaidx_FastqFile;
 struct __pyx_obj_5pysam_9libcfaidx_Fastafile;
+struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache;
 struct __pyx_obj_5pysam_18libcalignedsegment_AlignedSegment;
 struct __pyx_obj_5pysam_18libcalignedsegment_PileupColumn;
 struct __pyx_obj_5pysam_18libcalignedsegment_PileupRead;
@@ -1757,7 +1758,7 @@ struct __pyx_opt_args_5pysam_18libcalignedsegment_14AlignedSegment_tostring;
 */
 typedef struct __pyx_obj_5pysam_17libcalignmentfile_AlignmentFile *__pyx_t_5pysam_18libcalignedsegment_AlignmentFile_t;
 
-/* "pysam/libcalignedsegment.pxd":55
+/* "pysam/libcalignedsegment.pxd":64
  *     # add an alignment tag with value to the AlignedSegment
  *     # an existing tag of the same name will be replaced.
  *     cpdef set_tag(self, tag, value, value_type=?, replace=?)             # <<<<<<<<<<<<<<
@@ -1770,7 +1771,7 @@ struct __pyx_opt_args_5pysam_18libcalignedsegment_14AlignedSegment_set_tag {
   PyObject *replace;
 };
 
-/* "pysam/libcalignedsegment.pxd":58
+/* "pysam/libcalignedsegment.pxd":67
  * 
  *     # get an alignment tag from the AlignedSegment
  *     cpdef get_tag(self, tag, with_value_type=?)             # <<<<<<<<<<<<<<
@@ -1782,7 +1783,7 @@ struct __pyx_opt_args_5pysam_18libcalignedsegment_14AlignedSegment_get_tag {
   PyObject *with_value_type;
 };
 
-/* "pysam/libcalignedsegment.pxd":67
+/* "pysam/libcalignedsegment.pxd":76
  * 
  *     # returns a valid sam alignment string (deprecated)
  *     cpdef tostring(self, htsfile=*)             # <<<<<<<<<<<<<<
@@ -1947,7 +1948,26 @@ struct __pyx_obj_5pysam_9libcfaidx_Fastafile {
 };
 
 
-/* "pysam/libcalignedsegment.pxd":35
+/* "pysam/libcalignedsegment.pxd":34
+ * 
+ * 
+ * cdef class _AlignedSegment_Cache:  # For internal use only             # <<<<<<<<<<<<<<
+ *     cdef clear_query_sequences(self)
+ *     cdef clear_query_qualities(self)
+*/
+struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_5pysam_18libcalignedsegment__AlignedSegment_Cache *__pyx_vtab;
+  PyObject *query_sequence;
+  PyObject *query_alignment_sequence;
+  PyObject *query_qualities;
+  PyObject *query_qualities_str;
+  PyObject *query_alignment_qualities;
+  PyObject *query_alignment_qualities_str;
+};
+
+
+/* "pysam/libcalignedsegment.pxd":47
  * 
  * # Note: need to declare all C fields and methods here
  * cdef class AlignedSegment:             # <<<<<<<<<<<<<<
@@ -1959,16 +1979,14 @@ struct __pyx_obj_5pysam_18libcalignedsegment_AlignedSegment {
   struct __pyx_vtabstruct_5pysam_18libcalignedsegment_AlignedSegment *__pyx_vtab;
   bam1_t *_delegate;
   struct __pyx_obj_5pysam_17libcalignmentfile_AlignmentHeader *header;
-  PyObject *cache_query_qualities;
-  PyObject *cache_query_qualities_str;
-  PyObject *cache_query_alignment_qualities;
-  PyObject *cache_query_alignment_qualities_str;
-  PyObject *cache_query_sequence;
-  PyObject *cache_query_alignment_sequence;
+  struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache *cache;
+  PyObject *unused1;
+  PyObject *unused2;
+  PyObject *unused3;
 };
 
 
-/* "pysam/libcalignedsegment.pxd":70
+/* "pysam/libcalignedsegment.pxd":79
  * 
  * 
  * cdef class PileupColumn:             # <<<<<<<<<<<<<<
@@ -1988,7 +2006,7 @@ struct __pyx_obj_5pysam_18libcalignedsegment_PileupColumn {
 };
 
 
-/* "pysam/libcalignedsegment.pxd":80
+/* "pysam/libcalignedsegment.pxd":89
  *     cdef char * reference_sequence
  * 
  * cdef class PileupRead:             # <<<<<<<<<<<<<<
@@ -2337,7 +2355,22 @@ struct __pyx_vtabstruct_5pysam_9libcfaidx_Fastafile {
 static struct __pyx_vtabstruct_5pysam_9libcfaidx_Fastafile *__pyx_vtabptr_5pysam_9libcfaidx_Fastafile;
 
 
-/* "pysam/libcalignedsegment.pxd":35
+/* "pysam/libcalignedsegment.pxd":34
+ * 
+ * 
+ * cdef class _AlignedSegment_Cache:  # For internal use only             # <<<<<<<<<<<<<<
+ *     cdef clear_query_sequences(self)
+ *     cdef clear_query_qualities(self)
+*/
+
+struct __pyx_vtabstruct_5pysam_18libcalignedsegment__AlignedSegment_Cache {
+  PyObject *(*clear_query_sequences)(struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache *);
+  PyObject *(*clear_query_qualities)(struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache *);
+};
+static struct __pyx_vtabstruct_5pysam_18libcalignedsegment__AlignedSegment_Cache *__pyx_vtabptr_5pysam_18libcalignedsegment__AlignedSegment_Cache;
+
+
+/* "pysam/libcalignedsegment.pxd":47
  * 
  * # Note: need to declare all C fields and methods here
  * cdef class AlignedSegment:             # <<<<<<<<<<<<<<
@@ -2346,8 +2379,6 @@ static struct __pyx_vtabstruct_5pysam_9libcfaidx_Fastafile *__pyx_vtabptr_5pysam
 */
 
 struct __pyx_vtabstruct_5pysam_18libcalignedsegment_AlignedSegment {
-  void (*_clear_cached_query_qualities)(struct __pyx_obj_5pysam_18libcalignedsegment_AlignedSegment *);
-  void (*_clear_cached_query_sequences)(struct __pyx_obj_5pysam_18libcalignedsegment_AlignedSegment *);
   PyObject *(*set_tag)(struct __pyx_obj_5pysam_18libcalignedsegment_AlignedSegment *, PyObject *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_5pysam_18libcalignedsegment_14AlignedSegment_set_tag *__pyx_optional_args);
   PyObject *(*get_tag)(struct __pyx_obj_5pysam_18libcalignedsegment_AlignedSegment *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_5pysam_18libcalignedsegment_14AlignedSegment_get_tag *__pyx_optional_args);
   PyObject *(*has_tag)(struct __pyx_obj_5pysam_18libcalignedsegment_AlignedSegment *, PyObject *, int __pyx_skip_dispatch);
@@ -3977,6 +4008,7 @@ typedef struct {
   PyTypeObject *__pyx_ptype_5pysam_9libcfaidx_FastxFile;
   PyTypeObject *__pyx_ptype_5pysam_9libcfaidx_FastqFile;
   PyTypeObject *__pyx_ptype_5pysam_9libcfaidx_Fastafile;
+  PyTypeObject *__pyx_ptype_5pysam_18libcalignedsegment__AlignedSegment_Cache;
   PyTypeObject *__pyx_ptype_5pysam_18libcalignedsegment_AlignedSegment;
   PyTypeObject *__pyx_ptype_5pysam_18libcalignedsegment_PileupColumn;
   PyTypeObject *__pyx_ptype_5pysam_18libcalignedsegment_PileupRead;
@@ -4116,6 +4148,7 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_ptype_5pysam_9libcfaidx_FastxFile);
   Py_CLEAR(clear_module_state->__pyx_ptype_5pysam_9libcfaidx_FastqFile);
   Py_CLEAR(clear_module_state->__pyx_ptype_5pysam_9libcfaidx_Fastafile);
+  Py_CLEAR(clear_module_state->__pyx_ptype_5pysam_18libcalignedsegment__AlignedSegment_Cache);
   Py_CLEAR(clear_module_state->__pyx_ptype_5pysam_18libcalignedsegment_AlignedSegment);
   Py_CLEAR(clear_module_state->__pyx_ptype_5pysam_18libcalignedsegment_PileupColumn);
   Py_CLEAR(clear_module_state->__pyx_ptype_5pysam_18libcalignedsegment_PileupRead);
@@ -4169,6 +4202,7 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_ptype_5pysam_9libcfaidx_FastxFile);
   Py_VISIT(traverse_module_state->__pyx_ptype_5pysam_9libcfaidx_FastqFile);
   Py_VISIT(traverse_module_state->__pyx_ptype_5pysam_9libcfaidx_Fastafile);
+  Py_VISIT(traverse_module_state->__pyx_ptype_5pysam_18libcalignedsegment__AlignedSegment_Cache);
   Py_VISIT(traverse_module_state->__pyx_ptype_5pysam_18libcalignedsegment_AlignedSegment);
   Py_VISIT(traverse_module_state->__pyx_ptype_5pysam_18libcalignedsegment_PileupColumn);
   Py_VISIT(traverse_module_state->__pyx_ptype_5pysam_18libcalignedsegment_PileupRead);
@@ -6168,8 +6202,18 @@ static int __Pyx_modinit_type_import_code(__pyx_mstatetype *__pyx_mstate) {
   __Pyx_ImportType_CheckSize_Warn_3_1_1); if (!__pyx_mstate->__pyx_ptype_5pysam_9libcfaidx_Fastafile) __PYX_ERR(8, 79, __pyx_L1_error)
   __pyx_vtabptr_5pysam_9libcfaidx_Fastafile = (struct __pyx_vtabstruct_5pysam_9libcfaidx_Fastafile*)__Pyx_GetVtable(__pyx_mstate->__pyx_ptype_5pysam_9libcfaidx_Fastafile); if (unlikely(!__pyx_vtabptr_5pysam_9libcfaidx_Fastafile)) __PYX_ERR(8, 79, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyImport_ImportModule("pysam.libcalignedsegment"); if (unlikely(!__pyx_t_1)) __PYX_ERR(9, 70, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("pysam.libcalignedsegment"); if (unlikely(!__pyx_t_1)) __PYX_ERR(9, 34, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
+  __pyx_mstate->__pyx_ptype_5pysam_18libcalignedsegment__AlignedSegment_Cache = __Pyx_ImportType_3_1_1(__pyx_t_1, "pysam.libcalignedsegment", "_AlignedSegment_Cache",
+  #if defined(PYPY_VERSION_NUM) && PYPY_VERSION_NUM < 0x050B0000
+  sizeof(struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache), __PYX_GET_STRUCT_ALIGNMENT_3_1_1(struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache),
+  #elif CYTHON_COMPILING_IN_LIMITED_API
+  sizeof(struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache), __PYX_GET_STRUCT_ALIGNMENT_3_1_1(struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache),
+  #else
+  sizeof(struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache), __PYX_GET_STRUCT_ALIGNMENT_3_1_1(struct __pyx_obj_5pysam_18libcalignedsegment__AlignedSegment_Cache),
+  #endif
+  __Pyx_ImportType_CheckSize_Warn_3_1_1); if (!__pyx_mstate->__pyx_ptype_5pysam_18libcalignedsegment__AlignedSegment_Cache) __PYX_ERR(9, 34, __pyx_L1_error)
+  __pyx_vtabptr_5pysam_18libcalignedsegment__AlignedSegment_Cache = (struct __pyx_vtabstruct_5pysam_18libcalignedsegment__AlignedSegment_Cache*)__Pyx_GetVtable(__pyx_mstate->__pyx_ptype_5pysam_18libcalignedsegment__AlignedSegment_Cache); if (unlikely(!__pyx_vtabptr_5pysam_18libcalignedsegment__AlignedSegment_Cache)) __PYX_ERR(9, 34, __pyx_L1_error)
   __pyx_mstate->__pyx_ptype_5pysam_18libcalignedsegment_PileupColumn = __Pyx_ImportType_3_1_1(__pyx_t_1, "pysam.libcalignedsegment", "PileupColumn",
   #if defined(PYPY_VERSION_NUM) && PYPY_VERSION_NUM < 0x050B0000
   sizeof(struct __pyx_obj_5pysam_18libcalignedsegment_PileupColumn), __PYX_GET_STRUCT_ALIGNMENT_3_1_1(struct __pyx_obj_5pysam_18libcalignedsegment_PileupColumn),
@@ -6178,7 +6222,7 @@ static int __Pyx_modinit_type_import_code(__pyx_mstatetype *__pyx_mstate) {
   #else
   sizeof(struct __pyx_obj_5pysam_18libcalignedsegment_PileupColumn), __PYX_GET_STRUCT_ALIGNMENT_3_1_1(struct __pyx_obj_5pysam_18libcalignedsegment_PileupColumn),
   #endif
-  __Pyx_ImportType_CheckSize_Warn_3_1_1); if (!__pyx_mstate->__pyx_ptype_5pysam_18libcalignedsegment_PileupColumn) __PYX_ERR(9, 70, __pyx_L1_error)
+  __Pyx_ImportType_CheckSize_Warn_3_1_1); if (!__pyx_mstate->__pyx_ptype_5pysam_18libcalignedsegment_PileupColumn) __PYX_ERR(9, 79, __pyx_L1_error)
   __pyx_mstate->__pyx_ptype_5pysam_18libcalignedsegment_PileupRead = __Pyx_ImportType_3_1_1(__pyx_t_1, "pysam.libcalignedsegment", "PileupRead",
   #if defined(PYPY_VERSION_NUM) && PYPY_VERSION_NUM < 0x050B0000
   sizeof(struct __pyx_obj_5pysam_18libcalignedsegment_PileupRead), __PYX_GET_STRUCT_ALIGNMENT_3_1_1(struct __pyx_obj_5pysam_18libcalignedsegment_PileupRead),
@@ -6187,7 +6231,7 @@ static int __Pyx_modinit_type_import_code(__pyx_mstatetype *__pyx_mstate) {
   #else
   sizeof(struct __pyx_obj_5pysam_18libcalignedsegment_PileupRead), __PYX_GET_STRUCT_ALIGNMENT_3_1_1(struct __pyx_obj_5pysam_18libcalignedsegment_PileupRead),
   #endif
-  __Pyx_ImportType_CheckSize_Warn_3_1_1); if (!__pyx_mstate->__pyx_ptype_5pysam_18libcalignedsegment_PileupRead) __PYX_ERR(9, 80, __pyx_L1_error)
+  __Pyx_ImportType_CheckSize_Warn_3_1_1); if (!__pyx_mstate->__pyx_ptype_5pysam_18libcalignedsegment_PileupRead) __PYX_ERR(9, 89, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_1 = PyImport_ImportModule("pysam.libcalignmentfile"); if (unlikely(!__pyx_t_1)) __PYX_ERR(10, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);

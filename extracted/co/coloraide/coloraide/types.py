@@ -19,34 +19,34 @@ ColorInput = Union['Color', str, Mapping[str, Any]]
 # Vectors, Matrices, and Arrays are assumed to be mutable lists
 Vector = List[float]
 Matrix = List[Vector]
-Tensor = List[List[List[Union[float, Any]]]]
+Tensor = List[Union[Matrix, 'Tensor']]
 Array = Union[Matrix, Vector, Tensor]
 
 # Anything that resembles a sequence will be considered "like" one of our types above
 VectorLike = Sequence[float]
 MatrixLike = Sequence[VectorLike]
-TensorLike = Sequence[Sequence[Sequence[Union[float, Any]]]]
+TensorLike = Sequence[Union[MatrixLike, 'TensorLike']]
 ArrayLike = Union[VectorLike, MatrixLike, TensorLike]
 
 # Vectors, Matrices, and Arrays of various, specific types
 VectorBool = List[bool]
 MatrixBool = List[VectorBool]
-TensorBool = List[List[List[Union[bool, Any]]]]
+TensorBool = List[Union[MatrixBool, 'TensorBool']]
 ArrayBool = Union[MatrixBool, VectorBool, TensorBool]
 
 VectorInt = List[int]
 MatrixInt = List[VectorInt]
-TensorInt = List[List[List[Union[int, Any]]]]
+TensorInt = List[Union[MatrixInt, 'TensorInt']]
 ArrayInt = Union[MatrixInt, VectorInt, TensorInt]
 
 # General algebra types
-FloatShape = Tuple[()]
+EmptyShape = Tuple[()]
 VectorShape = Tuple[int]
 MatrixShape = Tuple[int, int]
 TensorShape = Tuple[int, int, int, Unpack[Tuple[int, ...]]]
 
 ArrayShape = Tuple[int, ...]
-Shape = Union[FloatShape, ArrayShape]
+Shape = Union[EmptyShape, ArrayShape]
 ShapeLike = Sequence[int]
 DimHints = Tuple[int, int]
 

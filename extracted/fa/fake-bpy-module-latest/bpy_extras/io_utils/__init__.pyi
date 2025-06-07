@@ -6,13 +6,13 @@ import bpy.types
 import mathutils
 
 class ExportHelper:
-    def check(self, _context):
+    def check(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -20,27 +20,27 @@ class ExportHelper:
         """
 
 class ImportHelper:
-    def check(self, _context):
+    def check(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
         :param _event:
         """
 
-    def invoke_popup(self, context, confirm_text=""):
+    def invoke_popup(self, context, confirm_text="") -> None:
         """
 
         :param context:
         :param confirm_text:
         """
 
-def axis_conversion(from_forward="Y", from_up="Z", to_forward="Y", to_up="Z"):
+def axis_conversion(from_forward="Y", from_up="Z", to_forward="Y", to_up="Z") -> None:
     """Each argument us an axis in ['X', 'Y', 'Z', '-X', '-Y', '-Z']
     where the first 2 are a source and the second 2 are the target.
 
@@ -76,7 +76,7 @@ def create_derived_objects(
         :rtype: dict[bpy.types.Object, list[tuple[bpy.types.Object, mathutils.Matrix]]]
     """
 
-def orientation_helper(axis_forward="Y", axis_up="Z"):
+def orientation_helper(axis_forward="Y", axis_up="Z") -> None:
     """A decorator for import/export classes, generating properties needed by the axis conversion system and IO helpers,
     with specified default values (axes).
 
@@ -116,7 +116,9 @@ def path_reference(
         :rtype: str
     """
 
-def path_reference_copy(copy_set, report: collections.abc.Callable[str, None] = print):
+def path_reference_copy(
+    copy_set, report: collections.abc.Callable[str, None] = print
+) -> None:
     """Execute copying files of path_reference
 
     :param copy_set: set of (from, to) pairs to copy.
@@ -124,7 +126,7 @@ def path_reference_copy(copy_set, report: collections.abc.Callable[str, None] = 
     :type report: collections.abc.Callable[str, None]
     """
 
-def poll_file_object_drop(context):
+def poll_file_object_drop(context) -> None:
     """A default implementation for FileHandler poll_drop methods. Allows for both the 3D Viewport and
     the Outliner (in ViewLayer display mode) to be targets for file drag and drop.
 
@@ -137,7 +139,7 @@ def unique_name(
     name_max=-1,
     clean_func: typing.Any | None = None,
     sep: str = ".",
-):
+) -> None:
     """Helper function for storing unique names which may have special characters
     stripped and restricted to a maximum length.
 
@@ -159,5 +161,5 @@ def unique_name(
         :type sep: str
     """
 
-def unpack_face_list(list_of_tuples): ...
-def unpack_list(list_of_tuples): ...
+def unpack_face_list(list_of_tuples) -> None: ...
+def unpack_list(list_of_tuples) -> None: ...

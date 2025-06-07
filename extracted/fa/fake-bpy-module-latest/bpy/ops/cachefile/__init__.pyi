@@ -35,7 +35,7 @@ def layer_add(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Add an override layer to the archive
 
         :type execution_context: int | str | None
@@ -108,7 +108,7 @@ def layer_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move layer in the list, layers further down the list will overwrite data from the layers higher up
 
     :type execution_context: int | str | None
@@ -117,7 +117,9 @@ def layer_move(
     :type direction: typing.Literal['UP','DOWN'] | None
     """
 
-def layer_remove(execution_context: int | str | None = None, undo: bool | None = None):
+def layer_remove(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove an override layer from the archive
 
     :type execution_context: int | str | None
@@ -156,7 +158,7 @@ def open(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Load a cache file
 
         :type execution_context: int | str | None
@@ -223,7 +225,9 @@ def open(
         :type sort_method: str | None
     """
 
-def reload(execution_context: int | str | None = None, undo: bool | None = None):
+def reload(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Update objects paths list with new data from the archive
 
     :type execution_context: int | str | None

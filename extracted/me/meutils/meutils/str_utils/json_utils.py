@@ -77,3 +77,46 @@ if __name__ == '__main__':
 
 
     print(json_path(A(), '$.a'))
+
+    json2class(
+        {
+            "id": 3323,
+            "type": 1,
+            "key": "20c790a8-8f5b-4382-942f-05d6f93ce04d:c3ceee990d5aae3f99084e7da6fa7c98",
+            "access_token": "",
+            "openai_organization": "",
+            "test_model": "",
+            "status": 1,
+            "name": "fal-flux",
+            "weight": 0,
+            "created_time": 1749175121,
+            "test_time": 0,
+            "response_time": 0,
+            "base_url": "https://openai.chatfire.cn/images",
+            "other": "",
+            "balance": 0,
+            "balance_updated_time": 0,
+            "models": "imagen4,recraft-v3,recraftv3,flux-pro-1.1-ultra,flux-kontext-pro,flux-kontext-max",
+            "group": "default",
+            "used_quota": 9927600,
+            "upstream_user_quota": 0,
+            "model_mapping": "{\n \"flux-pro-1.1-ultra\": \"fal-ai/flux-pro/v1.1-ultra\",\n \"ideogram-ai/ideogram-v2-turbo\": \"fal-ai/ideogram/v2/turbo\",\n \"ideogram-ai/ideogram-v2\": \"fal-ai/ideogram/v2\",\n \"recraftv3\": \"fal-ai/recraft-v3\",\n \"recraft-v3\": \"fal-ai/recraft-v3\",\n \"imagen4\": \"fal-ai/imagen4/preview\",\n \"flux-kontext-pro\": \"fal-ai/flux-pro/kontext\",\n \"flux-kontext-max\": \"fal-ai/flux-pro/kontext/max\",\n \"imagen4,recraft-v3,recraftv3,flux-pro-1.1-ultra,flux-kontext-pro,flux-kontext-max\": \"\"\n}",
+            "headers": "",
+            "status_code_mapping": "",
+            "priority": 1,
+            "auto_ban": 1,
+            "empty_response_retry": 0,
+            "not_use_key": 0,
+            "remark": "",
+            "mj_relax_limit": 99,
+            "mj_fast_limit": 99,
+            "mj_turbo_limit": 99,
+            "other_info": "{\"status_reason\":\"model: flux-kontext-max, status code: 500, reason: Failed to generate image: User is locked. Reason: Exhausted balance. Top up your balance at fal.ai/dashboard/billing.\",\"status_time\":1749175757}",
+            "channel_ratio": 1,
+            "error_return_429": 0,
+            "tag": "fal",
+            "setting": "",
+            "param_override": "",
+            "is_tools": True
+        }
+    )

@@ -11,7 +11,7 @@ def preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove a Text Editor Preset
 
     :type execution_context: int | str | None

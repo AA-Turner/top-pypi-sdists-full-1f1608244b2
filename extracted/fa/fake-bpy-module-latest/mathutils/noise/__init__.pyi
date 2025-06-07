@@ -212,7 +212,7 @@ def ridged_multi_fractal(
     :rtype: float
     """
 
-def seed_set(seed: int):
+def seed_set(seed: int) -> None:
     """Sets the random seed used for random_unit_vector, and random.
 
         :param seed: Seed used for the random generator.

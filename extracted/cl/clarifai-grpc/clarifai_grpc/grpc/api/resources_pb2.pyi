@@ -1000,7 +1000,9 @@ class App(google.protobuf.message.Message):
     name: builtins.str
     default_language: builtins.str
     default_workflow_id: builtins.str
-    """Default workflow id deprecated in favor of default_workflow"""
+    """Deprecated, use default_workflow instead.
+    @exclude TODO (EAGLE-4506): Remove this field and associated code
+    """
     @property
     def default_workflow(self) -> global___Workflow: ...
     user_id: builtins.str
@@ -2162,7 +2164,9 @@ class ConceptQuery(google.protobuf.message.Message):
     language: builtins.str
     """The language of the concept name in a search. Defaults to English."""
     workflow_id: builtins.str
-    """Deprecated: Use workflow.id instead."""
+    """Deprecated: Use workflow.id instead.
+    @exclude TODO (EAGLE-4506): Remove this field and associated code
+    """
     @property
     def use_cases(
         self,
@@ -10875,18 +10879,28 @@ class TaskAIAssistant(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     WORKFLOW_ID_FIELD_NUMBER: builtins.int
+    WORKFLOW_FIELD_NUMBER: builtins.int
     workflow_id: builtins.str
     """The worker is helped by an AI assistant.
     This field is the workflow id which is used to assist the worker with predictions.
     If empty, then AI assistant is disabled.
     """
+    @property
+    def workflow(self) -> global___Workflow: ...
     def __init__(
         self,
         *,
         workflow_id: builtins.str = ...,
+        workflow: global___Workflow | None = ...,
     ) -> None: ...
+    def HasField(
+        self, field_name: typing_extensions.Literal["workflow", b"workflow"]
+    ) -> builtins.bool: ...
     def ClearField(
-        self, field_name: typing_extensions.Literal["workflow_id", b"workflow_id"]
+        self,
+        field_name: typing_extensions.Literal[
+            "workflow", b"workflow", "workflow_id", b"workflow_id"
+        ],
     ) -> None: ...
 
 global___TaskAIAssistant = TaskAIAssistant
@@ -16065,6 +16079,423 @@ class OrchestrationSpec(google.protobuf.message.Message):
     ) -> typing_extensions.Literal["argo_orchestration_spec"] | None: ...
 
 global___OrchestrationSpec = OrchestrationSpec
+
+@typing_extensions.final
+class PipelineStepInputParam(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: builtins.int
+    DEFAULT_VALUE_FIELD_NUMBER: builtins.int
+    DESCRIPTION_FIELD_NUMBER: builtins.int
+    ACCEPTED_VALUES_FIELD_NUMBER: builtins.int
+    name: builtins.str
+    """The name of the input parameter."""
+    default_value: builtins.str
+    """The default value of the input parameter."""
+    description: builtins.str
+    """The description of the input parameter."""
+    @property
+    def accepted_values(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """The accepted values for the input parameter."""
+    def __init__(
+        self,
+        *,
+        name: builtins.str = ...,
+        default_value: builtins.str = ...,
+        description: builtins.str = ...,
+        accepted_values: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "accepted_values",
+            b"accepted_values",
+            "default_value",
+            b"default_value",
+            "description",
+            b"description",
+            "name",
+            b"name",
+        ],
+    ) -> None: ...
+
+global___PipelineStepInputParam = PipelineStepInputParam
+
+@typing_extensions.final
+class PipelineStep(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    ID_FIELD_NUMBER: builtins.int
+    USER_ID_FIELD_NUMBER: builtins.int
+    DESCRIPTION_FIELD_NUMBER: builtins.int
+    PIPELINE_STEP_VERSION_FIELD_NUMBER: builtins.int
+    VISIBILITY_FIELD_NUMBER: builtins.int
+    CREATED_AT_FIELD_NUMBER: builtins.int
+    MODIFIED_AT_FIELD_NUMBER: builtins.int
+    id: builtins.str
+    """The ID of the pipeline step."""
+    user_id: builtins.str
+    """The user the pipeline step belongs to"""
+    description: builtins.str
+    """Description of the pipeline step"""
+    @property
+    def pipeline_step_version(self) -> global___PipelineStepVersion:
+        """Latest Pipeline Step Version"""
+    @property
+    def visibility(self) -> global___Visibility:
+        """The visibility field represents whether this is privately/publicly visible.
+        To be visible to the public the App that contains it AND the User that contains the App must
+        also be publicly visible.
+        """
+    @property
+    def created_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
+        """When the pipeline step was created"""
+    @property
+    def modified_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
+        """When the pipeline step was last modified"""
+    def __init__(
+        self,
+        *,
+        id: builtins.str = ...,
+        user_id: builtins.str = ...,
+        description: builtins.str = ...,
+        pipeline_step_version: global___PipelineStepVersion | None = ...,
+        visibility: global___Visibility | None = ...,
+        created_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
+        modified_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
+    ) -> None: ...
+    def HasField(
+        self,
+        field_name: typing_extensions.Literal[
+            "created_at",
+            b"created_at",
+            "modified_at",
+            b"modified_at",
+            "pipeline_step_version",
+            b"pipeline_step_version",
+            "visibility",
+            b"visibility",
+        ],
+    ) -> builtins.bool: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "created_at",
+            b"created_at",
+            "description",
+            b"description",
+            "id",
+            b"id",
+            "modified_at",
+            b"modified_at",
+            "pipeline_step_version",
+            b"pipeline_step_version",
+            "user_id",
+            b"user_id",
+            "visibility",
+            b"visibility",
+        ],
+    ) -> None: ...
+
+global___PipelineStep = PipelineStep
+
+@typing_extensions.final
+class OrchestrationStepSpec(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    ARGO_ORCHESTRATION_STEP_SPEC_FIELD_NUMBER: builtins.int
+    @property
+    def argo_orchestration_step_spec(self) -> global___ArgoOrchestrationStepSpec:
+        """Argo orchestration step template"""
+    def __init__(
+        self,
+        *,
+        argo_orchestration_step_spec: global___ArgoOrchestrationStepSpec | None = ...,
+    ) -> None: ...
+    def HasField(
+        self,
+        field_name: typing_extensions.Literal[
+            "argo_orchestration_step_spec",
+            b"argo_orchestration_step_spec",
+            "orchestration",
+            b"orchestration",
+        ],
+    ) -> builtins.bool: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "argo_orchestration_step_spec",
+            b"argo_orchestration_step_spec",
+            "orchestration",
+            b"orchestration",
+        ],
+    ) -> None: ...
+    def WhichOneof(
+        self, oneof_group: typing_extensions.Literal["orchestration", b"orchestration"]
+    ) -> typing_extensions.Literal["argo_orchestration_step_spec"] | None: ...
+
+global___OrchestrationStepSpec = OrchestrationStepSpec
+
+@typing_extensions.final
+class ArgoOrchestrationStepSpec(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    API_VERSION_FIELD_NUMBER: builtins.int
+    SPEC_JSON_FIELD_NUMBER: builtins.int
+    api_version: builtins.str
+    """The API version of the orchestration W.
+    Example: "argoproj.io/v1alpha1", "argoproj.io/v1beta1"
+    """
+    spec_json: builtins.str
+    """The JSON representation of the Argo Workflow Template"""
+    def __init__(
+        self,
+        *,
+        api_version: builtins.str = ...,
+        spec_json: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "api_version", b"api_version", "spec_json", b"spec_json"
+        ],
+    ) -> None: ...
+
+global___ArgoOrchestrationStepSpec = ArgoOrchestrationStepSpec
+
+@typing_extensions.final
+class PipelineStepVersion(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    ID_FIELD_NUMBER: builtins.int
+    USER_ID_FIELD_NUMBER: builtins.int
+    APP_ID_FIELD_NUMBER: builtins.int
+    DESCRIPTION_FIELD_NUMBER: builtins.int
+    PIPELINE_STEP_FIELD_NUMBER: builtins.int
+    ORCHESTRATION_STEP_SPEC_FIELD_NUMBER: builtins.int
+    PIPELINE_STEP_INPUT_PARAMS_FIELD_NUMBER: builtins.int
+    STATUS_FIELD_NUMBER: builtins.int
+    PIPELINE_STEP_COMPUTE_INFO_FIELD_NUMBER: builtins.int
+    BUILD_INFO_FIELD_NUMBER: builtins.int
+    VISIBILITY_FIELD_NUMBER: builtins.int
+    CREATED_AT_FIELD_NUMBER: builtins.int
+    MODIFIED_AT_FIELD_NUMBER: builtins.int
+    id: builtins.str
+    """The ID of the pipeline step version."""
+    user_id: builtins.str
+    """The user the pipeline step version belongs to"""
+    app_id: builtins.str
+    """The app the pipeline step version belongs to"""
+    description: builtins.str
+    """Description of the pipeline step version"""
+    @property
+    def pipeline_step(self) -> global___PipelineStep:
+        """Pipeline Step"""
+    @property
+    def orchestration_step_spec(self) -> global___OrchestrationStepSpec:
+        """Orchestration Step Specification using oneof"""
+    @property
+    def pipeline_step_input_params(
+        self,
+    ) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[
+        global___PipelineStepInputParam
+    ]:
+        """The pipeline step version input parameters"""
+    @property
+    def status(self) -> proto.clarifai.api.status.status_pb2.Status:
+        """Pipeline step Status - Created, Building Artifacts, Completed, Failed"""
+    @property
+    def pipeline_step_compute_info(self) -> global___ComputeInfo:
+        """The minimum required compute resource to run the pipeline step as part of a Pipeline"""
+    @property
+    def build_info(self) -> global___BuildInfo:
+        """Build information for the pipeline step"""
+    @property
+    def visibility(self) -> global___Visibility:
+        """The visibility field represents whether this is privately/publicly visible.
+        To be visible to the public the App that contains it AND the User that contains the App must
+        also be publicly visible.
+        """
+    @property
+    def created_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
+        """When the pipeline step was created"""
+    @property
+    def modified_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
+        """When the pipeline step was last modified"""
+    def __init__(
+        self,
+        *,
+        id: builtins.str = ...,
+        user_id: builtins.str = ...,
+        app_id: builtins.str = ...,
+        description: builtins.str = ...,
+        pipeline_step: global___PipelineStep | None = ...,
+        orchestration_step_spec: global___OrchestrationStepSpec | None = ...,
+        pipeline_step_input_params: collections.abc.Iterable[global___PipelineStepInputParam]
+        | None = ...,
+        status: proto.clarifai.api.status.status_pb2.Status | None = ...,
+        pipeline_step_compute_info: global___ComputeInfo | None = ...,
+        build_info: global___BuildInfo | None = ...,
+        visibility: global___Visibility | None = ...,
+        created_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
+        modified_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
+    ) -> None: ...
+    def HasField(
+        self,
+        field_name: typing_extensions.Literal[
+            "build_info",
+            b"build_info",
+            "created_at",
+            b"created_at",
+            "modified_at",
+            b"modified_at",
+            "orchestration_step_spec",
+            b"orchestration_step_spec",
+            "pipeline_step",
+            b"pipeline_step",
+            "pipeline_step_compute_info",
+            b"pipeline_step_compute_info",
+            "status",
+            b"status",
+            "visibility",
+            b"visibility",
+        ],
+    ) -> builtins.bool: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "app_id",
+            b"app_id",
+            "build_info",
+            b"build_info",
+            "created_at",
+            b"created_at",
+            "description",
+            b"description",
+            "id",
+            b"id",
+            "modified_at",
+            b"modified_at",
+            "orchestration_step_spec",
+            b"orchestration_step_spec",
+            "pipeline_step",
+            b"pipeline_step",
+            "pipeline_step_compute_info",
+            b"pipeline_step_compute_info",
+            "pipeline_step_input_params",
+            b"pipeline_step_input_params",
+            "status",
+            b"status",
+            "user_id",
+            b"user_id",
+            "visibility",
+            b"visibility",
+        ],
+    ) -> None: ...
+
+global___PipelineStepVersion = PipelineStepVersion
+
+@typing_extensions.final
+class Pipeline(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    ID_FIELD_NUMBER: builtins.int
+    USER_ID_FIELD_NUMBER: builtins.int
+    APP_ID_FIELD_NUMBER: builtins.int
+    PIPELINE_VERSION_FIELD_NUMBER: builtins.int
+    DESCRIPTION_FIELD_NUMBER: builtins.int
+    VISIBILITY_FIELD_NUMBER: builtins.int
+    NOTES_FIELD_NUMBER: builtins.int
+    METADATA_FIELD_NUMBER: builtins.int
+    CREATED_AT_FIELD_NUMBER: builtins.int
+    MODIFIED_AT_FIELD_NUMBER: builtins.int
+    id: builtins.str
+    user_id: builtins.str
+    """The user the pipeline belongs to"""
+    app_id: builtins.str
+    """The app the pipeline belongs to"""
+    @property
+    def pipeline_version(self) -> global___PipelineVersion:
+        """Latest Pipeline Version"""
+    description: builtins.str
+    """Short description about this pipeline"""
+    @property
+    def visibility(self) -> global___Visibility:
+        """The visibility field represents whether this message is privately/publicly visible.
+        To be visible to the public the App that contains it AND the User that contains the App must
+        also be publicly visible.
+        """
+    notes: builtins.str
+    """Notes for the Pipeline. This field should be used for in-depth notes and supports up to 64Kbs."""
+    @property
+    def metadata(self) -> google.protobuf.struct_pb2.Struct:
+        """To handle arbitrary json metadata, use a struct field
+        https://github.com/google/protobuf/blob/master/src/google/protobuf/struct.proto
+        """
+    @property
+    def created_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
+        """When the pipeline was created"""
+    @property
+    def modified_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
+        """When the pipeline was last modified"""
+    def __init__(
+        self,
+        *,
+        id: builtins.str = ...,
+        user_id: builtins.str = ...,
+        app_id: builtins.str = ...,
+        pipeline_version: global___PipelineVersion | None = ...,
+        description: builtins.str = ...,
+        visibility: global___Visibility | None = ...,
+        notes: builtins.str = ...,
+        metadata: google.protobuf.struct_pb2.Struct | None = ...,
+        created_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
+        modified_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
+    ) -> None: ...
+    def HasField(
+        self,
+        field_name: typing_extensions.Literal[
+            "created_at",
+            b"created_at",
+            "metadata",
+            b"metadata",
+            "modified_at",
+            b"modified_at",
+            "pipeline_version",
+            b"pipeline_version",
+            "visibility",
+            b"visibility",
+        ],
+    ) -> builtins.bool: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions.Literal[
+            "app_id",
+            b"app_id",
+            "created_at",
+            b"created_at",
+            "description",
+            b"description",
+            "id",
+            b"id",
+            "metadata",
+            b"metadata",
+            "modified_at",
+            b"modified_at",
+            "notes",
+            b"notes",
+            "pipeline_version",
+            b"pipeline_version",
+            "user_id",
+            b"user_id",
+            "visibility",
+            b"visibility",
+        ],
+    ) -> None: ...
+
+global___Pipeline = Pipeline
 
 @typing_extensions.final
 class PipelineVersion(google.protobuf.message.Message):

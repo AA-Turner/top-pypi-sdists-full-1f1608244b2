@@ -347,7 +347,7 @@ class DataConnection(BaseDataConnection):
             )
         )
 
-        conn = FlightConnection(
+        return FlightConnection(
             headers=self._api_client._get_headers(),
             sampling_type=None,
             label=None,
@@ -361,8 +361,6 @@ class DataConnection(BaseDataConnection):
             space_id=self._api_client.default_space_id,
             _api_client=self._api_client,
         )
-
-        return conn
 
     def _get_paths_from_location(self, include_folders: bool = False) -> list[str]:
         """Returns file and folder (optional) paths (keys) of objects that are stored at a NFS / Storage Volume or bucket location.
@@ -385,22 +383,22 @@ class DataConnection(BaseDataConnection):
         prefix = self.location.get_location().strip("/")
 
         try:
-            flight_conn = self._prepare_flight_connection_for_discovery()
+            with self._prepare_flight_connection_for_discovery() as flight_conn:
 
-            if isinstance(self.location, NFSLocation):
-                paths = [
-                    r["path"]
-                    for r in flight_conn.discovery(f"{prefix}")["assets"]
-                    if r["type"] in include_types
-                ]
-            else:
-                paths = [
-                    r["path"].replace(f"/{self.location.bucket}/", "", 1)
-                    for r in flight_conn.discovery(f"/{self.location.bucket}/{prefix}")[
-                        "assets"
+                if isinstance(self.location, NFSLocation):
+                    paths = [
+                        r["path"]
+                        for r in flight_conn.discovery(f"{prefix}")["assets"]
+                        if r["type"] in include_types
                     ]
-                    if r["type"] in include_types
-                ]
+                else:
+                    paths = [
+                        r["path"].replace(f"/{self.location.bucket}/", "", 1)
+                        for r in flight_conn.discovery(
+                            f"/{self.location.bucket}/{prefix}"
+                        )["assets"]
+                        if r["type"] in include_types
+                    ]
 
         except Exception as e:
             if include_folders or isinstance(self.location, NFSLocation):

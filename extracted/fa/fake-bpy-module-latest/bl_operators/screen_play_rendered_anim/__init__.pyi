@@ -27,10 +27,10 @@ class PlayRenderedAnim(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-def guess_player_path(preset): ...
+def guess_player_path(preset) -> None: ...

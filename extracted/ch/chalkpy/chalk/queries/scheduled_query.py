@@ -118,7 +118,13 @@ class ScheduledQuery:
         if upper_bound is not None:
             upper_bound = upper_bound.astimezone(tz=timezone.utc)
 
-        caller_filename = inspect.stack()[1].filename
+        caller_filename = None
+        frame = inspect.currentframe()
+        assert frame is not None, "Failed to get current frame"
+        caller_frame = frame.f_back
+        assert caller_frame is not None, "Failed to get caller frame"
+        caller_filename = caller_frame.f_code.co_filename
+        del frame
 
         if not store_offline and not store_online:
             self.errors.append(

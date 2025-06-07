@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: earthkit-data
-Version: 0.14.3
+Version: 0.14.4
 Summary: A format-agnostic Python interface for geospatial data
 Author-email: "European Centre for Medium-Range Weather Forecasts (ECMWF)" <software.support@ecmwf.int>
 License: Apache License Version 2.0
@@ -43,7 +43,7 @@ Requires-Dist: pyyaml
 Requires-Dist: tqdm>=4.63
 Requires-Dist: xarray>=0.19
 Provides-Extra: all
-Requires-Dist: earthkit-data[cds,covjsonkit,ecmwf-opendata,fdb,geo,geopandas,geotiff,mars,odb,polytope,projection,s3,wekeo]; extra == "all"
+Requires-Dist: earthkit-data[cds,covjsonkit,ecmwf-opendata,fdb,geo,geopandas,mars,odb,polytope,projection,s3,wekeo]; extra == "all"
 Provides-Extra: cds
 Requires-Dist: cdsapi>=0.7.2; extra == "cds"
 Provides-Extra: ci

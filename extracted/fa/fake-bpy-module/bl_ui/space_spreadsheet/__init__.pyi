@@ -23,13 +23,13 @@ class SPREADSHEET_HT_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def selection_filter_available(self, space):
+    def selection_filter_available(self, space) -> None:
         """
 
         :param space:
@@ -55,7 +55,7 @@ class SPREADSHEET_MT_editor_menus(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -80,7 +80,7 @@ class SPREADSHEET_MT_view(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:

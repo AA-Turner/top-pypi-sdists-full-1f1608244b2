@@ -7,14 +7,14 @@ class PlayheadSnappingPanel:
     bl_label: typing.Any
     bl_region_type: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -25,14 +25,14 @@ class PresetPanel:
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def draw_menu(cls, layout, text=None):
+    def draw_menu(cls, layout, text=None) -> None:
         """
 
         :param layout:
@@ -40,7 +40,7 @@ class PresetPanel:
         """
 
     @classmethod
-    def draw_panel_header(cls, layout):
+    def draw_panel_header(cls, layout) -> None:
         """
 
         :param layout:

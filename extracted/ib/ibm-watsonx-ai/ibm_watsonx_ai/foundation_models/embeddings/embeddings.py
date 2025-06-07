@@ -380,9 +380,7 @@ class Embeddings(BaseEmbeddings, WMLResource):
         :rtype: dict
         """
         self._validate_type(inputs, "inputs", list, True)
-        generate_url = (
-            self._client.service_instance._href_definitions.get_fm_embeddings_href()
-        )
+        generate_url = self._client._href_definitions.get_fm_embeddings_href()
 
         results = await self._agenerate(generate_url, inputs, params)
 

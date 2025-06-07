@@ -11,19 +11,19 @@ class GenericUIListOperator:
 
     bl_options: typing.Any
 
-    def get_active_index(self, context):
+    def get_active_index(self, context) -> None:
         """
 
         :param context:
         """
 
-    def get_list(self, context):
+    def get_list(self, context) -> None:
         """
 
         :param context:
         """
 
-    def set_active_index(self, context, index):
+    def set_active_index(self, context, index) -> None:
         """
 
         :param context:
@@ -53,7 +53,7 @@ class UILIST_OT_entry_add(GenericUIListOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -82,7 +82,7 @@ class UILIST_OT_entry_move(GenericUIListOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -111,7 +111,7 @@ class UILIST_OT_entry_remove(GenericUIListOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:

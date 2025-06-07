@@ -30,13 +30,13 @@ def get_projection_matrix() -> mathutils.Matrix:
     :rtype: mathutils.Matrix
     """
 
-def load_identity():
+def load_identity() -> None:
     """Load an identity matrix into the stack."""
 
 def load_matrix(
     matrix: collections.abc.Sequence[collections.abc.Sequence[float]]
     | mathutils.Matrix,
-):
+) -> None:
     """Load a matrix into the stack.
 
     :param matrix: A 4x4 matrix.
@@ -46,7 +46,7 @@ def load_matrix(
 def load_projection_matrix(
     matrix: collections.abc.Sequence[collections.abc.Sequence[float]]
     | mathutils.Matrix,
-):
+) -> None:
     """Load a projection matrix into the stack.
 
     :param matrix: A 4x4 matrix.
@@ -56,49 +56,49 @@ def load_projection_matrix(
 def multiply_matrix(
     matrix: collections.abc.Sequence[collections.abc.Sequence[float]]
     | mathutils.Matrix,
-):
+) -> None:
     """Multiply the current stack matrix.
 
     :param matrix: A 4x4 matrix.
     :type matrix: collections.abc.Sequence[collections.abc.Sequence[float]] | mathutils.Matrix
     """
 
-def pop():
+def pop() -> None:
     """Remove the last model-view matrix from the stack."""
 
-def pop_projection():
+def pop_projection() -> None:
     """Remove the last projection matrix from the stack."""
 
-def push():
+def push() -> None:
     """Add to the model-view matrix stack."""
 
-def push_pop():
+def push_pop() -> None:
     """Context manager to ensure balanced push/pop calls, even in the case of an error."""
 
-def push_pop_projection():
+def push_pop_projection() -> None:
     """Context manager to ensure balanced push/pop calls, even in the case of an error."""
 
-def push_projection():
+def push_projection() -> None:
     """Add to the projection matrix stack."""
 
-def reset():
+def reset() -> None:
     """Empty stack and set to identity."""
 
-def scale(scale: collections.abc.Sequence[float]):
+def scale(scale: collections.abc.Sequence[float]) -> None:
     """Scale the current stack matrix.
 
     :param scale: Scale the current stack matrix with 2 or 3 floats.
     :type scale: collections.abc.Sequence[float]
     """
 
-def scale_uniform(scale: float):
+def scale_uniform(scale: float) -> None:
     """
 
     :param scale: Scale the current stack matrix.
     :type scale: float
     """
 
-def translate(offset: collections.abc.Sequence[float]):
+def translate(offset: collections.abc.Sequence[float]) -> None:
     """Scale the current stack matrix.
 
     :param offset: Translate the current stack matrix with 2 or 3 floats.

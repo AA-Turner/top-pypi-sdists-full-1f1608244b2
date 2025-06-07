@@ -72,6 +72,7 @@ CidrCollectionChangeActionType = Literal["DELETE_IF_EXISTS", "PUT"]
 CloudWatchRegionType = Literal[
     "af-south-1",
     "ap-east-1",
+    "ap-east-2",
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-northeast-3",
@@ -175,6 +176,7 @@ ResourceRecordSetFailoverType = Literal["PRIMARY", "SECONDARY"]
 ResourceRecordSetRegionType = Literal[
     "af-south-1",
     "ap-east-1",
+    "ap-east-2",
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-northeast-3",
@@ -217,6 +219,7 @@ TagResourceTypeType = Literal["healthcheck", "hostedzone"]
 VPCRegionType = Literal[
     "af-south-1",
     "ap-east-1",
+    "ap-east-2",
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-northeast-3",

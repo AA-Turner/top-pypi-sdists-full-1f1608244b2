@@ -262,6 +262,7 @@ class BaseSQLSource(BaseSQLSourceProtocol):
                 frame = inspect.currentframe()
                 assert frame is not None
                 caller_frame = frame.f_back
+                del frame
                 assert caller_frame is not None
                 while caller_frame.f_globals["__name__"].startswith("chalk.sql") and caller_frame.f_back is not None:
                     caller_frame = caller_frame.f_back

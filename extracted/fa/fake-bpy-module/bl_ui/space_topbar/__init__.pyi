@@ -23,19 +23,19 @@ class TOPBAR_HT_upper_bar(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_left(self, context):
+    def draw_left(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_right(self, context):
+    def draw_right(self, context) -> None:
         """
 
         :param context:
@@ -60,7 +60,7 @@ class TOPBAR_MT_blender(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -85,7 +85,7 @@ class TOPBAR_MT_blender_system(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -110,7 +110,7 @@ class TOPBAR_MT_edit(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -136,7 +136,7 @@ class TOPBAR_MT_editor_menus(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -161,7 +161,7 @@ class TOPBAR_MT_file(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -186,7 +186,7 @@ class TOPBAR_MT_file_cleanup(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -211,7 +211,7 @@ class TOPBAR_MT_file_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -236,7 +236,7 @@ class TOPBAR_MT_file_defaults(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -282,7 +282,7 @@ class TOPBAR_MT_file_external_data(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -315,7 +315,7 @@ class TOPBAR_MT_file_new(bpy.types.Menu):
     id_data: typing.Any
 
     @staticmethod
-    def app_template_paths(): ...
+    def app_template_paths() -> None: ...
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
 
@@ -330,14 +330,14 @@ class TOPBAR_MT_file_new(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_ex(layout, _context, *, use_splash=False, use_more=False):
+    def draw_ex(layout, _context, *, use_splash=False, use_more=False) -> None:
         """
 
         :param layout:
@@ -365,7 +365,7 @@ class TOPBAR_MT_file_previews(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -390,7 +390,7 @@ class TOPBAR_MT_file_recover(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -415,7 +415,7 @@ class TOPBAR_MT_help(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -440,7 +440,7 @@ class TOPBAR_MT_render(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -465,7 +465,7 @@ class TOPBAR_MT_templates_more(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -490,7 +490,7 @@ class TOPBAR_MT_window(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -515,7 +515,7 @@ class TOPBAR_MT_workspace_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -542,7 +542,7 @@ class TOPBAR_PT_gpencil_primitive(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -570,14 +570,14 @@ class TOPBAR_PT_grease_pencil_layers(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -605,7 +605,7 @@ class TOPBAR_PT_name(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -633,28 +633,28 @@ class TOPBAR_PT_name_marker(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def get_selected_marker(context):
+    def get_selected_marker(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def is_using_pose_markers(context):
+    def is_using_pose_markers(context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def row_with_icon(layout, icon):
+    def row_with_icon(layout, icon) -> None:
         """
 
         :param layout:
@@ -683,7 +683,7 @@ class TOPBAR_PT_tool_fallback(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -714,7 +714,7 @@ class TOPBAR_PT_tool_settings_extra(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:

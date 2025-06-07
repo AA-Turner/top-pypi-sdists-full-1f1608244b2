@@ -1207,10 +1207,10 @@ class BaseDataConnection(ABC):
             # because data limit is calculated on data downloaded as varchar, before the conversion to more optimal type.
             try:
                 iterable_dataset = TabularIterableDataset(
-                    **experiment_iterable_dataset_setup_parameters
+                    **experiment_iterable_dataset_setup_parameters,
+                    infer_as_varchar="true",
                 )
 
-                iterable_dataset.connection.infer_as_varchar = "true"
                 data_loader = ExperimentDataLoader(dataset=iterable_dataset)
 
                 if not return_data_as_iterator:

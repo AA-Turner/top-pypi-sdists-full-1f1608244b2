@@ -116,7 +116,7 @@ def BoolProperty(
     | None = None,
     get: collections.abc.Callable[[bpy.types.bpy_struct], bool] | None = None,
     set: collections.abc.Callable[[bpy.types.bpy_struct, bool], None] | None = None,
-):
+) -> None:
     """Returns a new boolean property definition.
 
         :param name: Name used in the user interface.
@@ -163,7 +163,7 @@ def BoolVectorProperty(
     | None = None,
     set: collections.abc.Callable[[bpy.types.bpy_struct, tuple[bool, ...]], None]
     | None = None,
-):
+) -> None:
     """Returns a new vector boolean property definition.
 
         :param name: Name used in the user interface.
@@ -206,7 +206,7 @@ def CollectionProperty(
         bpy.stub_internal.rna_enums.PropertyOverrideFlagCollectionItems
     ] = set(),
     tags=set(),
-):
+) -> None:
     """Returns a new collection property definition.
 
     :param type: A subclass of a property group.
@@ -252,7 +252,7 @@ def EnumProperty(
     | None = None,
     get: collections.abc.Callable[[bpy.types.bpy_struct], int] | None = None,
     set: collections.abc.Callable[[bpy.types.bpy_struct, int], None] | None = None,
-):
+) -> None:
     """Returns a new enumerator property definition.
 
         :param items: sequence of enum items formatted:
@@ -346,7 +346,7 @@ def FloatProperty(
     | None = None,
     get: collections.abc.Callable[[bpy.types.bpy_struct], float] | None = None,
     set: collections.abc.Callable[[bpy.types.bpy_struct, float], None] | None = None,
-):
+) -> None:
     """Returns a new float (single precision) property definition.
 
         :param name: Name used in the user interface.
@@ -414,7 +414,7 @@ def FloatVectorProperty(
     | None = None,
     set: collections.abc.Callable[[bpy.types.bpy_struct, tuple[float, ...]], None]
     | None = None,
-):
+) -> None:
     """Returns a new vector float property definition.
 
         :param name: Name used in the user interface.
@@ -479,7 +479,7 @@ def IntProperty(
     | None = None,
     get: collections.abc.Callable[[bpy.types.bpy_struct], int] | None = None,
     set: collections.abc.Callable[[bpy.types.bpy_struct, int], None] | None = None,
-):
+) -> None:
     """Returns a new int property definition.
 
         :param name: Name used in the user interface.
@@ -539,7 +539,7 @@ def IntVectorProperty(
     | None = None,
     set: collections.abc.Callable[[bpy.types.bpy_struct, tuple[int, ...]], None]
     | None = None,
-):
+) -> None:
     """Returns a new vector int property definition.
 
         :param name: Name used in the user interface.
@@ -594,7 +594,7 @@ def PointerProperty(
     | None = None,
     update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None]
     | None = None,
-):
+) -> None:
     """Returns a new pointer property definition.
 
         :param type: A subclass of a property group or ID types.
@@ -621,7 +621,7 @@ def PointerProperty(
         :type update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None] | None
     """
 
-def RemoveProperty(*, cls: typing.Any | None, attr: str | None):
+def RemoveProperty(*, cls: typing.Any | None, attr: str | None) -> None:
     """Removes a dynamically defined property.
 
     :param cls: The class containing the property (must be a positional argument).
@@ -645,10 +645,13 @@ def StringProperty(
     | None = None,
     get: collections.abc.Callable[[bpy.types.bpy_struct], str] | None = None,
     set: collections.abc.Callable[[bpy.types.bpy_struct, str], None] | None = None,
-    search: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context, str]]
+    search: collections.abc.Callable[
+        [bpy.types.bpy_struct, bpy.types.Context, str],
+        collections.abc.Iterable[str | tuple[str, str]],
+    ]
     | None = None,
     search_options={"SUGGESTION"},
-):
+) -> None:
     """Returns a new string property definition.
 
         :param name: Name used in the user interface.
@@ -686,7 +689,7 @@ def StringProperty(
 
     A tuple-pair of strings, where the first is a candidate and the second
     is additional information about the candidate.
-        :type search: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context, str]] | None
+        :type search: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context, str], collections.abc.Iterable[str | tuple[str, str]]] | None
         :param search_options: Set of strings in:
 
     'SORT' sorts the resulting items.

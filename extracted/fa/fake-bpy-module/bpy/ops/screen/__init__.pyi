@@ -10,7 +10,7 @@ def actionzone(
     /,
     *,
     modifier: int | None = 0,
-):
+) -> None:
     """Handle area action zones for mouse actions/gestures
 
     :type execution_context: int | str | None
@@ -25,7 +25,7 @@ def animation_cancel(
     /,
     *,
     restore_frame: bool | None = True,
-):
+) -> None:
     """Cancel animation, returning to the original frame
 
     :type execution_context: int | str | None
@@ -41,7 +41,7 @@ def animation_play(
     *,
     reverse: bool | None = False,
     sync: bool | None = False,
-):
+) -> None:
     """Play animation
 
     :type execution_context: int | str | None
@@ -54,21 +54,25 @@ def animation_play(
 
 def animation_step(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Step through animation by position
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def area_close(execution_context: int | str | None = None, undo: bool | None = None):
+def area_close(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Close selected area
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def area_dupli(execution_context: int | str | None = None, undo: bool | None = None):
+def area_dupli(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Duplicate selected area into new window
 
     :type execution_context: int | str | None
@@ -82,7 +86,7 @@ def area_join(
     *,
     source_xy: collections.abc.Iterable[int] | None = (0, 0),
     target_xy: collections.abc.Iterable[int] | None = (0, 0),
-):
+) -> None:
     """Join selected areas into new window
 
     :type execution_context: int | str | None
@@ -101,7 +105,7 @@ def area_move(
     x: int | None = 0,
     y: int | None = 0,
     delta: int | None = 0,
-):
+) -> None:
     """Move selected area edges
 
     :type execution_context: int | str | None
@@ -114,7 +118,9 @@ def area_move(
     :type delta: int | None
     """
 
-def area_options(execution_context: int | str | None = None, undo: bool | None = None):
+def area_options(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Operations for splitting and merging
 
     :type execution_context: int | str | None
@@ -129,7 +135,7 @@ def area_split(
     direction: typing.Literal["HORIZONTAL", "VERTICAL"] | None = "HORIZONTAL",
     factor: float | None = 0.5,
     cursor: collections.abc.Iterable[int] | None = (0, 0),
-):
+) -> None:
     """Split selected area into new windows
 
     :type execution_context: int | str | None
@@ -148,7 +154,7 @@ def area_swap(
     /,
     *,
     cursor: collections.abc.Iterable[int] | None = (0, 0),
-):
+) -> None:
     """Swap selected areas screen positions
 
     :type execution_context: int | str | None
@@ -159,14 +165,16 @@ def area_swap(
 
 def back_to_previous(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Revert back to the original screen layout, before fullscreen area overlay
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def delete(execution_context: int | str | None = None, undo: bool | None = None):
+def delete(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Delete active screen
 
     :type execution_context: int | str | None
@@ -175,7 +183,7 @@ def delete(execution_context: int | str | None = None, undo: bool | None = None)
 
 def drivers_editor_show(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Show drivers editor in a separate window
 
     :type execution_context: int | str | None
@@ -188,7 +196,7 @@ def frame_jump(
     /,
     *,
     end: bool | None = False,
-):
+) -> None:
     """Jump to first/last frame in frame range
 
     :type execution_context: int | str | None
@@ -203,7 +211,7 @@ def frame_offset(
     /,
     *,
     delta: int | None = 0,
-):
+) -> None:
     """Move current frame forward/backward by a given number
 
     :type execution_context: int | str | None
@@ -214,14 +222,16 @@ def frame_offset(
 
 def header_toggle_menus(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Expand or collapse the header pull-down menus
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def info_log_show(execution_context: int | str | None = None, undo: bool | None = None):
+def info_log_show(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Show info log in a separate window
 
     :type execution_context: int | str | None
@@ -234,7 +244,7 @@ def keyframe_jump(
     /,
     *,
     next: bool | None = True,
-):
+) -> None:
     """Jump to previous/next keyframe
 
     :type execution_context: int | str | None
@@ -249,7 +259,7 @@ def marker_jump(
     /,
     *,
     next: bool | None = True,
-):
+) -> None:
     """Jump to previous/next marker
 
     :type execution_context: int | str | None
@@ -258,21 +268,25 @@ def marker_jump(
     :type next: bool | None
     """
 
-def new(execution_context: int | str | None = None, undo: bool | None = None):
+def new(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Add a new screen
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def redo_last(execution_context: int | str | None = None, undo: bool | None = None):
+def redo_last(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Display parameters for last action performed
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def region_blend(execution_context: int | str | None = None, undo: bool | None = None):
+def region_blend(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Blend in and out overlapping region
 
     :type execution_context: int | str | None
@@ -281,14 +295,16 @@ def region_blend(execution_context: int | str | None = None, undo: bool | None =
 
 def region_context_menu(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Display region context menu
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def region_flip(execution_context: int | str | None = None, undo: bool | None = None):
+def region_flip(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Toggle the region's alignment (left/right or top/bottom)
 
     :type execution_context: int | str | None
@@ -297,14 +313,16 @@ def region_flip(execution_context: int | str | None = None, undo: bool | None = 
 
 def region_quadview(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Split selected area into camera, front, right, and top views
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def region_scale(execution_context: int | str | None = None, undo: bool | None = None):
+def region_scale(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Scale selected area
 
     :type execution_context: int | str | None
@@ -317,7 +335,7 @@ def region_toggle(
     /,
     *,
     region_type: bpy.stub_internal.rna_enums.RegionTypeItems | None = "WINDOW",
-):
+) -> None:
     """Hide or unhide the region
 
     :type execution_context: int | str | None
@@ -332,7 +350,7 @@ def repeat_history(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Display menu for previous actions performed
 
     :type execution_context: int | str | None
@@ -341,7 +359,9 @@ def repeat_history(
     :type index: int | None
     """
 
-def repeat_last(execution_context: int | str | None = None, undo: bool | None = None):
+def repeat_last(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Repeat last action
 
     :type execution_context: int | str | None
@@ -354,7 +374,7 @@ def screen_full_area(
     /,
     *,
     use_hide_panels: bool | None = False,
-):
+) -> None:
     """Toggle display selected area as fullscreen/maximized
 
     :type execution_context: int | str | None
@@ -369,7 +389,7 @@ def screen_set(
     /,
     *,
     delta: int | None = 1,
-):
+) -> None:
     """Cycle through available screens
 
     :type execution_context: int | str | None
@@ -411,7 +431,7 @@ def screenshot(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Capture a picture of the whole Blender window
 
         :type execution_context: int | str | None
@@ -513,7 +533,7 @@ def screenshot_area(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Capture a picture of an editor
 
         :type execution_context: int | str | None
@@ -588,7 +608,7 @@ def space_context_cycle(
     /,
     *,
     direction: typing.Literal["PREV", "NEXT"] | None = "NEXT",
-):
+) -> None:
     """Cycle through the editor context by activating the next/previous one
 
     :type execution_context: int | str | None
@@ -603,7 +623,7 @@ def space_type_set_or_cycle(
     /,
     *,
     space_type: bpy.stub_internal.rna_enums.SpaceTypeItems | None = "EMPTY",
-):
+) -> None:
     """Set the space type or cycle subtype
 
     :type execution_context: int | str | None
@@ -614,7 +634,7 @@ def space_type_set_or_cycle(
 
 def spacedata_cleanup(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove unused settings for invisible editors
 
     :type execution_context: int | str | None
@@ -627,7 +647,7 @@ def userpref_show(
     /,
     *,
     section: bpy.stub_internal.rna_enums.PreferenceSectionItems | None = "INTERFACE",
-):
+) -> None:
     """Edit user preferences and system settings
 
     :type execution_context: int | str | None
@@ -642,7 +662,7 @@ def workspace_cycle(
     /,
     *,
     direction: typing.Literal["PREV", "NEXT"] | None = "NEXT",
-):
+) -> None:
     """Cycle through workspaces
 
     :type execution_context: int | str | None

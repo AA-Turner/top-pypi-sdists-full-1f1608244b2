@@ -32,7 +32,7 @@ def change_effect_type(
         "COLORMIX",
     ]
     | None = "CROSS",
-):
+) -> None:
     """Replace effect strip with another that takes the same number of inputs
 
         :type execution_context: int | str | None
@@ -128,7 +128,7 @@ def change_path(
     | None = "DEFAULT",
     sort_method: str | None = "",
     use_placeholders: bool | None = False,
-):
+) -> None:
     """Undocumented, consider contributing.
 
         :type execution_context: int | str | None
@@ -207,7 +207,7 @@ def change_scene(
     /,
     *,
     scene: str | None = "",
-):
+) -> None:
     """Change Scene assigned to Strip
 
     :type execution_context: int | str | None
@@ -222,7 +222,7 @@ def connect(
     /,
     *,
     toggle: bool | None = True,
-):
+) -> None:
     """Link selected strips together for simplified group selection
 
     :type execution_context: int | str | None
@@ -231,7 +231,7 @@ def connect(
     :type toggle: bool | None
     """
 
-def copy(execution_context: int | str | None = None, undo: bool | None = None):
+def copy(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Copy the selected strips to the internal clipboard
 
     :type execution_context: int | str | None
@@ -240,7 +240,7 @@ def copy(execution_context: int | str | None = None, undo: bool | None = None):
 
 def crossfade_sounds(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Do cross-fading volume animation of two selected sound strips
 
     :type execution_context: int | str | None
@@ -253,7 +253,7 @@ def cursor_set(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Set 2D cursor location
 
     :type execution_context: int | str | None
@@ -264,7 +264,7 @@ def cursor_set(
 
 def deinterlace_selected_movies(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Deinterlace all selected movie sources
 
     :type execution_context: int | str | None
@@ -277,7 +277,7 @@ def delete(
     /,
     *,
     delete_data: bool | None = False,
-):
+) -> None:
     """Delete selected strips from the sequencer
 
     :type execution_context: int | str | None
@@ -286,14 +286,18 @@ def delete(
     :type delete_data: bool | None
     """
 
-def disconnect(execution_context: int | str | None = None, undo: bool | None = None):
+def disconnect(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Unlink selected strips so that they can be selected individually
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def duplicate(execution_context: int | str | None = None, undo: bool | None = None):
+def duplicate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Duplicate the selected strips
 
     :type execution_context: int | str | None
@@ -307,7 +311,7 @@ def duplicate_move(
     *,
     SEQUENCER_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_seq_slide: bpy.ops.transform.seq_slide | None = None,
-):
+) -> None:
     """Duplicate selected strips and move them
 
     :type execution_context: int | str | None
@@ -351,7 +355,7 @@ def effect_strip_add(
     overlap_shuffle_override: bool | None = False,
     skip_locked_or_muted_channels: bool | None = True,
     color: collections.abc.Sequence[float] | mathutils.Color | None = (0.0, 0.0, 0.0),
-):
+) -> None:
     """Add an effect to the sequencer, most are applied on top of existing strips
 
         :type execution_context: int | str | None
@@ -437,7 +441,7 @@ def enable_proxies(
     proxy_75: bool | None = False,
     proxy_100: bool | None = False,
     overwrite: bool | None = False,
-):
+) -> None:
     """Enable selected proxies on all selected Movie and Image strips
 
     :type execution_context: int | str | None
@@ -485,7 +489,7 @@ def export_subtitles(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Export .srt file containing text strips
 
         :type execution_context: int | str | None
@@ -558,7 +562,7 @@ def fades_add(
     duration_seconds: float | None = 1.0,
     type: typing.Literal["IN_OUT", "IN", "OUT", "CURSOR_FROM", "CURSOR_TO"]
     | None = "IN_OUT",
-):
+) -> None:
     """Adds or updates a fade animation for either visual or audio strips
 
         :type execution_context: int | str | None
@@ -584,7 +588,9 @@ def fades_add(
         :type type: typing.Literal['IN_OUT','IN','OUT','CURSOR_FROM','CURSOR_TO'] | None
     """
 
-def fades_clear(execution_context: int | str | None = None, undo: bool | None = None):
+def fades_clear(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Removes fade animation from selected strips
 
     :type execution_context: int | str | None
@@ -597,7 +603,7 @@ def gap_insert(
     /,
     *,
     frames: int | None = 10,
-):
+) -> None:
     """Insert gap at current frame to first strips at the right, independent of selection or locked state of strips
 
     :type execution_context: int | str | None
@@ -612,7 +618,7 @@ def gap_remove(
     /,
     *,
     all: bool | None = False,
-):
+) -> None:
     """Remove gap at current frame to first strip at the right, independent of selection or locked state of strips
 
     :type execution_context: int | str | None
@@ -674,7 +680,7 @@ def image_strip_add(
     fit_method: typing.Literal["FIT", "FILL", "STRETCH", "ORIGINAL"] | None = "FIT",
     set_view_transform: bool | None = True,
     use_placeholders: bool | None = False,
-):
+) -> None:
     """Add an image or image sequence to the sequencer
 
         :type execution_context: int | str | None
@@ -801,7 +807,7 @@ def images_separate(
     /,
     *,
     length: int | None = 1,
-):
+) -> None:
     """On image sequence strips, it returns a strip for each image
 
     :type execution_context: int | str | None
@@ -810,7 +816,7 @@ def images_separate(
     :type length: int | None
     """
 
-def lock(execution_context: int | str | None = None, undo: bool | None = None):
+def lock(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Lock strips so they can't be transformed
 
     :type execution_context: int | str | None
@@ -829,7 +835,7 @@ def mask_strip_add(
     overlap_shuffle_override: bool | None = False,
     skip_locked_or_muted_channels: bool | None = True,
     mask: str | None = "",
-):
+) -> None:
     """Add a mask strip to the sequencer
 
     :type execution_context: int | str | None
@@ -850,21 +856,27 @@ def mask_strip_add(
     :type mask: str | None
     """
 
-def meta_make(execution_context: int | str | None = None, undo: bool | None = None):
+def meta_make(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Group selected strips into a meta-strip
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def meta_separate(execution_context: int | str | None = None, undo: bool | None = None):
+def meta_separate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Put the contents of a meta-strip back in the sequencer
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def meta_toggle(execution_context: int | str | None = None, undo: bool | None = None):
+def meta_toggle(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Toggle a meta-strip (to edit enclosed strips)
 
     :type execution_context: int | str | None
@@ -926,7 +938,7 @@ def movie_strip_add(
     adjust_playback_rate: bool | None = True,
     sound: bool | None = True,
     use_framerate: bool | None = True,
-):
+) -> None:
     """Add a movie strip to the sequencer
 
         :type execution_context: int | str | None
@@ -1063,7 +1075,7 @@ def movieclip_strip_add(
     overlap_shuffle_override: bool | None = False,
     skip_locked_or_muted_channels: bool | None = True,
     clip: str | None = "",
-):
+) -> None:
     """Add a movieclip strip to the sequencer
 
     :type execution_context: int | str | None
@@ -1090,7 +1102,7 @@ def mute(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Mute (un)selected strips
 
     :type execution_context: int | str | None
@@ -1099,7 +1111,9 @@ def mute(
     :type unselected: bool | None
     """
 
-def offset_clear(execution_context: int | str | None = None, undo: bool | None = None):
+def offset_clear(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Clear strip offsets from the start and end frames
 
     :type execution_context: int | str | None
@@ -1112,7 +1126,7 @@ def paste(
     /,
     *,
     keep_offset: bool | None = False,
-):
+) -> None:
     """Paste strips from the internal clipboard
 
     :type execution_context: int | str | None
@@ -1128,7 +1142,7 @@ def preview_duplicate_move(
     *,
     SEQUENCER_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Duplicate selected strips and move them
 
     :type execution_context: int | str | None
@@ -1141,21 +1155,25 @@ def preview_duplicate_move(
 
 def reassign_inputs(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reassign the inputs for the effect strip
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def rebuild_proxy(execution_context: int | str | None = None, undo: bool | None = None):
+def rebuild_proxy(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Rebuild all selected proxies and timecode indices
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def refresh_all(execution_context: int | str | None = None, undo: bool | None = None):
+def refresh_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Refresh the sequencer editor
 
     :type execution_context: int | str | None
@@ -1168,7 +1186,7 @@ def reload(
     /,
     *,
     adjust_length: bool | None = False,
-):
+) -> None:
     """Reload strips in the sequencer
 
     :type execution_context: int | str | None
@@ -1179,14 +1197,16 @@ def reload(
 
 def rename_channel(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def rendersize(execution_context: int | str | None = None, undo: bool | None = None):
+def rendersize(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Set render size and aspect from active strip
 
     :type execution_context: int | str | None
@@ -1200,7 +1220,7 @@ def retiming_add_freeze_frame_slide(
     *,
     SEQUENCER_OT_retiming_freeze_frame_add: retiming_freeze_frame_add | None = None,
     TRANSFORM_OT_seq_slide: bpy.ops.transform.seq_slide | None = None,
-):
+) -> None:
     """Add freeze frame and move it
 
     :type execution_context: int | str | None
@@ -1218,7 +1238,7 @@ def retiming_add_transition_slide(
     *,
     SEQUENCER_OT_retiming_transition_add: retiming_transition_add | None = None,
     TRANSFORM_OT_seq_slide: bpy.ops.transform.seq_slide | None = None,
-):
+) -> None:
     """Add smooth transition between 2 retimed segments and change its duration
 
     :type execution_context: int | str | None
@@ -1235,7 +1255,7 @@ def retiming_freeze_frame_add(
     /,
     *,
     duration: int | None = 0,
-):
+) -> None:
     """Add freeze frame
 
     :type execution_context: int | str | None
@@ -1250,7 +1270,7 @@ def retiming_key_add(
     /,
     *,
     timeline_frame: int | None = 0,
-):
+) -> None:
     """Add retiming Key
 
     :type execution_context: int | str | None
@@ -1261,7 +1281,7 @@ def retiming_key_add(
 
 def retiming_key_delete(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete selected retiming keys from the sequencer
 
     :type execution_context: int | str | None
@@ -1270,7 +1290,7 @@ def retiming_key_delete(
 
 def retiming_reset(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reset strip retiming
 
     :type execution_context: int | str | None
@@ -1284,7 +1304,7 @@ def retiming_segment_speed_set(
     *,
     speed: float | None = 100.0,
     keep_retiming: bool | None = True,
-):
+) -> None:
     """Set speed of retimed segment
 
     :type execution_context: int | str | None
@@ -1295,7 +1315,9 @@ def retiming_segment_speed_set(
     :type keep_retiming: bool | None
     """
 
-def retiming_show(execution_context: int | str | None = None, undo: bool | None = None):
+def retiming_show(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Show retiming keys in selected strips
 
     :type execution_context: int | str | None
@@ -1308,7 +1330,7 @@ def retiming_transition_add(
     /,
     *,
     duration: int | None = 0,
-):
+) -> None:
     """Add smooth transition between 2 retimed segments
 
     :type execution_context: int | str | None
@@ -1323,7 +1345,7 @@ def sample(
     /,
     *,
     size: int | None = 1,
-):
+) -> None:
     """Use mouse to sample color in current frame
 
     :type execution_context: int | str | None
@@ -1334,7 +1356,7 @@ def sample(
 
 def scene_frame_range_update(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Update frame range of scene strip
 
     :type execution_context: int | str | None
@@ -1353,7 +1375,7 @@ def scene_strip_add(
     overlap_shuffle_override: bool | None = False,
     skip_locked_or_muted_channels: bool | None = True,
     scene: str | None = "",
-):
+) -> None:
     """Add a strip to the sequencer using a Blender scene as a source
 
     :type execution_context: int | str | None
@@ -1386,7 +1408,7 @@ def scene_strip_add_new(
     overlap_shuffle_override: bool | None = False,
     skip_locked_or_muted_channels: bool | None = True,
     type: typing.Literal["NEW", "EMPTY", "LINK_COPY", "FULL_COPY"] | None = "NEW",
-):
+) -> None:
     """Create a new Strip and assign a new Scene as source
 
         :type execution_context: int | str | None
@@ -1437,7 +1459,7 @@ def select(
     linked_time: bool | None = False,
     side_of_frame: bool | None = False,
     ignore_connections: bool | None = False,
-):
+) -> None:
     """Select a strip (last selected becomes the "active strip")
 
     :type execution_context: int | str | None
@@ -1476,7 +1498,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Select or deselect all strips
 
         :type execution_context: int | str | None
@@ -1511,7 +1533,7 @@ def select_box(
     tweak: bool | None = False,
     include_handles: bool | None = False,
     ignore_connections: bool | None = False,
-):
+) -> None:
     """Select strips using box selection
 
         :type execution_context: int | str | None
@@ -1556,7 +1578,7 @@ def select_grouped(
     | None = "TYPE",
     extend: bool | None = False,
     use_active_channel: bool | None = False,
-):
+) -> None:
     """Select all strips grouped by various properties
 
         :type execution_context: int | str | None
@@ -1599,7 +1621,7 @@ def select_handle(
     mouse_x: int | None = 0,
     mouse_y: int | None = 0,
     ignore_connections: bool | None = False,
-):
+) -> None:
     """Select strip handle
 
     :type execution_context: int | str | None
@@ -1623,7 +1645,7 @@ def select_handles(
         "LEFT", "RIGHT", "BOTH", "LEFT_NEIGHBOR", "RIGHT_NEIGHBOR", "BOTH_NEIGHBORS"
     ]
     | None = "BOTH",
-):
+) -> None:
     """Select gizmo handles on the sides of the selected strip
 
     :type execution_context: int | str | None
@@ -1632,14 +1654,18 @@ def select_handles(
     :type side: typing.Literal['LEFT','RIGHT','BOTH','LEFT_NEIGHBOR','RIGHT_NEIGHBOR','BOTH_NEIGHBORS'] | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Shrink the current selection of adjacent selected strips
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_linked(execution_context: int | str | None = None, undo: bool | None = None):
+def select_linked(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select all strips adjacent to the current selection
 
     :type execution_context: int | str | None
@@ -1652,7 +1678,7 @@ def select_linked_pick(
     /,
     *,
     extend: bool | None = False,
-):
+) -> None:
     """Select a chain of linked strips nearest to the mouse pointer
 
     :type execution_context: int | str | None
@@ -1661,7 +1687,9 @@ def select_linked_pick(
     :type extend: bool | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select more strips adjacent to the current selection
 
     :type execution_context: int | str | None
@@ -1674,7 +1702,7 @@ def select_side(
     /,
     *,
     side: typing.Literal["MOUSE", "LEFT", "RIGHT", "BOTH", "NO_CHANGE"] | None = "BOTH",
-):
+) -> None:
     """Select strips on the nominated side of the selected strips
 
     :type execution_context: int | str | None
@@ -1690,7 +1718,7 @@ def select_side_of_frame(
     *,
     extend: bool | None = False,
     side: typing.Literal["LEFT", "RIGHT", "CURRENT"] | None = "LEFT",
-):
+) -> None:
     """Select strips relative to the current frame
 
         :type execution_context: int | str | None
@@ -1716,7 +1744,7 @@ def set_range_to_strips(
     /,
     *,
     preview: bool | None = False,
-):
+) -> None:
     """Set the frame range to the selected strips start and end
 
     :type execution_context: int | str | None
@@ -1732,7 +1760,7 @@ def slip(
     *,
     offset: float | None = 0.0,
     slip_keyframes: bool | None = False,
-):
+) -> None:
     """Slip the contents of selected strips
 
     :type execution_context: int | str | None
@@ -1749,7 +1777,7 @@ def snap(
     /,
     *,
     frame: int | None = 0,
-):
+) -> None:
     """Frame where selected strips will be snapped
 
     :type execution_context: int | str | None
@@ -1808,7 +1836,7 @@ def sound_strip_add(
     skip_locked_or_muted_channels: bool | None = True,
     cache: bool | None = False,
     mono: bool | None = False,
-):
+) -> None:
     """Add a sound strip to the sequencer
 
         :type execution_context: int | str | None
@@ -1923,7 +1951,7 @@ def split(
     side: typing.Literal["MOUSE", "LEFT", "RIGHT", "BOTH", "NO_CHANGE"]
     | None = "MOUSE",
     ignore_selection: bool | None = False,
-):
+) -> None:
     """Split the selected strips in two
 
     :type execution_context: int | str | None
@@ -1948,7 +1976,7 @@ def split_multicam(
     /,
     *,
     camera: int | None = 1,
-):
+) -> None:
     """Split multicam strip and select camera
 
     :type execution_context: int | str | None
@@ -1963,7 +1991,7 @@ def strip_color_tag_set(
     /,
     *,
     color: bpy.stub_internal.rna_enums.StripColorItems | None = "NONE",
-):
+) -> None:
     """Set a color tag for the selected strips
 
     :type execution_context: int | str | None
@@ -1979,7 +2007,7 @@ def strip_jump(
     *,
     next: bool | None = True,
     center: bool | None = True,
-):
+) -> None:
     """Move frame to previous edit point
 
     :type execution_context: int | str | None
@@ -1996,7 +2024,7 @@ def strip_modifier_add(
     /,
     *,
     type: str | None = "",
-):
+) -> None:
     """Add a modifier to the strip
 
     :type execution_context: int | str | None
@@ -2011,7 +2039,7 @@ def strip_modifier_copy(
     /,
     *,
     type: typing.Literal["REPLACE", "APPEND"] | None = "REPLACE",
-):
+) -> None:
     """Copy modifiers of the active strip to all selected strips
 
         :type execution_context: int | str | None
@@ -2033,7 +2061,7 @@ def strip_modifier_equalizer_redefine(
     *,
     graphs: typing.Literal["SIMPLE", "DOUBLE", "TRIPLE"] | None = "SIMPLE",
     name: str = "Name",
-):
+) -> None:
     """Redefine equalizer graphs
 
         :type execution_context: int | str | None
@@ -2060,7 +2088,7 @@ def strip_modifier_move(
     *,
     name: str = "Name",
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move modifier up and down in the stack
 
         :type execution_context: int | str | None
@@ -2083,7 +2111,7 @@ def strip_modifier_remove(
     /,
     *,
     name: str = "Name",
-):
+) -> None:
     """Remove a modifier from the strip
 
     :type execution_context: int | str | None
@@ -2098,7 +2126,7 @@ def strip_transform_clear(
     /,
     *,
     property: typing.Literal["POSITION", "SCALE", "ROTATION", "ALL"] | None = "ALL",
-):
+) -> None:
     """Reset image transformation to default value
 
         :type execution_context: int | str | None
@@ -2125,7 +2153,7 @@ def strip_transform_fit(
     /,
     *,
     fit_method: typing.Literal["FIT", "FILL", "STRETCH"] | None = "FIT",
-):
+) -> None:
     """Undocumented, consider contributing.
 
         :type execution_context: int | str | None
@@ -2149,7 +2177,7 @@ def swap(
     /,
     *,
     side: typing.Literal["LEFT", "RIGHT"] | None = "RIGHT",
-):
+) -> None:
     """Swap active strip with strip to the right or left
 
     :type execution_context: int | str | None
@@ -2158,14 +2186,18 @@ def swap(
     :type side: typing.Literal['LEFT','RIGHT'] | None
     """
 
-def swap_data(execution_context: int | str | None = None, undo: bool | None = None):
+def swap_data(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Swap 2 sequencer strips
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def swap_inputs(execution_context: int | str | None = None, undo: bool | None = None):
+def swap_inputs(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Swap the two inputs of the effect strip
 
     :type execution_context: int | str | None
@@ -2191,7 +2223,7 @@ def text_cursor_move(
     ]
     | None = "LINE_BEGIN",
     select_text: bool | None = False,
-):
+) -> None:
     """Move cursor in text
 
     :type execution_context: int | str | None
@@ -2208,7 +2240,7 @@ def text_cursor_set(
     /,
     *,
     select_text: bool | None = False,
-):
+) -> None:
     """Set cursor position in text
 
     :type execution_context: int | str | None
@@ -2224,7 +2256,7 @@ def text_delete(
     *,
     type: typing.Literal["NEXT_OR_SELECTION", "PREVIOUS_OR_SELECTION"]
     | None = "NEXT_OR_SELECTION",
-):
+) -> None:
     """Delete text at cursor position
 
     :type execution_context: int | str | None
@@ -2235,7 +2267,7 @@ def text_delete(
 
 def text_deselect_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Deselect all characters
 
     :type execution_context: int | str | None
@@ -2244,14 +2276,16 @@ def text_deselect_all(
 
 def text_edit_copy(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy text to clipboard
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def text_edit_cut(execution_context: int | str | None = None, undo: bool | None = None):
+def text_edit_cut(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Cut text to clipboard
 
     :type execution_context: int | str | None
@@ -2260,7 +2294,7 @@ def text_edit_cut(execution_context: int | str | None = None, undo: bool | None 
 
 def text_edit_mode_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle text editing
 
     :type execution_context: int | str | None
@@ -2269,7 +2303,7 @@ def text_edit_mode_toggle(
 
 def text_edit_paste(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Paste text from clipboard
 
     :type execution_context: int | str | None
@@ -2282,7 +2316,7 @@ def text_insert(
     /,
     *,
     string: str = "",
-):
+) -> None:
     """Insert text at cursor position
 
     :type execution_context: int | str | None
@@ -2293,7 +2327,7 @@ def text_insert(
 
 def text_line_break(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Insert line break at cursor position
 
     :type execution_context: int | str | None
@@ -2302,14 +2336,16 @@ def text_line_break(
 
 def text_select_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select all characters
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def unlock(execution_context: int | str | None = None, undo: bool | None = None):
+def unlock(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Unlock strips so they can be transformed
 
     :type execution_context: int | str | None
@@ -2322,7 +2358,7 @@ def unmute(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Unmute (un)selected strips
 
     :type execution_context: int | str | None
@@ -2331,7 +2367,9 @@ def unmute(
     :type unselected: bool | None
     """
 
-def view_all(execution_context: int | str | None = None, undo: bool | None = None):
+def view_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """View all the strips in the sequencer
 
     :type execution_context: int | str | None
@@ -2340,14 +2378,16 @@ def view_all(execution_context: int | str | None = None, undo: bool | None = Non
 
 def view_all_preview(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Zoom preview to fit in the area
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def view_frame(execution_context: int | str | None = None, undo: bool | None = None):
+def view_frame(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Move the view to the current frame
 
     :type execution_context: int | str | None
@@ -2364,7 +2404,7 @@ def view_ghost_border(
     ymin: int | None = 0,
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
-):
+) -> None:
     """Set the boundaries of the border used for offset view
 
     :type execution_context: int | str | None
@@ -2381,7 +2421,9 @@ def view_ghost_border(
     :type wait_for_input: bool | None
     """
 
-def view_selected(execution_context: int | str | None = None, undo: bool | None = None):
+def view_selected(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Zoom the sequencer on the selected strips
 
     :type execution_context: int | str | None
@@ -2394,7 +2436,7 @@ def view_zoom_ratio(
     /,
     *,
     ratio: float | None = 1.0,
-):
+) -> None:
     """Change zoom ratio of sequencer preview
 
     :type execution_context: int | str | None

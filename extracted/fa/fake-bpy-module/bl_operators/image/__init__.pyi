@@ -27,13 +27,13 @@ class EditExternally(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -63,7 +63,7 @@ class IMAGE_FH_drop_handler(bpy.types.FileHandler):
         """
 
     @classmethod
-    def poll_drop(cls, context):
+    def poll_drop(cls, context) -> None:
         """
 
         :param context:
@@ -90,14 +90,14 @@ class IMAGE_OT_open_images(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -126,7 +126,7 @@ class ProjectApply(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -155,7 +155,7 @@ class ProjectEdit(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:

@@ -27,13 +27,13 @@ class WM_OT_blend_strings_utf8_validate(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def validate_strings(self, item, done_items):
+    def validate_strings(self, item, done_items) -> None:
         """
 
         :param item:
@@ -63,13 +63,13 @@ class WM_OT_previews_batch_clear(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -99,13 +99,13 @@ class WM_OT_previews_batch_generate(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:

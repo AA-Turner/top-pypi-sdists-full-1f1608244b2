@@ -27,7 +27,7 @@ class VIEW3D_FH_camera_background_image(bpy.types.FileHandler):
         """
 
     @classmethod
-    def poll_drop(cls, context):
+    def poll_drop(cls, context) -> None:
         """
 
         :param context:
@@ -56,7 +56,7 @@ class VIEW3D_FH_empty_image(bpy.types.FileHandler):
         """
 
     @classmethod
-    def poll_drop(cls, context):
+    def poll_drop(cls, context) -> None:
         """
 
         :param context:
@@ -85,7 +85,7 @@ class VIEW3D_FH_vdb_volume(bpy.types.FileHandler):
         """
 
     @classmethod
-    def poll_drop(cls, context):
+    def poll_drop(cls, context) -> None:
         """
 
         :param context:
@@ -113,13 +113,13 @@ class VIEW3D_OT_edit_mesh_extrude_individual_move(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -127,7 +127,7 @@ class VIEW3D_OT_edit_mesh_extrude_individual_move(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -155,13 +155,13 @@ class VIEW3D_OT_edit_mesh_extrude_manifold_normal(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -169,7 +169,7 @@ class VIEW3D_OT_edit_mesh_extrude_manifold_normal(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -197,14 +197,16 @@ class VIEW3D_OT_edit_mesh_extrude_move(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def extrude_region(operator, context, use_vert_normals, dissolve_and_intersect):
+    def extrude_region(
+        operator, context, use_vert_normals, dissolve_and_intersect
+    ) -> None:
         """
 
         :param operator:
@@ -213,7 +215,7 @@ class VIEW3D_OT_edit_mesh_extrude_move(bpy.types.Operator):
         :param dissolve_and_intersect:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -221,7 +223,7 @@ class VIEW3D_OT_edit_mesh_extrude_move(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -249,13 +251,13 @@ class VIEW3D_OT_edit_mesh_extrude_shrink_fatten(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -263,7 +265,7 @@ class VIEW3D_OT_edit_mesh_extrude_shrink_fatten(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -292,13 +294,13 @@ class VIEW3D_OT_transform_gizmo_set(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -306,7 +308,7 @@ class VIEW3D_OT_transform_gizmo_set(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

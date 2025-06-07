@@ -1,3 +1,4 @@
+import json
 from unittest.mock import patch
 
 import requests
@@ -455,6 +456,89 @@ class TestProject(RoboflowTest):
                 for mock in mocks.values():
                     mock.stop()
 
+    def test_get_batches_success(self):
+        expected_url = f"{API_URL}/{WORKSPACE_NAME}/{PROJECT_NAME}/batches?api_key={ROBOFLOW_API_KEY}"
+        mock_response = {
+            "batches": [
+                {
+                    "name": "Uploaded on 11/22/22 at 1:39 pm",
+                    "numJobs": 2,
+                    "images": 115,
+                    "uploaded": {"_seconds": 1669146024, "_nanoseconds": 818000000},
+                    "id": "batch-1",
+                },
+                {
+                    "numJobs": 0,
+                    "images": 11,
+                    "uploaded": {"_seconds": 1669236873, "_nanoseconds": 47000000},
+                    "name": "Upload via API",
+                    "id": "batch-2",
+                },
+            ]
+        }
+
+        responses.add(responses.GET, expected_url, json=mock_response, status=200)
+
+        batches = self.project.get_batches()
+
+        self.assertIsInstance(batches, dict)
+        self.assertIn("batches", batches)
+        self.assertEqual(len(batches["batches"]), 2)
+        self.assertEqual(batches["batches"][0]["id"], "batch-1")
+        self.assertEqual(batches["batches"][0]["name"], "Uploaded on 11/22/22 at 1:39 pm")
+        self.assertEqual(batches["batches"][0]["images"], 115)
+        self.assertEqual(batches["batches"][0]["numJobs"], 2)
+        self.assertEqual(batches["batches"][1]["id"], "batch-2")
+        self.assertEqual(batches["batches"][1]["name"], "Upload via API")
+
+    def test_get_batches_error(self):
+        expected_url = f"{API_URL}/{WORKSPACE_NAME}/{PROJECT_NAME}/batches?api_key={ROBOFLOW_API_KEY}"
+        error_response = {"error": "Cannot retrieve batches"}
+
+        responses.add(responses.GET, expected_url, json=error_response, status=404)
+
+        with self.assertRaises(RuntimeError) as context:
+            self.project.get_batches()
+
+        self.assertEqual(str(context.exception), "Cannot retrieve batches")
+
+    def test_get_batch_success(self):
+        batch_id = "batch-123"
+        expected_url = f"{API_URL}/{WORKSPACE_NAME}/{PROJECT_NAME}/batches/{batch_id}?api_key={ROBOFLOW_API_KEY}"
+        mock_response = {
+            "batch": {
+                "name": "Uploaded on 11/22/22 at 1:39 pm",
+                "numJobs": 2,
+                "images": 115,
+                "uploaded": {"_seconds": 1669146024, "_nanoseconds": 818000000},
+                "id": batch_id,
+            }
+        }
+
+        responses.add(responses.GET, expected_url, json=mock_response, status=200)
+
+        batch = self.project.get_batch(batch_id)
+
+        self.assertIsInstance(batch, dict)
+        self.assertIn("batch", batch)
+        self.assertEqual(batch["batch"]["id"], batch_id)
+        self.assertEqual(batch["batch"]["name"], "Uploaded on 11/22/22 at 1:39 pm")
+        self.assertEqual(batch["batch"]["images"], 115)
+        self.assertEqual(batch["batch"]["numJobs"], 2)
+        self.assertIn("uploaded", batch["batch"])
+
+    def test_get_batch_error(self):
+        batch_id = "nonexistent-batch"
+        expected_url = f"{API_URL}/{WORKSPACE_NAME}/{PROJECT_NAME}/batches/{batch_id}?api_key={ROBOFLOW_API_KEY}"
+        error_response = {"error": "Batch not found"}
+
+        responses.add(responses.GET, expected_url, json=error_response, status=404)
+
+        with self.assertRaises(RuntimeError) as context:
+            self.project.get_batch(batch_id)
+
+        self.assertEqual(str(context.exception), "Batch not found")
+
     def test_classification_dataset_upload(self):
         from roboflow.util import folderparser
 
@@ -539,6 +623,46 @@ class TestProject(RoboflowTest):
             self.assertEqual(len(annotation_calls), 2)
             self.assertIn("severe", annotation_calls)
             self.assertIn("good", annotation_calls)
+        finally:
+            for mock in mocks.values():
+                mock.stop()
+
+    def test_multilabel_classification_dataset_upload(self):
+        from roboflow.util import folderparser
+
+        multilabel_folder = "tests/datasets/skinproblem-multilabel-classification"
+        parsed_dataset = folderparser.parsefolder(multilabel_folder, is_classification=True)
+
+        self.project.type = "classification"
+        self.project.multilabel = True
+        annotation_calls = []
+
+        def capture_annotation_calls(annotation_path, **kwargs):
+            annotation_calls.append(annotation_path)
+            return ({"success": True}, 0.1, 0)
+
+        mocks = {
+            "parser": patch("roboflow.core.workspace.folderparser.parsefolder", return_value=parsed_dataset),
+            "upload": patch(
+                "roboflow.core.workspace.Project.upload_image",
+                return_value=({"id": "test-id", "success": True}, 0.1, 0),
+            ),
+            "save_annotation": patch(
+                "roboflow.core.workspace.Project.save_annotation", side_effect=capture_annotation_calls
+            ),
+            "get_project": patch(
+                "roboflow.core.workspace.Workspace._get_or_create_project", return_value=(self.project, False)
+            ),
+        }
+        for mock in mocks.values():
+            mock.start()
+        try:
+            self.workspace.upload_dataset(dataset_path=multilabel_folder, project_name=PROJECT_NAME, num_workers=1)
+            self.assertEqual(len(annotation_calls), len(parsed_dataset["images"]))
+            for call in annotation_calls:
+                labels = json.loads(call)
+                self.assertIsInstance(labels, list)
+                self.assertGreater(len(labels), 0)
         finally:
             for mock in mocks.values():
                 mock.stop()

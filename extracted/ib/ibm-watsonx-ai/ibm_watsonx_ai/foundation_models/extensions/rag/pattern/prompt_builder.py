@@ -2,6 +2,8 @@
 #  (C) Copyright IBM Corp. 2024-2025.
 #  https://opensource.org/licenses/BSD-3-Clause
 #  -----------------------------------------------------------------------------------------
+from typing import Any
+
 from ibm_watsonx_ai.foundation_models.extensions.rag import RAGPattern
 
 # Defaults
@@ -36,6 +38,7 @@ def build_prompt(
     reference_documents: list[str],
     model_max_input_tokens: int,
     word_to_token_ratio: float = WORD_TO_TOKEN_RATIO,
+    **kwargs: Any,
 ) -> str:
     """Build the input prompt from the prompt and context templates, and the inputs (question and reference documents).
 
@@ -59,11 +62,15 @@ def build_prompt(
         approximating the token count, defaults to 1.5
     :type word_to_token_ratio: float, optional
 
+    :param system_prompt_text: the text of the system prompt that is used - only applicable for chat scenario, defaults to None
+    :type system_prompt_text: str | None
+
     :return: the constructed prompt containing the instruction and model inputs (question and reference documents).
         The prompt length is under the maximal number of input tokens supported by the model (model_max_input_tokens).
         The prompt may contain only a subset of the reference documents, due to the limited input length.
     :rtype: str
     """
+    system_prompt_text = kwargs.pop("system_prompt_text", None)
     if context_template_text:
         reference_documents = [
             context_template_text.format(document=reference_document)
@@ -76,6 +83,7 @@ def build_prompt(
         reference_documents=reference_documents,
         model_max_input_tokens=model_max_input_tokens,
         word_to_token_ratio=word_to_token_ratio,
+        system_prompt_text=system_prompt_text,
     )
 
     prompt_variables = {
@@ -91,6 +99,7 @@ def _select_reference_documents(
     reference_documents: list[str],
     model_max_input_tokens: int,
     word_to_token_ratio: float = WORD_TO_TOKEN_RATIO,
+    system_prompt_text: str | None = None,
 ) -> list[str]:
     """Select reference documents according to maximal number of input tokens supported by the model.
     Only using these selected references ensures that the constructed prompt fits (in terms of length) properly
@@ -113,6 +122,9 @@ def _select_reference_documents(
         approximating the token count, defaults to 1.5
     :type word_to_token_ratio: float, optional
 
+    :param system_prompt_text: the text of the system prompt that is used - only applicable for chat scenario, defaults to None
+    :type system_prompt_text: str | None
+
     :return: the reference documents that may be integrated into the prompt template, while maintaining
         the constraint on the model input window size.
     :rtype: list[str]
@@ -130,6 +142,11 @@ def _select_reference_documents(
             RAGPattern.REFERENCE_DOCUMENTS_PLACEHOLDER, word_to_token_ratio
         )
     )
+
+    if system_prompt_text is not None:
+        available_input_tokens -= estimate_tokens_count(
+            system_prompt_text, word_to_token_ratio
+        )
 
     selected_reference_documents = []
     for reference_document in reference_documents:

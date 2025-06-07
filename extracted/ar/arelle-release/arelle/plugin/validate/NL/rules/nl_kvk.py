@@ -6,13 +6,16 @@ from __future__ import annotations
 from datetime import date
 import zipfile
 
+from arelle.ModelDtsObject import ModelLink
 from arelle.ModelInstanceObject import ModelInlineFact
+from arelle.ModelObject import ModelObject
+from arelle.PrototypeDtsObject import PrototypeObject
 from arelle.ValidateDuplicateFacts import getDuplicateFactSets
 from arelle.XmlValidateConst import VALID
 from collections.abc import Iterable
 from typing import Any, cast, TYPE_CHECKING
 
-from arelle import XmlUtil, XbrlConst
+from arelle import XmlUtil, XbrlConst, ModelDocument
 from arelle.ValidateXbrl import ValidateXbrl
 from arelle.typing import TypeGetText
 from arelle.utils.PluginHooks import ValidationHook
@@ -20,12 +23,16 @@ from arelle.utils.validate.Decorator import validation
 from arelle.utils.validate.Validation import Validation
 from arelle.ValidateDuplicateFacts import getHashEquivalentFactGroups, getAspectEqualFacts
 from arelle.utils.validate.ValidationUtil import etreeIterWithDepth
-from ..DisclosureSystems import DISCLOSURE_SYSTEM_NL_INLINE_2024
+from ..DisclosureSystems import (ALL_NL_INLINE_DISCLOSURE_SYSTEMS, NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
+                                 NL_INLINE_GAAP_OTHER_DISCLOSURE_SYSTEMS)
 from ..LinkbaseType import LinkbaseType
 from ..PluginValidationDataExtension import (PluginValidationDataExtension, ALLOWABLE_LANGUAGES,
-                                             DISALLOWED_IXT_NAMESPACES, EFFECTIVE_KVK_GAAP_IFRS_ENTRYPOINT_FILES,
+                                             DEFAULT_MEMBER_ROLE_URI, DISALLOWED_IXT_NAMESPACES,
+                                             EFFECTIVE_KVK_GAAP_IFRS_ENTRYPOINT_FILES,
+                                             EFFECTIVE_KVK_GAAP_OTHER_ENTRYPOINT_FILES,
                                              MAX_REPORT_PACKAGE_SIZE_MBS, TAXONOMY_URLS_BY_YEAR,
-                                             XBRLI_IDENTIFIER_PATTERN, XBRLI_IDENTIFIER_SCHEMA)
+                                             XBRLI_IDENTIFIER_PATTERN, XBRLI_IDENTIFIER_SCHEMA,
+                                             QN_DOMAIN_ITEM_TYPES)
 
 if TYPE_CHECKING:
     from arelle.ModelXbrl import ModelXbrl
@@ -45,9 +52,7 @@ def _getReportingPeriodDateValue(modelXbrl: ModelXbrl, qname: QName) -> date | N
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_1_1_1(
     pluginData: PluginValidationDataExtension,
@@ -73,9 +78,7 @@ def rule_nl_kvk_3_1_1_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_1_1_2(
         pluginData: PluginValidationDataExtension,
@@ -100,9 +103,7 @@ def rule_nl_kvk_3_1_1_2(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_1_2_1(
         pluginData: PluginValidationDataExtension,
@@ -124,9 +125,7 @@ def rule_nl_kvk_3_1_2_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_1_2_2(
         pluginData: PluginValidationDataExtension,
@@ -148,9 +147,7 @@ def rule_nl_kvk_3_1_2_2(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_1_3_1 (
         pluginData: PluginValidationDataExtension,
@@ -172,9 +169,7 @@ def rule_nl_kvk_3_1_3_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_1_3_2 (
         pluginData: PluginValidationDataExtension,
@@ -196,9 +191,7 @@ def rule_nl_kvk_3_1_3_2 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_1_4_1 (
         pluginData: PluginValidationDataExtension,
@@ -221,9 +214,7 @@ def rule_nl_kvk_3_1_4_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_1_4_2 (
         pluginData: PluginValidationDataExtension,
@@ -250,9 +241,7 @@ def rule_nl_kvk_3_1_4_2 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_2_1_1 (
         pluginData: PluginValidationDataExtension,
@@ -277,9 +266,7 @@ def rule_nl_kvk_3_2_1_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_2_3_1 (
         pluginData: PluginValidationDataExtension,
@@ -305,9 +292,7 @@ def rule_nl_kvk_3_2_3_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_2_4_1 (
         pluginData: PluginValidationDataExtension,
@@ -335,9 +320,7 @@ def rule_nl_kvk_3_2_4_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_2_4_2 (
         pluginData: PluginValidationDataExtension,
@@ -365,9 +348,7 @@ def rule_nl_kvk_3_2_4_2 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_2_7_1 (
         pluginData: PluginValidationDataExtension,
@@ -394,9 +375,7 @@ def rule_nl_kvk_3_2_7_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_3_1_1 (
         pluginData: PluginValidationDataExtension,
@@ -417,9 +396,7 @@ def rule_nl_kvk_3_3_1_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_3_1_2 (
         pluginData: PluginValidationDataExtension,
@@ -441,9 +418,7 @@ def rule_nl_kvk_3_3_1_2 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_3_1_3 (
         pluginData: PluginValidationDataExtension,
@@ -467,9 +442,7 @@ def rule_nl_kvk_3_3_1_3 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_4_1_1 (
         pluginData: PluginValidationDataExtension,
@@ -491,9 +464,7 @@ def rule_nl_kvk_3_4_1_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_4_1_2 (
         pluginData: PluginValidationDataExtension,
@@ -515,9 +486,7 @@ def rule_nl_kvk_3_4_1_2 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_4_1_3 (
         pluginData: PluginValidationDataExtension,
@@ -541,9 +510,7 @@ def rule_nl_kvk_3_4_1_3 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_4_1_4 (
         pluginData: PluginValidationDataExtension,
@@ -565,9 +532,7 @@ def rule_nl_kvk_3_4_1_4 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_4_1_5 (
         pluginData: PluginValidationDataExtension,
@@ -589,9 +554,7 @@ def rule_nl_kvk_3_4_1_5 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_4_2_1 (
         pluginData: PluginValidationDataExtension,
@@ -613,9 +576,7 @@ def rule_nl_kvk_3_4_2_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_5_2_1(
         pluginData: PluginValidationDataExtension,
@@ -644,9 +605,7 @@ def rule_nl_kvk_3_5_2_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_5_2_2(
         pluginData: PluginValidationDataExtension,
@@ -675,9 +634,7 @@ def rule_nl_kvk_3_5_2_2(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_5_2_3(
         pluginData: PluginValidationDataExtension,
@@ -706,9 +663,7 @@ def rule_nl_kvk_3_5_2_3(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_5_3_1(
         pluginData: PluginValidationDataExtension,
@@ -730,9 +685,7 @@ def rule_nl_kvk_3_5_3_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_5_4_1 (
         pluginData: PluginValidationDataExtension,
@@ -755,9 +708,7 @@ def rule_nl_kvk_3_5_4_1 (
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_6_3_1(
         pluginData: PluginValidationDataExtension,
@@ -788,9 +739,7 @@ def rule_nl_kvk_3_6_3_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_6_3_2(
         pluginData: PluginValidationDataExtension,
@@ -820,9 +769,7 @@ def rule_nl_kvk_3_6_3_2(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_6_3_3(
         pluginData: PluginValidationDataExtension,
@@ -850,9 +797,7 @@ def rule_nl_kvk_3_6_3_3(
 
 @validation(
     hook=ValidationHook.FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_7_1_1(
         pluginData: PluginValidationDataExtension,
@@ -880,9 +825,7 @@ def rule_nl_kvk_3_7_1_1(
 
 @validation(
     hook=ValidationHook.FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_3_7_1_2(
         pluginData: PluginValidationDataExtension,
@@ -910,9 +853,7 @@ def rule_nl_kvk_3_7_1_2(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_1_1_1(
         pluginData: PluginValidationDataExtension,
@@ -963,9 +904,7 @@ def rule_nl_kvk_4_1_1_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_1_1_2(
         pluginData: PluginValidationDataExtension,
@@ -1000,9 +939,7 @@ def rule_nl_kvk_4_1_1_2(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_1_2_1(
         pluginData: PluginValidationDataExtension,
@@ -1027,9 +964,7 @@ def rule_nl_kvk_4_1_2_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_1_2_2(
         pluginData: PluginValidationDataExtension,
@@ -1048,16 +983,15 @@ def rule_nl_kvk_4_1_2_2(
         yield Validation.error(
             codes='NL.NL-KVK.4.1.2.2.incorrectKvkTaxonomyVersionUsed',
             msg=_('The extension taxonomy MUST import the applicable version of the taxonomy files prepared by KVK '
-                  'for the reported financial reporting period of %(reportingPeriod)s.'),
+                  'for the reported financial reporting period. Verify the taxonomy version and make sure '
+                  'that FinancialReportingPeriod are tagged correctly.'),
             modelObject=val.modelXbrl.modelDocument
         )
 
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_1_5_1(
         pluginData: PluginValidationDataExtension,
@@ -1089,9 +1023,7 @@ def rule_nl_kvk_4_1_5_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_1_5_2(
         pluginData: PluginValidationDataExtension,
@@ -1122,9 +1054,7 @@ def rule_nl_kvk_4_1_5_2(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_2_0_1(
         pluginData: PluginValidationDataExtension,
@@ -1148,9 +1078,7 @@ def rule_nl_kvk_4_2_0_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_2_0_2(
         pluginData: PluginValidationDataExtension,
@@ -1174,9 +1102,7 @@ def rule_nl_kvk_4_2_0_2(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_2_1_1(
         pluginData: PluginValidationDataExtension,
@@ -1205,9 +1131,59 @@ def rule_nl_kvk_4_2_1_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
+)
+def rule_nl_kvk_4_2_2_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.2.2.2: Domain members MUST have domainItemType data type as defined in https://www.xbrl.org/dtr/type/2022-03-31/types.xsd.
+    """
+    domainMembersWrongType = []
+    domainMembers = pluginData.getDomainMembers(val.modelXbrl)
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for concept in extensionData.extensionConcepts:
+        if concept.isDomainMember and concept in domainMembers and concept.typeQname not in QN_DOMAIN_ITEM_TYPES:
+            domainMembersWrongType.append(concept)
+    if len(domainMembersWrongType) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.2.2.2.domainMemberWrongDataType',
+            modelObject=domainMembersWrongType,
+            msg=_('Domain members must have domainItemType data type as defined in "https://www.xbrl.org/dtr/type/2022-03-31/types.xsd".'
+                  'Update to follow appropriate Data Type Registry.  '))
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
+)
+def rule_nl_kvk_4_2_3_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.2.3.1: Extension taxonomy MUST NOT define typed dimensions.
+    """
+    typedDims = []
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for concept in extensionData.extensionConcepts:
+        if concept.isTypedDimension:
+            typedDims.append(concept)
+    if len(typedDims) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.4.3.2.1.typedDimensionDefinitionInExtensionTaxonomy',
+            modelObject=typedDims,
+            msg=_('Typed dimensions are not allowed in the extension taxonomy.  Update to remove the typed dimension.'))
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_4_1_1(
         pluginData: PluginValidationDataExtension,
@@ -1235,9 +1211,7 @@ def rule_nl_kvk_4_4_1_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_4_2_1(
         pluginData: PluginValidationDataExtension,
@@ -1264,9 +1238,7 @@ def rule_nl_kvk_4_4_2_1(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_4_2_2(
         pluginData: PluginValidationDataExtension,
@@ -1294,9 +1266,7 @@ def rule_nl_kvk_4_4_2_2(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_4_4_2_3(
         pluginData: PluginValidationDataExtension,
@@ -1324,9 +1294,129 @@ def rule_nl_kvk_4_4_2_3(
 
 @validation(
     hook=ValidationHook.XBRL_FINALLY,
-    disclosureSystems=[
-        DISCLOSURE_SYSTEM_NL_INLINE_2024
-    ],
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
+)
+def rule_nl_kvk_4_4_3_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.4.3.1: The extension taxonomy MUST not modify (prohibit and/or override) default members assigned to dimensions by the KVK taxonomy
+    """
+    for modelLink in cast(list[ModelLink], val.modelXbrl.baseSets[XbrlConst.dimensionDefault, None, None, None]):
+        if not pluginData.isExtensionUri(modelLink.modelDocument.uri, val.modelXbrl):
+            continue
+        for linkChild in modelLink:
+            if (
+                    isinstance(linkChild,(ModelObject,PrototypeObject))
+                    and linkChild.get(XbrlConst.qnXlinkType.clarkNotation) == "arc"
+                    and linkChild.get(XbrlConst.qnXlinkArcRole.clarkNotation) == XbrlConst.dimensionDefault
+            ):
+                fromLabel = linkChild.get(XbrlConst.qnXlinkFrom.clarkNotation)
+                for fromResource in modelLink.labeledResources[fromLabel]:
+                    if not pluginData.isExtensionUri(fromResource.modelDocument.uri, val.modelXbrl):
+                        yield Validation.error(
+                            codes='NL.NL-KVK.4.4.3.1.extensionTaxonomyOverridesDefaultMembers',
+                             msg=_('A default member does not match the default member settings of the taxonomy. '
+                                   'Update the default member to taxonomy defaults.'
+                                   ),
+                            modelObject=linkChild
+                        )
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for modelDocument, extensionDocumentData in extensionData.extensionDocuments.items():
+        for arc in extensionDocumentData.iterArcsByType(LinkbaseType.DEFINITION, includeArcroles={XbrlConst.dimensionDefault}):
+            if arc.get("use") == "prohibited":
+                yield Validation.error(
+                    codes='NL.NL-KVK.4.4.3.1.extensionTaxonomyOverridesDefaultMembers',
+                    msg=_('A default member is forbidden in the extension taxonomy. '
+                          'Update the default member to taxonomy defaults.'
+                          ),
+                    modelObject=arc
+                )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=NL_INLINE_GAAP_IFRS_DISCLOSURE_SYSTEMS,
+)
+def rule_nl_kvk_4_4_3_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.4.3.2: Each dimension in an extension taxonomy MUST be assigned to a default member in the ELR with role URI https://www.nltaxonomie.nl/kvk/role/axis-defaults.
+    """
+    dimensionDefaults =val.modelXbrl.relationshipSet(XbrlConst.dimensionDefault, DEFAULT_MEMBER_ROLE_URI)
+    extensionData = pluginData.getExtensionData(val.modelXbrl)
+    for modelConcept in extensionData.extensionConcepts:
+        if modelConcept.isExplicitDimension and not dimensionDefaults.fromModelObject(modelConcept):
+            yield Validation.error(
+                codes='NL.NL-KVK.4.4.2.3.extensionTaxonomyDimensionNotAssignedDefaultMemberInDedicatedPlaceholder',
+                modelObject=modelConcept,
+                msg=_('Axis is missing a default member or the default member does not match the taxonomy defaults. '
+                      'Update to set default member based on taxonomy defaults.'
+                      ),
+            )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=NL_INLINE_GAAP_OTHER_DISCLOSURE_SYSTEMS,
+)
+def rule_nl_kvk_5_1_3_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.5.1.3.1: Validate that the imported taxonomy matches the KVK-specified entry point.
+        - https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-other-gaap.xsd
+    """
+    uris = {doc[0].uri for doc in val.modelXbrl.namespaceDocs.values()}
+    matches = uris & EFFECTIVE_KVK_GAAP_OTHER_ENTRYPOINT_FILES
+    if not matches:
+        yield Validation.error(
+            codes='NL.NL-KVK.5.1.3.1.requiredEntryPointOtherGaapNotReferenced',
+            msg=_('The extension taxonomy must import the entry point of the taxonomy files prepared by KVK.'),
+            modelObject=val.modelXbrl.modelDocument
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=NL_INLINE_GAAP_OTHER_DISCLOSURE_SYSTEMS,
+)
+def rule_nl_kvk_5_1_3_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.5.1.3.2: The legal entity’s report MUST import the applicable version of
+                    the taxonomy files prepared by KVK.
+    """
+    reportingPeriod = pluginData.getReportingPeriod(val.modelXbrl)
+    uris = {doc[0].uri for doc in val.modelXbrl.namespaceDocs.values()}
+    matches = uris & TAXONOMY_URLS_BY_YEAR.get(reportingPeriod or '', set())
+    if not reportingPeriod or not matches:
+        yield Validation.error(
+            codes='NL.NL-KVK.5.1.3.2.incorrectVersionEntryPointOtherGaapReferenced',
+            msg=_('The report MUST import the applicable version of the taxonomy files prepared by KVK '
+                  'for the reported financial reporting period. Verify the taxonomy version and make sure '
+                  'that FinancialReportingPeriod are tagged correctly.'),
+            modelObject=val.modelXbrl.modelDocument
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=ALL_NL_INLINE_DISCLOSURE_SYSTEMS,
 )
 def rule_nl_kvk_6_1_1_1(
         pluginData: PluginValidationDataExtension,

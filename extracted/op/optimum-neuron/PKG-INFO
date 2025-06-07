@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: optimum-neuron
-Version: 0.1.0
+Version: 0.2.0
 Summary: Optimum Neuron is the interface between the Hugging Face Transformers and Diffusers libraries and AWS Trainium and Inferentia accelerators. It provides a set of tools enabling easy model loading, training and inference on single and multiple neuron core settings for different downstream tasks.
 Home-page: https://huggingface.co/hardware/aws
 Author: HuggingFace Inc. Special Ops Team
@@ -13,12 +13,11 @@ Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Education
 Classifier: Intended Audience :: Science/Research
 Classifier: Operating System :: OS Independent
-Classifier: Programming Language :: Python :: 3.8
-Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: transformers~=4.48.1
+Requires-Dist: transformers~=4.51.0
 Requires-Dist: accelerate==0.29.2
 Requires-Dist: optimum~=1.23.3
 Requires-Dist: huggingface_hub>=0.29.0
@@ -35,7 +34,7 @@ Requires-Dist: sacremoses; extra == "tests"
 Requires-Dist: diffusers<=0.30.3,>=0.29.0; extra == "tests"
 Requires-Dist: safetensors; extra == "tests"
 Requires-Dist: sentence-transformers>=2.2.0; extra == "tests"
-Requires-Dist: peft>=0.14.0; extra == "tests"
+Requires-Dist: peft==0.14.0; extra == "tests"
 Requires-Dist: trl==0.11.4; extra == "tests"
 Requires-Dist: compel; extra == "tests"
 Requires-Dist: rjieba; extra == "tests"
@@ -52,8 +51,8 @@ Requires-Dist: isort; extra == "quality"
 Provides-Extra: training
 Requires-Dist: trl==0.11.4; extra == "training"
 Requires-Dist: peft==0.14.0; extra == "training"
-Requires-Dist: neuronx-distributed==0.9.0; extra == "training"
 Requires-Dist: evaluate==0.4.3; extra == "training"
+Requires-Dist: neuronx_distributed==0.10.1; extra == "training"
 Provides-Extra: neuron
 Requires-Dist: wheel; extra == "neuron"
 Requires-Dist: torch-neuron==1.13.1.2.9.74.0; extra == "neuron"
@@ -64,16 +63,15 @@ Requires-Dist: torchvision; extra == "neuron"
 Requires-Dist: numpy==1.22.3; extra == "neuron"
 Provides-Extra: neuronx
 Requires-Dist: wheel; extra == "neuronx"
-Requires-Dist: neuronx-cc==2.16.372.0; extra == "neuronx"
-Requires-Dist: torch-neuronx==2.5.1.2.4.0; extra == "neuronx"
-Requires-Dist: transformers-neuronx==0.13.322; extra == "neuronx"
+Requires-Dist: neuronx-cc==2.17.194.0; extra == "neuronx"
+Requires-Dist: torch-neuronx==2.5.1.2.6.0; extra == "neuronx"
 Requires-Dist: torch==2.5.1.*; extra == "neuronx"
 Requires-Dist: torchvision==0.20.*; extra == "neuronx"
-Requires-Dist: neuronx_distributed==0.10.1; extra == "neuronx"
-Requires-Dist: libneuronxla==2.1.681.0; extra == "neuronx"
+Requires-Dist: neuronx_distributed==0.11.0; extra == "neuronx"
+Requires-Dist: libneuronxla==2.2.1630.0; extra == "neuronx"
 Provides-Extra: diffusers
 Requires-Dist: diffusers<=0.30.3,>=0.28.0; extra == "diffusers"
-Requires-Dist: peft>=0.14.0; extra == "diffusers"
+Requires-Dist: peft==0.14.0; extra == "diffusers"
 Provides-Extra: sentence-transformers
 Requires-Dist: sentence-transformers>=2.2.0; extra == "sentence-transformers"
 
@@ -145,9 +143,9 @@ pip install -r requirements.txt
 
 There are two main classes one needs to know:
 - TrainiumArgumentParser: inherits the original [HfArgumentParser](https://huggingface.co/docs/transformers/main/en/internal/trainer_utils#transformers.HfArgumentParser) in Transformers with additional checks on the argument values to make sure that they will work well with AWS Trainium instances.
-- [NeuronTrainer](https://huggingface.co/docs/optimum/neuron/package_reference/trainer): this version trainer takes care of doing the proper checks and changes to the supported models to make them trainable on AWS Trainium instances.
+- [NeuronTrainer](https://huggingface.co/docs/optimum-neuron/main/en/package_reference/trainer): this version trainer takes care of doing the proper checks and changes to the supported models to make them trainable on AWS Trainium instances.
 
-The [NeuronTrainer](https://huggingface.co/docs/optimum/neuron/package_reference/trainer) is very similar to the [🤗 Transformers Trainer](https://huggingface.co/docs/transformers/main_classes/trainer), and adapting a script using the Trainer to make it work with Trainium will mostly consist in simply swapping the Trainer class for the NeuronTrainer one.
+The [NeuronTrainer](https://huggingface.co/docs/optimum-neuron/package_reference/trainer) is very similar to the [🤗 Transformers Trainer](https://huggingface.co/docs/transformers/main_classes/trainer), and adapting a script using the Trainer to make it work with Trainium will mostly consist in simply swapping the Trainer class for the NeuronTrainer one.
 That's how most of the [example scripts](https://github.com/huggingface/optimum-neuron/tree/main/examples) were adapted from their [original counterparts](https://github.com/huggingface/transformers/tree/main/examples/pytorch).
 
 ```diff

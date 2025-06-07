@@ -13,7 +13,7 @@ def svg(
     filter_glob: str = "*.svg",
     files: bpy.types.bpy_prop_collection[bpy.types.OperatorFileListElement]
     | None = None,
-):
+) -> None:
     """Load a SVG file
 
     :type execution_context: int | str | None

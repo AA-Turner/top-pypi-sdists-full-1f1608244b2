@@ -4,7 +4,7 @@ import typing_extensions
 import numpy.typing as npt
 import bpy.ops.transform
 
-def align(execution_context: int | str | None = None, undo: bool | None = None):
+def align(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Align selected bones to the active bone (or to their parent)
 
     :type execution_context: int | str | None
@@ -18,7 +18,7 @@ def assign_to_collection(
     *,
     collection_index: int | None = -1,
     new_collection_name: str = "",
-):
+) -> None:
     """Assign all selected bones to a collection, or unassign them, depending on whether the active bone is already assigned or not
 
     :type execution_context: int | str | None
@@ -35,7 +35,7 @@ def autoside_names(
     /,
     *,
     type: typing.Literal["XAXIS", "YAXIS", "ZAXIS"] | None = "XAXIS",
-):
+) -> None:
     """Automatically renames the selected bones according to which side of the target axis they fall on
 
         :type execution_context: int | str | None
@@ -59,7 +59,7 @@ def bone_primitive_add(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Add a new bone located at the 3D cursor
 
     :type execution_context: int | str | None
@@ -91,7 +91,7 @@ def calculate_roll(
     | None = "POS_X",
     axis_flip: bool | None = False,
     axis_only: bool | None = False,
-):
+) -> None:
     """Automatically fix alignment of select bones' axes
 
     :type execution_context: int | str | None
@@ -104,7 +104,9 @@ def calculate_roll(
     :type axis_only: bool | None
     """
 
-def click_extrude(execution_context: int | str | None = None, undo: bool | None = None):
+def click_extrude(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Create a new bone going from the last selected joint to the mouse position
 
     :type execution_context: int | str | None
@@ -113,7 +115,7 @@ def click_extrude(execution_context: int | str | None = None, undo: bool | None 
 
 def collection_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add a new bone collection
 
     :type execution_context: int | str | None
@@ -126,7 +128,7 @@ def collection_assign(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Add selected bones to the chosen bone collection
 
     :type execution_context: int | str | None
@@ -141,7 +143,7 @@ def collection_create_and_assign(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Create a new bone collection and assign all selected bones
 
     :type execution_context: int | str | None
@@ -152,7 +154,7 @@ def collection_create_and_assign(
 
 def collection_deselect(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Deselect bones of active Bone Collection
 
     :type execution_context: int | str | None
@@ -165,7 +167,7 @@ def collection_move(
     /,
     *,
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Change position of active Bone Collection in list of Bone collections
 
     :type execution_context: int | str | None
@@ -176,7 +178,7 @@ def collection_move(
 
 def collection_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove the active bone collection
 
     :type execution_context: int | str | None
@@ -185,7 +187,7 @@ def collection_remove(
 
 def collection_remove_unused(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove all bone collections that have neither bones nor children. This is done recursively, so bone collections that only have unused children are also removed
 
     :type execution_context: int | str | None
@@ -194,7 +196,7 @@ def collection_remove_unused(
 
 def collection_select(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select bones in active Bone Collection
 
     :type execution_context: int | str | None
@@ -203,7 +205,7 @@ def collection_select(
 
 def collection_show_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Show all bone collections
 
     :type execution_context: int | str | None
@@ -216,7 +218,7 @@ def collection_unassign(
     /,
     *,
     name: str = "",
-):
+) -> None:
     """Remove selected bones from the active bone collection
 
     :type execution_context: int | str | None
@@ -232,7 +234,7 @@ def collection_unassign_named(
     *,
     name: str = "",
     bone_name: str = "",
-):
+) -> None:
     """Unassign the named bone from this bone collection
 
     :type execution_context: int | str | None
@@ -245,7 +247,7 @@ def collection_unassign_named(
 
 def collection_unsolo_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear the 'solo' setting on all bone collections
 
     :type execution_context: int | str | None
@@ -258,7 +260,7 @@ def copy_bone_color_to_selected(
     /,
     *,
     bone_type: typing.Literal["EDIT", "POSE"] | None = "EDIT",
-):
+) -> None:
     """Copy the bone color of the active bone to all selected bones
 
         :type execution_context: int | str | None
@@ -279,7 +281,7 @@ def delete(
     /,
     *,
     confirm: bool | None = True,
-):
+) -> None:
     """Remove selected bones from the armature
 
     :type execution_context: int | str | None
@@ -288,7 +290,9 @@ def delete(
     :type confirm: bool | None
     """
 
-def dissolve(execution_context: int | str | None = None, undo: bool | None = None):
+def dissolve(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Dissolve selected bones from the armature
 
     :type execution_context: int | str | None
@@ -301,7 +305,7 @@ def duplicate(
     /,
     *,
     do_flip_names: bool | None = False,
-):
+) -> None:
     """Make copies of the selected bones within the same armature
 
     :type execution_context: int | str | None
@@ -317,7 +321,7 @@ def duplicate_move(
     *,
     ARMATURE_OT_duplicate: duplicate | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Make copies of the selected bones within the same armature and move them
 
     :type execution_context: int | str | None
@@ -334,7 +338,7 @@ def extrude(
     /,
     *,
     forked: bool | None = False,
-):
+) -> None:
     """Create new bones from the selected joints
 
     :type execution_context: int | str | None
@@ -350,7 +354,7 @@ def extrude_forked(
     *,
     ARMATURE_OT_extrude: extrude | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Create new bones from the selected joints and move them
 
     :type execution_context: int | str | None
@@ -368,7 +372,7 @@ def extrude_move(
     *,
     ARMATURE_OT_extrude: extrude | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Create new bones from the selected joints and move them
 
     :type execution_context: int | str | None
@@ -379,7 +383,7 @@ def extrude_move(
     :type TRANSFORM_OT_translate: bpy.ops.transform.translate | None
     """
 
-def fill(execution_context: int | str | None = None, undo: bool | None = None):
+def fill(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Add bone between selected joint(s) and/or 3D cursor
 
     :type execution_context: int | str | None
@@ -392,7 +396,7 @@ def flip_names(
     /,
     *,
     do_strip_numbers: bool | None = False,
-):
+) -> None:
     """Flips (and corrects) the axis suffixes of the names of selected bones
 
     :type execution_context: int | str | None
@@ -407,7 +411,7 @@ def hide(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Tag selected bones to not be visible in Edit Mode
 
     :type execution_context: int | str | None
@@ -423,7 +427,7 @@ def move_to_collection(
     *,
     collection_index: int | None = -1,
     new_collection_name: str = "",
-):
+) -> None:
     """Move bones to a collection
 
     :type execution_context: int | str | None
@@ -440,7 +444,7 @@ def parent_clear(
     /,
     *,
     type: typing.Literal["CLEAR", "DISCONNECT"] | None = "CLEAR",
-):
+) -> None:
     """Remove the parent-child relationship between selected bones and their parents
 
     :type execution_context: int | str | None
@@ -455,7 +459,7 @@ def parent_set(
     /,
     *,
     type: typing.Literal["CONNECTED", "OFFSET"] | None = "CONNECTED",
-):
+) -> None:
     """Set the active bone as the parent of the selected bones
 
     :type execution_context: int | str | None
@@ -470,7 +474,7 @@ def reveal(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Reveal all bones hidden in Edit Mode
 
     :type execution_context: int | str | None
@@ -485,7 +489,7 @@ def roll_clear(
     /,
     *,
     roll: float | None = 0.0,
-):
+) -> None:
     """Clear roll for selected bones
 
     :type execution_context: int | str | None
@@ -500,7 +504,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Toggle selection status of all bones
 
         :type execution_context: int | str | None
@@ -528,7 +532,7 @@ def select_hierarchy(
     *,
     direction: typing.Literal["PARENT", "CHILD"] | None = "PARENT",
     extend: bool | None = False,
-):
+) -> None:
     """Select immediate parent/children of selected bones
 
     :type execution_context: int | str | None
@@ -539,7 +543,9 @@ def select_hierarchy(
     :type extend: bool | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Deselect those bones at the boundary of each selection region
 
     :type execution_context: int | str | None
@@ -552,7 +558,7 @@ def select_linked(
     /,
     *,
     all_forks: bool | None = False,
-):
+) -> None:
     """Select all bones linked by parent/child connections to the current selection
 
     :type execution_context: int | str | None
@@ -568,7 +574,7 @@ def select_linked_pick(
     *,
     deselect: bool | None = False,
     all_forks: bool | None = False,
-):
+) -> None:
     """(De)select bones linked by parent/child connections under the mouse cursor
 
     :type execution_context: int | str | None
@@ -586,7 +592,7 @@ def select_mirror(
     *,
     only_active: bool | None = False,
     extend: bool | None = False,
-):
+) -> None:
     """Mirror the bone selection
 
     :type execution_context: int | str | None
@@ -597,7 +603,9 @@ def select_mirror(
     :type extend: bool | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select those bones connected to the initial selection
 
     :type execution_context: int | str | None
@@ -623,7 +631,7 @@ def select_similar(
     ]
     | None = "LENGTH",
     threshold: float | None = 0.1,
-):
+) -> None:
     """Select similar bones by property types
 
     :type execution_context: int | str | None
@@ -634,7 +642,9 @@ def select_similar(
     :type threshold: float | None
     """
 
-def separate(execution_context: int | str | None = None, undo: bool | None = None):
+def separate(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Isolate selected bones into a separate armature
 
     :type execution_context: int | str | None
@@ -643,14 +653,14 @@ def separate(execution_context: int | str | None = None, undo: bool | None = Non
 
 def shortest_path_pick(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select shortest path between two bones
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def split(execution_context: int | str | None = None, undo: bool | None = None):
+def split(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Split off selected bones from connected unselected bones
 
     :type execution_context: int | str | None
@@ -663,7 +673,7 @@ def subdivide(
     /,
     *,
     number_cuts: int | None = 1,
-):
+) -> None:
     """Break selected bones into chains of smaller bones
 
     :type execution_context: int | str | None
@@ -674,7 +684,7 @@ def subdivide(
 
 def switch_direction(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Change the direction that a chain of bones points in (head and tail swap)
 
     :type execution_context: int | str | None
@@ -687,7 +697,7 @@ def symmetrize(
     /,
     *,
     direction: typing.Literal["NEGATIVE_X", "POSITIVE_X"] | None = "NEGATIVE_X",
-):
+) -> None:
     """Enforce symmetry, make copies of the selection or use existing
 
     :type execution_context: int | str | None

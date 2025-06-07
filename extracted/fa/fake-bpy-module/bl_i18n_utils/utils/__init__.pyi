@@ -11,7 +11,7 @@ class I18n:
     writers: typing.Any
 
     @classmethod
-    def check_py_module_has_translations(cls, src, settings=None):
+    def check_py_module_has_translations(cls, src, settings=None) -> None:
         """Check whether a given src (a py module, either a directory or a py file) has some i18n translation data,
         and returns a tuple (src_file, translations_tuple) if yes, else (None, None).
 
@@ -19,13 +19,13 @@ class I18n:
                 :param settings:
         """
 
-    def escape(self, do_all=False):
+    def escape(self, do_all=False) -> None:
         """
 
         :param do_all:
         """
 
-    def parse(self, kind, src, langs=set()):
+    def parse(self, kind, src, langs=set()) -> None:
         """
 
         :param kind:
@@ -33,14 +33,14 @@ class I18n:
         :param langs:
         """
 
-    def parse_from_po(self, src, langs=set()):
+    def parse_from_po(self, src, langs=set()) -> None:
         """
 
         :param src:
         :param langs:
         """
 
-    def parse_from_py(self, src, langs=set()):
+    def parse_from_py(self, src, langs=set()) -> None:
         """src must be a valid path, either a py file or a module directory (in which case all py files inside it
         will be checked, first file matching will win!).
         if langs set is void, all languages found are loaded.
@@ -49,7 +49,7 @@ class I18n:
                 :param langs:
         """
 
-    def print_stats(self, prefix="", print_msgs=True):
+    def print_stats(self, prefix="", print_msgs=True) -> None:
         """Print out some stats about an I18n object.
         If print_msgs is True, it will also print all its translations' stats.
 
@@ -57,27 +57,27 @@ class I18n:
                 :param print_msgs:
         """
 
-    def unescape(self, do_all=True):
+    def unescape(self, do_all=True) -> None:
         """
 
         :param do_all:
         """
 
-    def update_info(self): ...
-    def write(self, kind, langs=set()):
+    def update_info(self) -> None: ...
+    def write(self, kind, langs=set()) -> None:
         """
 
         :param kind:
         :param langs:
         """
 
-    def write_to_po(self, langs=set()):
+    def write_to_po(self, langs=set()) -> None:
         """
 
         :param langs:
         """
 
-    def write_to_py(self, langs=set()):
+    def write_to_py(self, langs=set()) -> None:
         """
 
         :param langs:
@@ -99,35 +99,35 @@ class I18nMessage:
     settings: typing.Any
     sources: typing.Any
 
-    def copy(self): ...
+    def copy(self) -> None: ...
     @classmethod
-    def do_escape(cls, txt):
+    def do_escape(cls, txt) -> None:
         """Replace some chars by their escaped versions!
 
         :param txt:
         """
 
     @classmethod
-    def do_unescape(cls, txt):
+    def do_unescape(cls, txt) -> None:
         """Replace escaped chars by real ones!
 
         :param txt:
         """
 
-    def escape(self, do_all=False):
+    def escape(self, do_all=False) -> None:
         """
 
         :param do_all:
         """
 
-    def normalize(self, max_len=80):
+    def normalize(self, max_len=80) -> None:
         """Normalize this message, call this before exporting it...
         Currently normalize msgctxt, msgid and msgstr lines to given max_len (if below 1, make them single line).
 
                 :param max_len:
         """
 
-    def unescape(self, do_all=True):
+    def unescape(self, do_all=True) -> None:
         """
 
         :param do_all:
@@ -139,7 +139,7 @@ class I18nMessages:
     parsers: typing.Any
     writers: typing.Any
 
-    def check(self, fix=False):
+    def check(self, fix=False) -> None:
         """Check consistency between messages and their keys!
         Check messages using format stuff are consistent between msgid and msgstr!
         If fix is True, tries to fix the issues.
@@ -148,16 +148,16 @@ class I18nMessages:
                 :param fix:
         """
 
-    def clean_commented(self): ...
+    def clean_commented(self) -> None: ...
     @classmethod
-    def cleanup_callback(cls, lng, settings):
+    def cleanup_callback(cls, lng, settings) -> None:
         """Cleanup a single PO file (specified by a filepath).Callback usable in a context where Blender specific modules (like bpy) are not available.
 
         :param lng:
         :param settings:
         """
 
-    def escape(self, do_all=False):
+    def escape(self, do_all=False) -> None:
         """
 
         :param do_all:
@@ -165,7 +165,7 @@ class I18nMessages:
 
     def find_best_messages_matches(
         self, msgs, msgmap, rna_ctxt, rna_struct_name, rna_prop_name, rna_enum_name
-    ):
+    ) -> None:
         """
 
         :param msgs:
@@ -185,7 +185,7 @@ class I18nMessages:
         bl_time,
         default_copyright=True,
         settings=None,
-    ):
+    ) -> None:
         """Generate an empty I18nMessages object (only header is present!).
 
         :param uid:
@@ -196,26 +196,26 @@ class I18nMessages:
         :param settings:
         """
 
-    def invalidate_reverse_cache(self, rebuild_now=False):
+    def invalidate_reverse_cache(self, rebuild_now=False) -> None:
         """Invalidate the reverse cache used by find_best_messages_matches.
 
         :param rebuild_now:
         """
 
-    def merge(self, msgs, replace=False):
+    def merge(self, msgs, replace=False) -> None:
         """
 
         :param msgs:
         :param replace:
         """
 
-    def normalize(self, max_len=80):
+    def normalize(self, max_len=80) -> None:
         """
 
         :param max_len:
         """
 
-    def parse(self, kind, key, src):
+    def parse(self, kind, key, src) -> None:
         """
 
         :param kind:
@@ -223,14 +223,16 @@ class I18nMessages:
         :param src:
         """
 
-    def parse_messages_from_po(self, src, key=None):
+    def parse_messages_from_po(self, src, key=None) -> None:
         """
 
         :param src:
         :param key:
         """
 
-    def print_info(self, prefix="", output=None, print_stats=True, print_errors=True):
+    def print_info(
+        self, prefix="", output=None, print_stats=True, print_errors=True
+    ) -> None:
         """Print out some info about an I18nMessages object.
 
         :param prefix:
@@ -239,14 +241,14 @@ class I18nMessages:
         :param print_errors:
         """
 
-    def rtl_process(self): ...
-    def unescape(self, do_all=True):
+    def rtl_process(self) -> None: ...
+    def unescape(self, do_all=True) -> None:
         """
 
         :param do_all:
         """
 
-    def update(self, ref, use_similar=None, keep_old_commented=True):
+    def update(self, ref, use_similar=None, keep_old_commented=True) -> None:
         """Update this I18nMessage with the ref one. Translations from ref are never used. Source comments from ref
         completely replace current ones. If use_similar is not 0.0, it will try to match new messages in ref with an
         existing one. Messages no more found in ref will be marked as commented if keep_old_commented is True,
@@ -258,7 +260,7 @@ class I18nMessages:
         """
 
     @classmethod
-    def update_from_pot_callback(cls, pot, lng, settings):
+    def update_from_pot_callback(cls, pot, lng, settings) -> None:
         """Update or create a single PO file (specified by a filepath) from the given POT I18nMessages data.Callback usable in a context where Blender specific modules (like bpy) are not available.
 
         :param pot:
@@ -266,61 +268,61 @@ class I18nMessages:
         :param settings:
         """
 
-    def update_info(self): ...
+    def update_info(self) -> None: ...
     @classmethod
-    def update_to_blender_repo_callback(cls, lng, settings):
+    def update_to_blender_repo_callback(cls, lng, settings) -> None:
         """Cleanup and write a single PO file (specified by a filepath) into the relevant Blender source 'compact' PO file.Callback usable in a context where Blender specific modules (like bpy) are not available.
 
         :param lng:
         :param settings:
         """
 
-    def write(self, kind, dest):
+    def write(self, kind, dest) -> None:
         """
 
         :param kind:
         :param dest:
         """
 
-    def write_messages_to_mo(self, fname):
+    def write_messages_to_mo(self, fname) -> None:
         """Write messages in fname mo file.
 
         :param fname:
         """
 
-    def write_messages_to_po(self, fname, compact=False):
+    def write_messages_to_po(self, fname, compact=False) -> None:
         """Write messages in fname po file.
 
         :param fname:
         :param compact:
         """
 
-def enable_addons(addons=None, support=None, disable=False, check_only=False):
+def enable_addons(addons=None, support=None, disable=False, check_only=False) -> None:
     """Enable (or disable) addons based either on a set of names, or a set of 'support' types.
     Returns the list of all affected addons (as fake modules)!
     If "check_only" is set, no addon will be enabled nor disabled.
 
     """
 
-def find_best_isocode_matches(uid, iso_codes):
+def find_best_isocode_matches(uid, iso_codes) -> None:
     """Return an ordered tuple of elements in iso_codes that can match the given uid, from most similar to lesser ones."""
 
-def get_best_similar(data): ...
-def get_po_files_from_dir(root_dir, langs=set()):
+def get_best_similar(data) -> None: ...
+def get_po_files_from_dir(root_dir, langs=set()) -> None:
     """Yield tuples (uid, po_path) of translations for each po file found in the given directory, which should be either
     a directory containing po files using language uid's as names (e.g. fr.po, es_ES.po, etc.), or
     a directory containing directories which names are language uids, and containing po files of the same names.
 
     """
 
-def is_valid_po_path(path): ...
-def list_po_dir(root_path, settings):
+def is_valid_po_path(path) -> None: ...
+def list_po_dir(root_path, settings) -> None:
     """Generator. List given directory (expecting one sub-directory per languages)
     and return all files matching languages listed in settings.Yield tuples (can_use, uid, num_id, name, isocode, po_path)Note that po_path may not actually exists.
 
     """
 
-def locale_explode(locale):
+def locale_explode(locale) -> None:
     """Copies behavior of BLT_lang_locale_explode, keep them in sync."""
 
-def locale_match(loc1, loc2): ...
+def locale_match(loc1, loc2) -> None: ...

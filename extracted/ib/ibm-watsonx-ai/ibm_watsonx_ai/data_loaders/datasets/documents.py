@@ -63,6 +63,7 @@ class DocumentsIterableDataset(IterableDataset):
         - **pptx** (".pptx" file extension) - standard PowerPoint style file
         - **json** (".json" file extension) - standard json file
         - **yaml** (".yaml" file extension) - standard yaml file
+        - **xml** (".xml" file extension) - standard xml file
 
     :param connections: list of connections to the documents
     :type connections: list[DataConnection]

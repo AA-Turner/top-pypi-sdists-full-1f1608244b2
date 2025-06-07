@@ -10,7 +10,7 @@ def delete_metaelems(
     /,
     *,
     confirm: bool | None = True,
-):
+) -> None:
     """Delete selected metaball element(s)
 
     :type execution_context: int | str | None
@@ -21,7 +21,7 @@ def delete_metaelems(
 
 def duplicate_metaelems(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Duplicate selected metaball element(s)
 
     :type execution_context: int | str | None
@@ -35,7 +35,7 @@ def duplicate_move(
     *,
     MBALL_OT_duplicate_metaelems: duplicate_metaelems | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Make copies of the selected metaball elements and move them
 
     :type execution_context: int | str | None
@@ -52,7 +52,7 @@ def hide_metaelems(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Hide (un)selected metaball element(s)
 
     :type execution_context: int | str | None
@@ -67,7 +67,7 @@ def reveal_metaelems(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Reveal all hidden metaball elements
 
     :type execution_context: int | str | None
@@ -82,7 +82,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection of all metaball elements
 
         :type execution_context: int | str | None
@@ -111,7 +111,7 @@ def select_random_metaelems(
     ratio: float | None = 0.5,
     seed: int | None = 0,
     action: typing.Literal["SELECT", "DESELECT"] | None = "SELECT",
-):
+) -> None:
     """Randomly select metaball elements
 
         :type execution_context: int | str | None
@@ -137,7 +137,7 @@ def select_similar(
     *,
     type: typing.Literal["TYPE", "RADIUS", "STIFFNESS", "ROTATION"] | None = "TYPE",
     threshold: float | None = 0.1,
-):
+) -> None:
     """Select similar metaballs by property types
 
     :type execution_context: int | str | None

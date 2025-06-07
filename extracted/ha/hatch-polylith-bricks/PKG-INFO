@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: hatch-polylith-bricks
-Version: 1.4.0
+Version: 1.5.1
 Summary: Hatch build hook plugin for Polylith
 Home-page: https://davidvujic.github.io/python-polylith-docs/
 License: MIT

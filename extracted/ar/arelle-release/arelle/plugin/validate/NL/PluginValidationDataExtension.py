@@ -18,7 +18,7 @@ from arelle.ModelDocument import ModelDocument, Type as ModelDocumentType
 from arelle.ModelDtsObject import ModelConcept
 from arelle.ModelInstanceObject import ModelContext, ModelFact, ModelInlineFootnote, ModelUnit, ModelInlineFact
 from arelle.ModelObject import ModelObject
-from arelle.ModelValue import QName
+from arelle.ModelValue import QName, qname
 from arelle.ModelXbrl import ModelXbrl
 from arelle.typing import assert_type
 from arelle.utils.PluginData import PluginData
@@ -28,6 +28,7 @@ from arelle.XmlValidate import lexicalPatterns
 from arelle.XmlValidateConst import VALID
 from .LinkbaseType import LinkbaseType
 
+DEFAULT_MEMBER_ROLE_URI = 'https://www.nltaxonomie.nl/kvk/role/axis-defaults'
 XBRLI_IDENTIFIER_PATTERN = re.compile(r"^(?!00)\d{8}$")
 XBRLI_IDENTIFIER_SCHEMA = 'http://www.kvk.nl/kvk-id'
 MAX_REPORT_PACKAGE_SIZE_MBS = 100
@@ -63,6 +64,10 @@ EFFECTIVE_KVK_GAAP_IFRS_ENTRYPOINT_FILES = frozenset((
     'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-ifrs-ext.xsd',
 ))
 
+EFFECTIVE_KVK_GAAP_OTHER_ENTRYPOINT_FILES = frozenset((
+    'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-other-gaap.xsd',
+))
+
 TAXONOMY_URLS_BY_YEAR = {
     '2024': {
         'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-nlgaap-ext.xsd',
@@ -92,6 +97,10 @@ STANDARD_TAXONOMY_URLS = frozenset((
     'https://xbrl.org/2020/extensible-enumerations-2.0',
     'http://www.w3.org/1999/xlink',
     'https://www.w3.org/1999/xlink'
+))
+
+QN_DOMAIN_ITEM_TYPES = frozenset((
+    qname("{http://www.xbrl.org/dtr/type/2022-03-31}nonnum:domainItemType"),
 ))
 
 
@@ -194,6 +203,12 @@ class PluginValidationDataExtension(PluginData):
     # Identity hash for caching.
     def __hash__(self) -> int:
         return id(self)
+
+    def addDomMbrs(self, modelXbrl: ModelXbrl, sourceDomMbr: ModelConcept, ELR: str, membersSet: set[ModelConcept]) -> None:
+        if isinstance(sourceDomMbr, ModelConcept) and sourceDomMbr not in membersSet:
+            membersSet.add(sourceDomMbr)
+            for domMbrRel in modelXbrl.relationshipSet(XbrlConst.domainMember, ELR).fromModelObject(sourceDomMbr):
+                self.addDomMbrs(modelXbrl, domMbrRel.toModelObject, domMbrRel.consecutiveLinkrole, membersSet)
 
     @lru_cache(1)
     def contextsByDocument(self, modelXbrl: ModelXbrl) -> dict[str, list[ModelContext]]:
@@ -383,6 +398,31 @@ class PluginValidationDataExtension(PluginData):
         modelDocuments[modelXbrl.modelDocument] = None
         _getDocumentsInDts(modelXbrl.modelDocument)
         return modelDocuments
+
+    def getDomainMembers(self, modelXbrl: ModelXbrl) -> set[ModelConcept]:
+        domainMembers = set()  # concepts which are dimension domain members
+        hcPrimaryItems: set[ModelConcept] = set()
+        hcMembers: set[Any] = set()
+        for hasHypercubeArcrole in (XbrlConst.all, XbrlConst.notAll):
+            hasHypercubeRelationships = modelXbrl.relationshipSet(hasHypercubeArcrole).fromModelObjects()
+            for hasHcRels in hasHypercubeRelationships.values():
+                for hasHcRel in hasHcRels:
+                    sourceConcept: ModelConcept = hasHcRel.fromModelObject
+                    hcPrimaryItems.add(sourceConcept)
+                    # find associated primary items to source concept
+                    for domMbrRel in modelXbrl.relationshipSet(XbrlConst.domainMember).fromModelObject(sourceConcept):
+                        if domMbrRel.consecutiveLinkrole == hasHcRel.linkrole: # only those related to this hc
+                            self.addDomMbrs(modelXbrl, domMbrRel.toModelObject, domMbrRel.consecutiveLinkrole, hcPrimaryItems)
+                    hc = hasHcRel.toModelObject
+                    for hcDimRel in modelXbrl.relationshipSet(XbrlConst.hypercubeDimension, hasHcRel.consecutiveLinkrole).fromModelObject(hc):
+                        dim = hcDimRel.toModelObject
+                        if isinstance(dim, ModelConcept):
+                            for dimDomRel in modelXbrl.relationshipSet(XbrlConst.dimensionDomain, hcDimRel.consecutiveLinkrole).fromModelObject(dim):
+                                dom = dimDomRel.toModelObject
+                                if isinstance(dom, ModelConcept):
+                                    self.addDomMbrs(modelXbrl, dom, dimDomRel.consecutiveLinkrole, hcMembers)
+                    domainMembers.update(hcMembers)
+        return domainMembers
 
     def getEligibleForTransformHiddenFacts(self, modelXbrl: ModelXbrl) -> set[ModelInlineFact]:
         return self.checkHiddenElements(modelXbrl).eligibleForTransformHiddenFacts

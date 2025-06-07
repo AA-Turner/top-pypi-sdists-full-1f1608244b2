@@ -38,10 +38,10 @@ import mathutils
 class ChainingTimeStampF1D:
     """Class hierarchy: `freestyle.types.UnaryFunction1D` > `freestyle.types.UnaryFunction1DVoid` > `ChainingTimeStampF1D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a ChainingTimeStampF1D object."""
 
-    def __call__(self, inter: freestyle.types.Interface1D):
+    def __call__(self, inter: freestyle.types.Interface1D) -> None:
         """Sets the chaining time stamp of the Interface1D.
 
         :param inter: An Interface1D object.
@@ -51,7 +51,7 @@ class ChainingTimeStampF1D:
 class Curvature2DAngleF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `Curvature2DAngleF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a Curvature2DAngleF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -72,7 +72,7 @@ class Curvature2DAngleF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a Curvature2DAngleF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -99,7 +99,7 @@ class CurveMaterialF0D:
 class CurveNatureF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DEdgeNature` > `CurveNatureF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a CurveNatureF0D object."""
 
     def __call__(
@@ -120,7 +120,7 @@ class CurveNatureF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a CurveNatureF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -146,7 +146,7 @@ class CurveNatureF1D:
 class DensityF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `DensityF0D`"""
 
-    def __init__(self, sigma: float = 2.0):
+    def __init__(self, sigma: float = 2.0) -> None:
         """Builds a DensityF0D object.
 
                 :param sigma: The gaussian sigma value indicating the X value for
@@ -177,7 +177,7 @@ class DensityF1D:
         sigma: float = 2.0,
         integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN,
         sampling: float = 2.0,
-    ):
+    ) -> None:
         """Builds a DensityF1D object.
 
                 :param sigma: The sigma used in DensityF0D and determining the window size
@@ -214,7 +214,7 @@ class GetCompleteViewMapDensityF1D:
         level: int,
         integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN,
         sampling: float = 2.0,
-    ):
+    ) -> None:
         """Builds a GetCompleteViewMapDensityF1D object.
 
                 :param level: The level of the pyramid from which the pixel must be
@@ -248,7 +248,7 @@ class GetCompleteViewMapDensityF1D:
 class GetCurvilinearAbscissaF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DFloat` > `GetCurvilinearAbscissaF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetCurvilinearAbscissaF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -271,7 +271,7 @@ class GetDirectionalViewMapDensityF1D:
         level: int,
         integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN,
         sampling: float = 2.0,
-    ):
+    ) -> None:
         """Builds a GetDirectionalViewMapDensityF1D object.
 
                 :param orientation: The number of the directional map we must work
@@ -309,7 +309,7 @@ class GetDirectionalViewMapDensityF1D:
 class GetOccludeeF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DViewShape` > `GetOccludeeF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetOccludeeF0D object."""
 
     def __call__(
@@ -327,7 +327,7 @@ class GetOccludeeF0D:
 class GetOccludeeF1D:
     """Class hierarchy: `freestyle.types.UnaryFunction1D` > `freestyle.types.UnaryFunction1DVectorViewShape` > `GetOccludeeF1D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetOccludeeF1D object."""
 
     def __call__(
@@ -344,7 +344,7 @@ class GetOccludeeF1D:
 class GetOccludersF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DVectorViewShape` > `GetOccludersF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetOccludersF0D object."""
 
     def __call__(
@@ -363,7 +363,7 @@ class GetOccludersF0D:
 class GetOccludersF1D:
     """Class hierarchy: `freestyle.types.UnaryFunction1D` > `freestyle.types.UnaryFunction1DVectorViewShape` > `GetOccludersF1D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetOccludersF1D object."""
 
     def __call__(
@@ -380,7 +380,7 @@ class GetOccludersF1D:
 class GetParameterF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DFloat` > `GetParameterF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetParameterF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -396,7 +396,7 @@ class GetParameterF0D:
 class GetProjectedXF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `GetProjectedXF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetProjectedXF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -414,7 +414,7 @@ class GetProjectedXF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a GetProjectedXF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -434,7 +434,7 @@ class GetProjectedXF1D:
 class GetProjectedYF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `GetProjectedYF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetProjectedYF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -452,7 +452,7 @@ class GetProjectedYF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a GetProjectedYF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -472,7 +472,7 @@ class GetProjectedYF1D:
 class GetProjectedZF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `GetProjectedZF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetProjectedZF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -490,7 +490,7 @@ class GetProjectedZF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a GetProjectedZF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -510,7 +510,7 @@ class GetProjectedZF1D:
 class GetShapeF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DViewShape` > `GetShapeF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetShapeF0D object."""
 
     def __call__(
@@ -528,7 +528,7 @@ class GetShapeF0D:
 class GetShapeF1D:
     """Class hierarchy: `freestyle.types.UnaryFunction1D` > `freestyle.types.UnaryFunction1DVectorViewShape` > `GetShapeF1D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetShapeF1D object."""
 
     def __call__(
@@ -550,7 +550,7 @@ class GetSteerableViewMapDensityF1D:
         level: int,
         integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN,
         sampling: float = 2.0,
-    ):
+    ) -> None:
         """Builds a GetSteerableViewMapDensityF1D object.
 
                 :param level: The level of the pyramid from which the pixel must be
@@ -581,7 +581,7 @@ class GetSteerableViewMapDensityF1D:
 class GetViewMapGradientNormF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DFloat` > `GetViewMapGradientNormF0D`"""
 
-    def __init__(self, level: int):
+    def __init__(self, level: int) -> None:
         """Builds a GetViewMapGradientNormF0D object.
 
                 :param level: The level of the pyramid from which the pixel must be
@@ -608,7 +608,7 @@ class GetViewMapGradientNormF1D:
         level: int,
         integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN,
         sampling: float = 2.0,
-    ):
+    ) -> None:
         """Builds a GetViewMapGradientNormF1D object.
 
                 :param level: The level of the pyramid from which the pixel must be
@@ -639,7 +639,7 @@ class GetViewMapGradientNormF1D:
 class GetXF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `GetXF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetXF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -657,7 +657,7 @@ class GetXF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a GetXF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -677,7 +677,7 @@ class GetXF1D:
 class GetYF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `GetYF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetYF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -695,7 +695,7 @@ class GetYF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a GetYF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -715,7 +715,7 @@ class GetYF1D:
 class GetZF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `GetZF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a GetZF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -733,7 +733,7 @@ class GetZF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a GetZF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -753,10 +753,10 @@ class GetZF1D:
 class IncrementChainingTimeStampF1D:
     """Class hierarchy: `freestyle.types.UnaryFunction1D` > `freestyle.types.UnaryFunction1DVoid` > `IncrementChainingTimeStampF1D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds an IncrementChainingTimeStampF1D object."""
 
-    def __call__(self, inter: freestyle.types.Interface1D):
+    def __call__(self, inter: freestyle.types.Interface1D) -> None:
         """Increments the chaining time stamp of the Interface1D.
 
         :param inter: An Interface1D object.
@@ -766,7 +766,7 @@ class IncrementChainingTimeStampF1D:
 class LocalAverageDepthF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `LocalAverageDepthF0D`"""
 
-    def __init__(self, mask_size: float = 5.0):
+    def __init__(self, mask_size: float = 5.0) -> None:
         """Builds a LocalAverageDepthF0D object.
 
         :param mask_size: The size of the mask.
@@ -792,7 +792,7 @@ class LocalAverageDepthF1D:
         self,
         sigma: float,
         integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN,
-    ):
+    ) -> None:
         """Builds a LocalAverageDepthF1D object.
 
                 :param sigma: The sigma used in DensityF0D and determining the window
@@ -819,7 +819,7 @@ class LocalAverageDepthF1D:
 class MaterialF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DMaterial` > `MaterialF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a MaterialF0D object."""
 
     def __call__(
@@ -847,7 +847,7 @@ class MaterialF0D:
 class Normal2DF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DVec2f` > `Normal2DF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a Normal2DF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> mathutils.Vector:
@@ -868,7 +868,7 @@ class Normal2DF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a Normal2DF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -890,7 +890,7 @@ class Orientation2DF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds an Orientation2DF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -912,7 +912,7 @@ class Orientation3DF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds an Orientation3DF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -932,7 +932,7 @@ class Orientation3DF1D:
 class QuantitativeInvisibilityF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DUnsigned` > `QuantitativeInvisibilityF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a QuantitativeInvisibilityF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> int:
@@ -956,7 +956,7 @@ class QuantitativeInvisibilityF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a QuantitativeInvisibilityF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -980,7 +980,7 @@ class QuantitativeInvisibilityF1D:
 class ReadCompleteViewMapPixelF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DFloat` > `ReadCompleteViewMapPixelF0D`"""
 
-    def __init__(self, level: int):
+    def __init__(self, level: int) -> None:
         """Builds a ReadCompleteViewMapPixelF0D object.
 
                 :param level: The level of the pyramid from which the pixel must be
@@ -1000,7 +1000,7 @@ class ReadCompleteViewMapPixelF0D:
 class ReadMapPixelF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DFloat` > `ReadMapPixelF0D`"""
 
-    def __init__(self, map_name: str, level: int):
+    def __init__(self, map_name: str, level: int) -> None:
         """Builds a ReadMapPixelF0D object.
 
                 :param map_name: The name of the map to be read.
@@ -1022,7 +1022,7 @@ class ReadMapPixelF0D:
 class ReadSteerableViewMapPixelF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DFloat` > `ReadSteerableViewMapPixelF0D`"""
 
-    def __init__(self, orientation: int, level: int):
+    def __init__(self, orientation: int, level: int) -> None:
         """Builds a ReadSteerableViewMapPixelF0D object.
 
                 :param orientation: The integer belonging to [0, 4] indicating the
@@ -1045,7 +1045,7 @@ class ReadSteerableViewMapPixelF0D:
 class ShapeIdF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DId` > `ShapeIdF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a ShapeIdF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> freestyle.types.Id:
@@ -1068,10 +1068,10 @@ class ShapeIdF0D:
 class TimeStampF1D:
     """Class hierarchy: `freestyle.types.UnaryFunction1D` > `freestyle.types.UnaryFunction1DVoid` > `TimeStampF1D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a TimeStampF1D object."""
 
-    def __call__(self, inter: freestyle.types.Interface1D):
+    def __call__(self, inter: freestyle.types.Interface1D) -> None:
         """Returns the time stamp of the Interface1D.
 
         :param inter: An Interface1D object.
@@ -1081,7 +1081,7 @@ class TimeStampF1D:
 class VertexOrientation2DF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DVec2f` > `VertexOrientation2DF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a VertexOrientation2DF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> mathutils.Vector:
@@ -1100,7 +1100,7 @@ class VertexOrientation2DF0D:
 class VertexOrientation3DF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DVec3f` > `VertexOrientation3DF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a VertexOrientation3DF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> mathutils.Vector:
@@ -1119,7 +1119,7 @@ class VertexOrientation3DF0D:
 class ZDiscontinuityF0D:
     """Class hierarchy: `freestyle.types.UnaryFunction0D` > `freestyle.types.UnaryFunction0DDouble` > `ZDiscontinuityF0D`"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Builds a ZDiscontinuityF0D object."""
 
     def __call__(self, it: freestyle.types.Interface0DIterator) -> float:
@@ -1142,7 +1142,7 @@ class ZDiscontinuityF1D:
 
     def __init__(
         self, integration_type: freestyle.types.IntegrationType = IntegrationType.MEAN
-    ):
+    ) -> None:
         """Builds a ZDiscontinuityF1D object.
 
                 :param integration_type: The integration method used to compute a single value
@@ -1178,7 +1178,7 @@ class pyViewMapGradientNormF1D: ...
 class pyViewMapGradientVectorF0D:
     """Returns the gradient vector for a pixel."""
 
-    def __init__(self, level: int):
+    def __init__(self, level: int) -> None:
         """Builds a pyViewMapGradientVectorF0D object.
 
         :param level: the level at which to compute the gradient

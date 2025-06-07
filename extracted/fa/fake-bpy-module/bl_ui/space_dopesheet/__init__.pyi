@@ -9,7 +9,7 @@ import rna_prop_ui
 
 class DOPESHEET_HT_editor_buttons:
     @classmethod
-    def draw_header(cls, context, layout):
+    def draw_header(cls, context, layout) -> None:
         """
 
         :param context:
@@ -35,7 +35,7 @@ class DOPESHEET_HT_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -60,7 +60,7 @@ class DOPESHEET_MT_action(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -85,7 +85,7 @@ class DOPESHEET_MT_channel(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -110,7 +110,7 @@ class DOPESHEET_MT_channel_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -135,7 +135,7 @@ class DOPESHEET_MT_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -160,7 +160,7 @@ class DOPESHEET_MT_delete(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -186,7 +186,7 @@ class DOPESHEET_MT_editor_menus(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -211,7 +211,7 @@ class DOPESHEET_MT_gpencil_channel(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -236,7 +236,7 @@ class DOPESHEET_MT_key(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -261,7 +261,7 @@ class DOPESHEET_MT_key_transform(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -286,7 +286,7 @@ class DOPESHEET_MT_marker(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -311,7 +311,7 @@ class DOPESHEET_MT_select(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -336,7 +336,7 @@ class DOPESHEET_MT_snap_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -361,7 +361,7 @@ class DOPESHEET_MT_view(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -386,7 +386,7 @@ class DOPESHEET_MT_view_pie(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -414,14 +414,14 @@ class DOPESHEET_PT_action(DopesheetActionPanelBase, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -449,14 +449,14 @@ class DOPESHEET_PT_action_slot(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -492,7 +492,7 @@ class DOPESHEET_PT_custom_props_action(rna_prop_ui.PropertyPanel, bpy.types.Pane
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -519,7 +519,7 @@ class DOPESHEET_PT_filters(DopesheetFilterPopoverBase, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -689,7 +689,7 @@ class DOPESHEET_PT_grease_pencil_mode(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -740,7 +740,7 @@ class DOPESHEET_PT_proportional_edit(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -767,7 +767,7 @@ class DOPESHEET_PT_snapping(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -778,7 +778,7 @@ class DopesheetActionPanelBase:
     bl_region_type: typing.Any
 
     @classmethod
-    def draw_generic_panel(cls, _context, layout, action):
+    def draw_generic_panel(cls, _context, layout, action) -> None:
         """
 
         :param _context:
@@ -791,7 +791,7 @@ class DopesheetFilterPopoverBase:
     bl_region_type: typing.Any
 
     @classmethod
-    def draw_generic_filters(cls, context, layout):
+    def draw_generic_filters(cls, context, layout) -> None:
         """
 
         :param context:
@@ -799,7 +799,7 @@ class DopesheetFilterPopoverBase:
         """
 
     @classmethod
-    def draw_search_filters(cls, context, layout, generic_filters_only=False):
+    def draw_search_filters(cls, context, layout, generic_filters_only=False) -> None:
         """
 
         :param context:
@@ -808,7 +808,7 @@ class DopesheetFilterPopoverBase:
         """
 
     @classmethod
-    def draw_standard_filters(cls, context, layout):
+    def draw_standard_filters(cls, context, layout) -> None:
         """
 
         :param context:
@@ -821,7 +821,7 @@ class GreasePencilLayersDopeSheetPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -833,10 +833,10 @@ class LayersDopeSheetPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def dopesheet_filter(layout, context): ...
+def dopesheet_filter(layout, context) -> None: ...

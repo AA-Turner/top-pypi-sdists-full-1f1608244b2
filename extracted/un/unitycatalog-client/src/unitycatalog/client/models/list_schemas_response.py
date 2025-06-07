@@ -73,9 +73,9 @@ class ListSchemasResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in schemas (list)
         _items = []
         if self.schemas:
-            for _item in self.schemas:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_schemas in self.schemas:
+                if _item_schemas:
+                    _items.append(_item_schemas.to_dict())
             _dict['schemas'] = _items
         return _dict
 

@@ -71,6 +71,23 @@ class TSModelInference(WMLResource):
             project_id=project_id
         )
 
+    .. code-block:: python
+
+        from ibm_watsonx_ai import Credentials
+        from ibm_watsonx_ai.foundation_models import TSModelInference
+
+        forecasting_params = {
+            "prediction_length": 10
+        }
+
+        ts_model = TSModelInference(
+            deployment_id="<ID of deployed model>",
+            params=forecasting_params,
+            credentials=Credentials(
+                api_key = IAM_API_KEY,
+                url = "https://us-south.ml.cloud.ibm.com"),
+        )
+
     """
 
     def __init__(

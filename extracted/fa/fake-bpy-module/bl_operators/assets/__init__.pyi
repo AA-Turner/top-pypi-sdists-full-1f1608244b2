@@ -27,33 +27,33 @@ class ASSET_OT_open_containing_blend_file(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def cancel(self, context):
+    def cancel(self, context) -> None:
         """
 
         :param context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def modal(self, context, event):
+    def modal(self, context, event) -> None:
         """
 
         :param context:
         :param event:
         """
 
-    def open_in_new_blender(self, filepath):
+    def open_in_new_blender(self, filepath) -> None:
         """
 
         :param filepath:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -82,7 +82,7 @@ class ASSET_OT_tag_add(AssetBrowserMetadataOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -111,14 +111,14 @@ class ASSET_OT_tag_remove(AssetBrowserMetadataOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -126,7 +126,7 @@ class ASSET_OT_tag_remove(AssetBrowserMetadataOperator, bpy.types.Operator):
 
 class AssetBrowserMetadataOperator:
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

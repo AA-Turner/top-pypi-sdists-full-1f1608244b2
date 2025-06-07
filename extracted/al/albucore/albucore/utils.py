@@ -103,8 +103,8 @@ def maybe_process_in_chunks(
 
 def clip(img: np.ndarray, dtype: Any, inplace: bool = False) -> np.ndarray:
     max_value = MAX_VALUES_BY_DTYPE[dtype]
-    if inplace:
-        return np.clip(img, 0, max_value, out=img)
+    if inplace and img.dtype == dtype:
+        return np.clip(img, 0, max_value, out=img).astype(dtype, copy=False)
     return np.clip(img, 0, max_value).astype(dtype, copy=False)
 
 
@@ -123,7 +123,7 @@ def clipped(func: Callable[Concatenate[np.ndarray, P], np.ndarray]) -> Callable[
 
 
 def get_num_channels(image: np.ndarray) -> int:
-    return image.shape[2] if image.ndim == NUM_MULTI_CHANNEL_DIMENSIONS else 1
+    return image.shape[-1] if image.ndim >= NUM_MULTI_CHANNEL_DIMENSIONS else 1
 
 
 def is_grayscale_image(image: np.ndarray) -> bool:

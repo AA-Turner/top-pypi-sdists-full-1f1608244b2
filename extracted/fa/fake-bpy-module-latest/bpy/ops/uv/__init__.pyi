@@ -16,7 +16,7 @@ def align(
         "ALIGN_S", "ALIGN_T", "ALIGN_U", "ALIGN_AUTO", "ALIGN_X", "ALIGN_Y"
     ]
     | None = "ALIGN_AUTO",
-):
+) -> None:
     """Aligns selected UV vertices on a line
 
         :type execution_context: int | str | None
@@ -51,7 +51,7 @@ def align_rotation(
     method: typing.Literal["AUTO", "EDGE", "GEOMETRY"] | None = "AUTO",
     axis: typing.Literal["X", "Y", "Z"] | None = "X",
     correct_aspect: bool | None = False,
-):
+) -> None:
     """Align the UV island's rotation
 
         :type execution_context: int | str | None
@@ -89,7 +89,7 @@ def average_islands_scale(
     *,
     scale_uv: bool | None = False,
     shear: bool | None = False,
-):
+) -> None:
     """Average the size of separate UV islands, based on their area in 3D space
 
     :type execution_context: int | str | None
@@ -100,7 +100,7 @@ def average_islands_scale(
     :type shear: bool | None
     """
 
-def copy(execution_context: int | str | None = None, undo: bool | None = None):
+def copy(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Copy selected UV vertices
 
     :type execution_context: int | str | None
@@ -116,7 +116,7 @@ def cube_project(
     correct_aspect: bool | None = True,
     clip_to_bounds: bool | None = False,
     scale_to_bounds: bool | None = False,
-):
+) -> None:
     """Project the UV vertices of the mesh over the six faces of a cube
 
     :type execution_context: int | str | None
@@ -137,7 +137,7 @@ def cursor_set(
     /,
     *,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Set 2D cursor location
 
     :type execution_context: int | str | None
@@ -160,7 +160,7 @@ def cylinder_project(
     correct_aspect: bool | None = True,
     clip_to_bounds: bool | None = False,
     scale_to_bounds: bool | None = False,
-):
+) -> None:
     """Project the UV vertices of the mesh over the curved wall of a cylinder
 
         :type execution_context: int | str | None
@@ -217,7 +217,7 @@ def export_layout(
     size: collections.abc.Iterable[int] | None = (1024, 1024),
     opacity: float | None = 0.25,
     check_existing: bool | None = True,
-):
+) -> None:
     """Export UV layout to file
 
         :type execution_context: int | str | None
@@ -264,7 +264,7 @@ def follow_active_quads(
     /,
     *,
     mode: typing.Literal["EVEN", "LENGTH", "LENGTH_AVERAGE"] | None = "LENGTH_AVERAGE",
-):
+) -> None:
     """Follow UVs from active quads along continuous face loops
 
         :type execution_context: int | str | None
@@ -288,7 +288,7 @@ def hide(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Hide (un)selected UV vertices
 
     :type execution_context: int | str | None
@@ -307,7 +307,7 @@ def lightmap_pack(
     PREF_NEW_UVLAYER: bool | None = False,
     PREF_BOX_DIV: int | None = 12,
     PREF_MARGIN_DIV: float | None = 0.1,
-):
+) -> None:
     """Pack each face's UVs into the UV bounds
 
         :type execution_context: int | str | None
@@ -336,7 +336,7 @@ def mark_seam(
     /,
     *,
     clear: bool | None = False,
-):
+) -> None:
     """Mark selected UV edges as seams
 
     :type execution_context: int | str | None
@@ -353,7 +353,7 @@ def minimize_stretch(
     fill_holes: bool | None = True,
     blend: float | None = 0.0,
     iterations: int | None = 0,
-):
+) -> None:
     """Reduce UV stretching by relaxing angles
 
     :type execution_context: int | str | None
@@ -386,7 +386,7 @@ def pack_islands(
     pin_method: typing.Literal["SCALE", "ROTATION", "ROTATION_SCALE", "LOCKED"]
     | None = "LOCKED",
     shape_method: typing.Literal["CONCAVE", "CONVEX", "AABB"] | None = "CONCAVE",
-):
+) -> None:
     """Transform all islands so that they fill up the UV/UDIM space as much as possible
 
         :type execution_context: int | str | None
@@ -467,7 +467,7 @@ def pack_islands(
         :type shape_method: typing.Literal['CONCAVE','CONVEX','AABB'] | None
     """
 
-def paste(execution_context: int | str | None = None, undo: bool | None = None):
+def paste(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Paste selected UV vertices
 
     :type execution_context: int | str | None
@@ -481,7 +481,7 @@ def pin(
     *,
     clear: bool | None = False,
     invert: bool | None = False,
-):
+) -> None:
     """Set/clear selected UV vertices as anchored between multiple unwrap operations
 
     :type execution_context: int | str | None
@@ -502,7 +502,7 @@ def project_from_view(
     correct_aspect: bool | None = True,
     clip_to_bounds: bool | None = False,
     scale_to_bounds: bool | None = False,
-):
+) -> None:
     """Project the UV vertices of the mesh as seen in current 3D view
 
     :type execution_context: int | str | None
@@ -532,7 +532,7 @@ def randomize_uv_transform(
     use_scale: bool | None = True,
     scale_even: bool | None = False,
     scale: collections.abc.Iterable[float] | None = (1.0, 1.0),
-):
+) -> None:
     """Randomize the UV island's location, rotation, and scale
 
     :type execution_context: int | str | None
@@ -563,7 +563,7 @@ def remove_doubles(
     threshold: float | None = 0.02,
     use_unselected: bool | None = False,
     use_shared_vertex: bool | None = False,
-):
+) -> None:
     """Selected UV vertices that are within a radius of each other are welded together
 
     :type execution_context: int | str | None
@@ -576,7 +576,7 @@ def remove_doubles(
     :type use_shared_vertex: bool | None
     """
 
-def reset(execution_context: int | str | None = None, undo: bool | None = None):
+def reset(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Reset UV projection
 
     :type execution_context: int | str | None
@@ -589,7 +589,7 @@ def reveal(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Reveal all hidden UV vertices
 
     :type execution_context: int | str | None
@@ -607,7 +607,7 @@ def rip(
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Rip selected vertices or a selected region
 
     :type execution_context: int | str | None
@@ -629,7 +629,7 @@ def rip_move(
     *,
     UV_OT_rip: rip | None = None,
     TRANSFORM_OT_translate: bpy.ops.transform.translate | None = None,
-):
+) -> None:
     """Unstitch UVs and move the result
 
     :type execution_context: int | str | None
@@ -647,7 +647,7 @@ def seams_from_islands(
     *,
     mark_seams: bool | None = True,
     mark_sharp: bool | None = False,
-):
+) -> None:
     """Set mesh seams according to island setup in the UV editor
 
     :type execution_context: int | str | None
@@ -669,7 +669,7 @@ def select(
     deselect_all: bool | None = False,
     select_passthrough: bool | None = False,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Select UV vertices
 
     :type execution_context: int | str | None
@@ -694,7 +694,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection of all UV vertices
 
         :type execution_context: int | str | None
@@ -727,7 +727,7 @@ def select_box(
     ymax: int | None = 0,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select UV vertices using box selection
 
         :type execution_context: int | str | None
@@ -767,7 +767,7 @@ def select_circle(
     radius: int | None = 25,
     wait_for_input: bool | None = True,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select UV vertices using circle selection
 
         :type execution_context: int | str | None
@@ -800,7 +800,7 @@ def select_edge_ring(
     *,
     extend: bool | None = False,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Select an edge ring of connected UV vertices
 
     :type execution_context: int | str | None
@@ -821,7 +821,7 @@ def select_lasso(
     smooth_stroke_factor: float | None = 0.75,
     smooth_stroke_radius: int | None = 35,
     mode: typing.Literal["SET", "ADD", "SUB"] | None = "SET",
-):
+) -> None:
     """Select UVs using lasso selection
 
         :type execution_context: int | str | None
@@ -847,14 +847,18 @@ def select_lasso(
         :type mode: typing.Literal['SET','ADD','SUB'] | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Deselect UV vertices at the boundary of each selection region
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_linked(execution_context: int | str | None = None, undo: bool | None = None):
+def select_linked(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select all UV vertices linked to the active UV map
 
     :type execution_context: int | str | None
@@ -869,7 +873,7 @@ def select_linked_pick(
     extend: bool | None = False,
     deselect: bool | None = False,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Select all UV vertices linked under the mouse
 
     :type execution_context: int | str | None
@@ -889,7 +893,7 @@ def select_loop(
     *,
     extend: bool | None = False,
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Select a loop of connected UV vertices
 
     :type execution_context: int | str | None
@@ -906,7 +910,7 @@ def select_mode(
     /,
     *,
     type: bpy.stub_internal.rna_enums.MeshSelectModeUvItems | None = "VERTEX",
-):
+) -> None:
     """Change UV selection mode
 
     :type execution_context: int | str | None
@@ -915,7 +919,9 @@ def select_mode(
     :type type: bpy.stub_internal.rna_enums.MeshSelectModeUvItems | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select more UV vertices connected to initial selection
 
     :type execution_context: int | str | None
@@ -928,7 +934,7 @@ def select_overlap(
     /,
     *,
     extend: bool | None = False,
-):
+) -> None:
     """Select all UV faces which overlap each other
 
     :type execution_context: int | str | None
@@ -937,7 +943,9 @@ def select_overlap(
     :type extend: bool | None
     """
 
-def select_pinned(execution_context: int | str | None = None, undo: bool | None = None):
+def select_pinned(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select all pinned UV vertices
 
     :type execution_context: int | str | None
@@ -964,7 +972,7 @@ def select_similar(
     | None = "PIN",
     compare: typing.Literal["EQUAL", "GREATER", "LESS"] | None = "EQUAL",
     threshold: float | None = 0.0,
-):
+) -> None:
     """Select similar UVs by property types
 
     :type execution_context: int | str | None
@@ -977,7 +985,9 @@ def select_similar(
     :type threshold: float | None
     """
 
-def select_split(execution_context: int | str | None = None, undo: bool | None = None):
+def select_split(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select only entirely selected faces
 
     :type execution_context: int | str | None
@@ -997,7 +1007,7 @@ def shortest_path_pick(
     offset: int | None = 0,
     object_index: int | None = -1,
     index: int | None = -1,
-):
+) -> None:
     """Select shortest path between two selections
 
     :type execution_context: int | str | None
@@ -1029,7 +1039,7 @@ def shortest_path_select(
     skip: int | None = 0,
     nth: int | None = 1,
     offset: int | None = 0,
-):
+) -> None:
     """Selected shortest path between two vertices/edges/faces
 
     :type execution_context: int | str | None
@@ -1061,7 +1071,7 @@ def smart_project(
     area_weight: float | None = 0.0,
     correct_aspect: bool | None = True,
     scale_to_bounds: bool | None = False,
-):
+) -> None:
     """Projection unwraps the selected faces of mesh objects
 
         :type execution_context: int | str | None
@@ -1106,7 +1116,7 @@ def snap_cursor(
     /,
     *,
     target: typing.Literal["PIXELS", "SELECTED", "ORIGIN"] | None = "PIXELS",
-):
+) -> None:
     """Snap cursor to target type
 
     :type execution_context: int | str | None
@@ -1122,7 +1132,7 @@ def snap_selected(
     *,
     target: typing.Literal["PIXELS", "CURSOR", "CURSOR_OFFSET", "ADJACENT_UNSELECTED"]
     | None = "PIXELS",
-):
+) -> None:
     """Snap selected UV vertices to target type
 
     :type execution_context: int | str | None
@@ -1144,7 +1154,7 @@ def sphere_project(
     correct_aspect: bool | None = True,
     clip_to_bounds: bool | None = False,
     scale_to_bounds: bool | None = False,
-):
+) -> None:
     """Project the UV vertices of the mesh over the curved surface of a sphere
 
         :type execution_context: int | str | None
@@ -1202,7 +1212,7 @@ def stitch(
     stored_mode: typing.Literal["VERTEX", "EDGE"] | None = "VERTEX",
     selection: bpy.types.bpy_prop_collection[bpy.types.SelectedUvElement] | None = None,
     objects_selection_count: collections.abc.Iterable[int] | None = (0, 0, 0, 0, 0, 0),
-):
+) -> None:
     """Stitch selected UV vertices by proximity
 
     :type execution_context: int | str | None
@@ -1248,7 +1258,7 @@ def unwrap(
     use_weights: bool | None = False,
     weight_group: str = "uv_importance",
     weight_factor: float | None = 1.0,
-):
+) -> None:
     """Unwrap the mesh of the object being edited
 
         :type execution_context: int | str | None
@@ -1286,7 +1296,7 @@ def unwrap(
         :type weight_factor: float | None
     """
 
-def weld(execution_context: int | str | None = None, undo: bool | None = None):
+def weld(execution_context: int | str | None = None, undo: bool | None = None) -> None:
     """Weld selected UV vertices together
 
     :type execution_context: int | str | None

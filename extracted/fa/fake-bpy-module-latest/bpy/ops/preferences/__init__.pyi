@@ -10,7 +10,7 @@ def addon_disable(
     /,
     *,
     module: str = "",
-):
+) -> None:
     """Turn off this add-on
 
     :type execution_context: int | str | None
@@ -25,7 +25,7 @@ def addon_enable(
     /,
     *,
     module: str = "",
-):
+) -> None:
     """Turn on this add-on
 
     :type execution_context: int | str | None
@@ -40,7 +40,7 @@ def addon_expand(
     /,
     *,
     module: str = "",
-):
+) -> None:
     """Display information and preferences for this add-on
 
     :type execution_context: int | str | None
@@ -61,7 +61,7 @@ def addon_install(
     filter_folder: bool | None = True,
     filter_python: bool | None = True,
     filter_glob: str = "*.py;*.zip",
-):
+) -> None:
     """Install an add-on
 
     :type execution_context: int | str | None
@@ -82,7 +82,9 @@ def addon_install(
     :type filter_glob: str
     """
 
-def addon_refresh(execution_context: int | str | None = None, undo: bool | None = None):
+def addon_refresh(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Scan add-on directories for new modules
 
     :type execution_context: int | str | None
@@ -95,7 +97,7 @@ def addon_remove(
     /,
     *,
     module: str = "",
-):
+) -> None:
     """Delete the add-on from the file system
 
     :type execution_context: int | str | None
@@ -110,7 +112,7 @@ def addon_show(
     /,
     *,
     module: str = "",
-):
+) -> None:
     """Show add-on preferences
 
     :type execution_context: int | str | None
@@ -128,7 +130,7 @@ def app_template_install(
     filepath: str = "",
     filter_folder: bool | None = True,
     filter_glob: str = "*.zip",
-):
+) -> None:
     """Install an application template
 
     :type execution_context: int | str | None
@@ -174,7 +176,7 @@ def asset_library_add(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Add a directory to be used by the Asset Browser as source of assets
 
         :type execution_context: int | str | None
@@ -245,7 +247,7 @@ def asset_library_remove(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Remove a path to a .blend file, so the Asset Browser will not attempt to show it anymore
 
     :type execution_context: int | str | None
@@ -256,7 +258,7 @@ def asset_library_remove(
 
 def associate_blend(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Use this installation for .blend files and to display thumbnails
 
     :type execution_context: int | str | None
@@ -265,7 +267,7 @@ def associate_blend(
 
 def autoexec_path_add(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add path to exclude from auto-execution
 
     :type execution_context: int | str | None
@@ -278,7 +280,7 @@ def autoexec_path_remove(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Remove path to exclude from auto-execution
 
     :type execution_context: int | str | None
@@ -287,7 +289,9 @@ def autoexec_path_remove(
     :type index: int | None
     """
 
-def copy_prev(execution_context: int | str | None = None, undo: bool | None = None):
+def copy_prev(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Copy settings from previous version
 
     :type execution_context: int | str | None
@@ -307,7 +311,7 @@ def extension_repo_add(
     use_custom_directory: bool | None = False,
     custom_directory: str = "",
     type: typing.Literal["REMOTE", "LOCAL"] | None = "REMOTE",
-):
+) -> None:
     """Add a new repository used to store extensions
 
         :type execution_context: int | str | None
@@ -343,7 +347,7 @@ def extension_repo_remove(
     *,
     index: int | None = 0,
     remove_files: bool | None = False,
-):
+) -> None:
     """Remove an extension repository
 
     :type execution_context: int | str | None
@@ -360,7 +364,7 @@ def extension_url_drop(
     /,
     *,
     url: str = "",
-):
+) -> None:
     """Handle dropping an extension URL
 
     :type execution_context: int | str | None
@@ -375,7 +379,7 @@ def keyconfig_activate(
     /,
     *,
     filepath: str = "",
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -394,7 +398,7 @@ def keyconfig_export(
     filter_folder: bool | None = True,
     filter_text: bool | None = True,
     filter_python: bool | None = True,
-):
+) -> None:
     """Export key configuration to a Python script
 
     :type execution_context: int | str | None
@@ -421,7 +425,7 @@ def keyconfig_import(
     filter_text: bool | None = True,
     filter_python: bool | None = True,
     keep_original: bool | None = True,
-):
+) -> None:
     """Import key configuration from a Python script
 
     :type execution_context: int | str | None
@@ -440,7 +444,7 @@ def keyconfig_import(
 
 def keyconfig_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove key config
 
     :type execution_context: int | str | None
@@ -449,14 +453,16 @@ def keyconfig_remove(
 
 def keyconfig_test(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Test key configuration for conflicts
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def keyitem_add(execution_context: int | str | None = None, undo: bool | None = None):
+def keyitem_add(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add key map item
 
     :type execution_context: int | str | None
@@ -469,7 +475,7 @@ def keyitem_remove(
     /,
     *,
     item_id: int | None = 0,
-):
+) -> None:
     """Remove key map item
 
     :type execution_context: int | str | None
@@ -484,7 +490,7 @@ def keyitem_restore(
     /,
     *,
     item_id: int | None = 0,
-):
+) -> None:
     """Restore key map item
 
     :type execution_context: int | str | None
@@ -499,7 +505,7 @@ def keymap_restore(
     /,
     *,
     all: bool | None = False,
-):
+) -> None:
     """Restore key map(s)
 
     :type execution_context: int | str | None
@@ -510,7 +516,7 @@ def keymap_restore(
 
 def reset_default_theme(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reset to the default theme colors
 
     :type execution_context: int | str | None
@@ -524,7 +530,7 @@ def script_directory_add(
     *,
     directory: str = "",
     filter_folder: bool | None = True,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -541,7 +547,7 @@ def script_directory_remove(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -556,7 +562,7 @@ def studiolight_copy_settings(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Copy Studio Light settings to the Studio Light editor
 
     :type execution_context: int | str | None
@@ -576,7 +582,7 @@ def studiolight_install(
     filter_folder: bool | None = True,
     filter_glob: str = "*.png;*.jpg;*.hdr;*.exr",
     type: typing.Literal["MATCAP", "WORLD", "STUDIO"] | None = "MATCAP",
-):
+) -> None:
     """Install a user defined light
 
         :type execution_context: int | str | None
@@ -608,7 +614,7 @@ def studiolight_new(
     /,
     *,
     filename: str = "StudioLight",
-):
+) -> None:
     """Save custom studio light from the studio light editor settings
 
     :type execution_context: int | str | None
@@ -623,7 +629,7 @@ def studiolight_uninstall(
     /,
     *,
     index: int | None = 0,
-):
+) -> None:
     """Delete Studio Light
 
     :type execution_context: int | str | None
@@ -641,7 +647,7 @@ def theme_install(
     filepath: str = "",
     filter_folder: bool | None = True,
     filter_glob: str = "*.xml",
-):
+) -> None:
     """Load and apply a Blender XML theme file
 
     :type execution_context: int | str | None
@@ -658,7 +664,7 @@ def theme_install(
 
 def unassociate_blend(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove this installation's associations with .blend files
 
     :type execution_context: int | str | None

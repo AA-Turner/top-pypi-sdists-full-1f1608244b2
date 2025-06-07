@@ -22,14 +22,14 @@ from . import icons as icons
 from . import timers as timers
 from . import translations as translations
 
-def help_text(all: bool | None = False):
+def help_text(all: bool | None = False) -> None:
     """Return the help text as a string.
 
     :param all: Return all arguments, even those which aren't available for the current platform.
     :type all: bool | None
     """
 
-def is_job_running(job_type: bpy.stub_internal.rna_enums.WmJobTypeItems):
+def is_job_running(job_type: bpy.stub_internal.rna_enums.WmJobTypeItems) -> None:
     """Check whether a job of the given type is running.
 
     :param job_type: job type in `rna_enum_wm_job_type_items`.
@@ -98,7 +98,7 @@ build_linkflags: typing.Any
 """
 
 build_options: typing.Any
-""" Constant value bpy.app.build_options(bullet=True, codec_avi=False, codec_ffmpeg=True, codec_sndfile=True, compositor_cpu=True, cycles=True, cycles_osl=True, freestyle=True, image_cineon=True, image_dds=True, image_hdr=True, image_openexr=True, image_openjpeg=True, image_tiff=True, image_webp=True, input_ndof=True, audaspace=True, international=True, openal=True, opensubdiv=True, sdl=False, coreaudio=False, jack=False, pulseaudio=False, wasapi=False, libmv=True, mod_oceansim=True, mod_remesh=True, collada=True, io_wavefront_obj=True, io_ply=True, io_stl=True, io_fbx=True, io_gpencil=True, opencolorio=True, openmp=False, openvdb=True, alembic=True, usd=True, fluid=True, xr_openxr=True, potrace=True, pugixml=True, haru=True)
+""" Constant value bpy.app.build_options(bullet=True, codec_avi=False, codec_ffmpeg=True, codec_sndfile=True, compositor_cpu=True, cycles=True, cycles_osl=True, freestyle=True, image_cineon=True, image_dds=True, image_hdr=True, image_openexr=True, image_openjpeg=True, image_tiff=True, image_webp=True, input_ndof=True, audaspace=True, international=True, openal=True, opensubdiv=True, sdl=False, coreaudio=False, jack=False, pulseaudio=False, wasapi=False, libmv=True, mod_oceansim=True, mod_remesh=True, collada=True, io_wavefront_obj=True, io_ply=True, io_stl=True, io_fbx=True, io_gpencil=True, opencolorio=True, openmp=False, openvdb=True, alembic=True, usd=True, fluid=True, xr_openxr=True, potrace=True, pugixml=True, haru=True, experimental_features=True)
 """
 
 build_platform: typing.Any

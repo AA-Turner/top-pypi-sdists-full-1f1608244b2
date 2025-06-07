@@ -237,11 +237,12 @@ class _SEnumTypeWrapper(
     LogEntries_Get: _S.ValueType  # 151
     WorkflowVersionEvaluations_Get: _S.ValueType  # 152
     WorkflowVersionEvaluations_Add: _S.ValueType  # 153
-    Pipeline_Get: _S.ValueType  # 154
-    Pipeline_Add: _S.ValueType  # 155
-    PipelineStep_Get: _S.ValueType  # 157
-    PipelineStep_Add: _S.ValueType  # 158
-    PipelineStep_Pull: _S.ValueType  # 159
+    Pipelines_Get: _S.ValueType  # 154
+    Pipelines_Add: _S.ValueType  # 155
+    Pipelines_Delete: _S.ValueType  # 156
+    PipelineSteps_Get: _S.ValueType  # 157
+    PipelineSteps_Add: _S.ValueType  # 158
+    PipelineSteps_Pull: _S.ValueType  # 159
     """To pull the pipeline step version's image"""
 
 class S(_S, metaclass=_SEnumTypeWrapper):
@@ -481,11 +482,12 @@ AuditLogs_Get: S.ValueType  # 149
 LogEntries_Get: S.ValueType  # 151
 WorkflowVersionEvaluations_Get: S.ValueType  # 152
 WorkflowVersionEvaluations_Add: S.ValueType  # 153
-Pipeline_Get: S.ValueType  # 154
-Pipeline_Add: S.ValueType  # 155
-PipelineStep_Get: S.ValueType  # 157
-PipelineStep_Add: S.ValueType  # 158
-PipelineStep_Pull: S.ValueType  # 159
+Pipelines_Get: S.ValueType  # 154
+Pipelines_Add: S.ValueType  # 155
+Pipelines_Delete: S.ValueType  # 156
+PipelineSteps_Get: S.ValueType  # 157
+PipelineSteps_Add: S.ValueType  # 158
+PipelineSteps_Pull: S.ValueType  # 159
 """To pull the pipeline step version's image"""
 global___S = S
 

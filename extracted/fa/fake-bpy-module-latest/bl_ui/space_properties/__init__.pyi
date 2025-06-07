@@ -23,7 +23,7 @@ class PROPERTIES_HT_header(bpy.types.Header):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -51,7 +51,7 @@ class PROPERTIES_PT_navigation_bar(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -80,7 +80,7 @@ class PROPERTIES_PT_options(bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -98,14 +98,14 @@ class PropertiesAnimationMixin:
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def draw_action_and_slot_selector(cls, context, layout, animated_id):
+    def draw_action_and_slot_selector(cls, context, layout, animated_id) -> None:
         """
 
         :param context:
@@ -114,7 +114,7 @@ class PropertiesAnimationMixin:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

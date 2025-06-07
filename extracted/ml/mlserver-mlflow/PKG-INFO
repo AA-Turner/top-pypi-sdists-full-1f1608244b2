@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: mlserver-mlflow
-Version: 1.7.0
+Version: 1.7.1
 Summary: MLflow runtime for MLServer
 License: Apache-2.0
 Author: Seldon Technologies Ltd.
@@ -12,7 +12,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
-Requires-Dist: mlflow
+Requires-Dist: mlflow (>=2.19.0)
 Requires-Dist: mlserver
 Description-Content-Type: text/markdown
 

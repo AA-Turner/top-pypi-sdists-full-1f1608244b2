@@ -15,14 +15,14 @@ class KeyframesCo:
 
     keyframes_from_fcurve: typing.Any
 
-    def add_paths(self, rna_path, total_indices):
+    def add_paths(self, rna_path, total_indices) -> None:
         """
 
         :param rna_path:
         :param total_indices:
         """
 
-    def extend_co_value(self, rna_path, frame, value):
+    def extend_co_value(self, rna_path, frame, value) -> None:
         """
 
         :param rna_path:
@@ -30,7 +30,7 @@ class KeyframesCo:
         :param value:
         """
 
-    def extend_co_values(self, rna_path, total_indices, frame, values):
+    def extend_co_values(self, rna_path, total_indices, frame, values) -> None:
         """
 
         :param rna_path:
@@ -41,7 +41,7 @@ class KeyframesCo:
 
     def insert_keyframes_into_existing_action(
         self, lookup_fcurves, total_new_keys, action, action_slot
-    ):
+    ) -> None:
         """Assumes the action already exists, that it might already have F-curves. Otherwise, the
         only difference between versions is performance and implementation simplicity.
 
@@ -54,7 +54,7 @@ class KeyframesCo:
 
     def insert_keyframes_into_new_action(
         self, total_new_keys, action, action_group_name: str
-    ):
+    ) -> None:
         """Assumes the action is new, that it has no F-curves. Otherwise, the only difference between versions is
         performance and implementation simplicity.
 
@@ -64,7 +64,7 @@ class KeyframesCo:
                 :type action_group_name: str
         """
 
-def action_get_channelbag_for_slot(action, slot):
+def action_get_channelbag_for_slot(action, slot) -> None:
     """Returns the first channelbag found for the slot.
     In case there are multiple layers or strips they are iterated until a
     channelbag for that slot is found. In case no matching channelbag is found, returns None.
@@ -114,7 +114,7 @@ def bake_action_objects(
     :rtype: collections.abc.Sequence[bpy.types.Action]
     """
 
-def bake_action_objects_iter(object_action_pairs, bake_options):
+def bake_action_objects_iter(object_action_pairs, bake_options) -> None:
     """An coroutine that bakes actions for multiple objects.
 
         :param object_action_pairs: Sequence of object action tuples,

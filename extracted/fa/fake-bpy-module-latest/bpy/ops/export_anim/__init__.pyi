@@ -17,7 +17,7 @@ def bvh(
     rotate_mode: typing.Literal["NATIVE", "XYZ", "XZY", "YXZ", "YZX", "ZXY", "ZYX"]
     | None = "NATIVE",
     root_transform_only: bool | None = False,
-):
+) -> None:
     """Save a BVH motion capture file from an armature
 
         :type execution_context: int | str | None

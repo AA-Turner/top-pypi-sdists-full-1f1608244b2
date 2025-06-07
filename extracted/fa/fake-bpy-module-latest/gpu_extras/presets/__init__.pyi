@@ -11,7 +11,7 @@ def draw_circle_2d(
     radius: float,
     *,
     segments: None | int | None = None,
-):
+) -> None:
     """Draw a circle.
 
         :param position: 2D position where the circle will be drawn.
@@ -32,7 +32,7 @@ def draw_texture_2d(
     position: collections.abc.Sequence[float] | mathutils.Vector,
     width: float,
     height: float,
-):
+) -> None:
     """Draw a 2d texture.
 
         :param texture: GPUTexture to draw (e.g. gpu.texture.from_image(image) for `bpy.types.Image`).

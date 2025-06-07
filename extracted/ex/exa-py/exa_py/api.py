@@ -159,13 +159,14 @@ FIND_SIMILAR_OPTIONS_TYPES = {
 }
 
 # the livecrawl options
-LIVECRAWL_OPTIONS = Literal["always", "fallback", "never", "auto"]
+LIVECRAWL_OPTIONS = Literal["always", "fallback", "never", "auto", "preferred"]
 
 CONTENTS_OPTIONS_TYPES = {
     "urls": [list],
     "text": [dict, bool],
     "highlights": [dict, bool],
     "summary": [dict, bool],
+    "context": [dict, bool],
     "metadata": [dict, bool],
     "livecrawl_timeout": [int],
     "livecrawl": [LIVECRAWL_OPTIONS],
@@ -290,6 +291,16 @@ class SummaryContentsOptions(TypedDict, total=False):
 
     query: str
     schema: JSONSchema
+
+
+class ContextContentsOptions(TypedDict, total=False):
+    """Options for retrieving aggregated context from a set of search results.
+
+    Attributes:
+        max_characters (int): The maximum number of characters to include in the context string.
+    """
+
+    max_characters: int
 
 
 class ExtrasOptions(TypedDict, total=False):
@@ -788,6 +799,15 @@ class AsyncStreamAnswerResponse:
 
 T = TypeVar("T")
 
+@dataclass
+class ContentStatus:
+    """A class representing the status of a content retrieval operation."""
+
+    id: str
+    status: str
+    source: str
+
+
 
 @dataclass
 class SearchResponse(Generic[T]):
@@ -798,16 +818,23 @@ class SearchResponse(Generic[T]):
         autoprompt_string (str, optional): The Exa query created by autoprompt.
         resolved_search_type (str, optional): 'neural' or 'keyword' if auto.
         auto_date (str, optional): A date for filtering if autoprompt found one.
+        context (str, optional): Combined context string when requested via contents.context.
+        statuses (List[ContentStatus], optional): Status list from get_contents.
+        cost_dollars (CostDollars, optional): Cost breakdown.
     """
 
     results: List[T]
     autoprompt_string: Optional[str]
     resolved_search_type: Optional[str]
     auto_date: Optional[str]
+    context: Optional[str] = None
+    statuses: Optional[List[ContentStatus]] = None
     cost_dollars: Optional[CostDollars] = None
 
     def __str__(self):
         output = "\n\n".join(str(result) for result in self.results)
+        if self.context:
+            output += f"\nContext: {self.context}"
         if self.autoprompt_string:
             output += f"\n\nAutoprompt String: {self.autoprompt_string}"
         if self.resolved_search_type:
@@ -818,6 +845,8 @@ class SearchResponse(Generic[T]):
                 output += f"\n  - search: {self.cost_dollars.search}"
             if self.cost_dollars.contents:
                 output += f"\n  - contents: {self.cost_dollars.contents}"
+        if self.statuses:
+            output += f"\nStatuses: {self.statuses}"
         return output
 
 
@@ -1242,6 +1271,7 @@ class Exa:
                 "text",
                 "highlights",
                 "summary",
+                "context",
                 "subpages",
                 "subpage_target",
                 "livecrawl",
@@ -1258,6 +1288,7 @@ class Exa:
             data["autopromptString"] if "autopromptString" in data else None,
             data["resolvedSearchType"] if "resolvedSearchType" in data else None,
             data["autoDate"] if "autoDate" in data else None,
+            context=data.get("context"),
             cost_dollars=cost_dollars,
         )
 
@@ -1405,12 +1436,15 @@ class Exa:
         options = to_camel_case(options)
         data = self.request("/contents", options)
         cost_dollars = parse_cost_dollars(data.get("costDollars"))
+        statuses = [ContentStatus(**status) for status in data.get("statuses", [])]
         return SearchResponse(
             [Result(**to_snake_case(result)) for result in data["results"]],
             data.get("autopromptString"),
             data.get("resolvedSearchType"),
             data.get("autoDate"),
+            context=data.get("context"),
             cost_dollars=cost_dollars,
+            statuses=statuses,
         )
 
     def find_similar(
@@ -1700,6 +1734,7 @@ class Exa:
                 "text",
                 "highlights",
                 "summary",
+                "context",
                 "subpages",
                 "subpage_target",
                 "livecrawl",
@@ -1716,6 +1751,7 @@ class Exa:
             data.get("autopromptString"),
             data.get("resolvedSearchType"),
             data.get("autoDate"),
+            context=data.get("context"),
             cost_dollars=cost_dollars,
         )
 
@@ -2052,6 +2088,7 @@ class AsyncExa(Exa):
                 "text",
                 "highlights",
                 "summary",
+                "context",
                 "subpages",
                 "subpage_target",
                 "livecrawl",
@@ -2068,6 +2105,7 @@ class AsyncExa(Exa):
             data["autopromptString"] if "autopromptString" in data else None,
             data["resolvedSearchType"] if "resolvedSearchType" in data else None,
             data["autoDate"] if "autoDate" in data else None,
+            context=data.get("context"),
             cost_dollars=cost_dollars,
         )
 
@@ -2092,12 +2130,15 @@ class AsyncExa(Exa):
         options = to_camel_case(options)
         data = await self.async_request("/contents", options)
         cost_dollars = parse_cost_dollars(data.get("costDollars"))
+        statuses = [ContentStatus(**status) for status in data.get("statuses", [])]
         return SearchResponse(
             [Result(**to_snake_case(result)) for result in data["results"]],
             data.get("autopromptString"),
             data.get("resolvedSearchType"),
             data.get("autoDate"),
+            context=data.get("context"),
             cost_dollars=cost_dollars,
+            statuses=statuses,
         )
 
     async def find_similar(
@@ -2175,6 +2216,7 @@ class AsyncExa(Exa):
                 "text",
                 "highlights",
                 "summary",
+                "context",
                 "subpages",
                 "subpage_target",
                 "livecrawl",
@@ -2191,6 +2233,7 @@ class AsyncExa(Exa):
             data.get("autopromptString"),
             data.get("resolvedSearchType"),
             data.get("autoDate"),
+            context=data.get("context"),
             cost_dollars=cost_dollars,
         )
 

@@ -7,7 +7,7 @@ import bpy.types
 class ToolActivePanelHelper:
     bl_label: typing.Any
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -30,14 +30,16 @@ class ToolDef:
     widget_properties: typing.Any
 
 class ToolSelectPanelHelper:
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_active_tool_fallback(context, layout, tool, *, is_horizontal_layout=False):
+    def draw_active_tool_fallback(
+        context, layout, tool, *, is_horizontal_layout=False
+    ) -> None:
         """
 
         :param context:
@@ -49,7 +51,7 @@ class ToolSelectPanelHelper:
     @staticmethod
     def draw_active_tool_header(
         context, layout, *, show_tool_icon_always=False, tool_key=None
-    ):
+    ) -> None:
         """
 
         :param context:
@@ -59,7 +61,7 @@ class ToolSelectPanelHelper:
         """
 
     @classmethod
-    def draw_cls(cls, layout, context, detect_layout=True, scale_y=1.75):
+    def draw_cls(cls, layout, context, detect_layout=True, scale_y=1.75) -> None:
         """
 
         :param layout:
@@ -69,7 +71,7 @@ class ToolSelectPanelHelper:
         """
 
     @staticmethod
-    def draw_fallback_tool_items(layout, context):
+    def draw_fallback_tool_items(layout, context) -> None:
         """
 
         :param layout:
@@ -77,7 +79,7 @@ class ToolSelectPanelHelper:
         """
 
     @staticmethod
-    def draw_fallback_tool_items_for_pie_menu(layout, context):
+    def draw_fallback_tool_items_for_pie_menu(layout, context) -> None:
         """
 
         :param layout:
@@ -85,27 +87,27 @@ class ToolSelectPanelHelper:
         """
 
     @classmethod
-    def keymap_ui_hierarchy(cls, context_mode):
+    def keymap_ui_hierarchy(cls, context_mode) -> None:
         """
 
         :param context_mode:
         """
 
     @classmethod
-    def register(cls): ...
+    def register(cls) -> None: ...
     @classmethod
-    def register_ensure(cls): ...
+    def register_ensure(cls) -> None: ...
     @staticmethod
-    def tool_active_from_context(context):
+    def tool_active_from_context(context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def tools_all(cls): ...
+    def tools_all(cls) -> None: ...
     @classmethod
-    def tools_from_context(cls, context, mode=None):
+    def tools_from_context(cls, context, mode=None) -> None:
         """
 
         :param context:
@@ -117,23 +119,23 @@ class WM_MT_toolsystem_submenu(bpy.types.Menu):
     bl_rna: typing.Any
     id_data: typing.Any
 
-    def bl_rna_get_subclass(self): ...
-    def bl_rna_get_subclass_py(self): ...
-    def draw(self, context):
+    def bl_rna_get_subclass(self) -> None: ...
+    def bl_rna_get_subclass_py(self) -> None: ...
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-def activate_by_id(context, space_type, idname, *, as_fallback=False): ...
+def activate_by_id(context, space_type, idname, *, as_fallback=False) -> None: ...
 def activate_by_id_or_cycle(
     context, space_type, idname, *, offset=1, as_fallback=False
-): ...
-def description_from_id(context, space_type, idname, *, use_operator=True): ...
-def item_from_flat_index(context, space_type, index): ...
-def item_from_id(context, space_type, idname): ...
-def item_from_id_active(context, space_type, idname): ...
-def item_from_id_active_with_group(context, space_type, idname): ...
-def item_from_index_active(context, space_type, index): ...
-def item_group_from_id(context, space_type, idname, *, coerce=False): ...
-def keymap_from_id(context, space_type, idname): ...
+) -> None: ...
+def description_from_id(context, space_type, idname, *, use_operator=True) -> None: ...
+def item_from_flat_index(context, space_type, index) -> None: ...
+def item_from_id(context, space_type, idname) -> None: ...
+def item_from_id_active(context, space_type, idname) -> None: ...
+def item_from_id_active_with_group(context, space_type, idname) -> None: ...
+def item_from_index_active(context, space_type, index) -> None: ...
+def item_group_from_id(context, space_type, idname, *, coerce=False) -> None: ...
+def keymap_from_id(context, space_type, idname) -> None: ...

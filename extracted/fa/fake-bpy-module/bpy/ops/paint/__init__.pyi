@@ -8,7 +8,7 @@ import mathutils
 
 def add_simple_uvs(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Add cube map UVs on mesh
 
     :type execution_context: int | str | None
@@ -42,7 +42,7 @@ def add_texture_paint_slot(
     domain: bpy.stub_internal.rna_enums.ColorAttributeDomainItems | None = "POINT",
     data_type: bpy.stub_internal.rna_enums.ColorAttributeTypeItems
     | None = "FLOAT_COLOR",
-):
+) -> None:
     """Add a paint slot
 
     :type execution_context: int | str | None
@@ -73,7 +73,7 @@ def add_texture_paint_slot(
 
 def brush_colors_flip(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Swap primary and secondary brush colors
 
     :type execution_context: int | str | None
@@ -86,7 +86,7 @@ def face_select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection for all faces
 
         :type execution_context: int | str | None
@@ -113,7 +113,7 @@ def face_select_hide(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Hide selected faces
 
     :type execution_context: int | str | None
@@ -128,7 +128,7 @@ def face_select_less(
     /,
     *,
     face_step: bool | None = True,
-):
+) -> None:
     """Deselect Faces connected to existing selection
 
     :type execution_context: int | str | None
@@ -139,7 +139,7 @@ def face_select_less(
 
 def face_select_linked(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select linked faces
 
     :type execution_context: int | str | None
@@ -152,7 +152,7 @@ def face_select_linked_pick(
     /,
     *,
     deselect: bool | None = False,
-):
+) -> None:
     """Select linked faces under the cursor
 
     :type execution_context: int | str | None
@@ -168,7 +168,7 @@ def face_select_loop(
     *,
     select: bool | None = True,
     extend: bool | None = False,
-):
+) -> None:
     """Select face loop under the cursor
 
     :type execution_context: int | str | None
@@ -185,7 +185,7 @@ def face_select_more(
     /,
     *,
     face_step: bool | None = True,
-):
+) -> None:
     """Select Faces connected to existing selection
 
     :type execution_context: int | str | None
@@ -200,7 +200,7 @@ def face_vert_reveal(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Reveal hidden faces and vertices
 
     :type execution_context: int | str | None
@@ -215,7 +215,7 @@ def grab_clone(
     /,
     *,
     delta: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
-):
+) -> None:
     """Move the clone source image
 
     :type execution_context: int | str | None
@@ -237,7 +237,7 @@ def hide_show(
     action: typing.Literal["HIDE", "SHOW"] | None = "HIDE",
     area: typing.Literal["OUTSIDE", "Inside"] | None = "Inside",
     use_front_faces_only: bool | None = False,
-):
+) -> None:
     """Hide/show some vertices
 
         :type execution_context: int | str | None
@@ -278,7 +278,7 @@ def hide_show_all(
     /,
     *,
     action: typing.Literal["HIDE", "SHOW"] | None = "HIDE",
-):
+) -> None:
     """Hide/show all vertices
 
         :type execution_context: int | str | None
@@ -305,7 +305,7 @@ def hide_show_lasso_gesture(
     action: typing.Literal["HIDE", "SHOW"] | None = "HIDE",
     area: typing.Literal["OUTSIDE", "Inside"] | None = "Inside",
     use_front_faces_only: bool | None = False,
-):
+) -> None:
     """Hide/show some vertices
 
         :type execution_context: int | str | None
@@ -353,7 +353,7 @@ def hide_show_line_gesture(
     area: typing.Literal["OUTSIDE", "Inside"] | None = "Inside",
     use_front_faces_only: bool | None = False,
     use_limit_to_segment: bool | None = False,
-):
+) -> None:
     """Hide/show some vertices
 
         :type execution_context: int | str | None
@@ -398,7 +398,7 @@ def hide_show_masked(
     /,
     *,
     action: typing.Literal["HIDE", "SHOW"] | None = "HIDE",
-):
+) -> None:
     """Hide/show all masked vertices above a threshold
 
         :type execution_context: int | str | None
@@ -422,7 +422,7 @@ def hide_show_polyline_gesture(
     action: typing.Literal["HIDE", "SHOW"] | None = "HIDE",
     area: typing.Literal["OUTSIDE", "Inside"] | None = "Inside",
     use_front_faces_only: bool | None = False,
-):
+) -> None:
     """Hide/show some vertices
 
         :type execution_context: int | str | None
@@ -455,7 +455,7 @@ def image_from_view(
     /,
     *,
     filepath: str = "",
-):
+) -> None:
     """Make an image from biggest 3D view for reprojection
 
     :type execution_context: int | str | None
@@ -473,7 +473,7 @@ def image_paint(
     | None = None,
     mode: typing.Literal["NORMAL", "INVERT", "SMOOTH", "ERASE"] | None = "NORMAL",
     pen_flip: bool | None = False,
-):
+) -> None:
     """Paint a stroke into the image
 
         :type execution_context: int | str | None
@@ -511,7 +511,7 @@ def mask_box_gesture(
     use_front_faces_only: bool | None = False,
     mode: typing.Literal["VALUE", "VALUE_INVERSE", "INVERT"] | None = "VALUE",
     value: float | None = 1.0,
-):
+) -> None:
     """Mask within a rectangle defined by the cursor
 
         :type execution_context: int | str | None
@@ -550,7 +550,7 @@ def mask_flood_fill(
     *,
     mode: typing.Literal["VALUE", "VALUE_INVERSE", "INVERT"] | None = "VALUE",
     value: float | None = 0.0,
-):
+) -> None:
     """Fill the whole mask with a given value, or invert its values
 
         :type execution_context: int | str | None
@@ -582,7 +582,7 @@ def mask_lasso_gesture(
     use_front_faces_only: bool | None = False,
     mode: typing.Literal["VALUE", "VALUE_INVERSE", "INVERT"] | None = "VALUE",
     value: float | None = 1.0,
-):
+) -> None:
     """Mask within a shape defined by the cursor
 
         :type execution_context: int | str | None
@@ -627,7 +627,7 @@ def mask_line_gesture(
     use_limit_to_segment: bool | None = False,
     mode: typing.Literal["VALUE", "VALUE_INVERSE", "INVERT"] | None = "VALUE",
     value: float | None = 1.0,
-):
+) -> None:
     """Mask to one side of a line defined by the cursor
 
         :type execution_context: int | str | None
@@ -672,7 +672,7 @@ def mask_polyline_gesture(
     use_front_faces_only: bool | None = False,
     mode: typing.Literal["VALUE", "VALUE_INVERSE", "INVERT"] | None = "VALUE",
     value: float | None = 1.0,
-):
+) -> None:
     """Mask within a shape defined by the cursor
 
         :type execution_context: int | str | None
@@ -702,7 +702,7 @@ def project_image(
     /,
     *,
     image: str | None = "",
-):
+) -> None:
     """Project an edited render from the active camera back onto the object
 
     :type execution_context: int | str | None
@@ -719,7 +719,7 @@ def sample_color(
     location: collections.abc.Iterable[int] | None = (0, 0),
     merged: bool | None = False,
     palette: bool | None = False,
-):
+) -> None:
     """Use the mouse to sample a color in the image
 
     :type execution_context: int | str | None
@@ -734,7 +734,7 @@ def sample_color(
 
 def texture_paint_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle texture paint mode in 3D view
 
     :type execution_context: int | str | None
@@ -747,7 +747,7 @@ def vert_select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection for all vertices
 
         :type execution_context: int | str | None
@@ -774,7 +774,7 @@ def vert_select_hide(
     /,
     *,
     unselected: bool | None = False,
-):
+) -> None:
     """Hide selected vertices
 
     :type execution_context: int | str | None
@@ -789,7 +789,7 @@ def vert_select_less(
     /,
     *,
     face_step: bool | None = True,
-):
+) -> None:
     """Deselect Vertices connected to existing selection
 
     :type execution_context: int | str | None
@@ -800,7 +800,7 @@ def vert_select_less(
 
 def vert_select_linked(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select linked vertices
 
     :type execution_context: int | str | None
@@ -813,7 +813,7 @@ def vert_select_linked_pick(
     /,
     *,
     select: bool | None = True,
-):
+) -> None:
     """Select linked vertices under the cursor
 
     :type execution_context: int | str | None
@@ -828,7 +828,7 @@ def vert_select_more(
     /,
     *,
     face_step: bool | None = True,
-):
+) -> None:
     """Select Vertices connected to existing selection
 
     :type execution_context: int | str | None
@@ -843,7 +843,7 @@ def vert_select_ungrouped(
     /,
     *,
     extend: bool | None = False,
-):
+) -> None:
     """Select vertices without a group
 
     :type execution_context: int | str | None
@@ -859,7 +859,7 @@ def vertex_color_brightness_contrast(
     *,
     brightness: float | None = 0.0,
     contrast: float | None = 0.0,
-):
+) -> None:
     """Adjust vertex color brightness/contrast
 
     :type execution_context: int | str | None
@@ -881,7 +881,7 @@ def vertex_color_dirt(
     dirt_angle: float | None = 0.0,
     dirt_only: bool | None = False,
     normalize: bool | None = True,
-):
+) -> None:
     """Generate a dirt map gradient based on cavity
 
     :type execution_context: int | str | None
@@ -902,7 +902,7 @@ def vertex_color_dirt(
 
 def vertex_color_from_weight(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Convert active weight into gray scale vertex colors
 
     :type execution_context: int | str | None
@@ -917,7 +917,7 @@ def vertex_color_hsv(
     h: float | None = 0.5,
     s: float | None = 1.0,
     v: float | None = 1.0,
-):
+) -> None:
     """Adjust vertex color Hue/Saturation/Value
 
     :type execution_context: int | str | None
@@ -932,7 +932,7 @@ def vertex_color_hsv(
 
 def vertex_color_invert(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Invert RGB values
 
     :type execution_context: int | str | None
@@ -946,7 +946,7 @@ def vertex_color_levels(
     *,
     offset: float | None = 0.0,
     gain: float | None = 1.0,
-):
+) -> None:
     """Adjust levels of vertex colors
 
     :type execution_context: int | str | None
@@ -963,7 +963,7 @@ def vertex_color_set(
     /,
     *,
     use_alpha: bool | None = True,
-):
+) -> None:
     """Fill the active vertex color layer with the current paint color
 
     :type execution_context: int | str | None
@@ -974,7 +974,7 @@ def vertex_color_set(
 
 def vertex_color_smooth(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Smooth colors across vertices
 
     :type execution_context: int | str | None
@@ -991,7 +991,7 @@ def vertex_paint(
     mode: typing.Literal["NORMAL", "INVERT", "SMOOTH", "ERASE"] | None = "NORMAL",
     pen_flip: bool | None = False,
     override_location: bool | None = False,
-):
+) -> None:
     """Paint a stroke in the active color attribute layer
 
         :type execution_context: int | str | None
@@ -1020,7 +1020,7 @@ def vertex_paint(
 
 def vertex_paint_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle the vertex paint mode in 3D view
 
     :type execution_context: int | str | None
@@ -1035,7 +1035,7 @@ def visibility_filter(
     action: typing.Literal["GROW", "SHRINK"] | None = "GROW",
     iterations: int | None = 1,
     auto_iteration_count: bool | None = True,
-):
+) -> None:
     """Edit the visibility of the current mesh
 
         :type execution_context: int | str | None
@@ -1056,7 +1056,7 @@ def visibility_filter(
 
 def visibility_invert(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Invert the visibility of all vertices
 
     :type execution_context: int | str | None
@@ -1069,7 +1069,7 @@ def weight_from_bones(
     /,
     *,
     type: typing.Literal["AUTOMATIC", "ENVELOPES"] | None = "AUTOMATIC",
-):
+) -> None:
     """Set the weights of the groups matching the attached armature's selected bones, using the distance between the vertices and the bones
 
         :type execution_context: int | str | None
@@ -1096,7 +1096,7 @@ def weight_gradient(
     yend: int | None = 0,
     flip: bool | None = False,
     cursor: int | None = 5,
-):
+) -> None:
     """Draw a line to apply a weight gradient to selected vertices
 
     :type execution_context: int | str | None
@@ -1127,7 +1127,7 @@ def weight_paint(
     mode: typing.Literal["NORMAL", "INVERT", "SMOOTH", "ERASE"] | None = "NORMAL",
     pen_flip: bool | None = False,
     override_location: bool | None = False,
-):
+) -> None:
     """Paint a stroke in the current vertex group's weights
 
         :type execution_context: int | str | None
@@ -1156,14 +1156,16 @@ def weight_paint(
 
 def weight_paint_toggle(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Toggle weight paint mode in 3D view
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def weight_sample(execution_context: int | str | None = None, undo: bool | None = None):
+def weight_sample(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Use the mouse to sample a weight in the 3D view
 
     :type execution_context: int | str | None
@@ -1172,14 +1174,16 @@ def weight_sample(execution_context: int | str | None = None, undo: bool | None 
 
 def weight_sample_group(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Select one of the vertex groups available under current mouse position
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def weight_set(execution_context: int | str | None = None, undo: bool | None = None):
+def weight_set(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Fill the active vertex group with the current paint weight
 
     :type execution_context: int | str | None

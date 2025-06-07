@@ -6,7 +6,7 @@ import bpy.types
 
 class ObjectModeOperator:
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -35,13 +35,13 @@ class QuickExplode(ObjectModeOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -71,7 +71,7 @@ class QuickFur(ObjectModeOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -100,7 +100,7 @@ class QuickLiquid(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -129,13 +129,13 @@ class QuickSmoke(ObjectModeOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-def grid_location(x, y): ...
-def obj_bb_minmax(obj, min_co, max_co): ...
-def object_ensure_material(obj, mat_name):
+def grid_location(x, y) -> None: ...
+def obj_bb_minmax(obj, min_co, max_co) -> None: ...
+def object_ensure_material(obj, mat_name) -> None:
     """Use an existing material or add a new one."""

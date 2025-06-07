@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-opentelekomcloud",
-    "version": "12.0.0",
+    "version": "12.0.1",
     "description": "Prebuilt opentelekomcloud Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-opentelekomcloud.git",
@@ -161,6 +161,8 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_opentelekomcloud.data_opentelekomcloud_lb_listener_v3",
         "cdktf_cdktf_provider_opentelekomcloud.data_opentelekomcloud_lb_loadbalancer_v3",
         "cdktf_cdktf_provider_opentelekomcloud.data_opentelekomcloud_lb_member_ids_v2",
+        "cdktf_cdktf_provider_opentelekomcloud.data_opentelekomcloud_lts_groups_v2",
+        "cdktf_cdktf_provider_opentelekomcloud.data_opentelekomcloud_lts_streams_v2",
         "cdktf_cdktf_provider_opentelekomcloud.data_opentelekomcloud_nat_dnat_rules_v2",
         "cdktf_cdktf_provider_opentelekomcloud.data_opentelekomcloud_nat_gateway_v2",
         "cdktf_cdktf_provider_opentelekomcloud.data_opentelekomcloud_nat_snat_rules_v2",
@@ -434,7 +436,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_opentelekomcloud._jsii": [
-            "provider-opentelekomcloud@12.0.0.jsii.tgz"
+            "provider-opentelekomcloud@12.0.1.jsii.tgz"
         ],
         "cdktf_cdktf_provider_opentelekomcloud": [
             "py.typed"

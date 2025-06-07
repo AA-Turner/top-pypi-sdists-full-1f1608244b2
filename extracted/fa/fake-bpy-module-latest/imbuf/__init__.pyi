@@ -45,7 +45,9 @@ def new(size: tuple[int, int]) -> imbuf.types.ImBuf:
     :rtype: imbuf.types.ImBuf
     """
 
-def write(image: imbuf.types.ImBuf, filepath: None | bytes | str = image.filepath):
+def write(
+    image: imbuf.types.ImBuf, filepath: None | bytes | str = image.filepath
+) -> None:
     """Write an image.
 
     :param image: the image to write.

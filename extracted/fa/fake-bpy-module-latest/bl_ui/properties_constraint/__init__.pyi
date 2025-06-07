@@ -29,7 +29,7 @@ class BONE_PT_bActionConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -60,7 +60,7 @@ class BONE_PT_bActionConstraint_action(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -91,7 +91,7 @@ class BONE_PT_bActionConstraint_target(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -122,7 +122,7 @@ class BONE_PT_bArmatureConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -153,7 +153,7 @@ class BONE_PT_bArmatureConstraint_bones(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -184,7 +184,7 @@ class BONE_PT_bCameraSolverConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -215,7 +215,7 @@ class BONE_PT_bChildOfConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -246,7 +246,7 @@ class BONE_PT_bClampToConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -277,7 +277,7 @@ class BONE_PT_bDampTrackConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -308,7 +308,7 @@ class BONE_PT_bDistLimitConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -339,7 +339,7 @@ class BONE_PT_bFollowPathConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -370,7 +370,7 @@ class BONE_PT_bFollowTrackConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -401,7 +401,7 @@ class BONE_PT_bKinematicConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -432,7 +432,7 @@ class BONE_PT_bLocLimitConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -463,7 +463,7 @@ class BONE_PT_bLocateLikeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -494,7 +494,7 @@ class BONE_PT_bLockTrackConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -525,7 +525,7 @@ class BONE_PT_bMinMaxConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -556,7 +556,7 @@ class BONE_PT_bObjectSolverConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -587,7 +587,7 @@ class BONE_PT_bPivotConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -618,7 +618,7 @@ class BONE_PT_bRotLimitConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -649,7 +649,7 @@ class BONE_PT_bRotateLikeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -680,7 +680,7 @@ class BONE_PT_bSameVolumeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -711,7 +711,7 @@ class BONE_PT_bShrinkwrapConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -742,7 +742,7 @@ class BONE_PT_bSizeLikeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -773,7 +773,7 @@ class BONE_PT_bSizeLimitConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -804,7 +804,7 @@ class BONE_PT_bSplineIKConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -835,7 +835,7 @@ class BONE_PT_bSplineIKConstraint_chain_scaling(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -866,7 +866,7 @@ class BONE_PT_bSplineIKConstraint_fitting(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -897,7 +897,7 @@ class BONE_PT_bStretchToConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -928,7 +928,7 @@ class BONE_PT_bTrackToConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -959,7 +959,7 @@ class BONE_PT_bTransLikeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -990,7 +990,7 @@ class BONE_PT_bTransformCacheConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1021,7 +1021,7 @@ class BONE_PT_bTransformCacheConstraint_layers(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1052,7 +1052,7 @@ class BONE_PT_bTransformCacheConstraint_procedural(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1083,7 +1083,7 @@ class BONE_PT_bTransformCacheConstraint_time(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1114,7 +1114,7 @@ class BONE_PT_bTransformCacheConstraint_velocity(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1145,7 +1145,7 @@ class BONE_PT_bTransformConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1176,7 +1176,7 @@ class BONE_PT_bTransformConstraint_from(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1207,7 +1207,7 @@ class BONE_PT_bTransformConstraint_to(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1236,7 +1236,7 @@ class BONE_PT_constraints(BoneConstraintPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -1246,7 +1246,7 @@ class BoneConstraintPanel:
     bl_context: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -1258,196 +1258,196 @@ class ConstraintButtonsPanel:
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw_action(self, context):
+    def draw_action(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_armature(self, context):
+    def draw_armature(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_camera_solver(self, context):
+    def draw_camera_solver(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_childof(self, context):
+    def draw_childof(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_clamp_to(self, context):
+    def draw_clamp_to(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_damp_track(self, context):
+    def draw_damp_track(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_dist_limit(self, context):
+    def draw_dist_limit(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_follow_path(self, context):
+    def draw_follow_path(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_follow_track(self, context):
+    def draw_follow_track(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def draw_influence(layout, con):
+    def draw_influence(layout, con) -> None:
         """
 
         :param layout:
         :param con:
         """
 
-    def draw_kinematic(self, context):
+    def draw_kinematic(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_loc_limit(self, context):
+    def draw_loc_limit(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_locate_like(self, context):
+    def draw_locate_like(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_lock_track(self, context):
+    def draw_lock_track(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_min_max(self, context):
+    def draw_min_max(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_object_solver(self, context):
+    def draw_object_solver(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_pivot(self, context):
+    def draw_pivot(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_rot_limit(self, context):
+    def draw_rot_limit(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_rotate_like(self, context):
+    def draw_rotate_like(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_same_volume(self, context):
+    def draw_same_volume(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_shrinkwrap(self, context):
+    def draw_shrinkwrap(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_size_like(self, context):
+    def draw_size_like(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_size_limit(self, context):
+    def draw_size_limit(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_spline_ik(self, context):
+    def draw_spline_ik(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_stretch_to(self, context):
+    def draw_stretch_to(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_trackto(self, context):
+    def draw_trackto(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_trans_like(self, context):
+    def draw_trans_like(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_transform(self, context):
+    def draw_transform(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_transform_cache(self, context):
+    def draw_transform_cache(self, context) -> None:
         """
 
         :param context:
         """
 
-    def get_constraint(self, _context):
+    def get_constraint(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @staticmethod
-    def space_template(layout, con, target=True, owner=True, separator=True):
+    def space_template(layout, con, target=True, owner=True, separator=True) -> None:
         """
 
         :param layout:
@@ -1458,7 +1458,7 @@ class ConstraintButtonsPanel:
         """
 
     @staticmethod
-    def target_template(layout, con, subtargets=True):
+    def target_template(layout, con, subtargets=True) -> None:
         """
 
         :param layout:
@@ -1471,80 +1471,80 @@ class ConstraintButtonsSubPanel:
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw_action_action(self, context):
+    def draw_action_action(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_action_target(self, context):
+    def draw_action_target(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_armature_bones(self, context):
+    def draw_armature_bones(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_spline_ik_chain_scaling(self, context):
+    def draw_spline_ik_chain_scaling(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_spline_ik_fitting(self, context):
+    def draw_spline_ik_fitting(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_transform_cache_layers(self, context):
+    def draw_transform_cache_layers(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_transform_cache_procedural(self, context):
+    def draw_transform_cache_procedural(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_transform_cache_subpanel(self, context, template_func):
+    def draw_transform_cache_subpanel(self, context, template_func) -> None:
         """
 
         :param context:
         :param template_func:
         """
 
-    def draw_transform_cache_time(self, context):
+    def draw_transform_cache_time(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_transform_cache_velocity(self, context):
+    def draw_transform_cache_velocity(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_transform_from(self, context):
+    def draw_transform_from(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_transform_to(self, context):
+    def draw_transform_to(self, context) -> None:
         """
 
         :param context:
         """
 
-    def get_constraint(self, _context):
+    def get_constraint(self, _context) -> None:
         """
 
         :param _context:
@@ -1575,7 +1575,7 @@ class OBJECT_PT_bActionConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1606,7 +1606,7 @@ class OBJECT_PT_bActionConstraint_action(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1637,7 +1637,7 @@ class OBJECT_PT_bActionConstraint_target(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1668,7 +1668,7 @@ class OBJECT_PT_bArmatureConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1699,7 +1699,7 @@ class OBJECT_PT_bArmatureConstraint_bones(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1730,7 +1730,7 @@ class OBJECT_PT_bCameraSolverConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1761,7 +1761,7 @@ class OBJECT_PT_bChildOfConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1792,7 +1792,7 @@ class OBJECT_PT_bClampToConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1823,7 +1823,7 @@ class OBJECT_PT_bDampTrackConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1854,7 +1854,7 @@ class OBJECT_PT_bDistLimitConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1885,7 +1885,7 @@ class OBJECT_PT_bFollowPathConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1916,7 +1916,7 @@ class OBJECT_PT_bFollowTrackConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1947,7 +1947,7 @@ class OBJECT_PT_bKinematicConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -1978,7 +1978,7 @@ class OBJECT_PT_bLocLimitConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2009,7 +2009,7 @@ class OBJECT_PT_bLocateLikeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2040,7 +2040,7 @@ class OBJECT_PT_bLockTrackConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2071,7 +2071,7 @@ class OBJECT_PT_bMinMaxConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2102,7 +2102,7 @@ class OBJECT_PT_bObjectSolverConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2133,7 +2133,7 @@ class OBJECT_PT_bPivotConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2164,7 +2164,7 @@ class OBJECT_PT_bRotLimitConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2195,7 +2195,7 @@ class OBJECT_PT_bRotateLikeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2226,7 +2226,7 @@ class OBJECT_PT_bSameVolumeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2257,7 +2257,7 @@ class OBJECT_PT_bShrinkwrapConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2288,7 +2288,7 @@ class OBJECT_PT_bSizeLikeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2319,7 +2319,7 @@ class OBJECT_PT_bSizeLimitConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2350,7 +2350,7 @@ class OBJECT_PT_bStretchToConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2381,7 +2381,7 @@ class OBJECT_PT_bTrackToConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2412,7 +2412,7 @@ class OBJECT_PT_bTransLikeConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2443,7 +2443,7 @@ class OBJECT_PT_bTransformCacheConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2474,7 +2474,7 @@ class OBJECT_PT_bTransformCacheConstraint_layers(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2505,7 +2505,7 @@ class OBJECT_PT_bTransformCacheConstraint_procedural(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2536,7 +2536,7 @@ class OBJECT_PT_bTransformCacheConstraint_time(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2567,7 +2567,7 @@ class OBJECT_PT_bTransformCacheConstraint_velocity(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2598,7 +2598,7 @@ class OBJECT_PT_bTransformConstraint(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2629,7 +2629,7 @@ class OBJECT_PT_bTransformConstraint_destination(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2660,7 +2660,7 @@ class OBJECT_PT_bTransformConstraint_source(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -2689,7 +2689,7 @@ class OBJECT_PT_constraints(ObjectConstraintPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -2699,7 +2699,7 @@ class ObjectConstraintPanel:
     bl_context: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

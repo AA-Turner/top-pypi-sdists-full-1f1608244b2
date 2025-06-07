@@ -655,8 +655,8 @@ class RekognitionClient(BaseClient):
         self, **kwargs: Unpack[GetPersonTrackingRequestTypeDef]
     ) -> GetPersonTrackingResponseTypeDef:
         """
-        Gets the path tracking results of a Amazon Rekognition Video analysis started
-        by <a>StartPersonTracking</a>.
+        <i>End of support notice:</i> On October 31, 2025, AWS will discontinue support
+        for Amazon Rekognition People Pathing.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rekognition/client/get_person_tracking.html)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_rekognition/client/#get_person_tracking)
@@ -910,7 +910,8 @@ class RekognitionClient(BaseClient):
         self, **kwargs: Unpack[StartPersonTrackingRequestTypeDef]
     ) -> StartPersonTrackingResponseTypeDef:
         """
-        Starts the asynchronous tracking of a person's path in a stored video.
+        <i>End of support notice:</i> On October 31, 2025, AWS will discontinue support
+        for Amazon Rekognition People Pathing.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rekognition/client/start_person_tracking.html)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_rekognition/client/#start_person_tracking)

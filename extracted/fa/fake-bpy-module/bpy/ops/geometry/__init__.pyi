@@ -12,7 +12,7 @@ def attribute_add(
     name: str = "",
     domain: bpy.stub_internal.rna_enums.AttributeDomainItems | None = "POINT",
     data_type: bpy.stub_internal.rna_enums.AttributeTypeItems | None = "FLOAT",
-):
+) -> None:
     """Add attribute to geometry
 
     :type execution_context: int | str | None
@@ -33,7 +33,7 @@ def attribute_convert(
     mode: typing.Literal["GENERIC", "VERTEX_GROUP"] | None = "GENERIC",
     domain: bpy.stub_internal.rna_enums.AttributeDomainItems | None = "POINT",
     data_type: bpy.stub_internal.rna_enums.AttributeTypeItems | None = "FLOAT",
-):
+) -> None:
     """Change how the attribute is stored
 
     :type execution_context: int | str | None
@@ -48,7 +48,7 @@ def attribute_convert(
 
 def attribute_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove attribute from geometry
 
     :type execution_context: int | str | None
@@ -65,7 +65,7 @@ def color_attribute_add(
     data_type: bpy.stub_internal.rna_enums.ColorAttributeTypeItems
     | None = "FLOAT_COLOR",
     color: collections.abc.Iterable[float] | None = (0.0, 0.0, 0.0, 1.0),
-):
+) -> None:
     """Add color attribute to geometry
 
     :type execution_context: int | str | None
@@ -88,7 +88,7 @@ def color_attribute_convert(
     domain: bpy.stub_internal.rna_enums.ColorAttributeDomainItems | None = "POINT",
     data_type: bpy.stub_internal.rna_enums.ColorAttributeTypeItems
     | None = "FLOAT_COLOR",
-):
+) -> None:
     """Change how the color attribute is stored
 
     :type execution_context: int | str | None
@@ -101,7 +101,7 @@ def color_attribute_convert(
 
 def color_attribute_duplicate(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Duplicate color attribute
 
     :type execution_context: int | str | None
@@ -110,7 +110,7 @@ def color_attribute_duplicate(
 
 def color_attribute_remove(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Remove color attribute from geometry
 
     :type execution_context: int | str | None
@@ -123,7 +123,7 @@ def color_attribute_render_set(
     /,
     *,
     name: str = "Color",
-):
+) -> None:
     """Set default color attribute used for rendering
 
     :type execution_context: int | str | None
@@ -184,7 +184,7 @@ def execute_node_group(
         0.0,
     ),
     viewport_is_perspective: bool | None = False,
-):
+) -> None:
     """Execute a node group on geometry
 
     :type execution_context: int | str | None
@@ -221,7 +221,7 @@ def geometry_randomization(
     /,
     *,
     value: bool | None = False,
-):
+) -> None:
     """Toggle geometry randomization for debugging purposes
 
     :type execution_context: int | str | None

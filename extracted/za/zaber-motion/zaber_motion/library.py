@@ -154,7 +154,7 @@ class Library:
         """
         request = dto.CheckVersionRequest(
             host="py",
-            version="7.8.3",
+            version="7.8.4",
         )
         call_sync("library/check_version", request)
 

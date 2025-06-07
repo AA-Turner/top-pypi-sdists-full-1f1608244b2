@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: tinybird-python-sdk
-Version: 0.3.5
+Version: 0.3.7
 Summary: Python SDK for Tinybird
 Author-email: "tinybird.co" <support@tinybird.co>
 Project-URL: homepage, https://github.com/tinybirdco/tinybird-python-sdk

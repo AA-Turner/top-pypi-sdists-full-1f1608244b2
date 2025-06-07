@@ -270,8 +270,8 @@ class APIClient:
             "https://private.ca-tor.ml.cloud.ibm.com": "https://private.api.ca-tor.dai.cloud.ibm.com",
             # Mumbai (AWS)
             "https://ap-south-1.aws.wxai.ibm.com": "https://api.ap-south-1.aws.data.ibm.com",
-            "https://private.ap-south-1.aws.wxai.ibm.com": "https://private.api.ap-south-1.aws.data.ibm.com",
-            # TODO ensure private platform url is correct
+            "https://private.ap-south-1.aws.wxai.ibm.com": "https://api.ap-south-1.aws.data.ibm.com",
+            # TODO ensure private platform url is correct - changed mapping to private -> public
             # YPCR
             "https://yp-cr.ml.cloud.ibm.com": "https://api.dataplatform.test.cloud.ibm.com",
             "https://private.yp-cr.ml.cloud.ibm.com": "https://private.api.dataplatform.test.cloud.ibm.com",
@@ -292,11 +292,12 @@ class APIClient:
             "https://private.us-south.ml.test.cloud.ibm.com": "https://private.api.dataplatform.dev.cloud.ibm.com",
             # AWS DEV
             "https://dev.aws.wxai.ibm.com": "https://api.dev.aws.data.ibm.com",
-            "https://private.dev.aws.wxai.ibm.com": "https://private.api.dev.aws.data.ibm.com",  # TODO ensure private platform url is correct
+            "https://private.dev.aws.wxai.ibm.com": "https://api.dev.aws.data.ibm.com",
+            # TODO ensure private platform url is correct - changed mapping to private -> public
             # AWS TEST
             "https://test.aws.wxai.ibm.com": "https://api.test.aws.data.ibm.com",
-            "https://private.test.aws.wxai.ibm.com": "https://private.api.test.aws.data.ibm.com",
-            # TODO ensure private platform url is correct
+            "https://private.test.aws.wxai.ibm.com": "https://api.test.aws.data.ibm.com",
+            # TODO ensure private platform url is correct - changed mapping to private -> public
         }
 
         requests.packages.urllib3.disable_warnings()  # type: ignore[attr-defined]
@@ -576,6 +577,7 @@ class APIClient:
         **Example:**
 
         .. code-block:: python
+
             def deployable_ai_service(context, params={"k1":"v1"}, **kwargs):
 
                 # imports
@@ -604,6 +606,7 @@ class APIClient:
                 return generate
 
             stored_ai_service_details = client._ai_services.store(deployable_ai_service, meta_props)
+
         """
         excluded = [
             "_APIClient__session",

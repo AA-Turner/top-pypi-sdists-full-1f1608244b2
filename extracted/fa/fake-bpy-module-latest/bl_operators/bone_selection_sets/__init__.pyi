@@ -28,7 +28,7 @@ class POSE_OT_selection_set_add(_PoseModeOnlyMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -58,7 +58,7 @@ class POSE_OT_selection_set_add_and_assign(_PoseModeOnlyMixin, bpy.types.Operato
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -88,13 +88,13 @@ class POSE_OT_selection_set_assign(_PoseModeOnlyMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -125,7 +125,7 @@ class POSE_OT_selection_set_copy(_NeedSelSetMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -155,7 +155,7 @@ class POSE_OT_selection_set_delete_all(_PoseModeOnlyMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -185,7 +185,7 @@ class POSE_OT_selection_set_deselect(_NeedSelSetMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -215,14 +215,14 @@ class POSE_OT_selection_set_move(_NeedSelSetMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -252,7 +252,7 @@ class POSE_OT_selection_set_paste(_PoseModeOnlyMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -282,7 +282,7 @@ class POSE_OT_selection_set_remove(_NeedSelSetMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -312,7 +312,7 @@ class POSE_OT_selection_set_remove_bones(_PoseModeOnlyMixin, bpy.types.Operator)
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -342,7 +342,7 @@ class POSE_OT_selection_set_select(_NeedSelSetMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -372,7 +372,7 @@ class POSE_OT_selection_set_unassign(_NeedSelSetMixin, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -418,7 +418,7 @@ class _PoseModeOnlyMixin:
     """Operator only available for objects of type armature in pose mode."""
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -428,11 +428,11 @@ class _NeedSelSetMixin(_PoseModeOnlyMixin):
     """Operator only available if the armature has a selected selection set."""
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def register(): ...
-def unregister(): ...
+def register() -> None: ...
+def unregister() -> None: ...

@@ -10866,8 +10866,6 @@ l_post_welcome = {
     'zh': "🌱 <b>{0}</b>，欢迎使用<i>@tg-应用</i>创建创意帖子：\n\n<blockquote>▪️<b>按钮</b>计数器\n▪️内联<b>望远镜</b>\n▪️解析/<b>点击</b>通知\n▪️<b>耳语</b>消息</blockquote>",
     'ar': "🌱 <b>{0}</b>، مرحبًا بك في <i>@tg-تطبيق</i> لإنشاء منشورات إبداعية:\n\n<blockquote>▪️عداد <b>زر</b>\n▪️<b>تلسكوبات</b> مضمنة\n▪️تحليل/إشعارات <b>النقر</b>\n▪️رسائل <b>همس</b></blockquote>",
 }
-
-
 l_post_bot_button_push = {
     'ru': "👩🏽‍💻 <b>Пользователь</b>: {0} нажал на: [{1}] (пост #<u>{2}</u>)\n\n<code>/parse {3}</code> - все клики поста",
     'en': "👩🏽‍💻 <b>User</b>: {0} clicked on: [{1}] (post #<u>{2}</u>)\n\n<code>/parse {3} </code>-all post clicks",
@@ -10884,6 +10882,7 @@ l_post_parse = {
     'zh': "👩🏽‍💻 <b>列表</b>，帖子 #{0} 次点击：<u>{1}</u>\n\n👩🏽‍💻 <b>查看</b> <a href =' {2}'>💨订阅</a>以接收用户名",
     'ar': "👩🏽‍💻 <b>قائمة</b> المنشورات التي #{0} نقرات: <u>{1}</u>\n\n👩🏽‍💻 <b>الخروج</b> <a href =' {2}'>💨اشترك</a> لتلقي أسماء المستخدمين",
 }
+
 l_post_whisper_btn = {
     'ru': "Показать",
     'en': "Show",
@@ -10900,7 +10899,6 @@ l_post_whisper_message_text = {
     'zh': "👩🏽‍💻 <b>秘密</b>耳语仅适用于：",
     'ar': "👩🏽‍💻 <b>سري</b> همس فقط لـ: ",
 }
-
 l_post_whisper_title = {
     'ru': "👩🏽‍💻 Шёпот",
     'en': "👩🏽‍💻 Whisper",
@@ -10925,7 +10923,6 @@ l_post_whisper_outdate = {
     'zh': "👩🏽‍💻 私语在 3 天后过期",
     'ar': "👩🏽‍💻 انتهت صلاحية الهمس بعد 3 أيام",
 }
-
 l_post_whisper_skip = {
     'ru': "👩🏽‍💻 Ты не видишь этот шёпот, потому что он был отправлен не тебе",
     'en': "👩🏽‍💻 You don’t see this whisper because it wasn’t sent to you",
@@ -10934,7 +10931,6 @@ l_post_whisper_skip = {
     'zh': "👩🏽‍💻 你看不到这条私语，因为它不是发给你的",
     'ar': "👩🏽‍💻 لا يمكنك رؤية هذا الهمس لأنه لم يُرسل إليك",
 }
-
 l_post_whisper_alert = {
     'ru': "👩🏽‍💻 <b>Пользователь</b>: {0} прочитал шёпот: [{1}]",
     'en': "👩🏽‍💻 <b>User</b>: {0} read the whisper: [{1}]",
@@ -10943,7 +10939,6 @@ l_post_whisper_alert = {
     'zh': "👩🏽‍💻 <b>用户</b>：{0} 阅读了私语：[{1}]",
     'ar': "👩🏽‍💻 <b>المستخدم</b>: {0} قرأ الهمس: [{1}]",
 }
-
 l_post_whisper_text = {
     'ru': "👩🏽‍💻 <b>Шепот</b> - секретные сообщения для заданного количества пользователей в группе, которые открываются нажатием на кнопку",
     'en': "👩🏽‍💻 <b>Whisper</b> - secret messages for a specified number of users in a group, opened by pressing a button",
@@ -10952,7 +10947,6 @@ l_post_whisper_text = {
     'zh': "👩🏽‍💻 <b>耳语</b> - 面向群组中指定数量用户的私密消息，点击按钮即可查看",
     'ar': "👩🏽‍💻 <b>همس</b> - رسائل سرية لعدد محدد من المستخدمين في المجموعة تُفتح عند الضغط على الزر",
 }
-
 l_post_whisper_txt = {
     'ru': "посмотри личные сообщения",
     'en': "check private messages",
@@ -10961,7 +10955,6 @@ l_post_whisper_txt = {
     'zh': "查看私密消息",
     'ar': "تحقق من الرسائل الخاصة",
 }
-
 l_post_whisper_example = {
     'ru': "💨 Например",
     'en': "💨 For example",
@@ -10970,7 +10963,6 @@ l_post_whisper_example = {
     'zh': "💨 例如",
     'ar': "💨 على سبيل المثال",
 }
-
 # endregion
 
 
@@ -10993,53 +10985,38 @@ l_media_btn2 = {
 }
 l_media_welcome = {
     'ru': "🌱 <b>{0}</b>, добро пожаловать в <i>@tg-приложение</i> создания медиа-креативов:\n\n<blockquote>▪️<b>стикеры</b> из текста и фото\n▪️<b>аудио-тренды</b>\n▪️<b>видео-заметки</b>\n▪️инлайн-<b>телескопы</b>\n▪️<b>кнопочные</b> #нейро-титры</blockquote>",
-    'en': "🌱 <b>{0}</b>, welcome to <i>landing bot</i> creating media notes:\n\n▪️<b>stickers</b> from text and photos\n▪️ <b>audio trends</b>\n▪️<b>video notes</b>\n▪️online <b>telescopes</b>\n▪️<b>push-button</b> media",
-    'es': "🌱 <b>{0}</b>, bienvenido al <i>bot de aterrizaje</i> que crea notas multimedia:\n\n▪️<b>pegatinas</b> a partir de texto y fotos\n▪️ <b> tendencias de audio</b>\n▪️<b>notas de vídeo</b>\n▪️<b>telescopios en línea</b>\n▪️<b>medios de comunicación mediante botón</b>",
-    'fr': "🌱 <b>{0}</b>, bienvenue dans le <i>bot d'atterrissage</i> qui crée des notes multimédias :\n\nnoyer<b>autocollants</b> à partir de texte et de photos\nnoyance <b> tendances audio</b>\nnounced<b>notes vidéo</b>\nnoyer <b>télescopes</b> en ligne</b>\nnoyam<b>médias à bouton-poussoir</b>",
-    'zh': "🌱 <b>{0}</b>，欢迎<i>登陆机器人</i>创建媒体笔记：\n\n▪️来自文本和照片的<b>贴纸</b>\n▪️ <b>音频趋势</b>\n▪️<b>视频笔记</b>\n▪️在线<b>望远镜</b>\n▪️<b>按钮</b>媒体\n\n❗️<b>定期</b>-更新/内容",
-    'ar': "🌱 <b>{0}</b>، مرحبًا بك في <i>الروبوت المقصود</i> لإنشاء ملاحظات الوسائط:\n\n▪️<b>الملصقات</b> من النصوص والصور\n▪️ <b> الاتجاهات الصوتية</b>\n▪️<b>ملاحظات الفيديو</b>\n▪️على الإنترنت <b>التلسكوبات</b>\n▪️<b>ضغط الزر</b> الوسائط\n\n❗️< ب>عادي</b>-محدث/محتوى",
-}
-l_media_welcome_instruction = {
-    'ru': 'https://telegra.ph/FereyMediaBot-11-15',
-    'en': 'https://telegra.ph/FereyBotBot-11-13',
-    'es': 'https://telegra.ph/FereyBotBot-11-13',
-    'fr': 'https://telegra.ph/FereyBotBot-11-13',
-    'zh': 'https://telegra.ph/FereyBotBot-11-13',
-    'ar': 'https://telegra.ph/FereyBotBot-11-13',
-}
-l_subscribe_media = {
-    'ru': "👩🏽‍💻 <b>Оформи</b> ежемесячную подписку:\n\n¹ [<b>Все боты</b> и проекты (-<u>22</u>%)]\n² [@{0}-бот]:\n<blockquote>▪️<b>кнопочные</b> #нейро-титры\n(<i>динамические медиа</i>)</blockquote>",
-    'en': "👩🏽‍💻 <b>Subscribe</b> to a monthly subscription:\n\n¹ [<b>All bots</b> and projects (-<u>22</u>%)]\n² [@{0 }-bot]:\n▪️<b>button</b> media\n(<i>dynamic media</i>)",
-    'es': "👩🏽‍💻 <b>Suscríbete</b> a una suscripción mensual:\n\n¹ [<b>Todos los bots</b> y proyectos (-<u>22</u>%)]\n² [@ {0 }-bot]:\n▪️<b>botón</b> medios\n(<i>medios dinámicos</i>)\n\n👩🏽‍💻 /saldo",
-    'fr': "👩🏽‍💻 <b>S'abonner</b> à un abonnement mensuel :\n\n¹ [<b>Tous les robots</b> et projets (-<u>22</u>%)]\n² [@ {0 }-bot] :\nnoyance<b>bouton</b> média\n(<i>média dynamique</i>)",
-    'zh': "👩🏽‍💻<b>订阅</b>按月订阅：\n\n1 [<b>所有机器人</b>和项目 (-<u>22</u>%)]\n² [@ {0 }-bot]：\n▪️<b>按钮</b>媒体\n（<i>动态媒体</i>）",
-    'ar': "👩🏽‍💻 <b>اشترك</b> في اشتراك شهري:\n\n¹ [<b>جميع الروبوتات</b> والمشاريع (-<u>22</u>%)]\n² [@ {0 }-bot]:\n▪️<b>زر</b> الوسائط\n(<i>الوسائط الديناميكية</i>)",
+    'en': "🌱 <b>{0}</b>, welcome to the <i>@tg-app</i> for creating media creatives:\n\n<blockquote>▪️<b>stickers</b> from text and photos\n▪️<b>audio trends</b>\n▪️<b>video notes</b>\n▪️inline <b>telescopes</b>\n▪️<b>push-button</b> #neuro-captions</blockquote>",
+    'es': "🌱 <b>{0}</b>, bienvenido a la <i>@tg-app</i> para crear contenido creativo:\n\n<blockquote>▪️<b>pegatinas</b> de texto y fotos\n▪️<b>tendencias de audio</b>\n▪️<b>notas de video</b>\n▪️<b>telescopios</b> en línea\n▪️<b>subtítulos neuronales</b> con botón</blockquote>",
+    'fr': "🌱 <b>{0}</b>, bienvenue sur <i>@tg-app</i> pour créer des médias créatifs :\n\n<blockquote>▪️<b>autocollants</b> à partir de texte et de photos\n▪️<b>tendances audio</b>\n▪️<b>notes vidéo</b>\n▪️<b>télescopes</b> en ligne\n▪️<b>légendes neuronales</b> à bouton</blockquote>",
+    'zh': "🌱 <b>{0}</b>，欢迎使用<i>@tg-app</i> 创建媒体创意：\n\n<blockquote>▪️来自文本和照片的<b>贴纸</b>\n▪️<b>音频趋势</b>\n▪️<b>视频笔记</b>\n▪️在线<b>望远镜</b>\n▪️<b>按钮式</b>#神经字幕</blockquote>",
+    'ar': "🌱 <b>{0}</b>، مرحبًا بك في <i>@tg-app</i> لإنشاء الإبداعات الإعلامية:\n\n<blockquote>▪️<b>ملصقات</b> من النصوص والصور\n▪️<b>اتجاهات صوتية</b>\n▪️<b>ملاحظات فيديو</b>\n▪️<b>تلسكوبات</b> مضمنة\n▪️<b>تسميات توضيحية عصبية</b> بزر</blockquote>",
 }
 
 l_media_text = {
     'ru': "👩🏽‍💻 <b>Выбери</b> тип выпадающих медиа-креативов (/add | /del)",
-    'en': "👩🏽‍💻 <b>Here</b> you can select the type of drop-down media notes (/add | /del)",
-    'es': "👩🏽‍💻 <b>Aquí</b> puedes seleccionar el tipo de notas multimedia desplegables (/add | /del)",
-    'fr': "👩🏽‍💻 <b>Ici</b>, vous pouvez sélectionner le type de notes média déroulantes (/add | /del)",
-    'zh': "👩🏽‍💻<b>在这里</b>您可以选择下拉媒体注释的类型（/add | /del）",
-    'ar': "👩🏽‍💻 <b>هنا</b> يمكنك تحديد نوع ملاحظات الوسائط المنسدلة (/add | /del)",
+    'en': "👩🏽‍💻 <b>Select</b> the type of drop-down media creatives (/add | /del)",
+    'es': "👩🏽‍💻 <b>Selecciona</b> el tipo de contenido multimedia desplegable (/add | /del)",
+    'fr': "👩🏽‍💻 <b>Sélectionnez</b> le type de média créatif déroulant (/add | /del)",
+    'zh': "👩🏽‍💻<b>选择</b>下拉式媒体创意类型（/add | /del）",
+    'ar': "👩🏽‍💻 <b>اختر</b> نوع الإبداع الإعلامي المنسدل (/add | /del)",
 }
 l_media_del = {
     'ru': "👩🏽‍💻 <b>Выбери</b> медиа-креатив для удаления",
-    'en': "👩🏽‍💻 <b>Select</b> media note to delete",
-    'es': "👩🏽‍💻 <b>Seleccione</b> nota multimedia para eliminar",
-    'fr': "👩🏽‍💻 <b>Sélectionnez</b> la note média à supprimer",
-    'zh': "👩🏽‍💻<b>选择</b>要删除的媒体笔记",
-    'ar': "👩🏽‍💻 <b>اختر</b> ملاحظة الوسائط لحذفها",
+    'en': "👩🏽‍💻 <b>Select</b> a media creative to delete",
+    'es': "👩🏽‍💻 <b>Selecciona</b> un contenido multimedia para eliminar",
+    'fr': "👩🏽‍💻 <b>Sélectionnez</b> un média créatif à supprimer",
+    'zh': "👩🏽‍💻<b>选择</b>要删除的媒体创意",
+    'ar': "👩🏽‍💻 <b>اختر</b> الإبداع الإعلامي المراد حذفه",
 }
 l_media_show = {
     'ru': "👩🏽‍💻 <b>Введи</b> запрос для поиска по медиа-креативам",
-    'en': "👩🏽‍💻 <b>Enter</b> text to search in media notes",
-    'es': "👩🏽‍💻 <b>Ingrese</b> texto para buscar en notas multimedia",
-    'fr': "👩🏽‍💻 <b>Saisissez</b> le texte à rechercher dans les notes des médias",
-    'zh': "👩🏽‍💻 <b>输入</b>文本以在媒体笔记中搜索",
-    'ar': "👩🏽‍💻 <b>أدخل</b> النص للبحث في ملاحظات الوسائط",
+    'en': "👩🏽‍💻 <b>Enter</b> a query to search media creatives",
+    'es': "👩🏽‍💻 <b>Ingresa</b> una consulta para buscar contenidos multimedia",
+    'fr': "👩🏽‍💻 <b>Entrez</b> une requête pour rechercher des médias créatifs",
+    'zh': "👩🏽‍💻<b>输入</b>关键词以搜索媒体创意",
+    'ar': "👩🏽‍💻 <b>أدخل</b> استعلامًا للبحث في الإبداعات الإعلامية",
 }
+
 l_media_random = {
     'ru': "🎲 Случайный выбор",
     'en': "🎲 Random selection",
@@ -11050,35 +11027,35 @@ l_media_random = {
 }
 l_media_none = {
     'ru': "👩🏽‍💻 <b>Медиа</b>-креатива не найдено",
-    'en': "👩🏽‍💻 <b>Media</b>-notes not found",
-    'es': "👩🏽‍💻 <b>Notas multimedia</b> no encontradas",
-    'fr': "👩🏽‍💻 <b>Media</b>-notes introuvables",
-    'zh': "👩🏽‍💻<b>媒体</b>-找不到注释",
-    'ar': "👩🏽‍💻 <b>الوسائط</b>-لم يتم العثور على الملاحظات",
+    'en': "👩🏽‍💻 <b>Media</b> creative not found",
+    'es': "👩🏽‍💻 <b>Contenido multimedia</b> no encontrado",
+    'fr': "👩🏽‍💻 <b>Média</b> créatif introuvable",
+    'zh': "👩🏽‍💻 未找到<b>媒体</b>创意",
+    'ar': "👩🏽‍💻 <b>الإبداع الإعلامي</b> غير موجود",
 }
 l_media_file = {
     'ru': "👩🏽‍💻 1/2. <b>Прикрепи</b> audio/video, text/photo контент для создания медиа-креатива",
-    'en': "👩🏽‍💻 1/2. <b>Attach</b> audio/video, text/photo content to create a media note",
-    'es': "👩🏽‍💻 1/2. <b>Adjunte</b> contenido de audio/vídeo, texto/foto para crear una nota multimedia.",
-    'fr': "👩🏽‍💻 1/2. <b>Joindre</b> du contenu audio/vidéo, texte/photo pour créer une note média",
-    'zh': "👩🏽‍💻 1/2。 <b>附加</b>音频/视频、文本/照片内容以创建媒体注释",
-    'ar': "👩🏽‍💻 1/2. <b>أرفق</b> محتوى الصوت/الفيديو والنص/الصورة لإنشاء ملاحظة إعلامية",
+    'en': "👩🏽‍💻 1/2. <b>Attach</b> audio/video, text/photo content to create a media creative",
+    'es': "👩🏽‍💻 1/2. <b>Adjunta</b> contenido de audio/vídeo o texto/foto para crear un contenido multimedia",
+    'fr': "👩🏽‍💻 1/2. <b>Joignez</b> du contenu audio/vidéo ou texte/photo pour créer un média créatif",
+    'zh': "👩🏽‍💻 1/2。<b>附加</b>音频/视频、文本/照片内容以创建媒体创意",
+    'ar': "👩🏽‍💻 1/2. <b>أرفق</b> محتوى صوت/فيديو أو نص/صورة لإنشاء إبداع إعلامي",
 }
 l_media_title1 = {
     'ru': "👩🏽‍💻 2/2. <b>Введи</b> <code>ключевые слова</code> для твоего медиа-креатива\n\n<blockquote>изменить ключевые слова нельзя</blockquote>",
-    'en': "👩🏽‍💻 2/2. <b>Enter</b> <code>keywords</code> for your media note\n[you cannot change <code>keywords</code>]",
-    'es': "👩🏽‍💻 2/2. <b>Ingrese</b> <code>palabras clave</code> para su nota multimedia\n[no puede cambiar las <code>palabras clave</code>]",
-    'fr': "👩🏽‍💻 2/2. <b>Saisissez</b> les <code>mots-clés</code> pour votre note média\n[vous ne pouvez pas modifier les <code>mots-clés</code>]",
-    'zh': "👩🏽‍💻 2/2。 <b>输入</b>媒体注释的<code>关键字</code>\n[您无法更改<code>关键字</code>]",
-    'ar': "👩🏽‍💻 2/2. <b>أدخل</b> <code>الكلمات الرئيسية</code> لملاحظة الوسائط الخاصة بك\n[لا يمكنك تغيير <code>الكلمات الرئيسية</code>]",
+    'en': "👩🏽‍💻 2/2. <b>Enter</b> <code>keywords</code> for your media creative\n\n<blockquote><code>Keywords</code> cannot be changed</blockquote>",
+    'es': "👩🏽‍💻 2/2. <b>Ingresa</b> <code>palabras clave</code> para tu contenido multimedia\n\n<blockquote>no se pueden cambiar</blockquote>",
+    'fr': "👩🏽‍💻 2/2. <b>Saisissez</b> des <code>mots-clés</code> pour votre média créatif\n\n<blockquote>ils ne peuvent pas être modifiés</blockquote>",
+    'zh': "👩🏽‍💻 2/2。<b>输入</b><code>关键字</code>用于媒体创意\n\n<blockquote><code>关键字</code>无法更改</blockquote>",
+    'ar': "👩🏽‍💻 2/2. <b>أدخل</b> <code>الكلمات الرئيسية</code> لإبداعك الإعلامي\n\n<blockquote>لا يمكن تغييرها</blockquote>",
 }
 l_media_title2 = {
     'ru': "👩🏽‍💻 2/2. <b>Текущие</b> ключевые слова для твоего медиа-креатива\n\n<blockquote>{0}</blockquote>\n\n[отправь новые или жми {1}]",
-    'en': "👩🏽‍💻 2/2. <b>Current</b> keywords for your media note\n\n{0}\n\n[new ones arrived or press {1}]",
-    'es': "👩🏽‍💻 2/2. Palabras clave <b>actuales</b> para su nota multimedia\n\n{0}\n\n[llegaron nuevas o presione {1}]",
-    'fr': "👩🏽‍💻 2/2. <b>Mots clés actuels</b> pour votre note média\n\n{0}\n\n[de nouveaux mots sont arrivés ou appuyez sur {1}]",
-    'zh': "👩🏽‍💻 2/2。媒体记事的<b>当前</b>关键字\n\n{0}\n\n[新关键字已到达或按 {1}]",
-    'ar': "👩🏽‍💻 2/2. الكلمات الرئيسية <b>الحالية</b> لمذكرة الوسائط الخاصة بك\n\n{0}\n\n[وصلت كلمات رئيسية جديدة أو اضغط على {1}]",
+    'en': "👩🏽‍💻 2/2. <b>Current</b> keywords for your media creative\n\n<blockquote>{0}</blockquote>\n\n[send new ones or press {1}]",
+    'es': "👩🏽‍💻 2/2. <b>Palabras clave actuales</b> para tu contenido multimedia\n\n<blockquote>{0}</blockquote>\n\n[envía nuevas o pulsa {1}]",
+    'fr': "👩🏽‍💻 2/2. <b>Mots-clés actuels</b> pour votre média créatif\n\n<blockquote>{0}</blockquote>\n\n[envoyez-en de nouveaux ou appuyez sur {1}]",
+    'zh': "👩🏽‍💻 2/2。<b>当前</b>媒体创意关键字\n\n<blockquote>{0}</blockquote>\n\n[发送新关键字或点击 {1}]",
+    'ar': "👩🏽‍💻 2/2. <b>الكلمات الرئيسية الحالية</b> لإبداعك الإعلامي\n\n<blockquote>{0}</blockquote>\n\n[أرسل كلمات جديدة أو اضغط {1}]",
 }
 l_media_confirm = {
     'ru': "🏁 Завершить",
@@ -11098,11 +11075,11 @@ l_media_error = {
 }
 l_media_finish = {
     'ru': "👩🏽‍💻 <b>Медиа</b>-креатив успешно создан",
-    'en': "👩🏽‍💻 <b>Media</b>-note successfully created",
-    'es': "👩🏽‍💻 <b>Nota multimedia</b> creada correctamente",
-    'fr': "👩🏽‍💻 <b>Media</b>-note créée avec succès",
-    'zh': "👩🏽‍💻<b>媒体</b>-笔记已成功创建",
-    'ar': "👩🏽‍💻 <b>الوسائط</b>-تم إنشاء الملاحظة بنجاح",
+    'en': "👩🏽‍💻 <b>Media</b> creative successfully created",
+    'es': "👩🏽‍💻 <b>Contenido multimedia</b> creado con éxito",
+    'fr': "👩🏽‍💻 <b>Média</b> créatif créé avec succès",
+    'zh': "👩🏽‍💻<b>媒体</b>创意已成功创建",
+    'ar': "👩🏽‍💻 تم إنشاء <b>الإبداع الإعلامي</b> بنجاح",
 }
 l_media_publish = {
     'ru': "🔗 Список",
@@ -11122,11 +11099,11 @@ l_media_check = {
 }
 l_media_hasdeleted = {
     'ru': "👩🏽‍💻 <b>Медиа</b>-креатив удален",
-    'en': "👩🏽‍💻 <b>Media</b>-note deleted",
-    'es': "👩🏽‍💻 <b>Nota multimedia</b> eliminada",
-    'fr': "👩🏽‍💻 <b>Médias</b>-note supprimée",
-    'zh': "👩🏽‍💻<b>媒体</b>-注释已删除",
-    'ar': "👩🏽‍💻 <b>الوسائط</b>-تم حذف الملاحظة",
+    'en': "👩🏽‍💻 <b>Media</b> creative deleted",
+    'es': "👩🏽‍💻 <b>Contenido multimedia</b> eliminado",
+    'fr': "👩🏽‍💻 <b>Média</b> créatif supprimé",
+    'zh': "👩🏽‍💻<b>媒体</b>创意已删除",
+    'ar': "👩🏽‍💻 تم حذف <b>الإبداع الإعلامي</b>",
 }
 l_media_delprepare = {
     'ru': "🔗 Выбрать",
@@ -11162,12 +11139,12 @@ l_titles_needpaid = {
     'ar': "👩🏽‍💻 1/2. <b>أرفق</b> محتوى الصوت/الفيديو والنص/الصورة لإنشاء ملاحظة إعلامية",
 }
 l_titles_error = {
-    'ru': "👩🏽‍💻 <b>Ошибка</b> создания титров к медиа-креативу: пропробуй еще раз позже или загрузи другой медиа-файл",
-    'en': "👩🏽‍💻 1/2. <b>Attach</b> audio/video, text/photo content to create a media note",
-    'es': "👩🏽‍💻 1/2. <b>Adjunte</b> contenido de audio/vídeo, texto/foto para crear una nota multimedia.",
-    'fr': "👩🏽‍💻 1/2. <b>Joindre</b> du contenu audio/vidéo, texte/photo pour créer une note média",
-    'zh': "👩🏽‍💻 1/2。 <b>附加</b>音频/视频、文本/照片内容以创建媒体注释",
-    'ar': "👩🏽‍💻 1/2. <b>أرفق</b> محتوى الصوت/الفيديو والنص/الصورة لإنشاء ملاحظة إعلامية",
+    'ru': "👩🏽‍💻 <b>Ошибка</b> создания титров к медиа-креативу: попробуй ещё раз позже или загрузи другой медиа-файл",
+    'en': "👩🏽‍💻 <b>Error</b> generating media captions: try again later or upload a different media file",
+    'es': "👩🏽‍💻 <b>Error</b> al generar subtítulos: inténtelo más tarde o cargue otro archivo multimedia",
+    'fr': "👩🏽‍💻 <b>Erreur</b> lors de la création des sous-titres : réessayez plus tard ou téléversez un autre fichier média",
+    'zh': "👩🏽‍💻 <b>创建字幕</b>时出错：请稍后重试或上传其他媒体文件",
+    'ar': "👩🏽‍💻 <b>خطأ</b> في إنشاء العناوين: حاول مرة أخرى لاحقًا أو حمّل ملفًا إعلاميًا آخر",
 }
 # endregion
 

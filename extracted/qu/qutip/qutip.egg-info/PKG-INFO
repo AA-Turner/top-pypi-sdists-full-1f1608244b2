@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: qutip
-Version: 5.1.1
+Version: 5.2.0
 Summary: QuTiP: The Quantum Toolbox in Python
 Home-page: https://qutip.org
 Author: Alexander Pitchford, Paul D. Nation, Robert J. Johansson, Chris Granade, Arne Grimsmo, Nathan Shammah, Shahnawaz Ahmed, Neill Lambert, Eric Giguere, Boxi Li, Jake Lishman, Simon Cross
@@ -45,7 +45,8 @@ Requires-Dist: pytest-rerunfailures; extra == "tests"
 Provides-Extra: ipython
 Requires-Dist: ipython; extra == "ipython"
 Provides-Extra: extras
-Requires-Dist: loky; extra == "extras"
+Requires-Dist: loky; python_version >= "3.11" and extra == "extras"
+Requires-Dist: loky!=3.5.0; python_version <= "3.10" and extra == "extras"
 Requires-Dist: tqdm; extra == "extras"
 Requires-Dist: mpmath; extra == "extras"
 Provides-Extra: mpi
@@ -60,9 +61,11 @@ Requires-Dist: cvxopt; extra == "full"
 Requires-Dist: pytest>=5.2; extra == "full"
 Requires-Dist: pytest-rerunfailures; extra == "full"
 Requires-Dist: ipython; extra == "full"
-Requires-Dist: loky; extra == "full"
+Requires-Dist: loky; python_version >= "3.11" and extra == "full"
+Requires-Dist: loky!=3.5.0; python_version <= "3.10" and extra == "full"
 Requires-Dist: tqdm; extra == "full"
 Requires-Dist: mpmath; extra == "full"
+Dynamic: license-file
 
 QuTiP: Quantum Toolbox in Python
 ================================

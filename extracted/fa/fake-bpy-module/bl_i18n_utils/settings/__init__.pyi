@@ -17,30 +17,30 @@ class I18nSettings:
     TEMPLATES_DIR: typing.Any
     WORK_DIR: typing.Any
 
-    def from_dict(self, mapping):
+    def from_dict(self, mapping) -> None:
         """
 
         :param mapping:
         """
 
-    def from_json(self, string):
+    def from_json(self, string) -> None:
         """
 
         :param string:
         """
 
-    def load(self, fname, reset=False):
+    def load(self, fname, reset=False) -> None:
         """
 
         :param fname:
         :param reset:
         """
 
-    def save(self, fname):
+    def save(self, fname) -> None:
         """
 
         :param fname:
         """
 
-    def to_dict(self): ...
-    def to_json(self): ...
+    def to_dict(self) -> None: ...
+    def to_json(self) -> None: ...

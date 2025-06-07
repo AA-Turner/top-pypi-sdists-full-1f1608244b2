@@ -61,7 +61,7 @@ def fbx(
     use_metadata: bool | None = True,
     axis_forward: typing.Literal["X", "Y", "Z", "-X", "-Y", "-Z"] | None = "-Z",
     axis_up: typing.Literal["X", "Y", "Z", "-X", "-Y", "-Z"] | None = "Y",
-):
+) -> None:
     """Write a FBX file
 
         :type execution_context: int | str | None
@@ -368,7 +368,7 @@ def gltf(
     export_extra_animations: bool | None = False,
     export_loglevel: int | None = -1,
     filter_glob: str = "*.glb",
-):
+) -> None:
     """Export scene as glTF 2.0 file
 
         :type execution_context: int | str | None

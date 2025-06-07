@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dvc
-Version: 3.59.2
+Version: 3.60.0
 Summary: Git for data scientists - manage your code and data together
 Author-email: Dmitry Petrov <dmitry@dvc.org>
 Maintainer-email: Iterative <support@dvc.org>
@@ -70,7 +70,7 @@ Requires-Dist: dvc[azure,gdrive,gs,hdfs,lint,oss,s3,ssh,tests,webdav,webhdfs]; e
 Provides-Extra: gdrive
 Requires-Dist: dvc-gdrive<4,>=3; extra == "gdrive"
 Provides-Extra: gs
-Requires-Dist: dvc-gs<4,>=3; extra == "gs"
+Requires-Dist: dvc-gs<4,>=3.0.2; extra == "gs"
 Provides-Extra: hdfs
 Requires-Dist: dvc-hdfs<4,>=3; extra == "hdfs"
 Provides-Extra: lint

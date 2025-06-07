@@ -5,7 +5,7 @@ import numpy.typing as npt
 
 def assign_default_button(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Set this property's current value as the new default
 
     :type execution_context: int | str | None
@@ -18,7 +18,7 @@ def button_execute(
     /,
     *,
     skip_depressed: bool | None = False,
-):
+) -> None:
     """Presses active button
 
     :type execution_context: int | str | None
@@ -29,7 +29,7 @@ def button_execute(
 
 def button_string_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Unsets the text of the active button
 
     :type execution_context: int | str | None
@@ -38,7 +38,7 @@ def button_string_clear(
 
 def copy_as_driver_button(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create a new driver with this property as input, and copy it to the internal clipboard. Use Paste Driver to add it to the target property, or Paste Driver Variables to extend an existing driver
 
     :type execution_context: int | str | None
@@ -51,7 +51,7 @@ def copy_data_path_button(
     /,
     *,
     full_path: bool | None = False,
-):
+) -> None:
     """Copy the RNA data path for this property to the clipboard
 
     :type execution_context: int | str | None
@@ -66,7 +66,7 @@ def copy_driver_to_selected_button(
     /,
     *,
     all: bool | None = False,
-):
+) -> None:
     """Copy the property's driver from the active item to the same property of all selected items, if the same property exists
 
     :type execution_context: int | str | None
@@ -77,7 +77,7 @@ def copy_driver_to_selected_button(
 
 def copy_python_command_button(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy the Python command matching this button
 
     :type execution_context: int | str | None
@@ -90,7 +90,7 @@ def copy_to_selected_button(
     /,
     *,
     all: bool | None = True,
-):
+) -> None:
     """Copy the property's value from the active item to the same property of all selected items if the same property exists
 
     :type execution_context: int | str | None
@@ -107,7 +107,7 @@ def drop_color(
     color: collections.abc.Iterable[float] | None = (0.0, 0.0, 0.0, 0.0),
     gamma: bool | None = False,
     has_alpha: bool | None = False,
-):
+) -> None:
     """Drop colors to buttons
 
     :type execution_context: int | str | None
@@ -126,7 +126,7 @@ def drop_material(
     /,
     *,
     session_uid: int | None = 0,
-):
+) -> None:
     """Drag material to Material slots in Properties
 
     :type execution_context: int | str | None
@@ -141,7 +141,7 @@ def drop_name(
     /,
     *,
     string: str = "",
-):
+) -> None:
     """Drop name to button
 
     :type execution_context: int | str | None
@@ -150,7 +150,9 @@ def drop_name(
     :type string: str
     """
 
-def editsource(execution_context: int | str | None = None, undo: bool | None = None):
+def editsource(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Edit UI source code of the active button
 
     :type execution_context: int | str | None
@@ -159,7 +161,7 @@ def editsource(execution_context: int | str | None = None, undo: bool | None = N
 
 def eyedropper_bone(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Sample a bone from the 3D View or the Outliner to store in a property
 
     :type execution_context: int | str | None
@@ -172,7 +174,7 @@ def eyedropper_color(
     /,
     *,
     prop_data_path: str = "",
-):
+) -> None:
     """Sample a color from the Blender window to store in a property
 
     :type execution_context: int | str | None
@@ -183,7 +185,7 @@ def eyedropper_color(
 
 def eyedropper_colorramp(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Sample a color band
 
     :type execution_context: int | str | None
@@ -192,7 +194,7 @@ def eyedropper_colorramp(
 
 def eyedropper_colorramp_point(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Point-sample a color band
 
     :type execution_context: int | str | None
@@ -205,7 +207,7 @@ def eyedropper_depth(
     /,
     *,
     prop_data_path: str = "",
-):
+) -> None:
     """Sample depth from the 3D view
 
     :type execution_context: int | str | None
@@ -223,7 +225,7 @@ def eyedropper_driver(
         "SINGLE_MANY", "DIRECT", "MATCH", "NONE_ALL", "NONE_SINGLE"
     ]
     | None = "SINGLE_MANY",
-):
+) -> None:
     """Pick a property to use as a driver target
 
         :type execution_context: int | str | None
@@ -254,7 +256,7 @@ def eyedropper_grease_pencil_color(
     *,
     mode: typing.Literal["MATERIAL", "PALETTE", "BRUSH"] | None = "MATERIAL",
     material_mode: typing.Literal["STROKE", "FILL", "BOTH"] | None = "STROKE",
-):
+) -> None:
     """Sample a color from the Blender Window and create Grease Pencil material
 
     :type execution_context: int | str | None
@@ -265,7 +267,9 @@ def eyedropper_grease_pencil_color(
     :type material_mode: typing.Literal['STROKE','FILL','BOTH'] | None
     """
 
-def eyedropper_id(execution_context: int | str | None = None, undo: bool | None = None):
+def eyedropper_id(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Sample a data-block from the 3D View to store in a property
 
     :type execution_context: int | str | None
@@ -274,7 +278,7 @@ def eyedropper_id(execution_context: int | str | None = None, undo: bool | None 
 
 def jump_to_target_button(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Switch to the target object or bone
 
     :type execution_context: int | str | None
@@ -283,7 +287,7 @@ def jump_to_target_button(
 
 def list_start_filter(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Start entering filter text for the list in focus
 
     :type execution_context: int | str | None
@@ -292,7 +296,7 @@ def list_start_filter(
 
 def override_idtemplate_clear(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Delete the selected local override and relink its usages to the linked data-block if possible, else reset it and mark it as non editable
 
     :type execution_context: int | str | None
@@ -301,7 +305,7 @@ def override_idtemplate_clear(
 
 def override_idtemplate_make(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Create a local override of the selected linked data-block, and its hierarchy of dependencies
 
     :type execution_context: int | str | None
@@ -310,7 +314,7 @@ def override_idtemplate_make(
 
 def override_idtemplate_reset(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Reset the selected local override to its linked reference values
 
     :type execution_context: int | str | None
@@ -323,7 +327,7 @@ def override_remove_button(
     /,
     *,
     all: bool | None = True,
-):
+) -> None:
     """Remove an override operation
 
     :type execution_context: int | str | None
@@ -339,7 +343,7 @@ def override_type_set_button(
     *,
     all: bool | None = True,
     type: typing.Literal["NOOP", "REPLACE", "DIFFERENCE", "FACTOR"] | None = "REPLACE",
-):
+) -> None:
     """Create an override operation, or set the type of an existing one
 
         :type execution_context: int | str | None
@@ -364,7 +368,7 @@ def override_type_set_button(
 
 def reloadtranslation(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Force a full reload of UI translation
 
     :type execution_context: int | str | None
@@ -377,7 +381,7 @@ def reset_default_button(
     /,
     *,
     all: bool | None = True,
-):
+) -> None:
     """Reset this property's value to its default value
 
     :type execution_context: int | str | None
@@ -388,14 +392,16 @@ def reset_default_button(
 
 def unset_property_button(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Clear the property and use default or generated value in operators
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def view_drop(execution_context: int | str | None = None, undo: bool | None = None):
+def view_drop(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Drag and drop onto a data-set or item within the data-set
 
     :type execution_context: int | str | None
@@ -404,14 +410,16 @@ def view_drop(execution_context: int | str | None = None, undo: bool | None = No
 
 def view_item_rename(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Rename the active item in the data-set view
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def view_scroll(execution_context: int | str | None = None, undo: bool | None = None):
+def view_scroll(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -420,7 +428,7 @@ def view_scroll(execution_context: int | str | None = None, undo: bool | None = 
 
 def view_start_filter(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Start entering filter text for the data-set in focus
 
     :type execution_context: int | str | None

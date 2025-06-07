@@ -222,6 +222,9 @@ async def wait_run(request: ApiRequest):
         stream = asyncio.create_task(consume())
         while True:
             try:
+                if stream.done():
+                    # raise stream exception if any
+                    stream.result()
                 yield await asyncio.wait_for(last_chunk.wait(), timeout=5)
                 break
             except TimeoutError:
@@ -270,7 +273,10 @@ async def wait_run_stateless(request: ApiRequest):
         vchunk: bytes | None = None
         async with aclosing(
             Runs.Stream.join(
-                run["run_id"], thread_id=run["thread_id"], stream_mode=await sub
+                run["run_id"],
+                thread_id=run["thread_id"],
+                stream_mode=await sub,
+                ignore_404=True,
             )
         ) as stream:
             async for mode, chunk, _ in stream:
@@ -290,6 +296,9 @@ async def wait_run_stateless(request: ApiRequest):
         stream = asyncio.create_task(consume())
         while True:
             try:
+                if stream.done():
+                    # raise stream exception if any
+                    stream.result()
                 yield await asyncio.wait_for(last_chunk.wait(), timeout=5)
                 break
             except TimeoutError:

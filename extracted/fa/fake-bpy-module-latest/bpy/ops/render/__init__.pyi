@@ -11,7 +11,7 @@ def color_management_white_balance_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove a white balance preset
 
     :type execution_context: int | str | None
@@ -32,7 +32,7 @@ def cycles_integrator_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add an Integrator Preset
 
     :type execution_context: int | str | None
@@ -53,7 +53,7 @@ def cycles_performance_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add an Performance Preset
 
     :type execution_context: int | str | None
@@ -74,7 +74,7 @@ def cycles_sampling_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add a Sampling Preset
 
     :type execution_context: int | str | None
@@ -95,7 +95,7 @@ def cycles_viewport_sampling_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add a Viewport Sampling Preset
 
     :type execution_context: int | str | None
@@ -116,7 +116,7 @@ def eevee_raytracing_preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove an EEVEE ray-tracing preset
 
     :type execution_context: int | str | None
@@ -139,7 +139,7 @@ def opengl(
     sequencer: bool | None = False,
     write_still: bool | None = False,
     view_context: bool | None = True,
-):
+) -> None:
     """Take a snapshot of the active viewport
 
     :type execution_context: int | str | None
@@ -158,7 +158,7 @@ def opengl(
 
 def play_rendered_anim(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Play back rendered frames/movies using an external player
 
     :type execution_context: int | str | None
@@ -173,7 +173,7 @@ def preset_add(
     name: str = "",
     remove_name: bool | None = False,
     remove_active: bool | None = False,
-):
+) -> None:
     """Add or remove a Render Preset
 
     :type execution_context: int | str | None
@@ -196,7 +196,7 @@ def render(
     use_viewport: bool | None = False,
     layer: str = "",
     scene: str = "",
-):
+) -> None:
     """Render active scene
 
     :type execution_context: int | str | None
@@ -220,7 +220,7 @@ def shutter_curve_preset(
     *,
     shape: typing.Literal["SHARP", "SMOOTH", "MAX", "LINE", "ROUND", "ROOT"]
     | None = "SMOOTH",
-):
+) -> None:
     """Set shutter curve
 
     :type execution_context: int | str | None
@@ -229,14 +229,18 @@ def shutter_curve_preset(
     :type shape: typing.Literal['SHARP','SMOOTH','MAX','LINE','ROUND','ROOT'] | None
     """
 
-def view_cancel(execution_context: int | str | None = None, undo: bool | None = None):
+def view_cancel(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Cancel show render view
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def view_show(execution_context: int | str | None = None, undo: bool | None = None):
+def view_show(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Toggle show render view
 
     :type execution_context: int | str | None

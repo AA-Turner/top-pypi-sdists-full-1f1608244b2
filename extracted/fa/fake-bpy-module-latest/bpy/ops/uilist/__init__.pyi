@@ -10,7 +10,7 @@ def entry_add(
     *,
     list_path: str = "",
     active_index_path: str = "",
-):
+) -> None:
     """Add an entry to the list after the current active item
 
     :type execution_context: int | str | None
@@ -29,7 +29,7 @@ def entry_move(
     list_path: str = "",
     active_index_path: str = "",
     direction: typing.Literal["UP", "DOWN"] | None = "UP",
-):
+) -> None:
     """Move an entry in the list up or down
 
         :type execution_context: int | str | None
@@ -55,7 +55,7 @@ def entry_remove(
     *,
     list_path: str = "",
     active_index_path: str = "",
-):
+) -> None:
     """Remove the selected entry from the list
 
     :type execution_context: int | str | None

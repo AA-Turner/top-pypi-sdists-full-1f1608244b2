@@ -3,14 +3,18 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 
-def autocomplete(execution_context: int | str | None = None, undo: bool | None = None):
+def autocomplete(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Evaluate the namespace up until the cursor and give a list of options or complete the name if there is only one
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def banner(execution_context: int | str | None = None, undo: bool | None = None):
+def banner(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Print a message when the terminal initializes
 
     :type execution_context: int | str | None
@@ -24,7 +28,7 @@ def clear(
     *,
     scrollback: bool | None = True,
     history: bool | None = False,
-):
+) -> None:
     """Clear text by type
 
     :type execution_context: int | str | None
@@ -35,7 +39,9 @@ def clear(
     :type history: bool | None
     """
 
-def clear_line(execution_context: int | str | None = None, undo: bool | None = None):
+def clear_line(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Clear the line and store in history
 
     :type execution_context: int | str | None
@@ -48,7 +54,7 @@ def copy(
     /,
     *,
     delete: bool | None = False,
-):
+) -> None:
     """Copy selected text to clipboard
 
     :type execution_context: int | str | None
@@ -59,7 +65,7 @@ def copy(
 
 def copy_as_script(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Copy the console contents for use in a script
 
     :type execution_context: int | str | None
@@ -75,7 +81,7 @@ def delete(
         "NEXT_CHARACTER", "PREVIOUS_CHARACTER", "NEXT_WORD", "PREVIOUS_WORD"
     ]
     | None = "NEXT_CHARACTER",
-):
+) -> None:
     """Delete text by cursor position
 
     :type execution_context: int | str | None
@@ -90,7 +96,7 @@ def execute(
     /,
     *,
     interactive: bool | None = False,
-):
+) -> None:
     """Execute the current console line as a Python expression
 
     :type execution_context: int | str | None
@@ -107,7 +113,7 @@ def history_append(
     text: str = "",
     current_character: int | None = 0,
     remove_duplicates: bool | None = False,
-):
+) -> None:
     """Append history at cursor position
 
     :type execution_context: int | str | None
@@ -126,7 +132,7 @@ def history_cycle(
     /,
     *,
     reverse: bool | None = False,
-):
+) -> None:
     """Cycle through history
 
     :type execution_context: int | str | None
@@ -135,7 +141,9 @@ def history_cycle(
     :type reverse: bool | None
     """
 
-def indent(execution_context: int | str | None = None, undo: bool | None = None):
+def indent(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Add 4 spaces at line beginning
 
     :type execution_context: int | str | None
@@ -144,7 +152,7 @@ def indent(execution_context: int | str | None = None, undo: bool | None = None)
 
 def indent_or_autocomplete(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Indent selected text or autocomplete
 
     :type execution_context: int | str | None
@@ -157,7 +165,7 @@ def insert(
     /,
     *,
     text: str = "",
-):
+) -> None:
     """Insert text at cursor position
 
     :type execution_context: int | str | None
@@ -172,7 +180,7 @@ def language(
     /,
     *,
     language: str = "",
-):
+) -> None:
     """Set the current language for this console
 
     :type execution_context: int | str | None
@@ -196,7 +204,7 @@ def move(
     ]
     | None = "LINE_BEGIN",
     select: bool | None = False,
-):
+) -> None:
     """Move cursor position
 
     :type execution_context: int | str | None
@@ -213,7 +221,7 @@ def paste(
     /,
     *,
     selection: bool | None = False,
-):
+) -> None:
     """Paste text from clipboard
 
     :type execution_context: int | str | None
@@ -229,7 +237,7 @@ def scrollback_append(
     *,
     text: str = "",
     type: typing.Literal["OUTPUT", "INPUT", "INFO", "ERROR"] | None = "OUTPUT",
-):
+) -> None:
     """Append scrollback text by type
 
     :type execution_context: int | str | None
@@ -240,28 +248,36 @@ def scrollback_append(
     :type type: typing.Literal['OUTPUT','INPUT','INFO','ERROR'] | None
     """
 
-def select_all(execution_context: int | str | None = None, undo: bool | None = None):
+def select_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select all the text
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_set(execution_context: int | str | None = None, undo: bool | None = None):
+def select_set(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Set the console selection
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def select_word(execution_context: int | str | None = None, undo: bool | None = None):
+def select_word(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select word at cursor position
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def unindent(execution_context: int | str | None = None, undo: bool | None = None):
+def unindent(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Delete 4 spaces from line beginning
 
     :type execution_context: int | str | None

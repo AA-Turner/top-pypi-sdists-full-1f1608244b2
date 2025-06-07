@@ -16,7 +16,7 @@ def check(module_name: str) -> tuple[bool, bool]:
     :rtype: tuple[bool, bool]
     """
 
-def check_extension(module_name):
+def check_extension(module_name) -> None:
     """Return true if the module is an extension."""
 
 def disable(
@@ -25,7 +25,7 @@ def disable(
     default_set: bool = False,
     refresh_handled=False,
     handle_error: None | collections.abc.Callable[None] | None = None,
-):
+) -> None:
     """Disables an addon by name.
 
     :param module_name: The name of the addon and module.
@@ -36,7 +36,7 @@ def disable(
     :type handle_error: None | collections.abc.Callable[None] | None
     """
 
-def disable_all(): ...
+def disable_all() -> None: ...
 def enable(
     module_name: str,
     *,
@@ -44,7 +44,7 @@ def enable(
     persistent: bool = False,
     refresh_handled: bool = False,
     handle_error: None | collections.abc.Callable[None] | None = None,
-):
+) -> None:
     """Enables an addon by name.
 
         :param module_name: the name of the addon and module.
@@ -66,7 +66,7 @@ def extensions_refresh(
     ensure_wheels: bool = True,
     addon_modules_pending: None | collections.abc.Sequence[str] | None = None,
     handle_error: None | collections.abc.Callable[None] | None = None,
-):
+) -> None:
     """Ensure data relating to extensions is up to date.
     This should be called after extensions on the file-system have changed.
 
@@ -79,12 +79,12 @@ def extensions_refresh(
         :type handle_error: None | collections.abc.Callable[None] | None
     """
 
-def module_bl_info(mod, *, info_basis=None): ...
-def modules(*, module_cache={}, refresh=True): ...
-def modules_refresh(*, module_cache={}): ...
-def paths(): ...
-def reset_all(*, reload_scripts=False):
+def module_bl_info(mod, *, info_basis=None) -> None: ...
+def modules(*, module_cache={}, refresh=True) -> None: ...
+def modules_refresh(*, module_cache={}) -> None: ...
+def paths() -> None: ...
+def reset_all(*, reload_scripts=False) -> None:
     """Sets the addon state based on the user preferences."""
 
-def stale_pending_remove_paths(path_base, paths): ...
-def stale_pending_stage_paths(path_base, paths): ...
+def stale_pending_remove_paths(path_base, paths) -> None: ...
+def stale_pending_stage_paths(path_base, paths) -> None: ...

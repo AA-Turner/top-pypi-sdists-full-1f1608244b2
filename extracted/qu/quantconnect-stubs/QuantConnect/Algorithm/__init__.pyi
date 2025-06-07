@@ -4434,6 +4434,20 @@ class QCAlgorithm(System.MarshalByRefObject, QuantConnect.Interfaces.IAlgorithm)
         """
         ...
 
+    def kvo(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], fast_period: int, slow_period: int, signal_period: int = 13, resolution: typing.Optional[QuantConnect.Resolution] = None, selector: typing.Callable[[QuantConnect.Data.IBaseData], QuantConnect.Data.Market.TradeBar] = None) -> QuantConnect.Indicators.KlingerVolumeOscillator:
+        """
+        Creates a new Klinger Volume Oscillator (KVO) indicator
+        
+        :param symbol: The symbol whose KVO we want
+        :param fast_period: The period of the fast EMA used to calculate KVO
+        :param slow_period: The period of the slow EMA used to calculate KVO, default to 13
+        :param signal_period: The period of the signal EMA of the raw KVO value
+        :param resolution: The resolution.
+        :param selector: Selects a value from the BaseData to send into the indicator, if null defaults to casting the input value to a TradeBar
+        :returns: The Klinger Volume Oscillator indicator for the requested symbol.
+        """
+        ...
+
     @overload
     def limit_if_touched_order(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], quantity: int, trigger_price: float, limit_price: float, tag: str = ..., order_properties: QuantConnect.Interfaces.IOrderProperties = None) -> QuantConnect.Orders.OrderTicket:
         """

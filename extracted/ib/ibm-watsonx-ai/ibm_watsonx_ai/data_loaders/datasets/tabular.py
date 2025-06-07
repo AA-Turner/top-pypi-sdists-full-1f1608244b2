@@ -10,6 +10,7 @@ __all__ = ["TabularIterableDataset"]
 import os
 import logging
 from typing import TYPE_CHECKING, Iterator, Any, cast, Sequence
+from collections.abc import Callable
 from warnings import warn
 
 import pandas as pd
@@ -19,9 +20,9 @@ from ibm_watsonx_ai.utils.autoai.enums import SamplingTypes, DocumentsSamplingTy
 from ibm_watsonx_ai.utils.autoai.errors import InvalidSizeLimit
 
 if TYPE_CHECKING:
-    from ibm_watsonx_ai.helpers.connections.flight_service import FlightConnection
     from ibm_watsonx_ai.helpers.connections import DataConnection
     from ibm_watsonx_ai import APIClient
+    from ibm_watsonx_ai.helpers.connections.flight_service import FlightConnection
 
 # Note: try to import torch lib if available, this fallback is done based on
 # torch dependency removal request
@@ -238,42 +239,54 @@ class TabularIterableDataset(IterableDataset):
 
             headers_ = cast(dict, headers_)
             number_of_batch_rows = cast(int, number_of_batch_rows)
-            self.connection: FlightConnection = FlightConnection(
-                headers=headers_,
-                sampling_type=self.sampling_type,
-                label=self.experiment_metadata.get("prediction_column"),
-                learning_type=self.experiment_metadata.get("prediction_type"),
-                params=self.experiment_metadata,
-                project_id=self.experiment_metadata.get(
-                    "project_id", getattr(self._api_client, "default_project_id", None)
-                ),
-                space_id=self.experiment_metadata.get(
-                    "space_id", getattr(self._api_client, "default_space_id", None)
-                ),
-                asset_id=(
-                    None
-                    if is_cos_asset
-                    else dict_connection.get("location", {}).get("id")
-                ),  # do not pass asset id for data assets located on COS
-                connection_id=dict_connection.get("connection", {}).get("id"),
-                data_location=dict_connection,
-                data_batch_size_limit=self.sample_size_limit,
-                flight_parameters=flight_parameters,
-                extra_interaction_properties=kwargs.get(
-                    "extra_interaction_properties", {}
-                ),
-                fallback_to_one_connection=kwargs.get(
-                    "fallback_to_one_connection", True
-                ),
-                number_of_batch_rows=number_of_batch_rows,
-                stop_after_first_batch=stop_after_first_batch,
-                _api_client=self._api_client,
-                return_subsampling_stats=kwargs.get("_return_subsampling_stats", False),
-                total_size_limit=self.total_size_limit,
-                total_nrows_limit=self.total_nrows_limit,
-                total_percentage_limit=self.total_percentage_limit,
-                apply_literal_eval=self.apply_literal_eval,
-            )
+
+            def get_flight_conn() -> FlightConnection:
+                conn = FlightConnection(
+                    headers=headers_,
+                    sampling_type=self.sampling_type,
+                    label=self.experiment_metadata.get("prediction_column"),
+                    learning_type=self.experiment_metadata.get("prediction_type"),
+                    params=self.experiment_metadata,
+                    project_id=self.experiment_metadata.get(
+                        "project_id",
+                        getattr(self._api_client, "default_project_id", None),
+                    ),
+                    space_id=self.experiment_metadata.get(
+                        "space_id", getattr(self._api_client, "default_space_id", None)
+                    ),
+                    asset_id=(
+                        None
+                        if is_cos_asset
+                        else dict_connection.get("location", {}).get("id")
+                    ),  # do not pass asset id for data assets located on COS
+                    connection_id=dict_connection.get("connection", {}).get("id"),
+                    data_location=dict_connection,
+                    data_batch_size_limit=self.sample_size_limit,
+                    flight_parameters=flight_parameters,
+                    extra_interaction_properties=kwargs.get(
+                        "extra_interaction_properties", {}
+                    ),
+                    fallback_to_one_connection=kwargs.get(
+                        "fallback_to_one_connection", True
+                    ),
+                    number_of_batch_rows=number_of_batch_rows,
+                    stop_after_first_batch=stop_after_first_batch,
+                    _api_client=self._api_client,
+                    return_subsampling_stats=kwargs.get(
+                        "_return_subsampling_stats", False
+                    ),
+                    total_size_limit=self.total_size_limit,
+                    total_nrows_limit=self.total_nrows_limit,
+                    total_percentage_limit=self.total_percentage_limit,
+                    apply_literal_eval=self.apply_literal_eval,
+                )
+
+                if "infer_as_varchar" in kwargs:
+                    conn.infer_as_varchar = kwargs.get("infer_as_varchar")
+
+                return conn
+
+            self._get_conn = get_flight_conn
 
         else:
 
@@ -282,10 +295,14 @@ class TabularIterableDataset(IterableDataset):
                 and "location" in dict_connection
                 and "path" in dict_connection["location"]
             ):
-                self.connection: LocalBatchReader = LocalBatchReader(
-                    file_path=dict_connection["location"]["path"],
-                    batch_size=sample_size_limit,
-                )
+
+                def get_local_conn() -> LocalBatchReader:
+                    return LocalBatchReader(
+                        file_path=dict_connection["location"]["path"],
+                        batch_size=sample_size_limit,
+                    )
+
+                self._get_conn = get_local_conn
 
             else:
                 raise NotImplementedError(
@@ -428,28 +445,36 @@ class TabularIterableDataset(IterableDataset):
                 f"'file_path' need to be a string, you provided: '{type(file_path)}'."
             )
 
+        from ibm_watsonx_ai.helpers.connections.flight_service import FlightConnection
+
+        self._get_conn = cast(Callable[[], FlightConnection], self._get_conn)
         if data is not None:
-            self.connection.write_data(data)
+            with self._get_conn() as connection:
+                connection.write_data(data)
 
         else:
             file_path = cast(str, file_path)
-            self.connection.write_binary_data(file_path)
+            with self._get_conn() as connection:
+                connection.write_binary_data(file_path)
 
     def __iter__(self) -> Iterator:
         """Iterate over Flight Dataset."""
         if self.authorized:
-            if self.enable_sampling:
-                if self.sampling_type == SamplingTypes.FIRST_VALUES:
-                    return self.connection.iterable_read()
+            with self._get_conn() as connection:
+                if self.enable_sampling:
+                    if self.sampling_type != SamplingTypes.FIRST_VALUES:
+                        connection.enable_subsampling = True
+
+                    yield from connection.iterable_read()
+
                 else:
-                    self.connection.enable_subsampling = True
-                    return self.connection.iterable_read()
-            else:
-                if self.binary_data:
-                    return self.connection.read_binary_data(read_to_file=self.read_to_file)  # type: ignore[return-value]
-                else:
-                    self.total_size_limit = None
-                    return self.connection.iterable_read()
+                    if self.binary_data:
+                        yield from connection.read_binary_data(
+                            read_to_file=self.read_to_file
+                        )  # type: ignore[return-value]
+                    else:
+                        self.total_size_limit = None
+                        yield from connection.iterable_read()
         else:
-            self.connection = cast(LocalBatchReader, self.connection)
-            return (batch for batch in self.connection)
+            connection = cast(LocalBatchReader, self._get_conn())
+            return (batch for batch in connection)

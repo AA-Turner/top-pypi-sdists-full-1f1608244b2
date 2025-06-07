@@ -10,7 +10,7 @@ def flip(
     /,
     *,
     axis: typing.Literal["U", "V", "W"] | None = "U",
-):
+) -> None:
     """Mirror all control points without inverting the lattice deform
 
     :type execution_context: int | str | None
@@ -19,7 +19,9 @@ def flip(
     :type axis: typing.Literal['U','V','W'] | None
     """
 
-def make_regular(execution_context: int | str | None = None, undo: bool | None = None):
+def make_regular(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Set UVW control points a uniform distance apart
 
     :type execution_context: int | str | None
@@ -32,7 +34,7 @@ def select_all(
     /,
     *,
     action: typing.Literal["TOGGLE", "SELECT", "DESELECT", "INVERT"] | None = "TOGGLE",
-):
+) -> None:
     """Change selection of all UVW control points
 
         :type execution_context: int | str | None
@@ -53,7 +55,9 @@ def select_all(
         :type action: typing.Literal['TOGGLE','SELECT','DESELECT','INVERT'] | None
     """
 
-def select_less(execution_context: int | str | None = None, undo: bool | None = None):
+def select_less(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Deselect vertices at the boundary of each selection region
 
     :type execution_context: int | str | None
@@ -67,7 +71,7 @@ def select_mirror(
     *,
     axis: set[bpy.stub_internal.rna_enums.AxisFlagXyzItems] | None = {"X"},
     extend: bool | None = False,
-):
+) -> None:
     """Select mirrored lattice points
 
     :type execution_context: int | str | None
@@ -78,7 +82,9 @@ def select_mirror(
     :type extend: bool | None
     """
 
-def select_more(execution_context: int | str | None = None, undo: bool | None = None):
+def select_more(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Select vertex directly linked to already selected ones
 
     :type execution_context: int | str | None
@@ -93,7 +99,7 @@ def select_random(
     ratio: float | None = 0.5,
     seed: int | None = 0,
     action: typing.Literal["SELECT", "DESELECT"] | None = "SELECT",
-):
+) -> None:
     """Randomly select UVW control points
 
         :type execution_context: int | str | None
@@ -118,7 +124,7 @@ def select_ungrouped(
     /,
     *,
     extend: bool | None = False,
-):
+) -> None:
     """Select vertices without a group
 
     :type execution_context: int | str | None

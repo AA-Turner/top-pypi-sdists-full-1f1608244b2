@@ -14,7 +14,7 @@ except ImportError:
 
 class SinkGoogleSecOps(pydantic.BaseModel):
     """
-    Configuration for Google Security Operations (formerly Google Chronicle) as a Sink Provider.
+    Configuration for Google Security Operations (formerly Google Chronicle) as a Sink Provider connecting via the older Malachite API.
     """
 
     credential: GoogleChronicleCredential = pydantic.Field()

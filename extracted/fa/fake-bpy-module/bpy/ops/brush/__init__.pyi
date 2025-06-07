@@ -14,7 +14,7 @@ def asset_activate(
     asset_library_identifier: str = "",
     relative_asset_identifier: str = "",
     use_toggle: bool | None = False,
-):
+) -> None:
     """Activate a brush asset as current sculpt and paint tool
 
     :type execution_context: int | str | None
@@ -29,7 +29,9 @@ def asset_activate(
     :type use_toggle: bool | None
     """
 
-def asset_delete(execution_context: int | str | None = None, undo: bool | None = None):
+def asset_delete(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Delete the active brush asset
 
     :type execution_context: int | str | None
@@ -44,7 +46,7 @@ def asset_edit_metadata(
     catalog_path: str = "",
     author: str = "",
     description: str = "",
-):
+) -> None:
     """Edit asset information like the catalog, preview image, tags, or author
 
     :type execution_context: int | str | None
@@ -90,7 +92,7 @@ def asset_load_preview(
     ]
     | None = "DEFAULT",
     sort_method: str | None = "",
-):
+) -> None:
     """Choose a preview image for the brush
 
         :type execution_context: int | str | None
@@ -159,14 +161,18 @@ def asset_load_preview(
         :type sort_method: str | None
     """
 
-def asset_revert(execution_context: int | str | None = None, undo: bool | None = None):
+def asset_revert(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Revert the active brush settings to the default values from the asset library
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def asset_save(execution_context: int | str | None = None, undo: bool | None = None):
+def asset_save(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Update the active brush asset in the asset library with current settings
 
     :type execution_context: int | str | None
@@ -181,7 +187,7 @@ def asset_save_as(
     name: str = "",
     asset_library_reference: str | None = "",
     catalog_path: str = "",
-):
+) -> None:
     """Save a copy of the active brush asset into the default asset library, and make it the active brush
 
     :type execution_context: int | str | None
@@ -201,7 +207,7 @@ def curve_preset(
     *,
     shape: typing.Literal["SHARP", "SMOOTH", "MAX", "LINE", "ROUND", "ROOT"]
     | None = "SMOOTH",
-):
+) -> None:
     """Set brush shape
 
     :type execution_context: int | str | None
@@ -216,7 +222,7 @@ def scale_size(
     /,
     *,
     scalar: float | None = 1.0,
-):
+) -> None:
     """Change brush size by a scalar
 
     :type execution_context: int | str | None
@@ -232,7 +238,7 @@ def sculpt_curves_falloff_preset(
     *,
     shape: typing.Literal["SHARP", "SMOOTH", "MAX", "LINE", "ROUND", "ROOT"]
     | None = "SMOOTH",
-):
+) -> None:
     """Set Curve Falloff Preset
 
     :type execution_context: int | str | None
@@ -248,7 +254,7 @@ def stencil_control(
     *,
     mode: typing.Literal["TRANSLATION", "SCALE", "ROTATION"] | None = "TRANSLATION",
     texmode: typing.Literal["PRIMARY", "SECONDARY"] | None = "PRIMARY",
-):
+) -> None:
     """Control the stencil brush
 
     :type execution_context: int | str | None
@@ -267,7 +273,7 @@ def stencil_fit_image_aspect(
     use_repeat: bool | None = True,
     use_scale: bool | None = True,
     mask: bool | None = False,
-):
+) -> None:
     """When using an image texture, adjust the stencil size to fit the image aspect ratio
 
     :type execution_context: int | str | None
@@ -286,7 +292,7 @@ def stencil_reset_transform(
     /,
     *,
     mask: bool | None = False,
-):
+) -> None:
     """Reset the stencil transformation to the default
 
     :type execution_context: int | str | None

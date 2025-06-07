@@ -27,21 +27,21 @@ class MeshMirrorUV(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def do_mesh_mirror_UV(self, mesh, DIR):
+    def do_mesh_mirror_UV(self, mesh, DIR) -> None:
         """
 
         :param mesh:
         :param DIR:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -70,14 +70,14 @@ class MeshSelectNext(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -106,14 +106,14 @@ class MeshSelectPrev(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:

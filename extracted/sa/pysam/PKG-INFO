@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pysam
-Version: 0.23.1
+Version: 0.23.2
 Summary: Package for reading, manipulating, and writing genomic data
 Home-page: https://github.com/pysam-developers/pysam
 Author: Andreas Heger

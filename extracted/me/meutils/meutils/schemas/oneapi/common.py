@@ -23,6 +23,7 @@ STEP = 2
 MINIMAX_VIDEO = 3
 
 MODEL_PRICE = {
+    "chatfire-claude":0.02,
     "o1:free": FREE,
     # "claude-3-7-sonnet-code:free": "claude-3-7-sonnet-code"
     "claude-3-7-sonnet-code:free": 0.0001,
@@ -824,6 +825,7 @@ MODEL_RATIO = {
     "gemini-2.5-pro-exp-03-25": 0.625,
     "gemini-2.5-pro-preview-03-25": 0.625,
     "gemini-2.5-pro-preview-05-06": 0.625,
+    "gemini-2.5-pro-preview-06-05": 0.625,
 
     "gemini-1.5-pro-001": 1.25,
     "gemini-1.5-pro-002": 1.25,
@@ -1117,6 +1119,7 @@ COMPLETION_RATIO = {
     "gemini-2.5-pro-exp-03-25": 8,
     "gemini-2.5-pro-preview-03-25": 8,
     "gemini-2.5-pro-preview-05-06": 8,
+    "gemini-2.5-pro-preview-06-05": 8,
 
     "gemma2-9b-it": 4,
     "gemma2-27b-it": 4,

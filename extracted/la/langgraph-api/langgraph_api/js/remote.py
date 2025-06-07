@@ -48,7 +48,6 @@ from langgraph_api.js.sse import SSEDecoder, aiter_lines_raw
 from langgraph_api.route import ApiResponse
 from langgraph_api.schema import Config
 from langgraph_api.serde import json_dumpb
-from langgraph_api.utils import AsyncConnectionProto
 
 logger = structlog.stdlib.get_logger(__name__)
 
@@ -469,10 +468,10 @@ class PassthroughSerialiser(SerializerProtocol):
         return orjson.loads(payload)
 
 
-def _get_passthrough_checkpointer(conn: AsyncConnectionProto):
+def _get_passthrough_checkpointer():
     from langgraph_runtime.checkpoint import Checkpointer
 
-    checkpointer = Checkpointer(conn)
+    checkpointer = Checkpointer()
     # This checkpointer does not attempt to revive LC-objects.
     # Instead, it will pass through the JSON values as-is.
     checkpointer.serde = PassthroughSerialiser()
@@ -487,53 +486,46 @@ async def _get_passthrough_store():
 # Setup a HTTP server on top of CHECKPOINTER_SOCKET unix socket
 # used by `client.mts` to communicate with the Python checkpointer
 async def run_remote_checkpointer():
-    from langgraph_runtime.database import connect
-
     async def checkpointer_list(payload: dict):
         """Search checkpoints"""
 
         result = []
-        async with connect() as conn:
-            checkpointer = _get_passthrough_checkpointer(conn)
-            async for item in checkpointer.alist(
-                config=payload.get("config"),
-                limit=int(payload.get("limit") or 10),
-                before=payload.get("before"),
-                filter=payload.get("filter"),
-            ):
-                result.append(item)
+        checkpointer = _get_passthrough_checkpointer()
+        async for item in checkpointer.alist(
+            config=payload.get("config"),
+            limit=int(payload.get("limit") or 10),
+            before=payload.get("before"),
+            filter=payload.get("filter"),
+        ):
+            result.append(item)
 
         return result
 
     async def checkpointer_put(payload: dict):
         """Put the new checkpoint metadata"""
 
-        async with connect() as conn:
-            checkpointer = _get_passthrough_checkpointer(conn)
-            return await checkpointer.aput(
-                payload["config"],
-                payload["checkpoint"],
-                payload["metadata"],
-                payload.get("new_versions", {}),
-            )
+        checkpointer = _get_passthrough_checkpointer()
+        return await checkpointer.aput(
+            payload["config"],
+            payload["checkpoint"],
+            payload["metadata"],
+            payload.get("new_versions", {}),
+        )
 
     async def checkpointer_get_tuple(payload: dict):
         """Get actual checkpoint values (reads)"""
-
-        async with connect() as conn:
-            checkpointer = _get_passthrough_checkpointer(conn)
-            return await checkpointer.aget_tuple(config=payload["config"])
+        checkpointer = _get_passthrough_checkpointer()
+        return await checkpointer.aget_tuple(config=payload["config"])
 
     async def checkpointer_put_writes(payload: dict):
         """Put actual checkpoint values (writes)"""
 
-        async with connect() as conn:
-            checkpointer = _get_passthrough_checkpointer(conn)
-            return await checkpointer.aput_writes(
-                payload["config"],
-                payload["writes"],
-                payload["taskId"],
-            )
+        checkpointer = _get_passthrough_checkpointer()
+        return await checkpointer.aput_writes(
+            payload["config"],
+            payload["writes"],
+            payload["taskId"],
+        )
 
     async def store_batch(payload: dict):
         """Batch operations on the store"""

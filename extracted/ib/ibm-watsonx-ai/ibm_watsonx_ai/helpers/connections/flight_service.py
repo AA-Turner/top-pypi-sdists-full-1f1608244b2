@@ -195,7 +195,6 @@ class FlightConnection:
         max_retry_time: int = 200,
         **kwargs,
     ) -> None:
-
         if project_id is None and space_id is None:
             raise SpaceIDandProjectIDCannotBeNone(
                 reason="'space_id' and 'project_id' are None. Please set one of them."
@@ -325,9 +324,9 @@ class FlightConnection:
 
         self._infer_as_varchar = "false"  # by default set infer_as_varchar to false in flight command. If None - the infer_as_varchar parameter won't be send.
 
-        additional_connection_args = {}
+        self.additional_connection_args = {}
         if os.environ.get("TLS_ROOT_CERTS_PATH"):
-            additional_connection_args["tls_root_certs"] = os.environ.get(
+            self.additional_connection_args["tls_root_certs"] = os.environ.get(
                 "TLS_ROOT_CERTS_PATH"
             )
 
@@ -338,16 +337,22 @@ class FlightConnection:
 
         self._set_default_flight_location()
 
+        self.empty_data_threads = set()
+        # note: client as property and setter for dynamic href creation for AssetLocation
+
+    def __enter__(self):
         self.flight_client = flight.FlightClient(
             location=f"grpc+tls://{self.flight_location}:{self.flight_port}",
             disable_server_verification=True,
             override_hostname=self.flight_location,
             middleware=[HeaderMiddlewareFactory(self.headers)],
-            **additional_connection_args,
+            **self.additional_connection_args,
         )
+        return self
 
-        self.empty_data_threads = set()
-        # note: client as property and setter for dynamic href creation for AssetLocation
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        self.flight_client.wait_for_available(10)
+        self.flight_client.close()
 
     @property
     def _wml_client(self):

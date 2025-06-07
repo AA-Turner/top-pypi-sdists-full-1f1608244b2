@@ -1,7 +1,7 @@
 import asyncio
 import time
 from collections.abc import AsyncGenerator
-from contextlib import AsyncExitStack, asynccontextmanager
+from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from typing import TypedDict, cast
 
@@ -20,16 +20,12 @@ from langgraph_api.errors import UserInterrupt, UserRollback
 from langgraph_api.js.errors import RemoteException
 from langgraph_api.metadata import incr_runs
 from langgraph_api.schema import Run
+from langgraph_api.state import state_snapshot_to_thread_state
 from langgraph_api.stream import astream_state, consume
-from langgraph_api.utils import set_auth_ctx, with_user
+from langgraph_api.utils import with_user
 from langgraph_runtime.database import connect
 from langgraph_runtime.ops import Runs, Threads
 from langgraph_runtime.retry import RETRIABLE_EXCEPTIONS
-
-try:
-    from psycopg.errors import InFailedSqlTransaction
-except ImportError:
-    InFailedSqlTransaction = ()
 
 logger = structlog.stdlib.get_logger(__name__)
 
@@ -90,45 +86,41 @@ async def worker(
         if request_created_at is not None
         else None
     )
-    async with (
-        connect() as conn,
-        set_auth_ctx_for_run(run["kwargs"]),
-        Runs.enter(run_id, main_loop) as done,
-        AsyncExitStack() as exit_stack,
-    ):
-        temporary = run["kwargs"].get("temporary", False)
-        resumable = run["kwargs"].get("resumable", False)
-        run_created_at = run["created_at"].isoformat()
-        lg_logging.set_logging_context(
-            {
-                "run_id": str(run_id),
-                "run_attempt": attempt,
-                "thread_id": str(run.get("thread_id")),
-                "assistant_id": str(run.get("assistant_id")),
-                "graph_id": _get_graph_id(run),
-                "request_id": _get_request_id(run),
-            }
-        )
-        run_stream_started_at = datetime.now(UTC)
-        await logger.ainfo(
-            "Starting background run",
-            run_started_at=run_started_at.isoformat(),
-            run_creation_ms=run_creation_ms,
-            run_queue_ms=ms(run_started_at, run["created_at"]),
-            run_stream_start_ms=ms(run_stream_started_at, run_started_at),
-        )
+    temporary = run["kwargs"].get("temporary", False)
+    resumable = run["kwargs"].get("resumable", False)
+    run_created_at = run["created_at"].isoformat()
+    lg_logging.set_logging_context(
+        {
+            "run_id": str(run_id),
+            "run_attempt": attempt,
+            "thread_id": str(run.get("thread_id")),
+            "assistant_id": str(run.get("assistant_id")),
+            "graph_id": _get_graph_id(run),
+            "request_id": _get_request_id(run),
+        }
+    )
+    run_stream_started_at = datetime.now(UTC)
+    await logger.ainfo(
+        "Starting background run",
+        run_started_at=run_started_at.isoformat(),
+        run_creation_ms=run_creation_ms,
+        run_queue_ms=ms(run_started_at, run["created_at"]),
+        run_stream_start_ms=ms(run_stream_started_at, run_started_at),
+    )
 
-        def on_checkpoint(checkpoint_arg: CheckpointPayload):
-            nonlocal checkpoint
-            checkpoint = checkpoint_arg
+    def on_checkpoint(checkpoint_arg: CheckpointPayload):
+        nonlocal checkpoint
+        checkpoint = checkpoint_arg
 
-        def on_task_result(task_result: TaskResultPayload):
-            if checkpoint is not None:
-                for task in checkpoint["tasks"]:
-                    if task["id"] == task_result["id"]:
-                        task.update(task_result)
-                        break
+    def on_task_result(task_result: TaskResultPayload):
+        if checkpoint is not None:
+            for task in checkpoint["tasks"]:
+                if task["id"] == task_result["id"]:
+                    task.update(task_result)
+                    break
 
+    async with Runs.enter(run_id, main_loop) as done:
+        # attempt the run
         try:
             if attempt > BG_JOB_MAX_RETRIES:
                 await logger.aerror(
@@ -155,70 +147,25 @@ async def worker(
                     )
 
                 raise RuntimeError(error_message)
-            if temporary:
-                stream = astream_state(exit_stack, conn, cast(Run, run), attempt, done)
-            else:
-                stream = astream_state(
-                    exit_stack,
-                    conn,
-                    cast(Run, run),
-                    attempt,
-                    done,
-                    on_checkpoint=on_checkpoint,
-                    on_task_result=on_task_result,
+            async with set_auth_ctx_for_run(run["kwargs"]):
+                if temporary:
+                    stream = astream_state(cast(Run, run), attempt, done)
+                else:
+                    stream = astream_state(
+                        cast(Run, run),
+                        attempt,
+                        done,
+                        on_checkpoint=on_checkpoint,
+                        on_task_result=on_task_result,
+                    )
+                await asyncio.wait_for(
+                    consume(stream, run_id, resumable),
+                    BG_JOB_TIMEOUT_SECS,
                 )
-            await asyncio.wait_for(
-                consume(stream, run_id, resumable),
-                BG_JOB_TIMEOUT_SECS,
-            )
-            run_ended_at_dt = datetime.now(UTC)
-            run_ended_at = run_ended_at_dt.isoformat()
-            await logger.ainfo(
-                "Background run succeeded",
-                run_id=str(run_id),
-                run_attempt=attempt,
-                run_created_at=run_created_at,
-                run_started_at=run_started_at.isoformat(),
-                run_ended_at=run_ended_at,
-                run_exec_ms=ms(run_ended_at_dt, run_started_at),
-                run_completed_in_ms=(
-                    int((run_ended_at_dt.timestamp() * 1_000) - request_created_at)
-                    if request_created_at is not None
-                    else None
-                ),
-            )
-            status = "success"
-            await Runs.set_status(conn, run_id, "success")
-        except TimeoutError as e:
-            exception = e
-            status = "timeout"
-            run_ended_at = datetime.now(UTC).isoformat()
-            await logger.awarning(
-                "Background run timed out",
-                run_id=str(run_id),
-                run_attempt=attempt,
-                run_created_at=run_created_at,
-                run_started_at=run_started_at.isoformat(),
-                run_ended_at=run_ended_at,
-                run_exec_ms=ms(datetime.now(UTC), run_started_at),
-                run_completed_in_ms=(
-                    int((run_ended_at_dt.timestamp() * 1_000) - request_created_at)
-                    if request_created_at is not None
-                    else None
-                ),
-            )
-            await Runs.set_status(conn, run_id, "timeout")
-        except UserRollback as e:
-            exception = e
-            status = "rollback"
-            run_ended_at_dt = datetime.now(UTC)
-            run_ended_at = run_ended_at_dt.isoformat()
-            try:
-                # Need to close the pipeline to re-use the connection
-                await exit_stack.aclose()
-                await Runs.delete(conn, run_id, thread_id=run["thread_id"])
+                run_ended_at_dt = datetime.now(UTC)
+                run_ended_at = run_ended_at_dt.isoformat()
                 await logger.ainfo(
-                    "Background run rolled back",
+                    "Background run succeeded",
                     run_id=str(run_id),
                     run_attempt=attempt,
                     run_created_at=run_created_at,
@@ -231,118 +178,163 @@ async def worker(
                         else None
                     ),
                 )
+        except Exception as ee:
+            # Note we don't handle asyncio.CancelledError here, as we want to
+            # let it bubble up and rollback db transaction, thus marking the run
+            # as available to be picked up by another worker
+            exception = ee
 
-            except InFailedSqlTransaction as e:
-                await logger.ainfo(
-                    "Ignoring rollback error",
+        # handle exceptions and set status
+        async with connect() as conn:
+            if exception is None:
+                status = "success"
+                await Runs.set_status(conn, run_id, "success")
+                # If a stateful run succeeded but no checkpoint was returned, likely
+                # there was a retriable exception that resumed right at the end
+                if checkpoint is None and not temporary:
+                    await logger.ainfo(
+                        "Fetching missing checkpoint for webhook",
+                        run_id=str(run_id),
+                        run_attempt=attempt,
+                    )
+                    try:
+                        state_snapshot = await Threads.State.get(
+                            conn, run["kwargs"]["config"]
+                        )
+                        checkpoint = state_snapshot_to_thread_state(state_snapshot)
+                    except Exception:
+                        await logger.aerror(
+                            "Failed to fetch missing checkpoint for webhook. Continuing...",
+                            exc_info=True,
+                            run_id=str(run_id),
+                            run_attempt=attempt,
+                        )
+            elif isinstance(exception, TimeoutError):
+                status = "timeout"
+                run_ended_at = datetime.now(UTC).isoformat()
+                await logger.awarning(
+                    "Background run timed out",
                     run_id=str(run_id),
                     run_attempt=attempt,
                     run_created_at=run_created_at,
-                    exc=str(e),
+                    run_started_at=run_started_at.isoformat(),
+                    run_ended_at=run_ended_at,
+                    run_exec_ms=ms(datetime.now(UTC), run_started_at),
+                    run_completed_in_ms=(
+                        int((run_ended_at_dt.timestamp() * 1_000) - request_created_at)
+                        if request_created_at is not None
+                        else None
+                    ),
                 )
-            except HTTPException as e:
-                if e.status_code == 404:
+                await Runs.set_status(conn, run_id, "timeout")
+            elif isinstance(exception, UserRollback):
+                status = "rollback"
+                run_ended_at_dt = datetime.now(UTC)
+                run_ended_at = run_ended_at_dt.isoformat()
+                try:
+                    await Runs.delete(conn, run_id, thread_id=run["thread_id"])
                     await logger.ainfo(
-                        "Ignoring rollback error for missing run",
+                        "Background run rolled back",
                         run_id=str(run_id),
                         run_attempt=attempt,
                         run_created_at=run_created_at,
+                        run_started_at=run_started_at.isoformat(),
+                        run_ended_at=run_ended_at,
+                        run_exec_ms=ms(run_ended_at_dt, run_started_at),
+                        run_completed_in_ms=(
+                            int(
+                                (run_ended_at_dt.timestamp() * 1_000)
+                                - request_created_at
+                            )
+                            if request_created_at is not None
+                            else None
+                        ),
                     )
-                else:
-                    raise
+                except HTTPException as e:
+                    if e.status_code == 404:
+                        await logger.ainfo(
+                            "Ignoring rollback error for missing run",
+                            run_id=str(run_id),
+                            run_attempt=attempt,
+                            run_created_at=run_created_at,
+                        )
+                    else:
+                        raise
 
-            checkpoint = None  # reset the checkpoint
-        except UserInterrupt as e:
-            exception = e
-            status = "interrupted"
-            run_ended_at_dt = datetime.now(UTC)
-            run_ended_at = run_ended_at_dt.isoformat()
-            await logger.ainfo(
-                "Background run interrupted",
-                run_id=str(run_id),
-                run_attempt=attempt,
-                run_created_at=run_created_at,
-                run_started_at=run_started_at.isoformat(),
-                run_ended_at=run_ended_at,
-                run_exec_ms=ms(run_ended_at_dt, run_started_at),
-                run_completed_in_ms=(
-                    int((run_ended_at_dt.timestamp() * 1_000) - request_created_at)
-                    if request_created_at is not None
-                    else None
-                ),
-            )
-            await Runs.set_status(conn, run_id, "interrupted")
-        except RETRIABLE_EXCEPTIONS as e:
-            exception = e
-            status = "retry"
-            run_ended_at_dt = datetime.now(UTC)
-            run_ended_at = run_ended_at_dt.isoformat()
-            await logger.awarning(
-                f"Background run failed, will retry. Exception: {e}",
-                exc_info=True,
-                run_id=str(run_id),
-                run_attempt=attempt,
-                run_created_at=run_created_at,
-                run_started_at=run_started_at.isoformat(),
-                run_ended_at=run_ended_at,
-                run_exec_ms=ms(run_ended_at_dt, run_started_at),
-            )
-            await Runs.set_status(conn, run_id, "pending")
-            raise
-        except Exception as exc:
-            exception = exc
-            status = "error"
-            run_ended_at_dt = datetime.now(UTC)
-            run_ended_at = run_ended_at_dt.isoformat()
-            await logger.aexception(
-                f"Background run failed. Exception: {exc}",
-                exc_info=not isinstance(exc, RemoteException),
-                run_id=str(run_id),
-                run_attempt=attempt,
-                run_created_at=run_created_at,
-                run_started_at=run_started_at.isoformat(),
-                run_ended_at=run_ended_at,
-                run_exec_ms=ms(run_ended_at_dt, run_started_at),
-            )
-            await Runs.set_status(conn, run_id, "error")
-        set_auth_ctx(None, None)
-        # delete or set status of thread
-        if temporary:
-            await Threads.delete(conn, run["thread_id"])
-        else:
-            try:
-                await Threads.set_status(conn, run["thread_id"], checkpoint, exception)
-            except HTTPException as e:
-                if e.status_code == 404:
-                    await logger.ainfo(
-                        "Ignoring set_status error for missing thread", exc=str(e)
-                    )
-                else:
-                    raise
-        # Note we don't handle asyncio.CancelledError here, as we want to
-        # let it bubble up and rollback db transaction, thus marking the run
-        # as available to be picked up by another worker
+                checkpoint = None  # reset the checkpoint
+            elif isinstance(exception, UserInterrupt):
+                status = "interrupted"
+                run_ended_at_dt = datetime.now(UTC)
+                run_ended_at = run_ended_at_dt.isoformat()
+                await logger.ainfo(
+                    "Background run interrupted",
+                    run_id=str(run_id),
+                    run_attempt=attempt,
+                    run_created_at=run_created_at,
+                    run_started_at=run_started_at.isoformat(),
+                    run_ended_at=run_ended_at,
+                    run_exec_ms=ms(run_ended_at_dt, run_started_at),
+                    run_completed_in_ms=(
+                        int((run_ended_at_dt.timestamp() * 1_000) - request_created_at)
+                        if request_created_at is not None
+                        else None
+                    ),
+                )
+                await Runs.set_status(conn, run_id, "interrupted")
+            elif isinstance(exception, RETRIABLE_EXCEPTIONS):
+                status = "retry"
+                run_ended_at_dt = datetime.now(UTC)
+                run_ended_at = run_ended_at_dt.isoformat()
+                await logger.awarning(
+                    f"Background run failed, will retry. Exception: {exception}",
+                    exc_info=True,
+                    run_id=str(run_id),
+                    run_attempt=attempt,
+                    run_created_at=run_created_at,
+                    run_started_at=run_started_at.isoformat(),
+                    run_ended_at=run_ended_at,
+                    run_exec_ms=ms(run_ended_at_dt, run_started_at),
+                )
+                await Runs.set_status(conn, run_id, "pending")
+            else:
+                status = "error"
+                run_ended_at_dt = datetime.now(UTC)
+                run_ended_at = run_ended_at_dt.isoformat()
+                await logger.aexception(
+                    f"Background run failed. Exception: {exception}",
+                    exc_info=not isinstance(exception, RemoteException),
+                    run_id=str(run_id),
+                    run_attempt=attempt,
+                    run_created_at=run_created_at,
+                    run_started_at=run_started_at.isoformat(),
+                    run_ended_at=run_ended_at,
+                    run_exec_ms=ms(run_ended_at_dt, run_started_at),
+                )
+                await Runs.set_status(conn, run_id, "error")
 
-    # If a stateful run succeeded but no checkoint was returned, it's likely because
-    # there was a retriable exception that resumed right at the end
-    if checkpoint is None and (not temporary) and webhook and status == "success":
-        await logger.ainfo(
-            "Fetching missing checkpoint for webhook",
-            run_id=str(run_id),
-            run_attempt=attempt,
-        )
-        try:
-            state_snapshot = await Threads.State.get(
-                conn, run["kwargs"]["config"], subgraphs=True
-            )
-            checkpoint = {"values": state_snapshot.values}
-        except Exception:
-            await logger.aerror(
-                "Failed to fetch missing checkpoint for webhook. Continuing...",
-                exc_info=True,
-                run_id=str(run_id),
-                run_attempt=attempt,
-            )
+            # delete or set status of thread
+            if not isinstance(exception, RETRIABLE_EXCEPTIONS):
+                if temporary:
+                    await Threads.delete(conn, run["thread_id"])
+                else:
+                    try:
+                        await Threads.set_status(
+                            conn, run["thread_id"], checkpoint, exception
+                        )
+                    except HTTPException as e:
+                        if e.status_code == 404:
+                            await logger.ainfo(
+                                "Ignoring set_status error for missing thread",
+                                exc=str(e),
+                            )
+                        else:
+                            raise
+
+        if isinstance(exception, RETRIABLE_EXCEPTIONS):
+            # re-raise so Runs.enter knows not to mark as done
+            # Runs.enter will catch the exception, but what triggers the retry
+            # is setting the status to "pending"
+            raise exception
 
     return WorkerResult(
         checkpoint=checkpoint,

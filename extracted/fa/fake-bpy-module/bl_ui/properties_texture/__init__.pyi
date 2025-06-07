@@ -26,7 +26,7 @@ class TEXTURE_MT_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -65,14 +65,14 @@ class TEXTURE_PT_animation(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -102,7 +102,7 @@ class TEXTURE_PT_blend(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -132,7 +132,7 @@ class TEXTURE_PT_clouds(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -162,7 +162,7 @@ class TEXTURE_PT_colors(TextureColorsPoll, TextureButtonsPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -193,13 +193,13 @@ class TEXTURE_PT_colors_ramp(TextureColorsPoll, TextureButtonsPanel, bpy.types.P
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -229,7 +229,7 @@ class TEXTURE_PT_context(TextureButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -267,7 +267,7 @@ class TEXTURE_PT_custom_props(
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -297,7 +297,7 @@ class TEXTURE_PT_distortednoise(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -327,7 +327,7 @@ class TEXTURE_PT_image(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -359,13 +359,13 @@ class TEXTURE_PT_image_alpha(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -397,7 +397,7 @@ class TEXTURE_PT_image_mapping(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -429,7 +429,7 @@ class TEXTURE_PT_image_mapping_crop(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -461,7 +461,7 @@ class TEXTURE_PT_image_sampling(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -492,7 +492,7 @@ class TEXTURE_PT_image_settings(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -522,14 +522,14 @@ class TEXTURE_PT_influence(TextureSlotPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -559,7 +559,7 @@ class TEXTURE_PT_magic(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -588,14 +588,14 @@ class TEXTURE_PT_mapping(TextureSlotPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -625,7 +625,7 @@ class TEXTURE_PT_marble(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -655,7 +655,7 @@ class TEXTURE_PT_musgrave(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -684,14 +684,14 @@ class TEXTURE_PT_node(TextureButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -720,14 +720,14 @@ class TEXTURE_PT_preview(TextureButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -757,7 +757,7 @@ class TEXTURE_PT_stucci(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -787,7 +787,7 @@ class TEXTURE_PT_voronoi(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -818,7 +818,7 @@ class TEXTURE_PT_voronoi_feature_weights(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -848,7 +848,7 @@ class TEXTURE_PT_wood(TextureTypePanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -882,7 +882,7 @@ class TEXTURE_UL_texslots(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -902,7 +902,7 @@ class TextureButtonsPanel:
 
 class TextureColorsPoll:
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -915,7 +915,7 @@ class TextureSlotPanel(TextureButtonsPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -927,11 +927,11 @@ class TextureTypePanel(TextureButtonsPanel):
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def context_tex_datablock(context): ...
-def texture_filter_common(tex, layout): ...
+def context_tex_datablock(context) -> None: ...
+def texture_filter_common(tex, layout) -> None: ...

@@ -28,30 +28,30 @@ class AddTorus(bpy.types.Operator, bpy_extras.object_utils.AddObjectHelper):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
         :param _event:
         """
 
-    def mode_update_callback(self, _context):
+    def mode_update_callback(self, _context) -> None:
         """
 
         :param _context:
         """
 
-def add_torus(major_rad, minor_rad, major_seg, minor_seg): ...
-def add_uvs(mesh, minor_seg, major_seg): ...
+def add_torus(major_rad, minor_rad, major_seg, minor_seg) -> None: ...
+def add_uvs(mesh, minor_seg, major_seg) -> None: ...

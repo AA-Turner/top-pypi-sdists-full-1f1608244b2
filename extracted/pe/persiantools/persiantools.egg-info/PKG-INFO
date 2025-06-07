@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: persiantools
-Version: 5.2.1
+Version: 5.3.0
 Summary: Jalali date and datetime with other tools
 Home-page: https://github.com/majiidd/persiantools
 Author: Majid Hajiloo
@@ -8,7 +8,6 @@ Author-email: majid.hajiloo@gmail.com
 License: MIT
 Keywords: jalali shamsi persian digits characters converter jalalidate jalalidatetime date datetime jdate jdatetime farsi
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: Persian
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python

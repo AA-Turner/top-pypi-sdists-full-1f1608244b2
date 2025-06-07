@@ -14,12 +14,15 @@
 """  # noqa: E501
 
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 # import apis into sdk package
 from unitycatalog.client.api.catalogs_api import CatalogsApi
+from unitycatalog.client.api.credentials_api import CredentialsApi
+from unitycatalog.client.api.external_locations_api import ExternalLocationsApi
 from unitycatalog.client.api.functions_api import FunctionsApi
 from unitycatalog.client.api.grants_api import GrantsApi
+from unitycatalog.client.api.metastores_api import MetastoresApi
 from unitycatalog.client.api.model_versions_api import ModelVersionsApi
 from unitycatalog.client.api.registered_models_api import RegisteredModelsApi
 from unitycatalog.client.api.schemas_api import SchemasApi
@@ -40,11 +43,15 @@ from unitycatalog.client.exceptions import ApiException
 
 # import models into sdk package
 from unitycatalog.client.models.aws_credentials import AwsCredentials
+from unitycatalog.client.models.aws_iam_role_request import AwsIamRoleRequest
+from unitycatalog.client.models.aws_iam_role_response import AwsIamRoleResponse
 from unitycatalog.client.models.azure_user_delegation_sas import AzureUserDelegationSAS
 from unitycatalog.client.models.catalog_info import CatalogInfo
 from unitycatalog.client.models.column_info import ColumnInfo
 from unitycatalog.client.models.column_type_name import ColumnTypeName
 from unitycatalog.client.models.create_catalog import CreateCatalog
+from unitycatalog.client.models.create_credential_request import CreateCredentialRequest
+from unitycatalog.client.models.create_external_location import CreateExternalLocation
 from unitycatalog.client.models.create_function import CreateFunction
 from unitycatalog.client.models.create_function_request import CreateFunctionRequest
 from unitycatalog.client.models.create_model_version import CreateModelVersion
@@ -52,9 +59,12 @@ from unitycatalog.client.models.create_registered_model import CreateRegisteredM
 from unitycatalog.client.models.create_schema import CreateSchema
 from unitycatalog.client.models.create_table import CreateTable
 from unitycatalog.client.models.create_volume_request_content import CreateVolumeRequestContent
+from unitycatalog.client.models.credential_info import CredentialInfo
+from unitycatalog.client.models.credential_purpose import CredentialPurpose
 from unitycatalog.client.models.data_source_format import DataSourceFormat
 from unitycatalog.client.models.dependency import Dependency
 from unitycatalog.client.models.dependency_list import DependencyList
+from unitycatalog.client.models.external_location_info import ExternalLocationInfo
 from unitycatalog.client.models.finalize_model_version import FinalizeModelVersion
 from unitycatalog.client.models.function_dependency import FunctionDependency
 from unitycatalog.client.models.function_info import FunctionInfo
@@ -67,7 +77,10 @@ from unitycatalog.client.models.generate_temporary_model_version_credential impo
 from unitycatalog.client.models.generate_temporary_path_credential import GenerateTemporaryPathCredential
 from unitycatalog.client.models.generate_temporary_table_credential import GenerateTemporaryTableCredential
 from unitycatalog.client.models.generate_temporary_volume_credential import GenerateTemporaryVolumeCredential
+from unitycatalog.client.models.get_metastore_summary_response import GetMetastoreSummaryResponse
 from unitycatalog.client.models.list_catalogs_response import ListCatalogsResponse
+from unitycatalog.client.models.list_credentials_response import ListCredentialsResponse
+from unitycatalog.client.models.list_external_locations_response import ListExternalLocationsResponse
 from unitycatalog.client.models.list_functions_response import ListFunctionsResponse
 from unitycatalog.client.models.list_model_versions_response import ListModelVersionsResponse
 from unitycatalog.client.models.list_registered_models_response import ListRegisteredModelsResponse
@@ -92,6 +105,8 @@ from unitycatalog.client.models.table_operation import TableOperation
 from unitycatalog.client.models.table_type import TableType
 from unitycatalog.client.models.temporary_credentials import TemporaryCredentials
 from unitycatalog.client.models.update_catalog import UpdateCatalog
+from unitycatalog.client.models.update_credential_request import UpdateCredentialRequest
+from unitycatalog.client.models.update_external_location import UpdateExternalLocation
 from unitycatalog.client.models.update_model_version import UpdateModelVersion
 from unitycatalog.client.models.update_permissions import UpdatePermissions
 from unitycatalog.client.models.update_registered_model import UpdateRegisteredModel

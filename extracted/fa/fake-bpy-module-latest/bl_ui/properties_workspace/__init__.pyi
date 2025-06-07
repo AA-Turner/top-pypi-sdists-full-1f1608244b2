@@ -30,13 +30,13 @@ class WORKSPACE_PT_addons(WorkSpaceButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def draw_header(self, context):
+    def draw_header(self, context) -> None:
         """
 
         :param context:
@@ -96,7 +96,7 @@ class WORKSPACE_PT_main(WorkSpaceButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -130,7 +130,7 @@ class WORKSPACE_UL_addons_items(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param context:
@@ -143,7 +143,7 @@ class WORKSPACE_UL_addons_items(bpy.types.UIList):
         :param _index:
         """
 
-    def filter_items(self, _context, data, property):
+    def filter_items(self, _context, data, property) -> None:
         """
 
         :param _context:

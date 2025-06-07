@@ -27,10 +27,10 @@ import bpy.types
 import mathutils
 
 class BMDeformVert:
-    def clear(self):
+    def clear(self) -> None:
         """Clears all weights."""
 
-    def get(self, key: int, default: typing.Any | None = None):
+    def get(self, key: int, default: typing.Any | None = None) -> None:
         """Returns the deform weight matching the key or default
         when not found (matches Python's dictionary function of the same name).
 
@@ -195,14 +195,14 @@ class BMEdge:
                 :rtype: mathutils.Vector
         """
 
-    def copy_from(self, other: typing_extensions.Self):
+    def copy_from(self, other: typing_extensions.Self) -> None:
         """Copy values from another element of matching type.
 
         :param other:
         :type other: typing_extensions.Self
         """
 
-    def hide_set(self, hide: bool):
+    def hide_set(self, hide: bool) -> None:
         """Set the hide state.
         This is different from the hide attribute because it updates the selection and hide state of associated geometry.
 
@@ -210,7 +210,7 @@ class BMEdge:
                 :type hide: bool
         """
 
-    def normal_update(self):
+    def normal_update(self) -> None:
         """Update normals of all connected faces and the edge verts."""
 
     def other_vert(self, vert: BMVert) -> BMVert | None:
@@ -222,7 +222,7 @@ class BMEdge:
         :rtype: BMVert | None
         """
 
-    def select_set(self, select: bool):
+    def select_set(self, select: bool) -> None:
         """Set the selection.
         This is different from the select attribute because it updates the selection state of associated geometry.
 
@@ -243,7 +243,7 @@ class BMEdge:
 
     def __setitem__[_GenericType1](
         self, key: BMLayerItem[_GenericType1], value: _GenericType1
-    ):
+    ) -> None:
         """
 
         :param key:
@@ -252,7 +252,7 @@ class BMEdge:
         :type value: _GenericType1
         """
 
-    def __delitem__[_GenericType1](self, key: BMLayerItem[_GenericType1]):
+    def __delitem__[_GenericType1](self, key: BMLayerItem[_GenericType1]) -> None:
         """
 
         :param key:
@@ -266,7 +266,7 @@ class BMEdgeSeq:
     :type: BMLayerAccessEdge
     """
 
-    def ensure_lookup_table(self):
+    def ensure_lookup_table(self) -> None:
         """Ensure internal data needed for int subscription is initialized with verts/edges/faces, eg bm.verts[index].This needs to be called again after adding/removing data in this sequence."""
 
     def get(self, verts: collections.abc.Sequence[BMVert], fallback=None) -> BMEdge:
@@ -279,7 +279,7 @@ class BMEdgeSeq:
         :rtype: BMEdge
         """
 
-    def index_update(self):
+    def index_update(self) -> None:
         """Initialize the index values of this sequence.This is the equivalent of looping over all elements and assigning the index values."""
 
     def new(
@@ -295,7 +295,7 @@ class BMEdgeSeq:
         :rtype: BMEdge
         """
 
-    def remove(self, edge: BMEdge):
+    def remove(self, edge: BMEdge) -> None:
         """Remove an edge.
 
         :param edge:
@@ -308,7 +308,7 @@ class BMEdgeSeq:
         | collections.abc.Callable[[BMVert | BMEdge | BMFace], int]
         | None = None,
         reverse: bool = False,
-    ):
+    ) -> None:
         """Sort the elements of this sequence, using an optional custom sort key.
         Indices of elements are not changed, `BMElemSeq.index_update` can be used for that.
 
@@ -361,28 +361,28 @@ class BMEditSelSeq:
     :type: BMEdge | BMFace | BMVert
     """
 
-    def add(self, element):
+    def add(self, element) -> None:
         """Add an element to the selection history (no action taken if its already added).
 
         :param element:
         """
 
-    def clear(self):
+    def clear(self) -> None:
         """Empties the selection history."""
 
-    def discard(self, element):
+    def discard(self, element) -> None:
         """Discard an element from the selection history.Like remove but doesn't raise an error when the elements not in the selection list.
 
         :param element:
         """
 
-    def remove(self, element):
+    def remove(self, element) -> None:
         """Remove an element from the selection history.
 
         :param element:
         """
 
-    def validate(self):
+    def validate(self) -> None:
         """Ensures all elements in the selection history are selected."""
 
 class BMElemSeq[_GenericType1]:
@@ -391,7 +391,7 @@ class BMElemSeq[_GenericType1]:
     there are also functions to create/remove items.
     """
 
-    def index_update(self):
+    def index_update(self) -> None:
         """Initialize the index values of this sequence.This is the equivalent of looping over all elements and assigning the index values."""
 
     @typing.overload
@@ -571,14 +571,16 @@ class BMFace:
         :rtype: typing_extensions.Self
         """
 
-    def copy_from(self, other: typing_extensions.Self):
+    def copy_from(self, other: typing_extensions.Self) -> None:
         """Copy values from another element of matching type.
 
         :param other:
         :type other: typing_extensions.Self
         """
 
-    def copy_from_face_interp(self, face: typing_extensions.Self, vert: bool = True):
+    def copy_from_face_interp(
+        self, face: typing_extensions.Self, vert: bool = True
+    ) -> None:
         """Interpolate the customdata from another face onto this one (faces should overlap).
 
         :param face: The face to interpolate data from.
@@ -587,7 +589,7 @@ class BMFace:
         :type vert: bool
         """
 
-    def hide_set(self, hide: bool):
+    def hide_set(self, hide: bool) -> None:
         """Set the hide state.
         This is different from the hide attribute because it updates the selection and hide state of associated geometry.
 
@@ -595,16 +597,16 @@ class BMFace:
                 :type hide: bool
         """
 
-    def normal_flip(self):
+    def normal_flip(self) -> None:
         """Reverses winding of a face, which flips its normal."""
 
-    def normal_update(self):
+    def normal_update(self) -> None:
         """Update face normal based on the positions of the face verts.
         This does not update the normals of face verts.
 
         """
 
-    def select_set(self, select: bool):
+    def select_set(self, select: bool) -> None:
         """Set the selection.
         This is different from the select attribute because it updates the selection state of associated geometry.
 
@@ -625,7 +627,7 @@ class BMFace:
 
     def __setitem__[_GenericType1](
         self, key: BMLayerItem[_GenericType1], value: _GenericType1
-    ):
+    ) -> None:
         """
 
         :param key:
@@ -634,7 +636,7 @@ class BMFace:
         :type value: _GenericType1
         """
 
-    def __delitem__[_GenericType1](self, key: BMLayerItem[_GenericType1]):
+    def __delitem__[_GenericType1](self, key: BMLayerItem[_GenericType1]) -> None:
         """
 
         :param key:
@@ -654,7 +656,7 @@ class BMFaceSeq:
     :type: BMLayerAccessFace
     """
 
-    def ensure_lookup_table(self):
+    def ensure_lookup_table(self) -> None:
         """Ensure internal data needed for int subscription is initialized with verts/edges/faces, eg bm.verts[index].This needs to be called again after adding/removing data in this sequence."""
 
     def get(self, verts: collections.abc.Sequence[BMVert], fallback=None) -> BMFace:
@@ -667,7 +669,7 @@ class BMFaceSeq:
         :rtype: BMFace
         """
 
-    def index_update(self):
+    def index_update(self) -> None:
         """Initialize the index values of this sequence.This is the equivalent of looping over all elements and assigning the index values."""
 
     def new(
@@ -683,7 +685,7 @@ class BMFaceSeq:
         :rtype: BMFace
         """
 
-    def remove(self, face: BMFace):
+    def remove(self, face: BMFace) -> None:
         """Remove a face.
 
         :param face:
@@ -696,7 +698,7 @@ class BMFaceSeq:
         | collections.abc.Callable[[BMVert | BMEdge | BMFace], int]
         | None = None,
         reverse: bool = False,
-    ):
+    ) -> None:
         """Sort the elements of this sequence, using an optional custom sort key.
         Indices of elements are not changed, `BMElemSeq.index_update` can be used for that.
 
@@ -1027,7 +1029,7 @@ class BMLayerCollection[_GenericType1]:
         :rtype: BMLayerItem[_GenericType1]
         """
 
-    def remove(self, layer: BMLayerItem[_GenericType1]):
+    def remove(self, layer: BMLayerItem[_GenericType1]) -> None:
         """Remove a layer
 
         :param layer: The layer to remove.
@@ -1058,7 +1060,7 @@ class BMLayerItem[_GenericType1]:
     :type: str
     """
 
-    def copy_from(self, other: typing_extensions.Self):
+    def copy_from(self, other: typing_extensions.Self) -> None:
         """Return a copy of the layer
 
         :param other: Another layer to copy from.
@@ -1164,7 +1166,7 @@ class BMLoop:
                 :rtype: mathutils.Vector
         """
 
-    def copy_from(self, other: typing_extensions.Self):
+    def copy_from(self, other: typing_extensions.Self) -> None:
         """Copy values from another element of matching type.
 
         :param other:
@@ -1173,7 +1175,7 @@ class BMLoop:
 
     def copy_from_face_interp(
         self, face: BMFace, vert: bool = True, multires: bool = True
-    ):
+    ) -> None:
         """Interpolate the customdata from a face onto this loop (the loops vert should overlap the face).
 
         :param face: The face to interpolate data from.
@@ -1197,7 +1199,7 @@ class BMLoop:
 
     def __setitem__[_GenericType1](
         self, key: BMLayerItem[_GenericType1], value: _GenericType1
-    ):
+    ) -> None:
         """
 
         :param key:
@@ -1206,7 +1208,7 @@ class BMLoop:
         :type value: _GenericType1
         """
 
-    def __delitem__[_GenericType1](self, key: BMLayerItem[_GenericType1]):
+    def __delitem__[_GenericType1](self, key: BMLayerItem[_GenericType1]) -> None:
         """
 
         :param key:
@@ -1379,14 +1381,14 @@ class BMVert:
                 :rtype: float
         """
 
-    def copy_from(self, other: typing_extensions.Self):
+    def copy_from(self, other: typing_extensions.Self) -> None:
         """Copy values from another element of matching type.
 
         :param other:
         :type other: typing_extensions.Self
         """
 
-    def copy_from_face_interp(self, face: BMFace):
+    def copy_from_face_interp(self, face: BMFace) -> None:
         """Interpolate the customdata from a face onto this loop (the loops vert should overlap the face).
 
         :param face: The face to interpolate data from.
@@ -1395,7 +1397,7 @@ class BMVert:
 
     def copy_from_vert_interp(
         self, vert_pair: collections.abc.Sequence[BMVert], fac: float
-    ):
+    ) -> None:
         """Interpolate the customdata from a vert between 2 other verts.
 
         :param vert_pair: The verts between which to interpolate data from.
@@ -1404,7 +1406,7 @@ class BMVert:
         :type fac: float
         """
 
-    def hide_set(self, hide: bool):
+    def hide_set(self, hide: bool) -> None:
         """Set the hide state.
         This is different from the hide attribute because it updates the selection and hide state of associated geometry.
 
@@ -1412,13 +1414,13 @@ class BMVert:
                 :type hide: bool
         """
 
-    def normal_update(self):
+    def normal_update(self) -> None:
         """Update vertex normal.
         This does not update the normals of adjoining faces.
 
         """
 
-    def select_set(self, select: bool):
+    def select_set(self, select: bool) -> None:
         """Set the selection.
         This is different from the select attribute because it updates the selection state of associated geometry.
 
@@ -1439,7 +1441,7 @@ class BMVert:
 
     def __setitem__[_GenericType1](
         self, key: BMLayerItem[_GenericType1], value: _GenericType1
-    ):
+    ) -> None:
         """
 
         :param key:
@@ -1448,7 +1450,7 @@ class BMVert:
         :type value: _GenericType1
         """
 
-    def __delitem__[_GenericType1](self, key: BMLayerItem[_GenericType1]):
+    def __delitem__[_GenericType1](self, key: BMLayerItem[_GenericType1]) -> None:
         """
 
         :param key:
@@ -1462,10 +1464,10 @@ class BMVertSeq:
     :type: BMLayerAccessVert
     """
 
-    def ensure_lookup_table(self):
+    def ensure_lookup_table(self) -> None:
         """Ensure internal data needed for int subscription is initialized with verts/edges/faces, eg bm.verts[index].This needs to be called again after adding/removing data in this sequence."""
 
-    def index_update(self):
+    def index_update(self) -> None:
         """Initialize the index values of this sequence.This is the equivalent of looping over all elements and assigning the index values."""
 
     def new(
@@ -1483,7 +1485,7 @@ class BMVertSeq:
         :rtype: BMVert
         """
 
-    def remove(self, vert: BMVert):
+    def remove(self, vert: BMVert) -> None:
         """Remove a vert.
 
         :param vert:
@@ -1496,7 +1498,7 @@ class BMVertSeq:
         | collections.abc.Callable[[BMVert | BMEdge | BMFace], int]
         | None = None,
         reverse: bool = False,
-    ):
+    ) -> None:
         """Sort the elements of this sequence, using an optional custom sort key.
         Indices of elements are not changed, `BMElemSeq.index_update` can be used for that.
 
@@ -1607,7 +1609,7 @@ class BMesh:
         :rtype: float
         """
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear all mesh data."""
 
     def copy(self) -> typing_extensions.Self:
@@ -1617,7 +1619,7 @@ class BMesh:
         :rtype: typing_extensions.Self
         """
 
-    def free(self):
+    def free(self) -> None:
         """Explicitly free the BMesh data from memory, causing exceptions on further access."""
 
     def from_mesh(
@@ -1627,7 +1629,7 @@ class BMesh:
         vertex_normals: bool = True,
         use_shape_key: bool = False,
         shape_key_index: int = 0,
-    ):
+    ) -> None:
         """Initialize this bmesh from existing mesh datablock.
 
         :param mesh: The mesh data to load.
@@ -1649,7 +1651,7 @@ class BMesh:
         cage: bool = False,
         face_normals: bool = True,
         vertex_normals: bool = True,
-    ):
+    ) -> None:
         """Initialize this bmesh from existing object data-block (only meshes are currently supported).
 
         :param object: The object data to load.
@@ -1664,20 +1666,20 @@ class BMesh:
         :type vertex_normals: bool
         """
 
-    def normal_update(self):
+    def normal_update(self) -> None:
         """Update normals of mesh faces and verts."""
 
-    def select_flush(self, select: bool):
+    def select_flush(self, select: bool) -> None:
         """Flush selection, independent of the current selection mode.
 
         :param select: flush selection or de-selected elements.
         :type select: bool
         """
 
-    def select_flush_mode(self):
+    def select_flush_mode(self) -> None:
         """flush selection based on the current mode current `BMesh.select_mode`."""
 
-    def to_mesh(self, mesh: bpy.types.Mesh):
+    def to_mesh(self, mesh: bpy.types.Mesh) -> None:
         """Writes this BMesh data into an existing Mesh datablock.
 
         :param mesh: The mesh data to write into.
@@ -1689,7 +1691,7 @@ class BMesh:
         matrix: collections.abc.Sequence[collections.abc.Sequence[float]]
         | mathutils.Matrix,
         filter=None,
-    ):
+    ) -> None:
         """Transform the mesh (optionally filtering flagged data only).
 
         :param matrix: 4x4x transform matrix.

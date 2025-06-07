@@ -8,7 +8,7 @@ class SortedNodeCategory(nodeitems_utils.NodeCategory): ...
 
 class CompositorNodeCategory(SortedNodeCategory):
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -16,11 +16,11 @@ class CompositorNodeCategory(SortedNodeCategory):
 
 class ShaderNodeCategory(SortedNodeCategory):
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def register(): ...
-def unregister(): ...
+def register() -> None: ...
+def unregister() -> None: ...

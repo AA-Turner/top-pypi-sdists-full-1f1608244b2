@@ -27,19 +27,19 @@ class LightMapPack(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -47,7 +47,7 @@ class LightMapPack(bpy.types.Operator):
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -63,7 +63,7 @@ class prettyface:
     xoff: typing.Any
     yoff: typing.Any
 
-    def place(self, xoff, yoff, xfac, yfac, margin_w, margin_h):
+    def place(self, xoff, yoff, xfac, yfac, margin_w, margin_h) -> None:
         """
 
         :param xoff:
@@ -74,7 +74,7 @@ class prettyface:
         :param margin_h:
         """
 
-    def spin(self): ...
+    def spin(self) -> None: ...
 
 def lightmap_uvpack(
     meshes,
@@ -83,7 +83,7 @@ def lightmap_uvpack(
     PREF_PACK_IN_ONE=False,
     PREF_BOX_DIV=8,
     PREF_MARGIN_DIV=512,
-):
+) -> None:
     """BOX_DIV if the maximum division of the UV map that
     a box may be consolidated into.
     A lower value will create more clumpy boxes and more wasted space,
@@ -91,4 +91,4 @@ def lightmap_uvpack(
 
     """
 
-def unwrap(operator, context, **kwargs): ...
+def unwrap(operator, context, **kwargs) -> None: ...

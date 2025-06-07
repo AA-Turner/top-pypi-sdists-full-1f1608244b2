@@ -26,7 +26,7 @@ class PREFERENCES_OT_addon_disable(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -54,7 +54,7 @@ class PREFERENCES_OT_addon_enable(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -83,7 +83,7 @@ class PREFERENCES_OT_addon_expand(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -111,13 +111,13 @@ class PREFERENCES_OT_addon_install(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -146,7 +146,7 @@ class PREFERENCES_OT_addon_refresh(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -174,19 +174,19 @@ class PREFERENCES_OT_addon_remove(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -194,7 +194,7 @@ class PREFERENCES_OT_addon_remove(bpy.types.Operator):
         """
 
     @staticmethod
-    def path_from_addon(module):
+    def path_from_addon(module) -> None:
         """
 
         :param module:
@@ -223,7 +223,7 @@ class PREFERENCES_OT_addon_show(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -251,13 +251,13 @@ class PREFERENCES_OT_app_template_install(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -286,21 +286,21 @@ class PREFERENCES_OT_copy_prev(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def poll(cls, _context):
+    def poll(cls, _context) -> None:
         """
 
         :param _context:
         """
 
     @classmethod
-    def previous_version(cls): ...
+    def previous_version(cls) -> None: ...
 
 class PREFERENCES_OT_keyconfig_activate(bpy.types.Operator):
     bl_idname: typing.Any
@@ -322,7 +322,7 @@ class PREFERENCES_OT_keyconfig_activate(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
@@ -350,13 +350,13 @@ class PREFERENCES_OT_keyconfig_export(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -385,13 +385,13 @@ class PREFERENCES_OT_keyconfig_import(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -420,14 +420,14 @@ class PREFERENCES_OT_keyconfig_remove(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -455,7 +455,7 @@ class PREFERENCES_OT_keyconfig_test(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -483,7 +483,7 @@ class PREFERENCES_OT_keyitem_add(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -511,14 +511,14 @@ class PREFERENCES_OT_keyitem_remove(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -546,14 +546,14 @@ class PREFERENCES_OT_keyitem_restore(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -581,7 +581,7 @@ class PREFERENCES_OT_keymap_restore(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -607,13 +607,13 @@ class PREFERENCES_OT_script_directory_new(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -640,7 +640,7 @@ class PREFERENCES_OT_script_directory_remove(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -668,7 +668,7 @@ class PREFERENCES_OT_studiolight_copy_settings(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -696,13 +696,13 @@ class PREFERENCES_OT_studiolight_install(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -732,19 +732,19 @@ class PREFERENCES_OT_studiolight_new(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:
@@ -773,7 +773,7 @@ class PREFERENCES_OT_studiolight_uninstall(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -801,13 +801,13 @@ class PREFERENCES_OT_theme_install(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, _context):
+    def execute(self, _context) -> None:
         """
 
         :param _context:
         """
 
-    def invoke(self, context, _event):
+    def invoke(self, context, _event) -> None:
         """
 
         :param context:

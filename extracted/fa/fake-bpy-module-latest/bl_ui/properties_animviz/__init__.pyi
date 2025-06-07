@@ -8,7 +8,7 @@ class MotionPathButtonsPanel:
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw_settings(self, _context, avs, mpath, bones=False):
+    def draw_settings(self, _context, avs, mpath, bones=False) -> None:
         """
 
         :param _context:
@@ -22,7 +22,7 @@ class MotionPathButtonsPanel_display:
     bl_region_type: typing.Any
     bl_space_type: typing.Any
 
-    def draw_settings(self, _context, avs, mpath, bones=False):
+    def draw_settings(self, _context, avs, mpath, bones=False) -> None:
         """
 
         :param _context:

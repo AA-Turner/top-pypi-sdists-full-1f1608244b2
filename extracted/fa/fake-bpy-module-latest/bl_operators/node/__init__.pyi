@@ -27,7 +27,7 @@ class NODE_FH_image_node(bpy.types.FileHandler):
         """
 
     @classmethod
-    def poll_drop(cls, context):
+    def poll_drop(cls, context) -> None:
         """
 
         :param context:
@@ -82,13 +82,13 @@ class NODE_OT_add_empty_group(NodeAddOperator, bpy.types.Operator):
         """
 
     @staticmethod
-    def create_empty_group(idname):
+    def create_empty_group(idname) -> None:
         """
 
         :param idname:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -146,14 +146,14 @@ class NODE_OT_add_node(NodeAddOperator, bpy.types.Operator):
         """
 
     @classmethod
-    def description(cls, _context, properties):
+    def description(cls, _context, properties) -> None:
         """
 
         :param _context:
         :param properties:
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -234,14 +234,14 @@ class NODE_OT_collapse_hide_unused_toggle(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -270,14 +270,14 @@ class NODE_OT_interface_item_duplicate(NodeInterfaceOperator, bpy.types.Operator
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -308,14 +308,14 @@ class NODE_OT_interface_item_make_panel_toggle(
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -344,20 +344,20 @@ class NODE_OT_interface_item_new(NodeInterfaceOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def find_valid_socket_type(tree):
+    def find_valid_socket_type(tree) -> None:
         """
 
         :param tree:
         """
 
-    def get_items(self, _self, context):
+    def get_items(self, _self, context) -> None:
         """
 
         :param _self:
@@ -387,7 +387,7 @@ class NODE_OT_interface_item_remove(NodeInterfaceOperator, bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
@@ -418,14 +418,14 @@ class NODE_OT_interface_item_unlink_panel_toggle(
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -454,14 +454,14 @@ class NODE_OT_tree_path_parent(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -490,14 +490,14 @@ class NODE_OT_viewer_shortcut_get(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -526,27 +526,27 @@ class NODE_OT_viewer_shortcut_set(bpy.types.Operator):
         :rtype: typing.Any
         """
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:
         """
 
-    def get_connected_viewer(self, node):
+    def get_connected_viewer(self, node) -> None:
         """
 
         :param node:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
 class NodeAddOperator:
-    def create_node(self, context, node_type):
+    def create_node(self, context, node_type) -> None:
         """
 
         :param context:
@@ -554,13 +554,13 @@ class NodeAddOperator:
         """
 
     @staticmethod
-    def deselect_nodes(context):
+    def deselect_nodes(context) -> None:
         """
 
         :param context:
         """
 
-    def invoke(self, context, event):
+    def invoke(self, context, event) -> None:
         """
 
         :param context:
@@ -568,14 +568,14 @@ class NodeAddOperator:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
     @staticmethod
-    def store_mouse_cursor(context, event):
+    def store_mouse_cursor(context, event) -> None:
         """
 
         :param context:
@@ -584,7 +584,7 @@ class NodeAddOperator:
 
 class NodeInterfaceOperator:
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -611,7 +611,7 @@ class NodeSetting(bpy.types.PropertyGroup):
 class NodeAddZoneOperator(NodeAddOperator):
     add_default_geometry_link: typing.Any
 
-    def execute(self, context):
+    def execute(self, context) -> None:
         """
 
         :param context:

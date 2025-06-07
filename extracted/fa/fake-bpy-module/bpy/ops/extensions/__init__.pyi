@@ -6,7 +6,7 @@ import bpy.types
 
 def package_disable(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Turn off this extension
 
     :type execution_context: int | str | None
@@ -24,7 +24,7 @@ def package_install(
     enable_on_install: bool | None = True,
     url: str = "",
     do_legacy_replace: bool | None = False,
-):
+) -> None:
     """Download and install the extension
 
     :type execution_context: int | str | None
@@ -58,7 +58,7 @@ def package_install_files(
     target: str | None = "",
     overwrite: bool | None = True,
     url: str = "",
-):
+) -> None:
     """Install extensions from files into a locally managed repository
 
     :type execution_context: int | str | None
@@ -89,7 +89,7 @@ def package_install_marked(
     /,
     *,
     enable_on_install: bool | None = True,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -105,7 +105,7 @@ def package_mark_clear(
     *,
     pkg_id: str = "",
     repo_index: int | None = -1,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -118,7 +118,7 @@ def package_mark_clear(
 
 def package_mark_clear_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -132,7 +132,7 @@ def package_mark_set(
     *,
     pkg_id: str = "",
     repo_index: int | None = -1,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -145,7 +145,7 @@ def package_mark_set(
 
 def package_mark_set_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -154,7 +154,7 @@ def package_mark_set_all(
 
 def package_obsolete_marked(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Zeroes package versions, useful for development - to test upgrading
 
     :type execution_context: int | str | None
@@ -168,7 +168,7 @@ def package_show_clear(
     *,
     pkg_id: str = "",
     repo_index: int | None = -1,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -186,7 +186,7 @@ def package_show_set(
     *,
     pkg_id: str = "",
     repo_index: int | None = -1,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -204,7 +204,7 @@ def package_show_settings(
     *,
     pkg_id: str = "",
     repo_index: int | None = -1,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -222,7 +222,7 @@ def package_theme_disable(
     *,
     pkg_id: str = "",
     repo_index: int | None = -1,
-):
+) -> None:
     """Turn off this theme
 
     :type execution_context: int | str | None
@@ -240,7 +240,7 @@ def package_theme_enable(
     *,
     pkg_id: str = "",
     repo_index: int | None = -1,
-):
+) -> None:
     """Turn off this theme
 
     :type execution_context: int | str | None
@@ -259,7 +259,7 @@ def package_uninstall(
     repo_directory: str = "",
     repo_index: int | None = -1,
     pkg_id: str = "",
-):
+) -> None:
     """Disable and uninstall the extension
 
     :type execution_context: int | str | None
@@ -274,7 +274,7 @@ def package_uninstall(
 
 def package_uninstall_marked(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -283,7 +283,7 @@ def package_uninstall_marked(
 
 def package_uninstall_system(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -296,7 +296,7 @@ def package_upgrade_all(
     /,
     *,
     use_active_only: bool | None = False,
-):
+) -> None:
     """Upgrade all the extensions to their latest version for all the remote repositories
 
     :type execution_context: int | str | None
@@ -311,7 +311,7 @@ def repo_enable_from_drop(
     /,
     *,
     repo_index: int | None = -1,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -320,7 +320,9 @@ def repo_enable_from_drop(
     :type repo_index: int | None
     """
 
-def repo_lock_all(execution_context: int | str | None = None, undo: bool | None = None):
+def repo_lock_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Lock repositories - to test locking
 
     :type execution_context: int | str | None
@@ -333,7 +335,7 @@ def repo_refresh_all(
     /,
     *,
     use_active_only: bool | None = False,
-):
+) -> None:
     """Scan extension & legacy add-ons for changes to modules & meta-data (similar to restarting). Any issues are reported as warnings
 
     :type execution_context: int | str | None
@@ -349,7 +351,7 @@ def repo_sync(
     *,
     repo_directory: str = "",
     repo_index: int | None = -1,
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -366,7 +368,7 @@ def repo_sync_all(
     /,
     *,
     use_active_only: bool | None = False,
-):
+) -> None:
     """Refresh the list of extensions for all the remote repositories
 
     :type execution_context: int | str | None
@@ -375,7 +377,9 @@ def repo_sync_all(
     :type use_active_only: bool | None
     """
 
-def repo_unlock(execution_context: int | str | None = None, undo: bool | None = None):
+def repo_unlock(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Remove the repository file-system lock
 
     :type execution_context: int | str | None
@@ -384,14 +388,16 @@ def repo_unlock(execution_context: int | str | None = None, undo: bool | None = 
 
 def repo_unlock_all(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Unlock repositories - to test unlocking
 
     :type execution_context: int | str | None
     :type undo: bool | None
     """
 
-def status_clear(execution_context: int | str | None = None, undo: bool | None = None):
+def status_clear(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -400,7 +406,7 @@ def status_clear(execution_context: int | str | None = None, undo: bool | None =
 
 def status_clear_errors(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Undocumented, consider contributing.
 
     :type execution_context: int | str | None
@@ -409,7 +415,7 @@ def status_clear_errors(
 
 def userpref_allow_online(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Allow internet access. Blender may access configured online extension repositories. Installed third party add-ons may access the internet for their own functionality
 
     :type execution_context: int | str | None
@@ -418,7 +424,7 @@ def userpref_allow_online(
 
 def userpref_allow_online_popup(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Allow internet access. Blender may access configured online extension repositories. Installed third party add-ons may access the internet for their own functionality
 
     :type execution_context: int | str | None
@@ -427,7 +433,7 @@ def userpref_allow_online_popup(
 
 def userpref_show_for_update(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Open extensions preferences
 
     :type execution_context: int | str | None
@@ -436,7 +442,7 @@ def userpref_show_for_update(
 
 def userpref_show_online(
     execution_context: int | str | None = None, undo: bool | None = None
-):
+) -> None:
     """Show system preferences "Network" panel to allow online access
 
     :type execution_context: int | str | None
@@ -450,7 +456,7 @@ def userpref_tags_set(
     *,
     value: bool | None = False,
     data_path: str = "",
-):
+) -> None:
     """Set the value of all tags
 
     :type execution_context: int | str | None

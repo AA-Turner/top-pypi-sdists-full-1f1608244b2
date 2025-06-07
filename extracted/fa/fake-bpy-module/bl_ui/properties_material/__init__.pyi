@@ -30,14 +30,14 @@ class EEVEE_MATERIAL_PT_context_material(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -67,14 +67,14 @@ class EEVEE_MATERIAL_PT_displacement(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -103,7 +103,7 @@ class EEVEE_MATERIAL_PT_settings(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -132,7 +132,7 @@ class EEVEE_MATERIAL_PT_surface(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -163,14 +163,14 @@ class EEVEE_MATERIAL_PT_thickness(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -200,7 +200,7 @@ class EEVEE_MATERIAL_PT_viewport_settings(MaterialButtonsPanel, bpy.types.Panel)
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -231,14 +231,14 @@ class EEVEE_MATERIAL_PT_volume(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -267,7 +267,7 @@ class EEVEE_NEXT_MATERIAL_PT_settings(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -297,7 +297,7 @@ class EEVEE_NEXT_MATERIAL_PT_settings_surface(MaterialButtonsPanel, bpy.types.Pa
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -327,7 +327,7 @@ class EEVEE_NEXT_MATERIAL_PT_settings_volume(MaterialButtonsPanel, bpy.types.Pan
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -352,7 +352,7 @@ class MATERIAL_MT_context_menu(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, _context) -> None:
         """
 
         :param _context:
@@ -391,7 +391,7 @@ class MATERIAL_PT_animation(
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -452,14 +452,14 @@ class MATERIAL_PT_lineart(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -489,7 +489,7 @@ class MATERIAL_PT_preview(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
@@ -519,14 +519,14 @@ class MATERIAL_PT_viewport(MaterialButtonsPanel, bpy.types.Panel):
         :rtype: typing.Any
         """
 
-    def draw(self, context):
+    def draw(self, context) -> None:
         """
 
         :param context:
         """
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
@@ -560,7 +560,7 @@ class MATERIAL_UL_matslots(bpy.types.UIList):
         _active_data,
         _active_propname,
         _index,
-    ):
+    ) -> None:
         """
 
         :param _context:
@@ -579,13 +579,13 @@ class MaterialButtonsPanel:
     bl_space_type: typing.Any
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context) -> None:
         """
 
         :param context:
         """
 
-def draw_material_settings(self_, context): ...
-def draw_material_surface_settings(layout, mat, is_eevee=True): ...
-def draw_material_volume_settings(layout, mat, is_eevee=True): ...
-def panel_node_draw(layout, ntree, _output_type, input_name): ...
+def draw_material_settings(self_, context) -> None: ...
+def draw_material_surface_settings(layout, mat, is_eevee=True) -> None: ...
+def draw_material_volume_settings(layout, mat, is_eevee=True) -> None: ...
+def panel_node_draw(layout, ntree, _output_type, input_name) -> None: ...

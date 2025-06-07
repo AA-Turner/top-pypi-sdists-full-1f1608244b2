@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pyontoenv
-Version: 0.2.0
+Version: 0.2.1
 Requires-Dist: oxrdflib>=0.4.0
 Requires-Dist: rdflib>=7.1.3
 Summary: Python bindings for the OntoEnv Rust library. Manages ontology-based environments for building knowledge graphs.

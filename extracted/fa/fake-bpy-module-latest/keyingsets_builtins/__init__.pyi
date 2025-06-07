@@ -26,7 +26,7 @@ class BUILTIN_KSI_Available(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def poll(self, context):
+    def poll(self, context) -> None:
         """
 
         :param context:
@@ -74,7 +74,7 @@ class BUILTIN_KSI_DeltaLocation(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, _context, ks, data):
+    def generate(self, _context, ks, data) -> None:
         """
 
         :param _context:
@@ -103,7 +103,7 @@ class BUILTIN_KSI_DeltaRotation(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, _context, ks, data):
+    def generate(self, _context, ks, data) -> None:
         """
 
         :param _context:
@@ -132,7 +132,7 @@ class BUILTIN_KSI_DeltaScale(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, _context, ks, data):
+    def generate(self, _context, ks, data) -> None:
         """
 
         :param _context:
@@ -161,7 +161,7 @@ class BUILTIN_KSI_LocRot(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, context, ks, data):
+    def generate(self, context, ks, data) -> None:
         """
 
         :param context:
@@ -191,7 +191,7 @@ class BUILTIN_KSI_LocRotScale(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, context, ks, data):
+    def generate(self, context, ks, data) -> None:
         """
 
         :param context:
@@ -221,7 +221,7 @@ class BUILTIN_KSI_LocRotScaleCProp(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, context, ks, data):
+    def generate(self, context, ks, data) -> None:
         """
 
         :param context:
@@ -250,7 +250,7 @@ class BUILTIN_KSI_LocScale(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, context, ks, data):
+    def generate(self, context, ks, data) -> None:
         """
 
         :param context:
@@ -301,7 +301,7 @@ class BUILTIN_KSI_RotScale(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, context, ks, data):
+    def generate(self, context, ks, data) -> None:
         """
 
         :param context:
@@ -397,7 +397,7 @@ class BUILTIN_KSI_VisualLocRot(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, context, ks, data):
+    def generate(self, context, ks, data) -> None:
         """
 
         :param context:
@@ -427,7 +427,7 @@ class BUILTIN_KSI_VisualLocRotScale(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, context, ks, data):
+    def generate(self, context, ks, data) -> None:
         """
 
         :param context:
@@ -457,7 +457,7 @@ class BUILTIN_KSI_VisualLocScale(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, context, ks, data):
+    def generate(self, context, ks, data) -> None:
         """
 
         :param context:
@@ -509,7 +509,7 @@ class BUILTIN_KSI_VisualRotScale(bpy.types.KeyingSetInfo):
         :rtype: typing.Any
         """
 
-    def generate(self, context, ks, data):
+    def generate(self, context, ks, data) -> None:
         """
 
         :param context:
@@ -585,7 +585,7 @@ class BUILTIN_KSI_WholeCharacterSelected(WholeCharacterMixin, bpy.types.KeyingSe
         :rtype: typing.Any
         """
 
-    def iterator(self, context, ks):
+    def iterator(self, context, ks) -> None:
         """
 
         :param context:
@@ -595,7 +595,7 @@ class BUILTIN_KSI_WholeCharacterSelected(WholeCharacterMixin, bpy.types.KeyingSe
 class WholeCharacterMixin:
     badBonePrefixes: typing.Any
 
-    def addProp(self, ks, bone, prop, index=-1, use_groups=True):
+    def addProp(self, ks, bone, prop, index=-1, use_groups=True) -> None:
         """
 
         :param ks:
@@ -605,7 +605,7 @@ class WholeCharacterMixin:
         :param use_groups:
         """
 
-    def doBBone(self, context, ks, pchan):
+    def doBBone(self, context, ks, pchan) -> None:
         """
 
         :param context:
@@ -613,42 +613,42 @@ class WholeCharacterMixin:
         :param pchan:
         """
 
-    def doCustomProps(self, ks, bone):
+    def doCustomProps(self, ks, bone) -> None:
         """
 
         :param ks:
         :param bone:
         """
 
-    def doLoc(self, ks, bone):
+    def doLoc(self, ks, bone) -> None:
         """
 
         :param ks:
         :param bone:
         """
 
-    def doRot3d(self, ks, bone):
+    def doRot3d(self, ks, bone) -> None:
         """
 
         :param ks:
         :param bone:
         """
 
-    def doRot4d(self, ks, bone):
+    def doRot4d(self, ks, bone) -> None:
         """
 
         :param ks:
         :param bone:
         """
 
-    def doScale(self, ks, bone):
+    def doScale(self, ks, bone) -> None:
         """
 
         :param ks:
         :param bone:
         """
 
-    def generate(self, context, ks, bone):
+    def generate(self, context, ks, bone) -> None:
         """
 
         :param context:
@@ -656,18 +656,18 @@ class WholeCharacterMixin:
         :param bone:
         """
 
-    def iterator(self, context, ks):
+    def iterator(self, context, ks) -> None:
         """
 
         :param context:
         :param ks:
         """
 
-    def poll(self, context):
+    def poll(self, context) -> None:
         """
 
         :param context:
         """
 
-def register(): ...
-def unregister(): ...
+def register() -> None: ...
+def unregister() -> None: ...

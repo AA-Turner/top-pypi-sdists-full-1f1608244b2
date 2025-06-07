@@ -253,7 +253,7 @@ if __name__ == '__main__':
 
     # arun(AsyncClient(key=token).key)
 
-    FEISHU_URL="https://xchatllm.feishu.cn/sheets/QB6Psj8zrhB4JStEW0acI4iInNg?sheet=ef2e81"
+    FEISHU_URL = "https://xchatllm.feishu.cn/sheets/QB6Psj8zrhB4JStEW0acI4iInNg?sheet=ef2e81"
 
     tokens = arun(get_series(FEISHU_URL))
     # tokens = ["578e143c-702d-46a1-8c02-d451bc3e155b:bb531a95f79c6026e7bc7ab676163c71"]

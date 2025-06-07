@@ -44,7 +44,9 @@ def get_time_stamp() -> int:
     :rtype: int
     """
 
-def load_map(file_name: str, map_name: str, num_levels: int = 4, sigma: float = 1.0):
+def load_map(
+    file_name: str, map_name: str, num_levels: int = 4, sigma: float = 1.0
+) -> None:
     """Loads an image map for further reading.
 
         :param file_name: The name of the image file.

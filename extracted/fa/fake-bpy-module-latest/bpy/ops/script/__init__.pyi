@@ -10,7 +10,7 @@ def execute_preset(
     *,
     filepath: str = "",
     menu_idname: str = "",
-):
+) -> None:
     """Load a preset
 
     :type execution_context: int | str | None
@@ -27,7 +27,7 @@ def python_file_run(
     /,
     *,
     filepath: str = "",
-):
+) -> None:
     """Run Python file
 
     :type execution_context: int | str | None
@@ -36,7 +36,9 @@ def python_file_run(
     :type filepath: str
     """
 
-def reload(execution_context: int | str | None = None, undo: bool | None = None):
+def reload(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
     """Reload scripts
 
     :type execution_context: int | str | None
