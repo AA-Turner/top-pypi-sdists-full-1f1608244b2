@@ -357,6 +357,11 @@ def delete_app(
     default=True,
     help="Whether to use interactive mode.",
 )
+@click.option("--cursor", type=str, help="The cursor for pagination.")
+@click.option("--pretty", type=bool, help="Use pretty printing for logs.")
+@click.option(
+    "--follow", type=bool, default=True, help="Asks to continue to query logs."
+)
 def app_logs(
     app_id: str | None,
     app_name: str | None,
@@ -366,9 +371,21 @@ def app_logs(
     end: int | None,
     loglevel: str,
     interactive: bool,
+    cursor: str | None = None,
+    pretty: bool = False,
+    follow: bool = True,
 ):
     """Retrieve logs for a given application."""
     from reflex_cli.utils import hosting
+
+    if pretty:
+        try:
+            import pprint
+        except ImportError:
+            console.error(
+                "pprint module is not available. Please install pprint to use pretty printing."
+            )
+            raise click.exceptions.Exit(1) from ImportError
 
     authenticated_client = hosting.get_authenticated_client(
         token=token, interactive=interactive
@@ -388,27 +405,64 @@ def app_logs(
 
     if offset is None and start is None and end is None:
         offset = 3600
-    if (offset is not None and start) or end:
+    if not offset and not (start and end):
         console.error("must provide both start and end")
         raise click.exceptions.Exit(1)
 
     console.set_log_level(loglevel)
 
     try:
+        console.debug(f"fetching logs with cursor: {cursor}")
         result = hosting.get_app_logs(
             app_id=app_id,
             offset=offset,
             start=start,
             end=end,
             client=authenticated_client,
+            cursor=cursor,
         )
         if result:
             if isinstance(result, list):
+                if len(result) == 2:
+                    cursor = result[1]
+                    result = result[0]
+                if not result:
+                    console.warn("No logs found for the specified criteria.")
+                    raise click.exceptions.Exit(0)
                 result.reverse()
                 for log in result:
-                    console.warn(log)
+                    if pretty:
+                        log = pprint.pformat(log, indent=2)  # type: ignore  # noqa: PGH003
+                    console.info(log)
             else:
                 console.warn("Unable to retrieve logs.")
+        if interactive and follow:
+            prompt = console.Prompt.ask(
+                "Press Enter to fetch next 100 logs or type 'exit' to quit",
+                default="",
+                show_default=False,
+            )
+            if prompt.lower() == "exit":
+                console.info("Exiting log retrieval.")
+                raise click.exceptions.Exit(0)
+            else:
+                ctx = click.get_current_context()
+                ctx.invoke(
+                    app_logs,
+                    app_id=app_id,
+                    app_name=None,  # Don't pass app_name again since we have app_id
+                    token=token,
+                    offset=offset,
+                    start=start,
+                    end=end,
+                    loglevel=loglevel,
+                    interactive=interactive,
+                    cursor=cursor,
+                    pretty=pretty,
+                )
+    except ResponseError as err:
+        console.error(f"Error retrieving logs: {err}")
+        raise click.exceptions.Exit(1) from err
     except NotAuthenticatedError as err:
         console.error("You are not authenticated. Run `reflex login` to authenticate.")
         raise click.exceptions.Exit(1) from err

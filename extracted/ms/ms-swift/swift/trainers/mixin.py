@@ -1,6 +1,7 @@
 # Copyright (c) Alibaba, Inc. and its affiliates.
 # Part of the implementation is borrowed from huggingface/transformers.
 import inspect
+import logging
 import os
 import shutil
 import time
@@ -33,7 +34,7 @@ from swift.hub import get_hub
 from swift.llm import BatchSamplerShard, DataLoaderDispatcher, DataLoaderShard, Template
 from swift.plugin import MeanMetric, compute_acc, extra_tuners
 from swift.tuners import SwiftModel
-from swift.utils import get_logger, is_mp_ddp, use_torchacc
+from swift.utils import get_logger, is_mp, is_mp_ddp, ms_logger_context, seed_worker, use_torchacc
 from swift.utils.torchacc_utils import ta_trim_graph
 from ..utils.torch_utils import get_device_count
 from .arguments import TrainingArguments
@@ -68,8 +69,7 @@ class SwiftMixin:
             logger.warning('Using IterableDataset, setting args.dataloader_num_workers to 1.')
 
         if args.check_model and hasattr(model, 'model_dir'):
-            from swift.utils.logger import ms_logger_ignore_error
-            with ms_logger_ignore_error():
+            with ms_logger_context(logging.CRITICAL):
                 check_local_model_is_latest(
                     model.model_dir, user_agent={
                         'invoked_by': 'local_trainer',
@@ -109,6 +109,16 @@ class SwiftMixin:
         if self.template.sequence_parallel_size > 1:
             from swift.trainers.sequence_parallel import sequence_parallel
             sequence_parallel.prepare_trainer(self)
+
+    def get_use_logits_to_keep(self, default_value: bool):
+        use_logits_to_keep = self.args.use_logits_to_keep
+        if use_logits_to_keep is None:
+            base_model = self.template.get_base_model(self.model)
+            use_logits_to_keep = (not self.model.model_meta.is_multimodal
+                                  and 'logits_to_keep' in inspect.signature(base_model.forward).parameters
+                                  and default_value)
+        logger.info_once(f'use_logits_to_keep: {use_logits_to_keep}')
+        return use_logits_to_keep
 
     def _save_initial_model(self, output_dir):
         # pissa/olora/lora-ga
@@ -313,6 +323,35 @@ class SwiftMixin:
         finally:
             Accelerator.clip_grad_norm_ = origin_clip_grad_norm_
 
+    def _prepare_gradient_checkpointing(self, model) -> None:
+        from swift.llm import HfConfigFactory, get_model_arch, deep_getattr, dynamic_gradient_checkpointing
+        args = self.args
+        HfConfigFactory.set_model_config_attr(model, 'use_cache', False)
+        if args.gradient_checkpointing or args.vit_gradient_checkpointing:
+            dynamic_gradient_checkpointing(model, args.vit_gradient_checkpointing)
+        if args.gradient_checkpointing:
+            model.gradient_checkpointing_enable(gradient_checkpointing_kwargs=args.gradient_checkpointing_kwargs)
+            model.enable_input_require_grads()
+
+        model_meta = model.model_meta
+        model_arch = get_model_arch(model_meta.model_arch)
+        if model_meta.is_multimodal and model_arch:
+            for vision_tower_name in model_arch.vision_tower:
+                vision_tower = deep_getattr(model, vision_tower_name)
+                if hasattr(vision_tower, 'enable_input_require_grads'):
+                    try:
+                        if args.vit_gradient_checkpointing:
+                            vision_tower.gradient_checkpointing_enable(
+                                gradient_checkpointing_kwargs=args.gradient_checkpointing_kwargs)
+                            vision_tower.enable_input_require_grads()
+                        else:
+                            vision_tower.gradient_checkpointing_disable()
+                            vision_tower.disable_input_require_grads()
+                    except (NotImplementedError, AttributeError):
+                        pass
+        # Avoid vit_gradient_checkpointing being overwritten by transformers.Trainer.gradient_checkpointing_enable.
+        self.args.gradient_checkpointing = False
+
     def train(self, *args, **kwargs):
         if self.model_meta.is_multimodal:
             models = []
@@ -328,13 +367,18 @@ class SwiftMixin:
                 elif isinstance(reward_model, nn.Module):
                     models.append(reward_model)
 
-            models = list(set(models))  # Deduplicate
+            models = list(set(self.accelerator.unwrap_model(model) for model in models))  # Deduplicate
             self.template.register_post_encode_hook(models)
             logger.info(f'Successfully registered post_encode hook: {[model.__class__.__name__ for model in models]}.')
         self._save_initial_model(self.args.output_dir)
+
+        # gradient_checkpointing
+        gradient_checkpointing = self.args.gradient_checkpointing
+        self._prepare_gradient_checkpointing(self.accelerator.unwrap_model(self.model))
         with self.hub.patch_hub(), self._fix_grad_norm_nan():
             res = super().train(*args, **kwargs)
         self.template.remove_post_encode_hook()
+        self.args.gradient_checkpointing = gradient_checkpointing  # recover
         return res
 
     def push_to_hub(self, *args, **kwargs):
@@ -450,9 +494,41 @@ class SwiftMixin:
         self.model.train()
         return eval_dict
 
+    def get_logits_to_keep(self, labels):
+        if labels.shape[0] == 1 and not is_mp():
+            # device_map may encounter device mismatch issues.
+            loss_mask = (labels != -100)[0]
+            labels = labels[:, loss_mask]
+            labels = nn.functional.pad(labels, (1, 0), value=-100)
+            logits_to_keep = nn.functional.pad(loss_mask[1:], (0, 1), value=True)
+        else:
+            logits_to_keep = labels.shape[-1] - ((labels != -100).int().argmax(-1).min().item()) + 1
+            assert logits_to_keep > 0
+            labels = labels[:, -logits_to_keep:]
+        return labels, logits_to_keep
+
+    def get_cu_seqlens(self, position_ids, logits_to_keep) -> torch.Tensor:
+        assert position_ids.shape[0] == 1
+        position_ids = position_ids[0]
+        indices = torch.arange(position_ids.shape[0], device=position_ids.device)
+        cu_seqlens = torch.concat([
+            indices[position_ids == 0],
+            torch.tensor(position_ids.shape, device=position_ids.device),
+        ])
+        res_cu_seqlens = cu_seqlens.clone()
+        if isinstance(logits_to_keep, torch.Tensor):
+            for i in range(cu_seqlens.shape[0] - 1):
+                start, end = cu_seqlens[i], cu_seqlens[i + 1]
+                res_cu_seqlens[i + 1:] -= (~logits_to_keep[start:end]).sum()
+        elif isinstance(logits_to_keep, int):
+            res_cu_seqlens[1:] -= position_ids.shape[0] + 1 - logits_to_keep
+        return res_cu_seqlens
+
     def get_batch_samples(self, *args, **kwargs):
         res = super().get_batch_samples(*args, **kwargs)
-        if self.template.sequence_parallel_size == 1:
+        from swift.trainers.sequence_parallel import sequence_parallel
+        if self.template.sequence_parallel_size == 1 or 'Ulysses' == sequence_parallel.__class__.__name__:
+            # ulysses split inputs in the model hook, so no need to gather num_items_in_batch
             return res
 
         batch_samples, num_items_in_batch = res
@@ -493,7 +569,10 @@ class DataLoaderMixin:
             if hasattr(train_dataset, '__len__'):
                 batch_sampler = BatchSamplerShard(
                     len(train_dataset), batch_size=self._train_batch_size, **batch_sampler_params)
-                dataloader = DataLoaderShard(train_dataset, batch_sampler, self.accelerator.device, **dataloader_params)
+                dataloader_params['worker_init_fn'] = partial(
+                    seed_worker, num_workers=self.args.dataloader_num_workers, rank=self.args.process_index)
+                dataloader_params['batch_sampler'] = batch_sampler
+                dataloader = DataLoaderShard(train_dataset, device=self.accelerator.device, **dataloader_params)
             else:
                 # IterableDataset
                 if dist.is_initialized() and dataloader_params['prefetch_factor']:

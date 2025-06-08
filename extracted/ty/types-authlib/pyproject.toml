@@ -4,7 +4,7 @@ requires = ["setuptools>=77.0.3"]
 
 [project]
 name = "types-Authlib"
-version = "1.5.0.20250516"
+version = "1.5.0.20250608"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 description = "Typing stubs for Authlib"
@@ -34,11 +34,11 @@ for more details. The source for this package can be found in the
 directory.
 
 This package was tested with
-mypy 1.15.0,
+mypy 1.16.0,
 pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`126768408a69b7a3a09b7d3992970b289f92937e`](https://github.com/python/typeshed/commit/126768408a69b7a3a09b7d3992970b289f92937e).
+[`b7bc6f32cfa60d66d2df5ab8d93af61f303a646d`](https://github.com/python/typeshed/commit/b7bc6f32cfa60d66d2df5ab8d93af61f303a646d).
 """, content-type = "text/markdown" }
 classifiers = [
   "Programming Language :: Python :: 3",

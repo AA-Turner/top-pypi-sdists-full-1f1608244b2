@@ -28,7 +28,6 @@ class IMAGE_AST_brush_paint(ImageAssetShelf, bpy.types.AssetShelf):
     brush_type_prop: typing.Any
     id_data: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -1948,7 +1947,6 @@ class ImageAssetShelf(bl_ui.properties_paint_common.BrushAssetShelf):
     bl_space_type: typing.Any
     brush_type_prop: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
 class ImageScopesPanel:
     @classmethod

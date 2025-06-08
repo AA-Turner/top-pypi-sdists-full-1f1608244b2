@@ -207,7 +207,6 @@ class VIEW3D_AST_brush_gpencil_paint(View3DAssetShelf, bpy.types.AssetShelf):
     id_data: typing.Any
     mode: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -233,7 +232,6 @@ class VIEW3D_AST_brush_gpencil_sculpt(View3DAssetShelf, bpy.types.AssetShelf):
     id_data: typing.Any
     mode: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -261,7 +259,6 @@ class VIEW3D_AST_brush_gpencil_vertex(
     id_data: typing.Any
     mode: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -289,7 +286,6 @@ class VIEW3D_AST_brush_gpencil_weight(
     id_data: typing.Any
     mode: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -315,7 +311,6 @@ class VIEW3D_AST_brush_sculpt(View3DAssetShelf, bpy.types.AssetShelf):
     id_data: typing.Any
     mode: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -341,7 +336,6 @@ class VIEW3D_AST_brush_sculpt_curves(View3DAssetShelf, bpy.types.AssetShelf):
     id_data: typing.Any
     mode: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -367,7 +361,6 @@ class VIEW3D_AST_brush_texture_paint(View3DAssetShelf, bpy.types.AssetShelf):
     id_data: typing.Any
     mode: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -393,7 +386,6 @@ class VIEW3D_AST_brush_vertex_paint(View3DAssetShelf, bpy.types.AssetShelf):
     id_data: typing.Any
     mode: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -421,7 +413,6 @@ class VIEW3D_AST_brush_weight_paint(
     id_data: typing.Any
     mode: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:
         """
@@ -7092,7 +7083,6 @@ class View3DAssetShelf(bl_ui.properties_paint_common.BrushAssetShelf):
     bl_space_type: typing.Any
     brush_type_prop: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
 class _draw_tool_settings_context_mode:
     @staticmethod

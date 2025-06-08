@@ -21,7 +21,6 @@ from pydantic import AnyUrl, BaseModel
 from typing_extensions import override
 
 from docling_core.transforms.serializer.base import (
-    BaseAnnotationSerializer,
     BaseDocSerializer,
     BaseFallbackSerializer,
     BaseFormSerializer,
@@ -36,7 +35,7 @@ from docling_core.transforms.serializer.base import (
 from docling_core.transforms.serializer.common import (
     CommonParams,
     DocSerializer,
-    _get_annotation_text,
+    _get_picture_annotation_text,
     create_ser_result,
 )
 from docling_core.transforms.serializer.html_styles import (
@@ -48,7 +47,6 @@ from docling_core.types.doc.base import ImageRefMode
 from docling_core.types.doc.document import (
     CodeItem,
     ContentLayer,
-    DescriptionAnnotation,
     DocItem,
     DoclingDocument,
     FloatingItem,
@@ -61,9 +59,7 @@ from docling_core.types.doc.document import (
     ListItem,
     NodeItem,
     OrderedList,
-    PictureClassificationData,
     PictureItem,
-    PictureMoleculeData,
     PictureTabularChartData,
     SectionHeaderItem,
     TableCell,
@@ -762,7 +758,14 @@ class HTMLFallbackSerializer(BaseFallbackSerializer):
     """HTML-specific fallback serializer."""
 
     @override
-    def serialize(self, *, item: NodeItem, **kwargs: Any) -> SerializationResult:
+    def serialize(
+        self,
+        *,
+        item: NodeItem,
+        doc_serializer: "BaseDocSerializer",
+        doc: DoclingDocument,
+        **kwargs: Any,
+    ) -> SerializationResult:
         """Fallback serializer for items not handled by other serializers."""
         if isinstance(item, DocItem):
             return create_ser_result(
@@ -772,42 +775,6 @@ class HTMLFallbackSerializer(BaseFallbackSerializer):
         else:
             # For group items, we don't generate any markup
             return create_ser_result()
-
-
-class HTMLAnnotationSerializer(BaseModel, BaseAnnotationSerializer):
-    """HTML-specific annotation serializer."""
-
-    def serialize(
-        self,
-        *,
-        item: DocItem,
-        doc: DoclingDocument,
-        **kwargs: Any,
-    ) -> SerializationResult:
-        """Serializes the passed annotation to HTML format."""
-        res_parts: list[SerializationResult] = []
-        for ann in item.get_annotations():
-            if isinstance(
-                ann,
-                (PictureClassificationData, DescriptionAnnotation, PictureMoleculeData),
-            ):
-                if ann_text := _get_annotation_text(ann):
-                    text_dir = get_text_direction(ann_text)
-                    dir_str = f' dir="{text_dir}"' if text_dir == "rtl" else ""
-                    ann_ser_res = create_ser_result(
-                        text=(
-                            f'<div data-annotation-kind="{ann.kind}"{dir_str}>'
-                            f"{html.escape(ann_text)}"
-                            f"</div>"
-                        ),
-                        span_source=item,
-                    )
-                    res_parts.append(ann_ser_res)
-
-        return create_ser_result(
-            text=" ".join([r.text for r in res_parts if r.text]),
-            span_source=res_parts,
-        )
 
 
 class HTMLDocSerializer(DocSerializer):
@@ -822,8 +789,6 @@ class HTMLDocSerializer(DocSerializer):
 
     list_serializer: BaseListSerializer = HTMLListSerializer()
     inline_serializer: BaseInlineSerializer = HTMLInlineSerializer()
-
-    annotation_serializer: BaseAnnotationSerializer = HTMLAnnotationSerializer()
 
     params: HTMLParams = HTMLParams()
 
@@ -846,16 +811,6 @@ class HTMLDocSerializer(DocSerializer):
     def serialize_strikethrough(self, text: str, **kwargs: Any) -> str:
         """Apply HTML-specific strikethrough serialization."""
         return f"<del>{text}</del>"
-
-    @override
-    def serialize_subscript(self, text: str, **kwargs: Any) -> str:
-        """Apply HTML-specific subscript serialization."""
-        return f"<sub>{text}</sub>"
-
-    @override
-    def serialize_superscript(self, text: str, **kwargs: Any) -> str:
-        """Apply HTML-specific superscript serialization."""
-        return f"<sup>{text}</sup>"
 
     @override
     def serialize_hyperlink(
@@ -1013,13 +968,20 @@ class HTMLDocSerializer(DocSerializer):
                     results.append(cap_ser_res)
 
         if params.include_annotations and item.self_ref not in excluded_refs:
-            if isinstance(item, (PictureItem, TableItem)):
-                ann_res = self.serialize_annotations(
-                    item=item,
-                    **kwargs,
-                )
-                if ann_res.text:
-                    results.append(ann_res)
+            if isinstance(item, PictureItem):
+                for ann in item.annotations:
+                    if ann_text := _get_picture_annotation_text(annotation=ann):
+                        text_dir = get_text_direction(ann_text)
+                        dir_str = f' dir="{text_dir}"' if text_dir == "rtl" else ""
+                        ann_ser_res = create_ser_result(
+                            text=(
+                                f'<div data-annotation-kind="{ann.kind}"{dir_str}>'
+                                f"{html.escape(ann_text)}"
+                                f"</div>"
+                            ),
+                            span_source=item,
+                        )
+                        results.append(ann_ser_res)
 
         text_res = params.caption_delim.join([r.text for r in results])
         if text_res:

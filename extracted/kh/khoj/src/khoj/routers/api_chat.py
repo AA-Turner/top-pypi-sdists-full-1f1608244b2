@@ -40,7 +40,6 @@ from khoj.processor.tools.online_search import (
     search_online,
 )
 from khoj.processor.tools.run_code import run_code
-from khoj.routers.api import extract_references_and_questions
 from khoj.routers.email import send_query_feedback
 from khoj.routers.helpers import (
     ApiImageRateLimiter,
@@ -63,6 +62,7 @@ from khoj.routers.helpers import (
     is_query_empty,
     is_ready_to_chat,
     read_chat_stream,
+    search_documents,
     update_telemetry_state,
     validate_chat_model,
 )
@@ -752,7 +752,7 @@ async def chat(
                                 q,
                                 chat_response="",
                                 user=user,
-                                meta_log=meta_log,
+                                chat_history=chat_history,
                                 compiled_references=compiled_references,
                                 online_results=online_results,
                                 code_results=code_results,
@@ -918,7 +918,7 @@ async def chat(
         if city or region or country or country_code:
             location = LocationData(city=city, region=region, country=country, country_code=country_code)
         user_message_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        meta_log = conversation.conversation_log
+        chat_history = conversation.messages
 
         # If interrupt flag is set, wait for the previous turn to be saved before proceeding
         if interrupt_flag:
@@ -964,14 +964,14 @@ async def chat(
             operator_results = [OperatorRun(**iter_dict) for iter_dict in last_message.operatorContext or []]
             train_of_thought = [thought.model_dump() for thought in last_message.trainOfThought or []]
             # Drop the interrupted message from conversation history
-            meta_log["chat"].pop()
+            chat_history.pop()
             logger.info(f"Loaded interrupted partial context from conversation {conversation_id}.")
 
         if conversation_commands == [ConversationCommand.Default]:
             try:
                 chosen_io = await aget_data_sources_and_output_format(
                     q,
-                    meta_log,
+                    chat_history,
                     is_automated_task,
                     user=user,
                     query_images=uploaded_images,
@@ -1011,7 +1011,7 @@ async def chat(
                 user=user,
                 query=defiltered_query,
                 conversation_id=conversation_id,
-                conversation_history=meta_log,
+                conversation_history=conversation.messages,
                 previous_iterations=list(research_results),
                 query_images=uploaded_images,
                 agent=agent,
@@ -1055,115 +1055,13 @@ async def chat(
             if state.verbose > 1:
                 logger.debug(f'Researched Results: {"".join(r.summarizedResult for r in research_results)}')
 
-        used_slash_summarize = conversation_commands == [ConversationCommand.Summarize]
-        # Skip trying to summarize if
-        if (
-            # summarization intent was inferred
-            ConversationCommand.Summarize in conversation_commands
-            # and not triggered via slash command
-            and not used_slash_summarize
-            # but we can't actually summarize
-            and len(file_filters) == 0
-        ):
-            conversation_commands.remove(ConversationCommand.Summarize)
-        elif ConversationCommand.Summarize in conversation_commands:
-            response_log = ""
-            agent_has_entries = await EntryAdapters.aagent_has_entries(agent)
-            if len(file_filters) == 0 and not agent_has_entries:
-                response_log = "No files selected for summarization. Please add files using the section on the left."
-                async for result in send_llm_response(response_log, tracer.get("usage")):
-                    yield result
-            else:
-                async for response in generate_summary_from_files(
-                    q=q,
-                    user=user,
-                    file_filters=file_filters,
-                    meta_log=meta_log,
-                    query_images=uploaded_images,
-                    agent=agent,
-                    send_status_func=partial(send_event, ChatEvent.STATUS),
-                    query_files=attached_file_context,
-                    tracer=tracer,
-                ):
-                    if isinstance(response, dict) and ChatEvent.STATUS in response:
-                        yield response[ChatEvent.STATUS]
-                    else:
-                        if isinstance(response, str):
-                            response_log = response
-                            async for result in send_llm_response(response, tracer.get("usage")):
-                                yield result
-
-            summarized_document = FileAttachment(
-                name="Summarized Document",
-                content=response_log,
-                type="text/plain",
-                size=len(response_log.encode("utf-8")),
-            )
-
-            async for result in send_event(ChatEvent.GENERATED_ASSETS, {"files": [summarized_document.model_dump()]}):
-                yield result
-
-            generated_files.append(summarized_document)
-
-        custom_filters = []
-        if conversation_commands == [ConversationCommand.Help]:
-            if not q:
-                chat_model = await ConversationAdapters.aget_user_chat_model(user)
-                if chat_model == None:
-                    chat_model = await ConversationAdapters.aget_default_chat_model(user)
-                model_type = chat_model.model_type
-                formatted_help = help_message.format(model=model_type, version=state.khoj_version, device=get_device())
-                async for result in send_llm_response(formatted_help, tracer.get("usage")):
-                    yield result
-                return
-            # Adding specification to search online specifically on khoj.dev pages.
-            custom_filters.append("site:khoj.dev")
-            conversation_commands.append(ConversationCommand.Online)
-
-        if ConversationCommand.Automation in conversation_commands:
-            try:
-                automation, crontime, query_to_run, subject = await create_automation(
-                    q, timezone, user, request.url, meta_log, tracer=tracer
-                )
-            except Exception as e:
-                logger.error(f"Error scheduling task {q} for {user.email}: {e}")
-                error_message = f"Unable to create automation. Ensure the automation doesn't already exist."
-                async for result in send_llm_response(error_message, tracer.get("usage")):
-                    yield result
-                return
-
-            llm_response = construct_automation_created_message(automation, crontime, query_to_run, subject)
-            # Trigger task to save conversation to DB
-            asyncio.create_task(
-                save_to_conversation_log(
-                    q,
-                    llm_response,
-                    user,
-                    meta_log,
-                    user_message_time,
-                    intent_type="automation",
-                    client_application=request.user.client_app,
-                    conversation_id=conversation_id,
-                    inferred_queries=[query_to_run],
-                    automation_id=automation.id,
-                    query_images=uploaded_images,
-                    train_of_thought=train_of_thought,
-                    raw_query_files=raw_query_files,
-                    tracer=tracer,
-                )
-            )
-            # Send LLM Response
-            async for result in send_llm_response(llm_response, tracer.get("usage")):
-                yield result
-            return
-
         # Gather Context
         ## Extract Document References
         if not ConversationCommand.Research in conversation_commands:
             try:
-                async for result in extract_references_and_questions(
+                async for result in search_documents(
                     user,
-                    meta_log,
+                    chat_history,
                     q,
                     (n or 7),
                     d,
@@ -1212,11 +1110,11 @@ async def chat(
             try:
                 async for result in search_online(
                     defiltered_query,
-                    meta_log,
+                    chat_history,
                     location,
                     user,
                     partial(send_event, ChatEvent.STATUS),
-                    custom_filters,
+                    custom_filters=[],
                     max_online_searches=3,
                     query_images=uploaded_images,
                     query_files=attached_file_context,
@@ -1240,7 +1138,7 @@ async def chat(
             try:
                 async for result in read_webpages(
                     defiltered_query,
-                    meta_log,
+                    chat_history,
                     location,
                     user,
                     partial(send_event, ChatEvent.STATUS),
@@ -1281,7 +1179,7 @@ async def chat(
                 context = f"# Iteration 1:\n#---\nNotes:\n{compiled_references}\n\nOnline Results:{online_results}"
                 async for result in run_code(
                     defiltered_query,
-                    meta_log,
+                    chat_history,
                     context,
                     location,
                     user,
@@ -1306,7 +1204,7 @@ async def chat(
                 async for result in operate_environment(
                     defiltered_query,
                     user,
-                    meta_log,
+                    chat_history,
                     location,
                     list(operator_results)[-1] if operator_results else None,
                     query_images=uploaded_images,
@@ -1356,7 +1254,7 @@ async def chat(
             async for result in text_to_image(
                 defiltered_query,
                 user,
-                meta_log,
+                chat_history,
                 location_data=location,
                 references=compiled_references,
                 online_results=online_results,
@@ -1400,7 +1298,7 @@ async def chat(
 
             async for result in generate_mermaidjs_diagram(
                 q=defiltered_query,
-                conversation_history=meta_log,
+                chat_history=chat_history,
                 location_data=location,
                 note_references=compiled_references,
                 online_results=online_results,
@@ -1456,40 +1354,36 @@ async def chat(
 
         llm_response, chat_metadata = await agenerate_chat_response(
             defiltered_query,
-            meta_log,
+            chat_history,
             conversation,
             compiled_references,
             online_results,
             code_results,
             operator_results,
             research_results,
-            inferred_queries,
-            conversation_commands,
             user,
-            request.user.client_app,
             location,
             user_name,
             uploaded_images,
-            train_of_thought,
             attached_file_context,
-            raw_query_files,
-            generated_images,
             generated_files,
-            generated_mermaidjs_diagram,
             program_execution_context,
             generated_asset_results,
             is_subscribed,
             tracer,
         )
 
+        full_response = ""
         async for item in llm_response:
-            # Should not happen with async generator, end is signaled by loop exit. Skip.
-            if item is None:
+            # Should not happen with async generator. Skip.
+            if item is None or not isinstance(item, ResponseWithThought):
+                logger.warning(f"Unexpected item type in LLM response: {type(item)}. Skipping.")
                 continue
             if cancellation_event.is_set():
                 break
-            message = item.response if isinstance(item, ResponseWithThought) else item
-            if isinstance(item, ResponseWithThought) and item.thought:
+            message = item.response
+            full_response += message if message else ""
+            if item.thought:
                 async for result in send_event(ChatEvent.THOUGHT, item.thought):
                     yield result
                 continue
@@ -1505,6 +1399,31 @@ async def chat(
                 if not cancellation_event.is_set():
                     logger.warning(f"Error during streaming. Stopping send: {e}")
                 break
+
+        # Save conversation once finish streaming
+        asyncio.create_task(
+            save_to_conversation_log(
+                q,
+                chat_response=full_response,
+                user=user,
+                chat_history=chat_history,
+                compiled_references=compiled_references,
+                online_results=online_results,
+                code_results=code_results,
+                operator_results=operator_results,
+                research_results=research_results,
+                inferred_queries=inferred_queries,
+                client_application=request.user.client_app,
+                conversation_id=str(conversation.id),
+                query_images=uploaded_images,
+                train_of_thought=train_of_thought,
+                raw_query_files=raw_query_files,
+                generated_images=generated_images,
+                raw_generated_files=generated_files,
+                generated_mermaidjs_diagram=generated_mermaidjs_diagram,
+                tracer=tracer,
+            )
+        )
 
         # Signal end of LLM response after the loop finishes
         if not cancellation_event.is_set():

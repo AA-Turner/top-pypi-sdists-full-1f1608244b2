@@ -1,5 +1,6 @@
 # Copyright (c) Alibaba, Inc. and its affiliates.
 # Part of the implementation is borrowed from huggingface/transformers.
+import inspect
 import os
 from contextlib import contextmanager, nullcontext
 from functools import wraps
@@ -15,9 +16,11 @@ from transformers import Trainer as HfTrainer
 from transformers.models.auto.modeling_auto import MODEL_FOR_CAUSAL_LM_MAPPING_NAMES
 from transformers.utils import is_peft_available
 
-from swift.utils import JsonlWriter, Serializer, gc_collect
+from swift.utils import JsonlWriter, Serializer, gc_collect, get_logger
 from .arguments import Seq2SeqTrainingArguments, TrainingArguments
 from .mixin import DataLoaderMixin, SwiftMixin
+
+logger = get_logger()
 
 
 class Trainer(SwiftMixin, HfTrainer):
@@ -152,15 +155,33 @@ class Seq2SeqTrainer(SwiftMixin, DataLoaderMixin, HfSeq2SeqTrainer):
         return None, response_list, labels_list
 
     def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
+        from swift.plugin.loss import get_loss_func
         loss_kwargs = {}
         labels = None
-        if (self.label_smoother is not None or self.compute_loss_func is not None) and 'labels' in inputs:
-            labels = inputs.pop('labels')
-
+        compute_loss_func = self.compute_loss_func
         loss_scale = inputs.pop('loss_scale', None)
         if loss_scale is not None:
             loss_kwargs['loss_scale'] = loss_scale
+            if compute_loss_func is None:
+                compute_loss_func = get_loss_func('loss_scale')
 
+        sample_channels = inputs.pop('channel', None)
+        if sample_channels is not None and self.args.channels is not None:
+            state = self.state
+            setattr(state, 'local_step', getattr(state, 'local_step', 0))
+            setattr(state, 'ch_loss_steps', getattr(state, 'ch_loss_steps', {}))
+
+            loss_kwargs['sample_channels'] = sample_channels
+            loss_kwargs['trainer'] = self
+
+        if (self.label_smoother is not None or compute_loss_func is not None) and 'labels' in inputs:
+            labels = inputs.pop('labels')
+
+        use_logits_to_keep = self.get_use_logits_to_keep('labels' in inputs)
+        if use_logits_to_keep:
+            inputs['labels'], logits_to_keep = self.get_logits_to_keep(inputs['labels'])
+            if logits_to_keep is not None:
+                inputs['logits_to_keep'] = logits_to_keep
         with self.template.compute_loss_context(self.model, inputs):
             outputs = model(**inputs)
         # Save past state if it exists
@@ -173,7 +194,7 @@ class Seq2SeqTrainer(SwiftMixin, DataLoaderMixin, HfSeq2SeqTrainer):
             outputs.loss = outputs.loss.to(labels.device)
             # fix https://github.com/huggingface/transformers/issues/34263
             if num_items_in_batch is not None:
-                outputs.loss = outputs.loss * (labels[:, 1:] != -100).sum() / num_items_in_batch
+                outputs.loss = outputs.loss * ((labels[:, 1:] != -100).sum() / num_items_in_batch)
 
             if isinstance(outputs, dict) and 'loss' not in outputs:
                 raise ValueError(
@@ -188,8 +209,8 @@ class Seq2SeqTrainer(SwiftMixin, DataLoaderMixin, HfSeq2SeqTrainer):
             else:
                 model_name = unwrapped_model._get_name()
             # User-defined compute_loss function
-            if self.compute_loss_func is not None:
-                loss = self.compute_loss_func(outputs, labels, num_items_in_batch=num_items_in_batch, **loss_kwargs)
+            if compute_loss_func is not None:
+                loss = compute_loss_func(outputs, labels, num_items_in_batch=num_items_in_batch, **loss_kwargs)
             elif model_name in MODEL_FOR_CAUSAL_LM_MAPPING_NAMES.values():
                 loss = self.label_smoother(outputs, labels, shift_labels=True)
             else:
@@ -202,7 +223,7 @@ class Seq2SeqTrainer(SwiftMixin, DataLoaderMixin, HfSeq2SeqTrainer):
         if getattr(self.args, 'average_tokens_across_devices', False) and self.model_accepts_loss_kwargs:
             loss *= self.accelerator.num_processes
 
-        if outputs.logits is not None and labels is not None:
+        if outputs.logits is not None and labels is not None and not return_outputs:
             # Liger does not have logits
             self._compute_acc(outputs, labels)
         return (loss, outputs) if return_outputs else loss

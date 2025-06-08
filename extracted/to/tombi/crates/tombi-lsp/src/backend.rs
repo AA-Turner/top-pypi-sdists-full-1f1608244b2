@@ -212,7 +212,7 @@ impl LanguageServer for Backend {
         &self,
         params: InitializeParams,
     ) -> Result<InitializeResult, tower_lsp::jsonrpc::Error> {
-        handle_initialize(params).await
+        handle_initialize(self, params).await
     }
 
     async fn initialized(&self, params: InitializedParams) {
@@ -282,7 +282,7 @@ impl LanguageServer for Backend {
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>, tower_lsp::jsonrpc::Error> {
         handle_hover(self, params)
             .await
-            .map(|response| response.map(|hover_content| hover_content.into()))
+            .map(|response| response.map(Into::into))
     }
 
     async fn folding_range(

@@ -1,12 +1,14 @@
+import asyncio
 import base64
+import concurrent.futures
 import hashlib
 import json
 import logging
 import math
 import os
 import re
+import time
 from datetime import datetime, timedelta, timezone
-from functools import partial
 from random import random
 from typing import (
     Annotated,
@@ -46,6 +48,7 @@ from khoj.database.adapters import (
     aget_user_by_email,
     ais_user_subscribed,
     create_khoj_token,
+    get_default_search_model,
     get_khoj_tokens,
     get_user_name,
     get_user_notion_config,
@@ -55,6 +58,7 @@ from khoj.database.adapters import (
 )
 from khoj.database.models import (
     Agent,
+    ChatMessageModel,
     ChatModel,
     ClientApplication,
     Conversation,
@@ -100,12 +104,16 @@ from khoj.processor.conversation.utils import (
     clean_json,
     clean_mermaidjs,
     construct_chat_history,
+    construct_question_history,
+    defilter_query,
     generate_chatml_messages_with_context,
-    save_to_conversation_log,
 )
 from khoj.processor.speech.text_to_speech import is_eleven_labs_enabled
 from khoj.routers.email import is_resend_enabled, send_task_email
 from khoj.routers.twilio import is_twilio_enabled
+from khoj.search_filter.date_filter import DateFilter
+from khoj.search_filter.file_filter import FileFilter
+from khoj.search_filter.word_filter import WordFilter
 from khoj.search_type import text_search
 from khoj.utils import state
 from khoj.utils.config import OfflineChatProcessorModel
@@ -122,7 +130,14 @@ from khoj.utils.helpers import (
     timer,
     tool_descriptions_for_llm,
 )
-from khoj.utils.rawconfig import ChatRequestBody, FileAttachment, FileData, LocationData
+from khoj.utils.rawconfig import (
+    ChatRequestBody,
+    FileAttachment,
+    FileData,
+    LocationData,
+    SearchResponse,
+)
+from khoj.utils.state import SearchType
 
 logger = logging.getLogger(__name__)
 
@@ -236,8 +251,6 @@ def get_next_url(request: Request) -> str:
 def get_conversation_command(query: str) -> ConversationCommand:
     if query.startswith("/notes"):
         return ConversationCommand.Notes
-    elif query.startswith("/help"):
-        return ConversationCommand.Help
     elif query.startswith("/general"):
         return ConversationCommand.General
     elif query.startswith("/online"):
@@ -248,8 +261,6 @@ def get_conversation_command(query: str) -> ConversationCommand:
         return ConversationCommand.Image
     elif query.startswith("/automated_task"):
         return ConversationCommand.AutomatedTask
-    elif query.startswith("/summarize"):
-        return ConversationCommand.Summarize
     elif query.startswith("/diagram"):
         return ConversationCommand.Diagram
     elif query.startswith("/code"):
@@ -285,7 +296,7 @@ async def acreate_title_from_history(
     """
     Create a title from the given conversation history
     """
-    chat_history = construct_chat_history(conversation.conversation_log)
+    chat_history = construct_chat_history(conversation.messages)
 
     title_generation_prompt = prompts.conversation_title_generation.format(chat_history=chat_history)
 
@@ -345,7 +356,7 @@ async def acheck_if_safe_prompt(system_prompt: str, user: KhojUser = None, lax: 
 
 async def aget_data_sources_and_output_format(
     query: str,
-    conversation_history: dict,
+    chat_history: list[ChatMessageModel],
     is_task: bool,
     user: KhojUser,
     query_images: List[str] = None,
@@ -379,14 +390,11 @@ async def aget_data_sources_and_output_format(
     agent_outputs = agent.output_modes if agent else []
 
     for output, description in mode_descriptions_for_llm.items():
-        # Do not allow tasks to schedule another task
-        if is_task and output == ConversationCommand.Automation:
-            continue
         output_options[output.value] = description
         if len(agent_outputs) == 0 or output.value in agent_outputs:
             output_options_str += f'- "{output.value}": "{description}"\n'
 
-    chat_history = construct_chat_history(conversation_history, n=6)
+    chat_history_str = construct_chat_history(chat_history, n=6)
 
     if query_images:
         query = f"[placeholder for {len(query_images)} user attached images]\n{query}"
@@ -399,7 +407,7 @@ async def aget_data_sources_and_output_format(
         query=query,
         sources=source_options_str,
         outputs=output_options_str,
-        chat_history=chat_history,
+        chat_history=chat_history_str,
         personality_context=personality_context,
     )
 
@@ -462,7 +470,7 @@ async def aget_data_sources_and_output_format(
 async def infer_webpage_urls(
     q: str,
     max_webpages: int,
-    conversation_history: dict,
+    chat_history: List[ChatMessageModel],
     location_data: LocationData,
     user: KhojUser,
     query_images: List[str] = None,
@@ -475,7 +483,7 @@ async def infer_webpage_urls(
     """
     location = f"{location_data}" if location_data else "Unknown"
     username = prompts.user_name.format(name=user.get_full_name()) if user.get_full_name() else ""
-    chat_history = construct_chat_history(conversation_history)
+    chat_history_str = construct_chat_history(chat_history)
 
     utc_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     personality_context = (
@@ -485,7 +493,7 @@ async def infer_webpage_urls(
     online_queries_prompt = prompts.infer_webpages_to_read.format(
         query=q,
         max_webpages=max_webpages,
-        chat_history=chat_history,
+        chat_history=chat_history_str,
         current_date=utc_date,
         location=location,
         username=username,
@@ -526,7 +534,7 @@ async def infer_webpage_urls(
 
 async def generate_online_subqueries(
     q: str,
-    conversation_history: dict,
+    chat_history: List[ChatMessageModel],
     location_data: LocationData,
     user: KhojUser,
     query_images: List[str] = None,
@@ -540,7 +548,7 @@ async def generate_online_subqueries(
     """
     location = f"{location_data}" if location_data else "Unknown"
     username = prompts.user_name.format(name=user.get_full_name()) if user.get_full_name() else ""
-    chat_history = construct_chat_history(conversation_history)
+    chat_history_str = construct_chat_history(chat_history)
 
     utc_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     personality_context = (
@@ -549,7 +557,7 @@ async def generate_online_subqueries(
 
     online_queries_prompt = prompts.online_search_conversation_subqueries.format(
         query=q,
-        chat_history=chat_history,
+        chat_history=chat_history_str,
         max_queries=max_queries,
         current_date=utc_date,
         location=location,
@@ -591,16 +599,16 @@ async def generate_online_subqueries(
 
 
 def schedule_query(
-    q: str, conversation_history: dict, user: KhojUser, query_images: List[str] = None, tracer: dict = {}
+    q: str, chat_history: List[ChatMessageModel], user: KhojUser, query_images: List[str] = None, tracer: dict = {}
 ) -> Tuple[str, str, str]:
     """
     Schedule the date, time to run the query. Assume the server timezone is UTC.
     """
-    chat_history = construct_chat_history(conversation_history)
+    chat_history_str = construct_chat_history(chat_history)
 
     crontime_prompt = prompts.crontime_prompt.format(
         query=q,
-        chat_history=chat_history,
+        chat_history=chat_history_str,
     )
 
     raw_response = send_message_to_model_wrapper_sync(
@@ -619,16 +627,16 @@ def schedule_query(
 
 
 async def aschedule_query(
-    q: str, conversation_history: dict, user: KhojUser, query_images: List[str] = None, tracer: dict = {}
+    q: str, chat_history: List[ChatMessageModel], user: KhojUser, query_images: List[str] = None, tracer: dict = {}
 ) -> Tuple[str, str, str]:
     """
     Schedule the date, time to run the query. Assume the server timezone is UTC.
     """
-    chat_history = construct_chat_history(conversation_history)
+    chat_history_str = construct_chat_history(chat_history)
 
     crontime_prompt = prompts.crontime_prompt.format(
         query=q,
-        chat_history=chat_history,
+        chat_history=chat_history_str,
     )
 
     raw_response = await send_message_to_model_wrapper(
@@ -681,7 +689,7 @@ async def extract_relevant_info(
 async def extract_relevant_summary(
     q: str,
     corpus: str,
-    conversation_history: dict,
+    chat_history: List[ChatMessageModel] = [],
     query_images: List[str] = None,
     user: KhojUser = None,
     agent: Agent = None,
@@ -698,11 +706,11 @@ async def extract_relevant_summary(
         prompts.personality_context.format(personality=agent.personality) if agent and agent.personality else ""
     )
 
-    chat_history = construct_chat_history(conversation_history)
+    chat_history_str = construct_chat_history(chat_history)
 
     extract_relevant_information = prompts.extract_relevant_summary.format(
         query=q,
-        chat_history=chat_history,
+        chat_history=chat_history_str,
         corpus=corpus.strip(),
         personality_context=personality_context,
     )
@@ -725,7 +733,7 @@ async def generate_summary_from_files(
     q: str,
     user: KhojUser,
     file_filters: List[str],
-    meta_log: dict,
+    chat_history: List[ChatMessageModel] = [],
     query_images: List[str] = None,
     agent: Agent = None,
     send_status_func: Optional[Callable] = None,
@@ -766,7 +774,7 @@ async def generate_summary_from_files(
         response = await extract_relevant_summary(
             q,
             contextual_data,
-            conversation_history=meta_log,
+            chat_history=chat_history,
             query_images=query_images,
             user=user,
             agent=agent,
@@ -782,7 +790,7 @@ async def generate_summary_from_files(
 
 async def generate_excalidraw_diagram(
     q: str,
-    conversation_history: Dict[str, Any],
+    chat_history: List[ChatMessageModel],
     location_data: LocationData,
     note_references: List[Dict[str, Any]],
     online_results: Optional[dict] = None,
@@ -799,7 +807,7 @@ async def generate_excalidraw_diagram(
 
     better_diagram_description_prompt = await generate_better_diagram_description(
         q=q,
-        conversation_history=conversation_history,
+        chat_history=chat_history,
         location_data=location_data,
         note_references=note_references,
         online_results=online_results,
@@ -834,7 +842,7 @@ async def generate_excalidraw_diagram(
 
 async def generate_better_diagram_description(
     q: str,
-    conversation_history: Dict[str, Any],
+    chat_history: List[ChatMessageModel],
     location_data: LocationData,
     note_references: List[Dict[str, Any]],
     online_results: Optional[dict] = None,
@@ -857,7 +865,7 @@ async def generate_better_diagram_description(
 
     user_references = "\n\n".join([f"# {item['compiled']}" for item in note_references])
 
-    chat_history = construct_chat_history(conversation_history)
+    chat_history_str = construct_chat_history(chat_history)
 
     simplified_online_results = {}
 
@@ -870,7 +878,7 @@ async def generate_better_diagram_description(
 
     improve_diagram_description_prompt = prompts.improve_excalidraw_diagram_description_prompt.format(
         query=q,
-        chat_history=chat_history,
+        chat_history=chat_history_str,
         location=location,
         current_date=today_date,
         references=user_references,
@@ -939,7 +947,7 @@ async def generate_excalidraw_diagram_from_description(
 
 async def generate_mermaidjs_diagram(
     q: str,
-    conversation_history: Dict[str, Any],
+    chat_history: List[ChatMessageModel],
     location_data: LocationData,
     note_references: List[Dict[str, Any]],
     online_results: Optional[dict] = None,
@@ -956,7 +964,7 @@ async def generate_mermaidjs_diagram(
 
     better_diagram_description_prompt = await generate_better_mermaidjs_diagram_description(
         q=q,
-        conversation_history=conversation_history,
+        chat_history=chat_history,
         location_data=location_data,
         note_references=note_references,
         online_results=online_results,
@@ -985,7 +993,7 @@ async def generate_mermaidjs_diagram(
 
 async def generate_better_mermaidjs_diagram_description(
     q: str,
-    conversation_history: Dict[str, Any],
+    chat_history: List[ChatMessageModel],
     location_data: LocationData,
     note_references: List[Dict[str, Any]],
     online_results: Optional[dict] = None,
@@ -1008,7 +1016,7 @@ async def generate_better_mermaidjs_diagram_description(
 
     user_references = "\n\n".join([f"# {item['compiled']}" for item in note_references])
 
-    chat_history = construct_chat_history(conversation_history)
+    chat_history_str = construct_chat_history(chat_history)
 
     simplified_online_results = {}
 
@@ -1021,7 +1029,7 @@ async def generate_better_mermaidjs_diagram_description(
 
     improve_diagram_description_prompt = prompts.improve_mermaid_js_diagram_description_prompt.format(
         query=q,
-        chat_history=chat_history,
+        chat_history=chat_history_str,
         location=location,
         current_date=today_date,
         references=user_references,
@@ -1150,6 +1158,276 @@ async def generate_better_image_prompt(
     return response
 
 
+async def search_documents(
+    user: KhojUser,
+    chat_history: list[ChatMessageModel],
+    q: str,
+    n: int,
+    d: float,
+    conversation_id: str,
+    conversation_commands: List[ConversationCommand] = [ConversationCommand.Default],
+    location_data: LocationData = None,
+    send_status_func: Optional[Callable] = None,
+    query_images: Optional[List[str]] = None,
+    previous_inferred_queries: Set = set(),
+    agent: Agent = None,
+    query_files: str = None,
+    tracer: dict = {},
+):
+    # Initialize Variables
+    compiled_references: List[dict[str, str]] = []
+    inferred_queries: List[str] = []
+
+    agent_has_entries = False
+
+    if agent:
+        agent_has_entries = await sync_to_async(EntryAdapters.agent_has_entries)(agent=agent)
+
+    if (
+        not ConversationCommand.Notes in conversation_commands
+        and not ConversationCommand.Default in conversation_commands
+        and not agent_has_entries
+    ):
+        yield compiled_references, inferred_queries, q
+        return
+
+    # If Notes or Default is not in the conversation command, then the search should be restricted to the agent's knowledge base
+    should_limit_to_agent_knowledge = (
+        ConversationCommand.Notes not in conversation_commands
+        and ConversationCommand.Default not in conversation_commands
+    )
+
+    if not await sync_to_async(EntryAdapters.user_has_entries)(user=user):
+        if not agent_has_entries:
+            logger.debug("No documents in knowledge base. Use a Khoj client to sync and chat with your docs.")
+            yield compiled_references, inferred_queries, q
+            return
+
+    # Extract filter terms from user message
+    defiltered_query = defilter_query(q)
+    filters_in_query = q.replace(defiltered_query, "").strip()
+    conversation = await sync_to_async(ConversationAdapters.get_conversation_by_id)(conversation_id)
+
+    if not conversation:
+        logger.error(f"Conversation with id {conversation_id} not found when extracting references.")
+        yield compiled_references, inferred_queries, defiltered_query
+        return
+
+    filters_in_query += " ".join([f'file:"{filter}"' for filter in conversation.file_filters])
+    if is_none_or_empty(filters_in_query):
+        logger.debug(f"Filters in query: {filters_in_query}")
+
+    personality_context = prompts.personality_context.format(personality=agent.personality) if agent else ""
+
+    # Infer search queries from user message
+    with timer("Extracting search queries took", logger):
+        inferred_queries = await extract_questions(
+            query=defiltered_query,
+            user=user,
+            personality_context=personality_context,
+            chat_history=chat_history,
+            location_data=location_data,
+            query_images=query_images,
+            query_files=query_files,
+            tracer=tracer,
+        )
+
+    # Collate search results as context for the LLM
+    inferred_queries = list(set(inferred_queries) - previous_inferred_queries)
+    with timer("Searching knowledge base took", logger):
+        search_results = []
+        logger.info(f"🔍 Searching knowledge base with queries: {inferred_queries}")
+        if send_status_func:
+            inferred_queries_str = "\n- " + "\n- ".join(inferred_queries)
+            async for event in send_status_func(f"**Searching Documents for:** {inferred_queries_str}"):
+                yield {ChatEvent.STATUS: event}
+        for query in inferred_queries:
+            search_results.extend(
+                await execute_search(
+                    user if not should_limit_to_agent_knowledge else None,
+                    f"{query} {filters_in_query}",
+                    n=n,
+                    t=SearchType.All,
+                    r=True,
+                    max_distance=d,
+                    dedupe=False,
+                    agent=agent,
+                )
+            )
+        search_results = text_search.deduplicated_search_responses(search_results)
+        compiled_references = [
+            {"query": q, "compiled": item.additional["compiled"], "file": item.additional["file"]}
+            for q, item in zip(inferred_queries, search_results)
+        ]
+
+    yield compiled_references, inferred_queries, defiltered_query
+
+
+async def extract_questions(
+    query: str,
+    user: KhojUser,
+    personality_context: str = "",
+    chat_history: List[ChatMessageModel] = [],
+    location_data: LocationData = None,
+    query_images: Optional[List[str]] = None,
+    query_files: str = None,
+    tracer: dict = {},
+):
+    """
+    Infer document search queries from user message and provided context
+    """
+    # Shared context setup
+    location = f"{location_data}" if location_data else "N/A"
+    username = prompts.user_name.format(name=user.get_full_name()) if user and user.get_full_name() else ""
+
+    # Date variables for prompt formatting
+    today = datetime.today()
+    current_new_year = today.replace(month=1, day=1)
+    last_new_year = current_new_year.replace(year=today.year - 1)
+    yesterday = (today - timedelta(days=1)).strftime("%Y-%m-%d")
+
+    # Common prompt setup for API-based models (using Anthropic prompts for consistency)
+    chat_history_str = construct_question_history(chat_history, query_prefix="User", agent_name="Assistant")
+
+    system_prompt = prompts.extract_questions_system_prompt.format(
+        current_date=today.strftime("%Y-%m-%d"),
+        day_of_week=today.strftime("%A"),
+        current_month=today.strftime("%Y-%m"),
+        last_new_year=last_new_year.strftime("%Y"),
+        last_new_year_date=last_new_year.strftime("%Y-%m-%d"),
+        current_new_year_date=current_new_year.strftime("%Y-%m-%d"),
+        yesterday_date=yesterday,
+        location=location,
+        username=username,
+        personality_context=personality_context,
+    )
+
+    prompt = prompts.extract_questions_user_message.format(text=query, chat_history=chat_history_str)
+
+    class DocumentQueries(BaseModel):
+        """Choose searches to run on user documents."""
+
+        queries: List[str] = Field(..., min_items=1, description="List of search queries to run on user documents.")
+
+    raw_response = await send_message_to_model_wrapper(
+        system_message=system_prompt,
+        query=prompt,
+        query_images=query_images,
+        query_files=query_files,
+        chat_history=chat_history,
+        response_type="json_object",
+        response_schema=DocumentQueries,
+        user=user,
+        tracer=tracer,
+    )
+
+    # Extract questions from the response
+    try:
+        response = clean_json(raw_response)
+        response = pyjson5.loads(response)
+        queries = [q.strip() for q in response["queries"] if q.strip()]
+        if not isinstance(queries, list) or not queries:
+            logger.error(f"Invalid response for constructing subqueries: {response}")
+            return [query]
+        return queries
+    except:
+        logger.warning(f"LLM returned invalid JSON. Falling back to using user message as search query.")
+        return [query]
+
+
+async def execute_search(
+    user: KhojUser,
+    q: str,
+    n: Optional[int] = 5,
+    t: Optional[SearchType] = None,
+    r: Optional[bool] = False,
+    max_distance: Optional[Union[float, None]] = None,
+    dedupe: Optional[bool] = True,
+    agent: Optional[Agent] = None,
+):
+    # Run validation checks
+    results: List[SearchResponse] = []
+
+    start_time = time.time()
+
+    # Ensure the agent, if present, is accessible by the user
+    if user and agent and not await AgentAdapters.ais_agent_accessible(agent, user):
+        logger.error(f"Agent {agent.slug} is not accessible by user {user}")
+        return results
+
+    if q is None or q == "":
+        logger.warning(f"No query param (q) passed in API call to initiate search")
+        return results
+
+    # initialize variables
+    user_query = q.strip()
+    results_count = n or 5
+    t = t or state.SearchType.All
+    search_tasks = []
+
+    # return cached results, if available
+    if user:
+        query_cache_key = f"{user_query}-{n}-{t}-{r}-{max_distance}-{dedupe}"
+        if query_cache_key in state.query_cache[user.uuid]:
+            logger.debug(f"Return response from query cache")
+            return state.query_cache[user.uuid][query_cache_key]
+
+    # Encode query with filter terms removed
+    defiltered_query = user_query
+    for filter in [DateFilter(), WordFilter(), FileFilter()]:
+        defiltered_query = filter.defilter(defiltered_query)
+
+    encoded_asymmetric_query = None
+    if t.value != SearchType.Image.value:
+        with timer("Encoding query took", logger=logger):
+            search_model = await sync_to_async(get_default_search_model)()
+            encoded_asymmetric_query = state.embeddings_model[search_model.name].embed_query(defiltered_query)
+
+    # Use asyncio to run searches in parallel
+    if t.value in [
+        SearchType.All.value,
+        SearchType.Org.value,
+        SearchType.Markdown.value,
+        SearchType.Github.value,
+        SearchType.Notion.value,
+        SearchType.Plaintext.value,
+        SearchType.Pdf.value,
+    ]:
+        # query markdown notes
+        search_tasks.append(
+            text_search.query(
+                user_query,
+                user,
+                t,
+                question_embedding=encoded_asymmetric_query,
+                max_distance=max_distance,
+                agent=agent,
+            )
+        )
+
+    # Query across each requested content types in parallel
+    with timer("Query took", logger):
+        if search_tasks:
+            hits_list = await asyncio.gather(*search_tasks)
+            for hits in hits_list:
+                # Collate results
+                results += text_search.collate_results(hits, dedupe=dedupe)
+
+                # Sort results across all content types and take top results
+                results = text_search.rerank_and_sort_results(
+                    results, query=defiltered_query, rank_results=r, search_model_name=search_model.name
+                )[:results_count]
+
+    # Cache results
+    if user:
+        state.query_cache[user.uuid][query_cache_key] = results
+
+    end_time = time.time()
+    logger.debug(f"🔍 Search took: {end_time - start_time:.3f} seconds")
+
+    return results
+
+
 async def send_message_to_model_wrapper(
     query: str,
     system_message: str = "",
@@ -1160,7 +1438,7 @@ async def send_message_to_model_wrapper(
     query_images: List[str] = None,
     context: str = "",
     query_files: str = None,
-    conversation_log: dict = {},
+    chat_history: list[ChatMessageModel] = [],
     agent_chat_model: ChatModel = None,
     tracer: dict = {},
 ):
@@ -1193,7 +1471,7 @@ async def send_message_to_model_wrapper(
         user_message=query,
         context_message=context,
         system_message=system_message,
-        conversation_log=conversation_log,
+        chat_history=chat_history,
         model_name=chat_model_name,
         loaded_model=loaded_model,
         tokenizer_name=tokenizer,
@@ -1260,7 +1538,7 @@ def send_message_to_model_wrapper_sync(
     user: KhojUser = None,
     query_images: List[str] = None,
     query_files: str = "",
-    conversation_log: dict = {},
+    chat_history: List[ChatMessageModel] = [],
     tracer: dict = {},
 ):
     chat_model: ChatModel = ConversationAdapters.get_default_chat_model(user)
@@ -1284,7 +1562,7 @@ def send_message_to_model_wrapper_sync(
     truncated_messages = generate_chatml_messages_with_context(
         user_message=message,
         system_message=system_message,
-        conversation_log=conversation_log,
+        chat_history=chat_history,
         model_name=chat_model_name,
         loaded_model=loaded_model,
         max_prompt_size=max_tokens,
@@ -1342,61 +1620,31 @@ def send_message_to_model_wrapper_sync(
 
 async def agenerate_chat_response(
     q: str,
-    meta_log: dict,
+    chat_history: List[ChatMessageModel],
     conversation: Conversation,
     compiled_references: List[Dict] = [],
     online_results: Dict[str, Dict] = {},
     code_results: Dict[str, Dict] = {},
     operator_results: List[OperatorRun] = [],
     research_results: List[ResearchIteration] = [],
-    inferred_queries: List[str] = [],
-    conversation_commands: List[ConversationCommand] = [ConversationCommand.Default],
     user: KhojUser = None,
-    client_application: ClientApplication = None,
     location_data: LocationData = None,
     user_name: Optional[str] = None,
     query_images: Optional[List[str]] = None,
-    train_of_thought: List[Any] = [],
     query_files: str = None,
-    raw_query_files: List[FileAttachment] = None,
-    generated_images: List[str] = None,
     raw_generated_files: List[FileAttachment] = [],
-    generated_mermaidjs_diagram: str = None,
     program_execution_context: List[str] = [],
     generated_asset_results: Dict[str, Dict] = {},
     is_subscribed: bool = False,
     tracer: dict = {},
-) -> Tuple[AsyncGenerator[str | ResponseWithThought, None], Dict[str, str]]:
+) -> Tuple[AsyncGenerator[ResponseWithThought, None], Dict[str, str]]:
     # Initialize Variables
-    chat_response_generator: AsyncGenerator[str | ResponseWithThought, None] = None
-    logger.debug(f"Conversation Types: {conversation_commands}")
+    chat_response_generator: AsyncGenerator[ResponseWithThought, None] = None
 
     metadata = {}
     agent = await AgentAdapters.aget_conversation_agent_by_id(conversation.agent.id) if conversation.agent else None
 
     try:
-        partial_completion = partial(
-            save_to_conversation_log,
-            q,
-            user=user,
-            meta_log=meta_log,
-            compiled_references=compiled_references,
-            online_results=online_results,
-            code_results=code_results,
-            operator_results=operator_results,
-            research_results=research_results,
-            inferred_queries=inferred_queries,
-            client_application=client_application,
-            conversation_id=str(conversation.id),
-            query_images=query_images,
-            train_of_thought=train_of_thought,
-            raw_query_files=raw_query_files,
-            generated_images=generated_images,
-            raw_generated_files=raw_generated_files,
-            generated_mermaidjs_diagram=generated_mermaidjs_diagram,
-            tracer=tracer,
-        )
-
         query_to_run = q
         deepthought = False
         if research_results:
@@ -1420,22 +1668,23 @@ async def agenerate_chat_response(
         if chat_model.model_type == "offline":
             loaded_model = state.offline_chat_processor_config.loaded_model
             chat_response_generator = converse_offline(
+                # Query
                 user_query=query_to_run,
+                # Context
                 references=compiled_references,
                 online_results=online_results,
+                generated_files=raw_generated_files,
+                generated_asset_results=generated_asset_results,
+                location_data=location_data,
+                user_name=user_name,
+                query_files=query_files,
+                chat_history=chat_history,
+                # Model
                 loaded_model=loaded_model,
-                conversation_log=meta_log,
-                completion_func=partial_completion,
-                conversation_commands=conversation_commands,
                 model_name=chat_model.name,
                 max_prompt_size=chat_model.max_prompt_size,
                 tokenizer_name=chat_model.tokenizer,
-                location_data=location_data,
-                user_name=user_name,
                 agent=agent,
-                query_files=query_files,
-                generated_files=raw_generated_files,
-                generated_asset_results=generated_asset_results,
                 tracer=tracer,
             )
 
@@ -1444,28 +1693,29 @@ async def agenerate_chat_response(
             api_key = openai_chat_config.api_key
             chat_model_name = chat_model.name
             chat_response_generator = converse_openai(
+                # Query
                 query_to_run,
-                compiled_references,
-                query_images=query_images,
+                # Context
+                references=compiled_references,
                 online_results=online_results,
                 code_results=code_results,
                 operator_results=operator_results,
-                conversation_log=meta_log,
-                model=chat_model_name,
-                api_key=api_key,
-                api_base_url=openai_chat_config.api_base_url,
-                completion_func=partial_completion,
-                conversation_commands=conversation_commands,
-                max_prompt_size=chat_model.max_prompt_size,
-                tokenizer_name=chat_model.tokenizer,
-                location_data=location_data,
-                user_name=user_name,
-                agent=agent,
-                vision_available=vision_available,
+                query_images=query_images,
                 query_files=query_files,
                 generated_files=raw_generated_files,
                 generated_asset_results=generated_asset_results,
                 program_execution_context=program_execution_context,
+                location_data=location_data,
+                user_name=user_name,
+                chat_history=chat_history,
+                # Model
+                model=chat_model_name,
+                api_key=api_key,
+                api_base_url=openai_chat_config.api_base_url,
+                max_prompt_size=chat_model.max_prompt_size,
+                tokenizer_name=chat_model.tokenizer,
+                agent=agent,
+                vision_available=vision_available,
                 deepthought=deepthought,
                 tracer=tracer,
             )
@@ -1474,28 +1724,29 @@ async def agenerate_chat_response(
             api_key = chat_model.ai_model_api.api_key
             api_base_url = chat_model.ai_model_api.api_base_url
             chat_response_generator = converse_anthropic(
+                # Query
                 query_to_run,
-                compiled_references,
-                query_images=query_images,
+                # Context
+                references=compiled_references,
                 online_results=online_results,
                 code_results=code_results,
                 operator_results=operator_results,
-                conversation_log=meta_log,
-                model=chat_model.name,
-                api_key=api_key,
-                api_base_url=api_base_url,
-                completion_func=partial_completion,
-                conversation_commands=conversation_commands,
-                max_prompt_size=chat_model.max_prompt_size,
-                tokenizer_name=chat_model.tokenizer,
-                location_data=location_data,
-                user_name=user_name,
-                agent=agent,
-                vision_available=vision_available,
+                query_images=query_images,
                 query_files=query_files,
                 generated_files=raw_generated_files,
                 generated_asset_results=generated_asset_results,
                 program_execution_context=program_execution_context,
+                location_data=location_data,
+                user_name=user_name,
+                chat_history=chat_history,
+                # Model
+                model=chat_model.name,
+                api_key=api_key,
+                api_base_url=api_base_url,
+                max_prompt_size=chat_model.max_prompt_size,
+                tokenizer_name=chat_model.tokenizer,
+                agent=agent,
+                vision_available=vision_available,
                 deepthought=deepthought,
                 tracer=tracer,
             )
@@ -1503,28 +1754,29 @@ async def agenerate_chat_response(
             api_key = chat_model.ai_model_api.api_key
             api_base_url = chat_model.ai_model_api.api_base_url
             chat_response_generator = converse_gemini(
+                # Query
                 query_to_run,
-                compiled_references,
+                # Context
+                references=compiled_references,
                 online_results=online_results,
                 code_results=code_results,
                 operator_results=operator_results,
-                conversation_log=meta_log,
-                model=chat_model.name,
-                api_key=api_key,
-                api_base_url=api_base_url,
-                completion_func=partial_completion,
-                conversation_commands=conversation_commands,
-                max_prompt_size=chat_model.max_prompt_size,
-                tokenizer_name=chat_model.tokenizer,
-                location_data=location_data,
-                user_name=user_name,
-                agent=agent,
                 query_images=query_images,
-                vision_available=vision_available,
                 query_files=query_files,
                 generated_files=raw_generated_files,
                 generated_asset_results=generated_asset_results,
                 program_execution_context=program_execution_context,
+                location_data=location_data,
+                user_name=user_name,
+                chat_history=chat_history,
+                # Model
+                model=chat_model.name,
+                api_key=api_key,
+                api_base_url=api_base_url,
+                max_prompt_size=chat_model.max_prompt_size,
+                tokenizer_name=chat_model.tokenizer,
+                agent=agent,
+                vision_available=vision_available,
                 deepthought=deepthought,
                 tracer=tracer,
             )
@@ -2005,11 +2257,11 @@ async def create_automation(
     timezone: str,
     user: KhojUser,
     calling_url: URL,
-    meta_log: dict = {},
+    chat_history: List[ChatMessageModel] = [],
     conversation_id: str = None,
     tracer: dict = {},
 ):
-    crontime, query_to_run, subject = await aschedule_query(q, meta_log, user, tracer=tracer)
+    crontime, query_to_run, subject = await aschedule_query(q, chat_history, user, tracer=tracer)
     job = await aschedule_automation(query_to_run, subject, crontime, timezone, q, user, calling_url, conversation_id)
     return job, crontime, query_to_run, subject
 

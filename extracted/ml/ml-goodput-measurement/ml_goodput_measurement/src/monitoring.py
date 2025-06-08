@@ -20,15 +20,19 @@ BadputType = goodput_utils.BadputType
 GCPOptions = goodput_utils.GCPOptions
 GCPMetrics = gcp_metrics.GCPMetrics
 GoodputCalculator = goodput.GoodputCalculator
+IntervalMetricType = goodput_utils.IntervalMetricType
+IntervalWorkloadMetricDetails = goodput_utils.IntervalWorkloadMetricDetails
+MetricType = goodput_utils.MetricType
+MonitoringWindowType = goodput_utils.MonitoringWindowType
 ValueType = gcp_metrics.ValueType
+UnproductiveTimeDict = goodput.UnproductiveTimeDict
+WorkloadMetricDetails = goodput_utils.WorkloadMetricDetails
 
 ACTIVITY_EXCLUSION_LIST = goodput_utils.ACTIVITY_EXCLUSION_LIST
 _TENSORBOARD_GCS_SUBDIR = 'goodput'
 _TENSORBOARD_GOODPUT_LABEL = 'goodput'
 _TENSORBOARD_BADPUT_LABEL = 'badput'
 _TENSORBOARD_STEP_DEVIATION_LABEL = 'step_deviation'
-_GOODPUT_DETAILS_KEY = 'goodput_time_dict'
-_BADPUT_DETAILS_KEY = 'badput_time_dict'
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +109,7 @@ class GoodputMonitor:
 
     # Goodput uploader flags to signal the daemon thread if it exists when to
     # initate shutdown and wait for termination.
-    self._uploader_thread_running = False
+    self._goodput_uploader_thread_running = False
     self._goodput_upload_thread = None
     self._termination_event = threading.Event()
     self._termination_event.clear()
@@ -142,7 +146,7 @@ class GoodputMonitor:
         self._gcp_options.enable_gcp_goodput_metrics = False
         self._gcp_options.enable_gcp_step_deviation_metrics = False
         logger.warning(
-            'Project ID or location is not set. GCP Monitoring will not be'
+            'Project ID or location is not set. Google Cloud Monitoring will not be'
             ' enabled.'
         )
       # Goodput interval uploader flags.
@@ -150,14 +154,16 @@ class GoodputMonitor:
       self._interval_goodput_upload_thread = None
       self._interval_termination_event = threading.Event()
       self._interval_termination_event.clear()
+      self._rolling_windows = []
 
   def __del__(self):
-    if self._uploader_thread_running:
+    try:
       self.stop_goodput_uploader()
-    if self._step_deviation_uploader_thread_running:
       self.stop_step_deviation_uploader()
-    if self._interval_uploader_thread_running:
-      self.stop_goodput_interval_uploader()
+      self.stop_goodput_rolling_window_uploader()
+
+    except Exception:  # pylint: disable=broad-exception-caught
+      pass
 
   def _log_tensorboard_scalars(
       self,
@@ -184,16 +190,23 @@ class GoodputMonitor:
 
     self._writer.flush()
 
-  def _write_goodput_and_badput_data_to_tensorboard(
+  def _upload_goodput_metrics_to_tensorboard(
       self,
       job_goodput: float,
-      badput_breakdown: dict[BadputType, float],
+      badput_breakdown: UnproductiveTimeDict,
       last_step: int,
   ):
     """Writes goodput and badput breakdown to Tensorboard."""
-    self._write_goodput_to_tensorboard(job_goodput, last_step)
-    if self._include_badput_breakdown:
-      self._write_badput_to_tensorboard(badput_breakdown, last_step)
+    try:
+      self._write_goodput_to_tensorboard(job_goodput, last_step)
+      if self._include_badput_breakdown:
+        self._write_badput_to_tensorboard(badput_breakdown, last_step)
+    except Exception as e:  # pylint: disable=broad-exception-caught
+      logger.error(
+          'Error while writing goodput and badput data to Tensorboard. This'
+          ' will not impact the workload. Error: %s',
+          e,
+      )
 
   def _write_goodput_to_tensorboard(self, job_goodput: float, last_step: int):
     self._log_tensorboard_scalars(
@@ -204,7 +217,7 @@ class GoodputMonitor:
 
   def _write_badput_to_tensorboard(
       self,
-      job_badput_breakdown: dict[BadputType, float | dict[str, float]],
+      job_badput_breakdown: UnproductiveTimeDict,
       last_step: int,
   ):
     """Writes badput breakdown to TensorBoard."""
@@ -224,27 +237,9 @@ class GoodputMonitor:
         last_step,
     )
 
-  def _query_and_upload_goodput_to_tensorboard(self):
-    """Queries and uploads goodput data to Tensorboard."""
-    try:
-      job_goodput, job_badput_breakdown, last_step = (
-          self._goodput_calculator.get_job_goodput(
-              include_badput_breakdown=self._include_badput_breakdown
-          )
-      )
-      self._write_goodput_and_badput_data_to_tensorboard(
-          job_goodput, job_badput_breakdown, last_step
-      )
-    except Exception as e:  # pylint: disable=broad-exception-caught
-      logger.error(
-          'Error while querying and uploading goodput to Tensorboard. This'
-          ' will not impact the workload. Error: %s',
-          e,
-      )
-
   def _flatten_badput_dict(
       self,
-      badput_time_dict: dict[BadputType, float | dict[str, float]],
+      badput_time_dict: UnproductiveTimeDict,
   ) -> list[tuple[str, float]]:
     """Flattens nested badput types into (label, value) pairs for export."""
     flat_badput = []
@@ -256,17 +251,20 @@ class GoodputMonitor:
         flat_badput.append((badput_type.name, val))
     return flat_badput
 
-  def _send_goodput_metrics_to_gcp(self, goodput_details):
-    """Sends goodput and badput metrics to GCP Monitoring."""
+  def _upload_goodput_metrics_to_gcm(
+      self, goodput_details: WorkloadMetricDetails
+  ):
+    """Sends goodput and badput metrics to GCM."""
     try:
-      gcp_goodput_metrics = []
+      gcm_metrics = []
 
+      # Populate goodput time metrics.
       for goodput_type, time_value in goodput_details[
-          _GOODPUT_DETAILS_KEY
+          MetricType.GOODPUT_TIME.value
       ].items():
         if goodput_type.name in ACTIVITY_EXCLUSION_LIST:
           continue
-        gcp_goodput_metrics.append({
+        gcm_metrics.append({
             'metric_type': 'compute.googleapis.com/workload/goodput_time',
             'value': time_value,
             'value_type': ValueType.DOUBLE,
@@ -281,12 +279,14 @@ class GoodputMonitor:
                 'replica_id': self._gcp_options.replica_id,
             },
         })
+
+      # Populate badput time metrics.
       for badput_label, time_value in self._flatten_badput_dict(
-          goodput_details[_BADPUT_DETAILS_KEY]
+          goodput_details[MetricType.BADPUT_TIME.value]
       ):
         if badput_label in ACTIVITY_EXCLUSION_LIST:
           continue
-        gcp_goodput_metrics.append({
+        gcm_metrics.append({
             'metric_type': 'compute.googleapis.com/workload/badput_time',
             'value': time_value,
             'value_type': ValueType.DOUBLE,
@@ -301,11 +301,104 @@ class GoodputMonitor:
                 'replica_id': self._gcp_options.replica_id,
             },
         })
-      if self._metrics_sender and gcp_goodput_metrics:
-        self._metrics_sender.send_metrics(gcp_goodput_metrics)
+
+      # Populate disruption metrics.
+      gcm_metrics.append({
+          'metric_type': 'compute.googleapis.com/workload/disruptions',
+          'value': goodput_details[MetricType.DISRUPTION_COUNT.value],
+          'value_type': ValueType.INT,
+          'metric_labels': {
+              'accelerator_type': self._gcp_options.acc_type,
+              'window_type': MonitoringWindowType.CUMULATIVE.value,
+          },
+          'resource_type': 'compute.googleapis.com/Workload',
+          'resource_labels': {
+              'location': self._gcp_options.location,
+              'workload_id': self._job_name,
+              'replica_id': self._gcp_options.replica_id,
+          },
+      })
+
+      # Populate max productive step metrics.
+      gcm_metrics.append({
+          'metric_type': 'compute.googleapis.com/workload/max_productive_steps',
+          'value': goodput_details[MetricType.MAX_PRODUCTIVE_STEP.value],
+          'value_type': ValueType.INT,
+          'metric_labels': {
+              'accelerator_type': self._gcp_options.acc_type,
+          },
+          'resource_type': 'compute.googleapis.com/Workload',
+          'resource_labels': {
+              'location': self._gcp_options.location,
+              'workload_id': self._job_name,
+              'replica_id': self._gcp_options.replica_id,
+          },
+      })
+
+      # Populate step time deviation metrics.
+      step_time_deviations = goodput_details[
+          MetricType.STEP_TIME_DEVIATION.value
+      ]
+      if step_time_deviations:
+        step_time_deviation_from_baseline = (
+            goodput_utils.compute_step_deviation_from_baseline(
+                step_time_deviations
+            )
+        )
+        gcm_metrics.append({
+            'metric_type': (
+                'compute.googleapis.com/workload/step_time_deviation'
+            ),
+            'value': step_time_deviation_from_baseline,
+            'value_type': ValueType.DOUBLE,
+            'metric_labels': {
+                'accelerator_type': self._gcp_options.acc_type,
+            },
+            'resource_type': 'compute.googleapis.com/Workload',
+            'resource_labels': {
+                'location': self._gcp_options.location,
+                'workload_id': self._job_name,
+                'replica_id': self._gcp_options.replica_id,
+            },
+        })
+
+      # Populate total elapsed time metrics.
+      gcm_metrics.append({
+          'metric_type': 'compute.googleapis.com/workload/total_elapsed_time',
+          'value': goodput_details[MetricType.TOTAL_ELAPSED_TIME.value],
+          'value_type': ValueType.DOUBLE,
+          'metric_labels': {
+              'accelerator_type': self._gcp_options.acc_type,
+              'window_type': MonitoringWindowType.CUMULATIVE.value,
+          },
+          'resource_type': 'compute.googleapis.com/Workload',
+          'resource_labels': {
+              'location': self._gcp_options.location,
+              'workload_id': self._job_name,
+              'replica_id': self._gcp_options.replica_id,
+          },
+      })
+
+      # Populate ideal step time metrics.
+      gcm_metrics.append({
+          'metric_type': 'compute.googleapis.com/workload/performance',
+          'value': goodput_details[MetricType.IDEAL_STEP_TIME.value],
+          'value_type': ValueType.DOUBLE,
+          'resource_type': 'compute.googleapis.com/Workload',
+          'resource_labels': {
+              'location': self._gcp_options.location,
+              'workload_id': self._job_name,
+              'replica_id': self._gcp_options.replica_id,
+          },
+      })
+
+      # Send metrics to Google Cloud Monitoring.
+      if self._metrics_sender and gcm_metrics:
+        self._metrics_sender.send_metrics(gcm_metrics)
+
     except Exception as e:  # pylint: disable=broad-exception-caught
       logger.error(
-          'Error while sending goodput metrics to GCP Monitoring. This'
+          'Error while sending goodput metrics to GCM. This'
           ' will not impact the workload. Error: %s',
           e,
       )
@@ -314,15 +407,69 @@ class GoodputMonitor:
     """Queries and uploads goodput data to Tensorboard."""
     while not self._termination_event.is_set():
       time.sleep(self._upload_interval)
-      self._query_and_upload_goodput_to_tensorboard()
+      # Query metrics and update the cache.
+      try:
+        job_goodput, job_badput_breakdown, last_step = (
+            self._goodput_calculator.get_job_goodput(
+                include_badput_breakdown=self._include_badput_breakdown
+            )
+        )
+      except Exception as e:  # pylint: disable=broad-exception-caught
+        logger.error(
+            'Error while querying goodput. Skipping this cycle. Error: %s', e
+        )
+        continue
+      # Upload metrics to Tensorboard.
+      self._upload_goodput_metrics_to_tensorboard(
+          job_goodput, job_badput_breakdown, last_step
+      )
+
+      # Upload metrics to Google Cloud Monitoring.
       if self._gcp_options.enable_gcp_goodput_metrics:
-        self._send_goodput_metrics_to_gcp(
+        self._upload_goodput_metrics_to_gcm(
             self._goodput_calculator.get_job_goodput_details()
         )
 
+  def _final_goodput_query_and_upload(self):
+    """Performs final cumulative goodput query and uploads data to Tensorboard & GCM."""
+    logger.info(
+        'Final goodput query and upload for job: %s and logger: %s',
+        self._job_name,
+        self._logger_name,
+    )
+    try:
+      job_goodput, job_badput_breakdown, last_step = (
+          self._goodput_calculator.get_job_goodput(
+              include_badput_breakdown=self._include_badput_breakdown
+          )
+      )
+      self._upload_goodput_metrics_to_tensorboard(
+          job_goodput, job_badput_breakdown, last_step
+      )
+      if self._gcp_options.enable_gcp_goodput_metrics:
+        self._upload_goodput_metrics_to_gcm(
+            self._goodput_calculator.get_job_goodput_details()
+        )
+      logger.info(
+          'Final goodput query and upload for job: %s and logger: %s completed'
+          ' with total goodput: %.2f%%, last step: %d',
+          self._job_name,
+          self._logger_name,
+          job_goodput,
+          last_step,
+      )
+    except Exception as e:  # pylint: disable=broad-exception-caught
+      logger.error(
+          'Error while performing final goodput query and upload for job: %s'
+          ' and logger: %s. This will not impact the workload. Error: %s',
+          self._job_name,
+          self._logger_name,
+          e,
+      )
+
   def start_goodput_uploader(self):
     """Starts the goodput uploader thread."""
-    if self._uploader_thread_running:
+    if self._goodput_uploader_thread_running:
       raise RuntimeError('Goodput uploader thread is already running.')
 
     self._termination_event.clear()
@@ -336,23 +483,28 @@ class GoodputMonitor:
         self._logger_name,
     )
     self._goodput_upload_thread.start()
-    self._uploader_thread_running = True
+    self._goodput_uploader_thread_running = True
 
   def stop_goodput_uploader(self):
-    """Stops the goodput uploader thread."""
-    if not self._uploader_thread_running:
-      raise RuntimeError('Goodput uploader thread is not running.')
+    """Stops the cumulative goodput uploader thread and performs a final cumulative goodput upload."""
+    if not self._goodput_uploader_thread_running:
+      raise RuntimeError('Cumulative goodput uploader thread is not running.')
 
     self._termination_event.set()
     if self._goodput_upload_thread is not None:
-      logger.info('Waiting for goodput query and uploader thread to complete.')
+      logger.info(
+          'Waiting for cumulative goodput query and uploader thread to'
+          ' complete.'
+      )
       self._goodput_upload_thread.join()
       self._goodput_upload_thread = None
     logger.info(
-        'Goodput query and uploader thread stopped. No more goodput data will'
-        ' be uploaded to Tensorboard or GCP Monitoring.'
+        'Cumulative goodput query and uploader thread stopped. No more goodput'
+        ' data will be uploaded to Tensorboard or GCM.'
     )
-    self._uploader_thread_running = False
+    self._goodput_uploader_thread_running = False
+    # Final goodput query and upload.
+    self._final_goodput_query_and_upload()
 
   def _write_step_deviation_to_tensorboard(
       self, step_deviation: dict[int, float]
@@ -367,7 +519,7 @@ class GoodputMonitor:
       self._writer.flush()
 
   def _send_step_deviation_metric_to_gcp(self, step_deviations):
-    """Sends step deviation metric to GCP Monitoring."""
+    """Sends step deviation metric to GCM."""
     try:
       if not step_deviations:
         logger.warning(
@@ -397,13 +549,13 @@ class GoodputMonitor:
         self._metrics_sender.send_metrics(perf_metric)
     except Exception as e:  # pylint: disable=broad-exception-caught
       logger.error(
-          'Error while sending step deviation to GCP Monitoring.'
+          'Error while sending step deviation to GCM.'
           ' This will not impact the workload. Error: %s',
           e,
       )
 
   def _query_and_upload_step_deviation_to_tensorboard_and_gcp(self):
-    """Queries and uploads step deviation data to Tensorboard and GCP Monitoring."""
+    """Queries and uploads step deviation data to Tensorboard and GCM."""
     try:
       step_deviation = self._goodput_calculator.get_step_deviation(
           self._configured_ideal_step_time
@@ -423,6 +575,36 @@ class GoodputMonitor:
     while not self._step_deviation_termination_event.is_set():
       time.sleep(self._step_deviation_interval_seconds)
       self._query_and_upload_step_deviation_to_tensorboard_and_gcp()
+
+  def _final_step_deviation_query_and_upload(self):
+    """Performs final step deviation query and uploads data to Tensorboard & GCM."""
+    logger.info(
+        'Final step deviation query and upload for job: %s and logger: %s',
+        self._job_name,
+        self._logger_name,
+    )
+    try:
+      step_deviation = self._goodput_calculator.get_step_deviation(
+          self._configured_ideal_step_time
+      )
+      self._write_step_deviation_to_tensorboard(step_deviation)
+      if self._gcp_options.enable_gcp_step_deviation_metrics:
+        self._send_step_deviation_metric_to_gcp(step_deviation)
+      logger.info(
+          'Final step deviation query and upload for job: %s and logger: %s'
+          ' completed',
+          self._job_name,
+          self._logger_name,
+      )
+    except Exception as e:  # pylint: disable=broad-exception-caught
+      logger.error(
+          'Error while performing final step deviation query and upload for'
+          ' job: %s and logger: %s. This will not impact the workload. Error:'
+          ' %s',
+          self._job_name,
+          self._logger_name,
+          e,
+      )
 
   def start_step_deviation_uploader(self):
     """Starts the step deviation uploader thread."""
@@ -462,61 +644,186 @@ class GoodputMonitor:
       self._step_deviation_upload_thread.join()
     logger.info(
         'Step deviation query and uploader thread stopped. No more step'
-        ' deviation data will be uploaded to Tensorboard or GCP Monitoring.'
+        ' deviation data will be uploaded to Tensorboard or GCM.'
     )
     self._step_deviation_uploader_thread_running = False
+    # Final step deviation query and upload.
+    self._final_step_deviation_query_and_upload()
 
-  def _query_and_upload_interval_goodput(self, window_size_seconds: float):
-    """Queries and uploads goodput interval data to Tensorboard."""
-    while not self._interval_termination_event.is_set():
-      time.sleep(self._upload_interval)
-      if self._gcp_options.enable_gcp_goodput_metrics:
-        window_end = datetime.datetime.now(datetime.timezone.utc)
-        window_start = window_end - datetime.timedelta(
-            seconds=window_size_seconds
-        )
-        # Add timezone since deltatime removes it.
+  def _final_rolling_window_goodput_query_and_upload(self):
+    """Performs final rolling window goodput query and uploads data to GCM for all rolling windows."""
+    logger.info(
+        'Final rolling window goodput query and upload for job: %s and'
+        ' logger: %s',
+        self._job_name,
+        self._logger_name,
+    )
+    try:
+      now = datetime.datetime.now(datetime.timezone.utc)
+
+      # Perform the final upload for each rolling window.
+      for window_size in self._rolling_windows:
+        window_end = now
+        window_start = now - datetime.timedelta(seconds=window_size)
         window_start = window_start.replace(tzinfo=datetime.timezone.utc)
-        self._send_goodput_metrics_to_gcp(
-            self._goodput_calculator.get_job_goodput_interval_details(
+
+        # Get rolling window metrics for the current window size.
+        rolling_window_metric_details = (
+            self._goodput_calculator.get_interval_metric_details(
                 window_start, window_end
             )
         )
 
-  def start_goodput_interval_uploader(self, window_size_seconds: float):
-    """Starts the goodput uploader thread for a user-specified interval window."""
+        # Upload the metrics to GCM.
+        self._upload_interval_goodput_metrics_to_gcm(
+            rolling_window_metric_details
+        )
+
+      logger.info(
+          'Final rolling window goodput query and upload for job: %s and'
+          ' logger: %s completed.',
+          self._job_name,
+          self._logger_name,
+      )
+    except Exception as e:  # pylint: disable=broad-exception-caught
+      logger.error(
+          'Error while performing final rolling window goodput query and upload'
+          ' for job: %s and logger: %s. This will not impact the workload.'
+          ' Error: %s',
+          self._job_name,
+          self._logger_name,
+          e,
+      )
+
+  def _upload_interval_goodput_metrics_to_gcm(
+      self,
+      interval_metric_details: IntervalWorkloadMetricDetails,
+  ):
+    """Uploads interval goodput metrics to GCM."""
+    try:
+      gcm_metrics = []
+      window_size = interval_metric_details[
+          IntervalMetricType.INTERVAL_SIZE.value
+      ]
+
+      # Populate Interval Goodput.
+      for goodput_type, goodput_value in interval_metric_details[
+          IntervalMetricType.INTERVAL_GOODPUT.value
+      ].items():
+        if goodput_type.name in ACTIVITY_EXCLUSION_LIST:
+          continue
+        gcm_metrics.append({
+            'metric_type': 'compute.googleapis.com/workload/interval_goodput',
+            'value': goodput_value,
+            'value_type': ValueType.DOUBLE,
+            'metric_labels': {
+                'goodput_source': goodput_type.name,
+                'accelerator_type': self._gcp_options.acc_type,
+                'rolling_window_size': str(window_size),
+            },
+            'resource_type': 'compute.googleapis.com/Workload',
+            'resource_labels': {
+                'location': self._gcp_options.location,
+                'workload_id': self._job_name,
+                'replica_id': self._gcp_options.replica_id,
+            },
+        })
+
+        # Populate Interval Badput.
+        for badput_type, badput_value in self._flatten_badput_dict(
+            interval_metric_details[IntervalMetricType.INTERVAL_BADPUT.value]
+        ):
+          if badput_type in ACTIVITY_EXCLUSION_LIST:
+            continue
+          gcm_metrics.append({
+              'metric_type': 'compute.googleapis.com/workload/interval_badput',
+              'value': badput_value,
+              'value_type': ValueType.DOUBLE,
+              'metric_labels': {
+                  'badput_source': badput_type,
+                  'accelerator_type': self._gcp_options.acc_type,
+                  'rolling_window_size': str(window_size),
+              },
+              'resource_type': 'compute.googleapis.com/Workload',
+              'resource_labels': {
+                  'location': self._gcp_options.location,
+                  'workload_id': self._job_name,
+                  'replica_id': self._gcp_options.replica_id,
+              },
+          })
+
+      if self._metrics_sender:
+        self._metrics_sender.send_metrics(gcm_metrics)
+
+    except Exception as e:  # pylint: disable=broad-exception-caught
+      logger.error(
+          'Error while uploading interval goodput metrics to GCM. This will'
+          ' not impact the workload. Error: %s',
+          e,
+      )
+
+  def _query_and_upload_rolling_window_goodput(self):
+    """Queries and uploads rolling window goodput to GCM."""
+    while not self._interval_termination_event.is_set():
+      time.sleep(self._upload_interval)
+      if not self._gcp_options.enable_gcp_goodput_metrics:
+        continue
+
+      now = datetime.datetime.now(datetime.timezone.utc)
+      for window_size in self._rolling_windows:
+        window_end = now
+        window_start = now - datetime.timedelta(seconds=window_size)
+        window_start = window_start.replace(tzinfo=datetime.timezone.utc)
+        interval_metric_details = (
+            self._goodput_calculator.get_interval_metric_details(
+                window_start, window_end
+            )
+        )
+        self._upload_interval_goodput_metrics_to_gcm(interval_metric_details)
+
+  def start_rolling_window_goodput_uploader(
+      self, rolling_windows_seconds: list[int]
+  ):
+    """Starts the goodput uploader thread for user-specified interval windows."""
     if self._interval_uploader_thread_running:
       raise RuntimeError('Goodput interval uploader thread is already running.')
 
     self._interval_termination_event.clear()
+    self._rolling_windows = rolling_windows_seconds
     self._interval_goodput_upload_thread = threading.Thread(
-        target=self._query_and_upload_interval_goodput,
-        args=(window_size_seconds,),
+        target=self._query_and_upload_rolling_window_goodput,
         daemon=True,
     )
     logger.info(
-        'Starting goodput intervalquery and uploader thread in the background'
-        ' for job: %s and logger: %s',
+        'Starting rolling window goodput query and uploader thread in the'
+        ' background for job: %s and logger: %s',
         self._job_name,
         self._logger_name,
     )
     self._interval_goodput_upload_thread.start()
     self._interval_uploader_thread_running = True
 
-  def stop_goodput_interval_uploader(self):
-    """Stops the goodput uploader thread."""
+  def stop_goodput_rolling_window_uploader(self):
+    """Stops the rolling window goodput uploader thread and performs a final rolling window goodput upload."""
     if not self._interval_uploader_thread_running:
-      raise RuntimeError('Goodput intervaluploader thread is not running.')
+      raise RuntimeError(
+          'Rolling window goodput uploader thread is not running.'
+      )
 
     self._interval_termination_event.set()
     if self._interval_goodput_upload_thread is not None:
       logger.info(
-          'Waiting for goodput interval query and uploader thread to complete.'
+          'Waiting for rolling window goodput query and uploader thread to'
+          ' complete.'
       )
       self._interval_goodput_upload_thread.join()
       self._interval_goodput_upload_thread = None
     logger.info(
-        'Goodput interval query and uploader thread stopped. No more goodput'
-        ' intervaldata will be uploaded to GCP Monitoring.'
+        'Rolling window goodput query and uploader thread stopped. No more'
+        ' rolling window goodput data will be uploaded to GCM.'
     )
-    self._uploader_thread_running = False
+
+    self._interval_uploader_thread_running = False
+
+    # Perform the final rolling window goodput query and upload
+    self._final_rolling_window_goodput_query_and_upload()

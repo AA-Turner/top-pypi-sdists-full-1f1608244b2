@@ -54,22 +54,23 @@ class Template(ProcessorMixin):
 
     def __init__(
         self,
-        processor: Processor,
+        processor: Optional[Processor],
         template_meta: 'TemplateMeta',
         default_system: Optional[str] = None,
         max_length: Optional[int] = None,
         *,
-        use_chat_template: bool = True,
         truncation_strategy: Literal['raise', 'left', 'right'] = 'raise',
         max_pixels: Optional[int] = None,
         agent_template: Optional[str] = None,
         norm_bbox: Literal['norm1000', 'none', None] = None,
-        response_prefix: Optional[str] = None,
+        use_chat_template: bool = True,
         # only for train
+        padding_free: bool = False,
         padding_side: Literal['left', 'right'] = 'right',
         loss_scale: str = 'default',
         sequence_parallel_size: int = 1,
         # infer/deploy
+        response_prefix: Optional[str] = None,
         template_backend: Literal['swift', 'jinja'] = 'swift',
     ) -> None:
         """
@@ -83,14 +84,8 @@ class Template(ProcessorMixin):
         """
         from .template_meta import TemplateMeta
         from swift.plugin import agent_templates, loss_scale_map
-
-        self.processor = processor
-        self.model_info = processor.model_info
-        self.config = self.model_info.config
-        self.model_meta = processor.model_meta
-        if max_length is None:
-            max_length = self.model_info.max_model_len
-        tokenizer = self.tokenizer
+        self._processor_inited = False
+        self.max_length = max_length
 
         if not use_chat_template:
             template_meta = template_meta.to_generate_template_meta()
@@ -102,13 +97,6 @@ class Template(ProcessorMixin):
             template_meta.default_system = default_system
         if response_prefix is not None:
             template_meta.response_prefix = response_prefix
-        logger.info(f'default_system: {repr(template_meta.default_system)}')
-        logger.info(f'response_prefix: {repr(template_meta.response_prefix)}')
-
-        for i, token in enumerate(self.placeholder_tokens):
-            if isinstance(token, str):
-                self.placeholder_tokens[i] = tokenizer.convert_tokens_to_ids(token)
-        template_meta.init(tokenizer)
 
         self.template_meta: TemplateMeta = template_meta
         self.use_chat_template = use_chat_template
@@ -119,23 +107,48 @@ class Template(ProcessorMixin):
         self.max_pixels = max_pixels
         self.padding_side = padding_side
         self.sequence_parallel_size = sequence_parallel_size
+        self.padding_free = padding_free
         agent_template = agent_template or template_meta.agent_template
-        logger.info(f'agent_template: {agent_template}')
+        self._agent_template = agent_template
         self.agent_template = agent_templates[agent_template]()
         self.norm_bbox = norm_bbox or self.norm_bbox
-        logger.info(f'max_length: {self.max_length}')
-        logger.info(f'norm_bbox: {self.norm_bbox}')
         if self.is_encoder_decoder:
             self.skip_prompt = False
         self.mode: Literal['pt', 'vllm', 'lmdeploy',  # infer
                            'train', 'rlhf', 'kto',  # train
                            'seq_cls', 'embedding', 'prm'] = 'pt'
-        self._packing = False
+        self._packing = self.padding_free
         self.use_megatron = False
-        if self.model_info.task_type != 'causal_lm':
-            self.mode = self.model_info.task_type
         self._handles = []
         self._deepspeed_initialize = None
+
+        if processor is not None:
+            self.init_processor(processor)
+
+    def init_processor(self, processor: Processor) -> None:
+        if processor is None:
+            return
+        self._processor_inited = True
+        self.processor = processor
+        self.model_info = processor.model_info
+        self.config = self.model_info.config
+        if self.model_info.task_type != 'causal_lm':
+            self.mode = self.model_info.task_type
+
+        self.model_meta = processor.model_meta
+        if self.max_length is None:
+            self.max_length = self.model_info.max_model_len
+        logger.info(f'default_system: {repr(self.template_meta.default_system)}')
+        logger.info(f'max_length: {self.max_length}')
+        logger.info(f'response_prefix: {repr(self.template_meta.response_prefix)}')
+        logger.info(f'agent_template: {self._agent_template}')
+        logger.info(f'norm_bbox: {self.norm_bbox}')
+        tokenizer = self.tokenizer
+
+        for i, token in enumerate(self.placeholder_tokens):
+            if isinstance(token, str):
+                self.placeholder_tokens[i] = tokenizer.convert_tokens_to_ids(token)
+        self.template_meta.init(tokenizer)
 
     @staticmethod
     def _load_image(image, load_images: bool):
@@ -394,6 +407,8 @@ class Template(ProcessorMixin):
         Returns:
             return {'input_ids': List[int], 'labels': Optional[List[int]], ...}
         """
+        assert self._processor_inited, ('Please initialize the processor before calling the template.encode method: '
+                                        'template.init_processor(processor).')
         if isinstance(inputs, (InferRequest, TemplateInputs)):
             inputs = asdict(inputs)
 
@@ -417,6 +432,8 @@ class Template(ProcessorMixin):
             encoded = self._kto_encode(inputs)
         elif self.mode == 'embedding':
             encoded = self._embedding_encode(inputs)
+        if inputs.channel is not None:
+            encoded['channel'] = inputs.channel
         for key in list(encoded.keys()):
             if encoded[key] is None:
                 encoded.pop(key)
@@ -896,8 +913,7 @@ class Template(ProcessorMixin):
             system = self.agent_template._format_tools(tools, system or '', inputs.messages[0])
         return system
 
-    @staticmethod
-    def _swift_prepare_function_call(agent_template, messages):
+    def _swift_prepare_messages(self, messages):
         if len(messages) < 2:
             return
         i = 1
@@ -909,12 +925,12 @@ class Template(ProcessorMixin):
                 i_start = i
                 while i + 1 < len(messages) and messages[i + 1]['role'] == 'tool':
                     i += 1
-                pre_message['content'], tool_content = agent_template._format_tool_responses(
+                pre_message['content'], tool_content = self.agent_template._format_tool_responses(
                     pre_content, messages[i_start:i + 1])
                 messages[i_start:i + 1] = [{'role': 'tool', 'content': tool_content}]
                 i = i_start + 1
-            elif pre_role == 'assistant' and role == 'assistant':
-                # Consecutive messages from the assistant role need to be merged to prevent errors.
+            elif pre_role == 'assistant' and role == 'assistant' or pre_role == 'user' and role == 'user':
+                # Consecutive messages from the assistant/user role need to be merged to prevent errors.
                 pre_message['content'] = pre_content + content
                 messages.pop(i)
             else:
@@ -923,7 +939,7 @@ class Template(ProcessorMixin):
     def _swift_encode(self, inputs: StdTemplateInputs):
         template_meta = self.template_meta
         system = self._get_system(inputs)
-        self._swift_prepare_function_call(self.agent_template, inputs.messages)
+        self._swift_prepare_messages(inputs.messages)
 
         self._get_std_messages(inputs.messages)
         n_round = len(inputs.messages) // 2
@@ -1036,12 +1052,12 @@ class Template(ProcessorMixin):
                     loss_scale = loss_scale[-self.max_length:]
             elif self.truncation_strategy == 'raise':
                 # input_ids might be a tensor.
+                lengths = [0]
                 if input_ids is not None:
-                    length = len(input_ids)
-                elif labels is not None:
-                    length = len(labels)
-                else:
-                    length = 0
+                    lengths.append(len(input_ids))
+                if labels is not None:
+                    lengths.append(len(labels))
+                length = max(lengths)
                 if length > self.max_length:
                     raise MaxLengthError(f'Current length of row({length}) is larger'
                                          f' than the max_length({self.max_length}).')
@@ -1158,7 +1174,8 @@ class Template(ProcessorMixin):
         old_kwargs = to_device(kwargs, model.device)
         kwargs = to_device(self._post_encode(model, old_kwargs), model.device)
         for k, v in old_kwargs.items():
-            if k in {'input_ids', 'attention_mask', 'labels', 'position_ids'} and k not in kwargs:
+            if k in {'input_ids', 'attention_mask', 'labels', 'position_ids', 'output_hidden_states', 'logits_to_keep'
+                     } and k not in kwargs:
                 kwargs[k] = v
         if 'inputs_embeds' in kwargs:
             kwargs.pop('input_ids', None)
@@ -1330,6 +1347,10 @@ class Template(ProcessorMixin):
             res['labels'] = labels
         return res
 
+    def _data_flatten(self, batch: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        new_batch = [(row, len(row['input_ids'])) for row in batch]
+        return [self.packing_row(new_batch)]
+
     def _data_collator(self, batch: List[Dict[str, Any]], *, padding_to: Optional[int] = None) -> Dict[str, Any]:
         """
         Args:
@@ -1340,7 +1361,11 @@ class Template(ProcessorMixin):
         assert self.tokenizer.pad_token_id is not None
         padding_side = self.padding_side if self.is_training else 'left'
         padding_right = padding_side == 'right'
-        packing_mode = self.use_megatron or self._packing and 'position_ids' in batch[0]
+        packing_mode = self.use_megatron or self._packing
+        if self.padding_free:
+            batch[:] = self._data_flatten(batch)
+        if self._packing:
+            assert 'position_ids' in batch[0], f'batch[0]: {batch[0]}'
         res = {}
         if packing_mode:
             # only support llm
@@ -1351,10 +1376,13 @@ class Template(ProcessorMixin):
         else:
             inputs_embeds = [b['inputs_embeds'] for b in batch if b.get('inputs_embeds') is not None]
             input_ids = [b['input_ids'] for b in batch if b.get('input_ids') is not None]
+            channel = [b['channel'] for b in batch if b.get('channel') is not None]
             if inputs_embeds:
                 res['inputs_embeds'] = inputs_embeds
             if input_ids:
                 res['input_ids'] = input_ids
+            if channel:
+                res['channel'] = channel
             for key in ['labels', 'loss_scale', 'position_ids', 'token_type_ids']:
                 val = [b[key] for b in batch if b.get(key) is not None]
                 if val:
@@ -1453,12 +1481,6 @@ class Template(ProcessorMixin):
             else:
                 position_ids = res['position_ids']
             assert padding_side == 'right' or bs == 1, 'Sequence parallel only support padding_side=right'
-            from swift.trainers.sequence_parallel import sequence_parallel
-            if sequence_parallel.world_size() > 1:
-                from swift.trainers.sequence_parallel import sequence_parallel
-                input_ids, _, labels, position_ids, attention_mask, loss_scale = \
-                    sequence_parallel.pad_and_split_inputs(
-                        tokenizer, input_ids, None, labels, position_ids, attention_mask, loss_scale)
             res['position_ids'] = position_ids
         _local_var = locals()
         for key in ['input_ids', 'attention_mask', 'labels', 'loss_scale']:

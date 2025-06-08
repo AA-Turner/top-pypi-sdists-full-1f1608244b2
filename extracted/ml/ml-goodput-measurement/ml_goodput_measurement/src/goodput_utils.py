@@ -4,8 +4,7 @@ import dataclasses
 import datetime
 import enum
 import logging
-import math
-from typing import Any, Optional
+from typing import Any, Optional, TypedDict
 
 import numpy as np
 import requests
@@ -47,6 +46,33 @@ class GCPOptions:
   enable_gcp_step_deviation_metrics: bool = True
 
 
+@dataclasses.dataclass
+class EntryTime:
+  field_name: str
+  timestamp: float
+
+
+# Cumulative metric types for upload and monitoring.
+class MetricType(enum.Enum):
+  """The type of CUMULATIVE Metric."""
+  GOODPUT_TIME = 'goodput_time'
+  BADPUT_TIME = 'badput_time'
+  MAX_PRODUCTIVE_STEP = 'max_productive_step'
+  TOTAL_ELAPSED_TIME = 'total_elapsed_time'
+  DISRUPTION_COUNT = 'disruption_count'
+  STEP_TIME_DEVIATION = 'step_time_deviation'
+  IDEAL_STEP_TIME = 'ideal_step_time'
+
+
+# Interval metric types for upload and monitoring.
+class IntervalMetricType(enum.Enum):
+  """The type of INTERVAL Metric."""
+
+  INTERVAL_GOODPUT = 'interval_goodput'
+  INTERVAL_BADPUT = 'interval_badput'
+  INTERVAL_SIZE = 'interval_size'
+
+
 # Productive time is not broken down by activities yet. As such, we only have
 # one type of Goodput which contributes to the total productive time.
 class GoodputType(enum.Enum):
@@ -70,11 +96,39 @@ class BadputType(enum.Enum):
   OTHER = 10
 
 
+class WorkloadMetricDetails(TypedDict):
+  goodput_time: dict[GoodputType, float]
+  badput_time: dict[BadputType, float | dict[str, float]]
+  max_productive_step: int
+  total_elapsed_time: float
+  disruption_count: int
+  step_time_deviation: dict[int, float]
+  ideal_step_time: float
+
+
+class IntervalWorkloadMetricDetails(TypedDict):
+  interval_goodput: dict[GoodputType, float]
+  interval_badput: dict[BadputType, float | dict[str, float]]
+  interval_size: int  # Unit: seconds.
+
+
 ACTIVITY_EXCLUSION_LIST = [
     # DATA_LOADING_ASYNC is not a non-productive activity as it is not
     # blocking. Hence, we exclude it from calculating Goodput.
     'DATA_LOADING_ASYNC',
 ]
+
+
+class MonitoringWindowType(enum.Enum):
+  """The type of Monitoring Window."""
+
+  CUMULATIVE = 'cumulative'
+  INTERVAL = 'interval'
+
+
+_DEFAULT_RECENT_WINDOW_SIZE = 100
+_DEFAULT_BASELINE_WINDOW_SIZE = 1000
+_DEFAULT_SPIKE_PERCENTILE = 90
 
 
 class GoodputInfo:
@@ -83,15 +137,17 @@ class GoodputInfo:
   def __init__(
       self,
       total_productive_time: float = 0.0,
-      total_elapsed_time_since_start: float = 0.0,
+      total_elapsed_time: float = 0.0,
       total_unproductive_time: Optional[dict[BadputType, float]] = None,
+      max_productive_step: int = 0,
       last_recorded_step: int = 0,
       last_updated_timestamp: datetime.datetime = datetime.datetime.now(
           datetime.timezone.utc
       ),
+      number_of_disruptions: int = 0,
   ):
     self.total_productive_time = total_productive_time
-    self.total_elapsed_time_since_start = total_elapsed_time_since_start
+    self.total_elapsed_time = total_elapsed_time
 
     # We cannot use {} as the default argument directly because it's a mutable
     # default argument.  Mutable default arguments are shared between all
@@ -103,8 +159,10 @@ class GoodputInfo:
     self.total_unproductive_time = (
         total_unproductive_time or {}
     )
+    self.max_productive_step = max_productive_step
     self.last_recorded_step = last_recorded_step
     self.last_updated_timestamp = last_updated_timestamp
+    self.number_of_disruptions = number_of_disruptions
 
 
 class StepInfo:
@@ -117,6 +175,75 @@ class StepInfo:
   ):
     self.ideal_step_time = ideal_step_time
     self.step_deviations = step_deviations
+
+
+def compute_percentile(values: list[float], percentile: float) -> float:
+  """Computes the specified percentile value from a list of floats."""
+  if not values:
+    return 0.0
+
+  sorted_values = sorted(values)
+  index = (len(sorted_values) - 1) * (percentile / 100.0)
+  lower_index = int(index)
+  upper_index = min(lower_index + 1, len(sorted_values) - 1)
+
+  return sorted_values[lower_index] + (
+      sorted_values[upper_index] - sorted_values[lower_index]
+  ) * (index - lower_index)
+
+
+def compute_step_deviation_from_baseline(
+    step_time_deviation: dict[int, float],
+    mode: MonitoringWindowType = MonitoringWindowType.CUMULATIVE,
+    recent_window_size: int = _DEFAULT_RECENT_WINDOW_SIZE,
+    baseline_window_size: int = _DEFAULT_BASELINE_WINDOW_SIZE,
+    spike_percentile: int = _DEFAULT_SPIKE_PERCENTILE,
+) -> float:
+  """Computes a spike-sensitive step time deviation metric.
+
+  Args:
+    step_time_deviation: Ordered dict (step count -> step deviation in seconds).
+    mode: 'cumulative' to compare against a historical baseline; 'interval' to
+      reflect short-term spikes only.
+    recent_window_size: Number of recent steps to consider for interval mode.
+    baseline_window_size: Number of older steps for cumulative baseline.
+    spike_percentile: Percentile to use for recent deviation sensitivity.
+
+  Returns:
+    The step deviation from the baseline.
+  """
+  if not step_time_deviation:
+    return 0.0
+
+  deviations = [abs(deviation) for deviation in step_time_deviation.values()]
+  total_steps = len(deviations)
+
+  if total_steps < _DEFAULT_RECENT_WINDOW_SIZE:
+    return np.mean(deviations)
+
+  if mode == MonitoringWindowType.INTERVAL:
+    recent_deviations = deviations[-recent_window_size:]
+    return compute_percentile(recent_deviations, spike_percentile)
+
+  elif mode == MonitoringWindowType.CUMULATIVE:
+    if total_steps < (recent_window_size + baseline_window_size):
+      recent_deviations = deviations[-recent_window_size:]
+      return compute_percentile(recent_deviations, spike_percentile)
+
+    recent_deviations = deviations[-recent_window_size:]
+    baseline_deviations = deviations[
+        -(recent_window_size + baseline_window_size) : -recent_window_size
+    ]
+
+    if not baseline_deviations:
+      return compute_percentile(recent_deviations, spike_percentile)
+
+    baseline_median = np.median(baseline_deviations)
+    spike_value = compute_percentile(recent_deviations, spike_percentile)
+    return spike_value - baseline_median
+
+  else:
+    raise ValueError('Unsupported MonitoringWindowType mode: {mode}')
 
 
 def compute_ideal_step_time(step_times: list[float]) -> Optional[float]:
@@ -162,6 +289,16 @@ def get_extra_time_from_anomalous_steps(step_times: list[Any]) -> float:
   return sum(anomalous_step_times) - (
       len(anomalous_step_times) * normal_step_mean
   )
+
+
+def get_entry_time_from_log_entry(
+    entry: dict[str, Any],
+) -> Optional[EntryTime]:
+  """Extracts the TimeEntry from a log entry."""
+  for entry_label, entry_value in entry.items():
+    if _TIME_ENTRY in entry_label and isinstance(entry_value, (int, float)):
+      return EntryTime(field_name=entry_label, timestamp=float(entry_value))
+  return None
 
 
 def get_timestamp_from_log_entry(

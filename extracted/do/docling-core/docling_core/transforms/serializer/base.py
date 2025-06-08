@@ -203,16 +203,6 @@ class BaseDocSerializer(ABC):
         ...
 
     @abstractmethod
-    def serialize_subscript(self, text: str, **kwargs: Any) -> str:
-        """Hook for subscript formatting serialization."""
-        ...
-
-    @abstractmethod
-    def serialize_superscript(self, text: str, **kwargs: Any) -> str:
-        """Hook for superscript formatting serialization."""
-        ...
-
-    @abstractmethod
     def serialize_hyperlink(
         self,
         text: str,
@@ -250,15 +240,6 @@ class BaseDocSerializer(ABC):
         ...
 
     @abstractmethod
-    def serialize_annotations(
-        self,
-        item: DocItem,
-        **kwargs: Any,
-    ) -> SerializationResult:
-        """Serialize the item's annotations."""
-        ...
-
-    @abstractmethod
     def get_excluded_refs(self, **kwargs: Any) -> set[str]:
         """Get references to excluded items."""
         ...
@@ -275,19 +256,4 @@ class BaseSerializerProvider(ABC):
     @abstractmethod
     def get_serializer(self, doc: DoclingDocument) -> BaseDocSerializer:
         """Get a the associated serializer."""
-        ...
-
-
-class BaseAnnotationSerializer(ABC):
-    """Base class for annotation serializers."""
-
-    @abstractmethod
-    def serialize(
-        self,
-        *,
-        item: DocItem,
-        doc: DoclingDocument,
-        **kwargs: Any,
-    ) -> SerializationResult:
-        """Serializes the passed annotation."""
         ...

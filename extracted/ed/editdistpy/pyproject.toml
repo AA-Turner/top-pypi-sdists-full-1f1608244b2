@@ -1,21 +1,26 @@
 [build-system]
-requires = ["setuptools>=61.0.0", "Cython>=3.0.8"]
+requires = ["setuptools>=77.0.3", "Cython>=3.0.8"]
 build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "pytest==8.3.2",
+]
 
 [project]
 name = "editdistpy"
-version = "0.1.5"
-requires-python = ">=3.8"
+version = "0.1.6"
+requires-python = ">=3.9"
 authors = [
     {name = "mmb L"},
 ]
 description = "Fast Levenshtein and Damerau optimal string alignment algorithms."
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = ["edit distance", "levenshtein", "damerau"]
 classifiers = [
     "Development Status :: 4 - Beta",
-    "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Natural Language :: English",
@@ -27,11 +32,11 @@ classifiers = [
     "Programming Language :: Cython",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
 

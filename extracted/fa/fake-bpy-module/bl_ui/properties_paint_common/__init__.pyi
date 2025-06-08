@@ -10,7 +10,6 @@ class BrushAssetShelf:
     bl_options: typing.Any
     brush_type_prop: typing.Any
     mode_prop: typing.Any
-    tool_prop: typing.Any
 
     @classmethod
     def asset_poll(cls, asset) -> None:

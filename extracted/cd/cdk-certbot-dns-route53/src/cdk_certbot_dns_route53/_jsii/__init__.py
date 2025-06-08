@@ -34,9 +34,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "cdk-certbot-dns-route53",
-    "2.4.506",
+    "2.4.507",
     __name__[0:-6],
-    "cdk-certbot-dns-route53@2.4.506.jsii.tgz",
+    "cdk-certbot-dns-route53@2.4.507.jsii.tgz",
 )
 
 __all__ = [

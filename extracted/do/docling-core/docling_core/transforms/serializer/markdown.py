@@ -15,7 +15,6 @@ from tabulate import tabulate
 from typing_extensions import override
 
 from docling_core.transforms.serializer.base import (
-    BaseAnnotationSerializer,
     BaseDocSerializer,
     BaseFallbackSerializer,
     BaseFormSerializer,
@@ -30,7 +29,7 @@ from docling_core.transforms.serializer.base import (
 from docling_core.transforms.serializer.common import (
     CommonParams,
     DocSerializer,
-    _get_annotation_text,
+    _get_picture_annotation_text,
     _PageBreakSerResult,
     create_ser_result,
 )
@@ -38,7 +37,6 @@ from docling_core.types.doc.base import ImageRefMode
 from docling_core.types.doc.document import (
     CodeItem,
     ContentLayer,
-    DescriptionAnnotation,
     DocItem,
     DoclingDocument,
     FloatingItem,
@@ -50,9 +48,7 @@ from docling_core.types.doc.document import (
     KeyValueItem,
     NodeItem,
     OrderedList,
-    PictureClassificationData,
     PictureItem,
-    PictureMoleculeData,
     PictureTabularChartData,
     SectionHeaderItem,
     TableItem,
@@ -60,23 +56,6 @@ from docling_core.types.doc.document import (
     TitleItem,
     UnorderedList,
 )
-
-
-def _get_annotation_ser_result(
-    ann_kind: str, ann_text: str, mark_annotation: bool, doc_item: DocItem
-):
-    return create_ser_result(
-        text=(
-            (
-                f'<!--<annotation kind="{ann_kind}">-->'
-                f"{ann_text}"
-                f"<!--<annotation/>-->"
-            )
-            if mark_annotation
-            else ann_text
-        ),
-        span_source=doc_item,
-    )
 
 
 class MarkdownParams(CommonParams):
@@ -157,49 +136,6 @@ class MarkdownTextSerializer(BaseModel, BaseTextSerializer):
         return create_ser_result(text=text, span_source=res_parts)
 
 
-class MarkdownAnnotationSerializer(BaseModel, BaseAnnotationSerializer):
-    """Markdown-specific annotation serializer."""
-
-    def serialize(
-        self,
-        *,
-        item: DocItem,
-        doc: DoclingDocument,
-        **kwargs: Any,
-    ) -> SerializationResult:
-        """Serialize the item's annotations."""
-        params = MarkdownParams(**kwargs)
-
-        res_parts: list[SerializationResult] = []
-        for ann in item.get_annotations():
-            if isinstance(
-                ann,
-                (
-                    PictureClassificationData,
-                    DescriptionAnnotation,
-                    PictureMoleculeData,
-                ),
-            ):
-                if ann_text := _get_annotation_text(ann):
-                    ann_res = create_ser_result(
-                        text=(
-                            (
-                                f'<!--<annotation kind="{ann.kind}">-->'
-                                f"{ann_text}"
-                                f"<!--<annotation/>-->"
-                            )
-                            if params.mark_annotations
-                            else ann_text
-                        ),
-                        span_source=item,
-                    )
-                    res_parts.append(ann_res)
-        return create_ser_result(
-            text="\n\n".join([r.text for r in res_parts if r.text]),
-            span_source=item,
-        )
-
-
 class MarkdownTableSerializer(BaseTableSerializer):
     """Markdown-specific table item serializer."""
 
@@ -213,7 +149,6 @@ class MarkdownTableSerializer(BaseTableSerializer):
         **kwargs: Any,
     ) -> SerializationResult:
         """Serializes the passed item."""
-        params = MarkdownParams(**kwargs)
         res_parts: list[SerializationResult] = []
 
         cap_res = doc_serializer.serialize_captions(
@@ -224,16 +159,6 @@ class MarkdownTableSerializer(BaseTableSerializer):
             res_parts.append(cap_res)
 
         if item.self_ref not in doc_serializer.get_excluded_refs(**kwargs):
-
-            if params.include_annotations:
-
-                ann_res = doc_serializer.serialize_annotations(
-                    item=item,
-                    **kwargs,
-                )
-                if ann_res.text:
-                    res_parts.append(ann_res)
-
             rows = [
                 [
                     # make sure that md tables are not broken
@@ -289,12 +214,22 @@ class MarkdownPictureSerializer(BasePictureSerializer):
 
         if item.self_ref not in doc_serializer.get_excluded_refs(**kwargs):
             if params.include_annotations:
-                ann_res = doc_serializer.serialize_annotations(
-                    item=item,
-                    **kwargs,
-                )
-                if ann_res.text:
-                    res_parts.append(ann_res)
+
+                for ann in item.annotations:
+                    if ann_text := _get_picture_annotation_text(annotation=ann):
+                        ann_ser_res = create_ser_result(
+                            text=(
+                                (
+                                    f'<!--<annotation kind="{ann.kind}">-->'
+                                    f"{ann_text}"
+                                    f"<!--<annotation/>-->"
+                                )
+                                if params.mark_annotations
+                                else ann_text
+                            ),
+                            span_source=item,
+                        )
+                        res_parts.append(ann_ser_res)
 
             img_res = self._serialize_image_part(
                 item=item,
@@ -322,7 +257,7 @@ class MarkdownPictureSerializer(BasePictureSerializer):
                     res_parts.append(
                         create_ser_result(text=md_table_content, span_source=item)
                     )
-        text_res = "\n\n".join([r.text for r in res_parts if r.text])
+        text_res = "\n\n".join([r.text for r in res_parts])
 
         return create_ser_result(text=text_res, span_source=res_parts)
 
@@ -535,8 +470,6 @@ class MarkdownDocSerializer(DocSerializer):
 
     list_serializer: BaseListSerializer = MarkdownListSerializer()
     inline_serializer: BaseInlineSerializer = MarkdownInlineSerializer()
-
-    annotation_serializer: BaseAnnotationSerializer = MarkdownAnnotationSerializer()
 
     params: MarkdownParams = MarkdownParams()
 

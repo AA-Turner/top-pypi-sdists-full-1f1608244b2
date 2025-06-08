@@ -121,6 +121,7 @@ class LHVQubit:
             self.x()
         return result
 
+
 # Provided by Elara (the custom OpenAI GPT)
 def _cpauli_lhv(prob, targ, axis, anti, theta=math.pi):
     """
@@ -142,6 +143,7 @@ def _cpauli_lhv(prob, targ, axis, anti, theta=math.pi):
         targ.ry(effective_theta)
     elif axis == Pauli.PauliZ:
         targ.rz(effective_theta)
+
 
 class QrackAceBackend:
     """A back end for elided quantum error correction
@@ -166,25 +168,35 @@ class QrackAceBackend:
     def __init__(
         self,
         qubit_count=1,
-        long_range_columns=-1,
+        long_range_columns=2,
         is_transpose=False,
         isTensorNetwork=False,
         isStabilizerHybrid=False,
         isBinaryDecisionTree=False,
         toClone=None,
     ):
-        if qubit_count < 0:
-            qubit_count = 0
         if toClone:
             qubit_count = toClone.num_qubits()
             long_range_columns = toClone.long_range_columns
             is_transpose = toClone.is_transpose
+        if qubit_count < 0:
+            qubit_count = 0
+        if long_range_columns < 0:
+            long_range_columns = 0
 
         self._factor_width(qubit_count, is_transpose)
-        if long_range_columns < 0:
-            long_range_columns = 3 if (self._row_length % 3) == 1 else 2
         self.long_range_columns = long_range_columns
         self.is_transpose = is_transpose
+
+        fppow = 5
+        if "QRACK_FPPOW" in os.environ:
+            fppow = int(os.environ.get("QRACK_FPPOW"))
+        if fppow < 5:
+            self._epsilon = 2**-9
+        elif fppow > 5:
+            self._epsilon = 2**-51
+        else:
+            self._epsilon = 2**-22
 
         self._coupling_map = None
 
@@ -218,7 +230,9 @@ class QrackAceBackend:
                     tot_qubits += 1
                     sim_counts[sim_id] += 1
 
-                    self._lhv_dict[tot_qubits] = LHVQubit(toClone = toClone._lhv_dict[tot_qubits] if toClone else None)
+                    self._lhv_dict[tot_qubits] = LHVQubit(
+                        toClone=toClone._lhv_dict[tot_qubits] if toClone else None
+                    )
                     tot_qubits += 1
 
                     sim_id = (sim_id + 1) % sim_count
@@ -242,7 +256,7 @@ class QrackAceBackend:
 
             # You can still "monkey-patch" this, after the constructor.
             if "QRACK_QUNIT_SEPARABILITY_THRESHOLD" not in os.environ:
-                self.sim[i].set_sdrp(0.03)
+                self.sim[i].set_sdrp(0.02375)
 
     def clone(self):
         return QrackAceBackend(toClone=self)
@@ -262,7 +276,9 @@ class QrackAceBackend:
             col_len -= 1
         row_len = width // col_len
 
-        self._col_length, self._row_length = (row_len, col_len) if is_transpose else (col_len, row_len)
+        self._col_length, self._row_length = (
+            (row_len, col_len) if is_transpose else (col_len, row_len)
+        )
 
     def _ct_pair_prob(self, q1, q2):
         p1 = self.sim[q1[0]].prob(q1[1]) if isinstance(q1, tuple) else q1.prob()
@@ -356,7 +372,12 @@ class QrackAceBackend:
             b = hq[2]
             self.sim[b[0]].h(b[1])
 
-        p = [self.sim[hq[0][0]].prob(hq[0][1]), hq[1].prob(), self.sim[hq[2][0]].prob(hq[2][1])]
+        # RMS
+        p = [
+            self.sim[hq[0][0]].prob(hq[0][1]),
+            hq[1].prob(),
+            self.sim[hq[2][0]].prob(hq[2][1]),
+        ]
         # Balancing suggestion from Elara (the custom OpenAI GPT)
         prms = math.sqrt((p[0] ** 2 + p[1] ** 2 + p[2] ** 2) / 3)
         qrms = math.sqrt(((1 - p[0]) ** 2 + (1 - p[1]) ** 2 + (1 - p[2]) ** 2) / 3)
@@ -364,7 +385,7 @@ class QrackAceBackend:
         syndrome = [1 - p[0], 1 - p[1], 1 - p[2]] if result else [p[0], p[1], p[2]]
 
         for q in range(3):
-            if syndrome[q] > 0.5:
+            if syndrome[q] > (0.5 + self._epsilon):
                 if q == 1:
                     hq[q].x()
                 else:
@@ -565,14 +586,16 @@ class QrackAceBackend:
         hq2 = self._unpack(lq2)
 
         if lq1_lr and lq2_lr:
-            connected = (lq1_col == lq2_col) or ((self.long_range_columns + 1) >= self._row_length)
+            connected = (lq1_col == lq2_col) or (
+                (self.long_range_columns + 1) >= self._row_length
+            )
             c = (lq1_col - 1) % self._row_length
             while not connected and self._is_col_long_range[c]:
-                connected = (lq2_col == c)
+                connected = lq2_col == c
                 c = (c - 1) % self._row_length
             c = (lq1_col + 1) % self._row_length
             while not connected and self._is_col_long_range[c]:
-                connected = (lq2_col == c)
+                connected = lq2_col == c
                 c = (c + 1) % self._row_length
 
             b1 = hq1[0]
@@ -766,15 +789,29 @@ class QrackAceBackend:
             b = hq[0]
             return self.sim[b[0]].m(b[1])
 
-        result = (random.random() < self.prob(lq))
+        p = self.prob(lq)
+        result = ((p + self._epsilon) >= 1) or (random.random() < p)
+
         b = hq[0]
-        self.sim[b[0]].force_m(b[1], result)
+        p = self.sim[b[0]].prob(b[1]) if result else (1 - self.sim[b[0]].prob(b[1]))
+        if p < self._epsilon:
+            if self.sim[b[0]].m(b[1]) != result:
+                self.sim[b[0]].x(b[1])
+        else:
+            self.sim[b[0]].force_m(b[1], result)
+
         b = hq[1]
         b.reset()
         if result:
             b.x()
+
         b = hq[2]
-        self.sim[b[0]].force_m(b[1], result)
+        p = self.sim[b[0]].prob(b[1]) if result else (1 - self.sim[b[0]].prob(b[1]))
+        if p < self._epsilon:
+            if self.sim[b[0]].m(b[1]) != result:
+                self.sim[b[0]].x(b[1])
+        else:
+            self.sim[b[0]].force_m(b[1], result)
 
         return result
 

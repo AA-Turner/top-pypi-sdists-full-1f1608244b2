@@ -613,9 +613,9 @@ def dissolve_mode(
     /,
     *,
     use_verts: bool | None = False,
+    angle_threshold: float | None = 0.349066,
     use_face_split: bool | None = False,
     use_boundary_tear: bool | None = False,
-    angle_threshold: float | None = 0.349066,
 ) -> None:
     """Dissolve geometry based on the selection mode
 
@@ -623,12 +623,12 @@ def dissolve_mode(
     :type undo: bool | None
     :param use_verts: Dissolve Vertices, Dissolve remaining vertices which connect to only two edges
     :type use_verts: bool | None
+    :param angle_threshold: Angle Threshold, Remaining vertices which separate edge pairs are preserved if their edge angle exceeds this threshold.
+    :type angle_threshold: float | None
     :param use_face_split: Face Split, Split off face corners to maintain surrounding geometry
     :type use_face_split: bool | None
     :param use_boundary_tear: Tear Boundary, Split off face corners instead of merging faces
     :type use_boundary_tear: bool | None
-    :param angle_threshold: Angle Threshold, Remaining vertices which separate edge pairs are preserved if their edge angle exceeds this threshold.
-    :type angle_threshold: float | None
     """
 
 def dissolve_verts(

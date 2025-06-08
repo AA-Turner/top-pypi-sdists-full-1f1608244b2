@@ -30,7 +30,6 @@ def mixdown(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -95,8 +94,6 @@ def mixdown(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -252,7 +249,6 @@ def open(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -301,8 +297,6 @@ def open(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -363,7 +357,6 @@ def open_mono(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -412,8 +405,6 @@ def open_mono(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files

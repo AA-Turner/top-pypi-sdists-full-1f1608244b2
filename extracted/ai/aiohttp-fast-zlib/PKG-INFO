@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: aiohttp-fast-zlib
-Version: 0.2.3
+Version: 0.3.0
 Summary: Use the fastest installed zlib compatible library with aiohttp
 License: Apache-2.0
 Author: J. Nick Koston

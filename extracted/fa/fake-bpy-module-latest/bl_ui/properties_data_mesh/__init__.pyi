@@ -520,39 +520,6 @@ class MESH_UL_attributes(bpy.types.UIList):
         :param property:
         """
 
-class MESH_UL_shape_keys(bpy.types.UIList):
-    bl_rna: typing.Any
-    id_data: typing.Any
-
-    def bl_rna_get_subclass(self) -> bpy.types.Struct:
-        """
-
-        :return: The RNA type or default when not found.
-        :rtype: bpy.types.Struct
-        """
-
-    def bl_rna_get_subclass_py(self) -> typing.Any:
-        """
-
-        :return: The class or default when not found.
-        :rtype: typing.Any
-        """
-
-    def draw_item(
-        self, _context, layout, _data, item, icon, active_data, _active_propname, index
-    ) -> None:
-        """
-
-        :param _context:
-        :param layout:
-        :param _data:
-        :param item:
-        :param icon:
-        :param active_data:
-        :param _active_propname:
-        :param index:
-        """
-
 class MESH_UL_uvmaps(bpy.types.UIList):
     bl_rna: typing.Any
     id_data: typing.Any

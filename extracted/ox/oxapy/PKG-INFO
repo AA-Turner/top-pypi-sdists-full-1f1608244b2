@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: oxapy
-Version: 0.5.5
+Version: 0.5.6
 Classifier: Programming Language :: Rust
 Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Programming Language :: Python :: Implementation :: PyPy
@@ -12,7 +12,25 @@ Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
 
 # OxAPY
 
-OxAPY is Python HTTP server library build in Rust - a fast, safe and feature-rich HTTP server implementation.
+<div align="center">
+ <h4>
+    <a href="https://github.com/j03-dev/oxapy/issues/">Report Bug</a>
+ </h4>
+
+<p>
+  <b>OxAPY</b> is Python HTTP server library build in Rust - a fast, safe and feature-rich HTTP server implementation.
+</p>
+
+<a href='https://github.com/j03-dev/oxapy/#'><img src='https://img.shields.io/badge/version-0.5.5-%23b7410e'/></a>
+
+<p>
+ <a href='https://pypi.org/project/oxapy/'> <img src='https://img.shields.io/pypi/v/oxapy?style=for-the-badge'/></a>
+</p>
+
+<p>
+   <strong> Show your support</strong>  <em> by giving a star 🌟 if this project helped you! </em>
+</p>
+</div>
 
 ## Features
 
@@ -32,11 +50,11 @@ router = Router()
 
 @router.get("/")
 def welcome(request):
-    return Response(Status.OK, "Welcome to OxAPY!")
+    return Response("Welcome to OxAPY!", content_type="text/plain")
 
 @router.get("/hello/{name}")
 def hello(request, name):
-    return Response(Status.OK, {"message": f"Hello, {name}!"})
+    return Response({"message": f"Hello, {name}!"})
 
 
 app = HttpServer(("127.0.0.1", 5555))

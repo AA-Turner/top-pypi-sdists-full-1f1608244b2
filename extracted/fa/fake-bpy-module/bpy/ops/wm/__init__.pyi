@@ -24,7 +24,6 @@ def alembic_export(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = True,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -99,8 +98,6 @@ def alembic_export(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -219,7 +216,6 @@ def alembic_import(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = True,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -273,8 +269,6 @@ def alembic_import(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -343,7 +337,6 @@ def append(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -400,8 +393,6 @@ def append(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -581,397 +572,6 @@ def clear_recent_files(
     :type undo: bool | None
     :param remove: Remove
     :type remove: typing.Literal['ALL','MISSING'] | None
-    """
-
-def collada_export(
-    execution_context: int | str | None = None,
-    undo: bool | None = None,
-    /,
-    *,
-    filepath: str = "",
-    check_existing: bool | None = True,
-    filter_blender: bool | None = False,
-    filter_backup: bool | None = False,
-    filter_image: bool | None = False,
-    filter_movie: bool | None = False,
-    filter_python: bool | None = False,
-    filter_font: bool | None = False,
-    filter_sound: bool | None = False,
-    filter_text: bool | None = False,
-    filter_archive: bool | None = False,
-    filter_btx: bool | None = False,
-    filter_collada: bool | None = True,
-    filter_alembic: bool | None = False,
-    filter_usd: bool | None = False,
-    filter_obj: bool | None = False,
-    filter_volume: bool | None = False,
-    filter_folder: bool | None = True,
-    filter_blenlib: bool | None = False,
-    filemode: int | None = 8,
-    display_type: typing.Literal[
-        "DEFAULT", "LIST_VERTICAL", "LIST_HORIZONTAL", "THUMBNAIL"
-    ]
-    | None = "DEFAULT",
-    sort_method: str | None = "",
-    filter_glob: str = "*.dae",
-    prop_bc_export_ui_section: typing.Literal[
-        "main", "geometry", "armature", "animation", "collada"
-    ]
-    | None = "main",
-    apply_modifiers: bool | None = False,
-    export_mesh_type: int | None = 0,
-    export_mesh_type_selection: typing.Literal["view", "render"] | None = "view",
-    export_global_forward_selection: typing.Literal["X", "Y", "Z", "-X", "-Y", "-Z"]
-    | None = "Y",
-    export_global_up_selection: typing.Literal["X", "Y", "Z", "-X", "-Y", "-Z"]
-    | None = "Z",
-    apply_global_orientation: bool | None = False,
-    selected: bool | None = False,
-    include_children: bool | None = False,
-    include_armatures: bool | None = False,
-    include_shapekeys: bool | None = False,
-    deform_bones_only: bool | None = False,
-    include_animations: bool | None = True,
-    include_all_actions: bool | None = True,
-    export_animation_type_selection: typing.Literal["sample", "keys"] | None = "sample",
-    sampling_rate: int | None = 1,
-    keep_smooth_curves: bool | None = False,
-    keep_keyframes: bool | None = False,
-    keep_flat_curves: bool | None = False,
-    active_uv_only: bool | None = False,
-    use_texture_copies: bool | None = True,
-    triangulate: bool | None = True,
-    use_object_instantiation: bool | None = True,
-    use_blender_profile: bool | None = True,
-    sort_by_name: bool | None = False,
-    export_object_transformation_type: int | None = 0,
-    export_object_transformation_type_selection: typing.Literal["matrix", "decomposed"]
-    | None = "matrix",
-    export_animation_transformation_type: int | None = 0,
-    export_animation_transformation_type_selection: typing.Literal[
-        "matrix", "decomposed"
-    ]
-    | None = "matrix",
-    open_sim: bool | None = False,
-    limit_precision: bool | None = False,
-    keep_bind_info: bool | None = False,
-) -> None:
-    """Save a Collada file (Deprecated)
-
-        :type execution_context: int | str | None
-        :type undo: bool | None
-        :param filepath: File Path, Path to file
-        :type filepath: str
-        :param check_existing: Check Existing, Check and warn on overwriting existing files
-        :type check_existing: bool | None
-        :param filter_blender: Filter .blend files
-        :type filter_blender: bool | None
-        :param filter_backup: Filter .blend files
-        :type filter_backup: bool | None
-        :param filter_image: Filter image files
-        :type filter_image: bool | None
-        :param filter_movie: Filter movie files
-        :type filter_movie: bool | None
-        :param filter_python: Filter Python files
-        :type filter_python: bool | None
-        :param filter_font: Filter font files
-        :type filter_font: bool | None
-        :param filter_sound: Filter sound files
-        :type filter_sound: bool | None
-        :param filter_text: Filter text files
-        :type filter_text: bool | None
-        :param filter_archive: Filter archive files
-        :type filter_archive: bool | None
-        :param filter_btx: Filter btx files
-        :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
-        :param filter_alembic: Filter Alembic files
-        :type filter_alembic: bool | None
-        :param filter_usd: Filter USD files
-        :type filter_usd: bool | None
-        :param filter_obj: Filter OBJ files
-        :type filter_obj: bool | None
-        :param filter_volume: Filter OpenVDB volume files
-        :type filter_volume: bool | None
-        :param filter_folder: Filter folders
-        :type filter_folder: bool | None
-        :param filter_blenlib: Filter Blender IDs
-        :type filter_blenlib: bool | None
-        :param filemode: File Browser Mode, The setting for the file browser mode to load a .blend file, a library or a special file
-        :type filemode: int | None
-        :param display_type: Display Type
-
-    DEFAULT
-    Default -- Automatically determine display type for files.
-
-    LIST_VERTICAL
-    Short List -- Display files as short list.
-
-    LIST_HORIZONTAL
-    Long List -- Display files as a detailed list.
-
-    THUMBNAIL
-    Thumbnails -- Display files as thumbnails.
-        :type display_type: typing.Literal['DEFAULT','LIST_VERTICAL','LIST_HORIZONTAL','THUMBNAIL'] | None
-        :param sort_method: File sorting mode
-        :type sort_method: str | None
-        :type filter_glob: str
-        :param prop_bc_export_ui_section: Export Section, Only for User Interface organization
-
-    main
-    Main -- Data export section.
-
-    geometry
-    Geom -- Geometry export section.
-
-    armature
-    Arm -- Armature export section.
-
-    animation
-    Anim -- Animation export section.
-
-    collada
-    Extra -- Collada export section.
-        :type prop_bc_export_ui_section: typing.Literal['main','geometry','armature','animation','collada'] | None
-        :param apply_modifiers: Apply Modifiers, Apply modifiers to exported mesh (non destructive)
-        :type apply_modifiers: bool | None
-        :param export_mesh_type: Resolution, Modifier resolution for export
-        :type export_mesh_type: int | None
-        :param export_mesh_type_selection: Resolution, Modifier resolution for export
-
-    view
-    Viewport -- Apply modifier's viewport settings.
-
-    render
-    Render -- Apply modifier's render settings.
-        :type export_mesh_type_selection: typing.Literal['view','render'] | None
-        :param export_global_forward_selection: Global Forward Axis, Global Forward axis for export
-
-    X
-    X -- Global Forward is positive X Axis.
-
-    Y
-    Y -- Global Forward is positive Y Axis.
-
-    Z
-    Z -- Global Forward is positive Z Axis.
-
-    -X
-    -X -- Global Forward is negative X Axis.
-
-    -Y
-    -Y -- Global Forward is negative Y Axis.
-
-    -Z
-    -Z -- Global Forward is negative Z Axis.
-        :type export_global_forward_selection: typing.Literal['X','Y','Z','-X','-Y','-Z'] | None
-        :param export_global_up_selection: Global Up Axis, Global Up axis for export
-
-    X
-    X -- Global UP is positive X Axis.
-
-    Y
-    Y -- Global UP is positive Y Axis.
-
-    Z
-    Z -- Global UP is positive Z Axis.
-
-    -X
-    -X -- Global UP is negative X Axis.
-
-    -Y
-    -Y -- Global UP is negative Y Axis.
-
-    -Z
-    -Z -- Global UP is negative Z Axis.
-        :type export_global_up_selection: typing.Literal['X','Y','Z','-X','-Y','-Z'] | None
-        :param apply_global_orientation: Apply Global Orientation, Rotate all root objects to match the global orientation settings otherwise set the global orientation per Collada asset
-        :type apply_global_orientation: bool | None
-        :param selected: Selection Only, Export only selected elements
-        :type selected: bool | None
-        :param include_children: Include Children, Export all children of selected objects (even if not selected)
-        :type include_children: bool | None
-        :param include_armatures: Include Armatures, Export related armatures (even if not selected)
-        :type include_armatures: bool | None
-        :param include_shapekeys: Include Shape Keys, Export all Shape Keys from Mesh Objects
-        :type include_shapekeys: bool | None
-        :param deform_bones_only: Deform Bones Only, Only export deforming bones with armatures
-        :type deform_bones_only: bool | None
-        :param include_animations: Include Animations, Export animations if available (exporting animations will enforce the decomposition of node transforms into <translation> <rotation> and <scale> components)
-        :type include_animations: bool | None
-        :param include_all_actions: Include all Actions, Export also unassigned actions (this allows you to export entire animation libraries for your character(s))
-        :type include_all_actions: bool | None
-        :param export_animation_type_selection: Key Type, Type for exported animations (use sample keys or Curve keys)
-
-    sample
-    Samples -- Export Sampled points guided by sampling rate.
-
-    keys
-    Curves -- Export Curves (note: guided by curve keys).
-        :type export_animation_type_selection: typing.Literal['sample','keys'] | None
-        :param sampling_rate: Sampling Rate, The distance between 2 keyframes (1 to key every frame)
-        :type sampling_rate: int | None
-        :param keep_smooth_curves: Keep Smooth curves, Export also the curve handles (if available) (this does only work when the inverse parent matrix is the unity matrix, otherwise you may end up with odd results)
-        :type keep_smooth_curves: bool | None
-        :param keep_keyframes: Keep Keyframes, Use existing keyframes as additional sample points (this helps when you want to keep manual tweaks)
-        :type keep_keyframes: bool | None
-        :param keep_flat_curves: All Keyed Curves, Export also curves which have only one key or are totally flat
-        :type keep_flat_curves: bool | None
-        :param active_uv_only: Only Selected UV Map, Export only the selected UV Map
-        :type active_uv_only: bool | None
-        :param use_texture_copies: Copy, Copy textures to same folder where the .dae file is exported
-        :type use_texture_copies: bool | None
-        :param triangulate: Triangulate, Export polygons (quads and n-gons) as triangles
-        :type triangulate: bool | None
-        :param use_object_instantiation: Use Object Instances, Instantiate multiple Objects from same Data
-        :type use_object_instantiation: bool | None
-        :param use_blender_profile: Use Blender Profile, Export additional Blender specific information (for material, shaders, bones, etc.)
-        :type use_blender_profile: bool | None
-        :param sort_by_name: Sort by Object name, Sort exported data by Object name
-        :type sort_by_name: bool | None
-        :param export_object_transformation_type: Transform, Object Transformation type for translation, scale and rotation
-        :type export_object_transformation_type: int | None
-        :param export_object_transformation_type_selection: Transform, Object Transformation type for translation, scale and rotation
-
-    matrix
-    Matrix -- Use <matrix> representation for exported transformations.
-
-    decomposed
-    Decomposed -- Use <rotate>, <translate> and <scale> representation for exported transformations.
-        :type export_object_transformation_type_selection: typing.Literal['matrix','decomposed'] | None
-        :param export_animation_transformation_type: Transform, Transformation type for translation, scale and rotation. Note: The Animation transformation type in the Anim Tab is always equal to the Object transformation type in the Geom tab
-        :type export_animation_transformation_type: int | None
-        :param export_animation_transformation_type_selection: Transform, Transformation type for translation, scale and rotation. Note: The Animation transformation type in the Anim Tab is always equal to the Object transformation type in the Geom tab
-
-    matrix
-    Matrix -- Use <matrix> representation for exported transformations.
-
-    decomposed
-    Decomposed -- Use <rotate>, <translate> and <scale> representation for exported transformations.
-        :type export_animation_transformation_type_selection: typing.Literal['matrix','decomposed'] | None
-        :param open_sim: Export to SL/OpenSim, Compatibility mode for Second Life, OpenSimulator and other compatible online worlds
-        :type open_sim: bool | None
-        :param limit_precision: Limit Precision, Reduce the precision of the exported data to 6 digits
-        :type limit_precision: bool | None
-        :param keep_bind_info: Keep Bind Info, Store Bindpose information in custom bone properties for later use during Collada export
-        :type keep_bind_info: bool | None
-    """
-
-def collada_import(
-    execution_context: int | str | None = None,
-    undo: bool | None = None,
-    /,
-    *,
-    filepath: str = "",
-    check_existing: bool | None = False,
-    filter_blender: bool | None = False,
-    filter_backup: bool | None = False,
-    filter_image: bool | None = False,
-    filter_movie: bool | None = False,
-    filter_python: bool | None = False,
-    filter_font: bool | None = False,
-    filter_sound: bool | None = False,
-    filter_text: bool | None = False,
-    filter_archive: bool | None = False,
-    filter_btx: bool | None = False,
-    filter_collada: bool | None = True,
-    filter_alembic: bool | None = False,
-    filter_usd: bool | None = False,
-    filter_obj: bool | None = False,
-    filter_volume: bool | None = False,
-    filter_folder: bool | None = True,
-    filter_blenlib: bool | None = False,
-    filemode: int | None = 8,
-    display_type: typing.Literal[
-        "DEFAULT", "LIST_VERTICAL", "LIST_HORIZONTAL", "THUMBNAIL"
-    ]
-    | None = "DEFAULT",
-    sort_method: str | None = "",
-    filter_glob: str = "*.dae",
-    import_units: bool | None = False,
-    custom_normals: bool | None = True,
-    fix_orientation: bool | None = False,
-    find_chains: bool | None = False,
-    auto_connect: bool | None = False,
-    min_chain_length: int | None = 0,
-    keep_bind_info: bool | None = False,
-) -> None:
-    """Load a Collada file (Deprecated)
-
-        :type execution_context: int | str | None
-        :type undo: bool | None
-        :param filepath: File Path, Path to file
-        :type filepath: str
-        :param check_existing: Check Existing, Check and warn on overwriting existing files
-        :type check_existing: bool | None
-        :param filter_blender: Filter .blend files
-        :type filter_blender: bool | None
-        :param filter_backup: Filter .blend files
-        :type filter_backup: bool | None
-        :param filter_image: Filter image files
-        :type filter_image: bool | None
-        :param filter_movie: Filter movie files
-        :type filter_movie: bool | None
-        :param filter_python: Filter Python files
-        :type filter_python: bool | None
-        :param filter_font: Filter font files
-        :type filter_font: bool | None
-        :param filter_sound: Filter sound files
-        :type filter_sound: bool | None
-        :param filter_text: Filter text files
-        :type filter_text: bool | None
-        :param filter_archive: Filter archive files
-        :type filter_archive: bool | None
-        :param filter_btx: Filter btx files
-        :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
-        :param filter_alembic: Filter Alembic files
-        :type filter_alembic: bool | None
-        :param filter_usd: Filter USD files
-        :type filter_usd: bool | None
-        :param filter_obj: Filter OBJ files
-        :type filter_obj: bool | None
-        :param filter_volume: Filter OpenVDB volume files
-        :type filter_volume: bool | None
-        :param filter_folder: Filter folders
-        :type filter_folder: bool | None
-        :param filter_blenlib: Filter Blender IDs
-        :type filter_blenlib: bool | None
-        :param filemode: File Browser Mode, The setting for the file browser mode to load a .blend file, a library or a special file
-        :type filemode: int | None
-        :param display_type: Display Type
-
-    DEFAULT
-    Default -- Automatically determine display type for files.
-
-    LIST_VERTICAL
-    Short List -- Display files as short list.
-
-    LIST_HORIZONTAL
-    Long List -- Display files as a detailed list.
-
-    THUMBNAIL
-    Thumbnails -- Display files as thumbnails.
-        :type display_type: typing.Literal['DEFAULT','LIST_VERTICAL','LIST_HORIZONTAL','THUMBNAIL'] | None
-        :param sort_method: File sorting mode
-        :type sort_method: str | None
-        :type filter_glob: str
-        :param import_units: Import Units, If disabled match import to Blender's current Unit settings, otherwise use the settings from the Imported scene
-        :type import_units: bool | None
-        :param custom_normals: Custom Normals, Import custom normals, if available (otherwise Blender will compute them)
-        :type custom_normals: bool | None
-        :param fix_orientation: Fix Leaf Bones, Fix Orientation of Leaf Bones (Collada does only support Joints)
-        :type fix_orientation: bool | None
-        :param find_chains: Find Bone Chains, Find best matching Bone Chains and ensure bones in chain are connected
-        :type find_chains: bool | None
-        :param auto_connect: Auto Connect, Set use_connect for parent bones which have exactly one child bone
-        :type auto_connect: bool | None
-        :param min_chain_length: Minimum Chain Length, When searching Bone Chains disregard chains of length below this value
-        :type min_chain_length: int | None
-        :param keep_bind_info: Keep Bind Info, Store Bindpose information in custom bone properties for later use during Collada export
-        :type keep_bind_info: bool | None
     """
 
 def collection_export_all(
@@ -1442,7 +1042,6 @@ def fbx_import(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -1499,8 +1098,6 @@ def fbx_import(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -1581,7 +1178,6 @@ def grease_pencil_export_pdf(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = True,
@@ -1629,8 +1225,6 @@ def grease_pencil_export_pdf(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -1708,7 +1302,6 @@ def grease_pencil_export_svg(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = True,
@@ -1757,8 +1350,6 @@ def grease_pencil_export_svg(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -1841,7 +1432,6 @@ def grease_pencil_import_svg(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = True,
@@ -1891,8 +1481,6 @@ def grease_pencil_import_svg(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -1953,7 +1541,6 @@ def id_linked_relocate(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -2009,8 +1596,6 @@ def id_linked_relocate(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -2185,7 +1770,6 @@ def lib_reload(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -2236,8 +1820,6 @@ def lib_reload(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -2295,7 +1877,6 @@ def lib_relocate(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -2348,8 +1929,6 @@ def lib_relocate(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -2405,7 +1984,6 @@ def link(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -2461,8 +2039,6 @@ def link(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -2537,7 +2113,6 @@ def obj_export(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -2609,8 +2184,6 @@ def obj_export(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -2771,7 +2344,6 @@ def obj_import(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -2832,8 +2404,6 @@ def obj_import(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -2942,7 +2512,6 @@ def open_mainfile(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -2990,8 +2559,6 @@ def open_mainfile(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -3173,7 +2740,6 @@ def ply_export(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -3232,8 +2798,6 @@ def ply_export(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -3357,7 +2921,6 @@ def ply_import(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -3415,8 +2978,6 @@ def ply_import(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -4162,7 +3723,6 @@ def recover_auto_save(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -4207,8 +3767,6 @@ def recover_auto_save(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -4342,7 +3900,6 @@ def save_as_mainfile(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -4389,8 +3946,6 @@ def save_as_mainfile(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -4456,7 +4011,6 @@ def save_mainfile(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -4504,8 +4058,6 @@ def save_mainfile(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -4655,7 +4207,6 @@ def stl_export(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -4711,8 +4262,6 @@ def stl_export(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -4821,7 +4370,6 @@ def stl_import(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -4878,8 +4426,6 @@ def stl_import(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -5183,7 +4729,6 @@ def usd_export(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = True,
     filter_obj: bool | None = False,
@@ -5294,8 +4839,6 @@ def usd_export(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files
@@ -5553,7 +5096,6 @@ def usd_import(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = True,
     filter_obj: bool | None = False,
@@ -5639,8 +5181,6 @@ def usd_import(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files

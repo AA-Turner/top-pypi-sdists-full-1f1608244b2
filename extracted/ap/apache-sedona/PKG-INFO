@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: apache-sedona
-Version: 1.7.1
+Version: 1.7.2
 Summary: Apache Sedona is a cluster computing system for processing large-scale spatial data
 Home-page: https://sedona.apache.org
 Author: Apache Sedona

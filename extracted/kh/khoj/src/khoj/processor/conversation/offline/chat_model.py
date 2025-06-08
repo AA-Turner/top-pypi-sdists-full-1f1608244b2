@@ -1,29 +1,25 @@
 import asyncio
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from threading import Thread
 from time import perf_counter
-from typing import Any, AsyncGenerator, Dict, List, Optional, Union
+from typing import Any, AsyncGenerator, Dict, List, Union
 
-import pyjson5
 from langchain_core.messages.chat import ChatMessage
 from llama_cpp import Llama
 
-from khoj.database.models import Agent, ChatModel, KhojUser
+from khoj.database.models import Agent, ChatMessageModel, ChatModel
 from khoj.processor.conversation import prompts
 from khoj.processor.conversation.offline.utils import download_model
 from khoj.processor.conversation.utils import (
-    clean_json,
+    ResponseWithThought,
     commit_conversation_trace,
-    construct_question_history,
     generate_chatml_messages_with_context,
     messages_to_print,
 )
 from khoj.utils import state
-from khoj.utils.constants import empty_escape_sequences
 from khoj.utils.helpers import (
-    ConversationCommand,
     is_none_or_empty,
     is_promptrace_enabled,
     truncate_code_context,
@@ -34,135 +30,28 @@ from khoj.utils.yaml import yaml_dump
 logger = logging.getLogger(__name__)
 
 
-def extract_questions_offline(
-    text: str,
-    model: str = "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
-    loaded_model: Union[Any, None] = None,
-    conversation_log={},
-    use_history: bool = True,
-    should_extract_questions: bool = True,
-    location_data: LocationData = None,
-    user: KhojUser = None,
-    max_prompt_size: int = None,
-    temperature: float = 0.7,
-    personality_context: Optional[str] = None,
-    query_files: str = None,
-    tracer: dict = {},
-) -> List[str]:
-    """
-    Infer search queries to retrieve relevant notes to answer user query
-    """
-    all_questions = text.split("? ")
-    all_questions = [q + "?" for q in all_questions[:-1]] + [all_questions[-1]]
-
-    if not should_extract_questions:
-        return all_questions
-
-    assert loaded_model is None or isinstance(loaded_model, Llama), "loaded_model must be of type Llama, if configured"
-    offline_chat_model = loaded_model or download_model(model, max_tokens=max_prompt_size)
-
-    location = f"{location_data}" if location_data else "Unknown"
-    username = prompts.user_name.format(name=user.get_full_name()) if user and user.get_full_name() else ""
-
-    # Extract Past User Message and Inferred Questions from Conversation Log
-    chat_history = construct_question_history(conversation_log, include_query=False) if use_history else ""
-
-    # Get dates relative to today for prompt creation
-    today = datetime.today()
-    yesterday = (today - timedelta(days=1)).strftime("%Y-%m-%d")
-    last_year = today.year - 1
-    example_questions = prompts.extract_questions_offline.format(
-        query=text,
-        chat_history=chat_history,
-        current_date=today.strftime("%Y-%m-%d"),
-        day_of_week=today.strftime("%A"),
-        current_month=today.strftime("%Y-%m"),
-        yesterday_date=yesterday,
-        last_year=last_year,
-        this_year=today.year,
-        location=location,
-        username=username,
-        personality_context=personality_context,
-    )
-
-    messages = generate_chatml_messages_with_context(
-        example_questions,
-        model_name=model,
-        loaded_model=offline_chat_model,
-        max_prompt_size=max_prompt_size,
-        model_type=ChatModel.ModelType.OFFLINE,
-        query_files=query_files,
-    )
-
-    state.chat_lock.acquire()
-    try:
-        response = send_message_to_model_offline(
-            messages,
-            loaded_model=offline_chat_model,
-            model_name=model,
-            max_prompt_size=max_prompt_size,
-            temperature=temperature,
-            response_type="json_object",
-            tracer=tracer,
-        )
-    finally:
-        state.chat_lock.release()
-
-    # Extract and clean the chat model's response
-    try:
-        response = clean_json(empty_escape_sequences)
-        response = pyjson5.loads(response)
-        questions = [q.strip() for q in response["queries"] if q.strip()]
-        questions = filter_questions(questions)
-    except:
-        logger.warning(f"Llama returned invalid JSON. Falling back to using user message as search query.\n{response}")
-        return all_questions
-    logger.debug(f"Questions extracted by {model}: {questions}")
-    return questions
-
-
-def filter_questions(questions: List[str]):
-    # Skip questions that seem to be apologizing for not being able to answer the question
-    hint_words = [
-        "sorry",
-        "apologize",
-        "unable",
-        "can't",
-        "cannot",
-        "don't know",
-        "don't understand",
-        "do not know",
-        "do not understand",
-    ]
-    filtered_questions = set()
-    for q in questions:
-        if not any([word in q.lower() for word in hint_words]) and not is_none_or_empty(q):
-            filtered_questions.add(q)
-
-    return list(filtered_questions)
-
-
 async def converse_offline(
+    # Query
     user_query: str,
+    # Context
     references: list[dict] = [],
     online_results={},
     code_results={},
-    conversation_log={},
-    model_name: str = "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
-    loaded_model: Union[Any, None] = None,
-    completion_func=None,
-    conversation_commands=[ConversationCommand.Default],
-    max_prompt_size=None,
-    tokenizer_name=None,
-    location_data: LocationData = None,
-    user_name: str = None,
-    agent: Agent = None,
     query_files: str = None,
     generated_files: List[FileAttachment] = None,
     additional_context: List[str] = None,
     generated_asset_results: Dict[str, Dict] = {},
+    location_data: LocationData = None,
+    user_name: str = None,
+    chat_history: list[ChatMessageModel] = [],
+    # Model
+    model_name: str = "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
+    loaded_model: Union[Any, None] = None,
+    max_prompt_size=None,
+    tokenizer_name=None,
+    agent: Agent = None,
     tracer: dict = {},
-) -> AsyncGenerator[str, None]:
+) -> AsyncGenerator[ResponseWithThought, None]:
     """
     Converse with user using Llama (Async Version)
     """
@@ -194,30 +83,17 @@ async def converse_offline(
         system_prompt = f"{system_prompt}\n{user_name_prompt}"
 
     # Get Conversation Primer appropriate to Conversation Type
-    if conversation_commands == [ConversationCommand.Notes] and is_none_or_empty(references):
-        response = prompts.no_notes_found.format()
-        if completion_func:
-            asyncio.create_task(completion_func(chat_response=response))
-        yield response
-        return
-    elif conversation_commands == [ConversationCommand.Online] and is_none_or_empty(online_results):
-        response = prompts.no_online_results_found.format()
-        if completion_func:
-            asyncio.create_task(completion_func(chat_response=response))
-        yield response
-        return
-
     context_message = ""
     if not is_none_or_empty(references):
         context_message = f"{prompts.notes_conversation_offline.format(references=yaml_dump(references))}\n\n"
-    if ConversationCommand.Online in conversation_commands or ConversationCommand.Webpage in conversation_commands:
+    if not is_none_or_empty(online_results):
         simplified_online_results = online_results.copy()
         for result in online_results:
             if online_results[result].get("webpages"):
                 simplified_online_results[result] = online_results[result]["webpages"]
 
         context_message += f"{prompts.online_search_conversation_offline.format(online_results=yaml_dump(simplified_online_results))}\n\n"
-    if ConversationCommand.Code in conversation_commands and not is_none_or_empty(code_results):
+    if not is_none_or_empty(code_results):
         context_message += (
             f"{prompts.code_executed_context.format(code_results=truncate_code_context(code_results))}\n\n"
         )
@@ -227,7 +103,7 @@ async def converse_offline(
     messages = generate_chatml_messages_with_context(
         user_query,
         system_prompt,
-        conversation_log,
+        chat_history,
         context_message=context_message,
         model_name=model_name,
         loaded_model=offline_chat_model,
@@ -243,9 +119,8 @@ async def converse_offline(
     logger.debug(f"Conversation Context for {model_name}: {messages_to_print(messages)}")
 
     # Use asyncio.Queue and a thread to bridge sync iterator
-    queue: asyncio.Queue = asyncio.Queue()
+    queue: asyncio.Queue[ResponseWithThought] = asyncio.Queue()
     stop_phrases = ["<s>", "INST]", "Notes:"]
-    aggregated_response_container = {"response": ""}
 
     def _sync_llm_thread():
         """Synchronous function to run in a separate thread."""
@@ -262,7 +137,7 @@ async def converse_offline(
                 tracer=tracer,
             )
             for response in response_iterator:
-                response_delta = response["choices"][0]["delta"].get("content", "")
+                response_delta: str = response["choices"][0]["delta"].get("content", "")
                 # Log the time taken to start response
                 if aggregated_response == "" and response_delta != "":
                     logger.info(f"First response took: {perf_counter() - start_time:.3f} seconds")
@@ -270,12 +145,12 @@ async def converse_offline(
                 aggregated_response += response_delta
                 # Put chunk into the asyncio queue (non-blocking)
                 try:
-                    queue.put_nowait(response_delta)
+                    queue.put_nowait(ResponseWithThought(response=response_delta))
                 except asyncio.QueueFull:
                     # Should not happen with default queue size unless consumer is very slow
                     logger.warning("Asyncio queue full during offline LLM streaming.")
                     # Potentially block here or handle differently if needed
-                    asyncio.run(queue.put(response_delta))
+                    asyncio.run(queue.put(ResponseWithThought(response=response_delta)))
 
             # Log the time taken to stream the entire response
             logger.info(f"Chat streaming took: {perf_counter() - start_time:.3f} seconds")
@@ -291,7 +166,6 @@ async def converse_offline(
             state.chat_lock.release()
             # Signal end of stream
             queue.put_nowait(None)
-            aggregated_response_container["response"] = aggregated_response
 
     # Start the synchronous thread
     thread = Thread(target=_sync_llm_thread)
@@ -309,10 +183,6 @@ async def converse_offline(
     # Wait for the thread to finish (optional, ensures cleanup)
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, thread.join)
-
-    # Call the completion function after streaming is done
-    if completion_func:
-        asyncio.create_task(completion_func(chat_response=aggregated_response_container["response"]))
 
 
 def send_message_to_model_offline(
@@ -342,7 +212,7 @@ def send_message_to_model_offline(
     if streaming:
         return response
 
-    response_text = response["choices"][0]["message"].get("content", "")
+    response_text: str = response["choices"][0]["message"].get("content", "")
 
     # Save conversation trace for non-streaming responses
     # Streamed responses need to be saved by the calling function

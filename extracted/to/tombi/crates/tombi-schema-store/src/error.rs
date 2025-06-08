@@ -19,8 +19,11 @@ pub enum Error {
     #[error("failed to convert to catalog url: {catalog_path}")]
     CatalogPathConvertUrlFailed { catalog_path: String },
 
-    #[error("failed to fetch catalog: {catalog_url}")]
-    CatalogUrlFetchFailed { catalog_url: CatalogUrl },
+    #[error("failed to fetch catalog: {catalog_url}, reason: {reason}")]
+    CatalogUrlFetchFailed {
+        catalog_url: CatalogUrl,
+        reason: String,
+    },
 
     #[error("invalid catalog file url: {catalog_url}")]
     InvalidCatalogFileUrl { catalog_url: CatalogUrl },
@@ -40,6 +43,9 @@ pub enum Error {
     #[error("schema file not found: {schema_path}")]
     SchemaFileNotFound { schema_path: PathBuf },
 
+    #[error("schema resource not found: {schema_url}")]
+    SchemaResourceNotFound { schema_url: SchemaUrl },
+
     #[error("failed to read schema: \"{schema_path}\"")]
     SchemaFileReadFailed { schema_path: PathBuf },
 
@@ -56,7 +62,7 @@ pub enum Error {
     },
 
     #[error("unsupported source url: {source_url}")]
-    SourceUrlUnsupported { source_url: url::Url },
+    UnsupportedSourceUrl { source_url: url::Url },
 
     #[error("invalid source url: {source_url}")]
     SourceUrlParseFailed { source_url: url::Url },

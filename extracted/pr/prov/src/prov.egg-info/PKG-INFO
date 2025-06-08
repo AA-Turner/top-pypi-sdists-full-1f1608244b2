@@ -1,22 +1,21 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: prov
-Version: 2.0.1
+Version: 2.0.2
 Summary: A library for W3C Provenance Data Model supporting PROV-JSON, PROV-XML and PROV-O (RDF)
-Home-page: https://github.com/trungdong/prov
-Author: Trung Dong Huynh
-Author-email: trungdong@donggiang.com
-License: MIT
-Project-URL: Bug Reports, https://github.com/trungdong/prov/issues
-Project-URL: Source, https://github.com/trungdong/prov
+Author-email: Trung Dong Huynh <trungdong@donggiang.com>
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/trungdong/prov
+Project-URL: Documentation, https://prov.readthedocs.io
+Project-URL: Repository, https://github.com/trungdong/prov
+Project-URL: Issues, https://github.com/trungdong/prov/issues
+Project-URL: Changelog, https://prov.readthedocs.io/en/latest/history.html
 Keywords: provenance,graph,model,PROV,PROV-DM,PROV-JSON,W3C,PROV-XML,PROV-N,PROV-O,RDF
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Information Technology
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: English
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
@@ -27,15 +26,17 @@ Classifier: Programming Language :: Python :: Implementation :: PyPy
 Classifier: Topic :: Scientific/Engineering :: Information Analysis
 Classifier: Topic :: Security
 Classifier: Topic :: System :: Logging
-Requires-Python: >=3.6, <4
+Requires-Python: >=3.9
+Description-Content-Type: text/x-rst
 License-File: LICENSE
-License-File: AUTHORS.rst
-Requires-Dist: python-dateutil>=2.2
 Requires-Dist: networkx>=2.0
-Requires-Dist: lxml>=3.3.5
-Requires-Dist: rdflib<7,>=4.2.1
-Provides-Extra: dot
-Requires-Dist: pydot>=1.2.0; extra == "dot"
+Requires-Dist: pydot>=1.2.0
+Requires-Dist: python-dateutil>=2.2
+Provides-Extra: rdf
+Requires-Dist: rdflib<7,>=4.2.1; extra == "rdf"
+Provides-Extra: xml
+Requires-Dist: lxml>=3.3.5; extra == "xml"
+Dynamic: license-file
 
 ============
 Introduction
@@ -45,7 +46,7 @@ Introduction
 .. image:: https://badge.fury.io/py/prov.svg
   :target: http://badge.fury.io/py/prov
   :alt: Latest Release
-.. image:: https://github.com/trungdong/prov/workflows/CI/badge.svg?branch=master
+.. image:: https://github.com/trungdong/prov/workflows/CI/badge.svg
   :target: https://github.com/trungdong/prov/actions?workflow=CI
   :alt: CI Status
 .. image:: https://img.shields.io/coveralls/trungdong/prov.svg

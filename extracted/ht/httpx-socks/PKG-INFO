@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: httpx-socks
-Version: 0.10.0
+Version: 0.10.1
 Summary: Proxy (HTTP, SOCKS) transports for httpx
 Home-page: https://github.com/romis2012/httpx-socks
 Author: Roman Snegirev
@@ -16,6 +16,17 @@ Provides-Extra: asyncio
 Requires-Dist: async-timeout>=3.0.1; extra == "asyncio"
 Provides-Extra: trio
 Requires-Dist: trio>=0.16.0; extra == "trio"
+Dynamic: author
+Dynamic: author-email
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: summary
 
 # httpx-socks
 

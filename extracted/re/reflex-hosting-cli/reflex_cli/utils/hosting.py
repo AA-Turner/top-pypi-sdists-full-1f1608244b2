@@ -1242,6 +1242,7 @@ def create_deployment(
         secrets: The secrets to use for the deployment.
         client: The authenticated client
         packages: The list of packages to install on the VM.
+        strategy: The deployment strategy to use.
 
     Returns:
         The deployment id.git c
@@ -1404,6 +1405,7 @@ def get_app_logs(
     start: int | None,
     end: int | None,
     client: AuthenticatedClient,
+    cursor: str | None = None,
 ):
     """Retrieve logs for a given application.
 
@@ -1413,6 +1415,7 @@ def get_app_logs(
         start: The start time in Unix epoch format.
         end: The end time in Unix epoch format.
         client: The authenticated client
+        cursor: The cursor for pagination.
 
     Returns:
         The logs as a dictionary.
@@ -1428,6 +1431,8 @@ def get_app_logs(
         console.warn("no app with given id found")
         return
     params = f"?offset={offset}" if offset else f"?start={start}&end={end}"
+    if cursor:
+        params += f"&cursor={cursor}"
     try:
         response = httpx.get(
             urljoin(

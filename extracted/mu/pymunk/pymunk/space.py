@@ -133,7 +133,7 @@ class Space(PickleMixin, object):
         self._locked = False
 
         self._add_later: set[_AddableObjects] = set()
-        self._remove_later: set[_AddableObjects] = set()
+        self._remove_later: dict[_AddableObjects, None] = dict()
         self._bodies_to_check: set[Body] = set()
 
     @property
@@ -377,9 +377,19 @@ class Space(PickleMixin, object):
     def remove(self, *objs: _AddableObjects) -> None:
         """Remove one or many shapes, bodies or constraints from the space
 
-        Unlike Chipmunk and earlier versions of Pymunk its now allowed to
-        remove objects even from a callback during the simulation step.
-        However, the removal will not be performed until the end of the step.
+        Unlike Chipmunk and early versions of Pymunk its allowed to
+        remove objects from a collision callback.
+
+        There are two cases, the most common is that a collision callback is
+        invoked during a Space.step() simulation step. In this case the
+        removal will happen in the end of the step(), when all callbacks have
+        been called and the collisions resolved.
+
+        A more uncommon case is when the `separate` callback is triggered by
+        calling Space.remove() outside of the step() function, and another
+        remove is called from the `seprate()` callback. In this case the
+        second removal will happen at the end of the first call to
+        Space.remove(), when all `separate` callbacks have been called.
 
         .. Note::
             When removing objects from the space, make sure you remove any
@@ -387,9 +397,20 @@ class Space(PickleMixin, object):
             body, remove the joints and shapes attached to it.
         """
         if self._locked:
-            self._remove_later.update(objs)
+            for o in objs:
+                self._remove_later[o] = None
             return
 
+        self._remove(*objs)
+        removed = set()
+        while self._remove_later:
+            to_remove, _ = self._remove_later.popitem()
+            if to_remove not in removed:
+                self._remove(to_remove)
+                removed.add(to_remove)
+
+    def _remove(self, *objs: _AddableObjects) -> None:
+        """Unsafe internal remove, will not check space is unlocked."""
         for o in objs:
             if isinstance(o, Body):
                 self._remove_body(o)
@@ -577,9 +598,13 @@ class Space(PickleMixin, object):
             self._locked = False
         self.add(*self._add_later)
         self._add_later.clear()
-        for obj in self._remove_later:
-            self.remove(obj)
-        self._remove_later.clear()
+
+        removed = set()
+        while self._remove_later:
+            to_remove, _ = self._remove_later.popitem()
+            if to_remove not in removed:
+                removed.add(to_remove)
+                self._remove(to_remove)
 
         for key in self._post_step_callbacks:
             self._post_step_callbacks[key](self)

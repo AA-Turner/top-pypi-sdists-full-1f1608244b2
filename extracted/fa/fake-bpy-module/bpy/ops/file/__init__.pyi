@@ -257,7 +257,6 @@ def find_missing_files(
     filter_text: bool | None = False,
     filter_archive: bool | None = False,
     filter_btx: bool | None = False,
-    filter_collada: bool | None = False,
     filter_alembic: bool | None = False,
     filter_usd: bool | None = False,
     filter_obj: bool | None = False,
@@ -303,8 +302,6 @@ def find_missing_files(
         :type filter_archive: bool | None
         :param filter_btx: Filter btx files
         :type filter_btx: bool | None
-        :param filter_collada: Filter COLLADA files
-        :type filter_collada: bool | None
         :param filter_alembic: Filter Alembic files
         :type filter_alembic: bool | None
         :param filter_usd: Filter USD files

@@ -15,7 +15,7 @@ import warnings
 from enum import Enum
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Dict, Final, List, Literal, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, Final, List, Literal, Optional, Tuple, Union
 from urllib.parse import unquote
 
 import pandas as pd
@@ -30,7 +30,6 @@ from pydantic import (
     computed_field,
     field_validator,
     model_validator,
-    validate_call,
 )
 from tabulate import tabulate
 from typing_extensions import Annotated, Self, deprecated
@@ -54,7 +53,7 @@ _logger = logging.getLogger(__name__)
 
 Uint64 = typing.Annotated[int, Field(ge=0, le=(2**64 - 1))]
 LevelNumber = typing.Annotated[int, Field(ge=1, le=100)]
-CURRENT_VERSION: Final = "1.4.0"
+CURRENT_VERSION: Final = "1.3.0"
 
 DEFAULT_EXPORT_LABELS = {
     DocItemLabel.TITLE,
@@ -86,8 +85,8 @@ DOCUMENT_TOKENS_EXPORT_LABELS.update(
 )
 
 
-class BaseAnnotation(BaseModel):
-    """Base class for all annotation types."""
+class BasePictureData(BaseModel):
+    """BasePictureData."""
 
     kind: str
 
@@ -99,7 +98,7 @@ class PictureClassificationClass(BaseModel):
     confidence: float
 
 
-class PictureClassificationData(BaseAnnotation):
+class PictureClassificationData(BasePictureData):
     """PictureClassificationData."""
 
     kind: Literal["classification"] = "classification"
@@ -107,18 +106,19 @@ class PictureClassificationData(BaseAnnotation):
     predicted_classes: List[PictureClassificationClass]
 
 
-class DescriptionAnnotation(BaseAnnotation):
-    """DescriptionAnnotation."""
+class PictureDescriptionData(BasePictureData):
+    """PictureDescriptionData."""
 
     kind: Literal["description"] = "description"
     text: str
     provenance: str
 
 
-class PictureMoleculeData(BaseAnnotation):
+class PictureMoleculeData(BaseModel):
     """PictureMoleculeData."""
 
     kind: Literal["molecule_data"] = "molecule_data"
+
     smi: str
     confidence: float
     class_name: str
@@ -126,17 +126,11 @@ class PictureMoleculeData(BaseAnnotation):
     provenance: str
 
 
-class MiscAnnotation(BaseAnnotation):
-    """MiscAnnotation."""
+class PictureMiscData(BaseModel):
+    """PictureMiscData."""
 
     kind: Literal["misc"] = "misc"
     content: Dict[str, Any]
-
-
-# deprecated aliases:
-BasePictureData = BaseAnnotation
-PictureDescriptionData = DescriptionAnnotation
-PictureMiscData = MiscAnnotation
 
 
 class ChartLine(BaseModel):
@@ -202,7 +196,7 @@ class ChartPoint(BaseModel):
     value: Tuple[float, float]
 
 
-class PictureChartData(BaseAnnotation):
+class PictureChartData(BaseModel):
     """Base class for picture chart data.
 
     Attributes:
@@ -387,10 +381,10 @@ class PictureTabularChartData(PictureChartData):
 
 PictureDataType = Annotated[
     Union[
-        DescriptionAnnotation,
-        MiscAnnotation,
         PictureClassificationData,
+        PictureDescriptionData,
         PictureMoleculeData,
+        PictureMiscData,
         PictureTabularChartData,
         PictureLineChartData,
         PictureBarChartData,
@@ -824,18 +818,6 @@ class DocItem(
         )
         return page_image.crop(crop_bbox.as_tuple())
 
-    def get_annotations(self) -> Sequence[BaseAnnotation]:
-        """Get the annotations of this DocItem."""
-        return []
-
-
-class Script(str, Enum):
-    """Text script position."""
-
-    BASELINE = "baseline"
-    SUB = "sub"
-    SUPER = "super"
-
 
 class Formatting(BaseModel):
     """Formatting."""
@@ -844,7 +826,6 @@ class Formatting(BaseModel):
     italic: bool = False
     underline: bool = False
     strikethrough: bool = False
-    script: Script = Script.BASELINE
 
 
 class TextItem(DocItem):
@@ -1201,19 +1182,6 @@ class PictureItem(FloatingItem):
         text = serializer.serialize(item=self).text
         return text
 
-    def get_annotations(self) -> Sequence[BaseAnnotation]:
-        """Get the annotations of this PictureItem."""
-        return self.annotations
-
-
-TableAnnotationType = Annotated[
-    Union[
-        DescriptionAnnotation,
-        MiscAnnotation,
-    ],
-    Field(discriminator="kind"),
-]
-
 
 class TableItem(FloatingItem):
     """TableItem."""
@@ -1223,8 +1191,6 @@ class TableItem(FloatingItem):
         DocItemLabel.DOCUMENT_INDEX,
         DocItemLabel.TABLE,
     ] = DocItemLabel.TABLE
-
-    annotations: List[TableAnnotationType] = []
 
     def export_to_dataframe(self) -> pd.DataFrame:
         """Export the table as a Pandas DataFrame."""
@@ -1471,15 +1437,6 @@ class TableItem(FloatingItem):
         )
         text = serializer.serialize(item=self).text
         return text
-
-    @validate_call
-    def add_annotation(self, annotation: TableAnnotationType) -> None:
-        """Add an annotation to the table."""
-        self.annotations.append(annotation)
-
-    def get_annotations(self) -> Sequence[BaseAnnotation]:
-        """Get the annotations of this TableItem."""
-        return self.annotations
 
 
 class GraphCell(BaseModel):
@@ -1819,18 +1776,6 @@ class DoclingDocument(BaseModel):
             item.parent = parent_ref
 
             self.form_items.append(item)
-
-        elif isinstance(item, (UnorderedList, OrderedList, InlineGroup)):
-            item_label = "groups"
-            item_index = len(self.groups)
-
-            cref = f"#/{item_label}/{item_index}"
-
-            item.self_ref = cref
-            item.parent = parent_ref
-
-            self.groups.append(item)
-
         else:
             raise ValueError(f"Item {item} is not supported for insertion")
 
@@ -2166,8 +2111,8 @@ class DoclingDocument(BaseModel):
         :param parent: Optional[NodeItem]:  (Default value = None)
 
         """
-        if not isinstance(parent, (OrderedList, UnorderedList)):
-            raise ValueError("ListItem's parent must be a list group")
+        if not parent:
+            parent = self.body
 
         if not orig:
             orig = text
@@ -2322,7 +2267,6 @@ class DoclingDocument(BaseModel):
         parent: Optional[NodeItem] = None,
         label: DocItemLabel = DocItemLabel.TABLE,
         content_layer: Optional[ContentLayer] = None,
-        annotations: Optional[list[TableAnnotationType]] = None,
     ):
         """add_table.
 
@@ -2340,11 +2284,7 @@ class DoclingDocument(BaseModel):
         cref = f"#/tables/{table_index}"
 
         tbl_item = TableItem(
-            label=label,
-            data=data,
-            self_ref=cref,
-            parent=parent.get_ref(),
-            annotations=annotations or [],
+            label=label, data=data, self_ref=cref, parent=parent.get_ref()
         )
         if prov:
             tbl_item.prov.append(prov)
@@ -2361,7 +2301,7 @@ class DoclingDocument(BaseModel):
 
     def add_picture(
         self,
-        annotations: Optional[List[PictureDataType]] = None,
+        annotations: List[PictureDataType] = [],
         image: Optional[ImageRef] = None,
         caption: Optional[Union[TextItem, RefItem]] = None,
         prov: Optional[ProvenanceItem] = None,
@@ -2370,7 +2310,7 @@ class DoclingDocument(BaseModel):
     ):
         """add_picture.
 
-        :param data: Optional[List[PictureData]]: (Default value = None)
+        :param data: List[PictureData]: (Default value = [])
         :param caption: Optional[Union[TextItem:
         :param RefItem]]:  (Default value = None)
         :param prov: Optional[ProvenanceItem]:  (Default value = None)
@@ -2384,7 +2324,7 @@ class DoclingDocument(BaseModel):
 
         fig_item = PictureItem(
             label=DocItemLabel.PICTURE,
-            annotations=annotations or [],
+            annotations=annotations,
             image=image,
             self_ref=cref,
             parent=parent.get_ref(),
@@ -3649,52 +3589,6 @@ class DoclingDocument(BaseModel):
 
             return (GraphData(cells=cells, links=links), overall_prov)
 
-        def _add_text(
-            full_chunk: str,
-            bbox: Optional[BoundingBox],
-            pg_width: int,
-            pg_height: int,
-            page_no: int,
-            tag_name: str,
-            doc_label: DocItemLabel,
-            doc: DoclingDocument,
-            parent: Optional[NodeItem],
-        ):
-            # For everything else, treat as text
-            text_content = extract_inner_text(full_chunk)
-            element_prov = (
-                ProvenanceItem(
-                    bbox=bbox.resize_by_scale(pg_width, pg_height),
-                    charspan=(0, len(text_content)),
-                    page_no=page_no,
-                )
-                if bbox
-                else None
-            )
-
-            content_layer = ContentLayer.BODY
-            if tag_name in [DocItemLabel.PAGE_HEADER, DocItemLabel.PAGE_FOOTER]:
-                content_layer = ContentLayer.FURNITURE
-
-            if doc_label == DocItemLabel.SECTION_HEADER:
-                # Extract level from tag_name (e.g. "section_level_header_1" -> 1)
-                level = int(tag_name.split("_")[-1])
-                doc.add_heading(
-                    text=text_content,
-                    level=level,
-                    prov=element_prov,
-                    parent=parent,
-                    content_layer=content_layer,
-                )
-            else:
-                doc.add_text(
-                    label=doc_label,
-                    text=text_content,
-                    prov=element_prov,
-                    parent=parent,
-                    content_layer=content_layer,
-                )
-
         # doc = DoclingDocument(name="Document")
         for pg_idx, doctag_page in enumerate(doctag_document.pages):
             page_doctags = doctag_page.tokens
@@ -3729,7 +3623,7 @@ class DoclingDocument(BaseModel):
             tag_pattern = (
                 rf"<(?P<tag>{DocItemLabel.TITLE}|{DocItemLabel.DOCUMENT_INDEX}|"
                 rf"{DocItemLabel.CHECKBOX_UNSELECTED}|{DocItemLabel.CHECKBOX_SELECTED}|"
-                rf"{DocItemLabel.TEXT}|{DocItemLabel.PAGE_HEADER}|{GroupLabel.INLINE}|"
+                rf"{DocItemLabel.TEXT}|{DocItemLabel.PAGE_HEADER}|"
                 rf"{DocItemLabel.PAGE_FOOTER}|{DocItemLabel.FORMULA}|"
                 rf"{DocItemLabel.CAPTION}|{DocItemLabel.PICTURE}|"
                 rf"{DocItemLabel.FOOTNOTE}|{DocItemLabel.CODE}|"
@@ -3754,7 +3648,7 @@ class DoclingDocument(BaseModel):
                     # no closing tag; only the existence of the item is recovered
                     full_chunk = f"<{tag_name}></{tag_name}>"
 
-                doc_label = tag_to_doclabel.get(tag_name, DocItemLabel.TEXT)
+                doc_label = tag_to_doclabel.get(tag_name, DocItemLabel.PARAGRAPH)
 
                 if tag_name == DocumentToken.OTSL.value:
                     table_data = parse_table_content(full_chunk)
@@ -3776,24 +3670,6 @@ class DoclingDocument(BaseModel):
                         doc.add_table(data=table_data, prov=prov, caption=caption)
                     else:
                         doc.add_table(data=table_data, caption=caption)
-
-                elif tag_name == GroupLabel.INLINE:
-                    inline_group = doc.add_inline_group()
-                    content = match.group("content")
-                    common_bbox = extract_bounding_box(content)
-                    for item_match in pattern.finditer(content):
-                        item_tag = item_match.group("tag")
-                        _add_text(
-                            full_chunk=item_match.group(0),
-                            bbox=common_bbox,
-                            pg_width=pg_width,
-                            pg_height=pg_height,
-                            page_no=page_no,
-                            tag_name=item_tag,
-                            doc_label=tag_to_doclabel.get(item_tag, DocItemLabel.TEXT),
-                            doc=doc,
-                            parent=inline_group,
-                        )
 
                 elif tag_name in [DocItemLabel.PICTURE, DocItemLabel.CHART]:
                     caption, caption_bbox = extract_caption(full_chunk)
@@ -3944,17 +3820,38 @@ class DoclingDocument(BaseModel):
                         )
                 else:
                     # For everything else, treat as text
-                    _add_text(
-                        full_chunk=full_chunk,
-                        bbox=bbox,
-                        pg_width=pg_width,
-                        pg_height=pg_height,
-                        page_no=page_no,
-                        tag_name=tag_name,
-                        doc_label=doc_label,
-                        doc=doc,
-                        parent=None,
+                    text_content = extract_inner_text(full_chunk)
+                    element_prov = (
+                        ProvenanceItem(
+                            bbox=bbox.resize_by_scale(pg_width, pg_height),
+                            charspan=(0, len(text_content)),
+                            page_no=page_no,
+                        )
+                        if bbox
+                        else None
                     )
+
+                    content_layer = ContentLayer.BODY
+                    if tag_name in [DocItemLabel.PAGE_HEADER, DocItemLabel.PAGE_FOOTER]:
+                        content_layer = ContentLayer.FURNITURE
+
+                    if doc_label == DocItemLabel.SECTION_HEADER:
+                        # Extract level from tag_name (e.g. "section_level_header_1" -> 1)
+                        level = int(tag_name.split("_")[-1])
+                        doc.add_heading(
+                            text=text_content,
+                            level=level,
+                            prov=element_prov,
+                            content_layer=content_layer,
+                        )
+                    else:
+                        doc.add_text(
+                            label=doc_label,
+                            text=text_content,
+                            prov=element_prov,
+                            content_layer=content_layer,
+                        )
+
         return doc
 
     @deprecated("Use save_as_doctags instead.")
@@ -4252,58 +4149,3 @@ class DoclingDocument(BaseModel):
                 raise ValueError("Document hierachy is inconsistent.")
 
         return d
-
-    @model_validator(mode="after")
-    def validate_misplaced_list_items(self):
-        """validate_misplaced_list_items."""
-        # find list items without list parent, putting succesive ones together
-        misplaced_list_items: list[list[ListItem]] = []
-        prev: Optional[NodeItem] = None
-        for item, _ in self.iterate_items(
-            traverse_pictures=True,
-            included_content_layers={c for c in ContentLayer},
-            with_groups=True,  # so that we can distinguish neighboring lists
-        ):
-            if isinstance(item, ListItem) and (
-                item.parent is None
-                or not isinstance(
-                    item.parent.resolve(doc=self), (OrderedList, UnorderedList)
-                )
-            ):
-                # non_group_list_items.append(item)
-                if prev is None or not isinstance(prev, ListItem):  # if new list
-                    misplaced_list_items.append([item])
-                else:
-                    misplaced_list_items[-1].append(item)
-            prev = item
-
-        for curr_list_items in reversed(misplaced_list_items):
-
-            # add group
-            new_group = (
-                OrderedList(self_ref="#")
-                if curr_list_items[0].enumerated
-                else UnorderedList(self_ref="#")
-            )
-            self.insert_item_before_sibling(
-                new_item=new_group,
-                sibling=curr_list_items[0],
-            )
-
-            # delete list items from document (should not be affected by group addition)
-            self.delete_items(node_items=curr_list_items)
-
-            # add list items to new group
-            for li in curr_list_items:
-                self.add_list_item(
-                    text=li.text,
-                    enumerated=li.enumerated,
-                    marker=li.marker,
-                    orig=li.orig,
-                    prov=li.prov[0] if li.prov else None,
-                    parent=new_group,
-                    content_layer=li.content_layer,
-                    formatting=li.formatting,
-                    hyperlink=li.hyperlink,
-                )
-        return self

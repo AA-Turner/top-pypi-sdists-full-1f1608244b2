@@ -10,7 +10,7 @@ import yaml
 from pydantic import BaseModel, Field
 
 from khoj.database.adapters import AgentAdapters, EntryAdapters
-from khoj.database.models import Agent, KhojUser
+from khoj.database.models import Agent, ChatMessageModel, KhojUser
 from khoj.processor.conversation import prompts
 from khoj.processor.conversation.utils import (
     OperatorRun,
@@ -22,10 +22,10 @@ from khoj.processor.conversation.utils import (
 from khoj.processor.operator import operate_environment
 from khoj.processor.tools.online_search import read_webpages, search_online
 from khoj.processor.tools.run_code import run_code
-from khoj.routers.api import extract_references_and_questions
 from khoj.routers.helpers import (
     ChatEvent,
     generate_summary_from_files,
+    search_documents,
     send_message_to_model_wrapper,
 )
 from khoj.utils.helpers import (
@@ -84,7 +84,7 @@ class PlanningResponse(BaseModel):
 
 async def apick_next_tool(
     query: str,
-    conversation_history: dict,
+    conversation_history: List[ChatMessageModel],
     user: KhojUser = None,
     location: LocationData = None,
     user_name: str = None,
@@ -166,18 +166,18 @@ async def apick_next_tool(
         query = f"[placeholder for user attached images]\n{query}"
 
     # Construct chat history with user and iteration history with researcher agent for context
-    previous_iterations_history = construct_iteration_history(previous_iterations, prompts.previous_iteration, query)
-    iteration_chat_log = {"chat": conversation_history.get("chat", []) + previous_iterations_history}
+    iteration_chat_history = construct_iteration_history(previous_iterations, prompts.previous_iteration, query)
+    chat_and_research_history = conversation_history + iteration_chat_history
 
     # Plan function execution for the next tool
-    query = prompts.plan_function_execution_next_tool.format(query=query) if previous_iterations_history else query
+    query = prompts.plan_function_execution_next_tool.format(query=query) if iteration_chat_history else query
 
     try:
         with timer("Chat actor: Infer information sources to refer", logger):
             response = await send_message_to_model_wrapper(
                 query=query,
                 system_message=function_planning_prompt,
-                conversation_log=iteration_chat_log,
+                chat_history=chat_and_research_history,
                 response_type="json_object",
                 response_schema=planning_response_model,
                 deepthought=True,
@@ -238,7 +238,7 @@ async def research(
     user: KhojUser,
     query: str,
     conversation_id: str,
-    conversation_history: dict,
+    conversation_history: List[ChatMessageModel],
     previous_iterations: List[ResearchIteration],
     query_images: List[str],
     agent: Agent = None,
@@ -261,9 +261,7 @@ async def research(
     if current_iteration := len(previous_iterations) > 0:
         logger.info(f"Continuing research with the previous {len(previous_iterations)} iteration results.")
         previous_iterations_history = construct_iteration_history(previous_iterations, prompts.previous_iteration)
-        research_conversation_history["chat"] = (
-            research_conversation_history.get("chat", []) + previous_iterations_history
-        )
+        research_conversation_history += previous_iterations_history
 
     while current_iteration < MAX_ITERATIONS:
         # Check for cancellation at the start of each iteration
@@ -275,7 +273,6 @@ async def research(
         code_results: Dict = dict()
         document_results: List[Dict[str, str]] = []
         operator_results: OperatorRun = None
-        summarize_files: str = ""
         this_iteration = ResearchIteration(tool=None, query=query)
 
         async for result in apick_next_tool(
@@ -315,7 +312,7 @@ async def research(
             previous_inferred_queries = {
                 c["query"] for iteration in previous_iterations if iteration.context for c in iteration.context
             }
-            async for result in extract_references_and_questions(
+            async for result in search_documents(
                 user,
                 construct_tool_chat_history(previous_iterations, ConversationCommand.Notes),
                 this_iteration.query,
@@ -475,40 +472,13 @@ async def research(
                 this_iteration.warning = f"Error operating browser: {e}"
                 logger.error(this_iteration.warning, exc_info=True)
 
-        elif this_iteration.tool == ConversationCommand.Summarize:
-            try:
-                async for result in generate_summary_from_files(
-                    this_iteration.query,
-                    user,
-                    file_filters,
-                    construct_tool_chat_history(previous_iterations, ConversationCommand.Summarize),
-                    query_images=query_images,
-                    agent=agent,
-                    send_status_func=send_status_func,
-                    query_files=query_files,
-                ):
-                    if isinstance(result, dict) and ChatEvent.STATUS in result:
-                        yield result[ChatEvent.STATUS]
-                    else:
-                        summarize_files = result  # type: ignore
-            except Exception as e:
-                this_iteration.warning = f"Error summarizing files: {e}"
-                logger.error(this_iteration.warning, exc_info=True)
-
         else:
             # No valid tools. This is our exit condition.
             current_iteration = MAX_ITERATIONS
 
         current_iteration += 1
 
-        if (
-            document_results
-            or online_results
-            or code_results
-            or operator_results
-            or summarize_files
-            or this_iteration.warning
-        ):
+        if document_results or online_results or code_results or operator_results or this_iteration.warning:
             results_data = f"\n<iteration>{current_iteration}\n<tool>{this_iteration.tool}</tool>\n<query>{this_iteration.query}</query>\n<results>"
             if document_results:
                 results_data += f"\n<document_references>\n{yaml.dump(document_results, allow_unicode=True, sort_keys=False, default_flow_style=False)}\n</document_references>"
@@ -520,8 +490,6 @@ async def research(
                 results_data += (
                     f"\n<browser_operator_results>\n{operator_results.response}\n</browser_operator_results>"
                 )
-            if summarize_files:
-                results_data += f"\n<summarized_files>\n{yaml.dump(summarize_files, allow_unicode=True, sort_keys=False, default_flow_style=False)}\n</summarized_files>"
             if this_iteration.warning:
                 results_data += f"\n<warning>\n{this_iteration.warning}\n</warning>"
             results_data += "\n</results>\n</iteration>"
