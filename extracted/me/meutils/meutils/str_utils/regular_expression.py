@@ -174,3 +174,4 @@ if __name__ == '__main__':
     https://p3-bot-workflow-sign.byteimg.com/tos-cn-i-mdko3gqilj/1fe07cca46224208bfbed8c0f3c50ed8.png~tplv-mdko3gqilj-image.image?rk3s=81d4c505&x-expires=1780112531&x-signature=e7q1NOMjqCHvMz%2FC3dVAEVisAh4%3D&x-wf-file_name=9748f6214970f744fe7fd7a3699cfa2.png \nA young woman holding a lipstick tube with a black body and gold decorative rings, featuring a nude or light brown lipstick bullet. The lipstick product faces the camera, positioned slightly below her face. In the background, a close-up of lips coated with the same nude or light brown shade, creating a natural and soft effect.
     """
     print(parse_url(text, for_image=True))
+

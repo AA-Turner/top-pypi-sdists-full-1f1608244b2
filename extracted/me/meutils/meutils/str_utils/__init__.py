@@ -12,7 +12,7 @@
 from meutils.pipe import *
 # from meutils.str_utils.translater import translater
 from meutils.str_utils.regular_expression import parse_url
-
+from meutils.caches import cache
 from meutils.request_utils.crawler import Crawler
 from urllib.parse import urlencode, parse_qs, parse_qsl, quote_plus, unquote_plus, urljoin
 
@@ -207,6 +207,40 @@ def unicode_normalize(s):
     return unicodedata.normalize('NFKC', s)
 
 
+def validate_url(url):
+    if isinstance(url, list):
+        return all(map(validate_url, url))
+
+    # 首先检查 URL 格式
+    try:
+        parsed_url = urlparse(url)
+        if not all([parsed_url.scheme, parsed_url.netloc]):
+            return False  # , "URL 格式无效"
+
+        # 检查格式是否符合标准
+        if not re.match(r'^https?://', url):
+            return False  # , "URL 必须以 http:// 或 https:// 开头"
+    except Exception:
+
+        logger.error("URL 解析错误")
+        return False
+
+    # 然后检查可访问性（可选）
+    try:
+        response = requests.head(url, timeout=5, allow_redirects=True)
+        if response.status_code >= 400:
+            logger.error(f"URL 返回错误状态码: {response.status_code}")
+
+            return False
+
+        logger.error("URL 有效")
+        return True
+    except requests.exceptions.RequestException as e:
+        logger.error(f"连接错误: {str(e)}")
+
+        return False
+
+
 if __name__ == '__main__':
     # print(str_replace('abcd', {'a': '8', 'd': '88'}))
     # print(unquote())
@@ -231,8 +265,11 @@ if __name__ == '__main__':
 
     print(parse_prompt("https://www.hao123.com/ hi" * 2, only_first_url=False))
 
-# import chardet
-#
-# def detect_encoding(byte_content):
-#     result = chardet.detect(byte_content)
-#     return result['encoding']
+    # import chardet
+    #
+    # def detect_encoding(byte_content):
+    #     result = chardet.detect(byte_content)
+    #     return result['encoding']
+
+    url = 'https://fal.ai/models/fal-ai/flux-pro/kontext/requests/de5f28be-2ca8-4bd4-8c42-c7fc32969801?output=0'
+    print(validate_url([url] * 3))

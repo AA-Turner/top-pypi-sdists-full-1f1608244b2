@@ -463,7 +463,7 @@ if __name__ == '__main__':  # 304752356930580482
         # first_frame_image="https://oss.ffire.cc/files/kling_watermark.png"  # 307173162217783304
     )
 
-    r = arun(create_task(request, token=token))
+    # r = arun(create_task(request, token=token))
     # arun(get_task(task_id=r.task_id, token=r.system_fingerprint))
 
     # arun(get_task(task_id="hailuoai-378260932722450439", token=token))
@@ -488,4 +488,5 @@ if __name__ == '__main__':  # 304752356930580482
     # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzUwMzQ1MjcsInVzZXIiOnsiaWQiOiIzMTMzODk5MjA0NjA5MzkyNjgiLCJuYW1lIjoiY2l4ZiB4YmNnIiwiYXZhdGFyIjoiIiwiZGV2aWNlSUQiOiIzMTM0MDgyMjg0NTEwOTg2MjYiLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.eOtAUe3MmarOGNk64j0bfaLNBZ4yxkqwIi1tUhOFD5c"
     # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAxMjg4NTIsInVzZXIiOnsiaWQiOiIzNzQwMTM3NzUyNzg4ODY5MTciLCJuYW1lIjoiTmFodWVsIE1vbGluYSIsImF2YXRhciI6IiIsImRldmljZUlEIjoiMzEzMzc0MTIyMjEyMjc4MjczIiwiaXNBbm9ueW1vdXMiOmZhbHNlfX0.uxTtDTcPT07piVA-x3N2ms2VrRN3JwcU99g_HJLwqLE"
     # token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAxMjg4NTIsInVzZXIiOnsiaWQiOiIzNzQwMTM3NzUyNzg4ODY5MTciLCJuYW1lIjoiTmFodWVsIE1vbGluYSIsImF2YXRhciI6IiIsImRldmljZUlEIjoiMzEzMzc0MTIyMjEyMjc4MjczIiwiaXNBbm9ueW1vdXMiOmZhbHNlfX0.uxTtDTcPT07piVA-x3N2ms2VrRN3JwcU99g_HJLwqLE"
-    # arun(check_token(token))
+    token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE3OTY1OTAsInVzZXIiOnsiaWQiOiIyMjkwODQ3NTA2MDEzODgwMzciLCJuYW1lIjoi5bCP6J665bi9ODAzNyIsImF2YXRhciI6Imh0dHBzOi8vY2RuLmhhaWx1b2FpLmNvbS9wcm9kL3VzZXJfYXZhdGFyLzE3MDYyNjc3MTEyODI3NzA4NzItMTczMTk0NTcwNjY4OTY1ODk2b3ZlcnNpemUucG5nIiwiZGV2aWNlSUQiOiIyNDM3MTMyNTI1NDU5ODY1NjIiLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.6qhw69sWo31EBTTm1x2iPzav0baKYjaXrtmzXXsq73I"
+    arun(check_token(token))

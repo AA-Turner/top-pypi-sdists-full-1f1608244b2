@@ -12,6 +12,7 @@ import uuid
 from meutils.pipe import *
 
 BASE_URL = "https://jimeng.jianying.com"
+BASE_URL_GLOBAL = "https://mweb-api-sg.capcut.com"
 FEISHU_URL = "https://xchatllm.feishu.cn/sheets/GYCHsvI4qhnDPNtI4VPcdw2knEd?sheet=zkPAHw"
 
 FEISHU_URL_MAPPER = {

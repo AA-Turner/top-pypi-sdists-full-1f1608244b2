@@ -9,7 +9,7 @@
 # @Description  : https://fal.ai/models/fal-ai/flux-pro/v1.1-ultra/api
 
 from meutils.pipe import *
-from meutils.str_utils.regular_expression import parse_url
+from meutils.str_utils import parse_url, validate_url
 from meutils.io.files_utils import to_url, to_url_fal
 
 from meutils.schemas.image_types import ImageRequest, FluxImageRequest, SDImageRequest, ImagesResponse
@@ -97,8 +97,10 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
     elif "kontext" in request.model:  # https://fal.ai/models/fal-ai/flux-pro/kontext/max
 
         if image_urls := parse_url(request.prompt):
-            # 转存
-            if request.user:
+            if not validate_url(image_urls):
+                raise Exception(f"Invalid image url: {image_urls}")
+
+            if request.user:  # 转存
                 image_urls = await to_url_fal(image_urls)
 
             for image_url in image_urls:
@@ -149,10 +151,15 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
             "prompt": await deeplx.llm_translate(request.prompt),
 
         }
+
         if request.aspect_ratio:
-            arguments["aspect_ratio"] = request.aspect_ratio
+            aspect_ratios = {'21:9', '16:9', '4:3', '3:2', '1:1', '2:3', '3:4', '9:16', '9:21'}
+            if request.aspect_ratio in aspect_ratios:
+                arguments["aspect_ratio"] = request.aspect_ratio
 
         logger.debug(bjson(arguments))
+
+
 
     elif request.model.startswith("fal-ai/flux"):  # https://fal.ai/models/fal-ai/flux-pro/v1.1-ultra/api
 

@@ -13,7 +13,7 @@ from meutils.pipe import *
 from meutils.hash_utils import md5
 from meutils.schemas.openai_types import TTSRequest
 
-from meutils.schemas.jimeng_types import BASE_URL, MODELS_MAP, FEISHU_URL
+from meutils.schemas.jimeng_types import BASE_URL_GLOBAL as BASE_URL, MODELS_MAP, FEISHU_URL
 from meutils.caches.redis_cache import cache
 
 from fake_useragent import UserAgent

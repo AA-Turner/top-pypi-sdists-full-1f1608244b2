@@ -19,7 +19,7 @@ from meutils.caches import rcache
 from meutils.decorators.retry import retrying
 from meutils.notice.feishu import send_message_for_images
 
-from meutils.schemas.jimeng_types import BASE_URL, MODELS_MAP, FEISHU_URL
+from meutils.schemas.jimeng_types import BASE_URL_GLOBAL as BASE_URL, MODELS_MAP, FEISHU_URL
 from meutils.schemas.image_types import ImageRequest
 from meutils.schemas.task_types import TaskResponse
 from meutils.apis.jimeng.common import get_headers, check_token
@@ -33,7 +33,7 @@ from fake_useragent import UserAgent
 
 ua = UserAgent()
 
-VERSION = "3.1.5"
+VERSION = "3.2.5"
 
 
 #
@@ -150,6 +150,15 @@ async def create_draft_content(request: ImageRequest, token: str):
             "min_version": "3.0.2",
             "generate_type": "generate",
             "aigc_mode": "workbench",
+            # 国际版
+            "metadata": {
+                "type": "",
+                "id": str(uuid.uuid4()),
+                "created_platform": 3,
+                "created_platform_version": "",
+                "created_time_in_ms": f"{time.time() * 1000}//1",
+                "created_did": ""
+            },
             "abilities": {
                 "type": "",
                 "id": str(uuid.uuid4()),
@@ -162,7 +171,7 @@ async def create_draft_content(request: ImageRequest, token: str):
                         "model": request.model,
                         "prompt": request.prompt,
                         "negative_prompt": request.negative_prompt or "",
-                        "seed": request.seed or 426999300,
+                        "seed": request.seed or 1192648548,
                         "sample_strength": request.guidance or 0.5,  # 精细度
                         "image_ratio": 1,
                         "large_image_info": {
@@ -177,6 +186,50 @@ async def create_draft_content(request: ImageRequest, token: str):
                     "history_option": {
                         "type": "",
                         "id": str(uuid.uuid4()),
+                    }
+                }
+            }
+        }
+        component = {
+            "type": "image_base_component",
+            "id": main_component_id,
+            "min_version": "3.0.2",
+            "metadata": {
+                "type": "",
+                "id": "85295e81-9b68-fba4-6570-81fc96c4b76e",
+                "created_platform": 3,
+                "created_platform_version": "",
+                "created_time_in_ms": "1749271549726",
+                "created_did": ""
+            },
+            "generate_type": "generate",
+            "aigc_mode": "workbench",
+            "abilities": {
+                "type": "",
+                "id": "91c763e9-1574-162d-1e7a-3356200dbc00",
+                "generate": {
+                    "type": "",
+                    "id": "3862c659-7761-841a-95a1-5d02b5326e72",
+                    "core_param": {
+                        "type": "",
+                        "id": "fcbc04a9-26ba-c890-c753-39d2a0ff9ef7",
+                        "model": "high_aes_general_v30l:general_v3.0_18b",
+                        "prompt": "a dog",
+                        "negative_prompt": "",
+                        "seed": 1192648548,
+                        "sample_strength": 0.5,
+                        "image_ratio": 1,
+                        "large_image_info": {
+                            "type": "",
+                            "id": "04242843-bfee-0584-9162-a611c5ff1b54",
+                            "height": 1328,
+                            "width": 1328,
+                            "resolution_type": "1k"
+                        }
+                    },
+                    "history_option": {
+                        "type": "",
+                        "id": "4e5867c5-06e9-c101-a1a8-bb972623d701"
                     }
                 }
             }
@@ -231,10 +284,15 @@ async def create_task(request: ImageRequest, token: Optional[str] = None):  # to
         "submit_id": str(uuid.uuid4()),
         "metrics_extra": "{\"templateId\":\"\",\"generateCount\":1,\"promptSource\":\"custom\",\"templateSource\":\"\",\"lastRequestId\":\"\",\"originRequestId\":\"\"}",
         "draft_content": json.dumps(draft_content),
-        "http_common_info": {
-            "aid": 513695
-        }
+        # "http_common_info": {
+        #     "aid": 513695
+        # }
     }
+    # logger.debug(bjson(payload))
+    # payload = {"extend": {"root_model": "high_aes_general_v30l:general_v3.0_18b", "template_id": ""},
+    #            "submit_id": "6e356f64-2bc3-45c7-83b6-64371bac9b64",
+    #            "metrics_extra": "{\"templateId\":\"\",\"generateCount\":1,\"promptSource\":\"custom\",\"templateSource\":\"\",\"lastRequestId\":\"\",\"originRequestId\":\"\"}",
+    #            "draft_content": "{\"type\":\"draft\",\"id\":\"0a47b141-8c2a-f4ce-ae51-5670688d3fdf\",\"min_version\":\"3.0.2\",\"min_features\":[],\"is_from_tsn\":true,\"version\":\"3.2.5\",\"main_component_id\":\"d7cf2d3f-db61-9775-2970-b3be2c193a71\",\"component_list\":[{\"type\":\"image_base_component\",\"id\":\"d7cf2d3f-db61-9775-2970-b3be2c193a71\",\"min_version\":\"3.0.2\",\"metadata\":{\"type\":\"\",\"id\":\"85295e81-9b68-fba4-6570-81fc96c4b76e\",\"created_platform\":3,\"created_platform_version\":\"\",\"created_time_in_ms\":\"1749271549726\",\"created_did\":\"\"},\"generate_type\":\"generate\",\"aigc_mode\":\"workbench\",\"abilities\":{\"type\":\"\",\"id\":\"91c763e9-1574-162d-1e7a-3356200dbc00\",\"generate\":{\"type\":\"\",\"id\":\"3862c659-7761-841a-95a1-5d02b5326e72\",\"core_param\":{\"type\":\"\",\"id\":\"fcbc04a9-26ba-c890-c753-39d2a0ff9ef7\",\"model\":\"high_aes_general_v30l:general_v3.0_18b\",\"prompt\":\"a dog\",\"negative_prompt\":\"\",\"seed\":1192648548,\"sample_strength\":0.5,\"image_ratio\":1,\"large_image_info\":{\"type\":\"\",\"id\":\"04242843-bfee-0584-9162-a611c5ff1b54\",\"height\":1328,\"width\":1328,\"resolution_type\":\"1k\"}},\"history_option\":{\"type\":\"\",\"id\":\"4e5867c5-06e9-c101-a1a8-bb972623d701\"}}}}]}"}
 
     async with httpx.AsyncClient(base_url=BASE_URL, headers=headers, timeout=60) as client:
         response = await client.post(url, json=payload)
@@ -619,7 +677,8 @@ async def generate(request: ImageRequest):
 
 if __name__ == '__main__':
     # token = "eb4d120829cfd3ee957943f63d6152ed"
-    token = "ffeee346fbd19eceebb79a7bfbca4bfe"
+    token = "176b9aba6b81256b50abf08526cf311a"
+    token = "7fdb556cbd1d01ba3e4a64eb0203d49d"
     image_url = "https://oss.ffire.cc/files/kling_watermark.png"
 
     # request = ImageRequest(prompt="做一个圣诞节的海报", size="1024x1024")
@@ -659,18 +718,17 @@ if __name__ == '__main__':
     # arun(generate(ImageRequest(**data)))
 
     # arun(generate(ImageRequest(prompt="fuck you")))
-    prompt = "A plump Chinese beauty wearing a wedding  dress revealing her skirt and underwear is swinging on the swing,Happy smile,cleavage,Exposed thighs,Spread your legs open,Extend your leg,panties,upskirt,Barefoot,sole"
-    # prompt = "a dog cat in the same room"
-    prompt = "https://oss.ffire.cc/files/kling_watermark.png 让这个女人带上墨镜，衣服换个颜色... ! "
+    # prompt = "A plump Chinese beauty wearing a wedding  dress revealing her skirt and underwear is swinging on the swing,Happy smile,cleavage,Exposed thighs,Spread your legs open,Extend your leg,panties,upskirt,Barefoot,sole"
+    prompt = "  a dog cat in the same room       "
+    # prompt = "https://oss.ffire.cc/files/kling_watermark.png 让这个女人带上墨镜，衣服换个颜色... ! "
     request = ImageRequest(prompt=prompt, size="1328x1328")
     # request = ImageRequest(prompt=prompt, size="1024x1024")
 
     # request = ImageRequest(prompt=prompt, size="2048*2048")
 
-    task = arun(create_task(request))
+    task = arun(create_task(request, token))
     # task = arun(create_task(request, "d2d142fc877e696484cc2fc521127b36"))
     # task = arun(create_task(request, "d2d142fc877e696484cc2fc521127b36"))
-
 
     # arun(get_task(task.task_id, task.system_fingerprint))
     # arun(get_task_plus(task.task_id, task.system_fingerprint))
@@ -681,6 +739,6 @@ if __name__ == '__main__':
     #              system_fingerprint='8089661372fe8db9795cc507c3049625', model=None,
     #              created_at='2025-05-06T19:49:50.933089')
 
-    # arun(get_task("16132262728706", "d2d142fc877e696484cc2fc521127b36"))
+    # arun(get_task("47185525857809", token))
 
     # arun(generate(request))

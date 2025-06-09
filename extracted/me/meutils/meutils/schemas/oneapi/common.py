@@ -23,7 +23,7 @@ STEP = 2
 MINIMAX_VIDEO = 3
 
 MODEL_PRICE = {
-    "chatfire-claude":0.02,
+    "chatfire-claude": 0.02,
     "o1:free": FREE,
     # "claude-3-7-sonnet-code:free": "claude-3-7-sonnet-code"
     "claude-3-7-sonnet-code:free": 0.0001,
@@ -33,6 +33,7 @@ MODEL_PRICE = {
 
     "gpt-search": 0.02,
 
+    # 谷歌
     "gemini-2.0-flash-search": 0.01,
     "gemini-2.0-flash-exp-image-generation": 0.03,
 
@@ -43,7 +44,8 @@ MODEL_PRICE = {
     "gemini-2.5-flash-video": 0.05,
     "gemini-2.5-pro-video": 0.1,
 
-    "images": FREE,
+    "veo3": 4,
+
     # rix
     "kling_image": 0.05,
     "kling_virtual_try_on": 1,

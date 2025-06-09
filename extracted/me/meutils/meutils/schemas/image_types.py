@@ -47,6 +47,7 @@ ASPECT_RATIOS = {
     "768x1024": '3:4',
 
     '1366x768': '16:9',
+
     '768x1366': '9:16',
     '1024x576': '16:9',
     '576x1024': '9:16',
@@ -87,7 +88,7 @@ class ImageRequest(BaseModel):  # openai
     """
     图生图 两种方式： prompt + controls
     """
-    model: str = "recraftv3"  ####### 临时方案
+    model: str
 
     prompt: constr(min_length=1, max_length=3000) = ""
 
@@ -118,6 +119,7 @@ class ImageRequest(BaseModel):  # openai
 
     def __init__(self, /, **data: Any):
         super().__init__(**data)
+
         if self.aspect_ratio:  # 适配比例
             self.size = ASPECT_RATIOS.get(self.aspect_ratio, '1024x1024')
 
