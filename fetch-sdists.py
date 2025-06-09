@@ -48,6 +48,9 @@ METADATA_FILES = frozenset({
     'pyproject.toml',
 })
 DIRECTORY_BLACKLIST = frozenset({
+    # Cache directories
+    '.cache', '.mypy_cache', '.pytest_cache', '.ruff_cache', '.uv-cache',
+    '__pycache__',
     # SCM directories
     '.git', '.hg', '.jj', '.svn',
     # Virtual environments
@@ -56,10 +59,13 @@ DIRECTORY_BLACKLIST = frozenset({
     '.tox', '.nox',
     '.idea', '.vs', '.vscode',
     # Non-project directories
-    'deps', 'extern', 'external', 'externals', 'external_libs',
+    'deps',
+    '_extern', '_external_libraries', 'extern', 'external', 'externals', 'external_libs',
     'pybind', 'pybind11',
-    'third_party',
-    '_vendor', 'vendor', 'vendored', 'vendored-meson',
+    '.3rd_party_stubs', '3rdparty',
+    '_thirdparty', 'third-parties', 'third-party', 'third-party-stubs', 'third_party', 'thirdparty',
+    '_vendor', '_vendored', '_vendored_packages', '.vendored',
+    'vendor', 'vendored', 'vendored-meson',
 })  # fmt: skip
 
 
