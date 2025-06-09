@@ -35,9 +35,9 @@ class ConnectorProjection(object):
     """
     openapi_types = {
         'enabled': 'bool',
+        'inbox_id': 'str',
         'user_id': 'str',
         'email_address': 'str',
-        'inbox_id': 'str',
         'created_at': 'datetime',
         'name': 'str',
         'id': 'str'
@@ -45,24 +45,24 @@ class ConnectorProjection(object):
 
     attribute_map = {
         'enabled': 'enabled',
+        'inbox_id': 'inboxId',
         'user_id': 'userId',
         'email_address': 'emailAddress',
-        'inbox_id': 'inboxId',
         'created_at': 'createdAt',
         'name': 'name',
         'id': 'id'
     }
 
-    def __init__(self, enabled=None, user_id=None, email_address=None, inbox_id=None, created_at=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, enabled=None, inbox_id=None, user_id=None, email_address=None, created_at=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
         """ConnectorProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
         self._enabled = None
+        self._inbox_id = None
         self._user_id = None
         self._email_address = None
-        self._inbox_id = None
         self._created_at = None
         self._name = None
         self._id = None
@@ -70,10 +70,10 @@ class ConnectorProjection(object):
 
         if enabled is not None:
             self.enabled = enabled
+        self.inbox_id = inbox_id
         self.user_id = user_id
         if email_address is not None:
             self.email_address = email_address
-        self.inbox_id = inbox_id
         self.created_at = created_at
         if name is not None:
             self.name = name
@@ -99,6 +99,29 @@ class ConnectorProjection(object):
         """
 
         self._enabled = enabled
+
+    @property
+    def inbox_id(self):
+        """Gets the inbox_id of this ConnectorProjection.  # noqa: E501
+
+
+        :return: The inbox_id of this ConnectorProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._inbox_id
+
+    @inbox_id.setter
+    def inbox_id(self, inbox_id):
+        """Sets the inbox_id of this ConnectorProjection.
+
+
+        :param inbox_id: The inbox_id of this ConnectorProjection.  # noqa: E501
+        :type: str
+        """
+        if self.local_vars_configuration.client_side_validation and inbox_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `inbox_id`, must not be `None`")  # noqa: E501
+
+        self._inbox_id = inbox_id
 
     @property
     def user_id(self):
@@ -143,29 +166,6 @@ class ConnectorProjection(object):
         """
 
         self._email_address = email_address
-
-    @property
-    def inbox_id(self):
-        """Gets the inbox_id of this ConnectorProjection.  # noqa: E501
-
-
-        :return: The inbox_id of this ConnectorProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._inbox_id
-
-    @inbox_id.setter
-    def inbox_id(self, inbox_id):
-        """Sets the inbox_id of this ConnectorProjection.
-
-
-        :param inbox_id: The inbox_id of this ConnectorProjection.  # noqa: E501
-        :type: str
-        """
-        if self.local_vars_configuration.client_side_validation and inbox_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `inbox_id`, must not be `None`")  # noqa: E501
-
-        self._inbox_id = inbox_id
 
     @property
     def created_at(self):

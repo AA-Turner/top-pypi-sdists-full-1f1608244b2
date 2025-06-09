@@ -1,12 +1,15 @@
 import io
 from pathlib import Path
+
 import numpy as np
-from approvaltests import verify_binary, Options
+from typing_extensions import override
+
+from approvaltests import Options, verify_binary
 from approvaltests.core import Reporter
 from approvaltests.reporters import get_command_text
 
 
-def serialize_ndarray(a: np.ndarray):
+def serialize_ndarray(a: np.ndarray) -> bytes:
     bs = io.BytesIO()
     np.save(bs, a)
     bs.seek(0)
@@ -14,7 +17,7 @@ def serialize_ndarray(a: np.ndarray):
 
 
 # begin-snippet: verify_numpy_array
-def test_simulator_produces_correct_output():
+def test_simulator_produces_correct_output() -> None:
     np_array = np.full(shape=(32, 16), fill_value=42, dtype=np.int64)
     verify_binary(
         serialize_ndarray(np_array),
@@ -31,12 +34,13 @@ def test_simulator_produces_correct_output():
 # begin-snippet: numpy_custom_reporter
 
 
-def load_ndarray(path):
+def load_ndarray(path: str):
     with open(path, mode="rb") as f:
         return np.load(f)
 
 
 class NDArrayDiffReporter(Reporter):
+    @override
     def report(self, received_path: str, approved_path: str) -> bool:
         if not Path(approved_path).is_file():
             self._create_empty_array(approved_path)
@@ -51,6 +55,6 @@ class NDArrayDiffReporter(Reporter):
     # end-snippet
 
     @staticmethod
-    def _create_empty_array(path):
+    def _create_empty_array(path: str) -> None:
         with open(path, mode="wb") as f:
             f.write(serialize_ndarray(np.zeros((0,))))

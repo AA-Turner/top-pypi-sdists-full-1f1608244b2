@@ -1,42 +1,13 @@
 Metadata-Version: 2.4
 Name: tweakwcs
-Version: 0.8.10
+Version: 0.8.11
 Summary: A package for correcting alignment errors in WCS objects
 Author-email: Mihai Cara <help@stsci.edu>
-License: Copyright (C) 2023, Association of Universities for Research in Astronomy
-        
-        Redistribution and use in source and binary forms, with or without
-        modification, are permitted provided that the following conditions are met:
-        
-            1. Redistributions of source code must retain the above copyright
-               notice, this list of conditions and the following disclaimer.
-        
-            2. Redistributions in binary form must reproduce the above
-               copyright notice, this list of conditions and the following
-               disclaimer in the documentation and/or other materials provided
-               with the distribution.
-        
-            3. Neither the name of the copyright holder nor the names of its
-               contributors may be used to endorse or promote products derived from
-               this software without specific prior written permission.
-        
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-        ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-        WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-        USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-        
 Project-URL: Homepage, https://github.com/spacetelescope/tweakwcs
 Project-URL: Bug Tracker, https://github.com/spacetelescope/tweakwcs/issues
 Project-URL: Documentation, http://spacetelescope.github.io/tweakwcs/
 Project-URL: Source Code, https://github.com/spacetelescope/tweakwcs
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: OSI Approved :: BSD License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Classifier: Topic :: Scientific/Engineering :: Astronomy
@@ -44,6 +15,7 @@ Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Development Status :: 4 - Beta
 Requires-Python: >=3.10
 Description-Content-Type: text/x-rst
+License-File: LICENSE.txt
 Requires-Dist: numpy
 Requires-Dist: astropy>=5.0.4
 Requires-Dist: gwcs>=0.14.0
@@ -63,6 +35,7 @@ Requires-Dist: sphinx-automodapi; extra == "docs"
 Requires-Dist: sphinx-rtd-theme; extra == "docs"
 Requires-Dist: stsci-rtd-theme; extra == "docs"
 Requires-Dist: graphviz; extra == "docs"
+Dynamic: license-file
 
 .. image:: https://codecov.io/gh/spacetelescope/tweakwcs/branch/main/graph/badge.svg
   :target: https://codecov.io/gh/spacetelescope/tweakwcs

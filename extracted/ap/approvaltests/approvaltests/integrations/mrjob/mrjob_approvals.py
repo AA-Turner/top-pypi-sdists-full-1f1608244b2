@@ -1,21 +1,34 @@
-import itertools
+import sys
+import warnings
 from io import BytesIO
 from itertools import product
-from typing import Callable, Sequence, Any, Dict, Optional
+from typing import Any, Callable, Dict, Optional, Sequence
 
-from mrjob.job import MRJob
+from approval_utilities.utilities.map_reduce import product_dict
+from approvaltests import Options, verify
 
-from approvaltests import verify, Options
+if sys.version_info <= (3, 12):
+    from mrjob.job import MRJob
+else:
+    MRJob = Any  # MRJob is not compatible with Python 3.13+
 
 
 def verify_map_reduce(
     mr_job_under_test: MRJob, test_data: str, *, options: Optional[Options] = None
 ) -> None:
+    warnings.warn(
+        "MRJob Approvals doesn't work with Python 3.13+, this will be removed in future",
+        DeprecationWarning,
+    )
     storyboard = print_map_reduce_job(mr_job_under_test, test_data)
     verify(storyboard, options=options)
 
 
 def print_map_reduce_job(mr_job_under_test: MRJob, test_data: str) -> str:
+    warnings.warn(
+        "MRJob Approvals doesn't work with Python 3.13+, this will be removed in future",
+        DeprecationWarning,
+    )
     storyboard = f"{test_data}\n\nMap reduces to:\n\n"
     mr_job_under_test.sandbox(stdin=BytesIO(test_data.encode("utf-8")))
     with mr_job_under_test.make_runner() as runner:
@@ -33,6 +46,11 @@ def verify_templated_map_reduce(
     *,
     options: Optional[Options] = None,
 ) -> None:
+    warnings.warn(
+        "MRJob Approvals doesn't work with Python 3.13+, this will be removed in future",
+        DeprecationWarning,
+    )
+
     def map_reducer_creator(*_):
         return map_reduction
 
@@ -48,6 +66,10 @@ def verify_templated_map_reduce_with_customized_job(
     *,
     options: Optional[Options] = None,
 ) -> None:
+    warnings.warn(
+        "MRJob Approvals doesn't work with Python 3.13+, this will be removed in future",
+        DeprecationWarning,
+    )
     inputs = product(*params)
     verify_templated_map_reduce_with_customized_job_with_dictionary_args2(
         lambda i: map_reduce_creator(*i),
@@ -57,13 +79,6 @@ def verify_templated_map_reduce_with_customized_job(
     )
 
 
-def product_dict(**kwargs):
-    keys = kwargs.keys()
-    vals = kwargs.values()
-    for instance in itertools.product(*vals):
-        yield dict(zip(keys, instance))
-
-
 def verify_templated_map_reduce_with_customized_job_with_dictionary_args(
     map_reduce_creator: Callable[[Dict[str, Any]], MRJob],
     input_creator: Callable[[Dict[str, Any]], str],
@@ -71,6 +86,10 @@ def verify_templated_map_reduce_with_customized_job_with_dictionary_args(
     *,
     options: Optional[Options] = None,
 ) -> None:
+    warnings.warn(
+        "MRJob Approvals doesn't work with Python 3.13+, this will be removed in future",
+        DeprecationWarning,
+    )
     inputs = product_dict(**params)
     verify_templated_map_reduce_with_customized_job_with_dictionary_args2(
         map_reduce_creator, input_creator, inputs, options=options
@@ -84,6 +103,10 @@ def verify_templated_map_reduce_with_customized_job_with_dictionary_args2(
     *,
     options: Optional[Options] = None,
 ) -> None:
+    warnings.warn(
+        "MRJob Approvals doesn't work with Python 3.13+, this will be removed in future",
+        DeprecationWarning,
+    )
     storyboard = ""
     for input1 in inputs:
         storyboard += f"===================\n\n{input1} =>\n"

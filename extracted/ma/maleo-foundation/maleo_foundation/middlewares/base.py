@@ -139,6 +139,7 @@ class BaseMiddleware(BaseHTTPMiddleware):
         if (authentication.user.is_authenticated
             and authentication.credentials.token.type == BaseEnums.TokenType.REFRESH
             and (response.status_code >= 200 and response.status_code < 300)
+            and "logout" not in request.url.path
         ):
             #* Regenerate new authorization
             payload = (

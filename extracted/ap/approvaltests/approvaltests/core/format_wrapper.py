@@ -1,6 +1,8 @@
 import abc
 import typing
 
+from typing_extensions import override
+
 
 class FormatWrapper(abc.ABC):
     @abc.abstractmethod
@@ -13,8 +15,10 @@ class FormatWrapper(abc.ABC):
 
 
 class AlwaysMatch(FormatWrapper):
+    @override
     def wrap(self, data: typing.Any) -> typing.Any:
         return data
 
+    @override
     def is_match(self, data: typing.Any) -> bool:
         return True

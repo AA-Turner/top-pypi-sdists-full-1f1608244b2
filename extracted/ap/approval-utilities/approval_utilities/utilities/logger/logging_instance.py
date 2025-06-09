@@ -1,12 +1,12 @@
 import datetime
 import inspect
 import traceback
-from typing import Callable, Any, Iterable, ContextManager
-
+from types import TracebackType
+from typing import Any, Callable, ContextManager, Iterable, Optional, Type, Union
 
 from approval_utilities.utilities.exceptions.exception_utils import to_string
-from approval_utilities.utilities.string_wrapper import StringWrapper
 from approval_utilities.utilities.stack_frame_utilities import get_class_name_for_frame
+from approval_utilities.utilities.string_wrapper import StringWrapper
 
 
 class Toggles:
@@ -19,21 +19,21 @@ class Toggles:
         self.events = show
 
 
-def _is_iterable(arg):
+def _is_iterable(arg: Any) -> bool:
     return isinstance(arg, Iterable) and not isinstance(arg, str)
 
 
-def print_type(value):
+def print_type(value: Any) -> str:
     return f"<{type(value).__name__}>"
 
 
 class LoggingInstance:
-    def __init__(self):
+    def __init__(self) -> None:
         self.log_stack_traces = True
         self.toggles = Toggles(True)
-        self.previous_timestamp = None
-        self.logger = lambda t: print(t, end="")
-        self.tabbing = 0
+        self.previous_timestamp: Optional[datetime.datetime] = None
+        self.logger: Callable[[str], None] = lambda t: print(t, end="")
+        self.tabbing: int = 0
         self.counter = 0
         self.log_with_timestamps = True
         self.timer: Callable[[], datetime.datetime] = datetime.datetime.now
@@ -45,53 +45,71 @@ class LoggingInstance:
         self.log_stack_traces = False
         return buffer
 
-    def indent(self) -> ContextManager:
+    def indent(self) -> ContextManager[None]:
         class Indent:
-            def __init__(self, log):
+            def __init__(self, log: "LoggingInstance") -> None:
                 self.log = log
 
-            def __enter__(self):
+            def __enter__(self) -> None:
                 self.log.tabbing += 1
 
-            def __exit__(self, exc_type, exc_val, exc_tb):
+            def __exit__(
+                self,
+                exc_type: Optional[Type[BaseException]],
+                exc_val: Optional[BaseException],
+                exc_tb: Optional[TracebackType],
+            ) -> None:
                 self.log.tabbing -= 1
 
         return Indent(self)
 
     def use_markers(
-        self, parameter_text: [str, Callable[[], str]] = None, additional_stack: int = 0
-    ) -> ContextManager:
+        self,
+        parameter_text: Optional[Union[str, Callable[[], str]]] = None,
+        additional_stack: int = 0,
+    ) -> ContextManager[None]:
         class Nothing:
-            def __enter__(self):
+            def __enter__(self) -> None:
                 pass
 
-            def __exit__(self, exc_type, exc_val, exc_tb):
+            def __exit__(
+                self,
+                exc_type: Optional[type],
+                exc_val: Optional[BaseException],
+                exc_tb: Optional[TracebackType],
+            ) -> None:
                 pass
 
         if not self.toggles.markers:
             return Nothing()
 
         class Markers:
-            def __init__(self, log, method_name, filename, parameter_text):
+            def __init__(
+                self, log: "LoggingInstance", method_name: str, filename: str
+            ) -> None:
                 self.log = log
                 self.method_name = method_name
                 self.filename = filename
-                self.parameter_text = parameter_text
 
-            def __enter__(self):
+            def __enter__(self) -> None:
                 expected = f"-> in: {self.method_name}({self.get_parameters(False)}) in {self.filename}"
                 self.log.log_line(expected)
                 self.log.tabbing = self.log.tabbing + 1
 
-            def __exit__(self, exc_type, exc_val, exc_tb):
+            def __exit__(
+                self,
+                exc_type: Optional[type],
+                exc_val: Optional[BaseException],
+                exc_tb: Optional[TracebackType],
+            ) -> None:
                 self.log.tabbing = self.log.tabbing - 1
                 expected = f"<- out: {self.method_name}({self.get_parameters(True)})"
                 self.log.log_line(expected)
 
-            def get_parameters(self, is_exit: bool):
-                if isinstance(self.parameter_text, Callable):
+            def get_parameters(self, is_exit: bool) -> str:
+                if callable(parameter_text):
                     return parameter_text()
-                elif self.parameter_text is None or is_exit:
+                elif parameter_text is None or is_exit:
                     return ""
                 else:
                     return str(parameter_text)
@@ -101,9 +119,9 @@ class LoggingInstance:
         method_name = stack.function
 
         filename = get_class_name_for_frame(stack)
-        return Markers(self, method_name, filename, parameter_text)
+        return Markers(self, method_name, filename)
 
-    def log_line(self, text: str, use_timestamps=True) -> None:
+    def log_line(self, text: str, use_timestamps: bool = True) -> None:
         if self.counter != 0:
             self.logger("\n")
             self.counter = 0
@@ -152,7 +170,7 @@ class LoggingInstance:
         if not self.toggles.variables:
             return
 
-        def to_type(value: Any, spacing=" ") -> str:
+        def to_type(value: Any, spacing: str = " ") -> str:
             return f"{spacing}{print_type(value)}" if show_types else ""
 
         if _is_iterable(value):
@@ -176,12 +194,16 @@ class LoggingInstance:
             return
         self.log_line(f"Sql: {query_text}")
 
-    def message(self, message):
+    def message(self, message: str) -> None:
         if not self.toggles.messages:
             return
         self.log_line(f"message: {message}")
 
-    def warning(self, text: str = "", exception: BaseException = None) -> None:
+    def warning(
+        self,
+        text: Union[str, BaseException] = "",
+        exception: Optional[BaseException] = None,
+    ) -> None:
         if isinstance(text, Exception):
             temp = ""
             if exception:
@@ -206,23 +228,23 @@ class LoggingInstance:
             self.log_line(stack_trace, use_timestamps=False)
         self.log_line(warning_stars, use_timestamps=False)
 
-    def show_queries(self, show):
+    def show_queries(self, show: bool) -> None:
         self.toggles.queries = show
 
     def show_all(self, show: bool) -> None:
         self.toggles = Toggles(show)
 
-    def show_messages(self, show):
+    def show_messages(self, show: bool) -> None:
         self.toggles.messages = show
 
-    def show_variables(self, show):
+    def show_variables(self, show: bool) -> None:
         self.toggles.variables = show
 
-    def show_hour_glass(self, show):
+    def show_hour_glass(self, show: bool) -> None:
         self.toggles.hour_glass = show
 
-    def show_markers(self, show):
+    def show_markers(self, show: bool) -> None:
         self.toggles.markers = show
 
-    def show_events(self, show):
+    def show_events(self, show: bool) -> None:
         self.toggles.events = show

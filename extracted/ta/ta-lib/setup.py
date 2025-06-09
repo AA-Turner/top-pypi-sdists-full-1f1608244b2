@@ -99,7 +99,6 @@ class LazyBuildExtCommandClass(dict):
         super(LazyBuildExtCommandClass, self).__setitem__(key, value)
 
     def __getitem__(self, key):
-        global include_dirs
         if key != 'build_ext':
             return super(LazyBuildExtCommandClass, self).__getitem__(key)
 
@@ -151,7 +150,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='TA-Lib',
-    version='0.6.3',
+    version='0.6.4',
     description='Python wrapper for TA-Lib',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -159,9 +158,8 @@ setup(
     author_email='mrjbq7@gmail.com',
     url='http://github.com/ta-lib/ta-lib-python',
     download_url='https://github.com/ta-lib/ta-lib-python/releases',
-    license='BSD',
+    license="BSD",
     classifiers=[
-        "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
         "Operating System :: Unix",
         "Operating System :: POSIX",
@@ -182,6 +180,7 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Programming Language :: Cython",
         "Topic :: Office/Business :: Financial",
         "Topic :: Scientific/Engineering :: Mathematics",

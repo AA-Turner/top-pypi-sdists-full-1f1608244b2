@@ -37,8 +37,8 @@ class TestAliasThreadProjection(unittest.TestCase):
         # model = mailslurp_client.models.alias_thread_projection.AliasThreadProjection()  # noqa: E501
         if include_optional :
             return AliasThreadProjection(
-                user_id = '0', 
                 inbox_id = '0', 
+                user_id = '0', 
                 updated_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 to = [
@@ -57,8 +57,8 @@ class TestAliasThreadProjection(unittest.TestCase):
             )
         else :
             return AliasThreadProjection(
-                user_id = '0',
                 inbox_id = '0',
+                user_id = '0',
                 updated_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
                 to = [

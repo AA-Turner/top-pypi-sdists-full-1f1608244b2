@@ -2,6 +2,8 @@
 
 # NOTE: for elwise_kernel_runner which adds keyword arguments
 # pylint:disable=unexpected-keyword-arg
+from __future__ import annotations
+
 
 __copyright__ = "Copyright (C) 2009 Andreas Kloeckner"
 
@@ -32,13 +34,14 @@ import builtins
 from dataclasses import dataclass
 from functools import reduce
 from numbers import Number
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
 from warnings import warn
 
 import numpy as np
 
 import pyopencl as cl
 import pyopencl.elementwise as elementwise
+import pyopencl.tools as cl_tools
 from pyopencl import cltypes
 from pyopencl.characterize import has_double_support
 from pyopencl.compyte.array import (
@@ -230,13 +233,13 @@ def elwise_kernel_runner(kernel_getter):
     return kernel_runner
 
 
-class DefaultAllocator(cl.tools.DeferredAllocator):
+class DefaultAllocator(cl_tools.DeferredAllocator):
     def __init__(self, *args, **kwargs):
         warn("pyopencl.array.DefaultAllocator is deprecated. "
                 "It will be continue to exist throughout the 2013.x "
                 "versions of PyOpenCL.",
                 DeprecationWarning, stacklevel=2)
-        cl.tools.DeferredAllocator.__init__(self, *args, **kwargs)
+        cl_tools.DeferredAllocator.__init__(self, *args, **kwargs)
 
 # }}}
 
@@ -262,7 +265,7 @@ class _copy_queue:  # noqa: N801
     pass
 
 
-_ARRAY_GET_SIZES_CACHE: Dict[Tuple[int, int, int], Tuple[int, int]] = {}
+_ARRAY_GET_SIZES_CACHE: dict[tuple[int, int, int], tuple[int, int]] = {}
 _BOOL_DTYPE = np.dtype(np.int8)
 _NOT_PRESENT = object()
 
@@ -457,22 +460,22 @@ class Array:
 
     def __init__(
             self,
-            cq: Optional[Union[cl.Context, cl.CommandQueue]],
-            shape: Union[Tuple[int, ...], int],
+            cq: cl.Context | cl.CommandQueue | None,
+            shape: tuple[int, ...] | int,
             dtype: Any,
             order: str = "C",
-            allocator: Optional[cl.tools.AllocatorBase] = None,
+            allocator: cl_tools.AllocatorBase | None = None,
             data: Any = None,
             offset: int = 0,
-            strides: Optional[Tuple[int, ...]] = None,
-            events: Optional[List[cl.Event]] = None,
+            strides: tuple[int, ...] | None = None,
+            events: list[cl.Event] | None = None,
 
             # NOTE: following args are used for the fast constructor
             _flags: Any = None,
             _fast: bool = False,
-            _size: Optional[int] = None,
-            _context: Optional[cl.Context] = None,
-            _queue: Optional[cl.CommandQueue] = None) -> None:
+            _size: int | None = None,
+            _context: cl.Context | None = None,
+            _queue: cl.CommandQueue | None = None) -> None:
         if _fast:
             # Assumptions, should be disabled if not testing
             if 0:
@@ -1956,13 +1959,13 @@ class Array:
             raise ValueError("new type not compatible with array")
 
         new_shape = (
-                self.shape[:min_stride_axis]
-                + (self.shape[min_stride_axis] * old_itemsize // itemsize,)
-                + self.shape[min_stride_axis+1:])
+                *self.shape[:min_stride_axis],
+                self.shape[min_stride_axis] * old_itemsize // itemsize,
+                *self.shape[min_stride_axis+1:])
         new_strides = (
-                self.strides[:min_stride_axis]
-                + (self.strides[min_stride_axis] * itemsize // old_itemsize,)
-                + self.strides[min_stride_axis+1:])
+                *self.strides[:min_stride_axis],
+                self.strides[min_stride_axis] * itemsize // old_itemsize,
+                *self.strides[min_stride_axis+1:])
 
         return self._new_with_changes(
                 self.base_data, self.offset,
@@ -2352,11 +2355,11 @@ def zeros_like(ary):
 
 @dataclass
 class _ArangeInfo:
-    start: Optional[int] = None
-    stop: Optional[int] = None
-    step: Optional[int] = None
-    dtype: Optional["np.dtype"] = None
-    allocator: Optional[Any] = None
+    start: int | None = None
+    stop: int | None = None
+    step: int | None = None
+    dtype: np.dtype | None = None
+    allocator: Any | None = None
 
 
 @elwise_kernel_runner
@@ -2759,9 +2762,9 @@ def concatenate(arrays, axis=0, queue=None, allocator=None):
     for ary in arrays:
         my_len = ary.shape[axis]
         result.setitem(
-                full_slice[:axis]
-                + (slice(base_idx, base_idx+my_len),)
-                + full_slice[axis+1:],
+                (*full_slice[:axis],
+                    slice(base_idx, base_idx+my_len),
+                    *full_slice[axis+1:]),
                 ary)
 
         base_idx += my_len
@@ -2867,7 +2870,7 @@ def stack(arrays, axis=0, queue=None):
         # pyopencl.Array.__setitem__ does not support non-contiguous assignments
         raise NotImplementedError
 
-    result_shape = input_shape[:axis] + (len(arrays),) + input_shape[axis:]
+    result_shape = (*input_shape[:axis], len(arrays), *input_shape[axis:])
 
     if __debug__:
         if builtins.any(type(ary) != type(arrays[0])  # noqa: E721

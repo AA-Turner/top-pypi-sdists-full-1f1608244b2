@@ -37,9 +37,9 @@ class TestAliasProjection(unittest.TestCase):
         # model = mailslurp_client.models.alias_projection.AliasProjection()  # noqa: E501
         if include_optional :
             return AliasProjection(
+                inbox_id = '0', 
                 user_id = '0', 
                 email_address = '0', 
-                inbox_id = '0', 
                 updated_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 use_threads = True, 
@@ -48,9 +48,9 @@ class TestAliasProjection(unittest.TestCase):
             )
         else :
             return AliasProjection(
+                inbox_id = '0',
                 user_id = '0',
                 email_address = '0',
-                inbox_id = '0',
                 updated_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
                 id = '0',

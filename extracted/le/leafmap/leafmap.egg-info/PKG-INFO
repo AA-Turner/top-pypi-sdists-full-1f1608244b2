@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: leafmap
-Version: 0.47.2
+Version: 0.48.0
 Summary: A Python package for geospatial analysis and interactive mapping in a Jupyter environment.
 Author-email: Qiusheng Wu <giswqs@gmail.com>
 License: MIT license
@@ -26,24 +26,18 @@ Requires-Dist: folium
 Requires-Dist: gdown
 Requires-Dist: geojson
 Requires-Dist: geopandas
-Requires-Dist: h5netcdf
-Requires-Dist: h5py
 Requires-Dist: ipyevents
 Requires-Dist: ipyfilechooser
 Requires-Dist: ipyleaflet
 Requires-Dist: ipyvuetify
 Requires-Dist: ipywidgets
-Requires-Dist: localtileserver
+Requires-Dist: maplibre
 Requires-Dist: matplotlib
 Requires-Dist: numpy
-Requires-Dist: opera-utils
 Requires-Dist: pandas
 Requires-Dist: plotly
-Requires-Dist: psutil
-Requires-Dist: pyshp
 Requires-Dist: pystac-client
 Requires-Dist: python-box
-Requires-Dist: rioxarray
 Requires-Dist: scooby
 Requires-Dist: whiteboxgui
 Requires-Dist: xyzservices
@@ -62,14 +56,20 @@ Requires-Dist: panel; extra == "lidar"
 Requires-Dist: pyntcloud[LAS]; extra == "lidar"
 Requires-Dist: pyvista[all]; extra == "lidar"
 Provides-Extra: raster
-Requires-Dist: localtileserver>=0.10.4; extra == "raster"
+Requires-Dist: localtileserver>=0.10.6; extra == "raster"
 Requires-Dist: jupyter-server-proxy; extra == "raster"
 Requires-Dist: rio-cogeo; extra == "raster"
 Requires-Dist: rioxarray; extra == "raster"
 Requires-Dist: netcdf4; extra == "raster"
-Requires-Dist: pynhd; extra == "raster"
-Requires-Dist: py3dep; extra == "raster"
 Requires-Dist: d2spy; extra == "raster"
+Requires-Dist: h5netcdf; extra == "raster"
+Requires-Dist: h5py; extra == "raster"
+Requires-Dist: opera-utils; extra == "raster"
+Requires-Dist: rioxarray; extra == "raster"
+Requires-Dist: psutil; extra == "raster"
+Provides-Extra: usgs
+Requires-Dist: pynhd; extra == "usgs"
+Requires-Dist: py3dep; extra == "usgs"
 Provides-Extra: sql
 Requires-Dist: psycopg2; extra == "sql"
 Requires-Dist: sqlalchemy; extra == "sql"

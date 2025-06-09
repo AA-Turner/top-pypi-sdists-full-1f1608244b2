@@ -37,11 +37,12 @@ class WebhookProjection(object):
         'url': 'str',
         'password': 'str',
         'username': 'str',
-        'user_id': 'str',
         'inbox_id': 'str',
+        'user_id': 'str',
         'event_name': 'str',
         'updated_at': 'datetime',
         'created_at': 'datetime',
+        'ai_transform_id': 'str',
         'health_status': 'str',
         'phone_number_id': 'str',
         'name': 'str',
@@ -52,18 +53,19 @@ class WebhookProjection(object):
         'url': 'url',
         'password': 'password',
         'username': 'username',
-        'user_id': 'userId',
         'inbox_id': 'inboxId',
+        'user_id': 'userId',
         'event_name': 'eventName',
         'updated_at': 'updatedAt',
         'created_at': 'createdAt',
+        'ai_transform_id': 'aiTransformId',
         'health_status': 'healthStatus',
         'phone_number_id': 'phoneNumberId',
         'name': 'name',
         'id': 'id'
     }
 
-    def __init__(self, url=None, password=None, username=None, user_id=None, inbox_id=None, event_name=None, updated_at=None, created_at=None, health_status=None, phone_number_id=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, url=None, password=None, username=None, inbox_id=None, user_id=None, event_name=None, updated_at=None, created_at=None, ai_transform_id=None, health_status=None, phone_number_id=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
         """WebhookProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -72,11 +74,12 @@ class WebhookProjection(object):
         self._url = None
         self._password = None
         self._username = None
-        self._user_id = None
         self._inbox_id = None
+        self._user_id = None
         self._event_name = None
         self._updated_at = None
         self._created_at = None
+        self._ai_transform_id = None
         self._health_status = None
         self._phone_number_id = None
         self._name = None
@@ -88,13 +91,15 @@ class WebhookProjection(object):
             self.password = password
         if username is not None:
             self.username = username
-        self.user_id = user_id
         if inbox_id is not None:
             self.inbox_id = inbox_id
+        self.user_id = user_id
         if event_name is not None:
             self.event_name = event_name
         self.updated_at = updated_at
         self.created_at = created_at
+        if ai_transform_id is not None:
+            self.ai_transform_id = ai_transform_id
         if health_status is not None:
             self.health_status = health_status
         if phone_number_id is not None:
@@ -169,6 +174,27 @@ class WebhookProjection(object):
         self._username = username
 
     @property
+    def inbox_id(self):
+        """Gets the inbox_id of this WebhookProjection.  # noqa: E501
+
+
+        :return: The inbox_id of this WebhookProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._inbox_id
+
+    @inbox_id.setter
+    def inbox_id(self, inbox_id):
+        """Sets the inbox_id of this WebhookProjection.
+
+
+        :param inbox_id: The inbox_id of this WebhookProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._inbox_id = inbox_id
+
+    @property
     def user_id(self):
         """Gets the user_id of this WebhookProjection.  # noqa: E501
 
@@ -190,27 +216,6 @@ class WebhookProjection(object):
             raise ValueError("Invalid value for `user_id`, must not be `None`")  # noqa: E501
 
         self._user_id = user_id
-
-    @property
-    def inbox_id(self):
-        """Gets the inbox_id of this WebhookProjection.  # noqa: E501
-
-
-        :return: The inbox_id of this WebhookProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._inbox_id
-
-    @inbox_id.setter
-    def inbox_id(self, inbox_id):
-        """Sets the inbox_id of this WebhookProjection.
-
-
-        :param inbox_id: The inbox_id of this WebhookProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._inbox_id = inbox_id
 
     @property
     def event_name(self):
@@ -284,6 +289,27 @@ class WebhookProjection(object):
             raise ValueError("Invalid value for `created_at`, must not be `None`")  # noqa: E501
 
         self._created_at = created_at
+
+    @property
+    def ai_transform_id(self):
+        """Gets the ai_transform_id of this WebhookProjection.  # noqa: E501
+
+
+        :return: The ai_transform_id of this WebhookProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._ai_transform_id
+
+    @ai_transform_id.setter
+    def ai_transform_id(self, ai_transform_id):
+        """Sets the ai_transform_id of this WebhookProjection.
+
+
+        :param ai_transform_id: The ai_transform_id of this WebhookProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._ai_transform_id = ai_transform_id
 
     @property
     def health_status(self):

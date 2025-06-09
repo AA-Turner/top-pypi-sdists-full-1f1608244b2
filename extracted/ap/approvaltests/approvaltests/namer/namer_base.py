@@ -1,7 +1,9 @@
 import json
 import os
 from abc import abstractmethod
-from typing import Optional, Dict
+from typing import Dict, Optional
+
+from typing_extensions import override
 
 from approvaltests.core.namer import Namer
 
@@ -10,14 +12,14 @@ class NamerBase(Namer):
     def __init__(self, extension: Optional[str] = None) -> None:
         self.extension_with_dot = extension or ".txt"
         self.config_loaded = False
-        self.config = None
+        self.config: Optional[Dict[str, str]] = None
 
     @abstractmethod
-    def get_file_name(self):
+    def get_file_name(self) -> str:
         raise Exception("This class is abstract, override this method in a subclass")
 
     @abstractmethod
-    def get_directory(self):
+    def get_directory(self) -> str:
         raise Exception("This class is abstract, override this method in a subclass")
 
     def config_directory(self) -> str:
@@ -43,10 +45,12 @@ class NamerBase(Namer):
         subdirectory = self.get_config().get("subdirectory", "")
         return str(os.path.join(self.get_directory(), subdirectory, file_name))
 
+    @override
     def get_received_filename(self, base: Optional[str] = None) -> str:
         base = base or self.get_basename()
         return base + Namer.RECEIVED + self.extension_with_dot
 
+    @override
     def get_approved_filename(self, base: Optional[str] = None) -> str:
         base = base or self.get_basename()
         return base + Namer.APPROVED + self.extension_with_dot

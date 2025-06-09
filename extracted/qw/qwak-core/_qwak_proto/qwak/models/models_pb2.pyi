@@ -13,6 +13,7 @@ import qwak.audience.v1.audience_pb2
 import qwak.build.v1.build_pb2
 import qwak.builds.builds_pb2
 import qwak.deployment.deployment_pb2
+import qwak.models.models_query_pb2
 import qwak.projects.jfrog_project_spec_pb2
 import sys
 import typing
@@ -149,6 +150,62 @@ class ListModelsResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["models", b"models"]) -> None: ...
 
 global___ListModelsResponse = ListModelsResponse
+
+class ListModelsPaginatedRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PAGE_SIZE_FIELD_NUMBER: builtins.int
+    CURSOR_FIELD_NUMBER: builtins.int
+    SORT_MODELS_FIELD_NUMBER: builtins.int
+    FILTER_FIELD_NUMBER: builtins.int
+    page_size: builtins.int
+    cursor: builtins.str
+    @property
+    def sort_models(self) -> qwak.models.models_query_pb2.SortModels: ...
+    @property
+    def filter(self) -> qwak.models.models_query_pb2.Filter: ...
+    def __init__(
+        self,
+        *,
+        page_size: builtins.int = ...,
+        cursor: builtins.str = ...,
+        sort_models: qwak.models.models_query_pb2.SortModels | None = ...,
+        filter: qwak.models.models_query_pb2.Filter | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["cursor", b"cursor", "cursor_opt", b"cursor_opt", "filter", b"filter", "filter_opt", b"filter_opt", "page_size", b"page_size", "page_size_opt", b"page_size_opt", "sort_models", b"sort_models", "sort_models_opt", b"sort_models_opt"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["cursor", b"cursor", "cursor_opt", b"cursor_opt", "filter", b"filter", "filter_opt", b"filter_opt", "page_size", b"page_size", "page_size_opt", b"page_size_opt", "sort_models", b"sort_models", "sort_models_opt", b"sort_models_opt"]) -> None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["cursor_opt", b"cursor_opt"]) -> typing_extensions.Literal["cursor"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["filter_opt", b"filter_opt"]) -> typing_extensions.Literal["filter"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["page_size_opt", b"page_size_opt"]) -> typing_extensions.Literal["page_size"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["sort_models_opt", b"sort_models_opt"]) -> typing_extensions.Literal["sort_models"] | None: ...
+
+global___ListModelsPaginatedRequest = ListModelsPaginatedRequest
+
+class ListModelsPaginatedResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    MODELS_FIELD_NUMBER: builtins.int
+    METADATA_FIELD_NUMBER: builtins.int
+    @property
+    def models(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Model]:
+        """List of models matching the query criteria."""
+    @property
+    def metadata(self) -> qwak.models.models_query_pb2.PaginationMetadata:
+        """Pagination information about the result set."""
+    def __init__(
+        self,
+        *,
+        models: collections.abc.Iterable[global___Model] | None = ...,
+        metadata: qwak.models.models_query_pb2.PaginationMetadata | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["metadata", b"metadata"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["metadata", b"metadata", "models", b"models"]) -> None: ...
+
+global___ListModelsPaginatedResponse = ListModelsPaginatedResponse
 
 class GetModelRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor

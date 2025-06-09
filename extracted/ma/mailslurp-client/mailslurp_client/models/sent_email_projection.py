@@ -39,9 +39,9 @@ class SentEmailProjection(object):
         'sender': 'Sender',
         'recipients': 'EmailRecipients',
         'subject': 'str',
+        'inbox_id': 'str',
         'user_id': 'str',
         'attachments': 'list[str]',
-        'inbox_id': 'str',
         'created_at': 'datetime',
         'to': 'list[str]',
         'cc': 'list[str]',
@@ -61,9 +61,9 @@ class SentEmailProjection(object):
         'sender': 'sender',
         'recipients': 'recipients',
         'subject': 'subject',
+        'inbox_id': 'inboxId',
         'user_id': 'userId',
         'attachments': 'attachments',
-        'inbox_id': 'inboxId',
         'created_at': 'createdAt',
         'to': 'to',
         'cc': 'cc',
@@ -77,7 +77,7 @@ class SentEmailProjection(object):
         'thread_id': 'threadId'
     }
 
-    def __init__(self, id=None, _from=None, sender=None, recipients=None, subject=None, user_id=None, attachments=None, inbox_id=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, in_reply_to=None, body_excerpt=None, text_excerpt=None, body_md5_hash=None, virtual_send=None, thread_id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, id=None, _from=None, sender=None, recipients=None, subject=None, inbox_id=None, user_id=None, attachments=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, in_reply_to=None, body_excerpt=None, text_excerpt=None, body_md5_hash=None, virtual_send=None, thread_id=None, local_vars_configuration=None):  # noqa: E501
         """SentEmailProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -88,9 +88,9 @@ class SentEmailProjection(object):
         self._sender = None
         self._recipients = None
         self._subject = None
+        self._inbox_id = None
         self._user_id = None
         self._attachments = None
-        self._inbox_id = None
         self._created_at = None
         self._to = None
         self._cc = None
@@ -109,9 +109,9 @@ class SentEmailProjection(object):
         self.sender = sender
         self.recipients = recipients
         self.subject = subject
+        self.inbox_id = inbox_id
         self.user_id = user_id
         self.attachments = attachments
-        self.inbox_id = inbox_id
         self.created_at = created_at
         self.to = to
         self.cc = cc
@@ -232,6 +232,29 @@ class SentEmailProjection(object):
         self._subject = subject
 
     @property
+    def inbox_id(self):
+        """Gets the inbox_id of this SentEmailProjection.  # noqa: E501
+
+
+        :return: The inbox_id of this SentEmailProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._inbox_id
+
+    @inbox_id.setter
+    def inbox_id(self, inbox_id):
+        """Sets the inbox_id of this SentEmailProjection.
+
+
+        :param inbox_id: The inbox_id of this SentEmailProjection.  # noqa: E501
+        :type: str
+        """
+        if self.local_vars_configuration.client_side_validation and inbox_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `inbox_id`, must not be `None`")  # noqa: E501
+
+        self._inbox_id = inbox_id
+
+    @property
     def user_id(self):
         """Gets the user_id of this SentEmailProjection.  # noqa: E501
 
@@ -274,29 +297,6 @@ class SentEmailProjection(object):
         """
 
         self._attachments = attachments
-
-    @property
-    def inbox_id(self):
-        """Gets the inbox_id of this SentEmailProjection.  # noqa: E501
-
-
-        :return: The inbox_id of this SentEmailProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._inbox_id
-
-    @inbox_id.setter
-    def inbox_id(self, inbox_id):
-        """Sets the inbox_id of this SentEmailProjection.
-
-
-        :param inbox_id: The inbox_id of this SentEmailProjection.  # noqa: E501
-        :type: str
-        """
-        if self.local_vars_configuration.client_side_validation and inbox_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `inbox_id`, must not be `None`")  # noqa: E501
-
-        self._inbox_id = inbox_id
 
     @property
     def created_at(self):

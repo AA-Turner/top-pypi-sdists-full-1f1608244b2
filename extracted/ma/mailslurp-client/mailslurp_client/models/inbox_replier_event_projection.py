@@ -35,9 +35,9 @@ class InboxReplierEventProjection(object):
     """
     openapi_types = {
         'recipients': 'list[str]',
-        'user_id': 'str',
         'email_id': 'str',
         'inbox_id': 'str',
+        'user_id': 'str',
         'created_at': 'datetime',
         'sent_id': 'str',
         'replier_id': 'str',
@@ -48,9 +48,9 @@ class InboxReplierEventProjection(object):
 
     attribute_map = {
         'recipients': 'recipients',
-        'user_id': 'userId',
         'email_id': 'emailId',
         'inbox_id': 'inboxId',
+        'user_id': 'userId',
         'created_at': 'createdAt',
         'sent_id': 'sentId',
         'replier_id': 'replierId',
@@ -59,16 +59,16 @@ class InboxReplierEventProjection(object):
         'status': 'status'
     }
 
-    def __init__(self, recipients=None, user_id=None, email_id=None, inbox_id=None, created_at=None, sent_id=None, replier_id=None, message=None, id=None, status=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, recipients=None, email_id=None, inbox_id=None, user_id=None, created_at=None, sent_id=None, replier_id=None, message=None, id=None, status=None, local_vars_configuration=None):  # noqa: E501
         """InboxReplierEventProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
         self._recipients = None
-        self._user_id = None
         self._email_id = None
         self._inbox_id = None
+        self._user_id = None
         self._created_at = None
         self._sent_id = None
         self._replier_id = None
@@ -78,9 +78,9 @@ class InboxReplierEventProjection(object):
         self.discriminator = None
 
         self.recipients = recipients
-        self.user_id = user_id
         self.email_id = email_id
         self.inbox_id = inbox_id
+        self.user_id = user_id
         self.created_at = created_at
         self.sent_id = sent_id
         self.replier_id = replier_id
@@ -108,27 +108,6 @@ class InboxReplierEventProjection(object):
         """
 
         self._recipients = recipients
-
-    @property
-    def user_id(self):
-        """Gets the user_id of this InboxReplierEventProjection.  # noqa: E501
-
-
-        :return: The user_id of this InboxReplierEventProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._user_id
-
-    @user_id.setter
-    def user_id(self, user_id):
-        """Sets the user_id of this InboxReplierEventProjection.
-
-
-        :param user_id: The user_id of this InboxReplierEventProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._user_id = user_id
 
     @property
     def email_id(self):
@@ -171,6 +150,27 @@ class InboxReplierEventProjection(object):
         """
 
         self._inbox_id = inbox_id
+
+    @property
+    def user_id(self):
+        """Gets the user_id of this InboxReplierEventProjection.  # noqa: E501
+
+
+        :return: The user_id of this InboxReplierEventProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_id
+
+    @user_id.setter
+    def user_id(self, user_id):
+        """Sets the user_id of this InboxReplierEventProjection.
+
+
+        :param user_id: The user_id of this InboxReplierEventProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._user_id = user_id
 
     @property
     def created_at(self):

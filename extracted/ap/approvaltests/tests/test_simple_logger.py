@@ -1,20 +1,21 @@
 import datetime
 import threading
-
 from contextlib import contextmanager
+from typing import Callable, Generator
 
+from approval_utilities.utilities.logger.simple_logger import SimpleLogger
+from approval_utilities.utilities.time_utilities import use_utc_timezone
 from approvaltests import (
-    verify,
     Options,
+    approvals,
     run_all_combinations,
+    verify,
     verify_logging_for_all_combinations,
 )
-from approval_utilities.utilities.logger.simple_logger import SimpleLogger
 from approvaltests.utilities.logger.simple_logger_approvals import verify_simple_logger
-from approval_utilities.utilities.time_utilities import use_utc_timezone
 
 
-def test_warnings():
+def test_warnings() -> None:
     def scrubber(text: str) -> str:
         return text.replace(__file__, "test_simple_logger.py")
 
@@ -31,7 +32,7 @@ def test_warnings():
     verify(output, options=Options().with_scrubber(scrubber))
 
 
-def log_from_inner_method():
+def log_from_inner_method() -> None:
     with SimpleLogger.use_markers():
         name = "Example"
         SimpleLogger.variable("name", name)
@@ -39,18 +40,18 @@ def log_from_inner_method():
             SimpleLogger.hour_glass()
 
 
-def test_standard_logger():
+def test_standard_logger() -> None:
     with verify_simple_logger():
         with SimpleLogger.use_markers() as m:
             log_from_inner_method()
 
 
-def test_timestamps():
+def test_timestamps() -> None:
     with use_utc_timezone():
         with verify_simple_logger():
             count = -1
 
-            def create_applesauce_timer():
+            def create_applesauce_timer() -> datetime.datetime:
                 dates = [
                     datetime.datetime.fromtimestamp(0.0),
                     datetime.datetime.fromtimestamp(0.5),
@@ -72,7 +73,7 @@ def test_timestamps():
 
 
 # begin-snippet: verify_simple_logger_example
-def test_variable():
+def test_variable() -> None:
     with verify_simple_logger():
         SimpleLogger.variable("dalmatians", 101, show_types=True)
         SimpleLogger.variable("dalmatians", 101, show_types=False)
@@ -82,7 +83,7 @@ def test_variable():
 
 
 # begin-snippet: verify_simple_logger_long_example
-def test_variable_explict():
+def test_variable_explict() -> None:
     output = SimpleLogger.log_to_string()
     SimpleLogger.variable("dalmatians", 101, show_types=True)
     SimpleLogger.variable("dalmatians", 101, show_types=False)
@@ -92,7 +93,7 @@ def test_variable_explict():
 # end-snippet
 
 
-def test_variable_with_list():
+def test_variable_with_list() -> None:
     output = SimpleLogger.log_to_string()
     with SimpleLogger.use_markers():
         names = ["Jacqueline", "Llewellyn"]
@@ -101,7 +102,7 @@ def test_variable_with_list():
     verify(output)
 
 
-def verify_toggle(toggle_name, toggle):
+def verify_toggle(toggle_name: str, toggle: Callable[[bool], None]) -> None:
     SimpleLogger.show_all(True)
     SimpleLogger.event(f"Toggle Off {toggle_name}")
     toggle(False)
@@ -137,7 +138,7 @@ def log_everything() -> None:
             SimpleLogger.warning(exception=e)
 
 
-def function_to_run(color, number) -> None:
+def function_to_run(color: str, number: str) -> None:
     with SimpleLogger.use_markers():
         SimpleLogger.variable("color", color)
         SimpleLogger.variable("number", number)
@@ -146,7 +147,7 @@ def function_to_run(color, number) -> None:
 
 
 def test_use_markers_with_raised_exception() -> None:
-    def throw_exception():
+    def throw_exception() -> None:
         with SimpleLogger.use_markers():
             raise Exception("Everything is awflu!!?")
 
@@ -163,6 +164,29 @@ def test_run_combinations() -> None:
         run_all_combinations(function_to_run, [["red", "blue"], ["one", "two", "brie"]])
 
 
+def test_run_combinations_with_exception_handler() -> None:
+    approvals.settings().allow_multiple_verify_calls_for_this_method()
+
+    with verify_simple_logger():
+        run_all_combinations(
+            function_to_run,
+            [["red"], ["one", "brie"]],
+            exception_handler=lambda e: SimpleLogger.warning(exception=e),
+        )
+    with verify_simple_logger():
+        run_all_combinations(
+            function_to_run,
+            [["red"], ["one", "brie"]],
+            exception_handler=lambda e: SimpleLogger.warning(e),
+        )
+    with verify_simple_logger():
+        run_all_combinations(
+            function_to_run,
+            [["red"], ["one", "brie"]],
+            exception_handler=SimpleLogger.warning,
+        )
+
+
 def test_verify_logging_for_all_combinations() -> None:
     verify_logging_for_all_combinations(
         function_to_run, [["red", "blue"], ["one", "two", "brie"]]
@@ -170,7 +194,7 @@ def test_verify_logging_for_all_combinations() -> None:
 
 
 # begin-snippet: method_with_inputs
-def method_with_inputs(number, name):
+def method_with_inputs(number: int, name: str) -> None:
     with SimpleLogger.use_markers(f"number = {number}, name = {name}"):
         # end-snippet
         print(f"{number}) {name}")
@@ -183,7 +207,7 @@ def test_markers_with_signature() -> None:
 
 
 # begin-snippet: method_with_inputs_and_outputs
-def method_with_inputs_and_outputs(number, announcement):
+def method_with_inputs_and_outputs(number: int, announcement: str) -> None:
     with SimpleLogger.use_markers(
         lambda: f"number = {number}, announcement = {announcement}"
     ):
@@ -203,7 +227,7 @@ def test_race_condition() -> None:
     whose_turn = 0
 
     @contextmanager
-    def wait_for(number):
+    def wait_for(number: int) -> Generator[None, None, None]:
         nonlocal whose_turn
         while whose_turn < number:
             pass
@@ -212,7 +236,7 @@ def test_race_condition() -> None:
 
     log1 = "Log1"
 
-    def thread_1():
+    def thread_1() -> None:
         nonlocal log1
         with wait_for(0):
             log1 = SimpleLogger.log_to_string(True)
@@ -223,7 +247,7 @@ def test_race_condition() -> None:
 
     log2 = "Log2"
 
-    def thread_2():
+    def thread_2() -> None:
         nonlocal log2
         with wait_for(1):
             log2 = SimpleLogger.log_to_string(True)

@@ -30,7 +30,7 @@ lia_move int_branch::operator()() {
 }
 
 lia_move int_branch::create_branch_on_column(int j) {
-    TRACE("check_main_int", tout << "branching" << std::endl;);
+    TRACE(check_main_int, tout << "branching" << std::endl;);
     lia.get_term().clear();
 
     SASSERT(j != -1);
@@ -44,7 +44,7 @@ lia_move int_branch::create_branch_on_column(int j) {
         lia.offset() = lia.is_upper()? floor(lia.get_value(j)) : ceil(lia.get_value(j));        
     }
         
-    TRACE("int_solver",
+    TRACE(int_solver,
           lia.display_column(tout << "branching v" << j << " = " << lia.get_value(j) << "\n", j);
           tout << "k = " << lia.offset() << std::endl;);
     return lia_move::branch;        
@@ -62,7 +62,7 @@ int int_branch::find_inf_int_base_column() {
     mpq new_range;
     mpq small_value(1024);
     unsigned n = 0;
-    lar_core_solver & lcs = lra.m_mpq_lar_core_solver;
+    lar_core_solver & lcs = lra.get_core_solver();
     unsigned prev_usage = 0; // to quiet down the compiler
     unsigned k = 0;
     unsigned usage;

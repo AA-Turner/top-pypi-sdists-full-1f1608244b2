@@ -1,10 +1,14 @@
+from typing import Optional
+
+from typing_extensions import override
+
 from approval_utilities.utilities.clipboard_utilities import copy_to_clipboard
 from approval_utilities.utils import is_windows_os
 from approvaltests.core.reporter import Reporter
 
 
 def get_command_text(
-    received_path: str, approved_path: str, is_windows: bool = None
+    received_path: str, approved_path: str, is_windows: Optional[bool] = None
 ) -> str:
     if is_windows is None:
         is_windows = is_windows_os()
@@ -27,7 +31,8 @@ class ClipboardReporter(Reporter):
     See also CommandLineReporter.
     """
 
-    def report(self, received_path, approved_path):
+    @override
+    def report(self, received_path: str, approved_path: str) -> bool:
         text = get_command_text(received_path, approved_path)
         print(text)
         copy_to_clipboard(text)
@@ -48,7 +53,8 @@ class CommandLineReporter(Reporter):
     See also ClipboardReporter.
     """
 
-    def report(self, received_path, approved_path):
+    @override
+    def report(self, received_path: str, approved_path: str) -> bool:
         text = get_command_text(received_path, approved_path)
         print(f"\n\n{text}\n\n")
         return True

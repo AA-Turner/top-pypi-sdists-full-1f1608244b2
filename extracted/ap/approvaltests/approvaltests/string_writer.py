@@ -1,16 +1,18 @@
 import io
 from typing import Optional
 
+from typing_extensions import override
+
 from approval_utilities.utils import create_directory_if_needed
 from approvaltests.core.writer import Writer
 
 
 class StringWriter(Writer):
-    contents = ""
+    contents: str = ""
 
     def __init__(
         self,
-        contents: str,
+        contents: Optional[str],
         extension: str = ".txt",
         encoding: Optional[str] = None,
         errors: Optional[str] = None,
@@ -23,12 +25,13 @@ class StringWriter(Writer):
         self.newline = newline
 
     @staticmethod
-    def sanitize_string(contents):
+    def sanitize_string(contents: Optional[str]) -> str:
         contents = contents or ""
         if len(contents) == 0 or contents[-1] != "\n":
             contents = contents + "\n"
         return contents
 
+    @override
     def write_received_file(self, received_file: str) -> str:
         create_directory_if_needed(received_file)
         with io.open(

@@ -38,9 +38,9 @@ class TestGuestPortalUserProjection(unittest.TestCase):
         if include_optional :
             return GuestPortalUserProjection(
                 username = '0', 
+                inbox_id = '0', 
                 user_id = '0', 
                 email_address = '0', 
-                inbox_id = '0', 
                 updated_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 portal_id = '0', 

@@ -1,3 +1,5 @@
+from typing_extensions import override
+
 from approvaltests.core.reporter import Reporter
 
 
@@ -10,12 +12,14 @@ class MultiReporter(Reporter):
     See also FirstWorkingReporter.
     """
 
-    def __init__(self, *reporters) -> None:
+    def __init__(self, *reporters: Reporter) -> None:
         self.reporters = reporters
 
-    def report(self, received_path, approved_path):
+    @override
+    def report(self, received_path: str, approved_path: str) -> bool:
         for reporter in self.reporters:
             reporter.report(received_path, approved_path)
 
-    def __str__(self):
+    @override
+    def __str__(self) -> str:
         return f"MultiReporter({', '.join([r.__class__.__name__ for r in self.reporters])})"

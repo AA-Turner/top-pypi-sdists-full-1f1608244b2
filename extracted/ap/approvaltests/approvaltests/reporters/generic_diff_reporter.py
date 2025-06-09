@@ -1,8 +1,9 @@
 from typing import List
 
+from typing_extensions import override
+
 from approval_utilities.utilities.os_utilities import run_command
-from approval_utilities.utils import ensure_file_exists, filter_values
-from approval_utilities.utils import to_json
+from approval_utilities.utils import ensure_file_exists, filter_values, to_json
 from approvaltests.command import Command
 from approvaltests.core.reporter import Reporter
 from approvaltests.reporters.generic_diff_reporter_config import (
@@ -32,6 +33,7 @@ class GenericDiffReporter(Reporter):
         self.path = self.expand_program_files(config.path)
         self.extra_args = config.extra_args
 
+    @override
     def __str__(self) -> str:
         config = filter_values(
             lambda v: bool(v),
@@ -46,6 +48,7 @@ class GenericDiffReporter(Reporter):
     def get_command(self, received: str, approved: str) -> List[str]:
         return [self.path] + self.extra_args + [received, approved]
 
+    @override
     def report(self, received_path: str, approved_path: str) -> bool:
         if not self.is_working():
             return False
@@ -73,7 +76,8 @@ class GenericDiffReporter(Reporter):
         found = Command(self.path).locate()
         if found:
             self.path = found
-        return found
+            return True
+        return False
 
     @staticmethod
     def get_limit_count() -> int:
@@ -95,6 +99,6 @@ class GenericDiffReporter(Reporter):
         return path.replace(PROGRAM_FILES, "C:/Program Files")
 
     @staticmethod
-    def reset_opened_diff_tool_count():
+    def reset_opened_diff_tool_count() -> None:
         GenericDiffReporter.opened_diff_tool_count = 0
         GenericDiffReporter.limit_count = 0

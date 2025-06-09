@@ -1,7 +1,9 @@
 import filecmp
 import os
 import pathlib
-from typing import Optional, Callable
+from typing import Callable, List, Optional
+
+from typing_extensions import override
 
 from approval_utilities.utilities.multiline_string_utils import remove_indentation_from
 from approvaltests.core.comparator import Comparator
@@ -22,6 +24,7 @@ class ReporterNotWorkingException(Exception):
 
 
 class FileComparator(Comparator):
+    @override
     def compare(self, received_path: str, approved_path: str) -> bool:
         if not exists(approved_path) or not exists(received_path):
             return False
@@ -38,8 +41,8 @@ class FileComparator(Comparator):
 
 
 class FileApprover:
-    previous_approved = []
-    allowed_duplicates = []
+    previous_approved: List[str] = []
+    allowed_duplicates: List[Callable[[str], bool]] = []
 
     @staticmethod
     def verify(
@@ -65,7 +68,7 @@ class FileApprover:
         return None
 
     @staticmethod
-    def get_duplicate_verify_error_message(approved):
+    def get_duplicate_verify_error_message(approved: str) -> str:
         return remove_indentation_from(
             f"""
             We noticed that you called verify more than once in the same test. 
@@ -84,14 +87,14 @@ class FileApprover:
         )
 
     @staticmethod
-    def is_this_a_multiple_verify(approved):
+    def is_this_a_multiple_verify(approved: str) -> bool:
         return (
             approved in FileApprover.previous_approved
             and not FileApprover.is_duplicate_allowed(approved)
         )
 
     @staticmethod
-    def is_duplicate_allowed(approved):
+    def is_duplicate_allowed(approved: str) -> bool:
         for allowed in FileApprover.allowed_duplicates:
             if allowed(approved):
                 return True
@@ -116,5 +119,5 @@ class FileApprover:
         return False
 
     @staticmethod
-    def add_allowed_duplicates(is_duplicate_allowed: Callable[[str], bool]):
+    def add_allowed_duplicates(is_duplicate_allowed: Callable[[str], bool]) -> None:
         FileApprover.allowed_duplicates.append(is_duplicate_allowed)

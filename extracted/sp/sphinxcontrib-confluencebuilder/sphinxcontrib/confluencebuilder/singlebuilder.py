@@ -19,8 +19,9 @@ class SingleConfluenceBuilder(ConfluenceBuilder):
     name = 'singleconfluence'
     supported_linkcode = name
 
-    def __init__(self, app, env=None):
+    def __init__(self, app, env):
         super().__init__(app, env)
+        self._verbose = app.verbosity
 
         # As of Sphinx v8.1, the builder's the `write` call has be finalized.
         # Support has been added to use the new `write_documents` call. To
@@ -90,7 +91,7 @@ class SingleConfluenceBuilder(ConfluenceBuilder):
             return
 
         with progress_message(C('assembling single confluence document')):
-            if self.app.verbosity:
+            if self._verbose:
                 print()
 
             # assemble toc section/figure numbers
@@ -123,7 +124,7 @@ class SingleConfluenceBuilder(ConfluenceBuilder):
             self.assets.process_document(doctree, self.config.root_doc)
 
         with progress_message(C('writing single confluence document')):
-            if self.app.verbosity:
+            if self._verbose:
                 print()
 
             self.write_doc_serialized(self.config.root_doc, doctree)
@@ -171,7 +172,7 @@ class SingleConfluenceBuilder(ConfluenceBuilder):
         # manipulating the individual nodes for our merged tree and want to
         # leave the original doctree entity as it (if other logic wants to
         # query/check original doctrees for documents)
-        tree = cast(nodes.document, doctree.deepcopy())
+        tree = cast('nodes.document', doctree.deepcopy())
 
         # we are processing multiple doctrees to be merged into a single one,
         # and we want to make sure any identifiers on each element is unique;

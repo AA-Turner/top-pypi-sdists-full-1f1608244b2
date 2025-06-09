@@ -58,7 +58,7 @@ namespace mbp {
     }
 
 
-    bool euf_project_plugin::operator()(model& model, app_ref_vector& vars, expr_ref_vector& lits) {
+    bool euf_project_plugin::project(model& model, app_ref_vector& vars, expr_ref_vector& lits) {
         if (vars.empty())
             return false;
         // check if there is a variable of uninterp sort
@@ -256,7 +256,7 @@ namespace mbp {
                     todo.push_back({ ax->get_arg(i), ay->get_arg(i) });
             }
 
-            TRACE("qe", tout << "unification attempt\n";
+            TRACE(qe, tout << "unification attempt\n";
                   for (auto [a, b] : todo)                 
                       tout << mk_pp(a, m) << " == " << mk_pp(b, m) << "\n";
                   for (auto [key, value] : soln)

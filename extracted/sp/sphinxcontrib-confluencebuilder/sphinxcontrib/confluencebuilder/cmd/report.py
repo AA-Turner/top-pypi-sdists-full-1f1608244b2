@@ -80,30 +80,30 @@ def report_main(args_parser):
     try:
         with temp_dir() as tmp_dir, docutils_namespace():
             print('fetching configuration information...')
-            builder = ConfluenceReportBuilder.name
+            builder_name = ConfluenceReportBuilder.name
             app = Sphinx(
                 str(work_dir),       # document sources
                 str(work_dir),       # directory with configuration
                 str(tmp_dir),        # output for built documents
                 str(tmp_dir),        # output for doctree files
-                builder,             # builder to execute
+                builder_name,        # builder to execute
                 status=sys.stdout,   # sphinx status output
                 warning=sys.stderr)  # sphinx warning output
 
             # keep track of unset options in the configuration
             pre_env_keys = set()
-            config_manager = app.config_manager_   # pylint: disable=no-member
-            for key in config_manager.options:
+            cm = app.config_manager_  # pylint: disable=no-member
+            for key in cm.options:
                 if getattr(app.config, key) is None:
                     pre_env_keys.add(key)
 
             # apply environment-based configuration changes
-            apply_env_overrides(app.builder)
+            apply_env_overrides(app)
 
             # track for any remaining unset options to see if the environment
             # has changed any options
             post_env_keys = set()
-            for key in config_manager.options:
+            for key in cm.options:
                 if getattr(app.config, key) is None:
                     post_env_keys.add(key)
 
@@ -119,7 +119,6 @@ def report_main(args_parser):
                     offline = True
 
             # extract configuration information
-            cm = app.config_manager_  # pylint: disable=no-member
             for key in app.config.values:
                 raw = getattr(app.config, key)
                 if raw is None:
@@ -138,7 +137,7 @@ def report_main(args_parser):
 
             # ensure internal defaults are applied after we already extracted
             # raw values and before attempting to use the publisher
-            apply_defaults(app.builder)
+            apply_defaults(app)
 
             # initialize the publisher (if needed later)
             publisher.init(app.config)

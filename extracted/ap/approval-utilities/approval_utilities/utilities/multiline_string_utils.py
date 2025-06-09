@@ -1,9 +1,10 @@
 import textwrap
+from typing import Optional
 
 from approval_utilities.utilities.logger.simple_logger import SimpleLogger
 
 
-def remove_indentation_from(text: str) -> str:
+def remove_indentation_from(text: Optional[str]) -> str:
     SimpleLogger.variable("text", text)
     if not text:
         return ""

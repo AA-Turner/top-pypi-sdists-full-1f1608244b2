@@ -1,5 +1,5 @@
-from approvaltests import verify
 from approval_utilities.utilities.multiline_string_utils import remove_indentation_from
+from approvaltests import verify
 
 
 def test_remove_indentation_from_works_perfectly() -> None:
@@ -21,14 +21,14 @@ def test_remove_indentation_from_works_perfectly() -> None:
     verify("remove_indentation_from\n" + text)
 
 
-def test_remove_indentation_uses_the_last_line_as_max_whitespace():
+def test_remove_indentation_uses_the_last_line_as_max_whitespace() -> None:
     input = """
         4 whitespaces
     """
     assert "    4 whitespaces\n" == remove_indentation_from(input)
 
 
-def test_trailing_whitespace():
+def test_trailing_whitespace() -> None:
     input = """
     4 trailing whitespaces    
     """

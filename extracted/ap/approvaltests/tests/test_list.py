@@ -1,14 +1,17 @@
 import os
 from unittest import TestCase
 
+from typing_extensions import override
+
 from approvaltests import approvals
 from approvaltests.reporters.clipboard_reporter import CommandLineReporter
-from approvaltests.reporters.multi_reporter import MultiReporter
 from approvaltests.reporters.diff_reporter import DiffReporter
 from approvaltests.reporters.generic_diff_reporter import GenericDiffReporter
+from approvaltests.reporters.multi_reporter import MultiReporter
 
 
 class TestList(TestCase):
+    @override
     def setUp(self) -> None:
         reporter = MultiReporter(
             GenericDiffReporter.create("diff"), CommandLineReporter()

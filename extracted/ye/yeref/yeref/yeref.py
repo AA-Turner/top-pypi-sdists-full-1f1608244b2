@@ -2289,9 +2289,9 @@ commands_media_ru = [
     types.BotCommand(command="start", description="⚙️ Перезагрузка"),
     types.BotCommand(command="lang", description="🇫🇷 Язык"),
     types.BotCommand(command="add", description="👩🏽‍💻 Добавить медиа"),
-    types.BotCommand(command="del", description="👩🏽‍💻 Удалить медиа"),
-    types.BotCommand(command="show", description="👩🏽‍💻 Показать медиа"),
-    types.BotCommand(command="titles", description="💭 Нейро-титры"),
+    # types.BotCommand(command="del", description="👩🏽‍💻 Удалить медиа"),
+    # types.BotCommand(command="show", description="👩🏽‍💻 Показать медиа"),
+    # types.BotCommand(command="titles", description="💭 Нейро-титры"),
 ]
 commands_group_ru = [
     types.BotCommand(command="help", description="⚙️ Помощь"),
@@ -16996,6 +16996,7 @@ async def post_pub(bot, lz, chat_id, ENT_TID, post, MEDIA_D, BASE_S, BASE_D, PRO
         cur_ = 1
         len_ = 1
         index = 0
+        tid = str(ENT_TID).replace('-', '')
         POST_MEDIA = json.loads(POST_MEDIA)
         POST_BUTTONS = json.loads(POST_BUTTONS)
         POST_CHKBOX = json.loads(POST_CHKBOX)
@@ -17033,7 +17034,7 @@ async def post_pub(bot, lz, chat_id, ENT_TID, post, MEDIA_D, BASE_S, BASE_D, PRO
         # region txt
         POST_TEXT = await correct_txt_tags_for_tg(POST_TEXT)
         if POST_ISTAG and POST_TEXT and len(POST_TEXT) < 900:
-            sql = f"SELECT USER_TID FROM {schema_name}_{str(ENT_TID).replace('-', '')}.USER"
+            sql = f"SELECT USER_TID FROM {schema_name}_{tid}.USER"
             data_rnd = await db_select_pg(sql, (), BASE_D)
             if len(data_rnd):
                 data_rnd = [it[0] for it in data_rnd]
@@ -17060,7 +17061,7 @@ async def post_pub(bot, lz, chat_id, ENT_TID, post, MEDIA_D, BASE_S, BASE_D, PRO
                                             reply_markup=reply_markup.as_markup())
 
             if PROJECT_USERNAME in ['FereyChannelBot', 'FereyGroupBot'] and not is_private:
-                sql = f"UPDATE {schema_name}_{str(ENT_TID).replace('-', '')}.POST SET POST_MSGID=$1 WHERE POST_TID=$2"
+                sql = f"UPDATE {schema_name}_{tid}.POST SET POST_MSGID=$1 WHERE POST_TID=$2"
                 await db_change_pg(sql, (result.message_id, POST_TID,), BASE_D)
             return
         # endregion
@@ -17173,6 +17174,10 @@ async def post_pub(bot, lz, chat_id, ENT_TID, post, MEDIA_D, BASE_S, BASE_D, PRO
                                             reply_markup=reply_markup.as_markup())
         elif POST_TYPE == 'photo':
             print(f"here {POST_MEDIA=}")
+            POST_ID_, POST_TID_, POST_MSGID_, POST_CHATTID_, POST_USERTID_, POST_USERTUN_, \
+                POST_TARGETTYPE_, POST_TARGET_, POST_TYPE_, POST_TEXT_, POST_MEDIA_, POST_BUTTONS_, \
+                POST_CHKBOX_, POST_WEB_, POST_NFT_, POST_PAY_, POST_INVOICE_, POST_BLOG_, POST_ISMINTED_, \
+                POST_MINTLINK_, POST_ISPRIVATE_, POST_TZ_, POST_DT_, POST_TR_, POST_STATUS_ = post
 
             file_id = POST_MEDIA[index]['file_id']
             print(f"before {file_id=}, {POST_ISWATER=}, {POST_WATER=}")
@@ -17206,7 +17211,7 @@ async def post_pub(bot, lz, chat_id, ENT_TID, post, MEDIA_D, BASE_S, BASE_D, PRO
                             POST_MEDIA_COPY[index]['filew_id'] = file_id
                             print(f"sooo {POST_MEDIA_COPY=}")
 
-                            sql = f"UPDATE {schema_name}_{str(ENT_TID).replace('-', '')}.POST SET POST_MEDIA=$1 WHERE POST_TID=$2"
+                            sql = f"UPDATE {schema_name}_{tid}.POST SET POST_MEDIA=$1 WHERE POST_TID=$2"
                             await db_change_pg(sql, (
                                 json.dumps(POST_MEDIA_COPY, ensure_ascii=False),
                                 POST_TID,
@@ -17217,16 +17222,34 @@ async def post_pub(bot, lz, chat_id, ENT_TID, post, MEDIA_D, BASE_S, BASE_D, PRO
                             await extra_bot.session.close()
                 else:
                     file_id = POST_MEDIA[index]['filew_id']
+            elif index == 0 and POST_MEDIA[index]['file_link'] not in [photo_jpg] and len(POST_TEXT_) > 1024:
+                POST_TEXT_ = await correct_txt_tags_for_tg(POST_TEXT_)
+                print(f"{POST_TEXT_=}")
 
-            print(f"after {file_id=}")
-            result = await bot.send_photo(chat_id=chat_id, photo=file_id, caption=POST_TEXT,
-                                          parse_mode=ParseMode.HTML,
-                                          show_caption_above_media=POST_CHKBOX['POST_ISPREVIEW'],
-                                          has_spoiler=POST_CHKBOX['POST_ISSPOILER'],
-                                          disable_notification=not POST_CHKBOX['POST_ISSOUND'],
-                                          protect_content=POST_CHKBOX['POST_ISPROTECT'],
-                                          message_effect_id=POST_CHKBOX['POST_EFFECT'],
-                                          reply_markup=reply_markup.as_markup())
+                result = await bot.send_message(chat_id=chat_id, text=POST_TEXT_, parse_mode=ParseMode.HTML,
+                                                link_preview_options=LinkPreviewOptions(
+                                                    is_disabled=False,
+                                                    url=POST_MEDIA[index]['file_link'],
+                                                    prefer_large_media=True,
+                                                    show_above_text=not POST_CHKBOX['POST_ISPREVIEW']
+                                                ),
+                                                disable_notification=not POST_CHKBOX['POST_ISSOUND'],
+                                                protect_content=POST_CHKBOX['POST_ISPROTECT'],
+                                                disable_web_page_preview=False,
+                                                message_effect_id=POST_CHKBOX['POST_EFFECT'],
+                                                reply_markup=reply_markup.as_markup())
+
+
+            if not result:
+                print(f"after {file_id=}")
+                result = await bot.send_photo(chat_id=chat_id, photo=file_id, caption=POST_TEXT,
+                                              parse_mode=ParseMode.HTML,
+                                              show_caption_above_media=POST_CHKBOX['POST_ISPREVIEW'],
+                                              has_spoiler=POST_CHKBOX['POST_ISSPOILER'],
+                                              disable_notification=not POST_CHKBOX['POST_ISSOUND'],
+                                              protect_content=POST_CHKBOX['POST_ISPROTECT'],
+                                              message_effect_id=POST_CHKBOX['POST_EFFECT'],
+                                              reply_markup=reply_markup.as_markup())
         elif POST_TYPE in ['animation', 'gif']:
             print(f"sova")
             try:
@@ -17363,7 +17386,7 @@ async def post_pub(bot, lz, chat_id, ENT_TID, post, MEDIA_D, BASE_S, BASE_D, PRO
             else:
                 POST_MSGID = str(result.message_id)
             print(f'res: POST_MSGID = {POST_MSGID}')
-            sql = f"UPDATE {schema_name}_{str(ENT_TID).replace('-', '')}.POST SET POST_MSGID=$1 WHERE POST_TID=$2"
+            sql = f"UPDATE {schema_name}_{tid}.POST SET POST_MSGID=$1 WHERE POST_TID=$2"
             await db_change_pg(sql, (POST_MSGID, POST_TID,), BASE_D)
         # endregion
 

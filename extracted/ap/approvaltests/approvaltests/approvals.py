@@ -2,8 +2,9 @@ import argparse
 import xml.dom.minidom
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Callable, List, Optional, Any, ByteString, Iterator
+from typing import Any, ByteString, Callable, Iterator, List, Optional
 
+import approvaltests.namer.default_namer_factory
 import approvaltests.reporters.default_reporter_factory
 from approval_utilities import utils
 from approval_utilities.approvaltests.core.executable_command import ExecutableCommand
@@ -14,12 +15,13 @@ from approval_utilities.utilities.map_reduce import first
 from approvaltests.approval_exception import ApprovalException
 from approvaltests.binary_writer import BinaryWriter
 from approvaltests.core import Reporter, Writer
-from approvaltests.core.format_wrapper import FormatWrapper, AlwaysMatch
+from approvaltests.core.format_wrapper import AlwaysMatch, FormatWrapper
 from approvaltests.core.namer import Namer
 from approvaltests.core.options import Options
 from approvaltests.core.scenario_namer import ScenarioNamer
 from approvaltests.existing_file_writer import ExistingFileWriter
 from approvaltests.file_approver import FileApprover
+from approvaltests.namer.namer_base import NamerBase
 from approvaltests.namer.stack_frame_namer import StackFrameNamer
 from approvaltests.reporters.diff_reporter import DiffReporter
 from approvaltests.reporters.executable_command_reporter import (
@@ -35,7 +37,7 @@ __tracebackhide__ = True
 
 
 class Settings:
-    def allow_multiple_verify_calls_for_this_method(self):
+    def allow_multiple_verify_calls_for_this_method(self) -> None:
         class_and_method = get_default_namer().get_file_name()
 
         def allow_method(filename: str) -> bool:
@@ -63,8 +65,10 @@ def get_reporter(reporter: Optional[Reporter]) -> Reporter:
     return approvaltests.reporters.default_reporter_factory.get_reporter(reporter)
 
 
-def get_default_namer(extension: Optional[str] = None) -> StackFrameNamer:
-    return approvaltests.namer.default_namer_factory.get_default_namer(extension)
+def get_default_namer(extension: Optional[str] = None) -> NamerBase:
+    from approvaltests.namer.default_name import get_default_namer as get_namer
+
+    return get_namer(extension)
 
 
 def verify(
@@ -236,12 +240,12 @@ def verify_with_namer_and_writer(
 
 # begin-snippet: verify_as_json
 def verify_as_json(
-    object_to_verify,
-    reporter=None,
+    object_to_verify: Any,
+    reporter: Optional[Reporter] = None,
     *,  # enforce keyword arguments - https://www.python.org/dev/peps/pep-3102/
-    deserialize_json_fields=False,
+    deserialize_json_fields: bool = False,
     options: Optional[Options] = None,
-):
+) -> None:
     if deserialize_json_fields:
         object_to_verify = utils.deserialize_json_fields(object_to_verify)
     options = initialize_options(options, reporter)
@@ -260,7 +264,7 @@ def verify_as_json(
 
 def verify_xml(
     xml_string: str,
-    reporter: None = None,
+    reporter: Optional[Reporter] = None,
     *,  # enforce keyword arguments - https://www.python.org/dev/peps/pep-3102/
     options: Optional[Options] = None,
 ) -> None:
@@ -292,7 +296,7 @@ def verify_html(
 
 def verify_file(
     file_name: str,
-    reporter: Reporter = None,
+    reporter: Optional[Reporter] = None,
     *,  # enforce keyword arguments - https://www.python.org/dev/peps/pep-3102/
     options: Optional[Options] = None,
 ) -> None:
@@ -321,7 +325,7 @@ def verify_file(
 
 def verify_all(
     header: str,
-    alist: List[str],
+    alist: List[Any],
     formatter: Optional[Callable] = None,
     reporter: Optional[DiffReporter] = None,
     encoding: None = None,
@@ -377,7 +381,7 @@ def verify_exception(
     code_that_throws_exception: Callable,
     *,  # enforce keyword arguments - https://www.python.org/dev/peps/pep-3102/
     options: Optional[Options] = None,
-):
+) -> None:
     result = ""
     try:
         code_that_throws_exception()
@@ -391,7 +395,7 @@ def get_scenario_namer(*scenario_name: Any) -> ScenarioNamer:
     return ScenarioNamer(get_default_namer(), *scenario_name)
 
 
-def delete_approved_file():
+def delete_approved_file() -> None:
     filename = Path(get_default_namer().get_approved_filename())
     if filename.exists():
         filename.unlink()
@@ -401,7 +405,7 @@ def verify_executable_command(
     command: ExecutableCommand,
     *,  # enforce keyword arguments - https://www.python.org/dev/peps/pep-3102/
     options: Optional[Options] = None,
-):
+) -> None:
     options = initialize_options(options)
     verify(
         command.get_command(),

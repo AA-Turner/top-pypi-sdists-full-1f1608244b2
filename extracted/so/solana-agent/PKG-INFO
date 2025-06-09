@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: solana-agent
-Version: 30.0.4
+Version: 30.0.6
 Summary: AI Agents for Solana
 License: MIT
 Keywords: solana,solana ai,solana agent,ai,ai agent,ai agents
@@ -15,19 +15,19 @@ Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Requires-Dist: instructor (==1.8.3)
-Requires-Dist: llama-index-core (==0.12.39)
+Requires-Dist: llama-index-core (==0.12.41)
 Requires-Dist: llama-index-embeddings-openai (==0.3.1)
-Requires-Dist: logfire (==3.16.1)
-Requires-Dist: openai (==1.82.1)
+Requires-Dist: logfire (==3.18.0)
+Requires-Dist: openai (==1.84.0)
 Requires-Dist: pillow (==11.2.1)
 Requires-Dist: pinecone (==7.0.2)
 Requires-Dist: pydantic (>=2)
 Requires-Dist: pymongo (==4.13.0)
-Requires-Dist: pypdf (==5.5.0)
+Requires-Dist: pypdf (==5.6.0)
 Requires-Dist: rich (>=13,<14.0)
 Requires-Dist: scrubadub (==2.0.1)
 Requires-Dist: typer (==0.16.0)
-Requires-Dist: zep-cloud (==2.12.3)
+Requires-Dist: zep-cloud (==2.14.1)
 Project-URL: Documentation, https://docs.solana-agent.com
 Project-URL: Homepage, https://solana-agent.com
 Project-URL: Repository, https://github.com/truemagic-coder/solana-agent
@@ -674,8 +674,7 @@ pip install sakit
 ### Inline Tool Example
 
 ```python
-from solana_agent import SolanaAgent
-from solana_agent.interfaces.plugins.plugins import Tool
+from solana_agent import SolanaAgent, Tool
 
 class TestTool(Tool):
     def __init__(self):
@@ -705,7 +704,8 @@ class TestTool(Tool):
                 "query": {"type": "string", "description": "Search query text"},
                 "user_id": {"type": "string", "description": "User ID for the search session"}
             },
-            "required": ["query", "user_id"]
+            "required": ["query", "user_id"],
+            "additionalProperties": False,
         }
 
     async def execute(self, **params) -> Dict[str, Any]:

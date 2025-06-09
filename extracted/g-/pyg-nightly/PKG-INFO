@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pyg-nightly
-Version: 2.7.0.dev20250607
+Version: 2.7.0.dev20250608
 Summary: Graph Neural Network Library for PyTorch
 Keywords: deep-learning,pytorch,geometric-deep-learning,graph-neural-networks,graph-convolutional-networks
 Author-email: Matthias Fey <matthias@pyg.org>
@@ -58,7 +58,7 @@ Requires-Dist: torch_geometric[graphgym, modelhub] ; extra == "full"
 Requires-Dist: torchmetrics ; extra == "full"
 Requires-Dist: trimesh ; extra == "full"
 Requires-Dist: protobuf<4.21 ; extra == "graphgym"
-Requires-Dist: pytorch-lightning<2.3.0 ; extra == "graphgym"
+Requires-Dist: pytorch-lightning ; extra == "graphgym"
 Requires-Dist: yacs ; extra == "graphgym"
 Requires-Dist: huggingface_hub ; extra == "modelhub"
 Requires-Dist: pcst_fast ; extra == "rag"
@@ -69,6 +69,7 @@ Requires-Dist: sentencepiece ; extra == "rag"
 Requires-Dist: accelerate ; extra == "rag"
 Requires-Dist: onnx ; extra == "test"
 Requires-Dist: onnxruntime ; extra == "test"
+Requires-Dist: onnxscript ; extra == "test"
 Requires-Dist: pytest ; extra == "test"
 Requires-Dist: pytest-cov ; extra == "test"
 Project-URL: changelog, https://github.com/pyg-team/pytorch_geometric/blob/master/CHANGELOG.md

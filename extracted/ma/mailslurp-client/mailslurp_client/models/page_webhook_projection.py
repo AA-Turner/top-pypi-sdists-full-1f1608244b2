@@ -36,8 +36,8 @@ class PageWebhookProjection(object):
     openapi_types = {
         'content': 'list[WebhookProjection]',
         'pageable': 'PageableObject',
-        'total_pages': 'int',
         'total_elements': 'int',
+        'total_pages': 'int',
         'last': 'bool',
         'number_of_elements': 'int',
         'first': 'bool',
@@ -50,8 +50,8 @@ class PageWebhookProjection(object):
     attribute_map = {
         'content': 'content',
         'pageable': 'pageable',
-        'total_pages': 'totalPages',
         'total_elements': 'totalElements',
+        'total_pages': 'totalPages',
         'last': 'last',
         'number_of_elements': 'numberOfElements',
         'first': 'first',
@@ -61,7 +61,7 @@ class PageWebhookProjection(object):
         'empty': 'empty'
     }
 
-    def __init__(self, content=None, pageable=None, total_pages=None, total_elements=None, last=None, number_of_elements=None, first=None, size=None, number=None, sort=None, empty=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, content=None, pageable=None, total_elements=None, total_pages=None, last=None, number_of_elements=None, first=None, size=None, number=None, sort=None, empty=None, local_vars_configuration=None):  # noqa: E501
         """PageWebhookProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -69,8 +69,8 @@ class PageWebhookProjection(object):
 
         self._content = None
         self._pageable = None
-        self._total_pages = None
         self._total_elements = None
+        self._total_pages = None
         self._last = None
         self._number_of_elements = None
         self._first = None
@@ -84,8 +84,8 @@ class PageWebhookProjection(object):
             self.content = content
         if pageable is not None:
             self.pageable = pageable
-        self.total_pages = total_pages
         self.total_elements = total_elements
+        self.total_pages = total_pages
         if last is not None:
             self.last = last
         if number_of_elements is not None:
@@ -144,29 +144,6 @@ class PageWebhookProjection(object):
         self._pageable = pageable
 
     @property
-    def total_pages(self):
-        """Gets the total_pages of this PageWebhookProjection.  # noqa: E501
-
-
-        :return: The total_pages of this PageWebhookProjection.  # noqa: E501
-        :rtype: int
-        """
-        return self._total_pages
-
-    @total_pages.setter
-    def total_pages(self, total_pages):
-        """Sets the total_pages of this PageWebhookProjection.
-
-
-        :param total_pages: The total_pages of this PageWebhookProjection.  # noqa: E501
-        :type: int
-        """
-        if self.local_vars_configuration.client_side_validation and total_pages is None:  # noqa: E501
-            raise ValueError("Invalid value for `total_pages`, must not be `None`")  # noqa: E501
-
-        self._total_pages = total_pages
-
-    @property
     def total_elements(self):
         """Gets the total_elements of this PageWebhookProjection.  # noqa: E501
 
@@ -188,6 +165,29 @@ class PageWebhookProjection(object):
             raise ValueError("Invalid value for `total_elements`, must not be `None`")  # noqa: E501
 
         self._total_elements = total_elements
+
+    @property
+    def total_pages(self):
+        """Gets the total_pages of this PageWebhookProjection.  # noqa: E501
+
+
+        :return: The total_pages of this PageWebhookProjection.  # noqa: E501
+        :rtype: int
+        """
+        return self._total_pages
+
+    @total_pages.setter
+    def total_pages(self, total_pages):
+        """Sets the total_pages of this PageWebhookProjection.
+
+
+        :param total_pages: The total_pages of this PageWebhookProjection.  # noqa: E501
+        :type: int
+        """
+        if self.local_vars_configuration.client_side_validation and total_pages is None:  # noqa: E501
+            raise ValueError("Invalid value for `total_pages`, must not be `None`")  # noqa: E501
+
+        self._total_pages = total_pages
 
     @property
     def last(self):

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from approval_utilities.approvaltests.core.verify_parameters import VerifyParameters
+from approvaltests.core.options import Options
 
 
 class Verifiable(ABC):

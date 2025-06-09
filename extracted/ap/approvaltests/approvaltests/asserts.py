@@ -1,11 +1,16 @@
-from typing import Optional, Any
+from typing import Any, Optional
+
+from typing_extensions import override
 
 from approval_utilities.utils import write_to_temporary_file
 from approvaltests import FileApprover
+from approvaltests.approvals import (
+    get_default_namer,
+    initialize_options,
+    verify_with_namer,
+)
 from approvaltests.core import Reporter
 from approvaltests.core.options import Options
-from approvaltests.approvals import get_default_namer, initialize_options
-from approvaltests.approvals import verify_with_namer
 from approvaltests.namer.stack_frame_namer import StackFrameNamer
 from approvaltests.reporters.testing_reporter import ReporterForTesting
 
@@ -15,6 +20,7 @@ class FilePathNamer(StackFrameNamer):
         StackFrameNamer.__init__(self, extension)
         self.file_path = file_path
 
+    @override
     def get_approved_filename(self, base: Optional[str] = None) -> str:
         return self.file_path
 
@@ -30,7 +36,7 @@ def assert_against_file(
 def assert_equal_with_reporter(
     expected: str,
     actual: Any,
-    reporter: Reporter = None,
+    reporter: Optional[Reporter] = None,
     *,  # enforce keyword arguments - https://www.python.org/dev/peps/pep-3102/
     options: Optional[Options] = None,
 ) -> None:

@@ -1,19 +1,18 @@
 from itertools import product
-from typing import Any, Callable, Optional, List, Sequence
+from typing import Any, Callable, List, Optional, Sequence
 
-from approvaltests.core.reporter import Reporter
-from approvaltests.approvals import verify, initialize_options
+from approval_utilities.utilities.logger.simple_logger import SimpleLogger
+from approvaltests.approvals import initialize_options, verify
 from approvaltests.core.options import Options
-
+from approvaltests.core.reporter import Reporter
 from approvaltests.pairwise_combinations import get_best_covering_pairs
 from approvaltests.reporters.testing_reporter import ReporterForTesting
-from approval_utilities.utilities.logger.simple_logger import SimpleLogger
 
 VariationForEachParameter = Sequence[Sequence[Any]]
 CombinationsOfParameters = Sequence[Sequence[Any]]
 
 
-def calculate_total_size(input_arguments):
+def calculate_total_size(input_arguments: VariationForEachParameter) -> int:
     from functools import reduce
 
     return reduce(
@@ -154,11 +153,11 @@ def args_and_result_formatter(args: List[Any], result: int) -> str:
 
 
 def verify_logging_for_all_combinations(
-    function_to_run,
+    function_to_run: Callable,
     input_arguments: VariationForEachParameter,
     *,  # enforce keyword arguments - https://www.python.org/dev/peps/pep-3102/
     options: Optional[Options] = None,
-):
+) -> None:
     def printer(*args):
         SimpleLogger._wrapper.get().log_line(f"Running inputs {args} => ")
         with SimpleLogger._wrapper.get().indent():

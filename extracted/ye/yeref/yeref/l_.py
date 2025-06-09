@@ -11034,7 +11034,7 @@ l_media_none = {
     'ar': "👩🏽‍💻 <b>الإبداع الإعلامي</b> غير موجود",
 }
 l_media_file = {
-    'ru': "👩🏽‍💻 1/2. <b>Прикрепи</b> audio/video, text/photo контент для создания медиа-креатива",
+    'ru': "👩🏽‍💻 1/2. <b>Прикрепи</b> аудио/видео, текст/фото контент для создания медиа-креатива",
     'en': "👩🏽‍💻 1/2. <b>Attach</b> audio/video, text/photo content to create a media creative",
     'es': "👩🏽‍💻 1/2. <b>Adjunta</b> contenido de audio/vídeo o texto/foto para crear un contenido multimedia",
     'fr': "👩🏽‍💻 1/2. <b>Joignez</b> du contenu audio/vidéo ou texte/photo pour créer un média créatif",
@@ -11113,38 +11113,30 @@ l_media_delprepare = {
     'zh': "🔗 选择",
     'ar': "🔗 اختر",
 }
+
 l_media_share = {
     'ru': "🔗 Поделиться",
-    'en': "💨 Subscription",
-    'es': "💨 Suscripción",
-    'fr': "💨 Abonnement",
-    'zh': "💨 订阅",
-    'ar': "💨 الاشتراك",
+    'en': "🔗 Share",
+    'es': "🔗 Compartir",
+    'fr': "🔗 Partager",
+    'zh': "🔗 分享",
+    'ar': "🔗 مشاركة",
 }
-
 l_titles_file = {
-    'ru': "👩🏽‍💻 1/2. <b>Прикрепи</b> audio/video-контент со звуком для создания #нейро-титров",
-    'en': "👩🏽‍💻 1/2. <b>Attach</b> audio/video, text/photo content to create a media note",
-    'es': "👩🏽‍💻 1/2. <b>Adjunte</b> contenido de audio/vídeo, texto/foto para crear una nota multimedia.",
-    'fr': "👩🏽‍💻 1/2. <b>Joindre</b> du contenu audio/vidéo, texte/photo pour créer une note média",
-    'zh': "👩🏽‍💻 1/2。 <b>附加</b>音频/视频、文本/照片内容以创建媒体注释",
-    'ar': "👩🏽‍💻 1/2. <b>أرفق</b> محتوى الصوت/الفيديو والنص/الصورة لإنشاء ملاحظة إعلامية",
-}
-l_titles_needpaid = {
-    'ru': "👩🏽‍💻 <b>Оформи</b> <a href='{0}'>подписку</a> для создания титров/субтитров",
-    'en': "👩🏽‍💻 1/2. <b>Attach</b> audio/video, text/photo content to create a media note",
-    'es': "👩🏽‍💻 1/2. <b>Adjunte</b> contenido de audio/vídeo, texto/foto para crear una nota multimedia.",
-    'fr': "👩🏽‍💻 1/2. <b>Joindre</b> du contenu audio/vidéo, texte/photo pour créer une note média",
-    'zh': "👩🏽‍💻 1/2。 <b>附加</b>音频/视频、文本/照片内容以创建媒体注释",
-    'ar': "👩🏽‍💻 1/2. <b>أرفق</b> محتوى الصوت/الفيديو والنص/الصورة لإنشاء ملاحظة إعلامية",
+    'ru': "👩🏽‍💻 1/2. <b>Прикрепи</b> аудио/видео-контент со звуком для создания #нейро-титров",
+    'en': "👩🏽‍💻 1/2. <b>Attach</b> audio/video content with sound to generate #neuro-captions",
+    'es': "👩🏽‍💻 1/2. <b>Adjunta</b> contenido de audio/vídeo con sonido para generar #neuro-subtítulos",
+    'fr': "👩🏽‍💻 1/2. <b>Joins</b> du contenu audio/vidéo avec du son pour générer des #neuro-sous-titres",
+    'zh': "👩🏽‍💻 1/2。<b>附加</b>带声音的音频/视频内容以生成#神经字幕",
+    'ar': "👩🏽‍💻 1/2. <b>أرفق</b> محتوى صوتي/مرئي مع صوت لإنشاء #ترجمات_عصبية",
 }
 l_titles_error = {
     'ru': "👩🏽‍💻 <b>Ошибка</b> создания титров к медиа-креативу: попробуй ещё раз позже или загрузи другой медиа-файл",
-    'en': "👩🏽‍💻 <b>Error</b> generating media captions: try again later or upload a different media file",
-    'es': "👩🏽‍💻 <b>Error</b> al generar subtítulos: inténtelo más tarde o cargue otro archivo multimedia",
-    'fr': "👩🏽‍💻 <b>Erreur</b> lors de la création des sous-titres : réessayez plus tard ou téléversez un autre fichier média",
-    'zh': "👩🏽‍💻 <b>创建字幕</b>时出错：请稍后重试或上传其他媒体文件",
-    'ar': "👩🏽‍💻 <b>خطأ</b> في إنشاء العناوين: حاول مرة أخرى لاحقًا أو حمّل ملفًا إعلاميًا آخر",
+    'en': "👩🏽‍💻 <b>Error</b> generating captions for the media content: try again later or upload a different media file",
+    'es': "👩🏽‍💻 <b>Error</b> al generar subtítulos para el contenido multimedia: inténtalo más tarde o sube otro archivo",
+    'fr': "👩🏽‍💻 <b>Erreur</b> lors de la génération des sous-titres du contenu média : réessayez plus tard ou envoyez un autre fichier",
+    'zh': "👩🏽‍💻 <b>生成媒体字幕</b>时出错：请稍后重试或上传其他媒体文件",
+    'ar': "👩🏽‍💻 <b>حدث خطأ</b> في إنشاء ترجمات الوسائط: حاول مرة أخرى لاحقًا أو قم بتحميل ملف آخر",
 }
 # endregion
 

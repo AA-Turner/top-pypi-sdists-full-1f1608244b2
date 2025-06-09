@@ -11,7 +11,9 @@ from sphinxcontrib.confluencebuilder.config.exceptions import ConfluenceConfigEr
 from sphinxcontrib.confluencebuilder.debug import PublishDebug
 from sphinxcontrib.confluencebuilder.exceptions import ConfluenceBadApiError
 from sphinxcontrib.confluencebuilder.exceptions import ConfluenceBadServerUrlError
+from sphinxcontrib.confluencebuilder.exceptions import ConfluenceError
 from sphinxcontrib.confluencebuilder.exceptions import ConfluenceMissingPageIdError
+from sphinxcontrib.confluencebuilder.exceptions import ConfluencePagePermissionError
 from sphinxcontrib.confluencebuilder.exceptions import ConfluencePermissionError
 from sphinxcontrib.confluencebuilder.exceptions import ConfluencePublishAncestorError
 from sphinxcontrib.confluencebuilder.exceptions import ConfluencePublishSelfAncestorError
@@ -963,14 +965,17 @@ class ConfluencePublisher:
 
         _, page = self.get_page(page_name, expand=expand)
 
-        # if the page is not found, but it determined to be an archived page,
+        # if the page is not found, but is determined to be an archived page,
         # Confluence Cloud does not appear to support moving/updating an
         # archived page back into a `current` mode -- instead, try to delete
         # the archived page before generating a new page
         if not page:
             _, page = self.get_page(page_name, expand=expand, status='archived')
             if page:
-                self.remove_page(page['id'])
+                try:
+                    self.remove_page(page['id'])
+                except ConfluenceError as ex:
+                    logger.warn(f'failed archive clean ("{page_name}"): {ex}')
                 page = None
 
         if self.onlynew and page:
@@ -1039,6 +1044,13 @@ class ConfluencePublisher:
             remote_hash = cb_props['value'].get('hash')
             if new_page_hash == remote_hash:
                 logger.verbose(f'no changes in page: {page_name}')
+                return page['id']
+
+        # check for inlined comments
+        if page:
+            icdrop = self._manage_inlined_comments(page, page_name, data)
+            if icdrop and self.config.confluence_publish_skip_commented_pages:
+                logger.verbose(f'skipping publish due to comments: {page_name}')
                 return page['id']
 
         try:
@@ -1149,8 +1161,20 @@ class ConfluencePublisher:
 
             # update existing page
             if page:
-                self._update_page(page, page_name, data, parent_id=parent_id)
-                uploaded_page_id = page['id']
+                try:
+                    self._update_page(
+                        page, page_name, data, parent_id=parent_id)
+                except ConfluenceBadApiError as ex:
+                    # if we are updating a page that existed but is now
+                    # reporting as missing, this is either a timing issue of
+                    # multiple clients editing a page; or more so likely,
+                    # the publisher does not have permission to view/update
+                    # the page
+                    if ex.status_code == 404:
+                        raise ConfluencePagePermissionError(page_name) from ex
+                    raise
+                else:
+                    uploaded_page_id = page['id']
 
         except ConfluencePermissionError as ex:
             msg = (
@@ -1220,6 +1244,13 @@ class ConfluencePublisher:
             remote_hash = cb_props['value'].get('hash')
             if new_page_hash == remote_hash:
                 logger.verbose(f'no changes in page: {page_name}')
+                return page_id
+
+        # check for inlined comments
+        if page:
+            icdrop = self._manage_inlined_comments(page, page_name, data)
+            if icdrop and self.config.confluence_publish_skip_commented_pages:
+                logger.verbose(f'skipping publish due to comments: {page_name}')
                 return page_id
 
         try:
@@ -1498,6 +1529,40 @@ class ConfluencePublisher:
 
         return page
 
+    def _manage_inlined_comments(self, page, page_name, data):
+        """
+        manage inlined comments for a page update
+
+        This call will attempt to manage a page update event where the
+        original page (``page``) may include inlined comments that are not
+        included in the proposed page update (``data``).
+
+        Args:
+            page: the page data from confluence to update
+            page_name: the page title to use on the update page
+            data: the new page data to be applied
+
+        Returns:
+            whether at least one inlined comment will be dropped
+        """
+
+        try:
+            existing_data = page['body']['storage']['value']
+        except KeyError:
+            return False
+
+        # At this time, we only have this crude check for inlined comments.
+        # We check if the original page has any inlined comment markers. If
+        # so, we generate a warning. A publish even will still go through,
+        # but it generates a warning to inform users and allows a publish
+        # even to stop if `--fail-on-warning` is set.
+        if '<ac:inline-comment-marker' in existing_data:
+            logger.warn(f'inline comment detected (page "{page_name}")',
+                subtype='inline-comment')
+            return True
+
+        return False
+
     def _next_page_fields(self, rsp, fields, offset):
         """
         extract next query fields from a response
@@ -1682,6 +1747,9 @@ class ConfluencePublisher:
         except ConfluenceBadApiError as ex:
             if str(ex).find('CDATA block has embedded') != -1:
                 raise ConfluenceUnexpectedCdataError from ex
+
+            if str(ex).find('title already exists') != -1:
+                raise ConfluencePagePermissionError(page_name) from ex
 
             if 'unreconciled' in str(ex):
                 raise ConfluenceUnreconciledPageError(

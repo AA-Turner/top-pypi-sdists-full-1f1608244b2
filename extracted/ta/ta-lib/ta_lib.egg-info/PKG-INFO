@@ -1,13 +1,12 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: ta-lib
-Version: 0.6.3
+Version: 0.6.4
 Summary: Python wrapper for TA-Lib
 Home-page: http://github.com/ta-lib/ta-lib-python
 Download-URL: https://github.com/ta-lib/ta-lib-python/releases
 Author: John Benediktsson
 Author-email: mrjbq7@gmail.com
 License: BSD
-Classifier: License :: OSI Approved :: BSD License
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Operating System :: Unix
 Classifier: Operating System :: POSIX
@@ -28,6 +27,7 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
 Classifier: Programming Language :: Cython
 Classifier: Topic :: Office/Business :: Financial
 Classifier: Topic :: Scientific/Engineering :: Mathematics
@@ -39,6 +39,16 @@ License-File: LICENSE
 License-File: AUTHORS
 Requires-Dist: setuptools
 Requires-Dist: numpy
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: download-url
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: summary
 
 # TA-Lib
 
@@ -314,6 +324,15 @@ than the ``STOCHRSI`` which is ``STOCHF`` applied to ``RSI``:
 
 If the build appears to hang, you might be running on a VM with not enough
 memory -- try 1 GB or 2 GB.
+
+It has also been reported that using a swapfile could help, for example:
+
+```
+$ sudo fallocate -l 1G /swapfile
+$ sudo chmod 600 /swapfile
+$ sudo mkswap /swapfile
+$ sudo swapon /swapfile
+```
 
 ---
 

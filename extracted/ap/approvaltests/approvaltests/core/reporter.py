@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from typing_extensions import override
+
 
 class Reporter(ABC):
     """
@@ -11,7 +13,8 @@ class Reporter(ABC):
     returns a truthy value on success.
     """
 
-    def __eq__(self, other):
+    @override
+    def __eq__(self, other: object) -> bool:
         return repr(self) == repr(other)
 
     @abstractmethod

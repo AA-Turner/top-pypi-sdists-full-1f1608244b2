@@ -34,8 +34,8 @@ class AliasThreadProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'user_id': 'str',
         'inbox_id': 'str',
+        'user_id': 'str',
         'updated_at': 'datetime',
         'created_at': 'datetime',
         'to': 'list[str]',
@@ -48,8 +48,8 @@ class AliasThreadProjection(object):
     }
 
     attribute_map = {
-        'user_id': 'userId',
         'inbox_id': 'inboxId',
+        'user_id': 'userId',
         'updated_at': 'updatedAt',
         'created_at': 'createdAt',
         'to': 'to',
@@ -61,14 +61,14 @@ class AliasThreadProjection(object):
         'id': 'id'
     }
 
-    def __init__(self, user_id=None, inbox_id=None, updated_at=None, created_at=None, to=None, cc=None, bcc=None, alias_id=None, subject=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, inbox_id=None, user_id=None, updated_at=None, created_at=None, to=None, cc=None, bcc=None, alias_id=None, subject=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
         """AliasThreadProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._user_id = None
         self._inbox_id = None
+        self._user_id = None
         self._updated_at = None
         self._created_at = None
         self._to = None
@@ -80,8 +80,8 @@ class AliasThreadProjection(object):
         self._id = None
         self.discriminator = None
 
-        self.user_id = user_id
         self.inbox_id = inbox_id
+        self.user_id = user_id
         self.updated_at = updated_at
         self.created_at = created_at
         self.to = to
@@ -95,31 +95,6 @@ class AliasThreadProjection(object):
         if name is not None:
             self.name = name
         self.id = id
-
-    @property
-    def user_id(self):
-        """Gets the user_id of this AliasThreadProjection.  # noqa: E501
-
-        User ID  # noqa: E501
-
-        :return: The user_id of this AliasThreadProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._user_id
-
-    @user_id.setter
-    def user_id(self, user_id):
-        """Sets the user_id of this AliasThreadProjection.
-
-        User ID  # noqa: E501
-
-        :param user_id: The user_id of this AliasThreadProjection.  # noqa: E501
-        :type: str
-        """
-        if self.local_vars_configuration.client_side_validation and user_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `user_id`, must not be `None`")  # noqa: E501
-
-        self._user_id = user_id
 
     @property
     def inbox_id(self):
@@ -145,6 +120,31 @@ class AliasThreadProjection(object):
             raise ValueError("Invalid value for `inbox_id`, must not be `None`")  # noqa: E501
 
         self._inbox_id = inbox_id
+
+    @property
+    def user_id(self):
+        """Gets the user_id of this AliasThreadProjection.  # noqa: E501
+
+        User ID  # noqa: E501
+
+        :return: The user_id of this AliasThreadProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_id
+
+    @user_id.setter
+    def user_id(self, user_id):
+        """Sets the user_id of this AliasThreadProjection.
+
+        User ID  # noqa: E501
+
+        :param user_id: The user_id of this AliasThreadProjection.  # noqa: E501
+        :type: str
+        """
+        if self.local_vars_configuration.client_side_validation and user_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `user_id`, must not be `None`")  # noqa: E501
+
+        self._user_id = user_id
 
     @property
     def updated_at(self):

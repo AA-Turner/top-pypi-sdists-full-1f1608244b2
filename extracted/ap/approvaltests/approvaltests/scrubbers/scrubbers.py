@@ -1,6 +1,7 @@
 import re
-from collections import defaultdict, abc
-from typing import Callable, Union
+from collections import abc, defaultdict
+from typing import Callable, DefaultDict, Union
+
 from approval_utilities.utilities.logger.logging_instance import print_type
 
 Scrubber = Callable[[str], str]
@@ -13,7 +14,7 @@ def create_regex_scrubber(
 ) -> Scrubber:
     if isinstance(function_or_replace_string, str):
         return lambda t: _replace_regex(t, regex, lambda _: function_or_replace_string)
-    elif isinstance(function_or_replace_string, abc.Callable):
+    elif callable(function_or_replace_string):
         return lambda t: _replace_regex(t, regex, function_or_replace_string)
     else:
         raise TypeError(
@@ -39,7 +40,7 @@ def scrub_all_guids(data: str) -> str:
     )(data)
 
 
-def combine_scrubbers(*scrubbers):
+def combine_scrubbers(*scrubbers: Scrubber) -> Scrubber:
     def combined(data: str) -> str:
         for scrubber in scrubbers:
             data = scrubber(data)
@@ -72,7 +73,7 @@ def create_line_scrubber(remove_lines_containing: str) -> Scrubber:
     return lambda t: scrub_lines_containing(remove_lines_containing, t)
 
 
-def scrub_lines_containing(remove_lines_containing, text):
+def scrub_lines_containing(remove_lines_containing: str, text: str) -> str:
     lines = text.splitlines()
     for line in lines:
         if remove_lines_containing in line:

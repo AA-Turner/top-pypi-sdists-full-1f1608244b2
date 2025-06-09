@@ -1,11 +1,9 @@
 import inspect
 import json
 import os
-
 from copy import deepcopy
 from pathlib import Path
-
-from typing import Callable, Dict, TypeVar
+from typing import Any, Callable, Dict, Optional, TypeVar
 
 
 def get_adjacent_file(name: str) -> str:
@@ -14,7 +12,9 @@ def get_adjacent_file(name: str) -> str:
     return os.path.join(directory, name)
 
 
-def write_to_temporary_file(text: str, name: str, file_extention_with_dot: str = None):
+def write_to_temporary_file(
+    text: str, name: str, file_extention_with_dot: Optional[str] = None
+) -> str:
     import tempfile
 
     file_extention_with_dot = file_extention_with_dot or ".txt"
@@ -25,7 +25,7 @@ def write_to_temporary_file(text: str, name: str, file_extention_with_dot: str =
         return temp.name
 
 
-def to_json(object_to_verify) -> str:
+def to_json(object_to_verify: Any) -> str:
     return json.dumps(
         object_to_verify,
         sort_keys=True,
@@ -78,7 +78,9 @@ def create_directory_if_needed(received_file: str) -> None:
         os.makedirs(directory, exist_ok=True)
 
 
-def print_grid(width, height, cell_print_func):
+def print_grid(
+    width: int, height: int, cell_print_func: Callable[[int, int], str]
+) -> str:
     result = ""
     for y in range(height):
         for x in range(width):
@@ -95,6 +97,6 @@ def filter_values(filter: Callable[[_V], bool], a_dict: Dict[_K, _V]) -> Dict[_K
     return {k: v for k, v in a_dict.items() if filter(v)}
 
 
-def append_to_file(file: Path, text: str):
+def append_to_file(file: Path, text: str) -> None:
     with file.open(mode="a") as f:
         f.write(text)

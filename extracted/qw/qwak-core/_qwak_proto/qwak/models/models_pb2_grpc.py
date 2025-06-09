@@ -24,6 +24,11 @@ class ModelsManagementServiceStub(object):
                 request_serializer=qwak_dot_models_dot_models__pb2.ListModelsRequest.SerializeToString,
                 response_deserializer=qwak_dot_models_dot_models__pb2.ListModelsResponse.FromString,
                 )
+        self.ListModelsPaginated = channel.unary_unary(
+                '/qwak.models.management.ModelsManagementService/ListModelsPaginated',
+                request_serializer=qwak_dot_models_dot_models__pb2.ListModelsPaginatedRequest.SerializeToString,
+                response_deserializer=qwak_dot_models_dot_models__pb2.ListModelsPaginatedResponse.FromString,
+                )
         self.GetModel = channel.unary_unary(
                 '/qwak.models.management.ModelsManagementService/GetModel',
                 request_serializer=qwak_dot_models_dot_models__pb2.GetModelRequest.SerializeToString,
@@ -83,6 +88,13 @@ class ModelsManagementServiceServicer(object):
 
     def ListModels(self, request, context):
         """List all models
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListModelsPaginated(self, request, context):
+        """Retrieves a paginated list of models based on the provided filters and pagination parameters.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -158,6 +170,11 @@ def add_ModelsManagementServiceServicer_to_server(servicer, server):
                     servicer.ListModels,
                     request_deserializer=qwak_dot_models_dot_models__pb2.ListModelsRequest.FromString,
                     response_serializer=qwak_dot_models_dot_models__pb2.ListModelsResponse.SerializeToString,
+            ),
+            'ListModelsPaginated': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListModelsPaginated,
+                    request_deserializer=qwak_dot_models_dot_models__pb2.ListModelsPaginatedRequest.FromString,
+                    response_serializer=qwak_dot_models_dot_models__pb2.ListModelsPaginatedResponse.SerializeToString,
             ),
             'GetModel': grpc.unary_unary_rpc_method_handler(
                     servicer.GetModel,
@@ -245,6 +262,23 @@ class ModelsManagementService(object):
         return grpc.experimental.unary_unary(request, target, '/qwak.models.management.ModelsManagementService/ListModels',
             qwak_dot_models_dot_models__pb2.ListModelsRequest.SerializeToString,
             qwak_dot_models_dot_models__pb2.ListModelsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListModelsPaginated(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/qwak.models.management.ModelsManagementService/ListModelsPaginated',
+            qwak_dot_models_dot_models__pb2.ListModelsPaginatedRequest.SerializeToString,
+            qwak_dot_models_dot_models__pb2.ListModelsPaginatedResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

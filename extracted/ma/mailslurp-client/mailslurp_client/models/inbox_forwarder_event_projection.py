@@ -34,9 +34,9 @@ class InboxForwarderEventProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'user_id': 'str',
         'email_id': 'str',
         'inbox_id': 'str',
+        'user_id': 'str',
         'created_at': 'datetime',
         'sent_id': 'str',
         'forwarder_id': 'str',
@@ -46,9 +46,9 @@ class InboxForwarderEventProjection(object):
     }
 
     attribute_map = {
-        'user_id': 'userId',
         'email_id': 'emailId',
         'inbox_id': 'inboxId',
+        'user_id': 'userId',
         'created_at': 'createdAt',
         'sent_id': 'sentId',
         'forwarder_id': 'forwarderId',
@@ -57,15 +57,15 @@ class InboxForwarderEventProjection(object):
         'status': 'status'
     }
 
-    def __init__(self, user_id=None, email_id=None, inbox_id=None, created_at=None, sent_id=None, forwarder_id=None, message=None, id=None, status=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, email_id=None, inbox_id=None, user_id=None, created_at=None, sent_id=None, forwarder_id=None, message=None, id=None, status=None, local_vars_configuration=None):  # noqa: E501
         """InboxForwarderEventProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._user_id = None
         self._email_id = None
         self._inbox_id = None
+        self._user_id = None
         self._created_at = None
         self._sent_id = None
         self._forwarder_id = None
@@ -74,36 +74,15 @@ class InboxForwarderEventProjection(object):
         self._status = None
         self.discriminator = None
 
-        self.user_id = user_id
         self.email_id = email_id
         self.inbox_id = inbox_id
+        self.user_id = user_id
         self.created_at = created_at
         self.sent_id = sent_id
         self.forwarder_id = forwarder_id
         self.message = message
         self.id = id
         self.status = status
-
-    @property
-    def user_id(self):
-        """Gets the user_id of this InboxForwarderEventProjection.  # noqa: E501
-
-
-        :return: The user_id of this InboxForwarderEventProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._user_id
-
-    @user_id.setter
-    def user_id(self, user_id):
-        """Sets the user_id of this InboxForwarderEventProjection.
-
-
-        :param user_id: The user_id of this InboxForwarderEventProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._user_id = user_id
 
     @property
     def email_id(self):
@@ -146,6 +125,27 @@ class InboxForwarderEventProjection(object):
         """
 
         self._inbox_id = inbox_id
+
+    @property
+    def user_id(self):
+        """Gets the user_id of this InboxForwarderEventProjection.  # noqa: E501
+
+
+        :return: The user_id of this InboxForwarderEventProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_id
+
+    @user_id.setter
+    def user_id(self, user_id):
+        """Sets the user_id of this InboxForwarderEventProjection.
+
+
+        :param user_id: The user_id of this InboxForwarderEventProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._user_id = user_id
 
     @property
     def created_at(self):

@@ -35,9 +35,9 @@ class GuestPortalUserProjection(object):
     """
     openapi_types = {
         'username': 'str',
+        'inbox_id': 'str',
         'user_id': 'str',
         'email_address': 'str',
-        'inbox_id': 'str',
         'updated_at': 'datetime',
         'created_at': 'datetime',
         'portal_id': 'str',
@@ -47,9 +47,9 @@ class GuestPortalUserProjection(object):
 
     attribute_map = {
         'username': 'username',
+        'inbox_id': 'inboxId',
         'user_id': 'userId',
         'email_address': 'emailAddress',
-        'inbox_id': 'inboxId',
         'updated_at': 'updatedAt',
         'created_at': 'createdAt',
         'portal_id': 'portalId',
@@ -57,16 +57,16 @@ class GuestPortalUserProjection(object):
         'id': 'id'
     }
 
-    def __init__(self, username=None, user_id=None, email_address=None, inbox_id=None, updated_at=None, created_at=None, portal_id=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, username=None, inbox_id=None, user_id=None, email_address=None, updated_at=None, created_at=None, portal_id=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
         """GuestPortalUserProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
         self._username = None
+        self._inbox_id = None
         self._user_id = None
         self._email_address = None
-        self._inbox_id = None
         self._updated_at = None
         self._created_at = None
         self._portal_id = None
@@ -75,11 +75,11 @@ class GuestPortalUserProjection(object):
         self.discriminator = None
 
         self.username = username
+        if inbox_id is not None:
+            self.inbox_id = inbox_id
         self.user_id = user_id
         if email_address is not None:
             self.email_address = email_address
-        if inbox_id is not None:
-            self.inbox_id = inbox_id
         self.updated_at = updated_at
         self.created_at = created_at
         self.portal_id = portal_id
@@ -109,6 +109,27 @@ class GuestPortalUserProjection(object):
             raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
 
         self._username = username
+
+    @property
+    def inbox_id(self):
+        """Gets the inbox_id of this GuestPortalUserProjection.  # noqa: E501
+
+
+        :return: The inbox_id of this GuestPortalUserProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._inbox_id
+
+    @inbox_id.setter
+    def inbox_id(self, inbox_id):
+        """Sets the inbox_id of this GuestPortalUserProjection.
+
+
+        :param inbox_id: The inbox_id of this GuestPortalUserProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._inbox_id = inbox_id
 
     @property
     def user_id(self):
@@ -153,27 +174,6 @@ class GuestPortalUserProjection(object):
         """
 
         self._email_address = email_address
-
-    @property
-    def inbox_id(self):
-        """Gets the inbox_id of this GuestPortalUserProjection.  # noqa: E501
-
-
-        :return: The inbox_id of this GuestPortalUserProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._inbox_id
-
-    @inbox_id.setter
-    def inbox_id(self, inbox_id):
-        """Sets the inbox_id of this GuestPortalUserProjection.
-
-
-        :param inbox_id: The inbox_id of this GuestPortalUserProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._inbox_id = inbox_id
 
     @property
     def updated_at(self):

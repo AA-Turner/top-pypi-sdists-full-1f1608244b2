@@ -1326,3 +1326,62 @@ class UpdateTaskIngestedRecordsAmountResponse(google.protobuf.message.Message):
     ) -> None: ...
 
 global___UpdateTaskIngestedRecordsAmountResponse = UpdateTaskIngestedRecordsAmountResponse
+
+class UpdateTasksDetailsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASKS_DETAILS_FIELD_NUMBER: builtins.int
+    @property
+    def tasks_details(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___BatchTaskDetails]: ...
+    def __init__(
+        self,
+        *,
+        tasks_details: collections.abc.Iterable[global___BatchTaskDetails] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["tasks_details", b"tasks_details"]) -> None: ...
+
+global___UpdateTasksDetailsRequest = UpdateTasksDetailsRequest
+
+class UpdateTasksDetailsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___UpdateTasksDetailsResponse = UpdateTasksDetailsResponse
+
+class BatchTaskDetails(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_ID_FIELD_NUMBER: builtins.int
+    INPUT_FILES_DETAILS_FIELD_NUMBER: builtins.int
+    task_id: builtins.str
+    """The task id"""
+    @property
+    def input_files_details(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___InputFileDetails]:
+        """List of input file details for the task"""
+    def __init__(
+        self,
+        *,
+        task_id: builtins.str = ...,
+        input_files_details: collections.abc.Iterable[global___InputFileDetails] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["input_files_details", b"input_files_details", "task_id", b"task_id"]) -> None: ...
+
+global___BatchTaskDetails = BatchTaskDetails
+
+class InputFileDetails(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PATH_FIELD_NUMBER: builtins.int
+    path: builtins.str
+    """The file path"""
+    def __init__(
+        self,
+        *,
+        path: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["path", b"path"]) -> None: ...
+
+global___InputFileDetails = InputFileDetails

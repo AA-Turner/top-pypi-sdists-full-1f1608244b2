@@ -1,10 +1,12 @@
+from typing import List, Tuple
+
 from approvaltests.scrubbers import create_regex_scrubber
 from approvaltests.scrubbers.scrubbers import Scrubber
 
 
 class DateScrubber:
     @staticmethod
-    def get_supported_formats():
+    def get_supported_formats() -> List[Tuple[str, List[str]]]:
         return [
             (
                 "[a-zA-Z]{3} [a-zA-Z]{3} \\d{2} \\d{2}:\\d{2}:\\d{2}",
@@ -70,7 +72,7 @@ class DateScrubber:
     def __init__(self, date_regex: str):
         self.date_regex = date_regex
 
-    def scrub(self, date_str: str):
+    def scrub(self, date_str: str) -> str:
         return create_regex_scrubber(self.date_regex, lambda t: f"<date{t}>")(date_str)
 
     @staticmethod

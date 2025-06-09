@@ -1,36 +1,39 @@
 """XMPP Connector to talk to bosch."""
 
-import logging
+import asyncio
 import json
+import logging
 import re
-from slixmpp import ClientXMPP, Iq
+
+from slixmpp import Iq
+from slixmpp import __version_info__ as slixmpp_version
 from slixmpp.exceptions import IqError, IqTimeout
 from slixmpp.xmlstream.handler import Callback
 from slixmpp.xmlstream.matcher import StanzaPath
-import asyncio
-from bosch_thermostat_client.exceptions import (
-    DeviceException,
-    MsgException,
-    EncryptionException,
-    FailedAuthException
-)
+
+if slixmpp_version >= (1, 10, 0):
+    from .client.slixmpp010 import BoschClientXMPP
+else:
+    from .client.slixmpp import BoschClientXMPP
+
 from bosch_thermostat_client.const import (
+    ACCESS_KEY,
+    BODY_400,
     GET,
     PUT,
     REQUEST_TIMEOUT,
-    BODY_400,
     WRONG_ENCRYPTION,
-    ACCESS_KEY,
+)
+from bosch_thermostat_client.exceptions import (
+    DeviceException,
+    EncryptionException,
+    FailedAuthException,
+    MsgException,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class BoschClientXMPP(ClientXMPP):
-
-    def __init__(self, jid, password, ca_certs, **kwargs):
-        ClientXMPP.__init__(self, jid=jid, password=password, **kwargs)
-        self.ca_certs = ca_certs
 
 
 class XMPPBaseConnector:
@@ -50,7 +53,7 @@ class XMPPBaseConnector:
 
         self._to = self._rrc_gateway_prefix + identifier
         self._password = self._accesskey_prefix + kwargs.get(ACCESS_KEY)
-        self.client = BoschClientXMPP(jid=self._from, password=self._password, ca_certs=self.ca_certs)
+        self.client = BoschClientXMPP(jid=self._from, password=self._password, ca_certs=self.ca_certs, use_ssl=self.use_ssl, force_starttls=self.force_starttls, disable_starttls=self.disable_starttls)
         self.client.register_plugin("xep_0030")  # Service Discovery
         self.client.register_plugin("xep_0199")  # XMPP Ping
         self.client.add_event_handler("session_start", self.session_start)
@@ -146,9 +149,8 @@ class XMPPBaseConnector:
         data = None
         try:
             if not self._auth_success:
-                self.client.connect(
-                    use_ssl=self.use_ssl, force_starttls=self.force_starttls, disable_starttls=self.disable_starttls
-                )
+                
+                self.client.connect()
                 await asyncio.wait_for(self.connected_event.wait(), timeout=10)
                 if not self._auth_success:
                     raise FailedAuthException("Can't authorize to XMPP server.")

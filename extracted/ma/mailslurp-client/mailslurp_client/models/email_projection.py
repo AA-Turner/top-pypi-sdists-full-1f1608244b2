@@ -36,8 +36,8 @@ class EmailProjection(object):
     openapi_types = {
         'sender': 'Sender',
         'recipients': 'EmailRecipients',
-        'attachments': 'list[str]',
         'inbox_id': 'str',
+        'attachments': 'list[str]',
         'created_at': 'datetime',
         'to': 'list[str]',
         'cc': 'list[str]',
@@ -63,8 +63,8 @@ class EmailProjection(object):
     attribute_map = {
         'sender': 'sender',
         'recipients': 'recipients',
-        'attachments': 'attachments',
         'inbox_id': 'inboxId',
+        'attachments': 'attachments',
         'created_at': 'createdAt',
         'to': 'to',
         'cc': 'cc',
@@ -87,7 +87,7 @@ class EmailProjection(object):
         '_from': 'from'
     }
 
-    def __init__(self, sender=None, recipients=None, attachments=None, inbox_id=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, domain_id=None, favourite=None, plus_address=None, size_bytes=None, in_reply_to=None, read=None, body_excerpt=None, text_excerpt=None, body_part_content_types=None, body_md5_hash=None, team_access=None, subject=None, id=None, thread_id=None, _from=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, sender=None, recipients=None, inbox_id=None, attachments=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, domain_id=None, favourite=None, plus_address=None, size_bytes=None, in_reply_to=None, read=None, body_excerpt=None, text_excerpt=None, body_part_content_types=None, body_md5_hash=None, team_access=None, subject=None, id=None, thread_id=None, _from=None, local_vars_configuration=None):  # noqa: E501
         """EmailProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -95,8 +95,8 @@ class EmailProjection(object):
 
         self._sender = None
         self._recipients = None
-        self._attachments = None
         self._inbox_id = None
+        self._attachments = None
         self._created_at = None
         self._to = None
         self._cc = None
@@ -121,8 +121,8 @@ class EmailProjection(object):
 
         self.sender = sender
         self.recipients = recipients
-        self.attachments = attachments
         self.inbox_id = inbox_id
+        self.attachments = attachments
         self.created_at = created_at
         self.to = to
         self.cc = cc
@@ -187,27 +187,6 @@ class EmailProjection(object):
         self._recipients = recipients
 
     @property
-    def attachments(self):
-        """Gets the attachments of this EmailProjection.  # noqa: E501
-
-
-        :return: The attachments of this EmailProjection.  # noqa: E501
-        :rtype: list[str]
-        """
-        return self._attachments
-
-    @attachments.setter
-    def attachments(self, attachments):
-        """Sets the attachments of this EmailProjection.
-
-
-        :param attachments: The attachments of this EmailProjection.  # noqa: E501
-        :type: list[str]
-        """
-
-        self._attachments = attachments
-
-    @property
     def inbox_id(self):
         """Gets the inbox_id of this EmailProjection.  # noqa: E501
 
@@ -229,6 +208,27 @@ class EmailProjection(object):
             raise ValueError("Invalid value for `inbox_id`, must not be `None`")  # noqa: E501
 
         self._inbox_id = inbox_id
+
+    @property
+    def attachments(self):
+        """Gets the attachments of this EmailProjection.  # noqa: E501
+
+
+        :return: The attachments of this EmailProjection.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._attachments
+
+    @attachments.setter
+    def attachments(self, attachments):
+        """Sets the attachments of this EmailProjection.
+
+
+        :param attachments: The attachments of this EmailProjection.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._attachments = attachments
 
     @property
     def created_at(self):

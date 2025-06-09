@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mkdocs-git-authors-plugin
-Version: 0.9.5
+Version: 0.9.6
 Summary: Mkdocs plugin to display git authors of a page
 Author-email: Tim Vink <vinktim@gmail.com>
 License: MIT

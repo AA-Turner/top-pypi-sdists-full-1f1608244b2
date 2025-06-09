@@ -63,26 +63,26 @@ class TestPageInboxReplierDto(unittest.TestCase):
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(
-                        unsorted = True, 
                         sorted = True, 
+                        unsorted = True, 
                         empty = True, ), ), 
-                total_pages = 56, 
                 total_elements = 56, 
+                total_pages = 56, 
                 last = True, 
                 number_of_elements = 56, 
                 first = True, 
                 size = 56, 
                 number = 56, 
                 sort = mailslurp_client.models.sort_object.SortObject(
-                    unsorted = True, 
                     sorted = True, 
+                    unsorted = True, 
                     empty = True, ), 
                 empty = True
             )
         else :
             return PageInboxReplierDto(
-                total_pages = 56,
                 total_elements = 56,
+                total_pages = 56,
         )
 
     def testPageInboxReplierDto(self):

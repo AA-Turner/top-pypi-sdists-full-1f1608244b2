@@ -57,7 +57,7 @@ class ConfluenceBuilder(Builder):
     supported_linkcode = name
     supported_remote_images = True
 
-    def __init__(self, app, env=None):
+    def __init__(self, app, env):
         super().__init__(app, env)
 
         self.cache_doctrees = {}
@@ -87,12 +87,13 @@ class ConfluenceBuilder(Builder):
         self.use_search = None
         self.verbose = ConfluenceLogger.verbose
         self.warn = ConfluenceLogger.warn
+        self.__app = app
         self._cache_info = ConfluenceCacheInfo(self)
         self._cached_footer_data = None
         self._cached_header_data = None
         self._config_confluence_hash = None
         self._original_get_doctree = None
-        self._verbose = self.app.verbosity
+        self._verbose = app.verbosity
 
         self.manifest = ConfluenceManifest(self.config, self.state)
 
@@ -101,9 +102,9 @@ class ConfluenceBuilder(Builder):
         self.state.reset()
 
     def init(self):
-        apply_env_overrides(self)
+        apply_env_overrides(self.__app)
         validate_configuration(self)
-        apply_defaults(self)
+        apply_defaults(self.__app)
         config = self.config
 
         # populate desired metadata into the manifest after the configuration
@@ -515,11 +516,14 @@ class ConfluenceBuilder(Builder):
         metadata = self.metadata.get(docname, {})
         docguid = metadata.get('guid')
 
-        forced_page_id = self.app.emit_firstresult(
-            'confluence-publish-override-pageid', docname, {
+        forced_page_id = self.events.emit_firstresult(
+            'confluence-publish-override-pageid',
+            docname,
+            {
                 'guid': docguid,
                 'title': title,
-            })
+            },
+        )
 
         if forced_page_id:
             uploaded_id = self.publisher.store_page_by_id(title,
@@ -613,10 +617,15 @@ class ConfluenceBuilder(Builder):
                 self.legacy_pages.remove(uploaded_id)
 
         if uploaded_id:
-            self.app.emit('confluence-publish-page', docname, uploaded_id, {
-                'guid': docguid,
-                'title': title,
-            })
+            self.events.emit(
+                'confluence-publish-page',
+                docname,
+                uploaded_id,
+                {
+                    'guid': docguid,
+                    'title': title,
+                },
+            )
 
     def _prepare_page_data(self, docname, output):
         data = {
@@ -693,11 +702,16 @@ class ConfluenceBuilder(Builder):
                     legacy_asset_info.pop(attachment_id, None)
 
         if attachment_id:
-            self.app.emit('confluence-publish-attachment',
-                docname, key, attachment_id, {
-                'hash': hash_,
-                'type': type_,
-            })
+            self.events.emit(
+                'confluence-publish-attachment',
+                docname,
+                key,
+                attachment_id,
+                {
+                    'hash': hash_,
+                    'type': type_,
+                },
+            )
 
     def publish_finalize(self):
         if self.root_doc_page_id:
@@ -719,7 +733,7 @@ class ConfluenceBuilder(Builder):
                 self.root_doc_page_id)
 
             self.info('Publish point: ' + point_url)
-            self.app.emit('confluence-publish-point', point_url)
+            self.events.emit('confluence-publish-point', point_url)
 
     def publish_cleanup(self):
         # check if archive cleanup is enabled
@@ -1342,7 +1356,21 @@ class ConfluenceBuilder(Builder):
         # See: https://jira.atlassian.com/browse/CONFCLOUD-74698
         if not self.config.confluence_adv_disable_confcloud_74698:
             if editor == 'v2':
-                new_target = quote(target)
+                # We originally encoded specific characters to prevent
+                # Confluence from suppressing anchors for select characters,
+                # but it is unknown the extensive list of characters Confluence
+                # was not happy with. We then switch to `quote` which worked
+                # for the most part, but when users used Emoji's, these
+                # characters would become encoded and generate anchor targets
+                # with incorrect values. Now, we do a partial quote in an
+                # attempt to be flexible -- we quote the standard ASCII range
+                # using Python default safe sets and anything beyond it, we
+                # will just leave as is.
+                def partial_quote(s):
+                    chars = [quote(x) if ord(x) < 128 else x for x in s]
+                    return ''.join(chars)
+
+                new_target = partial_quote(target)
 
                 # So... related to CONFCLOUD-74698, something about anchors
                 # with special characters will cause some pain for links.

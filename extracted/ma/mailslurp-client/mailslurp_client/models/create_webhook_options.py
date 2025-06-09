@@ -40,6 +40,7 @@ class CreateWebhookOptions(object):
         'event_name': 'str',
         'include_headers': 'WebhookHeaders',
         'request_body_template': 'str',
+        'ai_transform_id': 'str',
         'use_static_ip_range': 'bool',
         'ignore_insecure_ssl_certificates': 'bool',
         'tags': 'list[str]'
@@ -52,12 +53,13 @@ class CreateWebhookOptions(object):
         'event_name': 'eventName',
         'include_headers': 'includeHeaders',
         'request_body_template': 'requestBodyTemplate',
+        'ai_transform_id': 'aiTransformId',
         'use_static_ip_range': 'useStaticIpRange',
         'ignore_insecure_ssl_certificates': 'ignoreInsecureSslCertificates',
         'tags': 'tags'
     }
 
-    def __init__(self, url=None, basic_auth=None, name=None, event_name=None, include_headers=None, request_body_template=None, use_static_ip_range=False, ignore_insecure_ssl_certificates=None, tags=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, url=None, basic_auth=None, name=None, event_name=None, include_headers=None, request_body_template=None, ai_transform_id=None, use_static_ip_range=False, ignore_insecure_ssl_certificates=None, tags=None, local_vars_configuration=None):  # noqa: E501
         """CreateWebhookOptions - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -69,6 +71,7 @@ class CreateWebhookOptions(object):
         self._event_name = None
         self._include_headers = None
         self._request_body_template = None
+        self._ai_transform_id = None
         self._use_static_ip_range = None
         self._ignore_insecure_ssl_certificates = None
         self._tags = None
@@ -81,6 +84,7 @@ class CreateWebhookOptions(object):
         if include_headers is not None:
             self.include_headers = include_headers
         self.request_body_template = request_body_template
+        self.ai_transform_id = ai_transform_id
         self.use_static_ip_range = use_static_ip_range
         self.ignore_insecure_ssl_certificates = ignore_insecure_ssl_certificates
         self.tags = tags
@@ -226,6 +230,29 @@ class CreateWebhookOptions(object):
         """
 
         self._request_body_template = request_body_template
+
+    @property
+    def ai_transform_id(self):
+        """Gets the ai_transform_id of this CreateWebhookOptions.  # noqa: E501
+
+        AI Transform ID to apply to the webhook event and send a payload matching transform output schema  # noqa: E501
+
+        :return: The ai_transform_id of this CreateWebhookOptions.  # noqa: E501
+        :rtype: str
+        """
+        return self._ai_transform_id
+
+    @ai_transform_id.setter
+    def ai_transform_id(self, ai_transform_id):
+        """Sets the ai_transform_id of this CreateWebhookOptions.
+
+        AI Transform ID to apply to the webhook event and send a payload matching transform output schema  # noqa: E501
+
+        :param ai_transform_id: The ai_transform_id of this CreateWebhookOptions.  # noqa: E501
+        :type: str
+        """
+
+        self._ai_transform_id = ai_transform_id
 
     @property
     def use_static_ip_range(self):

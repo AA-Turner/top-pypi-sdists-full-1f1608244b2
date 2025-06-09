@@ -1,17 +1,20 @@
 import os
+import subprocess
 import sys
 import tempfile
-import subprocess
+from typing import List, Tuple
 
-from approvaltests import Options, verify_argument_parser
-from approvaltests.utilities.logger.simple_logger_approvals import verify_simple_logger
 from approval_utilities.utilities.logger.simple_logger import SimpleLogger
-from tests.find_stale_approved_files import create_argument_parser
+from approvaltests import Options, verify_argument_parser
 from approvaltests.scrubbers import create_regex_scrubber
+from approvaltests.utilities.logger.simple_logger_approvals import verify_simple_logger
+from tests.find_stale_approved_files import create_argument_parser
 
 
 # Create a temporary sandbox directory and log file
-def create_sandbox(approved_files, log_entries, nested=False):
+def create_sandbox(
+    approved_files: List[str], log_entries: List[str], nested: bool = False
+) -> Tuple[tempfile.TemporaryDirectory, str]:
     sandbox_dir = tempfile.TemporaryDirectory()
     log_file_path = os.path.join(sandbox_dir.name, "approvedfiles.log")
 
@@ -36,7 +39,7 @@ def create_sandbox(approved_files, log_entries, nested=False):
 
 
 # Execute the comparison script
-def execute_script(directory, log_file):
+def execute_script(directory: str, log_file: str) -> None:
 
     script = "find_stale_approved_files.py"
     dirname = os.path.dirname(__file__)
@@ -51,11 +54,11 @@ def execute_script(directory, log_file):
     SimpleLogger.message(output)
 
 
-def test_create_argument_parser():
+def test_create_argument_parser() -> None:
     verify_argument_parser(create_argument_parser())
 
 
-def test_find_stale_approved_files():
+def test_find_stale_approved_files() -> None:
     scrubber = create_regex_scrubber(r".+(?=file\d\.)", "")
     with verify_simple_logger(options=Options().with_scrubber(scrubber)):
         # Test Scenario 1: All approved files are in the log
@@ -121,7 +124,9 @@ def test_find_stale_approved_files():
         verify_files(approved_files, log_entries)
 
 
-def verify_files(approved_files, log_entries, nested=False):
+def verify_files(
+    approved_files: List[str], log_entries: List[str], nested: bool = False
+) -> None:
     SimpleLogger.variable("Approved Files", approved_files)
     SimpleLogger.variable("Log Entries", log_entries)
 

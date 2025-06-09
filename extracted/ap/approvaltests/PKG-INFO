@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: approvaltests
-Version: 14.5.0
+Version: 14.6.0
 Summary: Assertion/verification library to aid testing
 Home-page: https://github.com/approvals/ApprovalTests.Python
 Author: ApprovalTests Contributors
@@ -32,7 +32,7 @@ Requires-Dist: allpairspy>=2.1.0
 Requires-Dist: mrjob>=0.7.4
 Requires-Dist: testfixtures>=7.1.0
 Requires-Dist: mock>=5.1.0
-Requires-Dist: approval_utilities==14.5.0
+Requires-Dist: approval_utilities==14.6.0
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
@@ -131,7 +131,7 @@ golden master.
 from approvaltests.approvals import verify
 
 
-def test_simple():
+def test_simple() -> None:
     result = "Hello ApprovalTests"
     verify(result)
 ```
@@ -158,7 +158,7 @@ from approvaltests.approvals import verify
 
 
 class GettingStartedTest(unittest.TestCase):
-    def test_simple(self):
+    def test_simple(self) -> None:
         verify("Hello ApprovalTests")
 
 
@@ -217,7 +217,7 @@ class TestSelectReporterFromClass(unittest.TestCase):
     def test_simple(self):
         verify("Hello", options=Options().with_reporter(report_with_beyond_compare()))
 ```
-<sup><a href='/tests/samples/test_getting_started.py#L25-L31' title='Snippet source file'>snippet source</a> | <a href='#snippet-select_reporter_from_class' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/tests/samples/test_getting_started.py#L28-L34' title='Snippet source file'>snippet source</a> | <a href='#snippet-select_reporter_from_class' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 You can also use the `GenericDiffReporterFactory` to find and select the first diff utility that exists on our system.
@@ -228,6 +228,7 @@ An advantage of this method is you can modify the reporters.json file directly t
 <a id='snippet-select_reporter_from_factory'></a>
 ```py
 class TestSelectReporter(unittest.TestCase):
+    @override
     def setUp(self):
         self.factory = GenericDiffReporterFactory()
 
@@ -236,7 +237,7 @@ class TestSelectReporter(unittest.TestCase):
             "Hello", options=Options().with_reporter(self.factory.get("BeyondCompare"))
         )
 ```
-<sup><a href='/tests/samples/test_getting_started.py#L11-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-select_reporter_from_factory' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/tests/samples/test_getting_started.py#L13-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-select_reporter_from_factory' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 Or you can build your own GenericDiffReporter on the fly
@@ -253,7 +254,7 @@ class GettingStartedTest(unittest.TestCase):
             ),
         )
 ```
-<sup><a href='/tests/samples/test_getting_started.py#L34-L45' title='Snippet source file'>snippet source</a> | <a href='#snippet-custom_generic_diff_reporter' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/tests/samples/test_getting_started.py#L37-L48' title='Snippet source file'>snippet source</a> | <a href='#snippet-custom_generic_diff_reporter' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 As long as `C:/my/favorite/diff/utility.exe` can be invoked from the command line using the format `utility.exe file1 file2`
@@ -361,7 +362,7 @@ The best way to contribute is to [join our weekly mob/ensemble](./docs/Contribut
 Pull requests are welcomed, particularly those accompanied by automated tests.
 
 To run the self-tests:
-`./run_tests.sh`
+`./build_and_test.sh`
 
 This will run the self-tests on several python versions. We support python 3.8 and above.
 

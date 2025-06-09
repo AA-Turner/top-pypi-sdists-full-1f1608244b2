@@ -2,11 +2,13 @@ import argparse
 import typing
 from abc import ABC
 
+from typing_extensions import override
+
 from approvaltests import (
-    verify,
-    register_formatter,
-    find_formatter_for_specified_class,
     approvals,
+    find_formatter_for_specified_class,
+    register_formatter,
+    verify,
 )
 from approvaltests.core.format_wrapper import FormatWrapper
 from approvaltests.verifiable_objects.formatter_of_argparse_namespace import (
@@ -26,9 +28,11 @@ def test_argparse_namespace() -> None:
 
 def test_register_formatter() -> None:
     class ExampleFormatterWrapper(FormatWrapper):
+        @override
         def is_match(self, data: typing.Any) -> bool:
             return True
 
+        @override
         def wrap(self, data: typing.Any) -> typing.Any:
             return 42
 

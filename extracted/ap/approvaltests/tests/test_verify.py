@@ -1,24 +1,29 @@
 # -*- coding: utf-8 -*-
+
 import json
 import random
 import unittest
+from typing import Callable, Dict, Optional
 
 import pytest
+from typing_extensions import override
 
-from approvaltests import Options, delete_approved_file, approvals
+from approval_utilities.approvaltests.core.verifiable import Verifiable
+from approval_utilities.approvaltests.core.verify_parameters import VerifyParameters
+from approval_utilities.utilities.multiline_string_utils import remove_indentation_from
+from approval_utilities.utils import get_adjacent_file, is_windows_os, print_grid
+from approvaltests import List, Options, approvals, delete_approved_file
 from approvaltests.approval_exception import ApprovalException
 from approvaltests.approvals import (
     verify,
     verify_as_json,
-    verify_file,
-    verify_xml,
-    verify_html,
     verify_binary,
     verify_exception,
+    verify_file,
+    verify_html,
+    verify_xml,
 )
 from approvaltests.core.comparator import Comparator
-from approval_utilities.approvaltests.core.verifiable import Verifiable
-from approval_utilities.approvaltests.core.verify_parameters import VerifyParameters
 from approvaltests.reporters.report_all_to_clipboard import (
     ReporterByCopyMoveCommandForEverythingToClipboard,
 )
@@ -28,12 +33,10 @@ from approvaltests.reporters.reporter_that_automatically_approves import (
 )
 from approvaltests.reporters.testing_reporter import ReporterForTesting
 from approvaltests.storyboard import Storyboard, verify_storyboard
-from approval_utilities.utilities.multiline_string_utils import remove_indentation_from
-from approval_utilities.utils import get_adjacent_file, is_windows_os, print_grid
 
 
 class GameOfLife:
-    def __init__(self, board):
+    def __init__(self, board: Callable[[int, int], int]):
         self.board = board
         self.alive = "X"
         self.dead = "."
@@ -57,21 +60,23 @@ class GameOfLife:
         self.board = my_next
         return self
 
+    @override
     def __str__(self):
         return print_grid(
             5, 5, lambda x, y: f"{self.alive} " if self.board(x, y) else f"{self.dead} "
         )
 
-    def set_alive_cell(self, alive):
+    def set_alive_cell(self, alive: str) -> str:
         self.alive = alive
         return self.alive
 
-    def set_dead_cell(self, dead):
+    def set_dead_cell(self, dead: str) -> str:
         self.dead = dead
         return self.dead
 
 
 class VerifyTests(unittest.TestCase):
+    @override
     def setUp(self) -> None:
         self.reporter = ReporterByCopyMoveCommandForEverythingToClipboard()
 
@@ -122,9 +127,9 @@ class VerifyTests(unittest.TestCase):
 
     def test_verify_as_json(self) -> None:
         class Bag(object):
-            def __init__(self):
+            def __init__(self) -> None:
                 self.stuff = 1
-                self.json = None
+                self.json: Optional[Dict[str, int]] = None
 
         o = Bag()
         o.json = {"a": 0, "z": 26}
@@ -135,7 +140,7 @@ class VerifyTests(unittest.TestCase):
             verify_as_json(Ellipsis, self.reporter)
 
     def test_verify_as_json_raises_value_error_for_non_renderable_values(self):
-        circular_data = []
+        circular_data: List[List] = []
         circular_data.append(circular_data)
         with self.assertRaises(ValueError):
             verify_as_json(circular_data, self.reporter)
@@ -213,14 +218,15 @@ class VerifyTests(unittest.TestCase):
 
     def test_simple_storyboard(self) -> None:
         class AsciiWheel:
-            def __init__(self):
+            def __init__(self) -> None:
                 self.steps = ["-", "\\", "|", "/"]
                 self.step = 0
 
-            def __str__(self):
+            @override
+            def __str__(self) -> str:
                 return self.steps[self.step]
 
-            def advance(self):
+            def advance(self) -> None:
                 self.step += 1
                 self.step %= 4
 
@@ -296,6 +302,7 @@ class VerifyTests(unittest.TestCase):
 
     def test_verify_custom_comparator_allows_all_inputs(self):
         class EverythingIsTrue(Comparator):
+            @override
             def compare(self, received_path: str, approved_path: str) -> bool:
                 return True
 
@@ -304,10 +311,11 @@ class VerifyTests(unittest.TestCase):
     # begin-snippet: verifiable_object_example
     def test_verifiable(self):
         class MarkdownParagraph(Verifiable):
-            def __init__(self, title, text):
+            def __init__(self, title: str, text: str) -> None:
                 self.title = title
                 self.text = text
 
+            @override
             def __str__(self) -> str:
                 return remove_indentation_from(
                     f""" 
@@ -316,6 +324,7 @@ class VerifyTests(unittest.TestCase):
                 """
                 )
 
+            @override
             def get_verify_parameters(self, options: Options) -> VerifyParameters:
                 return VerifyParameters(options.for_file.with_extension(".md"))
 

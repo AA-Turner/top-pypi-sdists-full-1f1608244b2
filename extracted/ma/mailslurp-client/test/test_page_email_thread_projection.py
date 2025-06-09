@@ -62,8 +62,8 @@ class TestPageEmailThreadProjection(unittest.TestCase):
                                     raw_value = '0', 
                                     name = '0', )
                                 ], ), 
-                        user_id = '0', 
                         inbox_id = '0', 
+                        user_id = '0', 
                         updated_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                         created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                         to = [
@@ -76,6 +76,8 @@ class TestPageEmailThreadProjection(unittest.TestCase):
                             '0'
                             ], 
                         has_attachments = True, 
+                        unread = True, 
+                        message_count = 56, 
                         last_body_excerpt = '0', 
                         last_text_excerpt = '0', 
                         last_created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
@@ -84,8 +86,6 @@ class TestPageEmailThreadProjection(unittest.TestCase):
                             email_address = '0', 
                             raw_value = '0', 
                             name = '0', ), 
-                        message_count = 56, 
-                        unread = True, 
                         subject = '0', 
                         id = '0', 
                         from = '0', )
@@ -97,26 +97,26 @@ class TestPageEmailThreadProjection(unittest.TestCase):
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(
-                        unsorted = True, 
                         sorted = True, 
+                        unsorted = True, 
                         empty = True, ), ), 
-                total_pages = 56, 
                 total_elements = 56, 
+                total_pages = 56, 
                 last = True, 
                 number_of_elements = 56, 
                 first = True, 
                 size = 56, 
                 number = 56, 
                 sort = mailslurp_client.models.sort_object.SortObject(
-                    unsorted = True, 
                     sorted = True, 
+                    unsorted = True, 
                     empty = True, ), 
                 empty = True
             )
         else :
             return PageEmailThreadProjection(
-                total_pages = 56,
                 total_elements = 56,
+                total_pages = 56,
         )
 
     def testPageEmailThreadProjection(self):

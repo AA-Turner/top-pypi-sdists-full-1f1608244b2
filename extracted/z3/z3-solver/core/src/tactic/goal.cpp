@@ -254,7 +254,7 @@ void goal::assert_expr(expr * f, proof * pr, expr_dependency * d) {
     }
     SASSERT(!proofs_enabled() || pr);
     if (pr) {
-        CTRACE("goal", f != m().get_fact(pr), tout << mk_pp(f, m()) << "\n" << mk_pp(pr, m()) << "\n";);
+        CTRACE(goal, f != m().get_fact(pr), tout << mk_pp(f, m()) << "\n" << mk_pp(pr, m()) << "\n";);
         SASSERT(f == m().get_fact(pr));
         slow_process(f, pr, d);
     }
@@ -488,7 +488,7 @@ void goal::shrink(unsigned j) {
 */
 void goal::elim_true() {    
     unsigned i = 0, j = 0;
-    for (auto [f, dep, pr] : *this) {
+    for (const auto& [f, dep, pr] : *this) {
         if (m().is_true(f)) {
             ++i;
             continue;
@@ -599,7 +599,7 @@ bool goal::is_well_formed() const {
             return false;
 #if 0
         if (pr(i) && m().get_fact(pr(i)) != form(i)) {
-            TRACE("tactic", tout << mk_ismt2_pp(pr(i), m()) << "\n" << mk_ismt2_pp(form(i), m()) << "\n";);
+            TRACE(tactic, tout << mk_ismt2_pp(pr(i), m()) << "\n" << mk_ismt2_pp(form(i), m()) << "\n";);
             SASSERT(m().get_fact(pr(i)) == form(i));
             return false;
         }

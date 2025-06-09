@@ -1,8 +1,9 @@
 from approvaltests.reporters.generic_diff_reporter_factory import (
     GenericDiffReporterFactory,
 )
-from .python_native_reporter import PythonNativeReporter
+
 from .first_working_reporter import FirstWorkingReporter
+from .python_native_reporter import PythonNativeReporter
 from .report_with_diff_command_line import ReportWithDiffCommandLine
 from .report_with_diff_tool_on_windows import ReportWithDiffToolOnWindows
 from .report_with_vscode import ReportWithVSCode, ReportWithVSCodeMacOS
@@ -19,7 +20,7 @@ class DiffReporter(FirstWorkingReporter):
     At present, the default Reporter is the DiffReporter.
     """
 
-    def __init__(self, reporter_factory=None):
+    def __init__(self, reporter_factory=None) -> None:
         factory = reporter_factory or GenericDiffReporterFactory()
 
         reporters = list(factory.get_all_reporters_from_config())

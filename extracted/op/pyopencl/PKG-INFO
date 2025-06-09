@@ -1,14 +1,14 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: pyopencl
-Version: 2025.1
+Version: 2025.2.1
 Summary: Python wrapper for OpenCL
 Author-Email: Andreas Kloeckner <inform@tiker.net>
+License-Expression: MIT
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Other Audience
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: English
 Classifier: Programming Language :: C++
 Classifier: Programming Language :: Python
@@ -19,21 +19,22 @@ Classifier: Topic :: Scientific/Engineering :: Physics
 Project-URL: Documentation, https://documen.tician.de/pyopencl
 Project-URL: Homepage, https://mathema.tician.de/software/pyopencl
 Project-URL: Repository, https://github.com/inducer/pyopencl
-Requires-Python: ~=3.8
+Requires-Python: ~=3.10
 Requires-Dist: importlib-resources; python_version < "3.9"
 Requires-Dist: numpy
 Requires-Dist: platformdirs>=2.2
-Requires-Dist: pytools>=2024.1.5
+Requires-Dist: pytools>=2025.1.6
+Requires-Dist: typing_extensions>=4.6
+Provides-Extra: oclgrind
 Requires-Dist: oclgrind-binary-distribution>=18.3; extra == "oclgrind"
+Provides-Extra: pocl
 Requires-Dist: pocl-binary-distribution>=1.2; extra == "pocl"
+Provides-Extra: test
 Requires-Dist: ruff; extra == "test"
 Requires-Dist: mako; extra == "test"
 Requires-Dist: mypy; extra == "test"
 Requires-Dist: pylint; extra == "test"
 Requires-Dist: pytest>=7; extra == "test"
-Provides-Extra: oclgrind
-Provides-Extra: pocl
-Provides-Extra: test
 Description-Content-Type: text/x-rst
 
 PyOpenCL: Pythonic Access to OpenCL, with Arrays and Algorithms
@@ -42,9 +43,9 @@ PyOpenCL: Pythonic Access to OpenCL, with Arrays and Algorithms
 .. |badge-gitlab-ci| image:: https://gitlab.tiker.net/inducer/pyopencl/badges/main/pipeline.svg
     :alt: Gitlab Build Status
     :target: https://gitlab.tiker.net/inducer/pyopencl/commits/main
-.. |badge-github-ci| image:: https://github.com/inducer/pyopencl/workflows/CI/badge.svg?branch=main&event=push
+.. |badge-github-ci| image:: https://github.com/inducer/pyopencl/actions/workflows/ci.yml/badge.svg
     :alt: Github Build Status
-    :target: https://github.com/inducer/pyopencl/actions?query=branch%3Amain+workflow%3ACI+event%3Apush
+    :target: https://github.com/inducer/pyopencl/actions/workflows/ci.yml
 .. |badge-pypi| image:: https://badge.fury.io/py/pyopencl.svg
     :alt: Python Package Index Release Page
     :target: https://pypi.org/project/pyopencl/

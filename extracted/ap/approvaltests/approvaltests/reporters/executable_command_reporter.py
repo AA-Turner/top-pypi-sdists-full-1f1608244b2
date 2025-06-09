@@ -1,4 +1,7 @@
 import pathlib
+from typing import Optional
+
+from typing_extensions import override
 
 from approval_utilities.approvaltests.core.executable_command import ExecutableCommand
 from approval_utilities.utilities.multiline_string_utils import remove_indentation_from
@@ -10,6 +13,7 @@ class ExecutableCommandReporter(Reporter):
         self.executor = executor
         self.reporter = reporter
 
+    @override
     def report(self, received_filename: str, approved_filename: str) -> bool:
         # recieved and approved commands are not the same
         # todo run the content of the file against the executable command
@@ -22,7 +26,7 @@ class ExecutableCommandReporter(Reporter):
         self.reporter.report(received_filename, approved_filename)
         return True
 
-    def execute_result(self, filename) -> str:
+    def execute_result(self, filename: str) -> str:
         path = pathlib.Path(filename)
         command_string = None
         if path.exists():
@@ -38,7 +42,7 @@ class ExecutableCommandReporter(Reporter):
 
     @staticmethod
     def execute_command_and_format_result(
-        my_command: str, executor: ExecutableCommand
+        my_command: Optional[str], executor: ExecutableCommand
     ) -> str:
         if not my_command:
             return ""

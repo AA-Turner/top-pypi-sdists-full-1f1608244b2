@@ -1,4 +1,7 @@
-from typing import Any, Callable, Optional, Collection
+from types import TracebackType
+from typing import Any, Callable, Collection, Optional, Type
+
+from typing_extensions import override
 
 from approvaltests import verify
 from approvaltests.core.options import Options
@@ -17,10 +20,15 @@ class Storyboard:
         self.verify_on_exit = verify_on_exit
         self.options = options
 
-    def __enter__(self):
+    def __enter__(self) -> "Storyboard":
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None:
         if self.verify_on_exit:
             verify(self, options=self.options)
 
@@ -46,6 +54,7 @@ class Storyboard:
             self.add_frame(function_for_frame(number))
         return self
 
+    @override
     def __str__(self) -> str:
         return self.story
 
@@ -63,7 +72,7 @@ class Storyboard:
             self.add_frame(frame)
         return self
 
-    def add_description(self, description):
+    def add_description(self, description: str) -> "Storyboard":
         self.story += f"{description}\n\n"
         return self
 
@@ -79,5 +88,5 @@ StoryBoard = Storyboard
 def verify_storyboard(
     *,  # enforce keyword arguments - https://www.python.org/dev/peps/pep-3102/
     options: Optional[Options] = None,
-):
+) -> "Storyboard":
     return Storyboard(verify_on_exit=True, options=options)

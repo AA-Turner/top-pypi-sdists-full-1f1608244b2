@@ -37,17 +37,19 @@ class GenerateStructuredContentEmailOptions(object):
         'email_id': 'str',
         'content_selector': 'str',
         'instructions': 'str',
-        'output_schema': 'StructuredOutputSchema'
+        'output_schema': 'StructuredOutputSchema',
+        'transform_id': 'str'
     }
 
     attribute_map = {
         'email_id': 'emailId',
         'content_selector': 'contentSelector',
         'instructions': 'instructions',
-        'output_schema': 'outputSchema'
+        'output_schema': 'outputSchema',
+        'transform_id': 'transformId'
     }
 
-    def __init__(self, email_id=None, content_selector=None, instructions=None, output_schema=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, email_id=None, content_selector=None, instructions=None, output_schema=None, transform_id=None, local_vars_configuration=None):  # noqa: E501
         """GenerateStructuredContentEmailOptions - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -57,14 +59,15 @@ class GenerateStructuredContentEmailOptions(object):
         self._content_selector = None
         self._instructions = None
         self._output_schema = None
+        self._transform_id = None
         self.discriminator = None
 
         self.email_id = email_id
-        if content_selector is not None:
-            self.content_selector = content_selector
-        if instructions is not None:
-            self.instructions = instructions
-        self.output_schema = output_schema
+        self.content_selector = content_selector
+        self.instructions = instructions
+        if output_schema is not None:
+            self.output_schema = output_schema
+        self.transform_id = transform_id
 
     @property
     def email_id(self):
@@ -111,7 +114,7 @@ class GenerateStructuredContentEmailOptions(object):
         :param content_selector: The content_selector of this GenerateStructuredContentEmailOptions.  # noqa: E501
         :type: str
         """
-        allowed_values = ["RAW", "BODY"]  # noqa: E501
+        allowed_values = [None,"RAW", "BODY", "BODY_ATTACHMENTS"]  # noqa: E501
         if self.local_vars_configuration.client_side_validation and content_selector not in allowed_values:  # noqa: E501
             raise ValueError(
                 "Invalid value for `content_selector` ({0}), must be one of {1}"  # noqa: E501
@@ -161,10 +164,31 @@ class GenerateStructuredContentEmailOptions(object):
         :param output_schema: The output_schema of this GenerateStructuredContentEmailOptions.  # noqa: E501
         :type: StructuredOutputSchema
         """
-        if self.local_vars_configuration.client_side_validation and output_schema is None:  # noqa: E501
-            raise ValueError("Invalid value for `output_schema`, must not be `None`")  # noqa: E501
 
         self._output_schema = output_schema
+
+    @property
+    def transform_id(self):
+        """Gets the transform_id of this GenerateStructuredContentEmailOptions.  # noqa: E501
+
+        ID of transformer to apply  # noqa: E501
+
+        :return: The transform_id of this GenerateStructuredContentEmailOptions.  # noqa: E501
+        :rtype: str
+        """
+        return self._transform_id
+
+    @transform_id.setter
+    def transform_id(self, transform_id):
+        """Sets the transform_id of this GenerateStructuredContentEmailOptions.
+
+        ID of transformer to apply  # noqa: E501
+
+        :param transform_id: The transform_id of this GenerateStructuredContentEmailOptions.  # noqa: E501
+        :type: str
+        """
+
+        self._transform_id = transform_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

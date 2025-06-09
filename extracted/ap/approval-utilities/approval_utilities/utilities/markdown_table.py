@@ -1,13 +1,19 @@
-from typing import Any, Callable, Iterable
+from typing import TYPE_CHECKING, Any, Callable, Iterable
+
+from typing_extensions import override
 
 from approval_utilities.approvaltests.core.verifiable import Verifiable
 from approval_utilities.approvaltests.core.verify_parameters import VerifyParameters
 
+if TYPE_CHECKING:
+    from approvaltests.core.options import Options
+
 
 class MarkdownTable(Verifiable):
-    def __init__(self):
-        self.markdown = ""
+    def __init__(self) -> None:
+        self.markdown: str = ""
 
+    @override
     def get_verify_parameters(self, options: "Options") -> VerifyParameters:
         return VerifyParameters(options.for_file.with_extension(".md"))
 
@@ -23,6 +29,7 @@ class MarkdownTable(Verifiable):
         self.markdown += MarkdownTable.print_row(*column_names)
         return self
 
+    @override
     def __str__(self) -> str:
         return self.markdown
 

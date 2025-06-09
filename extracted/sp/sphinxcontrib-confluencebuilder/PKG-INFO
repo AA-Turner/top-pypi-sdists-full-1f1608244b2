@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sphinxcontrib-confluencebuilder
-Version: 2.12.0
+Version: 2.13.0
 Summary: Sphinx extension to build Atlassian Confluence Storage Markup
 Author-email: Anthony Shaw <anthonyshaw@apache.org>, James Knight <git@jdknight.me>
 Maintainer-email: James Knight <git@jdknight.me>

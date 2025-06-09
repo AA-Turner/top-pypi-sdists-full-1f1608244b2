@@ -38,17 +38,17 @@ class TestConnectorProjection(unittest.TestCase):
         if include_optional :
             return ConnectorProjection(
                 enabled = True, 
+                inbox_id = '0', 
                 user_id = '0', 
                 email_address = '0', 
-                inbox_id = '0', 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 name = '0', 
                 id = '0'
             )
         else :
             return ConnectorProjection(
-                user_id = '0',
                 inbox_id = '0',
+                user_id = '0',
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
                 id = '0',
         )

@@ -50,6 +50,7 @@ class TestCreateWebhookOptions(unittest.TestCase):
                             value = '0', )
                         ], ), 
                 request_body_template = '0', 
+                ai_transform_id = '0', 
                 use_static_ip_range = True, 
                 ignore_insecure_ssl_certificates = True, 
                 tags = [

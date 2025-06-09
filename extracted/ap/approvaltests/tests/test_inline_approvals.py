@@ -1,47 +1,34 @@
+import sys
 import unittest
 from inspect import FrameInfo
-from typing import Callable, Any
+from typing import Any, Callable
 
 import pytest
 
 from approval_utilities.utilities.multiline_string_utils import remove_indentation_from
 from approvaltests import (
-    StackFrameNamer,
+    ApprovalException,
     Options,
+    StackFrameNamer,
     verify,
     verify_all,
     verify_all_combinations_with_labeled_input,
-    ApprovalException,
 )
 from approvaltests.inline.inline_options import InlineOptions
 from approvaltests.inline.parse_docstring import parse_docstring
+from approvaltests.namer.inline_comparator import InlineComparator
 from approvaltests.reporters.report_quietly import ReportQuietly
 from approvaltests.reporters.report_with_beyond_compare import (
-    ReportWithPycharm,
     ReportWithBeyondCompare,
+    ReportWithPycharm,
 )
-
-
-def get_approved_via_doc_string():
-    test_stack_frame: FrameInfo = StackFrameNamer.get_test_frame()
-    method: Callable[..., Any] = get_caller_method(test_stack_frame)
-    return remove_indentation_from(method.__doc__)
-
-
-def get_caller_method(caller_frame) -> Callable:
-    caller_function_name: str = caller_frame[3]
-    caller_function_object = caller_frame.frame.f_globals.get(
-        caller_function_name, None
-    )
-    return caller_function_object
-
 
 # Todo:
 # detect the actual tab
 # detect if the quote type used in the docstring  (i.e. " or ')
 
 
-def fizz_buzz(param):
+def fizz_buzz(param: int) -> str:
     return_string = ""
     for i in range(1, param + 1):
         if i % 15 == 0:
@@ -55,7 +42,7 @@ def fizz_buzz(param):
     return return_string
 
 
-def test_fizz_buzz():
+def test_fizz_buzz() -> None:
     """
     1
     2
@@ -69,7 +56,7 @@ def test_fizz_buzz():
     verify(fizz_buzz(8), options=Options().inline())
 
 
-def test_docstrings():
+def test_docstrings() -> None:
     """
     hello
     world
@@ -79,11 +66,11 @@ def test_docstrings():
     verify(greeting(), options=Options().inline())
 
 
-def greeting():
+def greeting() -> str:
     return "hello\nworld"
 
 
-def test_docstring_parsing():
+def test_docstring_parsing() -> None:
     """
     1
     2 -> 2
@@ -97,7 +84,7 @@ def test_docstring_parsing():
     verify_all("inputs", parse_docstring())
 
 
-def test_uppercase():
+def test_uppercase() -> None:
     """
     a -> A
     b -> B
@@ -112,7 +99,7 @@ def test_uppercase():
 options = Options().inline()
 
 
-def test_when_options_is_created_outside_of_test():
+def test_when_options_is_created_outside_of_test() -> None:
     """
     hello
     world
@@ -120,7 +107,7 @@ def test_when_options_is_created_outside_of_test():
     verify(greeting(), options=options)
 
 
-def test_exception_on_failure():
+def test_exception_on_failure() -> None:
     """
     this string should not match
     """
@@ -144,19 +131,20 @@ class InlineTests(unittest.TestCase):
         )
 
 
-def get_preceding_whitespace():
+def get_preceding_whitespace() -> str:
     return "    4 whitespaces"
 
 
 # fmt: off
-def test_preceding_whitespace():
+@unittest.skipIf(sys.version_info >= (3, 13), "__doc__ removes preceding whitespace in Python 3.13+")
+def test_preceding_whitespace() -> None:
     """
         4 whitespaces
     """
     verify(get_preceding_whitespace(), options=Options().inline())
 
 
-def test_trailing_whitespace():
+def test_trailing_whitespace() -> None:
     """
     4 trailing whitespaces    
     """
@@ -167,7 +155,7 @@ def test_trailing_whitespace():
 # fmt: on
 
 
-def test_bug_blank_lines():
+def test_bug_blank_lines() -> None:
     """
 
 
@@ -179,7 +167,7 @@ def test_bug_blank_lines():
     verify("\n\ntest bug with blank lines\n\n\n\n", options=Options().inline())
 
 
-def test_inline_with_additional_reporter():
+def test_inline_with_additional_reporter() -> None:
     """
     hello
     world
@@ -190,7 +178,7 @@ def test_inline_with_additional_reporter():
     )
 
 
-def test_inline_with_preserved_approved_text():
+def test_inline_with_preserved_approved_text() -> None:
     """
     42
     ***** DELETE ME TO APPROVE *****
@@ -202,10 +190,10 @@ def test_inline_with_preserved_approved_text():
         verify("42", options=options)
     except ApprovalException:
         pass
-    verify(get_approved_via_doc_string())
+    verify(InlineComparator.get_test_method_doc_string())
 
 
-def test_inline_with_semi_automatic_inline():
+def test_inline_with_semi_automatic_inline() -> None:
     """
     42
     ***** DELETE ME TO APPROVE *****
@@ -215,4 +203,4 @@ def test_inline_with_semi_automatic_inline():
         verify("42", options=options)
     except ApprovalException:
         pass
-    verify(get_approved_via_doc_string())
+    verify(InlineComparator.get_test_method_doc_string())

@@ -56,6 +56,7 @@ class TestWebhookDto(unittest.TestCase):
                             name = '0', 
                             value = '0', )
                         ], ), 
+                ai_transform_id = '0', 
                 ignore_insecure_ssl_certificates = True, 
                 use_static_ip_range = True, 
                 health_status = 'HEALTHY'

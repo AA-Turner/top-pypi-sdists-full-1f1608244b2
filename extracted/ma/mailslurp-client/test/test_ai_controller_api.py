@@ -29,6 +29,48 @@ class TestAIControllerApi(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_create_transformer(self):
+        """Test case for create_transformer
+
+        List transformers  # noqa: E501
+        """
+        pass
+
+    def test_create_transformer1(self):
+        """Test case for create_transformer1
+
+        Create a transformer for reuse in automations  # noqa: E501
+        """
+        pass
+
+    def test_create_transformer_mappings(self):
+        """Test case for create_transformer_mappings
+
+        Create transformer mapping  # noqa: E501
+        """
+        pass
+
+    def test_delete_transformer(self):
+        """Test case for delete_transformer
+
+        Delete a transformer  # noqa: E501
+        """
+        pass
+
+    def test_delete_transformer_mapping(self):
+        """Test case for delete_transformer_mapping
+
+        Delete transformer mapping  # noqa: E501
+        """
+        pass
+
+    def test_delete_transformers(self):
+        """Test case for delete_transformers
+
+        Delete all transformers  # noqa: E501
+        """
+        pass
+
     def test_generate_structured_content_from_attachment(self):
         """Test case for generate_structured_content_from_attachment
 
@@ -40,6 +82,48 @@ class TestAIControllerApi(unittest.TestCase):
         """Test case for generate_structured_content_from_email
 
         Generate structured content for an email  # noqa: E501
+        """
+        pass
+
+    def test_generate_structured_content_from_sms(self):
+        """Test case for generate_structured_content_from_sms
+
+        Generate structured content for a TXT message  # noqa: E501
+        """
+        pass
+
+    def test_get_transformer(self):
+        """Test case for get_transformer
+
+        Get a transformer  # noqa: E501
+        """
+        pass
+
+    def test_get_transformer_mapping(self):
+        """Test case for get_transformer_mapping
+
+        Get transformer mapping  # noqa: E501
+        """
+        pass
+
+    def test_get_transformer_mappings(self):
+        """Test case for get_transformer_mappings
+
+        Get transformer mappings  # noqa: E501
+        """
+        pass
+
+    def test_get_transformer_result(self):
+        """Test case for get_transformer_result
+
+        Get transformer result  # noqa: E501
+        """
+        pass
+
+    def test_get_transformer_results(self):
+        """Test case for get_transformer_results
+
+        Get transformer results  # noqa: E501
         """
         pass
 

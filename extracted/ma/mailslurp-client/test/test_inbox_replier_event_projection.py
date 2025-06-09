@@ -40,9 +40,9 @@ class TestInboxReplierEventProjection(unittest.TestCase):
                 recipients = [
                     '0'
                     ], 
-                user_id = '0', 
                 email_id = '0', 
                 inbox_id = '0', 
+                user_id = '0', 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 sent_id = '0', 
                 replier_id = '0', 

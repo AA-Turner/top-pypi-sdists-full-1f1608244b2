@@ -1,24 +1,25 @@
 import json
-from typing import Iterator, List, Optional
+from typing import Callable, Dict, Iterator, List, Optional, Type
 
+from typing_extensions import override
+
+from approval_utilities.utilities.deprecated import deprecated
+from approval_utilities.utils import get_adjacent_file
 from approvaltests.core.reporter import Reporter
-from approvaltests.reporters.python_native_reporter import PythonNativeReporter
-from approvaltests.reporters.generic_diff_reporter import (
-    GenericDiffReporter,
-)
+from approvaltests.reporters.generic_diff_reporter import GenericDiffReporter
 from approvaltests.reporters.generic_diff_reporter_config import (
     GenericDiffReporterConfig,
     create_config,
 )
+from approvaltests.reporters.python_native_reporter import PythonNativeReporter
 from approvaltests.reporters.report_with_beyond_compare import (
     ReportWithBeyondCompare,
     ReportWithWinMerge,
 )
-from approval_utilities.utils import get_adjacent_file
-from approval_utilities.utilities.deprecated import deprecated
 
 
 class NoConfigReporter(Reporter):
+    @override
     def report(self, received_path: str, approved_path: str) -> bool:
         raise RuntimeError("This machine has no reporter configuration")
 
@@ -29,7 +30,7 @@ class GenericDiffReporterFactory:
     def __init__(self) -> None:
         self.load(get_adjacent_file("reporters.json"))
 
-    def add_default_reporter_config(self, config):
+    def add_default_reporter_config(self, config: List[str]) -> None:
         self.reporter_configs.insert(0, create_config(config))
 
     def list(self) -> List[str]:
@@ -43,7 +44,7 @@ class GenericDiffReporterFactory:
 
     @staticmethod
     def get_reporter_programmatically(reporter_name: str) -> Optional[Reporter]:
-        reporters = {
+        reporters: Dict[str, Callable[[], Reporter]] = {
             "BeyondCompare": ReportWithBeyondCompare,
             "WinMerge": ReportWithWinMerge,
             "PythonNative": PythonNativeReporter,

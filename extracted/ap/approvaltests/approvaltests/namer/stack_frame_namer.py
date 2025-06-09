@@ -1,13 +1,15 @@
+import fnmatch
 import inspect
 import os
 from inspect import FrameInfo
-from typing import Optional, Dict, List
-import fnmatch
+from typing import Dict, List, Optional
 
-from approvaltests.namer.namer_base import NamerBase
-from approvaltests.approval_exception import FrameNotFound
+from typing_extensions import override
+
 from approval_utilities.utilities.stack_frame_utilities import get_class_name_for_frame
+from approvaltests.approval_exception import FrameNotFound
 from approvaltests.integrations.pytest.pytest_config import PytestConfig
+from approvaltests.namer.namer_base import NamerBase
 
 
 class StackFrameNamer(NamerBase):
@@ -90,12 +92,15 @@ class StackFrameNamer(NamerBase):
     def get_method_name(self) -> str:
         return self.method_name
 
+    @override
     def get_directory(self) -> str:
         return self.directory
 
+    @override
     def config_directory(self) -> str:
         return self.directory
 
+    @override
     def get_file_name(self) -> str:
         class_name = "" if (self.class_name is None) else (self.class_name + ".")
         return class_name + self.method_name

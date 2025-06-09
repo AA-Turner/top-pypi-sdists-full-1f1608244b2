@@ -1,8 +1,9 @@
 import shutil
 from pathlib import Path
 
-from approvaltests.core import Options
-from approvaltests.core import Writer
+from typing_extensions import override
+
+from approvaltests.core import Options, Writer
 
 
 class ExistingFileWriter(Writer):
@@ -10,6 +11,7 @@ class ExistingFileWriter(Writer):
         self.file_name = file_name
         self.options = options
 
+    @override
     def write_received_file(self, received_file: str) -> str:
         if not self.options.has_scrubber():
             shutil.copyfile(self.file_name, received_file)

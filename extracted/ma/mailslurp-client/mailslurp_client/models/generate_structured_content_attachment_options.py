@@ -36,16 +36,20 @@ class GenerateStructuredContentAttachmentOptions(object):
     openapi_types = {
         'attachment_id': 'str',
         'instructions': 'str',
-        'output_schema': 'StructuredOutputSchema'
+        'output_schema': 'StructuredOutputSchema',
+        'transform_id': 'str',
+        'email_id': 'str'
     }
 
     attribute_map = {
         'attachment_id': 'attachmentId',
         'instructions': 'instructions',
-        'output_schema': 'outputSchema'
+        'output_schema': 'outputSchema',
+        'transform_id': 'transformId',
+        'email_id': 'emailId'
     }
 
-    def __init__(self, attachment_id=None, instructions=None, output_schema=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, attachment_id=None, instructions=None, output_schema=None, transform_id=None, email_id=None, local_vars_configuration=None):  # noqa: E501
         """GenerateStructuredContentAttachmentOptions - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -54,12 +58,16 @@ class GenerateStructuredContentAttachmentOptions(object):
         self._attachment_id = None
         self._instructions = None
         self._output_schema = None
+        self._transform_id = None
+        self._email_id = None
         self.discriminator = None
 
         self.attachment_id = attachment_id
-        if instructions is not None:
-            self.instructions = instructions
-        self.output_schema = output_schema
+        self.instructions = instructions
+        if output_schema is not None:
+            self.output_schema = output_schema
+        self.transform_id = transform_id
+        self.email_id = email_id
 
     @property
     def attachment_id(self):
@@ -127,10 +135,54 @@ class GenerateStructuredContentAttachmentOptions(object):
         :param output_schema: The output_schema of this GenerateStructuredContentAttachmentOptions.  # noqa: E501
         :type: StructuredOutputSchema
         """
-        if self.local_vars_configuration.client_side_validation and output_schema is None:  # noqa: E501
-            raise ValueError("Invalid value for `output_schema`, must not be `None`")  # noqa: E501
 
         self._output_schema = output_schema
+
+    @property
+    def transform_id(self):
+        """Gets the transform_id of this GenerateStructuredContentAttachmentOptions.  # noqa: E501
+
+        ID of transformer to apply  # noqa: E501
+
+        :return: The transform_id of this GenerateStructuredContentAttachmentOptions.  # noqa: E501
+        :rtype: str
+        """
+        return self._transform_id
+
+    @transform_id.setter
+    def transform_id(self, transform_id):
+        """Sets the transform_id of this GenerateStructuredContentAttachmentOptions.
+
+        ID of transformer to apply  # noqa: E501
+
+        :param transform_id: The transform_id of this GenerateStructuredContentAttachmentOptions.  # noqa: E501
+        :type: str
+        """
+
+        self._transform_id = transform_id
+
+    @property
+    def email_id(self):
+        """Gets the email_id of this GenerateStructuredContentAttachmentOptions.  # noqa: E501
+
+        Optional email ID for more context  # noqa: E501
+
+        :return: The email_id of this GenerateStructuredContentAttachmentOptions.  # noqa: E501
+        :rtype: str
+        """
+        return self._email_id
+
+    @email_id.setter
+    def email_id(self, email_id):
+        """Sets the email_id of this GenerateStructuredContentAttachmentOptions.
+
+        Optional email ID for more context  # noqa: E501
+
+        :param email_id: The email_id of this GenerateStructuredContentAttachmentOptions.  # noqa: E501
+        :type: str
+        """
+
+        self._email_id = email_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

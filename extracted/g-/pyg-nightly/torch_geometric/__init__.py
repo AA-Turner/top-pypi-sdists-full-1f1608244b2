@@ -31,7 +31,7 @@ from .lazy_loader import LazyLoader
 contrib = LazyLoader('contrib', globals(), 'torch_geometric.contrib')
 graphgym = LazyLoader('graphgym', globals(), 'torch_geometric.graphgym')
 
-__version__ = '2.7.0.dev20250607'
+__version__ = '2.7.0.dev20250608'
 
 __all__ = [
     'Index',
@@ -60,9 +60,10 @@ __all__ = [
 if not torch_geometric.typing.WITH_PT113:
     import warnings as std_warnings
 
-    std_warnings.warn("PyG 2.7 removed support for PyTorch < 1.13. Consider "
-                      "Consider upgrading to PyTorch >= 1.13 or downgrading "
-                      "to PyG <= 2.6. ")
+    std_warnings.warn(
+        "PyG 2.7 removed support for PyTorch < 1.13. Consider "
+        "Consider upgrading to PyTorch >= 1.13 or downgrading "
+        "to PyG <= 2.6. ", stacklevel=2)
 
 # Serialization ###############################################################
 

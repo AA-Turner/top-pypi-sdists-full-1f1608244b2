@@ -640,7 +640,7 @@ void bind_module_definitions(nb::module_& m)
              })
         .def("__eq__", [](const GroundActionImpl& lhs, const GroundActionImpl& rhs) { return &lhs == &rhs; })
         .def("__ne__", [](const GroundActionImpl& lhs, const GroundActionImpl& rhs) { return &lhs != &rhs; })
-        .def("__hash__", [](const GroundActionImpl& self) { return &self; })
+        .def("__hash__", [](const GroundActionImpl& self) { return reinterpret_cast<std::uintptr_t>(&self); })
         .def("to_string_for_plan",
              [](const GroundActionImpl& self, const ProblemImpl& problem)
              {
@@ -968,6 +968,20 @@ void bind_module_definitions(nb::module_& m)
             "fluent_literals"_a,
             "derived_literals"_a,
             "numeric_constraints"_a,
+            nb::rv_policy::reference_internal)
+        .def("get_or_create_ground_conjunctive_condition",
+            [](ProblemImpl& self,
+               GroundLiteralList<StaticTag> static_literals,
+               GroundLiteralList<FluentTag> fluent_literals,
+               GroundLiteralList<DerivedTag> derived_literals)
+            {
+                return self.get_or_create_ground_conjunctive_condition(std::move(static_literals),
+                                                                       std::move(fluent_literals),
+                                                                       std::move(derived_literals));
+            },
+            "static_literals"_a,
+            "fluent_literals"_a,
+            "derived_literals"_a,
             nb::rv_policy::reference_internal);
     nb::bind_vector<ProblemList>(m, "ProblemList");
 

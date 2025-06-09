@@ -48,6 +48,7 @@ class WebhookDto(object):
         'updated_at': 'datetime',
         'event_name': 'str',
         'request_headers': 'WebhookHeaders',
+        'ai_transform_id': 'str',
         'ignore_insecure_ssl_certificates': 'bool',
         'use_static_ip_range': 'bool',
         'health_status': 'str'
@@ -68,12 +69,13 @@ class WebhookDto(object):
         'updated_at': 'updatedAt',
         'event_name': 'eventName',
         'request_headers': 'requestHeaders',
+        'ai_transform_id': 'aiTransformId',
         'ignore_insecure_ssl_certificates': 'ignoreInsecureSslCertificates',
         'use_static_ip_range': 'useStaticIpRange',
         'health_status': 'healthStatus'
     }
 
-    def __init__(self, id=None, user_id=None, basic_auth=None, name=None, phone_id=None, inbox_id=None, request_body_template=None, url=None, method=None, payload_json_schema=None, created_at=None, updated_at=None, event_name=None, request_headers=None, ignore_insecure_ssl_certificates=None, use_static_ip_range=None, health_status=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, id=None, user_id=None, basic_auth=None, name=None, phone_id=None, inbox_id=None, request_body_template=None, url=None, method=None, payload_json_schema=None, created_at=None, updated_at=None, event_name=None, request_headers=None, ai_transform_id=None, ignore_insecure_ssl_certificates=None, use_static_ip_range=None, health_status=None, local_vars_configuration=None):  # noqa: E501
         """WebhookDto - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -93,6 +95,7 @@ class WebhookDto(object):
         self._updated_at = None
         self._event_name = None
         self._request_headers = None
+        self._ai_transform_id = None
         self._ignore_insecure_ssl_certificates = None
         self._use_static_ip_range = None
         self._health_status = None
@@ -113,6 +116,7 @@ class WebhookDto(object):
         self.event_name = event_name
         if request_headers is not None:
             self.request_headers = request_headers
+        self.ai_transform_id = ai_transform_id
         self.ignore_insecure_ssl_certificates = ignore_insecure_ssl_certificates
         self.use_static_ip_range = use_static_ip_range
         self.health_status = health_status
@@ -460,6 +464,29 @@ class WebhookDto(object):
         """
 
         self._request_headers = request_headers
+
+    @property
+    def ai_transform_id(self):
+        """Gets the ai_transform_id of this WebhookDto.  # noqa: E501
+
+        ID of AI transformer for payload  # noqa: E501
+
+        :return: The ai_transform_id of this WebhookDto.  # noqa: E501
+        :rtype: str
+        """
+        return self._ai_transform_id
+
+    @ai_transform_id.setter
+    def ai_transform_id(self, ai_transform_id):
+        """Sets the ai_transform_id of this WebhookDto.
+
+        ID of AI transformer for payload  # noqa: E501
+
+        :param ai_transform_id: The ai_transform_id of this WebhookDto.  # noqa: E501
+        :type: str
+        """
+
+        self._ai_transform_id = ai_transform_id
 
     @property
     def ignore_insecure_ssl_certificates(self):

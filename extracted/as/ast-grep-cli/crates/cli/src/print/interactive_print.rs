@@ -1,12 +1,13 @@
 use super::{ColoredPrinter, Diff, NodeMatch, PrintProcessor, Printer};
 use crate::lang::SgLang;
-use crate::utils;
 use crate::utils::ErrorContext as EC;
+use crate::utils::{self, clear};
 
 use anyhow::{Context, Result};
 use ast_grep_config::RuleConfig;
 use codespan_reporting::files::SimpleFile;
 use codespan_reporting::term::termcolor::{Buffer, StandardStream};
+use smallvec::{smallvec, SmallVec};
 
 use std::borrow::Cow;
 use std::ops::Range;
@@ -39,8 +40,8 @@ impl InteractivePrinter {
     if self.accept_all {
       return 'a';
     }
-    const EDIT_PROMPT: &str = "Accept change? (Yes[y], No[n], Accept All[a], Quit[q], Edit[e])";
-    utils::prompt(EDIT_PROMPT, "ynaqe", Some('n')).expect("Error happened during prompt")
+    const EDIT_PROMPT: &str = "Accept? [y]es/[↵], [n]o, [a]ll, [q]uit, [e]dit";
+    utils::prompt(EDIT_PROMPT, "ynaqe\t", Some('y')).expect("Error happened during prompt")
   }
 
   fn prompt_view(&self) -> char {
@@ -86,12 +87,13 @@ impl InteractivePrinter {
 
   fn process_diffs(&mut self, diffs: Diffs<Buffer>) -> Result<()> {
     let path = diffs.path.clone();
-    let (confirmed, all) = process_diffs_interactive(self, diffs)?;
+    let (confirmed, quit) = process_diffs_interactive(self, diffs)?;
     self.rewrite_action(confirmed, &path)?;
-    if all {
-      self.accept_all = true;
+    if quit {
+      Err(anyhow::anyhow!("Exit interactive editing"))
+    } else {
+      Ok(())
     }
-    Ok(())
   }
 }
 
@@ -122,11 +124,13 @@ impl Printer for InteractivePrinter {
   }
 }
 
+#[derive(Clone, Debug)]
 pub struct InteractiveDiff<D> {
   /// string content for the replacement
   replacement: String,
   range: Range<usize>,
   first_line: usize,
+  title: Option<String>,
   display: D,
 }
 
@@ -136,8 +140,20 @@ impl<D> InteractiveDiff<D> {
       first_line: diff.node_match.start_pos().line(),
       replacement: diff.replacement,
       range: diff.range,
+      title: diff.title,
       display,
     }
+  }
+
+  fn split(self) -> (InteractiveDiff<()>, D) {
+    let pure = InteractiveDiff {
+      first_line: self.first_line,
+      range: self.range,
+      replacement: self.replacement,
+      title: self.title,
+      display: (),
+    };
+    (pure, self.display)
   }
 }
 
@@ -151,7 +167,7 @@ pub struct Diffs<D> {
   path: PathBuf,
   // TODO: this clone is slow
   old_source: String,
-  contents: Vec<InteractiveDiff<D>>,
+  contents: Vec<SmallVec<[InteractiveDiff<D>; 1]>>,
 }
 
 pub enum InteractivePayload<D> {
@@ -210,7 +226,7 @@ where
     for diff in diffs {
       let display = self.inner.print_diffs(vec![diff.clone()], path)?;
       let content = InteractiveDiff::new(diff, display);
-      contents.push(content);
+      contents.push(smallvec![content]);
     }
     Ok(InteractivePayload::Diffs(Diffs {
       path: path.to_path_buf(),
@@ -225,12 +241,19 @@ where
   ) -> Result<Payload<P>> {
     let old_source = get_old_source(diffs.first().map(|d| &d.0));
     let mut contents = Vec::with_capacity(diffs.len());
-    for (diff, rule) in diffs {
-      let display = self
-        .inner
-        .print_rule_diffs(vec![(diff.clone(), rule)], path)?;
-      let content = InteractiveDiff::new(diff, display);
-      contents.push(content);
+    for (diff_list, rule) in diffs {
+      let diffs = diff_list.into_list();
+      let content: Result<_> = diffs
+        .into_iter()
+        .map(|diff| {
+          let display = self
+            .inner
+            .print_rule_diffs(vec![(diff.clone(), rule)], path)?;
+          let diff = InteractiveDiff::new(diff, display);
+          Ok(diff)
+        })
+        .collect();
+      contents.push(content?);
     }
     Ok(InteractivePayload::Diffs(Diffs {
       path: path.to_path_buf(),
@@ -252,58 +275,94 @@ fn process_diffs_interactive(
   diffs: Diffs<Buffer>,
 ) -> Result<(Diffs<()>, bool)> {
   let mut confirmed = vec![];
-  let mut all = interactive.accept_all;
   let mut end = 0;
+  let mut quit = false;
   let path = diffs.path;
   for diff in diffs.contents {
-    if diff.range.start < end {
+    let mut diff_list: Vec<_> = diff
+      .into_iter()
+      .filter(|diff| diff.range.start >= end)
+      .collect();
+    if diff_list.is_empty() {
       continue;
     }
-    let to_confirm = InteractiveDiff {
-      first_line: diff.first_line,
-      range: diff.range.clone(),
-      replacement: diff.replacement.clone(),
-      display: (),
+    let to_confirm = if interactive.accept_all {
+      diff_list.remove(0).split().0
+    } else {
+      use InteractionChoice as IC;
+      match print_diff_and_prompt_action(interactive, &path, diff_list)? {
+        IC::Yes(c) => c,
+        IC::All(c) => {
+          interactive.accept_all = true;
+          c
+        }
+        IC::No => continue,
+        IC::Quit => {
+          quit = true;
+          break;
+        }
+      }
     };
-    let confirm = all || {
-      let (accept_curr, accept_all) = print_diff_and_prompt_action(interactive, &path, diff)?;
-      all = accept_all;
-      accept_curr
-    };
-    if confirm {
-      end = to_confirm.range.end;
-      confirmed.push(to_confirm);
-      interactive.committed_cnt = interactive.committed_cnt.saturating_add(1);
-    }
+    end = to_confirm.range.end;
+    confirmed.push(smallvec![to_confirm]);
+    interactive.committed_cnt = interactive.committed_cnt.saturating_add(1);
   }
   let diffs = Diffs {
     path,
     old_source: diffs.old_source,
     contents: confirmed,
   };
-  Ok((diffs, all))
+  Ok((diffs, quit))
 }
+
+enum InteractionChoice {
+  Yes(InteractiveDiff<()>),
+  All(InteractiveDiff<()>),
+  No,
+  Quit,
+}
+
 /// returns if accept_current and accept_all
 fn print_diff_and_prompt_action(
   interactive: &mut InteractivePrinter,
   path: &Path,
-  processed: InteractiveDiff<Buffer>,
-) -> Result<(bool, bool)> {
+  processed: Vec<InteractiveDiff<Buffer>>,
+) -> Result<InteractionChoice> {
   utils::run_in_alternate_screen(|| {
-    let printer = &mut interactive.inner;
-    printer.process(processed.display)?;
-    match interactive.prompt_edit() {
-      'y' => Ok((true, false)),
-      'a' => Ok((true, true)),
-      'e' => {
-        let pos = processed.first_line;
-        open_in_editor(path, pos)?;
-        Ok((false, false))
-      }
-      'q' => Err(anyhow::anyhow!("Exit interactive editing")),
-      'n' => Ok((false, false)),
-      _ => Ok((false, false)),
+    let mut to_confirm = Vec::with_capacity(processed.len());
+    let mut display = Vec::with_capacity(processed.len());
+    for diff in processed {
+      let (c, d) = diff.split();
+      to_confirm.push(c);
+      display.push(d);
     }
+    let mut index = 0;
+    let len = to_confirm.len();
+    let titles: Vec<_> = to_confirm.iter().map(|d| d.title.as_deref()).collect();
+    let ret = loop {
+      let confirmed = to_confirm[index].clone();
+      let display = display[index].clone();
+      interactive.inner.process(display)?;
+      interactive.inner.print_diff_title(&titles, index)?;
+      break match interactive.prompt_edit() {
+        '\t' => {
+          index = (index + 1) % len;
+          clear()?;
+          continue;
+        }
+        'y' => InteractionChoice::Yes(confirmed),
+        'a' => InteractionChoice::All(confirmed),
+        'e' => {
+          let pos = confirmed.first_line;
+          open_in_editor(path, pos)?;
+          InteractionChoice::No
+        }
+        'q' => InteractionChoice::Quit,
+        'n' => InteractionChoice::No,
+        _ => return Err(anyhow::anyhow!("Unexpected choice")),
+      };
+    };
+    Ok(ret)
   })
 }
 
@@ -311,7 +370,8 @@ fn apply_rewrite(diffs: Diffs<()>) -> String {
   let mut new_content = String::new();
   let old_content = diffs.old_source;
   let mut start = 0;
-  for diff in diffs.contents {
+  for mut diff_list in diffs.contents {
+    let diff = diff_list.remove(0);
     let range = diff.range;
     new_content.push_str(&old_content[start..range.start]);
     new_content.push_str(&diff.replacement);
@@ -373,12 +433,13 @@ language: TypeScript
       .visit(root)
       .map(|nm| {
         let diff = Diff::generate(nm, &matcher, fixer);
-        InteractiveDiff {
+        smallvec![InteractiveDiff {
           first_line: 0,
           range: diff.range,
           replacement: diff.replacement,
+          title: diff.title,
           display: (),
-        }
+        }]
       })
       .collect();
     Diffs {

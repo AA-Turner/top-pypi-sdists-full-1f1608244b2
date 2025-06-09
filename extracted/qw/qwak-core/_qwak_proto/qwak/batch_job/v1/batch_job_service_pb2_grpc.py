@@ -94,6 +94,11 @@ class BatchJobManagementServiceStub(object):
                 request_serializer=qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTaskIngestedRecordsAmountRequest.SerializeToString,
                 response_deserializer=qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTaskIngestedRecordsAmountResponse.FromString,
                 )
+        self.UpdateTasksDetails = channel.unary_unary(
+                '/qwak.batchjob.BatchJobManagementService/UpdateTasksDetails',
+                request_serializer=qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTasksDetailsRequest.SerializeToString,
+                response_deserializer=qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTasksDetailsResponse.FromString,
+                )
 
 
 class BatchJobManagementServiceServicer(object):
@@ -208,6 +213,13 @@ class BatchJobManagementServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UpdateTasksDetails(self, request, context):
+        """Update the task details for given tasks
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_BatchJobManagementServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -290,6 +302,11 @@ def add_BatchJobManagementServiceServicer_to_server(servicer, server):
                     servicer.UpdateTaskIngestedRecordsAmount,
                     request_deserializer=qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTaskIngestedRecordsAmountRequest.FromString,
                     response_serializer=qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTaskIngestedRecordsAmountResponse.SerializeToString,
+            ),
+            'UpdateTasksDetails': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateTasksDetails,
+                    request_deserializer=qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTasksDetailsRequest.FromString,
+                    response_serializer=qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTasksDetailsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -570,5 +587,22 @@ class BatchJobManagementService(object):
         return grpc.experimental.unary_unary(request, target, '/qwak.batchjob.BatchJobManagementService/UpdateTaskIngestedRecordsAmount',
             qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTaskIngestedRecordsAmountRequest.SerializeToString,
             qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTaskIngestedRecordsAmountResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UpdateTasksDetails(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/qwak.batchjob.BatchJobManagementService/UpdateTasksDetails',
+            qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTasksDetailsRequest.SerializeToString,
+            qwak_dot_batch__job_dot_v1_dot_batch__job__service__pb2.UpdateTasksDetailsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

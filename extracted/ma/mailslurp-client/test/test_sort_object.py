@@ -37,8 +37,8 @@ class TestSortObject(unittest.TestCase):
         # model = mailslurp_client.models.sort_object.SortObject()  # noqa: E501
         if include_optional :
             return SortObject(
-                unsorted = True, 
                 sorted = True, 
+                unsorted = True, 
                 empty = True
             )
         else :

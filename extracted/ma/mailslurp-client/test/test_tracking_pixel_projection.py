@@ -37,8 +37,8 @@ class TestTrackingPixelProjection(unittest.TestCase):
         # model = mailslurp_client.models.tracking_pixel_projection.TrackingPixelProjection()  # noqa: E501
         if include_optional :
             return TrackingPixelProjection(
-                user_id = '0', 
                 inbox_id = '0', 
+                user_id = '0', 
                 sent_email_id = '0', 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 recipient = '0', 

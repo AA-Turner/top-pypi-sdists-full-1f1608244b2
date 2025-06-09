@@ -1,10 +1,12 @@
-import socket
 import json
+import socket
+
+from typing_extensions import override
 
 from approvaltests import Reporter
 
 
-def send_tcp_socket(host, port, data):
+def send_tcp_socket(host: str, port: int, data: str) -> None:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         sock.connect((host, port))
@@ -14,6 +16,7 @@ def send_tcp_socket(host, port, data):
 
 
 class ReportToDiffEngineTray(Reporter):
+    @override
     def report(self, received_path: str, approved_path: str) -> bool:
         payload = {
             "Type": "Move",

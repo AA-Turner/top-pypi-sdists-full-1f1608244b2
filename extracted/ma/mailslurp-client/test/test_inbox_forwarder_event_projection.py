@@ -37,9 +37,9 @@ class TestInboxForwarderEventProjection(unittest.TestCase):
         # model = mailslurp_client.models.inbox_forwarder_event_projection.InboxForwarderEventProjection()  # noqa: E501
         if include_optional :
             return InboxForwarderEventProjection(
-                user_id = '0', 
                 email_id = '0', 
                 inbox_id = '0', 
+                user_id = '0', 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 sent_id = '0', 
                 forwarder_id = '0', 

@@ -34,8 +34,8 @@ class TrackingPixelProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'user_id': 'str',
         'inbox_id': 'str',
+        'user_id': 'str',
         'sent_email_id': 'str',
         'created_at': 'datetime',
         'recipient': 'str',
@@ -46,8 +46,8 @@ class TrackingPixelProjection(object):
     }
 
     attribute_map = {
-        'user_id': 'userId',
         'inbox_id': 'inboxId',
+        'user_id': 'userId',
         'sent_email_id': 'sentEmailId',
         'created_at': 'createdAt',
         'recipient': 'recipient',
@@ -57,14 +57,14 @@ class TrackingPixelProjection(object):
         'id': 'id'
     }
 
-    def __init__(self, user_id=None, inbox_id=None, sent_email_id=None, created_at=None, recipient=None, seen=None, seen_at=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, inbox_id=None, user_id=None, sent_email_id=None, created_at=None, recipient=None, seen=None, seen_at=None, name=None, id=None, local_vars_configuration=None):  # noqa: E501
         """TrackingPixelProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._user_id = None
         self._inbox_id = None
+        self._user_id = None
         self._sent_email_id = None
         self._created_at = None
         self._recipient = None
@@ -74,9 +74,9 @@ class TrackingPixelProjection(object):
         self._id = None
         self.discriminator = None
 
-        self.user_id = user_id
         if inbox_id is not None:
             self.inbox_id = inbox_id
+        self.user_id = user_id
         if sent_email_id is not None:
             self.sent_email_id = sent_email_id
         self.created_at = created_at
@@ -88,6 +88,27 @@ class TrackingPixelProjection(object):
         if name is not None:
             self.name = name
         self.id = id
+
+    @property
+    def inbox_id(self):
+        """Gets the inbox_id of this TrackingPixelProjection.  # noqa: E501
+
+
+        :return: The inbox_id of this TrackingPixelProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._inbox_id
+
+    @inbox_id.setter
+    def inbox_id(self, inbox_id):
+        """Sets the inbox_id of this TrackingPixelProjection.
+
+
+        :param inbox_id: The inbox_id of this TrackingPixelProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._inbox_id = inbox_id
 
     @property
     def user_id(self):
@@ -111,27 +132,6 @@ class TrackingPixelProjection(object):
             raise ValueError("Invalid value for `user_id`, must not be `None`")  # noqa: E501
 
         self._user_id = user_id
-
-    @property
-    def inbox_id(self):
-        """Gets the inbox_id of this TrackingPixelProjection.  # noqa: E501
-
-
-        :return: The inbox_id of this TrackingPixelProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._inbox_id
-
-    @inbox_id.setter
-    def inbox_id(self, inbox_id):
-        """Sets the inbox_id of this TrackingPixelProjection.
-
-
-        :param inbox_id: The inbox_id of this TrackingPixelProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._inbox_id = inbox_id
 
     @property
     def sent_email_id(self):
