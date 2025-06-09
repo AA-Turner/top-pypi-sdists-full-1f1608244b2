@@ -28,24 +28,57 @@ http = urllib3.PoolManager()
 
 # Only keep interesting source files
 FILE_EXTENSIONS = frozenset({
+    # Assembly
+    '.asm', '.s',
+    # C, C++, C Sharp
     '.c', '.h',
     '.cc', '.hh',
-    '.c++', '.cpp', '.cxx', '.h++', '.hpp', '.ipp',
+    '.c++', '.cpp', '.cxx', '.h++', '.hpp', '.hxx', '.ipp',
     '.cs',
+    # CUDA / OpenCL / OpenGL
+    '.cl', '.cu', '.cuh', '.glsl', '.hlsl',
+    # Fortran
     '.f', '.f90', '.f95',
+    # Go
     '.go',
+    # Java
     '.java',
+    # JavaScript & TypeScript
+    '.js', '.cjs', '.mjs', '.ts',
+    # Lua
+    '.lua',
+    # Perl
     '.pl',
+    # PHP
     '.php',
+    # Python
     '.py', '.pyi', '.pyw', '.pyx', '.pxd',
+    # Ruby
     '.rb',
+    # Rust
     '.rs',
-    '.s',
+    # Zig
     '.zig',
+    # ------------------------------------------------------------------------
+    # Build systems
+    '.bazel', '.cmake', '.filters', '.meson', '.sln', '.vcproj', '.vcxproj',
+    # Configuration files
+    '.cfg', '.conf', '.ini', '.toml', '.yaml', '.yml',
+    # Shell scripts
+    '.bash', '.bat', '.ps1', '.sh', '.zsh',
 })  # fmt: skip
 METADATA_FILES = frozenset({
+    # build systems
+    'Cargo.toml',
+    'CMakeLists.txt',
+    'Makefile',
+    'meson.build',
+    'meson.options',
+    # distribution packages
     'PKG-INFO',
     'pyproject.toml',
+    # typing information
+    'py.typed',
 })
 DIRECTORY_BLACKLIST = frozenset({
     # Cache directories
