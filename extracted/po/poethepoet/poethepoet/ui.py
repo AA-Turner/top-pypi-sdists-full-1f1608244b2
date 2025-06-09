@@ -37,10 +37,16 @@ class PoeUi:
     args: "Namespace"
     _color: "Pastel"
 
-    def __init__(self, output: IO, program_name: str = "poe"):
+    def __init__(
+        self,
+        output: IO,
+        program_name: str = "poe",
+        suppress_args: Sequence[str] = ("legacy_project_root",),
+    ):
         self.output = output
         self.program_name = program_name
         self._init_colors()
+        self.suppress_args = set(suppress_args)
 
     def _init_colors(self):
         from pastel import Pastel
@@ -65,10 +71,15 @@ class PoeUi:
 
         parser = argparse.ArgumentParser(
             prog=self.program_name,
-            description="Poe the Poet: A task runner that works well with poetry.",
+            description="Poe the Poet: A task runner that works well with poetry or uv",
             add_help=False,
             allow_abbrev=False,
         )
+
+        def maybe_suppress(arg_name: str, help_text: str):
+            if arg_name in self.suppress_args:
+                return argparse.SUPPRESS
+            return help_text
 
         parser.add_argument(
             "-h",
@@ -77,7 +88,9 @@ class PoeUi:
             metavar="TASK",
             nargs="?",
             default=...,
-            help="Show this help page and exit, optionally supply a task.",
+            help=maybe_suppress(
+                "help", "Show this help page and exit, optionally supply a task."
+            ),
         )
 
         parser.add_argument(
@@ -85,7 +98,7 @@ class PoeUi:
             dest="version",
             action="store_true",
             default=False,
-            help="Print the version and exit",
+            help=maybe_suppress("version", "Print the version and exit"),
         )
 
         parser.add_argument(
@@ -94,7 +107,7 @@ class PoeUi:
             dest="increase_verbosity",
             action="count",
             default=0,
-            help="Increase command output (repeatable)",
+            help=maybe_suppress("verbosity", "Increase command output (repeatable)"),
         )
 
         parser.add_argument(
@@ -103,7 +116,7 @@ class PoeUi:
             dest="decrease_verbosity",
             action="count",
             default=0,
-            help="Decrease command output (repeatable)",
+            help=maybe_suppress("verbosity", "Decrease command output (repeatable)"),
         )
 
         parser.add_argument(
@@ -112,7 +125,9 @@ class PoeUi:
             dest="dry_run",
             action="store_true",
             default=False,
-            help="Print the task contents but don't actually run it",
+            help=maybe_suppress(
+                "dry_run", "Print the task contents but don't actually run it"
+            ),
         )
 
         parser.add_argument(
@@ -122,7 +137,9 @@ class PoeUi:
             metavar="PATH",
             type=str,
             default=os.environ.get("POE_PROJECT_DIR", None),
-            help="Specify where to find the pyproject.toml",
+            help=maybe_suppress(
+                "project_root", "Specify where to find the pyproject.toml"
+            ),
         )
 
         parser.add_argument(
@@ -132,7 +149,7 @@ class PoeUi:
             metavar="EXECUTOR",
             type=str,
             default="",
-            help="Override the default task executor",
+            help=maybe_suppress("executor", "Override the default task executor"),
         )
 
         # legacy --root parameter, keep for backwards compatibility but help output is
@@ -143,7 +160,9 @@ class PoeUi:
             metavar="PATH",
             type=str,
             default=None,
-            help=argparse.SUPPRESS,
+            help=maybe_suppress(
+                "legacy_project_root", "Specify where to find the pyproject.toml"
+            ),
         )
 
         ansi_group = parser.add_mutually_exclusive_group()
@@ -152,14 +171,14 @@ class PoeUi:
             dest="ansi",
             action="store_true",
             default=STDOUT_ANSI_SUPPORT,
-            help="Force enable ANSI output",
+            help=maybe_suppress("ansi", "Force enable ANSI output"),
         )
         ansi_group.add_argument(
             "--no-ansi",
             dest="ansi",
             action="store_false",
             default=STDOUT_ANSI_SUPPORT,
-            help="Force disable ANSI output",
+            help=maybe_suppress("ansi", "Force disable ANSI output"),
         )
 
         parser.add_argument("task", default=tuple(), nargs=argparse.REMAINDER)
@@ -183,21 +202,19 @@ class PoeUi:
         info: Optional[str] = None,
         error: Optional[PoeException] = None,
     ):
-        # TODO: See if this can be done nicely with a custom HelpFormatter
-
         # Ignore verbosity mode if help flag is set
         help_flag_set = self["help"] is None
         help_single_task = self["help"] if isinstance(self["help"], str) else None
         verbosity = 0 if help_flag_set else self.verbosity
 
+        # If there's no error and verbosity wasn't explicitly decreased for this call,
+        # then ensure we still print help
+        if not error and self.verbosity < 0 and not self["decrease_verbosity"]:
+            verbosity = 0
+
         result: list[Union[str, Sequence[str]]] = []
         if verbosity >= 0 and not help_single_task:
-            result.append(
-                (
-                    "Poe the Poet - A task runner that works well with poetry.",
-                    f"version <em>{__version__}</em>",
-                )
-            )
+            result.append((f"<h2>Poe the Poet</h2> (version <em>{__version__}</em>)",))
 
         if info:
             result.append(f"{f'<em2>Result: {info}</em2>'}")

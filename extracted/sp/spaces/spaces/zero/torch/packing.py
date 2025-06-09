@@ -14,6 +14,7 @@ from queue import Queue
 from typing import Callable
 
 from ...utils import debug
+from .utils import empty_like_raw_alloc
 
 import torch
 from typing_extensions import TypeAlias
@@ -93,7 +94,7 @@ def pack_tensors(
     if current_batch:
         batches += [current_batch]
 
-    get_meta = {tensor: torch.empty_like(tensor) for tensor in tensors}
+    get_meta = {tensor: empty_like_raw_alloc(tensor) for tensor in tensors}
     batches_meta = [[(get_meta[tensor], size, asize) for tensor, size, asize in batch] for batch in batches]
     big_tensors_meta = [(get_meta[tensor], size, asize) for tensor, size, asize in big_tensors]
     fakes_meta = {get_meta[tensor]: fake_list for tensor, fake_list in fakes.items()}

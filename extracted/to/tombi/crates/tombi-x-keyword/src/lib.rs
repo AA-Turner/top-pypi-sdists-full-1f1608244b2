@@ -1,3 +1,7 @@
+mod version_sort;
+
+pub use version_sort::version_sort;
+
 pub const X_TOMBI_TOML_VERSION: &str = "x-tombi-toml-version";
 pub const X_TOMBI_ARRAY_VALUES_ORDER: &str = "x-tombi-array-values-order";
 pub const X_TOMBI_TABLE_KEYS_ORDER: &str = "x-tombi-table-keys-order";
@@ -9,6 +13,10 @@ pub const X_TOMBI_TABLE_KEYS_ORDER: &str = "x-tombi-table-keys-order";
 pub enum ArrayValuesOrder {
     Ascending,
     Descending,
+    // Version Sorting
+    //
+    // See: https://doc.rust-lang.org/nightly/style-guide/index.html#sorting
+    VersionSort,
 }
 
 impl std::fmt::Display for ArrayValuesOrder {
@@ -16,6 +24,20 @@ impl std::fmt::Display for ArrayValuesOrder {
         match self {
             Self::Ascending => write!(f, "ascending"),
             Self::Descending => write!(f, "descending"),
+            Self::VersionSort => write!(f, "version-sort"),
+        }
+    }
+}
+
+impl<'a> TryFrom<&'a str> for ArrayValuesOrder {
+    type Error = &'a str;
+
+    fn try_from(value: &'a str) -> Result<Self, Self::Error> {
+        match value {
+            "ascending" => Ok(Self::Ascending),
+            "descending" => Ok(Self::Descending),
+            "version-sort" => Ok(Self::VersionSort),
+            _ => Err(value),
         }
     }
 }
@@ -28,6 +50,10 @@ pub enum TableKeysOrder {
     Ascending,
     Descending,
     Schema,
+    // Version Sorting
+    //
+    // See: https://doc.rust-lang.org/nightly/style-guide/index.html#sorting
+    VersionSort,
 }
 
 impl std::fmt::Display for TableKeysOrder {
@@ -36,6 +62,21 @@ impl std::fmt::Display for TableKeysOrder {
             TableKeysOrder::Ascending => write!(f, "ascending"),
             TableKeysOrder::Descending => write!(f, "descending"),
             TableKeysOrder::Schema => write!(f, "schema"),
+            TableKeysOrder::VersionSort => write!(f, "version-sort"),
+        }
+    }
+}
+
+impl<'a> TryFrom<&'a str> for TableKeysOrder {
+    type Error = &'a str;
+
+    fn try_from(value: &'a str) -> Result<Self, Self::Error> {
+        match value {
+            "ascending" => Ok(Self::Ascending),
+            "descending" => Ok(Self::Descending),
+            "schema" => Ok(Self::Schema),
+            "version-sort" => Ok(Self::VersionSort),
+            _ => Err("Invalid table keys order"),
         }
     }
 }

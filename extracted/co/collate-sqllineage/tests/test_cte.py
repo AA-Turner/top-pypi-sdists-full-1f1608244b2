@@ -74,3 +74,20 @@ SELECT col3 from tab3"""
         sql,
         {"tab1", "tab2", "tab3", "tab3"},
     )
+
+
+def test_with_compound_statement_union_all():
+    sql = """SELECT * FROM (
+    WITH t AS (
+        SELECT id FROM users
+        UNION ALL
+        SELECT id FROM cases
+    )
+    SELECT id FROM t
+) AS sub
+"""
+    assert_table_lineage_equal(
+        sql,
+        {"users"},
+        test_sqlparse=False,
+    )

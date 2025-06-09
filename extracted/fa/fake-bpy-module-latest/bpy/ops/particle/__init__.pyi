@@ -234,6 +234,15 @@ def particle_edit_toggle(
     :type undo: bool | None
     """
 
+def particle_system_remove_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+) -> None:
+    """Remove all particle system within the active object
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    """
+
 def rekey(
     execution_context: int | str | None = None,
     undo: bool | None = None,

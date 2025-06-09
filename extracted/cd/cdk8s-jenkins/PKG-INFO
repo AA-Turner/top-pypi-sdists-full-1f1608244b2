@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: cdk8s-jenkins
-Version: 0.0.503
+Version: 0.0.504
 Summary: Jenkins construct for CDK8s
 Home-page: https://github.com/cdk8s-team/cdk8s-jenkins.git
 Author: Amazon Web Services

@@ -48,7 +48,7 @@ class NotebookRevision(APIObject):
         Whether the revision was auto-saved.
     """
 
-    _revisions_path = "api-gw/nbx/notebookRevisions/"
+    _path = "notebookRevisions/"
 
     _converter = notebook_revision_trafaret
 
@@ -65,7 +65,9 @@ class NotebookRevision(APIObject):
         self.is_auto = is_auto
 
     @classmethod
-    def create(cls, notebook_id: str, payload: CreateRevisionPayload) -> "NotebookRevision":
+    def create(
+        cls, notebook_id: str, payload: Optional[CreateRevisionPayload] = None
+    ) -> "NotebookRevision":
         """
         Create a new notebook revision.
 
@@ -81,6 +83,5 @@ class NotebookRevision(APIObject):
         NotebookRevision
             Information about the created notebook revision.
         """
-        url = f"{cls._client.domain}/{cls._revisions_path}{notebook_id}/"
-        r_data = cls._client.post(url, data=payload)
-        return NotebookRevision.from_server_data(r_data.json())
+        r_data = cls._client.post(f"{cls._path}{notebook_id}/", data=payload or {})
+        return cls.from_server_data(r_data.json())

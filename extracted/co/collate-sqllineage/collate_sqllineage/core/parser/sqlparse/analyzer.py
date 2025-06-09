@@ -163,7 +163,8 @@ class SqlParseLineageAnalyzer(LineageAnalyzer):
                     right = c.right
                     if isinstance(right, Identifier):
                         src_col = Column(right.get_real_name())
-                        src_col.parent = direct_source
+                        if direct_source is not None:
+                            src_col.parent = direct_source
                         tgt_col = Column(c.left.get_real_name())
                         tgt_col.parent = list(holder.write)[0]
                         holder.add_column_lineage(src_col, tgt_col)
@@ -176,6 +177,8 @@ class SqlParseLineageAnalyzer(LineageAnalyzer):
                     elif isinstance(t, IdentifierList):
                         identifiers.extend(t.get_identifiers())
                     for identifier in identifiers:
+                        if not isinstance(identifier, Identifier):
+                            continue
                         tgt_col = Column(identifier.get_real_name())
                         tgt_col.parent = list(holder.write)[0]
                         insert_columns.append(tgt_col)
@@ -191,7 +194,8 @@ class SqlParseLineageAnalyzer(LineageAnalyzer):
                             for i, identifier in enumerate(identifiers):
                                 if isinstance(identifier, Identifier):
                                     src_col = Column(identifier.get_real_name())
-                                    src_col.parent = direct_source
+                                    if direct_source is not None:
+                                        src_col.parent = direct_source
                                     holder.add_column_lineage(
                                         src_col, insert_columns[i]
                                     )

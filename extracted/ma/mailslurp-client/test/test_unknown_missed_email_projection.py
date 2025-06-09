@@ -37,11 +37,11 @@ class TestUnknownMissedEmailProjection(unittest.TestCase):
         # model = mailslurp_client.models.unknown_missed_email_projection.UnknownMissedEmailProjection()  # noqa: E501
         if include_optional :
             return UnknownMissedEmailProjection(
+                subject = '0', 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 to = [
                     '0'
                     ], 
-                subject = '0', 
                 id = '0', 
                 _from = '0'
             )

@@ -109,10 +109,9 @@ class Notebook(APIObject, BrowserMixin):
         Whether or not the notebook has a currently enabled schedule.
     """
 
-    _notebooks_path = "api-gw/nbx/notebooks/"
-    _orchestrator_path = "api-gw/nbx/orchestrator/"
-    _scheduling_path = "api-gw/nbx/scheduling/"
-    _revisions_path = "api-gw/nbx/notebookRevisions/"
+    _notebooks_path = "notebooks/"
+    _scheduling_path = "notebookJobs/"
+    _revisions_path = "notebookRevisions/"
 
     _session_subset_trafaret = t.Dict(
         {
@@ -231,13 +230,12 @@ class Notebook(APIObject, BrowserMixin):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.notebook import Notebook
+            from datarobot._experimental.models.notebooks import Notebook
 
             notebook = Notebook.get(notebook_id='6556b00dcc4ea0bb7ea48121')
         """
-        url = f"{cls._client.domain}/{cls._notebooks_path}{notebook_id}/"
-        r_data = cls._client.get(url)
-        return Notebook.from_server_data(r_data.json())
+        r_data = cls._client.get(f"{cls._notebooks_path}{notebook_id}/")
+        return cls.from_server_data(r_data.json())
 
     def create_revision(
         self,
@@ -292,7 +290,7 @@ class Notebook(APIObject, BrowserMixin):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.notebook import Notebook
+            from datarobot._experimental.models.notebooks import Notebook
 
             notebook = Notebook.get(notebook_id='6556b00dcc4ea0bb7ea48121')
             manual_run = notebook.run_as_job()
@@ -301,9 +299,7 @@ class Notebook(APIObject, BrowserMixin):
         """
         assert_single_parameter(("filelike", "file_path"), filelike, file_path)
 
-        response = self._client.get(
-            f"{self._client.domain}/{self._revisions_path}{self.id}/{revision_id}/toFile/"
-        )
+        response = self._client.get(f"{self._revisions_path}{self.id}/{revision_id}/toFile/")
         if file_path:
             with open(file_path, "wb") as f:
                 f.write(response.content)
@@ -318,13 +314,12 @@ class Notebook(APIObject, BrowserMixin):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.notebook import Notebook
+            from datarobot._experimental.models.notebooks import Notebook
 
             notebook = Notebook.get(notebook_id='6556b00dcc4ea0bb7ea48121')
             notebook.delete()
         """
-        url = f"{self._client.domain}/{self._notebooks_path}{self.id}/"
-        self._client.delete(url)
+        self._client.delete(f"{self._notebooks_path}{self.id}/")
 
     @classmethod
     def list(
@@ -372,7 +367,7 @@ class Notebook(APIObject, BrowserMixin):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.notebook import Notebook
+            from datarobot._experimental.models.notebooks import Notebook
 
             notebooks = Notebook.list()
         """
@@ -385,9 +380,8 @@ class Notebook(APIObject, BrowserMixin):
             "query": query,
         }
         params = resolve_use_cases(use_cases=use_cases, params=params, use_case_key="use_case_id")
-        url = f"{cls._client.domain}/{cls._notebooks_path}"
-        r_data = unpaginate(url, params, cls._client)
-        return [Notebook.from_server_data(data) for data in r_data]
+        r_data = unpaginate(f"{cls._notebooks_path}", params, cls._client)
+        return [cls.from_server_data(data) for data in r_data]
 
     def is_running(self) -> bool:
         """
@@ -433,7 +427,7 @@ class Notebook(APIObject, BrowserMixin):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.notebook import Notebook
+            from datarobot._experimental.models.notebooks import Notebook
 
             notebook = Notebook.get(notebook_id='6556b00dcc4ea0bb7ea48121')
             session = notebook.start_session()
@@ -461,7 +455,7 @@ class Notebook(APIObject, BrowserMixin):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.notebook import Notebook
+            from datarobot._experimental.models.notebooks import Notebook
 
             notebook = Notebook.get(notebook_id='6556b00dcc4ea0bb7ea48121')
             session = notebook.stop_session()
@@ -579,13 +573,13 @@ class Notebook(APIObject, BrowserMixin):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.notebook import Notebook
+            from datarobot._experimental.models.notebooks import Notebook
 
             notebook = Notebook.get(notebook_id='6556b00dcc4ea0bb7ea48121')
             manual_run = notebook.run_as_job()
 
             # Alternatively, with title and parameters:
-            # manual_run = notebook.run_as_job(title="My Run", parameters=[{"FOO": "bar"}])
+            # manual_run = notebook.run_as_job(title="My Run", parameters=[{"name": "FOO", "value": "bar"}])
 
             revision_id = manual_run.wait_for_completion()
         """
@@ -596,7 +590,6 @@ class Notebook(APIObject, BrowserMixin):
         if self.is_standalone and notebook_path:
             raise InvalidUsageError("Notebook path should not be used for standalone notebooks.")
 
-        url = f"{self._client.domain}/{self._scheduling_path}manualRun/"
         payload: ManualRunPayload = {
             "notebook_id": self.id,
             "manual_run_type": manual_run_type,
@@ -611,5 +604,5 @@ class Notebook(APIObject, BrowserMixin):
         if parameters:
             payload["parameters"] = parameters
 
-        r_data = self._client.post(url, data=payload)
+        r_data = self._client.post(f"{self._scheduling_path}manualRun/", data=payload)
         return NotebookScheduledJob.from_server_data(r_data.json())

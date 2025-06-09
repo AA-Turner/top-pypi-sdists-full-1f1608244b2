@@ -536,6 +536,7 @@ class FilterConfig:
     jsii_struct_bases=[],
     name_mapping={
         "identifier": "identifier",
+        "circleci_ip_ranges": "circleciIpRanges",
         "docker": "docker",
         "environment": "environment",
         "machine": "machine",
@@ -553,6 +554,7 @@ class Job:
         self,
         *,
         identifier: builtins.str,
+        circleci_ip_ranges: typing.Optional[builtins.bool] = None,
         docker: typing.Optional[typing.Sequence[typing.Union[Docker, typing.Dict[builtins.str, typing.Any]]]] = None,
         environment: typing.Optional[typing.Mapping[builtins.str, typing.Union[builtins.str, jsii.Number, builtins.bool]]] = None,
         machine: typing.Optional[typing.Union["Machine", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -572,6 +574,7 @@ class Job:
         Each job consists of the job’s name as a key and a map as a value. A name should be case insensitive unique within a current jobs list.
 
         :param identifier: (experimental) name of dynamic key *.
+        :param circleci_ip_ranges: (experimental) Enables jobs to go through a set of well-defined IP address ranges.
         :param docker: 
         :param environment: (experimental) A map of environment variable names and values.
         :param machine: 
@@ -593,6 +596,7 @@ class Job:
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__97531d78e2f2b3c8448832e412f0f67b6d3bebdd7fffb6c833ae2f02941f25ce)
             check_type(argname="argument identifier", value=identifier, expected_type=type_hints["identifier"])
+            check_type(argname="argument circleci_ip_ranges", value=circleci_ip_ranges, expected_type=type_hints["circleci_ip_ranges"])
             check_type(argname="argument docker", value=docker, expected_type=type_hints["docker"])
             check_type(argname="argument environment", value=environment, expected_type=type_hints["environment"])
             check_type(argname="argument machine", value=machine, expected_type=type_hints["machine"])
@@ -606,6 +610,8 @@ class Job:
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "identifier": identifier,
         }
+        if circleci_ip_ranges is not None:
+            self._values["circleci_ip_ranges"] = circleci_ip_ranges
         if docker is not None:
             self._values["docker"] = docker
         if environment is not None:
@@ -636,6 +642,15 @@ class Job:
         result = self._values.get("identifier")
         assert result is not None, "Required property 'identifier' is missing"
         return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def circleci_ip_ranges(self) -> typing.Optional[builtins.bool]:
+        '''(experimental) Enables jobs to go through a set of well-defined IP address ranges.
+
+        :stability: experimental
+        '''
+        result = self._values.get("circleci_ip_ranges")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
     def docker(self) -> typing.Optional[typing.List[Docker]]:
@@ -1764,6 +1779,7 @@ def _typecheckingstub__81f19b9f6bd71e5aa29ece449d79c7c236857bb54e3c624432e34d8cb
 def _typecheckingstub__97531d78e2f2b3c8448832e412f0f67b6d3bebdd7fffb6c833ae2f02941f25ce(
     *,
     identifier: builtins.str,
+    circleci_ip_ranges: typing.Optional[builtins.bool] = None,
     docker: typing.Optional[typing.Sequence[typing.Union[Docker, typing.Dict[builtins.str, typing.Any]]]] = None,
     environment: typing.Optional[typing.Mapping[builtins.str, typing.Union[builtins.str, jsii.Number, builtins.bool]]] = None,
     machine: typing.Optional[typing.Union[Machine, typing.Dict[builtins.str, typing.Any]]] = None,

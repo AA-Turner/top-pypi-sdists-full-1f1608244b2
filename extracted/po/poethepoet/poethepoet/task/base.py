@@ -22,7 +22,7 @@ _TASK_NAME_PATTERN = re.compile(r"^\w[\w\d\-\_\+\:]*$")
 
 class MetaPoeTask(type):
     """
-    This metaclass makes all descendents of PoeTask (task types) register themselves on
+    This metaclass makes all descendants of PoeTask (task types) register themselves on
     declaration and validates that they include the expected class attributes.
     """
 
@@ -329,6 +329,12 @@ class PoeTask(metaclass=MetaPoeTask):
                             f"option set: {dep_task_name!r}"
                         )
 
+            if self.options.args:
+                from .args import ArgSpec
+
+                for _ in ArgSpec.parse(self.options.args):
+                    pass
+
         def _task_validations(self, config: "PoeConfig", task_specs: TaskSpecFactory):
             """
             Perform validations on this TaskSpec that apply to a specific task type
@@ -524,7 +530,7 @@ class PoeTask(metaclass=MetaPoeTask):
         """
         NB. this memoization assumes the context (and contained env vars) will be the
         same in all instances for the lifetime of this object. Whilst this should be OK
-        for all current usecases is it strictly speaking something that this object
+        for all current use cases is it strictly speaking something that this object
         should not know enough to safely assume. So we probably want to revisit this.
         """
         import shlex

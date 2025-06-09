@@ -1310,12 +1310,12 @@ class MavenPublishOptions(CommonPublishOptions):
         :param post_publish_steps: (experimental) Steps to execute after executing the publishing command. These can be used to add/update the release artifacts ot any other tasks needed. Note that when using this in ``publishToGitHubReleases`` this will override steps added via ``addGitHubPostPublishingSteps``.
         :param pre_publish_steps: (experimental) Steps to execute before executing the publishing command. These can be used to prepare the artifact for publishing if needed. These steps are executed after ``dist/`` has been populated with the build output. Note that when using this in ``publishToGitHubReleases`` this will override steps added via ``addGitHubPrePublishingSteps``.
         :param publish_tools: (experimental) Additional tools to install in the publishing job. Default: - no additional tools are installed
-        :param maven_endpoint: (experimental) URL of Nexus repository. if not set, defaults to https://oss.sonatype.org Default: "https://oss.sonatype.org"
+        :param maven_endpoint: (experimental) URL of Nexus repository. if not set, defaults to https://oss.sonatype.org Default: - "https://oss.sonatype.org" or none when publishing to Maven Central
         :param maven_gpg_private_key_passphrase: (experimental) GitHub secret name which contains the GPG private key or file that includes it. This is used to sign your Maven packages. See instructions. Default: "MAVEN_GPG_PRIVATE_KEY_PASSPHRASE" or not set when using GitHub Packages
         :param maven_gpg_private_key_secret: (experimental) GitHub secret name which contains the GPG private key or file that includes it. This is used to sign your Maven packages. See instructions. Default: "MAVEN_GPG_PRIVATE_KEY" or not set when using GitHub Packages
         :param maven_password: (experimental) GitHub secret name which contains the Password for maven repository. For Maven Central, you will need to Create JIRA account and then request a new project (see links). Default: "MAVEN_PASSWORD" or "GITHUB_TOKEN" when using GitHub Packages
         :param maven_repository_url: (experimental) Deployment repository when not deploying to Maven Central. Default: - not set
-        :param maven_server_id: (experimental) Used in maven settings for credential lookup (e.g. use github when publishing to GitHub). Default: "ossrh" (Maven Central) or "github" when using GitHub Packages
+        :param maven_server_id: (experimental) Used in maven settings for credential lookup (e.g. use github when publishing to GitHub). Set to ``central-ossrh`` to publish to Maven Central. Default: "ossrh" (Maven Central) or "github" when using GitHub Packages
         :param maven_staging_profile_id: (experimental) GitHub secret name which contains the Maven Central (sonatype) staging profile ID (e.g. 68a05363083174). Staging profile ID can be found in the URL of the "Releases" staging profile under "Staging Profiles" in https://oss.sonatype.org (e.g. https://oss.sonatype.org/#stagingProfiles;11a33451234521). Default: "MAVEN_STAGING_PROFILE_ID" or not set when using GitHub Packages
         :param maven_username: (experimental) GitHub secret name which contains the Username for maven repository. For Maven Central, you will need to Create JIRA account and then request a new project (see links). Default: "MAVEN_USERNAME" or the GitHub Actor when using GitHub Packages
 
@@ -1405,7 +1405,7 @@ class MavenPublishOptions(CommonPublishOptions):
 
         if not set, defaults to https://oss.sonatype.org
 
-        :default: "https://oss.sonatype.org"
+        :default: - "https://oss.sonatype.org" or none when publishing to Maven Central
 
         :stability: experimental
         '''
@@ -1470,6 +1470,8 @@ class MavenPublishOptions(CommonPublishOptions):
     @builtins.property
     def maven_server_id(self) -> typing.Optional[builtins.str]:
         '''(experimental) Used in maven settings for credential lookup (e.g. use github when publishing to GitHub).
+
+        Set to ``central-ossrh`` to publish to Maven Central.
 
         :default: "ossrh" (Maven Central) or "github" when using GitHub Packages
 
@@ -2070,12 +2072,12 @@ class Publisher(
     ) -> None:
         '''(experimental) Publishes artifacts from ``java/**`` to Maven.
 
-        :param maven_endpoint: (experimental) URL of Nexus repository. if not set, defaults to https://oss.sonatype.org Default: "https://oss.sonatype.org"
+        :param maven_endpoint: (experimental) URL of Nexus repository. if not set, defaults to https://oss.sonatype.org Default: - "https://oss.sonatype.org" or none when publishing to Maven Central
         :param maven_gpg_private_key_passphrase: (experimental) GitHub secret name which contains the GPG private key or file that includes it. This is used to sign your Maven packages. See instructions. Default: "MAVEN_GPG_PRIVATE_KEY_PASSPHRASE" or not set when using GitHub Packages
         :param maven_gpg_private_key_secret: (experimental) GitHub secret name which contains the GPG private key or file that includes it. This is used to sign your Maven packages. See instructions. Default: "MAVEN_GPG_PRIVATE_KEY" or not set when using GitHub Packages
         :param maven_password: (experimental) GitHub secret name which contains the Password for maven repository. For Maven Central, you will need to Create JIRA account and then request a new project (see links). Default: "MAVEN_PASSWORD" or "GITHUB_TOKEN" when using GitHub Packages
         :param maven_repository_url: (experimental) Deployment repository when not deploying to Maven Central. Default: - not set
-        :param maven_server_id: (experimental) Used in maven settings for credential lookup (e.g. use github when publishing to GitHub). Default: "ossrh" (Maven Central) or "github" when using GitHub Packages
+        :param maven_server_id: (experimental) Used in maven settings for credential lookup (e.g. use github when publishing to GitHub). Set to ``central-ossrh`` to publish to Maven Central. Default: "ossrh" (Maven Central) or "github" when using GitHub Packages
         :param maven_staging_profile_id: (experimental) GitHub secret name which contains the Maven Central (sonatype) staging profile ID (e.g. 68a05363083174). Staging profile ID can be found in the URL of the "Releases" staging profile under "Staging Profiles" in https://oss.sonatype.org (e.g. https://oss.sonatype.org/#stagingProfiles;11a33451234521). Default: "MAVEN_STAGING_PROFILE_ID" or not set when using GitHub Packages
         :param maven_username: (experimental) GitHub secret name which contains the Username for maven repository. For Maven Central, you will need to Create JIRA account and then request a new project (see links). Default: "MAVEN_USERNAME" or the GitHub Actor when using GitHub Packages
         :param post_publish_steps: (experimental) Steps to execute after executing the publishing command. These can be used to add/update the release artifacts ot any other tasks needed. Note that when using this in ``publishToGitHubReleases`` this will override steps added via ``addGitHubPostPublishingSteps``.
@@ -3674,12 +3676,12 @@ class JsiiReleaseMaven(MavenPublishOptions):
         :param post_publish_steps: (experimental) Steps to execute after executing the publishing command. These can be used to add/update the release artifacts ot any other tasks needed. Note that when using this in ``publishToGitHubReleases`` this will override steps added via ``addGitHubPostPublishingSteps``.
         :param pre_publish_steps: (experimental) Steps to execute before executing the publishing command. These can be used to prepare the artifact for publishing if needed. These steps are executed after ``dist/`` has been populated with the build output. Note that when using this in ``publishToGitHubReleases`` this will override steps added via ``addGitHubPrePublishingSteps``.
         :param publish_tools: (experimental) Additional tools to install in the publishing job. Default: - no additional tools are installed
-        :param maven_endpoint: (experimental) URL of Nexus repository. if not set, defaults to https://oss.sonatype.org Default: "https://oss.sonatype.org"
+        :param maven_endpoint: (experimental) URL of Nexus repository. if not set, defaults to https://oss.sonatype.org Default: - "https://oss.sonatype.org" or none when publishing to Maven Central
         :param maven_gpg_private_key_passphrase: (experimental) GitHub secret name which contains the GPG private key or file that includes it. This is used to sign your Maven packages. See instructions. Default: "MAVEN_GPG_PRIVATE_KEY_PASSPHRASE" or not set when using GitHub Packages
         :param maven_gpg_private_key_secret: (experimental) GitHub secret name which contains the GPG private key or file that includes it. This is used to sign your Maven packages. See instructions. Default: "MAVEN_GPG_PRIVATE_KEY" or not set when using GitHub Packages
         :param maven_password: (experimental) GitHub secret name which contains the Password for maven repository. For Maven Central, you will need to Create JIRA account and then request a new project (see links). Default: "MAVEN_PASSWORD" or "GITHUB_TOKEN" when using GitHub Packages
         :param maven_repository_url: (experimental) Deployment repository when not deploying to Maven Central. Default: - not set
-        :param maven_server_id: (experimental) Used in maven settings for credential lookup (e.g. use github when publishing to GitHub). Default: "ossrh" (Maven Central) or "github" when using GitHub Packages
+        :param maven_server_id: (experimental) Used in maven settings for credential lookup (e.g. use github when publishing to GitHub). Set to ``central-ossrh`` to publish to Maven Central. Default: "ossrh" (Maven Central) or "github" when using GitHub Packages
         :param maven_staging_profile_id: (experimental) GitHub secret name which contains the Maven Central (sonatype) staging profile ID (e.g. 68a05363083174). Staging profile ID can be found in the URL of the "Releases" staging profile under "Staging Profiles" in https://oss.sonatype.org (e.g. https://oss.sonatype.org/#stagingProfiles;11a33451234521). Default: "MAVEN_STAGING_PROFILE_ID" or not set when using GitHub Packages
         :param maven_username: (experimental) GitHub secret name which contains the Username for maven repository. For Maven Central, you will need to Create JIRA account and then request a new project (see links). Default: "MAVEN_USERNAME" or the GitHub Actor when using GitHub Packages
 
@@ -3771,7 +3773,7 @@ class JsiiReleaseMaven(MavenPublishOptions):
 
         if not set, defaults to https://oss.sonatype.org
 
-        :default: "https://oss.sonatype.org"
+        :default: - "https://oss.sonatype.org" or none when publishing to Maven Central
 
         :stability: experimental
         '''
@@ -3836,6 +3838,8 @@ class JsiiReleaseMaven(MavenPublishOptions):
     @builtins.property
     def maven_server_id(self) -> typing.Optional[builtins.str]:
         '''(experimental) Used in maven settings for credential lookup (e.g. use github when publishing to GitHub).
+
+        Set to ``central-ossrh`` to publish to Maven Central.
 
         :default: "ossrh" (Maven Central) or "github" when using GitHub Packages
 

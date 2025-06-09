@@ -22,6 +22,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 dynamic = ["version", "description"]
 requires-python = ">=3.8"
@@ -58,14 +59,14 @@ release = [
     "tbump",
 ]
 openapi = [
-    "drf-spectacular>=0.27.0",
+    "drf-spectacular>=0.27.1",
     "inflection",
 ]
 
 [tool.tbump]
 
 [tool.tbump.version]
-current = "0.14.1"
+current = "0.15.0"
 regex = '''
   (?P<major>\d+)
   \.

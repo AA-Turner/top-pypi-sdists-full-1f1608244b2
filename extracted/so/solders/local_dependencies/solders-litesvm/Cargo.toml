@@ -1,0 +1,41 @@
+
+[package]
+name = "solders-litesvm"
+version = "0.1.0"
+edition = "2021"
+include = ["/src"]
+license = "MIT"
+repository = "https://github.com/kevinheavey/solders"
+description = "Solders LiteSVM crate."
+
+[dependencies]
+litesvm = { git = "https://github.com/LiteSVM/litesvm.git", rev = "7e3d9a8" , features = ["nodejs-internal", "serde"] }
+pyo3 = { version = "0.23", default-features = false , features = ["macros"] }
+serde = "^1.0.188"
+solana-account = "2.2.1"
+solana-clock = "2.2.1"
+solana-epoch-rewards = "2.2.1"
+solana-epoch-schedule = "2.2.1"
+solana-feature-set = "2.2.1"
+solana-hash = "2.2.1"
+solana-last-restart-slot = "2.2.1"
+solana-message = "2.2.1"
+# add the precopmiles crate to ensure openssl-vendored is activated
+solana-precompiles = { version = "2.2.1", features = ["openssl-vendored"] }
+solana-rent = "2.2.1"
+solana-slot-hashes = "2.2.1"
+solana-slot-history = "2.2.1"
+solana-stake-interface = "1.2.1"
+solders-account = { path = "../solders-account" }
+solders-compute-budget = { path = "../solders-compute-budget" }
+solders-hash = { path = "../solders-hash" }
+solders-instruction = { path = "../solders-instruction" }
+solders-macros = { path = "../solders-macros" }
+solders-primitives = { path = "../solders-primitives" }
+solders-pubkey = { path = "../solders-pubkey" }
+solders-signature = { path = "../solders-signature" }
+solders-traits = { features = ["litesvm"] , path = "../solders-traits" }
+solders-traits-core = { path = "../solders-traits-core" }
+solders-transaction = { path = "../solders-transaction" }
+solders-transaction-error = { path = "../solders-transaction-error" }
+solders-transaction-return-data = { path = "../solders-transaction-return-data" }

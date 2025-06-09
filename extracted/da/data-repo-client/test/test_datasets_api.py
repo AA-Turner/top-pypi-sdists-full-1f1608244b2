@@ -40,6 +40,12 @@ class TestDatasetsApi(unittest.TestCase):
         """
         pass
 
+    def test_adjust_members_inherit_steward(self):
+        """Test case for adjust_members_inherit_steward
+
+        """
+        pass
+
     def test_apply_dataset_data_deletion(self):
         """Test case for apply_dataset_data_deletion
 

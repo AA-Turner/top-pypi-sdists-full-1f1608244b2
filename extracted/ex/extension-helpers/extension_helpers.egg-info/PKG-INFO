@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: extension-helpers
-Version: 1.3.0
+Version: 1.4.0
 Summary: Utilities for building and installing packages with compiled extensions
 Author-email: The Astropy Developers <astropy.team@gmail.com>
 License: BSD 3-Clause License

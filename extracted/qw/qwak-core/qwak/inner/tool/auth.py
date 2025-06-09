@@ -5,8 +5,8 @@ from typing_extensions import Self
 from qwak.inner.di_configuration.session import Session
 from abc import ABC, abstractmethod
 from typing import Optional
-from frogml_storage.authentication._authentication_utils import get_credentials
-from frogml_storage.authentication.models._auth_config import AuthConfig
+from frogml_storage.authentication.utils import get_credentials
+from frogml_storage.authentication.models import AuthConfig
 
 warnings.filterwarnings(action="ignore", module=".*jose.*")
 

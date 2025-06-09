@@ -4411,7 +4411,7 @@ class ZonedDateTime(_ExactAndLocalTime):
         return self._from_py_unchecked(
             _resolve_ambiguity(
                 self._py_dt.replace(**kwargs),
-                kwargs.get("tzinfo", self._py_dt.tzinfo),
+                kwargs.get("tzinfo", self._py_dt.tzinfo),  # type: ignore[arg-type]
                 # mypy doesn't know that offset is never None here
                 disambiguate or self._py_dt.utcoffset(),  # type: ignore[arg-type]
             ),
@@ -5551,7 +5551,7 @@ class PlainDateTime(_LocalTime):
         Note
         ----
         The local time may be ambiguous in the given timezone
-        (e.g. during a DST transition). Therefore, you must explicitly
+        (e.g. during a DST transition). You can explicitly
         specify how to handle such a situation using the ``disambiguate`` argument.
         See `the documentation <https://whenever.rtfd.io/en/latest/overview.html#ambiguity-in-timezones>`_
         for more information.
@@ -5580,7 +5580,7 @@ class PlainDateTime(_LocalTime):
         Note
         ----
         The local time may be ambiguous in the system timezone
-        (e.g. during a DST transition). Therefore, you must explicitly
+        (e.g. during a DST transition). You can explicitly
         specify how to handle such a situation using the ``disambiguate`` argument.
         See `the documentation <https://whenever.rtfd.io/en/latest/overview.html#ambiguity-in-timezones>`_
         for more information.

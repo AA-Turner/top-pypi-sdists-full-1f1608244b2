@@ -1271,6 +1271,20 @@ WHEN NOT MATCHED THEN INSERT (k, v) VALUES (b.k, b.v_max)"""
     )
 
 
+# https://github.com/open-metadata/OpenMetadata/issues/7427#issuecomment-2710190700
+# ensure no exception for merge query with column tokens under insert clause
+# TODO: this is invalid query as it is not allowed to have column tokens under insert clause
+# but it's parsable by sqlparse/sqlfluff. Therefore, we should handle this case.
+def test_merge_into_with_with_column_tokens():
+    sql = """MERGE INTO target_table t
+USING source_table s
+ON t.id = s.id
+WHEN NOT MATCHED THEN
+    INSERT (1, 2, 3)
+    VALUES (s.id, s.col1, s.col2)"""
+    assert_column_lineage_equal(sql, [])
+
+
 def test_union_inside_cte():
     sql = """INSERT INTO dataset.target WITH temp_cte AS (SELECT col1 FROM dataset.tab1 UNION ALL
 SELECT col1 FROM dataset.tab2) SELECT col1 FROM temp_cte"""

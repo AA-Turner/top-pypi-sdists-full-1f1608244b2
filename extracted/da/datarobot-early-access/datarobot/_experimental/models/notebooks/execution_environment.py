@@ -186,7 +186,7 @@ class ExecutionEnvironment(APIObject):
         The inactivity timeout for notebook session.
     """
 
-    _execution_environments_path = "api-gw/nbx/executionEnvironments/"
+    _path = "notebookExecutionEnvironments/"
 
     _converter = notebook_execution_environment_trafaret
 
@@ -215,14 +215,8 @@ class ExecutionEnvironment(APIObject):
         ExecutionEnvironment
             The notebook execution environment.
         """
-        url = f"{cls._client.domain}/{cls._execution_environments_path}{notebook_id}/"
-        r_data = cls._client.get(url)
-        json_data = r_data.json()
-        return ExecutionEnvironment(
-            image=Image.from_server_data(json_data["image"]),
-            machine=Machine.from_server_data(json_data["machine"]),
-            time_to_live=json_data["timeToLive"],
-        )
+        r_data = cls._client.get(f"{cls._path}{notebook_id}/")
+        return cls.from_server_data(r_data.json())
 
     @classmethod
     def assign_environment(
@@ -255,11 +249,5 @@ class ExecutionEnvironment(APIObject):
             exec_env = ExecutionEnvironment.assign_environment('67914bfab0279fd832dc3fd1', payload)
 
         """
-        url = f"{cls._client.domain}/{cls._execution_environments_path}{notebook_id}/"
-        r_data = cls._client.patch(url, data=payload)
-        json_data = r_data.json()
-        return ExecutionEnvironment(
-            image=Image.from_server_data(json_data["image"]),
-            machine=Machine.from_server_data(json_data["machine"]),
-            time_to_live=json_data["timeToLive"],
-        )
+        r_data = cls._client.patch(f"{cls._path}{notebook_id}/", data=payload)
+        return cls.from_server_data(r_data.json())

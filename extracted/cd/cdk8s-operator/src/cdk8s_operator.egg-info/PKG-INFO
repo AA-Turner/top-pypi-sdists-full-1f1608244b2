@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: cdk8s-operator
-Version: 0.1.360
+Version: 0.1.361
 Summary: Create Kubernetes CRD Operators using CDK8s Constructs
 Home-page: https://github.com/cdk8s-team/cdk8s-operator.git
 Author: Amazon Web Services

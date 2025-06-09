@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-health-check
-Version: 3.19.0
+Version: 3.19.1
 Summary: Monitor the health of your Django app and its connected services.
 Keywords: django,postgresql
 Author-email: Kristian Ollegaard <kristian@oellegaard.com>, Johannes Maron <johannes@maron.family>
@@ -28,7 +28,7 @@ Classifier: Topic :: Utilities
 License-File: LICENSE
 Requires-Dist: Django>=4.2
 Requires-Dist: sphinx ; extra == "docs"
-Requires-Dist: ruff==0.11.12 ; extra == "lint"
+Requires-Dist: ruff==0.11.13 ; extra == "lint"
 Requires-Dist: pytest ; extra == "test"
 Requires-Dist: pytest-cov ; extra == "test"
 Requires-Dist: pytest-django ; extra == "test"

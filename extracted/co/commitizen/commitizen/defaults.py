@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import pathlib
+import warnings
 from collections import OrderedDict
 from collections.abc import Iterable, MutableMapping, Sequence
 from typing import Any, TypedDict
 
+from commitizen.question import CzQuestion
+
 # Type
-Questions = Iterable[MutableMapping[str, Any]]
+Questions = Iterable[MutableMapping[str, Any]]  # TODO: deprecate this?
 
 
 class CzSettings(TypedDict, total=False):
@@ -15,7 +18,7 @@ class CzSettings(TypedDict, total=False):
     bump_map_major_version_zero: OrderedDict[str, str]
     change_type_order: list[str]
 
-    questions: Questions
+    questions: Iterable[CzQuestion]
     example: str | None
     schema_pattern: str | None
     schema: str | None
@@ -28,36 +31,39 @@ class CzSettings(TypedDict, total=False):
 
 
 class Settings(TypedDict, total=False):
+    allow_abort: bool
+    allowed_prefixes: list[str]
+    always_signoff: bool
+    annotated_tag: bool
+    bump_message: str | None
+    change_type_map: dict[str, str]
+    changelog_file: str
+    changelog_format: str | None
+    changelog_incremental: bool
+    changelog_merge_prerelease: bool
+    changelog_start_rev: str | None
+    customize: CzSettings
+    encoding: str
+    extras: dict[str, Any]
+    gpg_sign: bool
+    ignored_tag_formats: Sequence[str]
+    legacy_tag_formats: Sequence[str]
+    major_version_zero: bool
     name: str
-    version: str | None
+    post_bump_hooks: list[str] | None
+    pre_bump_hooks: list[str] | None
+    prerelease_offset: int
+    retry_after_failure: bool
+    style: list[tuple[str, str]]
+    tag_format: str
+    template: str | None
+    update_changelog_on_bump: bool
+    use_shortcuts: bool
     version_files: list[str]
     version_provider: str | None
     version_scheme: str | None
     version_type: str | None
-    tag_format: str
-    legacy_tag_formats: Sequence[str]
-    ignored_tag_formats: Sequence[str]
-    bump_message: str | None
-    retry_after_failure: bool
-    allow_abort: bool
-    allowed_prefixes: list[str]
-    changelog_file: str
-    changelog_format: str | None
-    changelog_incremental: bool
-    changelog_start_rev: str | None
-    changelog_merge_prerelease: bool
-    update_changelog_on_bump: bool
-    use_shortcuts: bool
-    style: list[tuple[str, str]]
-    customize: CzSettings
-    major_version_zero: bool
-    pre_bump_hooks: list[str] | None
-    post_bump_hooks: list[str] | None
-    prerelease_offset: int
-    encoding: str
-    always_signoff: bool
-    template: str | None
-    extras: dict[str, Any]
+    version: str | None
 
 
 CONFIG_FILES: list[str] = [
@@ -141,7 +147,7 @@ BUMP_MESSAGE = "bump: version $current_version → $new_version"
 def get_tag_regexes(
     version_regex: str,
 ) -> dict[str, str]:
-    regexs = {
+    regexes = {
         "version": version_regex,
         "major": r"(?P<major>\d+)",
         "minor": r"(?P<minor>\d+)",
@@ -150,6 +156,34 @@ def get_tag_regexes(
         "devrelease": r"(?P<devrelease>\.dev\d+)?",
     }
     return {
-        **{f"${k}": v for k, v in regexs.items()},
-        **{f"${{{k}}}": v for k, v in regexs.items()},
+        **{f"${k}": v for k, v in regexes.items()},
+        **{f"${{{k}}}": v for k, v in regexes.items()},
     }
+
+
+def __getattr__(name: str) -> Any:
+    # PEP-562: deprecate module-level variable
+
+    # {"deprecated key": (value, "new key")}
+    deprecated_vars = {
+        "bump_pattern": (BUMP_PATTERN, "BUMP_PATTERN"),
+        "bump_map": (BUMP_MAP, "BUMP_MAP"),
+        "bump_map_major_version_zero": (
+            BUMP_MAP_MAJOR_VERSION_ZERO,
+            "BUMP_MAP_MAJOR_VERSION_ZERO",
+        ),
+        "bump_message": (BUMP_MESSAGE, "BUMP_MESSAGE"),
+        "change_type_order": (CHANGE_TYPE_ORDER, "CHANGE_TYPE_ORDER"),
+        "encoding": (ENCODING, "ENCODING"),
+        "name": (DEFAULT_SETTINGS["name"], "DEFAULT_SETTINGS['name']"),
+    }
+    if name in deprecated_vars:
+        value, replacement = deprecated_vars[name]
+        warnings.warn(
+            f"{name} is deprecated and will be removed in v5. "
+            f"Use {replacement} instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return value
+    raise AttributeError(f"{name} is not an attribute of {__name__}")

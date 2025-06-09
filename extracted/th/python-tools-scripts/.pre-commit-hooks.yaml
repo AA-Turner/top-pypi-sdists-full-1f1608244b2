@@ -1,0 +1,18 @@
+-   id: tools
+    name: tools
+    entry: tools
+    language: python
+    types: [file]
+    args: []
+    require_serial: false
+    additional_dependencies: []
+
+-   id: tools-poetry
+    name: tools
+    entry: tools
+    language: python
+    types: [file]
+    args: []
+    require_serial: false
+    additional_dependencies:
+      - poetry>=1.8.0

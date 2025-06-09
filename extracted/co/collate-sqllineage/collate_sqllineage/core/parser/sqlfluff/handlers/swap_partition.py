@@ -43,15 +43,16 @@ class SwapPartitionHandler(SegmentBaseHandler):
                 function_parameters = get_grandchild(
                     function_from_select, "function_contents", "bracketed"
                 )
-                function_parameters = function_parameters.get_children("expression")
                 if function_parameters:
-                    holder.add_read(
-                        SqlFluffTable(
-                            escape_identifier_name(function_parameters[0].raw)
+                    function_parameters = function_parameters.get_children("expression")
+                    if function_parameters:
+                        holder.add_read(
+                            SqlFluffTable(
+                                escape_identifier_name(function_parameters[0].raw)
+                            )
                         )
-                    )
-                    holder.add_write(
-                        SqlFluffTable(
-                            escape_identifier_name(function_parameters[3].raw)
+                        holder.add_write(
+                            SqlFluffTable(
+                                escape_identifier_name(function_parameters[3].raw)
+                            )
                         )
-                    )

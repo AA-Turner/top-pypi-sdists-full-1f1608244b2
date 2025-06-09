@@ -46,7 +46,7 @@ class NotebookKernel(APIObject):
         The kernel execution state.
     """
 
-    _sessions_path = "api-gw/nbx/session/"
+    _path = "notebookSessions/"
 
     _converter = notebook_kernel_trafaret
 
@@ -66,17 +66,14 @@ class NotebookKernel(APIObject):
 
     @classmethod
     def create(cls, notebook_id: str, kernel_spec: KernelSpec) -> NotebookKernel:
-        url = f"{cls._client.domain}/{cls._sessions_path}{notebook_id}/kernels/"
-        payload = {"spec": kernel_spec}
-        r_data = cls._client.post(url, data=payload)
-        return NotebookKernel.from_server_data(r_data.json())
+        r_data = cls._client.post(f"{cls._path}{notebook_id}/kernels/", data={"spec": kernel_spec})
+        return cls.from_server_data(r_data.json())
 
     def assign_to_notebook(self, notebook_id: str, notebook_path: str) -> NotebookKernel:
-        url = f"{self._client.domain}/{self._sessions_path}{notebook_id}/notebook/kernel/"
-        payload = {"path": notebook_path}
-        r_data = self._client.post(url, data=payload)
+        r_data = self._client.post(
+            f"{self._path}{notebook_id}/notebook/kernel/", data={"path": notebook_path}
+        )
         return NotebookKernel.from_server_data(r_data.json())
 
     def stop(self, notebook_id: str) -> None:
-        url = f"{self._client.domain}/{self._sessions_path}{notebook_id}/kernels/{self.id}"
-        self._client.delete(url)
+        self._client.delete(f"{self._path}{notebook_id}/kernels/{self.id}")

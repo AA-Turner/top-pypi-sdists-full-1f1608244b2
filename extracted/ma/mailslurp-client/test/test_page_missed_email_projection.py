@@ -39,16 +39,16 @@ class TestPageMissedEmailProjection(unittest.TestCase):
             return PageMissedEmailProjection(
                 content = [
                     mailslurp_client.models.missed_email_projection.MissedEmailProjection(
+                        subject = '0', 
                         user_id = '0', 
                         created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
-                        subject = '0', 
                         id = '0', 
                         from = '0', )
                     ], 
                 pageable = mailslurp_client.models.pageable_object.PageableObject(
-                    page_size = 56, 
                     paged = True, 
                     page_number = 56, 
+                    page_size = 56, 
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(

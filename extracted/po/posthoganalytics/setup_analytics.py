@@ -1,69 +1,68 @@
 import os
 import sys
+import tomli
+import tomli_w
+import shutil
 
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
-# Don't import module here, since deps may not be installed
+# Don't import analytics-python module here, since deps may not be installed
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "posthoganalytics"))
-from version import VERSION
+from version import VERSION  # noqa: E402
+
+
+# Copy the original pyproject.toml as backup
+shutil.copy("pyproject.toml", "pyproject.toml.backup")
+
+# Read the original pyproject.toml
+with open("pyproject.toml", "rb") as f:
+    config = tomli.load(f)
+
+# Override specific values
+config["project"]["name"] = "posthoganalytics"
+config["tool"]["setuptools"]["dynamic"]["version"] = {
+    "attr": "posthoganalytics.version.VERSION"
+}
+
+# Rename packages from posthog.* to posthoganalytics.*
+if "packages" in config["tool"]["setuptools"]:
+    new_packages = []
+    for package in config["tool"]["setuptools"]["packages"]:
+        if package == "posthog":
+            new_packages.append("posthoganalytics")
+        elif package.startswith("posthog."):
+            new_packages.append(package.replace("posthog.", "posthoganalytics.", 1))
+        else:
+            new_packages.append(package)
+    config["tool"]["setuptools"]["packages"] = new_packages
+
+# Overwrite the original pyproject.toml
+with open("pyproject.toml", "wb") as f:
+    tomli_w.dump(config, f)
 
 long_description = """
-PostHog is developer-friendly, self-hosted product analytics. posthog-python is the python package.
+PostHog is developer-friendly, self-hosted product analytics.
+posthog-python is the python package.
 
 This package requires Python 3.9 or higher.
 """
 
-install_requires = [
-    "requests>=2.7,<3.0",
-    "six>=1.5",
-    "python-dateutil>=2.2",
-    "backoff>=1.10.0",
-    "distro>=1.5.0",  # Required for Linux OS detection in Python 3.9+
-]
-
-tests_require = ["mock>=2.0.0"]
-
+# Minimal setup.py for backward compatibility
+# Most configuration is now in pyproject.toml
 setup(
     name="posthoganalytics",
     version=VERSION,
+    # Basic fields for backward compatibility
     url="https://github.com/posthog/posthog-python",
     author="Posthog",
     author_email="hey@posthog.com",
     maintainer="PostHog",
     maintainer_email="hey@posthog.com",
-    test_suite="posthoganalytics.test.all",
-    packages=[
-        "posthoganalytics",
-        "posthoganalytics.ai",
-        "posthoganalytics.ai.langchain",
-        "posthoganalytics.ai.openai",
-        "posthoganalytics.ai.anthropic",
-        "posthoganalytics.ai.gemini",
-        "posthoganalytics.test",
-        "posthoganalytics.sentry",
-        "posthoganalytics.exception_integrations",
-    ],
     license="MIT License",
-    install_requires=install_requires,
-    tests_require=tests_require,
-    extras_require={
-        "sentry": ["sentry-sdk", "django"],
-    },
     description="Integrate PostHog into any python application.",
     long_description=long_description,
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: 3.13",
-    ],
+    # This will fallback to pyproject.toml for detailed configuration
 )

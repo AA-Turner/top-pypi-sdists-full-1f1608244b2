@@ -39,6 +39,7 @@ class TestPageEmailProjection(unittest.TestCase):
             return PageEmailProjection(
                 content = [
                     mailslurp_client.models.email_projection.EmailProjection(
+                        subject = '0', 
                         sender = mailslurp_client.models.sender.Sender(
                             raw_value = '0', 
                             email_address = '0', 
@@ -62,10 +63,10 @@ class TestPageEmailProjection(unittest.TestCase):
                                     email_address = '0', 
                                     name = '0', )
                                 ], ), 
-                        inbox_id = '0', 
                         attachments = [
                             '0'
                             ], 
+                        inbox_id = '0', 
                         created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                         to = [
                             '0'
@@ -90,15 +91,14 @@ class TestPageEmailProjection(unittest.TestCase):
                             ], 
                         body_md5_hash = '0', 
                         team_access = True, 
-                        subject = '0', 
                         id = '0', 
                         thread_id = '0', 
                         from = '0', )
                     ], 
                 pageable = mailslurp_client.models.pageable_object.PageableObject(
-                    page_size = 56, 
                     paged = True, 
                     page_number = 56, 
+                    page_size = 56, 
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(

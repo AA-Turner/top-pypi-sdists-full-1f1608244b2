@@ -333,6 +333,20 @@ class TestGroundConjunctiveCondition(unittest.TestCase):
         assert len(all_groundings) == 4
         assert len(single_grounding) == 1
 
+    def test_lift(self):
+        domain_path = DATA_DIR / 'gripper' / 'domain.pddl'
+        problem_path = DATA_DIR / 'gripper' / 'test_problem2.pddl'
+        domain = Domain(domain_path)
+        problem = Problem(domain, problem_path)
+        grounded_goal = problem.get_goal_condition()
+        lifted_goal = grounded_goal.lift()
+        assert len(lifted_goal.get_parameters()) == 3
+        assert len(lifted_goal.get_literals()) == 2
+        assert lifted_goal.get_literals()[0].get_atom().get_terms()[0] == lifted_goal.get_parameters()[0]
+        assert lifted_goal.get_literals()[0].get_atom().get_terms()[1] == lifted_goal.get_parameters()[1]
+        assert lifted_goal.get_literals()[1].get_atom().get_terms()[0] == lifted_goal.get_parameters()[2]
+        assert lifted_goal.get_literals()[1].get_atom().get_terms()[1] == lifted_goal.get_parameters()[1]
+
 
 class TestSearchAlgorithms(unittest.TestCase):
     def test_custom_heuristic(self):
@@ -399,7 +413,7 @@ class TestSearchAlgorithms(unittest.TestCase):
         initial_state = problem.get_initial_state()
         assert heuristic.compute_value(initial_state, True) == 0.0
         assert heuristic.compute_value(initial_state, False) == 5.0
-        assert len(heuristic.compute_preferred_actions()) == 0
+        assert len(heuristic.get_preferred_actions()) == 0
 
     def test_max_heuristic(self):
         domain_path = DATA_DIR / 'blocks_4' / 'domain.pddl'
@@ -410,7 +424,7 @@ class TestSearchAlgorithms(unittest.TestCase):
         initial_state = problem.get_initial_state()
         assert heuristic.compute_value(initial_state, True) == 0.0
         assert heuristic.compute_value(initial_state, False) == 2.0
-        assert len(heuristic.compute_preferred_actions()) == 0
+        assert len(heuristic.get_preferred_actions()) == 0
 
     def test_add_heuristic(self):
         domain_path = DATA_DIR / 'blocks_4' / 'domain.pddl'
@@ -421,7 +435,7 @@ class TestSearchAlgorithms(unittest.TestCase):
         initial_state = problem.get_initial_state()
         assert heuristic.compute_value(initial_state, True) == 0.0
         assert heuristic.compute_value(initial_state, False) == 2.0
-        assert len(heuristic.compute_preferred_actions()) == 0
+        assert len(heuristic.get_preferred_actions()) == 0
 
     def test_perfect_heuristic(self):
         domain_path = DATA_DIR / 'blocks_4' / 'domain.pddl'
@@ -432,7 +446,7 @@ class TestSearchAlgorithms(unittest.TestCase):
         initial_state = problem.get_initial_state()
         # assert heuristic.compute_value(initial_state, True) == 0.0  # TODO: PerfectHeuristic seems to ignore the goal flag.
         assert heuristic.compute_value(initial_state, False) == 4.0
-        assert len(heuristic.compute_preferred_actions()) == 0
+        assert len(heuristic.get_preferred_actions()) == 0
 
     def test_ff_heuristic(self):
         domain_path = DATA_DIR / 'blocks_4' / 'domain.pddl'
@@ -443,7 +457,7 @@ class TestSearchAlgorithms(unittest.TestCase):
         initial_state = problem.get_initial_state()
         assert heuristic.compute_value(initial_state, True) == 0.0
         assert heuristic.compute_value(initial_state, False) == 4.0
-        assert len(heuristic.compute_preferred_actions()) == 2
+        assert len(heuristic.get_preferred_actions()) == 2
 
 
 if __name__ == '__main__':

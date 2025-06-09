@@ -79132,6 +79132,47 @@ timeseries_archetype_api_CreateSeriesArchetypeRequest.__qualname__ = "CreateSeri
 timeseries_archetype_api_CreateSeriesArchetypeRequest.__module__ = "nominal_api.timeseries_archetype_api"
 
 
+class timeseries_archetype_api_CsvLocatorV2Template(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            's3_path': ConjureFieldDefinition('s3Path', api_S3Path),
+            'index': ConjureFieldDefinition('index', int),
+            'time_index': ConjureFieldDefinition('timeIndex', int),
+            'type': ConjureFieldDefinition('type', storage_series_api_NominalDataType)
+        }
+
+    __slots__: List[str] = ['_s3_path', '_index', '_time_index', '_type']
+
+    def __init__(self, index: int, s3_path: str, time_index: int, type: "storage_series_api_NominalDataType") -> None:
+        self._s3_path = s3_path
+        self._index = index
+        self._time_index = time_index
+        self._type = type
+
+    @builtins.property
+    def s3_path(self) -> str:
+        return self._s3_path
+
+    @builtins.property
+    def index(self) -> int:
+        return self._index
+
+    @builtins.property
+    def time_index(self) -> int:
+        return self._time_index
+
+    @builtins.property
+    def type(self) -> "storage_series_api_NominalDataType":
+        return self._type
+
+
+timeseries_archetype_api_CsvLocatorV2Template.__name__ = "CsvLocatorV2Template"
+timeseries_archetype_api_CsvLocatorV2Template.__qualname__ = "CsvLocatorV2Template"
+timeseries_archetype_api_CsvLocatorV2Template.__module__ = "nominal_api.timeseries_archetype_api"
+
+
 class timeseries_archetype_api_Influx1LocatorTemplate(ConjureBeanType):
 
     @builtins.classmethod
@@ -79230,6 +79271,7 @@ class timeseries_archetype_api_LocatorTemplate(ConjureUnionType):
     _timestream: Optional["timeseries_archetype_api_TimestreamLocatorTemplate"] = None
     _visual_crossing: Optional["timeseries_archetype_api_VisualCrossingLocatorTemplate"] = None
     _big_query: Optional["timeseries_archetype_api_BigQueryLocatorTemplate"] = None
+    _csv_v2: Optional["timeseries_archetype_api_CsvLocatorV2Template"] = None
 
     @builtins.classmethod
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
@@ -79240,7 +79282,8 @@ class timeseries_archetype_api_LocatorTemplate(ConjureUnionType):
             'nominal': ConjureFieldDefinition('nominal', timeseries_archetype_api_NominalLocatorTemplate),
             'timestream': ConjureFieldDefinition('timestream', timeseries_archetype_api_TimestreamLocatorTemplate),
             'visual_crossing': ConjureFieldDefinition('visualCrossing', timeseries_archetype_api_VisualCrossingLocatorTemplate),
-            'big_query': ConjureFieldDefinition('bigQuery', timeseries_archetype_api_BigQueryLocatorTemplate)
+            'big_query': ConjureFieldDefinition('bigQuery', timeseries_archetype_api_BigQueryLocatorTemplate),
+            'csv_v2': ConjureFieldDefinition('csvV2', timeseries_archetype_api_CsvLocatorV2Template)
         }
 
     def __init__(
@@ -79252,10 +79295,11 @@ class timeseries_archetype_api_LocatorTemplate(ConjureUnionType):
             timestream: Optional["timeseries_archetype_api_TimestreamLocatorTemplate"] = None,
             visual_crossing: Optional["timeseries_archetype_api_VisualCrossingLocatorTemplate"] = None,
             big_query: Optional["timeseries_archetype_api_BigQueryLocatorTemplate"] = None,
+            csv_v2: Optional["timeseries_archetype_api_CsvLocatorV2Template"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (timescale_db is not None) + (influx is not None) + (influx1 is not None) + (nominal is not None) + (timestream is not None) + (visual_crossing is not None) + (big_query is not None) != 1:
+            if (timescale_db is not None) + (influx is not None) + (influx1 is not None) + (nominal is not None) + (timestream is not None) + (visual_crossing is not None) + (big_query is not None) + (csv_v2 is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if timescale_db is not None:
@@ -79279,6 +79323,9 @@ class timeseries_archetype_api_LocatorTemplate(ConjureUnionType):
             if big_query is not None:
                 self._big_query = big_query
                 self._type = 'bigQuery'
+            if csv_v2 is not None:
+                self._csv_v2 = csv_v2
+                self._type = 'csvV2'
 
         elif type_of_union == 'timescaleDb':
             if timescale_db is None:
@@ -79315,6 +79362,11 @@ class timeseries_archetype_api_LocatorTemplate(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._big_query = big_query
             self._type = 'bigQuery'
+        elif type_of_union == 'csvV2':
+            if csv_v2 is None:
+                raise ValueError('a union value must not be None')
+            self._csv_v2 = csv_v2
+            self._type = 'csvV2'
 
     @builtins.property
     def timescale_db(self) -> Optional["timeseries_archetype_api_TimescaleDbLocatorTemplate"]:
@@ -79344,6 +79396,10 @@ class timeseries_archetype_api_LocatorTemplate(ConjureUnionType):
     def big_query(self) -> Optional["timeseries_archetype_api_BigQueryLocatorTemplate"]:
         return self._big_query
 
+    @builtins.property
+    def csv_v2(self) -> Optional["timeseries_archetype_api_CsvLocatorV2Template"]:
+        return self._csv_v2
+
     def accept(self, visitor) -> Any:
         if not isinstance(visitor, timeseries_archetype_api_LocatorTemplateVisitor):
             raise ValueError('{} is not an instance of timeseries_archetype_api_LocatorTemplateVisitor'.format(visitor.__class__.__name__))
@@ -79361,6 +79417,8 @@ class timeseries_archetype_api_LocatorTemplate(ConjureUnionType):
             return visitor._visual_crossing(self.visual_crossing)
         if self._type == 'bigQuery' and self.big_query is not None:
             return visitor._big_query(self.big_query)
+        if self._type == 'csvV2' and self.csv_v2 is not None:
+            return visitor._csv_v2(self.csv_v2)
 
 
 timeseries_archetype_api_LocatorTemplate.__name__ = "LocatorTemplate"
@@ -79396,6 +79454,10 @@ class timeseries_archetype_api_LocatorTemplateVisitor:
 
     @abstractmethod
     def _big_query(self, big_query: "timeseries_archetype_api_BigQueryLocatorTemplate") -> Any:
+        pass
+
+    @abstractmethod
+    def _csv_v2(self, csv_v2: "timeseries_archetype_api_CsvLocatorV2Template") -> Any:
         pass
 
 

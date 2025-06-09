@@ -37,9 +37,9 @@ class TestMissedEmailProjection(unittest.TestCase):
         # model = mailslurp_client.models.missed_email_projection.MissedEmailProjection()  # noqa: E501
         if include_optional :
             return MissedEmailProjection(
+                subject = '0', 
                 user_id = '0', 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
-                subject = '0', 
                 id = '0', 
                 _from = '0'
             )

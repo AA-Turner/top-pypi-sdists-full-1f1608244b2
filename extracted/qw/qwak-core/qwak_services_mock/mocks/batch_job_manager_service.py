@@ -36,6 +36,9 @@ from _qwak_proto.qwak.batch_job.v1.batch_job_service_pb2 import (
     StartWarmupJobRequest,
     StartWarmupJobResponse,
     TaskExecutionDetails,
+    UpdateTasksDetailsRequest,
+    UpdateTasksDetailsResponse,
+    BatchTaskDetails,
 )
 from _qwak_proto.qwak.batch_job.v1.batch_job_service_pb2_grpc import (
     BatchJobManagementServiceServicer,
@@ -51,6 +54,7 @@ class BatchJobManagerService(BatchJobManagementServiceServicer):
         self.id_to_batch_job: Dict[str, MockBatchJob] = dict()
         self.model_id_active_warmup: Set[str] = set()
         self.models_to_fail: Set[str] = set()
+        self.task_id_to_update_task_details: Dict[str, BatchTaskDetails] = dict()
 
     def StartBatchJob(
         self, request: StartBatchJobRequest, context
@@ -265,6 +269,25 @@ class BatchJobManagerService(BatchJobManagementServiceServicer):
         except Exception as e:
             raise_internal_grpc_error(context, e)
 
+    def UpdateTasksDetails(
+            self, request: UpdateTasksDetailsRequest, context
+    ) -> UpdateTasksDetailsResponse:
+        for task in request.tasks_details:
+            task_id = task.task_id
+            if not task_id :
+                raise ValueError("Task ID cannot be empty")
+            input_files = task.input_files_details
+
+            print(f"Updating task with ID: {task_id} and input files: {[file.path for file in input_files]}")
+            self.task_id_to_update_task_details[task_id] = task
+        return UpdateTasksDetailsResponse()
+
+    def get_task_details(self,task_id: str
+        ) -> Optional[BatchTaskDetails]:
+            """
+            Get task details by task ID
+            """
+            return self.task_id_to_update_task_details[task_id]
 
 class MockBatchJob:
     def __init__(self, request: StartBatchJobRequest):

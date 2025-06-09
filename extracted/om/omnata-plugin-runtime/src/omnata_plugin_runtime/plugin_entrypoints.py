@@ -63,6 +63,9 @@ class PluginEntrypoint:
             # logging defaults
             snowflake_logger = logging.getLogger("snowflake")
             snowflake_logger.setLevel(logging.WARN) # we don't want snowflake queries being logged by default
+            # also snowflake.snowpark._internal.open_telemetry can be very noisy, so we set it to ERROR
+            snowflake_telemetry_logger = logging.getLogger("snowflake.snowpark._internal.open_telemetry")
+            snowflake_telemetry_logger.setLevel(logging.ERROR)
             # the sync engine can tell the plugin to override log level via a session variable
             if session is not None:
                 try:

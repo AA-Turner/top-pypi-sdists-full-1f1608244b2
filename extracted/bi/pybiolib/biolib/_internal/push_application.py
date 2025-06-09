@@ -1,5 +1,7 @@
 import os
 import re
+import sys
+import time
 from pathlib import Path
 
 import rich.progress
@@ -36,8 +38,16 @@ class DockerStatusUpdate(TypedDict, total=False):
 
 
 def process_docker_status_updates(status_updates: Iterable[DockerStatusUpdate], action: str) -> None:
+    if sys.stdout.isatty():
+        _process_docker_status_updates_with_progress_bar(status_updates, action)
+    else:
+        _process_docker_status_updates_with_logging(status_updates, action)
+
+
+def _process_docker_status_updates_with_progress_bar(status_updates: Iterable[DockerStatusUpdate], action: str) -> None:
     with rich.progress.Progress() as progress:
         layer_id_to_task_id = {}
+        overall_task_id = progress.add_task(description=f'[bold blue]{action} Docker image', total=None)
 
         for update in status_updates:
             if 'progressDetail' in update and 'id' in update:
@@ -59,9 +69,109 @@ def process_docker_status_updates(status_updates: Iterable[DockerStatusUpdate], 
                         task_id=layer_id_to_task_id[layer_id],
                         total=100,
                     )
+            elif 'status' in update and 'id' in update:
+                layer_id = update['id']
+                status = update['status']
 
+                if layer_id not in layer_id_to_task_id:
+                    layer_id_to_task_id[layer_id] = progress.add_task(description=f'[cyan]{action} layer {layer_id}')
+
+                if status in ['Preparing', 'Waiting']:
+                    progress.update(
+                        task_id=layer_id_to_task_id[layer_id], description=f'[yellow]{status} layer {layer_id}'
+                    )
+                elif status in ['Pushing', 'Uploading']:
+                    progress.update(
+                        task_id=layer_id_to_task_id[layer_id], description=f'[cyan]{status} layer {layer_id}'
+                    )
+                elif status in ['Pushed', 'Uploaded']:
+                    progress.update(
+                        task_id=layer_id_to_task_id[layer_id],
+                        description=f'[green]{status} layer {layer_id}',
+                        completed=100,
+                        total=100,
+                    )
+                elif status == 'Layer already exists':
+                    progress.update(
+                        task_id=layer_id_to_task_id[layer_id],
+                        description=f'[green]{status} - layer {layer_id}',
+                        completed=100,
+                        total=100,
+                    )
+            elif 'status' in update and update['status']:
+                status = update['status']
+                if status not in ['Preparing', 'Pushing', 'Pushed', 'Waiting', 'Layer already exists']:
+                    progress.update(task_id=overall_task_id, description=f'[bold blue]{action} Docker image - {status}')
             elif 'status' not in update and 'progressDetail' not in update:
                 print(update)
+
+
+def _process_docker_status_updates_with_logging(status_updates: Iterable[DockerStatusUpdate], action: str) -> None:
+    layer_progress = {}
+    layer_status = {}
+    last_log_time = time.time()
+
+    logger.info(f'{action} Docker image...')
+
+    for update in status_updates:
+        current_time = time.time()
+
+        if 'progressDetail' in update and 'id' in update:
+            layer_id = update['id']
+            progress_detail = update['progressDetail']
+
+            if progress_detail and 'current' in progress_detail and 'total' in progress_detail:
+                current = progress_detail['current']
+                total = progress_detail['total']
+                percentage = (current / total * 100) if total > 0 else 0
+                layer_progress[layer_id] = percentage
+                layer_status[layer_id] = f'{action.lower()}'
+            elif update.get('status') == 'Layer already exists':
+                layer_progress[layer_id] = 100
+                layer_status[layer_id] = 'already exists'
+
+        elif 'status' in update and 'id' in update:
+            layer_id = update['id']
+            status = update['status']
+            layer_status[layer_id] = status.lower()
+
+            if status in ['Pushed', 'Uploaded'] or status == 'Layer already exists':
+                layer_progress[layer_id] = 100
+
+        elif 'status' in update and update['status']:
+            status = update['status']
+            if status not in ['Preparing', 'Pushing', 'Pushed', 'Waiting', 'Layer already exists']:
+                logger.info(f'{action} Docker image - {status}')
+
+        if current_time - last_log_time >= 10.0:
+            _log_progress_summary(action, layer_progress, layer_status)
+            last_log_time = current_time
+
+    _log_progress_summary(action, layer_progress, layer_status)
+    logger.info(f'{action} Docker image completed')
+
+
+def _log_progress_summary(action: str, layer_progress: dict, layer_status: dict) -> None:
+    if not layer_progress and not layer_status:
+        return
+
+    completed_layers = sum(1 for progress in layer_progress.values() if progress >= 100)
+    total_layers = len(layer_progress) if layer_progress else len(layer_status)
+
+    if total_layers > 0:
+        overall_percentage = completed_layers / total_layers * 100
+        logger.info(
+            f'{action} progress: {completed_layers}/{total_layers} layers completed ({overall_percentage:.1f}%)'
+        )
+
+    active_layers = [
+        layer_id
+        for layer_id, status in layer_status.items()
+        if status in ['preparing', 'waiting', 'pushing', 'uploading'] and layer_progress.get(layer_id, 0) < 100
+    ]
+
+    if active_layers:
+        logger.info(f'Active layers: {", ".join(active_layers[:5])}{"..." if len(active_layers) > 5 else ""}')
 
 
 def set_app_version_as_active(

@@ -34,10 +34,11 @@ class EmailProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
+        'subject': 'str',
         'sender': 'Sender',
         'recipients': 'EmailRecipients',
-        'inbox_id': 'str',
         'attachments': 'list[str]',
+        'inbox_id': 'str',
         'created_at': 'datetime',
         'to': 'list[str]',
         'cc': 'list[str]',
@@ -54,17 +55,17 @@ class EmailProjection(object):
         'body_part_content_types': 'list[str]',
         'body_md5_hash': 'str',
         'team_access': 'bool',
-        'subject': 'str',
         'id': 'str',
         'thread_id': 'str',
         '_from': 'str'
     }
 
     attribute_map = {
+        'subject': 'subject',
         'sender': 'sender',
         'recipients': 'recipients',
-        'inbox_id': 'inboxId',
         'attachments': 'attachments',
+        'inbox_id': 'inboxId',
         'created_at': 'createdAt',
         'to': 'to',
         'cc': 'cc',
@@ -81,22 +82,22 @@ class EmailProjection(object):
         'body_part_content_types': 'bodyPartContentTypes',
         'body_md5_hash': 'bodyMD5Hash',
         'team_access': 'teamAccess',
-        'subject': 'subject',
         'id': 'id',
         'thread_id': 'threadId',
         '_from': 'from'
     }
 
-    def __init__(self, sender=None, recipients=None, inbox_id=None, attachments=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, domain_id=None, favourite=None, plus_address=None, size_bytes=None, in_reply_to=None, read=None, body_excerpt=None, text_excerpt=None, body_part_content_types=None, body_md5_hash=None, team_access=None, subject=None, id=None, thread_id=None, _from=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, subject=None, sender=None, recipients=None, attachments=None, inbox_id=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, domain_id=None, favourite=None, plus_address=None, size_bytes=None, in_reply_to=None, read=None, body_excerpt=None, text_excerpt=None, body_part_content_types=None, body_md5_hash=None, team_access=None, id=None, thread_id=None, _from=None, local_vars_configuration=None):  # noqa: E501
         """EmailProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._subject = None
         self._sender = None
         self._recipients = None
-        self._inbox_id = None
         self._attachments = None
+        self._inbox_id = None
         self._created_at = None
         self._to = None
         self._cc = None
@@ -113,16 +114,16 @@ class EmailProjection(object):
         self._body_part_content_types = None
         self._body_md5_hash = None
         self._team_access = None
-        self._subject = None
         self._id = None
         self._thread_id = None
         self.__from = None
         self.discriminator = None
 
+        self.subject = subject
         self.sender = sender
         self.recipients = recipients
-        self.inbox_id = inbox_id
         self.attachments = attachments
+        self.inbox_id = inbox_id
         self.created_at = created_at
         self.to = to
         self.cc = cc
@@ -139,10 +140,30 @@ class EmailProjection(object):
         self.body_part_content_types = body_part_content_types
         self.body_md5_hash = body_md5_hash
         self.team_access = team_access
-        self.subject = subject
         self.id = id
         self.thread_id = thread_id
         self._from = _from
+
+    @property
+    def subject(self):
+        """Gets the subject of this EmailProjection.  # noqa: E501
+
+
+        :return: The subject of this EmailProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._subject
+
+    @subject.setter
+    def subject(self, subject):
+        """Sets the subject of this EmailProjection.
+
+
+        :param subject: The subject of this EmailProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._subject = subject
 
     @property
     def sender(self):
@@ -187,6 +208,27 @@ class EmailProjection(object):
         self._recipients = recipients
 
     @property
+    def attachments(self):
+        """Gets the attachments of this EmailProjection.  # noqa: E501
+
+
+        :return: The attachments of this EmailProjection.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._attachments
+
+    @attachments.setter
+    def attachments(self, attachments):
+        """Sets the attachments of this EmailProjection.
+
+
+        :param attachments: The attachments of this EmailProjection.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._attachments = attachments
+
+    @property
     def inbox_id(self):
         """Gets the inbox_id of this EmailProjection.  # noqa: E501
 
@@ -208,27 +250,6 @@ class EmailProjection(object):
             raise ValueError("Invalid value for `inbox_id`, must not be `None`")  # noqa: E501
 
         self._inbox_id = inbox_id
-
-    @property
-    def attachments(self):
-        """Gets the attachments of this EmailProjection.  # noqa: E501
-
-
-        :return: The attachments of this EmailProjection.  # noqa: E501
-        :rtype: list[str]
-        """
-        return self._attachments
-
-    @attachments.setter
-    def attachments(self, attachments):
-        """Sets the attachments of this EmailProjection.
-
-
-        :param attachments: The attachments of this EmailProjection.  # noqa: E501
-        :type: list[str]
-        """
-
-        self._attachments = attachments
 
     @property
     def created_at(self):
@@ -573,27 +594,6 @@ class EmailProjection(object):
             raise ValueError("Invalid value for `team_access`, must not be `None`")  # noqa: E501
 
         self._team_access = team_access
-
-    @property
-    def subject(self):
-        """Gets the subject of this EmailProjection.  # noqa: E501
-
-
-        :return: The subject of this EmailProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._subject
-
-    @subject.setter
-    def subject(self, subject):
-        """Sets the subject of this EmailProjection.
-
-
-        :param subject: The subject of this EmailProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._subject = subject
 
     @property
     def id(self):

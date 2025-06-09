@@ -1,0 +1,67 @@
+---
+
+- name: Block
+  ansible.builtin.block:
+    - name: Attempt to gather facts
+      ansible.builtin.setup:
+        gather_subset: all
+
+  rescue:
+    - name: Attempt to bootstrap ansible requirements for apt systems
+      become: true
+      become_user: root
+      changed_when: true
+      ansible.builtin.raw: |
+        /bin/bash -c "apt-get update && apt-get install -y python3 python3-apt ca-certificates aptitude sudo"
+
+    - name: Retry gather facts
+      ansible.builtin.setup:
+        gather_subset: all
+
+- name: Include OS specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  failed_when: false
+  loop:
+    - "{{ ansible_os_family | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version.split('.')[0:2] | join('-') | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version.split('.')[0:3] | join('-') | lower }}.yml"
+
+# TODO: also look for CURL_CA_BUNDLE, REQUESTS_CA_BUNDLE, SSL_CERT_FILE
+- name: Inject our CA certificate
+  when: lookup('env', 'SSL_CERT_FILE')
+  ansible.builtin.copy:
+    src: "{{ lookup('env', 'SSL_CERT_FILE') }}"
+    dest: "{{ cacert_location }}"
+    mode: 0644
+  register: result
+
+- name: Install ca-certificates on debian
+  when: ansible_os_family == 'Debian'
+  ansible.builtin.package:
+    name: ca-certificates  # noqa: no-handler
+
+- name: Update CA certificates
+  when: result is changed
+  ansible.builtin.raw: "{{ cacert_update_cmd }}"  # noqa: no-handler
+
+# TODO: enable proxy
+
+# cannot use become because we likely not have `sudo`
+- name: Pre-install system packages
+  when: pre_packages is defined
+  ansible.builtin.package:
+    name: "{{ pre_packages }}"
+
+# by now we should have `sudo`
+- name: Install system packages
+  when: packages is defined
+  become: true
+  ansible.builtin.package:
+    name: "{{ packages }}"
+  retries: 2
+  delay: 5
+  register: result
+  until: result is success

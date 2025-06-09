@@ -282,7 +282,7 @@ async def janela_conhecimento_frete(cte):
 
     try:
         # Clicar no botão - para apagar registro se existir
-        btn_salvar = main_window.child_window(
+        main_window.child_window(
             class_name="TDBIBitBtn", found_index=4
         ).click()
 
@@ -387,6 +387,7 @@ async def importar_cte_xml(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO
             )
 
         await kill_all_emsys()
+        
 
         app = Application(backend="win32").start("C:\\Rezende\\EMSys3\\EMSys3_35.exe")
         warnings.filterwarnings(
@@ -430,11 +431,22 @@ async def importar_cte_xml(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO
             pass
         await desmarcar_flag()
 
-        return RpaRetornoProcessoDTO(
-            sucesso=True,
-            retorno=f"Suceso no processo CTE com XML",
-            status=RpaHistoricoStatusEnum.Sucesso,
-        )
+        # Verifica se a nota foi lançada e atualizado no banco
+        status_nf_emsys = await get_status_cte_emsys(cte["chaveCte"])
+        status = status_nf_emsys["status"]
+        print(f"Status da nota:  {status}")
+        if status != "Lançada":
+            return RpaRetornoProcessoDTO(
+                sucesso=False,
+                retorno=f"Nota: {cte['chaveCte']} não foi lançada com sucesso",
+                status=RpaHistoricoStatusEnum.Falha,
+            )
+        else:
+            return RpaRetornoProcessoDTO(
+                sucesso=True,
+                retorno=f"Suceso no processo CTE com XML",
+                status=RpaHistoricoStatusEnum.Sucesso,
+            )
 
     except Exception as e:
         return RpaRetornoProcessoDTO(

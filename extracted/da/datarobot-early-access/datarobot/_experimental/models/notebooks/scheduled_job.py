@@ -78,7 +78,7 @@ class NotebookScheduledJob(APIObject):
         The last time the job was run (failed or successful). Optional.
     """
 
-    _path = "api-gw/nbx/scheduling/"
+    _path = "notebookJobs/"
 
     _converter = notebook_scheduled_job_trafaret
 
@@ -133,16 +133,17 @@ class NotebookScheduledJob(APIObject):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.scheduled_job import NotebookScheduledJob
+            from datarobot._experimental.models.notebooks import NotebookScheduledJob
 
             notebook_schedule = NotebookScheduledJob.get(
                 use_case_id="654ad653c6c1e889e8eab12e",
                 scheduled_job_id="65734fe637157200e28bf688",
             )
         """
-        url = f"{cls._client.domain}/{cls._path}{scheduled_job_id}/"
-        r_data = cls._client.get(url, params={"use_case_id": use_case_id})
-        return NotebookScheduledJob.from_server_data(r_data.json())
+        r_data = cls._client.get(
+            f"{cls._path}{scheduled_job_id}/", params={"use_case_id": use_case_id}
+        )
+        return cls.from_server_data(r_data.json())
 
     def get_most_recent_run(self) -> Optional[NotebookScheduledRun]:
         """
@@ -157,7 +158,7 @@ class NotebookScheduledJob(APIObject):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.scheduled_job import NotebookScheduledJob
+            from datarobot._experimental.models.notebooks import NotebookScheduledJob
 
             notebook_schedule = NotebookScheduledJob.get(
                 use_case_id="654ad653c6c1e889e8eab12e",
@@ -181,7 +182,7 @@ class NotebookScheduledJob(APIObject):
         --------
         .. code-block:: python
 
-            from datarobot._experimental.models.notebooks.scheduled_job import NotebookScheduledJob
+            from datarobot._experimental.models.notebooks import NotebookScheduledJob
 
             notebook_schedule = NotebookScheduledJob.get(
                 use_case_id="654ad653c6c1e889e8eab12e",
@@ -189,13 +190,13 @@ class NotebookScheduledJob(APIObject):
             )
             notebook_scheduled_runs = notebook_schedule.get_job_history()
         """
-        url = f"{self._client.domain}/{self._path}/runHistory/"
+        url = f"{self._path}/runHistory/"
         params = {
             "order_by": "-startTime",
             "use_case_id": self.use_case_id,
             "job_ids": self.id,
         }
-        r_data = unpaginate(url, params, self._client)
+        r_data = unpaginate(initial_url=url, initial_params=params, client=self._client)
         return [NotebookScheduledRun.from_server_data(data) for data in r_data]
 
     def wait_for_completion(self, max_wait: int = 600) -> str:

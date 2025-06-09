@@ -34,44 +34,65 @@ class BounceProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
+        'subject': 'str',
         'sender': 'str',
         'created_at': 'datetime',
         'bounce_type': 'str',
         'bounce_mta': 'str',
-        'subject': 'str',
         'id': 'str'
     }
 
     attribute_map = {
+        'subject': 'subject',
         'sender': 'sender',
         'created_at': 'createdAt',
         'bounce_type': 'bounceType',
         'bounce_mta': 'bounceMta',
-        'subject': 'subject',
         'id': 'id'
     }
 
-    def __init__(self, sender=None, created_at=None, bounce_type=None, bounce_mta=None, subject=None, id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, subject=None, sender=None, created_at=None, bounce_type=None, bounce_mta=None, id=None, local_vars_configuration=None):  # noqa: E501
         """BounceProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._subject = None
         self._sender = None
         self._created_at = None
         self._bounce_type = None
         self._bounce_mta = None
-        self._subject = None
         self._id = None
         self.discriminator = None
 
+        self.subject = subject
         self.sender = sender
         self.created_at = created_at
         self.bounce_type = bounce_type
         self.bounce_mta = bounce_mta
-        self.subject = subject
         if id is not None:
             self.id = id
+
+    @property
+    def subject(self):
+        """Gets the subject of this BounceProjection.  # noqa: E501
+
+
+        :return: The subject of this BounceProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._subject
+
+    @subject.setter
+    def subject(self, subject):
+        """Sets the subject of this BounceProjection.
+
+
+        :param subject: The subject of this BounceProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._subject = subject
 
     @property
     def sender(self):
@@ -160,27 +181,6 @@ class BounceProjection(object):
         """
 
         self._bounce_mta = bounce_mta
-
-    @property
-    def subject(self):
-        """Gets the subject of this BounceProjection.  # noqa: E501
-
-
-        :return: The subject of this BounceProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._subject
-
-    @subject.setter
-    def subject(self, subject):
-        """Sets the subject of this BounceProjection.
-
-
-        :param subject: The subject of this BounceProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._subject = subject
 
     @property
     def id(self):

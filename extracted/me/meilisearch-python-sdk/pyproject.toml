@@ -41,17 +41,17 @@ all = ["orjson", "ujson"]
 [dependency-groups]
 dev = [
   "mkdocs==1.6.1",
-  "mkdocs-material==9.6.12",
+  "mkdocs-material==9.6.14",
   "mkdocstrings[python]==0.29.1",
-  "mypy[faster-cache]==1.15.0",
+  "mypy[faster-cache]==1.16.0",
   "pre-commit==4.2.0",
-  "pytest==8.3.5",
+  "pytest==8.4.0",
   "pytest-cov==6.1.1",
-  "pytest-asyncio==0.26.0",
-  "pytest-xdist==3.6.1",
-  "ruff==0.11.8",
-  "types-aiofiles==24.1.0.20250326",
-  "typing-extensions==4.13.2",
+  "pytest-asyncio==1.0.0",
+  "pytest-xdist==3.7.0",
+  "ruff==0.11.13",
+  "types-aiofiles==24.1.0.20250606",
+  "typing-extensions==4.14.0",
   "types-ujson==5.10.0.20250326",
   "meilisearch==0.34.1",
   "rich==14.0.0",
@@ -70,6 +70,7 @@ minversion = "6.0"
 addopts = "--cov=meilisearch_python_sdk --cov-report term-missing --no-cov-on-fail --ignore examples"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
 markers = ["no_parallel"]
 
 [tool.mypy]

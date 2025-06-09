@@ -1,0 +1,23 @@
+---
+galaxy_info:
+  namespace: acme
+  author: Sorin Sbarnea
+  description: Role that bootstrap host to be managed via Ansible
+  license: MIT
+
+  min_ansible_version: "2.10"
+
+  platforms:
+    - name: Fedora
+      versions:
+        - all
+    - name: EL
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+
+  galaxy_tags: []
+
+dependencies: []

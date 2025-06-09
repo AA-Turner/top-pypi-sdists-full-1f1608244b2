@@ -34,6 +34,10 @@ from _qwak_proto.qwak.batch_job.v1.batch_job_service_pb2 import (
     StartBatchJobResponse,
     StartWarmupJobRequest,
     StartWarmupJobResponse,
+    UpdateTasksDetailsResponse,
+    UpdateTasksDetailsRequest,
+    BatchTaskDetails,
+    InputFileDetails,
 )
 from _qwak_proto.qwak.batch_job.v1.batch_job_service_pb2_grpc import (
     BatchJobManagementServiceStub,
@@ -66,6 +70,8 @@ from .results import (
     GetExecutionReportResult,
     StartExecutionResult,
 )
+
+from typing import List
 
 CLIENT_TIMEOUT = 180  # Seconds
 
@@ -541,3 +547,36 @@ class BatchJobManagerClient:
 
         except grpc.RpcError as e:
             raise QwakException(f"Failed to get batch job details, error is: {e}")
+
+    def update_task_details(self, task_id: str, input_file_paths: List[str]):
+        """
+        Update task details for a specific task using the provided list of input file paths.
+
+        :param task_id: The ID of the task to update.
+        :param input_file_paths: A list of paths for the input files associated with the task.
+        """
+        # Create InputFileDetails messages for each input file path
+        input_files_details = [
+            InputFileDetails(path=file_path) for file_path in input_file_paths
+        ]
+
+        # Create BatchTaskDetails message for the single task
+        batch_task_details = BatchTaskDetails(
+            task_id=task_id, input_files_details=input_files_details
+        )
+
+        update_request = UpdateTasksDetailsRequest(
+            tasks_details=[batch_task_details]  # Wrap in a list
+        )
+
+        try:
+            response: UpdateTasksDetailsResponse = (
+                self.batch_job_management.UpdateTasksDetails(
+                    update_request, timeout=CLIENT_TIMEOUT
+                )
+            )
+            return response
+        except grpc.RpcError as e:
+            raise QwakException(
+                f"Failed to update task details for task '{task_id}', error is: {e}"
+            )

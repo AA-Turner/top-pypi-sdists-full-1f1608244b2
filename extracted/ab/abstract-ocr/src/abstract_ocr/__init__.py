@@ -8,3 +8,4 @@ from .pdf_utils import *
 from .transcribe_utils import *
 from .repo_utils import *
 from .variable_utils import *
+from .tesseract_utils import *

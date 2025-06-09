@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import os
 import re
 import sys
-from typing import Any
+from typing import TypedDict
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -14,10 +13,20 @@ from commitizen.exceptions import (
 )
 
 
+class CheckArgs(TypedDict, total=False):
+    commit_msg_file: str
+    commit_msg: str
+    rev_range: str
+    allow_abort: bool
+    message_length_limit: int
+    allowed_prefixes: list[str]
+    message: str
+
+
 class Check:
     """Check if the current commit msg matches the commitizen format."""
 
-    def __init__(self, config: BaseConfig, arguments: dict[str, Any], cwd=os.getcwd()):
+    def __init__(self, config: BaseConfig, arguments: CheckArgs, *args: object) -> None:
         """Initial check command.
 
         Args:
@@ -25,16 +34,15 @@ class Check:
             arguments: All the flags provided by the user
             cwd: Current work directory
         """
-        self.commit_msg_file: str | None = arguments.get("commit_msg_file")
-        self.commit_msg: str | None = arguments.get("message")
-        self.rev_range: str | None = arguments.get("rev_range")
-        self.allow_abort: bool = bool(
+        self.commit_msg_file = arguments.get("commit_msg_file")
+        self.commit_msg = arguments.get("message")
+        self.rev_range = arguments.get("rev_range")
+        self.allow_abort = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
         )
-        self.max_msg_length: int = arguments.get("message_length_limit", 0)
+        self.max_msg_length = arguments.get("message_length_limit", 0)
 
         # we need to distinguish between None and [], which is a valid value
-
         allowed_prefixes = arguments.get("allowed_prefixes")
         self.allowed_prefixes: list[str] = (
             allowed_prefixes
@@ -48,7 +56,7 @@ class Check:
         self.encoding = config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
 
-    def _valid_command_argument(self):
+    def _valid_command_argument(self) -> None:
         num_exclusive_args_provided = sum(
             arg is not None
             for arg in (self.commit_msg_file, self.commit_msg, self.rev_range)
@@ -61,7 +69,7 @@ class Check:
                 "See 'cz check -h' for more information"
             )
 
-    def __call__(self):
+    def __call__(self) -> None:
         """Validate if commit messages follows the conventional pattern.
 
         Raises:
@@ -71,20 +79,19 @@ class Check:
         if not commits:
             raise NoCommitsFoundError(f"No commit found with range: '{self.rev_range}'")
 
-        pattern = self.cz.schema_pattern()
-        displayed_msgs_content = "\n".join(
-            [
-                f'commit "{commit.rev}": "{commit.message}"'
-                for commit in commits
-                if not self.validate_commit_message(commit.message, pattern)
-            ]
+        pattern = re.compile(self.cz.schema_pattern())
+        invalid_msgs_content = "\n".join(
+            f'commit "{commit.rev}": "{commit.message}"'
+            for commit in commits
+            if not self._validate_commit_message(commit.message, pattern)
         )
-        if displayed_msgs_content:
+        if invalid_msgs_content:
+            # TODO: capitalize the first letter of the error message for consistency in v5
             raise InvalidCommitMessageError(
                 "commit validation: failed!\n"
                 "please enter a commit message in the commitizen format.\n"
-                f"{displayed_msgs_content}\n"
-                f"pattern: {pattern}"
+                f"{invalid_msgs_content}\n"
+                f"pattern: {pattern.pattern}"
             )
         out.success("Commit validation: successful!")
 
@@ -97,12 +104,12 @@ class Check:
             # Get commit message from file (--commit-msg-file)
             return commit_file.read()
 
-    def _get_commits(self):
+    def _get_commits(self) -> list[git.GitCommit]:
         if (msg := self._get_commit_message()) is not None:
             return [git.GitCommit(rev="", title="", body=self._filter_comments(msg))]
 
         # Get commit messages from git log (--rev-range)
-        return git.get_commits(end=self.rev_range or "HEAD")
+        return git.get_commits(end=self.rev_range)
 
     @staticmethod
     def _filter_comments(msg: str) -> str:
@@ -135,14 +142,18 @@ class Check:
                 lines.append(line)
         return "\n".join(lines)
 
-    def validate_commit_message(self, commit_msg: str, pattern: str) -> bool:
+    def _validate_commit_message(
+        self, commit_msg: str, pattern: re.Pattern[str]
+    ) -> bool:
         if not commit_msg:
             return self.allow_abort
 
         if any(map(commit_msg.startswith, self.allowed_prefixes)):
             return True
+
         if self.max_msg_length:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > self.max_msg_length:
                 return False
-        return bool(re.match(pattern, commit_msg))
+
+        return bool(pattern.match(commit_msg))

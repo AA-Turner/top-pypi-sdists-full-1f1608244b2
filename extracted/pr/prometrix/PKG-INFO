@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: prometrix
-Version: 0.2.0
+Version: 0.2.1
 Summary: A Python Prometheus client for all Prometheus instances.
 Author: Avi Kotlicky
 Author-email: avi@robusta.dev
@@ -11,6 +11,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Requires-Dist: boto3 (>=1.28.15,<2.0.0)
 Requires-Dist: botocore (>=1.31.15,<2.0.0)
 Requires-Dist: fonttools (>=4.43.0,<5.0.0)

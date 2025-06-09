@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 import os
 import sys
-from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import IO, TYPE_CHECKING, Any, Optional, Union
+from typing import IO, TYPE_CHECKING, Any
 
 from .exceptions import ExecutionError, PoeException
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
+
     from .config import PoeConfig
     from .context import RunContext
-    from .task.base import PoeTask
+    from .task.base import PoeTask, TaskSpecFactory
     from .ui import PoeUi
 
 
@@ -52,23 +55,29 @@ class PoeThePoet:
         Optionally provide an alternative base environment for tasks to run with.
         If no mapping is provided then ``os.environ`` is used.
     :type env: dict, optional
+
+    :param suppress_args:
+        A sequence of identifiers for global arguments that should not be displayed in
+        the help message.
+    :type suppress_args: Sequence[str], optional
     """
 
     cwd: Path
-    ui: "PoeUi"
-    config: "PoeConfig"
+    ui: PoeUi
+    config: PoeConfig
 
-    _task_specs: Optional[dict[str, "PoeTask.TaskSpec"]] = None
+    _task_specs: TaskSpecFactory | None = None
 
     def __init__(
         self,
-        cwd: Optional[Union[Path, str]] = None,
-        config: Optional[Union[Mapping[str, Any], "PoeConfig"]] = None,
+        cwd: Path | str | None = None,
+        config: Mapping[str, Any] | PoeConfig | None = None,
         output: IO = sys.stdout,
-        poetry_env_path: Optional[str] = None,
-        config_name: Optional[str] = None,
+        poetry_env_path: str | None = None,
+        config_name: str | None = None,
         program_name: str = "poe",
-        env: Optional[Mapping[str, str]] = None,
+        env: Mapping[str, str] | None = None,
+        suppress_args: Sequence[str] = ("legacy_project_root",),
     ):
         from .config import PoeConfig
         from .ui import PoeUi
@@ -84,7 +93,9 @@ class PoeThePoet:
             if isinstance(config, PoeConfig)
             else PoeConfig(cwd=self.cwd, table=config, config_name=config_name)
         )
-        self.ui = PoeUi(output=output, program_name=program_name)
+        self.ui = PoeUi(
+            output=output, program_name=program_name, suppress_args=suppress_args
+        )
         self._poetry_env_path = poetry_env_path
         self._env = env if env is not None else os.environ
 
@@ -139,7 +150,7 @@ class PoeThePoet:
             self._task_specs = TaskSpecFactory(self.config)
         return self._task_specs
 
-    def resolve_task(self, allow_hidden: bool = False) -> Optional["PoeTask"]:
+    def resolve_task(self, allow_hidden: bool = False) -> PoeTask | None:
         from .task.base import TaskContext
 
         task = tuple(self.ui["task"])
@@ -174,9 +185,7 @@ class PoeThePoet:
             ),
         )
 
-    def run_task(
-        self, task: "PoeTask", context: Optional["RunContext"] = None
-    ) -> Optional[int]:
+    def run_task(self, task: PoeTask, context: RunContext | None = None) -> int | None:
         if context is None:
             context = self.get_run_context()
         try:
@@ -188,7 +197,7 @@ class PoeThePoet:
             self.print_help(error=error)
             return 1
 
-    def run_task_graph(self, task: "PoeTask") -> Optional[int]:
+    def run_task_graph(self, task: PoeTask) -> int | None:
         from .task.graph import TaskExecutionGraph
 
         context = self.get_run_context(multistage=True)
@@ -220,7 +229,7 @@ class PoeThePoet:
                     return 1
         return 0
 
-    def get_run_context(self, multistage: bool = False) -> "RunContext":
+    def get_run_context(self, multistage: bool = False) -> RunContext:
         from .context import RunContext
 
         result = RunContext(
@@ -239,8 +248,8 @@ class PoeThePoet:
 
     def print_help(
         self,
-        info: Optional[str] = None,
-        error: Optional[Union[str, PoeException]] = None,
+        info: str | None = None,
+        error: str | PoeException | None = None,
     ):
         from .task.args import PoeTaskArgs
 
@@ -252,7 +261,7 @@ class PoeThePoet:
         ] = {
             task_name: (
                 (
-                    content.get("help", ""),
+                    str(content.get("help", "")),
                     PoeTaskArgs.get_help_content(
                         content.get("args"), task_name, suppress_errors=bool(error)
                     ),

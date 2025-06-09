@@ -37,7 +37,10 @@ class TestSentEmailProjection(unittest.TestCase):
         # model = mailslurp_client.models.sent_email_projection.SentEmailProjection()  # noqa: E501
         if include_optional :
             return SentEmailProjection(
+                subject = '0', 
                 id = '0', 
+                thread_id = '0', 
+                in_reply_to = '0', 
                 _from = '0', 
                 sender = mailslurp_client.models.sender.Sender(
                     raw_value = '0', 
@@ -62,12 +65,11 @@ class TestSentEmailProjection(unittest.TestCase):
                             email_address = '0', 
                             name = '0', )
                         ], ), 
-                subject = '0', 
-                inbox_id = '0', 
-                user_id = '0', 
                 attachments = [
                     '0'
                     ], 
+                inbox_id = '0', 
+                user_id = '0', 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 to = [
                     '0'
@@ -79,12 +81,10 @@ class TestSentEmailProjection(unittest.TestCase):
                     '0'
                     ], 
                 message_id = '0', 
-                in_reply_to = '0', 
                 body_excerpt = '0', 
                 text_excerpt = '0', 
                 body_md5_hash = '0', 
-                virtual_send = True, 
-                thread_id = '0'
+                virtual_send = True
             )
         else :
             return SentEmailProjection(

@@ -75,7 +75,7 @@ class ChannelData(_message.Message):
     calls_succeeded: int
     calls_failed: int
     last_call_started_timestamp: _timestamp_pb2.Timestamp
-    def __init__(self, state: _Optional[_Union[ChannelConnectivityState, _Mapping]] = ..., target: _Optional[str] = ..., trace: _Optional[_Union[ChannelTrace, _Mapping]] = ..., calls_started: _Optional[int] = ..., calls_succeeded: _Optional[int] = ..., calls_failed: _Optional[int] = ..., last_call_started_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    def __init__(self, state: _Optional[_Union[ChannelConnectivityState, _Mapping]] = ..., target: _Optional[str] = ..., trace: _Optional[_Union[ChannelTrace, _Mapping]] = ..., calls_started: _Optional[int] = ..., calls_succeeded: _Optional[int] = ..., calls_failed: _Optional[int] = ..., last_call_started_timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class ChannelTraceEvent(_message.Message):
     __slots__ = ("description", "severity", "timestamp", "channel_ref", "subchannel_ref")
@@ -99,7 +99,7 @@ class ChannelTraceEvent(_message.Message):
     timestamp: _timestamp_pb2.Timestamp
     channel_ref: ChannelRef
     subchannel_ref: SubchannelRef
-    def __init__(self, description: _Optional[str] = ..., severity: _Optional[_Union[ChannelTraceEvent.Severity, str]] = ..., timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., channel_ref: _Optional[_Union[ChannelRef, _Mapping]] = ..., subchannel_ref: _Optional[_Union[SubchannelRef, _Mapping]] = ...) -> None: ...
+    def __init__(self, description: _Optional[str] = ..., severity: _Optional[_Union[ChannelTraceEvent.Severity, str]] = ..., timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., channel_ref: _Optional[_Union[ChannelRef, _Mapping]] = ..., subchannel_ref: _Optional[_Union[SubchannelRef, _Mapping]] = ...) -> None: ...
 
 class ChannelTrace(_message.Message):
     __slots__ = ("num_events_logged", "creation_timestamp", "events")
@@ -109,7 +109,7 @@ class ChannelTrace(_message.Message):
     num_events_logged: int
     creation_timestamp: _timestamp_pb2.Timestamp
     events: _containers.RepeatedCompositeFieldContainer[ChannelTraceEvent]
-    def __init__(self, num_events_logged: _Optional[int] = ..., creation_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., events: _Optional[_Iterable[_Union[ChannelTraceEvent, _Mapping]]] = ...) -> None: ...
+    def __init__(self, num_events_logged: _Optional[int] = ..., creation_timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., events: _Optional[_Iterable[_Union[ChannelTraceEvent, _Mapping]]] = ...) -> None: ...
 
 class ChannelRef(_message.Message):
     __slots__ = ("channel_id", "name")
@@ -165,7 +165,7 @@ class ServerData(_message.Message):
     calls_succeeded: int
     calls_failed: int
     last_call_started_timestamp: _timestamp_pb2.Timestamp
-    def __init__(self, trace: _Optional[_Union[ChannelTrace, _Mapping]] = ..., calls_started: _Optional[int] = ..., calls_succeeded: _Optional[int] = ..., calls_failed: _Optional[int] = ..., last_call_started_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    def __init__(self, trace: _Optional[_Union[ChannelTrace, _Mapping]] = ..., calls_started: _Optional[int] = ..., calls_succeeded: _Optional[int] = ..., calls_failed: _Optional[int] = ..., last_call_started_timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class Socket(_message.Message):
     __slots__ = ("ref", "data", "local", "remote", "security", "remote_name")
@@ -211,7 +211,7 @@ class SocketData(_message.Message):
     local_flow_control_window: _wrappers_pb2.Int64Value
     remote_flow_control_window: _wrappers_pb2.Int64Value
     option: _containers.RepeatedCompositeFieldContainer[SocketOption]
-    def __init__(self, streams_started: _Optional[int] = ..., streams_succeeded: _Optional[int] = ..., streams_failed: _Optional[int] = ..., messages_sent: _Optional[int] = ..., messages_received: _Optional[int] = ..., keep_alives_sent: _Optional[int] = ..., last_local_stream_created_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., last_remote_stream_created_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., last_message_sent_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., last_message_received_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., local_flow_control_window: _Optional[_Union[_wrappers_pb2.Int64Value, _Mapping]] = ..., remote_flow_control_window: _Optional[_Union[_wrappers_pb2.Int64Value, _Mapping]] = ..., option: _Optional[_Iterable[_Union[SocketOption, _Mapping]]] = ...) -> None: ...
+    def __init__(self, streams_started: _Optional[int] = ..., streams_succeeded: _Optional[int] = ..., streams_failed: _Optional[int] = ..., messages_sent: _Optional[int] = ..., messages_received: _Optional[int] = ..., keep_alives_sent: _Optional[int] = ..., last_local_stream_created_timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., last_remote_stream_created_timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., last_message_sent_timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., last_message_received_timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., local_flow_control_window: _Optional[_Union[_wrappers_pb2.Int64Value, _Mapping]] = ..., remote_flow_control_window: _Optional[_Union[_wrappers_pb2.Int64Value, _Mapping]] = ..., option: _Optional[_Iterable[_Union[SocketOption, _Mapping]]] = ...) -> None: ...
 
 class Address(_message.Message):
     __slots__ = ("tcpip_address", "uds_address", "other_address")
@@ -282,7 +282,7 @@ class SocketOptionTimeout(_message.Message):
     __slots__ = ("duration",)
     DURATION_FIELD_NUMBER: _ClassVar[int]
     duration: _duration_pb2.Duration
-    def __init__(self, duration: _Optional[_Union[_duration_pb2.Duration, _Mapping]] = ...) -> None: ...
+    def __init__(self, duration: _Optional[_Union[datetime.timedelta, _duration_pb2.Duration, _Mapping]] = ...) -> None: ...
 
 class SocketOptionLinger(_message.Message):
     __slots__ = ("active", "duration")
@@ -290,7 +290,7 @@ class SocketOptionLinger(_message.Message):
     DURATION_FIELD_NUMBER: _ClassVar[int]
     active: bool
     duration: _duration_pb2.Duration
-    def __init__(self, active: bool = ..., duration: _Optional[_Union[_duration_pb2.Duration, _Mapping]] = ...) -> None: ...
+    def __init__(self, active: bool = ..., duration: _Optional[_Union[datetime.timedelta, _duration_pb2.Duration, _Mapping]] = ...) -> None: ...
 
 class SocketOptionTcpInfo(_message.Message):
     __slots__ = ("tcpi_state", "tcpi_ca_state", "tcpi_retransmits", "tcpi_probes", "tcpi_backoff", "tcpi_options", "tcpi_snd_wscale", "tcpi_rcv_wscale", "tcpi_rto", "tcpi_ato", "tcpi_snd_mss", "tcpi_rcv_mss", "tcpi_unacked", "tcpi_sacked", "tcpi_lost", "tcpi_retrans", "tcpi_fackets", "tcpi_last_data_sent", "tcpi_last_ack_sent", "tcpi_last_data_recv", "tcpi_last_ack_recv", "tcpi_pmtu", "tcpi_rcv_ssthresh", "tcpi_rtt", "tcpi_rttvar", "tcpi_snd_ssthresh", "tcpi_snd_cwnd", "tcpi_advmss", "tcpi_reordering")

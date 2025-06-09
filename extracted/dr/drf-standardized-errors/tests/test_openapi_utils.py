@@ -1,6 +1,7 @@
 import sys
 from unittest import mock
 
+import django
 import pytest
 from django import forms
 from django.contrib.auth.models import User
@@ -515,7 +516,14 @@ def test_char_fields_with_error_codes():
     assert slug.error_codes == {"invalid", "null_characters_not_allowed"}
     assert regex.error_codes == {"invalid", "required", "null_characters_not_allowed"}
     assert uuid.error_codes == {"invalid", "required", "null_characters_not_allowed"}
-    assert ip.error_codes == {"invalid", "null_characters_not_allowed"}
+    if django.VERSION >= (4, 2):
+        assert ip.error_codes == {
+            "invalid",
+            "null_characters_not_allowed",
+            "max_length",
+        }
+    else:
+        assert ip.error_codes == {"invalid", "null_characters_not_allowed"}
 
 
 class NumberForm(forms.Form):
@@ -587,7 +595,10 @@ def test_choice_fields_with_error_codes():
 
 class MultiValueForm(forms.Form):
     split = forms.SplitDateTimeField()
-    disabled = forms.URLField(disabled=True)
+    if django.VERSION >= (5, 0):
+        disabled = forms.URLField(disabled=True, assume_scheme="https")
+    else:
+        disabled = forms.URLField(disabled=True)
 
 
 def test_multi_value_fields_with_error_codes():

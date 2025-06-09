@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spaces"
-version = "0.36.0"
+version = "0.37.0"
 description = "Utilities for Hugging Face Spaces"
 authors = ["Charles Bensimon <charles@huggingface.co>"]
 readme = "README.md"
@@ -40,6 +40,7 @@ accelerate = "*"
 xformers = "*"
 bitsandbytes = "*"
 torch = "2.4.1"
+torchao = "^0.10.0"
 scipy = "*"
 peft = "*"
 

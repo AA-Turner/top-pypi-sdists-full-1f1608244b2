@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: semchunk
-Version: 3.2.1
+Version: 3.2.2
 Summary: A fast, lightweight and easy-to-use Python library for splitting text into semantically meaningful chunks.
 Project-URL: Homepage, https://github.com/isaacus-dev/semchunk
 Project-URL: Documentation, https://github.com/isaacus-dev/semchunk/blob/main/README.md
@@ -65,7 +65,6 @@ In addition, [@dominictarro](https://github.com/dominictarro) maintains a Rust p
 ## Quickstart 👩‍💻
 The code snippet below demonstrates how to chunk text with `semchunk`:
 ```python
-
 import semchunk
 import tiktoken                        # `transformers` and `tiktoken` are not required.
 from transformers import AutoTokenizer # They're just here for demonstration purposes.

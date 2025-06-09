@@ -7,6 +7,8 @@ logger = logging.getLogger(__name__)
 
 def escape_identifier_name(name: str):
     if name is not None:
+        if name.startswith("[") and name.endswith("]"):
+            return name.strip("[]")
         return name.strip("`").strip('"').strip("'")
     return None
 

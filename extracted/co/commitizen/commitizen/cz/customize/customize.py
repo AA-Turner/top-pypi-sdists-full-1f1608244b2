@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from collections.abc import Mapping
+from typing import TYPE_CHECKING, Any
+
+from commitizen.question import CzQuestion
 
 if TYPE_CHECKING:
     from jinja2 import Template
@@ -14,7 +17,6 @@ else:
 from commitizen import defaults
 from commitizen.config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
-from commitizen.defaults import Questions
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
 __all__ = ["CustomizeCommitsCz"]
@@ -26,7 +28,7 @@ class CustomizeCommitsCz(BaseCommitizen):
     bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
     change_type_order = defaults.CHANGE_TYPE_ORDER
 
-    def __init__(self, config: BaseConfig):
+    def __init__(self, config: BaseConfig) -> None:
         super().__init__(config)
 
         if "customize" not in self.config.settings:
@@ -45,13 +47,13 @@ class CustomizeCommitsCz(BaseCommitizen):
             if value := self.custom_settings.get(attr_name):
                 setattr(self, attr_name, value)
 
-    def questions(self) -> Questions:
-        return self.custom_settings.get("questions", [{}])
+    def questions(self) -> list[CzQuestion]:
+        return self.custom_settings.get("questions", [{}])  # type: ignore[return-value]
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping[str, Any]) -> str:
         message_template = Template(self.custom_settings.get("message_template", ""))
         if getattr(Template, "substitute", None):
-            return message_template.substitute(**answers)  # type: ignore
+            return message_template.substitute(**answers)  # type: ignore[attr-defined,no-any-return] # pragma: no cover # TODO: check if we can fix this
         return message_template.render(**answers)
 
     def example(self) -> str:

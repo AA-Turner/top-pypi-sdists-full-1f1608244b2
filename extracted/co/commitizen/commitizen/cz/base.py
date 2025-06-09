@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from typing import Any, Callable, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
@@ -9,7 +9,7 @@ from prompt_toolkit.styles import Style, merge_styles
 
 from commitizen import git
 from commitizen.config.base_config import BaseConfig
-from commitizen.defaults import Questions
+from commitizen.question import CzQuestion
 
 
 class MessageBuilderHook(Protocol):
@@ -68,21 +68,21 @@ class BaseCommitizen(metaclass=ABCMeta):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
 
     @abstractmethod
-    def questions(self) -> Questions:
+    def questions(self) -> Iterable[CzQuestion]:
         """Questions regarding the commit message."""
 
     @abstractmethod
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping[str, Any]) -> str:
         """Format your git message."""
 
     @property
-    def style(self):
+    def style(self) -> Style:
         return merge_styles(
             [
                 Style(BaseCommitizen.default_style_config),
                 Style(self.config.settings["style"]),
             ]
-        )
+        )  # type: ignore[return-value]
 
     def example(self) -> str:
         """Example of the commit message."""
@@ -99,10 +99,3 @@ class BaseCommitizen(metaclass=ABCMeta):
     def info(self) -> str:
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")
-
-    def process_commit(self, commit: str) -> str:
-        """Process commit for changelog.
-
-        If not overwritten, it returns the first line of commit.
-        """
-        return commit.split("\n")[0]

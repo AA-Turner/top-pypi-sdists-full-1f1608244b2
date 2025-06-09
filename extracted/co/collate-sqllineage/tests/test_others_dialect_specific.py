@@ -199,7 +199,7 @@ FROM NDWH.dbo.FactHTSClientTests hts"""
     assert_table_lineage_equal(
         sql,
         {"ndwh.dbo.facthtsclienttests"},
-        {"reporting.[dbo].[aggregatehtsentrypoint]"},
+        {"reporting.dbo.aggregatehtsentrypoint"},
         dialect=dialect,
     )
 
@@ -213,9 +213,31 @@ FROM [dbo].[client]
 LEFT JOIN [dbo].[product] ON [client].[id] = [product].[client_id]"""
     assert_table_lineage_equal(
         sql,
-        {"[dbo].[client]", "[dbo].[product]"},
-        {"[dbo].[client_product]"},
+        {"dbo.client", "dbo.product"},
+        {"dbo.client_product"},
         dialect=dialect,
+    )
+
+
+@pytest.mark.parametrize("dialect", ["tsql"])
+def test_tsql_create_view_with_nolock(dialect: str):
+    sql = """CREATE VIEW [dbo].[test_view_lineage] AS
+SELECT
+    [s].[account_code] AS 'Account Code',
+    [c].[iso_code] AS 'ISO Code'
+FROM
+    [dbo].[source_table] (NOLOCK) [s]
+LEFT JOIN
+    [dbo].[lookup_currency] (NOLOCK) [c]
+    ON [s].[currency_id] = [c].[currency_id]
+WHERE
+    [s].[currency_id] IS NOT NULL;"""
+    assert_table_lineage_equal(
+        sql,
+        {"dbo.source_table", "dbo.lookup_currency"},
+        {"dbo.test_view_lineage"},
+        dialect=dialect,
+        test_sqlparse=False,
     )
 
 
@@ -347,4 +369,16 @@ def test_snowflake_create_stream_complex(dialect: str):
     """
     assert_table_lineage_equal(
         sql, {"myview"}, {"mystream"}, dialect, test_sqlparse=False
+    )
+
+
+@pytest.mark.parametrize("dialect", ["oracle"])
+def test_update_set_clause_with_select_statement(dialect: str):
+    sql = """
+    UPDATE "RAW".TABLKE_A MAS
+    SET MAS.ACCURE_INT_LAST_MONTH = (SELECT NVL(SUM(TRANS_AMOUNT), 0) FROM "RAW".TABLE_B D
+    WHERE D.POSTED_DT = '2023-07-11')
+    """
+    assert_table_lineage_equal(
+        sql, {"RAW.TABLE_B"}, {"RAW.TABLKE_A"}, dialect, test_sqlparse=False
     )

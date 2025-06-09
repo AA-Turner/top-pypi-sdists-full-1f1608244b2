@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdk8s-operator",
-    "version": "0.1.360",
+    "version": "0.1.361",
     "description": "Create Kubernetes CRD Operators using CDK8s Constructs",
     "license": "Apache-2.0",
     "url": "https://github.com/cdk8s-team/cdk8s-operator.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdk8s_operator._jsii": [
-            "cdk8s-operator@0.1.360.jsii.tgz"
+            "cdk8s-operator@0.1.361.jsii.tgz"
         ],
         "cdk8s_operator": [
             "py.typed"

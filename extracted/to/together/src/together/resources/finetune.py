@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Dict, List, Literal
+from typing import List, Dict, Literal
 
 from rich import print as rprint
 
@@ -69,7 +69,7 @@ def create_finetune_request(
     wandb_base_url: str | None = None,
     wandb_project_name: str | None = None,
     wandb_name: str | None = None,
-    train_on_inputs: bool | Literal["auto"] = "auto",
+    train_on_inputs: bool | Literal["auto"] | None = None,
     training_method: str = "sft",
     dpo_beta: float | None = None,
     from_checkpoint: str | None = None,
@@ -101,6 +101,11 @@ def create_finetune_request(
             raise ValueError(
                 f"LoRA adapters are not supported for the selected model ({model_or_checkpoint})."
             )
+
+        if lora_dropout is not None:
+            if not 0 <= lora_dropout < 1.0:
+                raise ValueError("LoRA dropout must be in [0, 1) range.")
+
         lora_r = lora_r if lora_r is not None else model_limits.lora_training.max_rank
         lora_alpha = lora_alpha if lora_alpha is not None else lora_r * 2
         training_type = LoRATrainingType(
@@ -166,6 +171,18 @@ def create_finetune_request(
             f"training_method must be one of {', '.join(AVAILABLE_TRAINING_METHODS)}"
         )
 
+    if train_on_inputs is not None and training_method != "sft":
+        raise ValueError("train_on_inputs is only supported for SFT training")
+
+    if train_on_inputs is None and training_method == "sft":
+        log_warn_once(
+            "train_on_inputs is not set for SFT training, it will be set to 'auto'"
+        )
+        train_on_inputs = "auto"
+
+    if dpo_beta is not None and training_method != "dpo":
+        raise ValueError("dpo_beta is only supported for DPO training")
+
     lr_scheduler: FinetuneLRScheduler
     if lr_scheduler_type == "cosine":
         if scheduler_num_cycles <= 0.0:
@@ -183,8 +200,10 @@ def create_finetune_request(
             lr_scheduler_args=LinearLRSchedulerArgs(min_lr_ratio=min_lr_ratio),
         )
 
-    training_method_cls: TrainingMethodSFT | TrainingMethodDPO = TrainingMethodSFT()
-    if training_method == "dpo":
+    training_method_cls: TrainingMethodSFT | TrainingMethodDPO
+    if training_method == "sft":
+        training_method_cls = TrainingMethodSFT(train_on_inputs=train_on_inputs)
+    elif training_method == "dpo":
         training_method_cls = TrainingMethodDPO(dpo_beta=dpo_beta)
 
     finetune_request = FinetuneRequest(
@@ -206,7 +225,6 @@ def create_finetune_request(
         wandb_base_url=wandb_base_url,
         wandb_project_name=wandb_project_name,
         wandb_name=wandb_name,
-        train_on_inputs=train_on_inputs,
         training_method=training_method_cls,
         from_checkpoint=from_checkpoint,
     )
@@ -281,7 +299,7 @@ class FineTuning:
         wandb_name: str | None = None,
         verbose: bool = False,
         model_limits: FinetuneTrainingLimits | None = None,
-        train_on_inputs: bool | Literal["auto"] = "auto",
+        train_on_inputs: bool | Literal["auto"] | None = None,
         training_method: str = "sft",
         dpo_beta: float | None = None,
         from_checkpoint: str | None = None,
@@ -326,12 +344,12 @@ class FineTuning:
                 Defaults to False.
             model_limits (FinetuneTrainingLimits, optional): Limits for the hyperparameters the model in Fine-tuning.
                 Defaults to None.
-            train_on_inputs (bool or "auto"): Whether to mask the user messages in conversational data or prompts in instruction data.
+            train_on_inputs (bool or "auto", optional): Whether to mask the user messages in conversational data or prompts in instruction data.
                 "auto" will automatically determine whether to mask the inputs based on the data format.
                 For datasets with the "text" field (general format), inputs will not be masked.
                 For datasets with the "messages" field (conversational format) or "prompt" and "completion" fields
                 (Instruction format), inputs will be masked.
-                Defaults to "auto".
+                Defaults to None, or "auto" if training_method is "sft" (set in create_finetune_request).
             training_method (str, optional): Training method. Defaults to "sft".
                 Supported methods: "sft", "dpo".
             dpo_beta (float, optional): DPO beta parameter. Defaults to None.
@@ -545,7 +563,7 @@ class FineTuning:
         *,
         output: Path | str | None = None,
         checkpoint_step: int | None = None,
-        checkpoint_type: DownloadCheckpointType = DownloadCheckpointType.DEFAULT,
+        checkpoint_type: DownloadCheckpointType | str = DownloadCheckpointType.DEFAULT,
     ) -> FinetuneDownloadResult:
         """
         Downloads compressed fine-tuned model or checkpoint to local disk.
@@ -558,7 +576,7 @@ class FineTuning:
                 Defaults to None.
             checkpoint_step (int, optional): Specifies step number for checkpoint to download.
                 Defaults to -1 (download the final model)
-            checkpoint_type (CheckpointType, optional): Specifies which checkpoint to download.
+            checkpoint_type (CheckpointType | str, optional): Specifies which checkpoint to download.
                 Defaults to CheckpointType.DEFAULT.
 
         Returns:
@@ -582,6 +600,16 @@ class FineTuning:
 
         ft_job = self.retrieve(id)
 
+        # convert str to DownloadCheckpointType
+        if isinstance(checkpoint_type, str):
+            try:
+                checkpoint_type = DownloadCheckpointType(checkpoint_type.lower())
+            except ValueError:
+                enum_strs = ", ".join(e.value for e in DownloadCheckpointType)
+                raise ValueError(
+                    f"Invalid checkpoint type: {checkpoint_type}. Choose one of {{{enum_strs}}}."
+                )
+
         if isinstance(ft_job.training_type, FullTrainingType):
             if checkpoint_type != DownloadCheckpointType.DEFAULT:
                 raise ValueError(
@@ -592,10 +620,11 @@ class FineTuning:
             if checkpoint_type == DownloadCheckpointType.DEFAULT:
                 checkpoint_type = DownloadCheckpointType.MERGED
 
-            if checkpoint_type == DownloadCheckpointType.MERGED:
-                url += f"&checkpoint={DownloadCheckpointType.MERGED.value}"
-            elif checkpoint_type == DownloadCheckpointType.ADAPTER:
-                url += f"&checkpoint={DownloadCheckpointType.ADAPTER.value}"
+            if checkpoint_type in {
+                DownloadCheckpointType.MERGED,
+                DownloadCheckpointType.ADAPTER,
+            }:
+                url += f"&checkpoint={checkpoint_type.value}"
             else:
                 raise ValueError(
                     f"Invalid checkpoint type for LoRATrainingType: {checkpoint_type}"
@@ -682,7 +711,7 @@ class AsyncFineTuning:
         wandb_name: str | None = None,
         verbose: bool = False,
         model_limits: FinetuneTrainingLimits | None = None,
-        train_on_inputs: bool | Literal["auto"] = "auto",
+        train_on_inputs: bool | Literal["auto"] | None = None,
         training_method: str = "sft",
         dpo_beta: float | None = None,
         from_checkpoint: str | None = None,
@@ -732,7 +761,7 @@ class AsyncFineTuning:
                 For datasets with the "text" field (general format), inputs will not be masked.
                 For datasets with the "messages" field (conversational format) or "prompt" and "completion" fields
                 (Instruction format), inputs will be masked.
-                Defaults to "auto".
+                Defaults to None, or "auto" if training_method is "sft" (set in create_finetune_request).
             training_method (str, optional): Training method. Defaults to "sft".
                 Supported methods: "sft", "dpo".
             dpo_beta (float, optional): DPO beta parameter. Defaults to None.

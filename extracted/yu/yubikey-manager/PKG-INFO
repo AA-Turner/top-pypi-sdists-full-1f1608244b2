@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: yubikey-manager
-Version: 5.7.0
+Version: 5.7.2
 Summary: Library and CLI for managing your YubiKey configuration.
 License: Copyright (c) 2015 Yubico AB
          All rights reserved.
@@ -37,7 +37,7 @@ Classifier: Intended Audience :: End Users/Desktop
 Classifier: Topic :: Security :: Cryptography
 Classifier: Topic :: Utilities
 Requires-Dist: click (>=8.0,<9)
-Requires-Dist: cryptography (>=3.0,<47)
+Requires-Dist: cryptography (>=3.0,<48)
 Requires-Dist: fido2 (>=1.0,<3)
 Requires-Dist: keyring (>=23.4,<26)
 Requires-Dist: pyscard (>=2.0,<3)

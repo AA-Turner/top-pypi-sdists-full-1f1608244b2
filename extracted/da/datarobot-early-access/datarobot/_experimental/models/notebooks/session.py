@@ -193,8 +193,8 @@ class NotebookSession(APIObject):
         The ID specific to ephemeral session if being used. Optional.
     """
 
-    _orchestrator_path = "api-gw/nbx/orchestrator/"
-    _runner_path = "api-gw/nbx/session/"
+    _runtimes_path = "notebookRuntimes/"
+    _sessions_path = "notebookSessions/"
 
     _converter = notebook_session_trafaret
 
@@ -229,9 +229,8 @@ class NotebookSession(APIObject):
         NotebookSession
             The notebook session information.
         """
-        url = f"{cls._client.domain}/{cls._orchestrator_path}notebooks/{notebook_id}/"
-        r_data = cls._client.get(url)
-        return NotebookSession.from_server_data(r_data.json())
+        r_data = cls._client.get(f"{cls._runtimes_path}notebooks/{notebook_id}/")
+        return cls.from_server_data(r_data.json())
 
     @classmethod
     def start(cls, notebook_id: str, payload: StartSessionPayload) -> NotebookSession:
@@ -250,9 +249,10 @@ class NotebookSession(APIObject):
         NotebookSession
             The notebook session information.
         """
-        url = f"{cls._client.domain}/{cls._orchestrator_path}notebooks/{notebook_id}/start/"
-        r_data = cls._client.post(url, data=payload)
-        return NotebookSession.from_server_data(r_data.json())
+        r_data = cls._client.post(
+            f"{cls._runtimes_path}notebooks/{notebook_id}/start/", data=payload
+        )
+        return cls.from_server_data(r_data.json())
 
     @classmethod
     def stop(cls, notebook_id: str) -> NotebookSession:
@@ -269,9 +269,8 @@ class NotebookSession(APIObject):
         NotebookSession
             The notebook session information.
         """
-        url = f"{cls._client.domain}/{cls._orchestrator_path}notebooks/{notebook_id}/stop/"
-        r_data = cls._client.post(url)
-        return NotebookSession.from_server_data(r_data.json())
+        r_data = cls._client.post(f"{cls._runtimes_path}notebooks/{notebook_id}/stop/")
+        return cls.from_server_data(r_data.json())
 
     @classmethod
     def execute_notebook(cls, notebook_id: str, cell_ids: Optional[List[str]] = None) -> None:
@@ -285,16 +284,16 @@ class NotebookSession(APIObject):
         cell_ids : Optional[List[bson.ObjectId]]
             The list of cell IDs to execute. Optional. If not provided, the whole notebook will be executed.
         """
-        url = f"{cls._client.domain}/{cls._orchestrator_path}notebooks/{notebook_id}/execute/"
         payload = {"cell_ids": cell_ids} if cell_ids else {}
-        cls._client.post(url, data=payload)
+        cls._client.post(f"{cls._runtimes_path}notebooks/{notebook_id}/execute/", data=payload)
 
     @classmethod
     def get_codespace_notebook_state(
         cls, notebook_id: str, notebook_path: str
     ) -> CodespaceNotebookState:
-        url = f"{cls._client.domain}/{cls._runner_path}{notebook_id}/notebook/"
-        r_data = cls._client.get(url, params={"path": notebook_path})
+        r_data = cls._client.get(
+            f"{cls._sessions_path}{notebook_id}/notebook/", params={"path": notebook_path}
+        )
         return CodespaceNotebookState.from_server_data(r_data.json())
 
     @classmethod
@@ -319,13 +318,12 @@ class NotebookSession(APIObject):
         cells : List[CodespaceNotebookCell]
             The list of cells to execute.
         """
-        url = f"{cls._client.domain}/{cls._runner_path}{notebook_id}/notebook/execute/"
         payload = {
             "path": notebook_path,
             "generation": generation,
             "cells": cells,
         }
-        cls._client.post(url, data=payload)
+        cls._client.post(f"{cls._sessions_path}{notebook_id}/notebook/execute/", data=payload)
 
     @classmethod
     def get_execution_status(cls, notebook_id: str) -> NotebookExecutionStatus:
@@ -342,8 +340,5 @@ class NotebookSession(APIObject):
         NotebookExecutionStatus
             The execution status information of the notebook.
         """
-        url = (
-            f"{cls._client.domain}/{cls._orchestrator_path}notebooks/{notebook_id}/executionStatus/"
-        )
-        r_data = cls._client.get(url)
+        r_data = cls._client.get(f"{cls._runtimes_path}notebooks/{notebook_id}/executionStatus/")
         return NotebookExecutionStatus.from_server_data(r_data.json())

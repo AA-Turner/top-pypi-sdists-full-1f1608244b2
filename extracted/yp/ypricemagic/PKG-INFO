@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ypricemagic
-Version: 4.6.8
+Version: 4.6.9
 Summary: Use this tool to extract historical on-chain price data from an archive node. Shoutout to @bantg and @nymmrx for their awesome work on yearn-exporter that made this library possible.
 Home-page: https://github.com/BobTheBuidler/ypricemagic
 Author: BobTheBuidler
@@ -8,7 +8,6 @@ Author-email: bobthebuidlerdefi@gmail.com
 License: MIT
 Classifier: Intended Audience :: Developers
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
@@ -16,7 +15,7 @@ Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Operating System :: OS Independent
 Classifier: Topic :: Software Development :: Libraries
-Requires-Python: >=3.8,<3.13
+Requires-Python: >=3.9,<3.13
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
 
@@ -27,18 +26,6 @@ ypricemagic is built to work seamlessly with both sync and async Python codebase
 
 ## Installation
 ypricemagic is published on [PyPI](https://pypi.org/). Simply install it just as you would any other library.
-```
-pip install ypricemagic
-```
-
-##### Known Issues:
-Make sure you are using Python >= 3.8 and < 3.12
-If you have a PyYaml Issue with 3.4.1 not installing due to an issue with cython, try the following:  
-```
-pip install wheel
-pip install --no-build-isolation "Cython<3" "pyyaml==5.4.1"
-```
-then try again:
 ```
 pip install ypricemagic
 ```

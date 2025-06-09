@@ -34,7 +34,7 @@ class Heuristic:
         """
         raise NotImplementedError("This method should be overridden by subclasses.")
 
-    def compute_preferred_actions(self) -> 'set[GroundAction]':
+    def get_preferred_actions(self) -> 'set[GroundAction]':
         """
         Get preferred actions for the last computed state.
 
@@ -54,7 +54,7 @@ class AddHeuristic(Heuristic):
     def compute_value(self, state: 'State', is_goal_state: bool) -> float:
         return self._advanced_heuristic.compute_heuristic(state._advanced_state, is_goal_state)
 
-    def compute_preferred_actions(self) -> 'set[GroundAction]':
+    def get_preferred_actions(self) -> 'set[GroundAction]':
         return { GroundAction(advanced_ground_action, self._problem) for advanced_ground_action in self._advanced_heuristic.get_preferred_actions().data }
 
 
@@ -68,7 +68,7 @@ class BlindHeuristic(Heuristic):
     def compute_value(self, state: 'State', is_goal_state: bool) -> float:
         self._advanced_heuristic.compute_heuristic(state._advanced_state, is_goal_state)
 
-    def compute_preferred_actions(self) -> 'set[GroundAction]':
+    def get_preferred_actions(self) -> 'set[GroundAction]':
         return { GroundAction(advanced_ground_action, self._problem) for advanced_ground_action in self._advanced_heuristic.get_preferred_actions().data }
 
 
@@ -83,7 +83,7 @@ class MaxHeuristic(Heuristic):
     def compute_value(self, state: 'State', is_goal_state: bool) -> float:
         return self._advanced_heuristic.compute_heuristic(state._advanced_state, is_goal_state)
 
-    def compute_preferred_actions(self) -> 'set[GroundAction]':
+    def get_preferred_actions(self) -> 'set[GroundAction]':
         return { GroundAction(advanced_ground_action, self._problem) for advanced_ground_action in self._advanced_heuristic.get_preferred_actions().data }
 
 
@@ -97,7 +97,7 @@ class PerfectHeuristic(Heuristic):
     def compute_value(self, state: 'State', is_goal_state: bool) -> float:
         return self._advanced_heuristic.compute_heuristic(state._advanced_state, is_goal_state)
 
-    def compute_preferred_actions(self) -> 'set[GroundAction]':
+    def get_preferred_actions(self) -> 'set[GroundAction]':
         return { GroundAction(advanced_ground_action, self._problem) for advanced_ground_action in self._advanced_heuristic.get_preferred_actions().data }
 
 
@@ -112,7 +112,7 @@ class SetAddHeuristic(Heuristic):
     def compute_value(self, state: 'State', is_goal_state: bool) -> float:
         return self._advanced_heuristic.compute_heuristic(state._advanced_state, is_goal_state)
 
-    def compute_preferred_actions(self) -> 'set[GroundAction]':
+    def get_preferred_actions(self) -> 'set[GroundAction]':
         return { GroundAction(advanced_ground_action, self._problem) for advanced_ground_action in self._advanced_heuristic.get_preferred_actions().data }
 
 
@@ -127,7 +127,7 @@ class FFHeuristic(Heuristic):
     def compute_value(self, state: 'State', is_goal_state: bool) -> float:
         return self._advanced_heuristic.compute_heuristic(state._advanced_state, is_goal_state)
 
-    def compute_preferred_actions(self) -> 'set[GroundAction]':
+    def get_preferred_actions(self) -> 'set[GroundAction]':
         return { GroundAction(advanced_ground_action, self._problem) for advanced_ground_action in self._advanced_heuristic.get_preferred_actions().data }
 
 
@@ -135,7 +135,7 @@ class FFHeuristic(Heuristic):
 # Search algorithms
 # -----------------
 
-class AdvancedHeuristicProxy(AdvancedHeuristicBase):
+class AdvancedHeuristicAdapter(AdvancedHeuristicBase):
     def __init__(self, heuristic: 'Heuristic', problem: 'Problem'):
         """
         Proxy class for a heuristic that wraps a Heuristic instance.
@@ -156,7 +156,7 @@ class AdvancedHeuristicProxy(AdvancedHeuristicBase):
     def get_preferred_actions(self, advanced_state: 'AdvancedState') -> AdvancedPreferredActions:
         state = State(advanced_state, self._problem)
         preferred_actions = AdvancedPreferredActions()
-        preferred_actions.data = { action._advanced_ground_action for action in self._heuristic.compute_preferred_actions(state) }
+        preferred_actions.data = { action._advanced_ground_action for action in self._heuristic.get_preferred_actions(state) }
         return preferred_actions
 
 
@@ -255,7 +255,7 @@ def astar_eager(
     if hasattr(heuristic, '_advanced_heuristic') and isinstance(heuristic._advanced_heuristic, AdvancedHeuristicBase):
         advanced_heuristic = heuristic._advanced_heuristic
     elif isinstance(heuristic, Heuristic):
-        advanced_heuristic = AdvancedHeuristicProxy(heuristic, problem)
+        advanced_heuristic = AdvancedHeuristicAdapter(heuristic, problem)
     else:
         raise TypeError("Heuristic must be an instance of Heuristic.")
     # Invoke the A* search algorithm

@@ -120,13 +120,19 @@ def is_subquery(segment: BaseSegment) -> bool:
         token = get_innermost_bracketed(
             segment if segment.type == "bracketed" else segment.segments[0]
         )
-        # check if innermost parenthesis contains SELECT
+        # check if innermost parenthesis contains SELECT, SET, or WITH COMPOUND
         sub_token = (
             token.get_child("select_statement")
             or token.get_child("set_expression")
+            or token.get_child("with_compound_statement")
             or (
                 token.get_child("expression")
-                and token.get_child("expression").get_child("select_statement")
+                and (
+                    token.get_child("expression").get_child("select_statement")
+                    or token.get_child("expression").get_child(
+                        "with_compound_statement"
+                    )
+                )
             )
         )
         if sub_token is not None:

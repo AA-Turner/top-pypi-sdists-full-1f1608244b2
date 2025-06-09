@@ -34,39 +34,60 @@ class MissedEmailProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
+        'subject': 'str',
         'user_id': 'str',
         'created_at': 'datetime',
-        'subject': 'str',
         'id': 'str',
         '_from': 'str'
     }
 
     attribute_map = {
+        'subject': 'subject',
         'user_id': 'userId',
         'created_at': 'createdAt',
-        'subject': 'subject',
         'id': 'id',
         '_from': 'from'
     }
 
-    def __init__(self, user_id=None, created_at=None, subject=None, id=None, _from=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, subject=None, user_id=None, created_at=None, id=None, _from=None, local_vars_configuration=None):  # noqa: E501
         """MissedEmailProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._subject = None
         self._user_id = None
         self._created_at = None
-        self._subject = None
         self._id = None
         self.__from = None
         self.discriminator = None
 
+        self.subject = subject
         self.user_id = user_id
         self.created_at = created_at
-        self.subject = subject
         self.id = id
         self._from = _from
+
+    @property
+    def subject(self):
+        """Gets the subject of this MissedEmailProjection.  # noqa: E501
+
+
+        :return: The subject of this MissedEmailProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._subject
+
+    @subject.setter
+    def subject(self, subject):
+        """Sets the subject of this MissedEmailProjection.
+
+
+        :param subject: The subject of this MissedEmailProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._subject = subject
 
     @property
     def user_id(self):
@@ -111,27 +132,6 @@ class MissedEmailProjection(object):
             raise ValueError("Invalid value for `created_at`, must not be `None`")  # noqa: E501
 
         self._created_at = created_at
-
-    @property
-    def subject(self):
-        """Gets the subject of this MissedEmailProjection.  # noqa: E501
-
-
-        :return: The subject of this MissedEmailProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._subject
-
-    @subject.setter
-    def subject(self, subject):
-        """Sets the subject of this MissedEmailProjection.
-
-
-        :param subject: The subject of this MissedEmailProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._subject = subject
 
     @property
     def id(self):

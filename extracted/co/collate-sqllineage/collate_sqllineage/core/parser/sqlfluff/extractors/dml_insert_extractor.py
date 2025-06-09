@@ -13,6 +13,7 @@ from collate_sqllineage.core.parser.sqlfluff.extractors.lineage_holder_extractor
 from collate_sqllineage.core.parser.sqlfluff.models import SqlFluffSubQuery
 from collate_sqllineage.core.parser.sqlfluff.utils import (
     get_child,
+    get_innermost_bracketed,
     is_union,
     retrieve_segments,
 )
@@ -105,6 +106,8 @@ class DmlInsertExtractor(LineageHolderExtractor):
                 self._extract_select(holder, segment)
             elif segment.type == "set_expression":
                 self._extract_set(holder, segment)
+            elif segment.type == "set_clause_list":
+                self._extract_set_clause_list(holder, segment)
             else:
                 for conditional_handler in conditional_handlers:
                     if conditional_handler.indicate(segment):
@@ -150,3 +153,35 @@ class DmlInsertExtractor(LineageHolderExtractor):
         if hasattr(conditional_handlers, "tables") and conditional_handlers.tables:
             for table in conditional_handlers.tables:
                 holder.add_read(table)
+
+    def _extract_set_clause_list(
+        self, holder: SubQueryLineageHolder, segment: BaseSegment
+    ):
+        """
+        Extract subqueries within SET clauses list
+        :param segment: SET clause list segment
+        :param holder: lineage holder to update
+        """
+        for set_clause in retrieve_segments(segment):
+            if set_clause.type != "set_clause":
+                continue
+
+            bracketed = get_innermost_bracketed(set_clause)
+            if not bracketed:
+                continue
+
+            select_stmt = self._extract_select_from_bracketed(bracketed)
+            if select_stmt:
+                self._extract_select(holder, select_stmt)
+
+    def _extract_select_from_bracketed(self, segment: BaseSegment):
+        """
+        Extract SELECT statement from a bracketed segment
+        :param segment: Bracketed segment
+        :return: SELECT statement segment or None
+        """
+        expression = get_child(segment, "expression")
+        if not expression:
+            return None
+
+        return get_child(expression, "select_statement")

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pepperize.cdk-route53-health-check
-Version: 0.0.745
+Version: 0.0.747
 Summary: Create Route53 HealthChecks to monitor TCP, HTTP, HTTPS endpoints, CloudWatch Alarms and other Route53 HealthChecks.
 Home-page: https://github.com/pepperize/cdk-route53-health-check.git
 Author: Patrick Florek<patrick.florek@gmail.com>

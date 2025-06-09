@@ -18,6 +18,8 @@ from typing import Callable
 import torch
 from torch.overrides import TorchFunctionMode
 from torch.overrides import resolve_name
+from torch.utils._python_dispatch import is_traceable_wrapper_subclass
+from torch.utils._python_dispatch import transform_subclass
 from torch.utils._python_dispatch import TorchDispatchMode
 from torch.utils._pytree import tree_map_only
 from torch.utils.weak import WeakTensorKeyDictionary
@@ -30,6 +32,7 @@ from .packing import ZeroGPUTensorPack
 from .packing import pack_tensors
 from .packing import pack_to_cuda
 from .static import *
+from .utils import empty_like_raw_alloc
 from .types import AliasId
 
 
@@ -70,7 +73,7 @@ class ZeroGPUTensor(torch.Tensor):
     pass
 
 def empty_fake(tensor: torch.Tensor):
-    fake = torch.empty_like(tensor, requires_grad=tensor.requires_grad)
+    fake = empty_like_raw_alloc(tensor, requires_grad=tensor.requires_grad)
     if fake.__class__ != tensor.__class__:
         fake = _tensor_make_subclass(tensor.__class__, fake, require_grad=tensor.requires_grad) # pyright: ignore [reportArgumentType]
     return fake
@@ -180,6 +183,16 @@ class ZeroGPUFunctionMode(TorchFunctionMode):
         if inputs_are_cuda == {True}:
             if cuda is not False:
                 cuda = True
+
+        # Wrapper tensors special case (torchao quickix)
+        if len(args) == 1 and is_traceable_wrapper_subclass(wrapper_tensor := args[0]):
+            if func in {
+                torch.Tensor.detach,
+                torch.ops.aten.alias.default, # pyright: ignore [reportAttributeAccessIssue]
+                torch.ops.aten.clone.default, # pyright: ignore [reportAttributeAccessIssue]
+            }:
+                with self:
+                    return transform_subclass(wrapper_tensor, lambda _, t: func(t))
 
         res = func(*args_, **kwargs_)
 

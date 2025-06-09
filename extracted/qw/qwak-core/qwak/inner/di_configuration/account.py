@@ -8,7 +8,7 @@ from qwak.exceptions import QwakLoginException
 from qwak.inner.const import QwakConstants
 from qwak.inner.di_configuration.session import Session
 from qwak.inner.tool.auth import Auth0ClientBase, FrogMLAuthClient
-from frogml_storage.cli._login_cli import login as frogml_login
+from frogml_storage.authentication.login import frogml_login
 
 
 @dataclass
@@ -58,7 +58,7 @@ class UserAccountConfiguration:
         if not self._auth_client:
             # Determine auth client based on FrogML configuration
             try:
-                from frogml_storage.authentication._authentication_utils import (
+                from frogml_storage.authentication.utils import (
                     get_frogml_configuration,
                 )
 
@@ -77,28 +77,7 @@ class UserAccountConfiguration:
         """
         if issubclass(self._auth_client, Auth0ClientBase):
             # Existing Qwak authentication flow
-            self._auth.read(self._auth_file)
-            self._auth.remove_section(self._environment)
-            with self._safe_open(self._auth_file) as authfile:
-                self._auth.write(authfile)
-
-            self._auth_client(
-                api_key=user_account.api_key,
-                auth_file=self._auth_file,
-            ).login()
-
-            # Store configuration only for Qwak auth
-            self._config.read(self._config_file)
-            with self._safe_open(self._config_file) as configfile:
-                self._config[self._environment] = {}
-                if user_account.username:
-                    self._config[self._environment][
-                        self.USER_FIELD
-                    ] = user_account.username
-                self._config[self._environment][
-                    self.API_KEY_FIELD
-                ] = user_account.api_key
-                self._config.write(configfile)
+            self.__qwak_login(user_account)
 
         elif issubclass(self._auth_client, FrogMLAuthClient):
             # Use FrogML's login flow
@@ -120,6 +99,26 @@ class UserAccountConfiguration:
                 raise QwakLoginException(
                     "Authentication with JFrog failed: Only Access Tokens are supported. Please ensure you are using a valid Access Token."
                 )
+
+    def __qwak_login(self, user_account: UserAccount):
+        self._auth.read(self._auth_file)
+        self._auth.remove_section(self._environment)
+        with self._safe_open(self._auth_file) as authfile:
+            self._auth.write(authfile)
+
+        self._auth_client(
+            api_key=user_account.api_key,
+            auth_file=self._auth_file,
+        ).login()
+
+        # Store configuration only for Qwak auth
+        self._config.read(self._config_file)
+        with self._safe_open(self._config_file) as configfile:
+            self._config[self._environment] = {}
+            if user_account.username:
+                self._config[self._environment][self.USER_FIELD] = user_account.username
+            self._config[self._environment][self.API_KEY_FIELD] = user_account.api_key
+            self._config.write(configfile)
 
     @staticmethod
     def _mkdir_p(path):

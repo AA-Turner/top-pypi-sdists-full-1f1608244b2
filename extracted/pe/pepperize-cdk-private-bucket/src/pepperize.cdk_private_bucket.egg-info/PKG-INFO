@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pepperize.cdk-private-bucket
-Version: 0.0.594
+Version: 0.0.595
 Summary: This project provides a CDK construct for creating private S3 bucket.
 Home-page: https://github.com/pepperize/cdk-private-bucket.git
 Author: Andreas Forster<andreas.forster@pepperize.com>
