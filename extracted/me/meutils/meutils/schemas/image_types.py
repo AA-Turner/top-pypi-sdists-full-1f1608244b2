@@ -88,9 +88,9 @@ class ImageRequest(BaseModel):  # openai
     """
     图生图 两种方式： prompt + controls
     """
-    model: str
+    model: str = ''
 
-    prompt: constr(min_length=1, max_length=3000) = ""
+    prompt: constr(min_length=1, max_length=4096) = ""
 
     n: Optional[int] = 1
 
@@ -596,3 +596,12 @@ if __name__ == '__main__':
 
     data = {"image[]": "xxx"}
     r = ImageRequest(**data)
+
+    data = {
+        "model": "flux-kontext-pro",
+        "prompt": "a cat",
+        "size": "512x1024",
+    }
+
+    r = ImageRequest(**data)
+

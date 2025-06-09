@@ -511,9 +511,9 @@ class XTS(Broker):
 
         ltp_json = api_response["listQuotes"]
 
-        ltp = [json.loads(x) for x in ltp_json]
-
+        ltp = [json.loads(x) for x in ltp_json if x is not None]
         ltp = {x["ExchangeInstrumentID"]: float(x["LastTradedPrice"]) for x in ltp}
+
         return ltp
 
     def get_exchange_code(

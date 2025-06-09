@@ -383,7 +383,10 @@ class Context(object):
             if isinstance(g, dict) and len(g) > 0:
                 for key, value in g.items():
                     try:
-                        self._glo[key] = eval(value)
+                        if str(value).find('[') >= 0 or str(value).find('{') >= 0 or str(value).find('(') >= 0:
+                            self._glo[key] = eval(value)
+                        else:
+                            self._glo[key] = value
                     except:
                         self._glo[key] = value
                 # self._glo = g

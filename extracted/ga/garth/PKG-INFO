@@ -1,7 +1,11 @@
 Metadata-Version: 2.4
 Name: garth
-Version: 0.5.14
+Version: 0.5.15
 Summary: Garmin SSO auth + Connect client
+Project-URL: Homepage, https://github.com/matin/garth
+Project-URL: Repository, https://github.com/matin/garth
+Project-URL: Issues, https://github.com/matin/garth/issues
+Project-URL: Changelog, https://github.com/matin/garth/releases
 Author-email: Matin Tamizi <mtamizi@duck.com>
 License: MIT
 License-File: LICENSE

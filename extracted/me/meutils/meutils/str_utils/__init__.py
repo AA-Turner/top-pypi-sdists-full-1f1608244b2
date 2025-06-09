@@ -227,7 +227,11 @@ def validate_url(url):
 
     # 然后检查可访问性（可选）
     try:
-        response = requests.head(url, timeout=5, allow_redirects=True)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+
+        response = requests.head(url, timeout=5, allow_redirects=True, headers=headers)
         if response.status_code >= 400:
             logger.error(f"URL 返回错误状态码: {response.status_code}")
 
@@ -272,4 +276,5 @@ if __name__ == '__main__':
     #     return result['encoding']
 
     url = 'https://fal.ai/models/fal-ai/flux-pro/kontext/requests/de5f28be-2ca8-4bd4-8c42-c7fc32969801?output=0'
+    url = "https://5b0988e595225.cdn.sohucs.com/images/20190814/5ebb727f502545718c4a06f199cd848b.jpeg"
     print(validate_url([url] * 3))

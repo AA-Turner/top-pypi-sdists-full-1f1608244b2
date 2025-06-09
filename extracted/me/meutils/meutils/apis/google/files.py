@@ -12,6 +12,8 @@
 from meutils.pipe import *
 
 file = "/Users/betterme/PycharmProjects/AI/QR.png"
+
+
 #
 # file_object = client.files.upload(file=file)
 # prompt = "一句话总结"

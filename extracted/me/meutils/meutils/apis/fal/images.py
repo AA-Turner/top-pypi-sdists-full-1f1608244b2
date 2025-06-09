@@ -153,13 +153,15 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
         }
 
         if request.aspect_ratio:
+            arguments.pop("aspect_ratio", None)
+
             aspect_ratios = {'21:9', '16:9', '4:3', '3:2', '1:1', '2:3', '3:4', '9:16', '9:21'}
             if request.aspect_ratio in aspect_ratios:
                 arguments["aspect_ratio"] = request.aspect_ratio
 
+
+
         logger.debug(bjson(arguments))
-
-
 
     elif request.model.startswith("fal-ai/flux"):  # https://fal.ai/models/fal-ai/flux-pro/v1.1-ultra/api
 

@@ -148,9 +148,15 @@ def add_basic_demo_customizations(project: Project, do_show_messages: bool = Tru
 
     if do_show_messages:
         log.info("\nExplore key customization files:")
-        log.info(f'..logic/declare_logic.py')
+        log.info('\033[94m\033[1m..logic/declare_logic.py\033[0m')
         log.info(f'..security/declare_security.py\n')
-        log.info(f'Explore MCP (Model Context Protocol): https://apilogicserver.github.io/Docs/Integration-MCP/\n')
+        # Make the message blue, bold, and add an attention-getting icon
+        log.info('\033[94m\033[1m🔷 Explore MCP (Model Context Protocol): https://apilogicserver.github.io/Docs/Integration-MCP/\033[0m\n')
+        log.info('.. restart the server')
+        log.info('python integration/mcp/mcp_client_executor.py mcp')
+        # log.info(".. Copy/paste this into your terminal (Mac/Linux):")
+        # log.info(".. curl -X 'POST' 'http://localhost:5656/api/SysMcp/' -H 'accept: application/vnd.api+json' -H 'Content-Type: application/json' -d '{ \"data\": { \"attributes\": {\"request\": \"List the orders date_shipped is null and CreatedOn before 2023-07-14, and send a discount email (subject: '\\''Discount Offer'\\'') to the customer for each one.\"}, \"type\": \"SysMcp\"}}'")
+        log.info('')
         log.info(f'Next Steps: activate security')
         log.info(f'..ApiLogicServer add-auth --db_url=auth')
         if project.is_tutorial == False:
