@@ -527,8 +527,12 @@ ALL_MODULES = [
         cli_prefix="anyscale machine-pool",
         cli_commands=[
             machine_pool_commands.create_machine_pool,
+            machine_pool_commands.update_machine_pool,
             machine_pool_commands.delete_machine_pool,
+            machine_pool_commands.attach_machine_pool_to_cloud,
+            machine_pool_commands.detach_machine_pool_from_cloud,
             machine_pool_commands.list_machine_pools,
+            machine_pool_commands.describe,
         ],
         sdk_prefix="anyscale.machine_pool",
         sdk_commands=[],

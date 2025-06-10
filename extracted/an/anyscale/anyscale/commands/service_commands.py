@@ -13,7 +13,12 @@ import yaml
 from anyscale._private.models.image_uri import ImageURI
 from anyscale.cli_logger import BlockLogger
 from anyscale.commands import command_examples
-from anyscale.commands.list_util import display_list
+from anyscale.commands.list_util import (
+    display_list,
+    MAX_PAGE_SIZE,
+    NON_INTERACTIVE_DEFAULT_MAX_ITEMS,
+    validate_page_size,
+)
 from anyscale.commands.util import (
     AnyscaleCommand,
     convert_kv_strings_to_dict,
@@ -640,17 +645,6 @@ def rollout(  # noqa: PLR0913
         rollout_strategy=rollout_strategy,
         auto_complete_rollout=not no_auto_complete_rollout,
     )
-
-
-MAX_PAGE_SIZE = 50
-NON_INTERACTIVE_DEFAULT_MAX_ITEMS = 10
-
-
-def validate_page_size(ctx, param, value):
-    value = validate_non_negative_arg(ctx, param, value)
-    if value is not None and value > MAX_PAGE_SIZE:
-        raise click.BadParameter(f"must be less than or equal to {MAX_PAGE_SIZE}.")
-    return value
 
 
 def validate_max_items(ctx, param, value):

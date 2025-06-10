@@ -2,7 +2,7 @@ import os
 
 from starlette.responses import JSONResponse, PlainTextResponse
 
-from langgraph_api import config, metadata
+from langgraph_api import __version__, config, metadata
 from langgraph_api.route import ApiRequest
 from langgraph_license.validation import plus_features_enabled
 from langgraph_runtime.database import connect, pool_stats
@@ -16,10 +16,12 @@ async def meta_info(request: ApiRequest):
     plus = plus_features_enabled()
     return JSONResponse(
         {
+            "version": __version__,
             "flags": {
                 "assistants": True,
                 "crons": plus and config.FF_CRONS_ENABLED,
                 "langsmith": bool(config.LANGSMITH_API_KEY) and bool(config.TRACING),
+                "langsmith_tracing_replicas": True,
             },
             "host": {
                 "kind": metadata.HOST,

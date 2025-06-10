@@ -1,3 +1,5 @@
+# Deepak runs this with
+# pip install ../../xarray && ICECHUNK_XARRAY_BACKENDS_TESTS=1 pytest -s --pdb -c=../../xarray/pyproject.toml -W ignore tests/run_xarray_backends_tests.py
 import contextlib
 import os
 import tempfile
@@ -21,7 +23,8 @@ from xarray.tests.test_backends import (
 )
 from xarray.tests.test_backends import (
     ZarrBase,
-    default_zarr_format,  # noqa: F401; needed otherwise not discovered
+    # needed otherwise not discovered
+    default_zarr_format,  # noqa: F401, RUF100
 )
 
 

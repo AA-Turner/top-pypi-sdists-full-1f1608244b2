@@ -181,8 +181,8 @@ def features(
                     raise_error=ValueError,
                     code="13",
                 )
-        registry =  CURRENT_FEATURE_REGISTRY.get()
-        registry_features =registry.get_feature_sets()
+        registry = CURRENT_FEATURE_REGISTRY.get()
+        registry_features = registry.get_feature_sets()
         previous_features_class = registry_features.get(namespace, None)
 
         if (
@@ -207,7 +207,11 @@ def features(
                 raise_error=ValueError,
             )
 
-        if notebook.is_notebook() and previous_features_class is not None and notebook.is_defined_in_module(previous_features_class):
+        if (
+            notebook.is_notebook()
+            and previous_features_class is not None
+            and notebook.is_defined_in_module(previous_features_class)
+        ):
             # Not generating an LSP here because we're in a notebook anyway
             # TODO: See if we can pretty-print lsp errors in notebooks, at which point we can generate one that points to the old feature class
             raise ValueError(
@@ -1302,6 +1306,7 @@ def _class_setattr(
     value: Any,
 ):
     from chalk.features.feature_set import FeatureSetBase
+
     # Handle inline feature definitions in notebooks
     if (
         (key.startswith("__") and key.endswith("__"))
@@ -1361,23 +1366,32 @@ def _class_setattr(
             # (e.g. customers can't use this pattern as part of their deployment code)
             is_notebook_defined_feature = True
             existing_feature = next((ff for ff in cls.features if ff.unversioned_attribute_name == key), None)
-            if notebook.is_defined_in_module(cls) and key not in FeatureSetBase.__chalk_notebook_defined_feature_fields__.get(cls.namespace, set()):
+            if notebook.is_defined_in_module(
+                cls
+            ) and key not in FeatureSetBase.__chalk_notebook_defined_feature_fields__.get(cls.namespace, set()):
                 if existing_feature is not None:
                     raise ValueError(f"Can't overwrite feature '{cls.namespace}.{key}' because it already exists in the deployment source.")
             # Get the type annotation
             parsed_annotation: Optional[ParsedAnnotation] = None
             if existing_feature is not None:
                 parsed_annotation = ParsedAnnotation(underlying=existing_feature.typ.parsed_annotation)
-            from chalk.df.ast_parser import parse_inline_setattr_annotation
-            typ = parse_inline_setattr_annotation(key)
-            if typ is not None:
-                parsed_annotation = ParsedAnnotation(underlying=typ)
+            if f._typ is not None and f.typ._unparsed_underlying is not None:
+                # If the feature already has a type annotation, use that
+                parsed_annotation = f.typ
+            else:
+                from chalk.df.ast_parser import parse_inline_setattr_annotation
+
+                typ = parse_inline_setattr_annotation(key)
+                if typ is not None:
+                    parsed_annotation = ParsedAnnotation(underlying=typ)
             if parsed_annotation is None:
-                raise TypeError(f"Please define a type annotation for feature '{cls.namespace}.{key}'")
+                raise TypeError(
+                    f"Please define a type annotation for feature '{cls.namespace}.{key}', like so: User.new_feature=feature(typ=str)"
+                )
             # Set some attributes that usually get set when the feature is created inside the class definition
             f.attribute_name = key
             f.unversioned_attribute_name = key
-            if getattr(f, 'name', None) is None:
+            if getattr(f, "name", None) is None:
                 f.name = key
             f.namespace = cls.namespace
             f.typ = parsed_annotation
@@ -1406,8 +1420,9 @@ def _class_setattr(
         wrapped_feature = FeatureWrapper(f)
         type.__setattr__(cls, key, wrapped_feature)
         if is_notebook_defined_feature:
-            assert f.unversioned_attribute_name is not None # for pyright
+            assert f.unversioned_attribute_name is not None  # for pyright
             FeatureSetBase.__chalk_notebook_defined_feature_fields__[cls.namespace].add(f.unversioned_attribute_name)
+
 
 def parse_quoted_window_feature(annotation_str: str, module_str: str) -> Type[Windowed]:
     """

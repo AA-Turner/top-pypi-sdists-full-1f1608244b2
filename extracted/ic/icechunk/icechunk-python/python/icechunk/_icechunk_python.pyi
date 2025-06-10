@@ -597,6 +597,7 @@ class StorageSettings:
         storage_class: str | None = None,
         metadata_storage_class: str | None = None,
         chunks_storage_class: str | None = None,
+        minimum_size_for_multipart_upload: int | None = None,
     ) -> None:
         """
         Create a new `StorageSettings` object
@@ -636,6 +637,10 @@ class StorageSettings:
             Store chunk objects using this object store storage class.
             Currently not supported in GCS.
             Defaults to storage_class.
+
+        minimum_size_for_multipart_upload: int | None
+            Use object store's multipart upload for objects larger than this size in bytes.
+            Default: 100 MB if None is passed.
         """
         ...
     @property
@@ -672,6 +677,11 @@ class StorageSettings:
     @property
     def chunks_storage_class(self) -> str | None:
         """Chunk objects in object store will use this storage class or self.storage_class if None"""
+        ...
+
+    @property
+    def minimum_size_for_multipart_upload(self) -> int | None:
+        """Use object store's multipart upload for objects larger than this size in bytes"""
         ...
 
 class RepositoryConfig:
@@ -1586,11 +1596,9 @@ class IcechunkError(Exception):
 
     ...
 
-class ConflictErrorData:
-    """Data class for conflict errors. This describes the snapshot conflict detected when committing a session
+class ConflictError(Exception):
+    """An error that occurs when a conflict is detected"""
 
-    If this error is raised, it means the branch was modified and committed by another session after the session was created.
-    """
     @property
     def expected_parent(self) -> str:
         """The expected parent snapshot ID.
@@ -1609,11 +1617,6 @@ class ConflictErrorData:
         the session was created.
         """
         ...
-
-class PyConflictError(IcechunkError):
-    """An error that occurs when a conflict is detected"""
-
-    args: tuple[ConflictErrorData]
     ...
 
 __version__: str
@@ -1685,8 +1688,8 @@ class Conflict:
         """
         ...
 
-class RebaseFailedData:
-    """Data class for rebase failed errors. This describes the error that occurred when rebasing a session"""
+class RebaseFailedError(IcechunkError):
+    """An error that occurs when a rebase operation fails"""
 
     @property
     def snapshot(self) -> str:
@@ -1700,12 +1703,6 @@ class RebaseFailedData:
         Returns:
             list[Conflict]: The conflicts that occurred during the rebase operation
         """
-        ...
-
-class PyRebaseFailedError(IcechunkError):
-    """An error that occurs when a rebase operation fails"""
-
-    args: tuple[RebaseFailedData]
     ...
 
 def initialize_logs() -> None:

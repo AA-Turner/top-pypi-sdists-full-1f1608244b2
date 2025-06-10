@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: hashin
-Version: 1.0.3
+Version: 1.0.4
 Summary: Edits your requirements.txt by hashing them in
 Home-page: https://github.com/peterbe/hashin
 Author: Peter Bengtsson
@@ -23,10 +23,22 @@ Classifier: Topic :: System :: Systems Administration
 Requires-Python: >=3.9
 License-File: LICENSE
 Requires-Dist: packaging
-Requires-Dist: pip-api
+Requires-Dist: pip
 Provides-Extra: dev
 Requires-Dist: tox; extra == "dev"
 Requires-Dist: twine; extra == "dev"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 ======
 hashin
@@ -299,6 +311,13 @@ put it directly into ``pip``.
 
 Version History
 ===============
+
+1.0.4
+  * Resolve dependency on pip-api.
+    See https://github.com/peterbe/hashin/pull/214 — thanks @hartwork
+
+  * Drop pytest-runner from ``setup_requires`` in ``setup.py``.
+    See https://github.com/peterbe/hashin/pull/215 — thanks @hartwork
 
 1.0.3
   * Drop support for Pythom 3.8.

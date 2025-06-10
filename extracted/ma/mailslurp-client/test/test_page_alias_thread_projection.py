@@ -39,7 +39,6 @@ class TestPageAliasThreadProjection(unittest.TestCase):
             return PageAliasThreadProjection(
                 content = [
                     mailslurp_client.models.alias_thread_projection.AliasThreadProjection(
-                        subject = '0', 
                         inbox_id = '0', 
                         user_id = '0', 
                         updated_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
@@ -54,13 +53,14 @@ class TestPageAliasThreadProjection(unittest.TestCase):
                             '0'
                             ], 
                         alias_id = '0', 
+                        subject = '0', 
                         name = '0', 
                         id = '0', )
                     ], 
                 pageable = mailslurp_client.models.pageable_object.PageableObject(
+                    page_size = 56, 
                     paged = True, 
                     page_number = 56, 
-                    page_size = 56, 
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(

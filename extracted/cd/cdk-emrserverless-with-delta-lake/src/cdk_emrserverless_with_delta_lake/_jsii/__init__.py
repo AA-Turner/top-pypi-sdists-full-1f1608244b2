@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "cdk-emrserverless-with-delta-lake",
-    "2.0.809",
+    "2.0.810",
     __name__[0:-6],
-    "cdk-emrserverless-with-delta-lake@2.0.809.jsii.tgz",
+    "cdk-emrserverless-with-delta-lake@2.0.810.jsii.tgz",
 )
 
 __all__ = [

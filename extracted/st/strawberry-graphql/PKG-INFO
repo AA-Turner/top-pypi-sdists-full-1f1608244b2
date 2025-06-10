@@ -1,23 +1,17 @@
 Metadata-Version: 2.3
 Name: strawberry-graphql
-Version: 0.271.1
+Version: 0.271.2
 Summary: A library for creating GraphQL APIs
 License: MIT
 Keywords: graphql,api,rest,starlette,async
 Author: Patrick Arminio
 Author-email: patrick.arminio@gmail.com
-Requires-Python: >=3.9
+Requires-Python: >=3.9,<4.0
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.9
-Classifier: Programming Language :: Python :: 3.10
-Classifier: Programming Language :: Python :: 3.11
-Classifier: Programming Language :: Python :: 3.12
-Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Software Development :: Libraries
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: License :: OSI Approved :: MIT License
 Provides-Extra: aiohttp
 Provides-Extra: asgi
 Provides-Extra: chalice
@@ -35,31 +29,41 @@ Provides-Extra: pyinstrument
 Provides-Extra: quart
 Provides-Extra: sanic
 Requires-Dist: Django (>=3.2) ; extra == "django"
-Requires-Dist: aiohttp (>=3.7.4.post0,<4.0.0) ; extra == "aiohttp"
-Requires-Dist: asgiref (>=3.2,<4.0) ; extra == "django" or extra == "channels"
+Requires-Dist: aiohttp (>=3.7.4.post0,<4) ; extra == "aiohttp"
+Requires-Dist: asgiref (>=3.2,<4.0) ; extra == "channels"
+Requires-Dist: asgiref (>=3.2,<4.0) ; extra == "django"
 Requires-Dist: chalice (>=1.22,<2.0) ; extra == "chalice"
 Requires-Dist: channels (>=3.0.5) ; extra == "channels"
 Requires-Dist: fastapi (>=0.65.2) ; extra == "fastapi"
 Requires-Dist: flask (>=1.1) ; extra == "flask"
-Requires-Dist: graphql-core (>=3.2.0,<3.4.0) ; python_version >= "3.9" and python_version < "4.0"
-Requires-Dist: libcst (>=0.4.7,<1.8.0) ; extra == "debug" or extra == "debug-server" or extra == "cli"
-Requires-Dist: litestar (>=2) ; (python_version >= "3.10" and python_version < "4.0") and (extra == "litestar")
+Requires-Dist: graphql-core (>=3.2.0,<3.4.0)
+Requires-Dist: libcst (>=0.4.7,<1.8.0) ; extra == "cli"
+Requires-Dist: libcst (>=0.4.7,<1.8.0) ; extra == "debug"
+Requires-Dist: libcst (>=0.4.7,<1.8.0) ; extra == "debug-server"
+Requires-Dist: litestar (>=2) ; (python_version ~= "3.10") and (extra == "litestar")
 Requires-Dist: opentelemetry-api (<2) ; extra == "opentelemetry"
 Requires-Dist: opentelemetry-sdk (<2) ; extra == "opentelemetry"
 Requires-Dist: packaging (>=23)
 Requires-Dist: pydantic (>1.6.1) ; extra == "pydantic"
-Requires-Dist: pygments (>=2.3,<3.0) ; extra == "debug-server" or extra == "cli"
+Requires-Dist: pygments (>=2.3,<3.0) ; extra == "cli"
+Requires-Dist: pygments (>=2.3,<3.0) ; extra == "debug-server"
 Requires-Dist: pyinstrument (>=4.0.0) ; extra == "pyinstrument"
-Requires-Dist: python-dateutil (>=2.7.0,<3.0.0)
-Requires-Dist: python-multipart (>=0.0.7) ; extra == "asgi" or extra == "debug-server" or extra == "fastapi"
+Requires-Dist: python-dateutil (>=2.7,<3.0)
+Requires-Dist: python-multipart (>=0.0.7) ; extra == "asgi"
+Requires-Dist: python-multipart (>=0.0.7) ; extra == "debug-server"
+Requires-Dist: python-multipart (>=0.0.7) ; extra == "fastapi"
 Requires-Dist: quart (>=0.19.3) ; extra == "quart"
-Requires-Dist: rich (>=12.0.0) ; extra == "debug" or extra == "debug-server" or extra == "cli"
+Requires-Dist: rich (>=12.0.0) ; extra == "cli"
+Requires-Dist: rich (>=12.0.0) ; extra == "debug"
+Requires-Dist: rich (>=12.0.0) ; extra == "debug-server"
 Requires-Dist: sanic (>=20.12.2) ; extra == "sanic"
-Requires-Dist: starlette (>=0.18.0) ; extra == "asgi" or extra == "debug-server"
-Requires-Dist: typer (>=0.7.0) ; extra == "debug-server" or extra == "cli"
+Requires-Dist: starlette (>=0.18.0) ; extra == "asgi"
+Requires-Dist: starlette (>=0.18.0) ; extra == "debug-server"
+Requires-Dist: typer (>=0.7.0) ; extra == "cli"
+Requires-Dist: typer (>=0.7.0) ; extra == "debug-server"
 Requires-Dist: typing-extensions (>=4.5.0)
 Requires-Dist: uvicorn (>=0.11.6) ; extra == "debug-server"
-Requires-Dist: websockets (>=15.0.1,<16.0.0) ; extra == "debug-server"
+Requires-Dist: websockets (>=15.0.1,<16) ; extra == "debug-server"
 Project-URL: Changelog, https://strawberry.rocks/changelog
 Project-URL: Documentation, https://strawberry.rocks/
 Project-URL: Discord, https://discord.com/invite/3uQ2PaY
@@ -164,17 +168,6 @@ urlpatterns = [
     ...,
     path("graphql", GraphQLView.as_view(schema=schema)),
 ]
-```
-
-## WebSockets
-
-To support graphql Subscriptions over WebSockets you need to provide a WebSocket
-enabled server. The debug server can be made to support WebSockets with these
-commands:
-
-```shell
-pip install 'strawberry-graphql[debug-server]'
-pip install 'uvicorn[standard]'
 ```
 
 ## Examples

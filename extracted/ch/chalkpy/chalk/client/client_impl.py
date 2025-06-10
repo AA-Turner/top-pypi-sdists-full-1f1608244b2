@@ -423,7 +423,7 @@ def _offline_query_inputs_to_parquet(
     except ImportError:
         raise missing_dependency_exception("chalkpy[runtime]")
     offset = 0
-    tables = []
+    tables: List[pa.Table] = []
     for single_input, single_input_times in offline_query_inputs:
         input_table: pa.Table | pa.RecordBatch
         if isinstance(single_input, DataFrame):
@@ -438,7 +438,7 @@ def _offline_query_inputs_to_parquet(
             input_table = pl.DataFrame(_validate_offline_query_inputs(single_input)).to_arrow()
         else:
             input_table = pl.from_pandas(pd.DataFrame(single_input)).to_arrow()
-        fields = []
+        fields: List[pa.Field] = []
         for i, column_fqn in enumerate(input_table.column_names):
             try:
                 f = Feature.from_root_fqn(column_fqn)
@@ -670,7 +670,7 @@ def render_fqn(name: str) -> str:
         hours, seconds = divmod(seconds, 3600)
         minutes, seconds = divmod(seconds, 60)
 
-        time_parts = []
+        time_parts: List[str] = []
         if days > 0:
             time_parts.append(f"{days}d")
         if hours > 0:
@@ -766,7 +766,7 @@ class OnlineQueryResponseImpl(OnlineQueryResult):
         return f"{df_html}{errors_html}"
 
     def __repr__(self) -> str:
-        lines = []
+        lines: List[str] = []
         for e in self.errors or []:
             nice_code = str(e.code.value).replace("_", " ").capitalize()
             # {str(e.category.value).capitalize()}
@@ -794,7 +794,7 @@ class OnlineQueryResponseImpl(OnlineQueryResult):
             return f"{json.dumps(self.to_dict(), sort_keys=True, indent=4)}\n{errs}"
 
     def __str__(self):
-        lines = []
+        lines: List[str] = []
         for e in self.errors or []:
             nice_code = str(e.code.value).replace("_", " ").capitalize()
             # {str(e.category.value).capitalize()}
@@ -821,7 +821,7 @@ class OnlineQueryResponseImpl(OnlineQueryResult):
             return f"{json.dumps(self.to_dict(), sort_keys=True, indent=4)}\n{errs}"
 
     def _repr_markdown_(self):
-        lines = []
+        lines: List[str] = []
         if self.errors is not None and len(self.errors) > 0:
             lines.append(f"## {len(self.errors)} Errors")
             lines.append("")
@@ -1561,7 +1561,7 @@ https://docs.chalk.ai/cli/apply
 
         import pyarrow.feather
 
-        errors = []
+        errors: List[ChalkError] = []
         for table in tables:
             features: List[str] = [field.name for field in table.schema]
             table_buffer = BytesIO()

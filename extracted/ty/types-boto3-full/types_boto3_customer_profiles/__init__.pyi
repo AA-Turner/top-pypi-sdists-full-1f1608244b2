@@ -13,6 +13,7 @@ Usage::
         Client,
         CustomerProfilesClient,
         GetSimilarProfilesPaginator,
+        ListDomainLayoutsPaginator,
         ListEventStreamsPaginator,
         ListEventTriggersPaginator,
         ListObjectTypeAttributesPaginator,
@@ -24,6 +25,7 @@ Usage::
     client: CustomerProfilesClient = session.client("customer-profiles")
 
     get_similar_profiles_paginator: GetSimilarProfilesPaginator = client.get_paginator("get_similar_profiles")
+    list_domain_layouts_paginator: ListDomainLayoutsPaginator = client.get_paginator("list_domain_layouts")
     list_event_streams_paginator: ListEventStreamsPaginator = client.get_paginator("list_event_streams")
     list_event_triggers_paginator: ListEventTriggersPaginator = client.get_paginator("list_event_triggers")
     list_object_type_attributes_paginator: ListObjectTypeAttributesPaginator = client.get_paginator("list_object_type_attributes")
@@ -35,6 +37,7 @@ Usage::
 from .client import CustomerProfilesClient
 from .paginator import (
     GetSimilarProfilesPaginator,
+    ListDomainLayoutsPaginator,
     ListEventStreamsPaginator,
     ListEventTriggersPaginator,
     ListObjectTypeAttributesPaginator,
@@ -48,6 +51,7 @@ __all__ = (
     "Client",
     "CustomerProfilesClient",
     "GetSimilarProfilesPaginator",
+    "ListDomainLayoutsPaginator",
     "ListEventStreamsPaginator",
     "ListEventTriggersPaginator",
     "ListObjectTypeAttributesPaginator",

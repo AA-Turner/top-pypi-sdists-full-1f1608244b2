@@ -39,7 +39,6 @@ class TestPageEmailThreadProjection(unittest.TestCase):
             return PageEmailThreadProjection(
                 content = [
                     mailslurp_client.models.email_thread_projection.EmailThreadProjection(
-                        subject = '0', 
                         sender = mailslurp_client.models.sender_projection.SenderProjection(
                             email_address = '0', 
                             raw_value = '0', 
@@ -87,13 +86,14 @@ class TestPageEmailThreadProjection(unittest.TestCase):
                             email_address = '0', 
                             raw_value = '0', 
                             name = '0', ), 
+                        subject = '0', 
                         id = '0', 
                         from = '0', )
                     ], 
                 pageable = mailslurp_client.models.pageable_object.PageableObject(
+                    page_size = 56, 
                     paged = True, 
                     page_number = 56, 
-                    page_size = 56, 
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(

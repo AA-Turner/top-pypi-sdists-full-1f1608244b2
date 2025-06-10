@@ -49,9 +49,9 @@ class TestPageSentSmsProjection(unittest.TestCase):
                         id = '0', )
                     ], 
                 pageable = mailslurp_client.models.pageable_object.PageableObject(
+                    page_size = 56, 
                     paged = True, 
                     page_number = 56, 
-                    page_size = 56, 
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(

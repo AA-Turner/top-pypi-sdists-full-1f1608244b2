@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: uniplot
-Version: 0.21.1
+Version: 0.21.2
 Summary: Lightweight plotting to the terminal. 4x resolution via Unicode.
 Author-email: Olav Stetter <olav.stetter@googlemail.com>
 License: Copyright (c) 2020 Olav Stetter
@@ -30,6 +30,7 @@ Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: numpy>=1.22.0
+Requires-Dist: readchar>=4.2.1
 Dynamic: license-file
 
 # Uniplot
@@ -59,7 +60,6 @@ the problem was.
 * Interactive mode (pass `interactive=True`)
 * Color mode (pass `color=True`) useful in particular when plotting multiple series
 * It's fast: Plotting 1M data points takes 26ms thanks to NumPy magic
-* Only one dependency: NumPy (but you have that anyway don't you)
 
 Please note that Unicode drawing will work correctly only when using a font
 that fully supports the [Block Elements character
@@ -75,7 +75,7 @@ and the options below to select the character set.
 
 ```python
 import math
-x = [math.sin(i/20)+i/300 for i in range(600)]
+x = [math.sin(i / 20) + i / 300 for i in range(600)]
 from uniplot import plot
 plot(x, title="Sine wave")
 ```
@@ -268,6 +268,16 @@ Result:
 └────────────────────────────────────────────────────────────┘
      -1                        0                       1
 ```
+
+### Arrow keys and FPS-style keys
+
+In interactive mode, we now also support wasd or FPS-style keyboard layout and
+the arrow keys. Arrows should work on most platforms like Mac, Linux or Windows. We might make the keyboard layout fully configurable, to change the current Vim-inspired one, at a later date. For now, you have 3 ways to move the view:
+
+* Vim-style: `h` left, `j` down, `k` up, `l` right, `u` zoom in, `n` zoom out.
+* FPS-style: `a` left, `s` down, `w` up, `d` right, `]` zoom in, `[` zoom out.
+* Arrow keys: movement obvious, `]` zoom in, `[` zoom out.
+
 
 ### Streaming
 

@@ -68,8 +68,8 @@ class Email(object):
         'in_reply_to': 'str',
         'favourite': 'bool',
         'size_bytes': 'int',
-        'xamp_html': 'bool',
-        'html': 'bool'
+        'html': 'bool',
+        'xamp_html': 'bool'
     }
 
     attribute_map = {
@@ -107,11 +107,11 @@ class Email(object):
         'in_reply_to': 'inReplyTo',
         'favourite': 'favourite',
         'size_bytes': 'sizeBytes',
-        'xamp_html': 'xampHtml',
-        'html': 'html'
+        'html': 'html',
+        'xamp_html': 'xampHtml'
     }
 
-    def __init__(self, id=None, user_id=None, inbox_id=None, domain_id=None, to=None, _from=None, sender=None, recipients=None, reply_to=None, cc=None, bcc=None, headers=None, headers_map=None, attachments=None, subject=None, body=None, body_excerpt=None, text_excerpt=None, body_md5_hash=None, is_html=None, charset=None, analysis=None, created_at=None, updated_at=None, read=None, team_access=None, is_x_amp_html=None, body_part_content_types=None, external_id=None, message_id=None, thread_id=None, in_reply_to=None, favourite=None, size_bytes=None, xamp_html=None, html=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, id=None, user_id=None, inbox_id=None, domain_id=None, to=None, _from=None, sender=None, recipients=None, reply_to=None, cc=None, bcc=None, headers=None, headers_map=None, attachments=None, subject=None, body=None, body_excerpt=None, text_excerpt=None, body_md5_hash=None, is_html=None, charset=None, analysis=None, created_at=None, updated_at=None, read=None, team_access=None, is_x_amp_html=None, body_part_content_types=None, external_id=None, message_id=None, thread_id=None, in_reply_to=None, favourite=None, size_bytes=None, html=None, xamp_html=None, local_vars_configuration=None):  # noqa: E501
         """Email - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -151,8 +151,8 @@ class Email(object):
         self._in_reply_to = None
         self._favourite = None
         self._size_bytes = None
-        self._xamp_html = None
         self._html = None
+        self._xamp_html = None
         self.discriminator = None
 
         self.id = id
@@ -189,10 +189,10 @@ class Email(object):
         self.in_reply_to = in_reply_to
         self.favourite = favourite
         self.size_bytes = size_bytes
-        if xamp_html is not None:
-            self.xamp_html = xamp_html
         if html is not None:
             self.html = html
+        if xamp_html is not None:
+            self.xamp_html = xamp_html
 
     @property
     def id(self):
@@ -987,27 +987,6 @@ class Email(object):
         self._size_bytes = size_bytes
 
     @property
-    def xamp_html(self):
-        """Gets the xamp_html of this Email.  # noqa: E501
-
-
-        :return: The xamp_html of this Email.  # noqa: E501
-        :rtype: bool
-        """
-        return self._xamp_html
-
-    @xamp_html.setter
-    def xamp_html(self, xamp_html):
-        """Sets the xamp_html of this Email.
-
-
-        :param xamp_html: The xamp_html of this Email.  # noqa: E501
-        :type: bool
-        """
-
-        self._xamp_html = xamp_html
-
-    @property
     def html(self):
         """Gets the html of this Email.  # noqa: E501
 
@@ -1027,6 +1006,27 @@ class Email(object):
         """
 
         self._html = html
+
+    @property
+    def xamp_html(self):
+        """Gets the xamp_html of this Email.  # noqa: E501
+
+
+        :return: The xamp_html of this Email.  # noqa: E501
+        :rtype: bool
+        """
+        return self._xamp_html
+
+    @xamp_html.setter
+    def xamp_html(self, xamp_html):
+        """Sets the xamp_html of this Email.
+
+
+        :param xamp_html: The xamp_html of this Email.  # noqa: E501
+        :type: bool
+        """
+
+        self._xamp_html = xamp_html
 
     def to_dict(self):
         """Returns the model properties as a dict"""

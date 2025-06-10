@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: buildkite-test-collector
-Version: 1.0.3
+Version: 1.0.4
 Summary: Buildkite Test Analytics collector
 Home-page: https://github.com/buildkite/test-collector-python
 Author: James Harton
@@ -13,6 +13,7 @@ Description-Content-Type: text/markdown
 License-File: LICENSE.txt
 Requires-Dist: requests>=2
 Requires-Dist: pytest>=7
+Requires-Dist: filelock>=3
 Provides-Extra: dev
 Requires-Dist: mock>=4; extra == "dev"
 Requires-Dist: check-manifest; extra == "dev"

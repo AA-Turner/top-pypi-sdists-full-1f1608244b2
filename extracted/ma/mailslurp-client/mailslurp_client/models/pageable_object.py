@@ -34,49 +34,70 @@ class PageableObject(object):
                             and the value is json key in definition.
     """
     openapi_types = {
+        'page_size': 'int',
         'paged': 'bool',
         'page_number': 'int',
-        'page_size': 'int',
         'unpaged': 'bool',
         'offset': 'int',
         'sort': 'SortObject'
     }
 
     attribute_map = {
+        'page_size': 'pageSize',
         'paged': 'paged',
         'page_number': 'pageNumber',
-        'page_size': 'pageSize',
         'unpaged': 'unpaged',
         'offset': 'offset',
         'sort': 'sort'
     }
 
-    def __init__(self, paged=None, page_number=None, page_size=None, unpaged=None, offset=None, sort=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, page_size=None, paged=None, page_number=None, unpaged=None, offset=None, sort=None, local_vars_configuration=None):  # noqa: E501
         """PageableObject - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._page_size = None
         self._paged = None
         self._page_number = None
-        self._page_size = None
         self._unpaged = None
         self._offset = None
         self._sort = None
         self.discriminator = None
 
+        if page_size is not None:
+            self.page_size = page_size
         if paged is not None:
             self.paged = paged
         if page_number is not None:
             self.page_number = page_number
-        if page_size is not None:
-            self.page_size = page_size
         if unpaged is not None:
             self.unpaged = unpaged
         if offset is not None:
             self.offset = offset
         if sort is not None:
             self.sort = sort
+
+    @property
+    def page_size(self):
+        """Gets the page_size of this PageableObject.  # noqa: E501
+
+
+        :return: The page_size of this PageableObject.  # noqa: E501
+        :rtype: int
+        """
+        return self._page_size
+
+    @page_size.setter
+    def page_size(self, page_size):
+        """Sets the page_size of this PageableObject.
+
+
+        :param page_size: The page_size of this PageableObject.  # noqa: E501
+        :type: int
+        """
+
+        self._page_size = page_size
 
     @property
     def paged(self):
@@ -119,27 +140,6 @@ class PageableObject(object):
         """
 
         self._page_number = page_number
-
-    @property
-    def page_size(self):
-        """Gets the page_size of this PageableObject.  # noqa: E501
-
-
-        :return: The page_size of this PageableObject.  # noqa: E501
-        :rtype: int
-        """
-        return self._page_size
-
-    @page_size.setter
-    def page_size(self, page_size):
-        """Sets the page_size of this PageableObject.
-
-
-        :param page_size: The page_size of this PageableObject.  # noqa: E501
-        :type: int
-        """
-
-        self._page_size = page_size
 
     @property
     def unpaged(self):

@@ -5838,6 +5838,8 @@ class event_EventDispositionStatus(ConjureEnumType):
     '''CLOSED_IGNORED'''
     CLOSED_REQUIRES_FURTHER_ACTION = 'CLOSED_REQUIRES_FURTHER_ACTION'
     '''CLOSED_REQUIRES_FURTHER_ACTION'''
+    NO_DISPOSITION = 'NO_DISPOSITION'
+    '''NO_DISPOSITION'''
     UNKNOWN = 'UNKNOWN'
     '''UNKNOWN'''
 
@@ -6309,6 +6311,65 @@ Empty fields in the UpdateEventRequest are left unchanged.
 event_EventService.__name__ = "EventService"
 event_EventService.__qualname__ = "EventService"
 event_EventService.__module__ = "nominal_api.event"
+
+
+class event_EventTimeFilter(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'timestamp': ConjureFieldDefinition('timestamp', api_Timestamp),
+            'timestamp_condition': ConjureFieldDefinition('timestampCondition', event_EventTimeFilterCondition)
+        }
+
+    __slots__: List[str] = ['_timestamp', '_timestamp_condition']
+
+    def __init__(self, timestamp: "api_Timestamp", timestamp_condition: "event_EventTimeFilterCondition") -> None:
+        self._timestamp = timestamp
+        self._timestamp_condition = timestamp_condition
+
+    @builtins.property
+    def timestamp(self) -> "api_Timestamp":
+        return self._timestamp
+
+    @builtins.property
+    def timestamp_condition(self) -> "event_EventTimeFilterCondition":
+        return self._timestamp_condition
+
+
+event_EventTimeFilter.__name__ = "EventTimeFilter"
+event_EventTimeFilter.__qualname__ = "EventTimeFilter"
+event_EventTimeFilter.__module__ = "nominal_api.event"
+
+
+class event_EventTimeFilterCondition(ConjureEnumType):
+
+    START_TIME_BEFORE_INCLUSIVE = 'START_TIME_BEFORE_INCLUSIVE'
+    '''START_TIME_BEFORE_INCLUSIVE'''
+    START_TIME_BEFORE_EXCLUSIVE = 'START_TIME_BEFORE_EXCLUSIVE'
+    '''START_TIME_BEFORE_EXCLUSIVE'''
+    START_TIME_AFTER_INCLUSIVE = 'START_TIME_AFTER_INCLUSIVE'
+    '''START_TIME_AFTER_INCLUSIVE'''
+    START_TIME_AFTER_EXCLUSIVE = 'START_TIME_AFTER_EXCLUSIVE'
+    '''START_TIME_AFTER_EXCLUSIVE'''
+    END_TIME_BEFORE_INCLUSIVE = 'END_TIME_BEFORE_INCLUSIVE'
+    '''END_TIME_BEFORE_INCLUSIVE'''
+    END_TIME_BEFORE_EXCLUSIVE = 'END_TIME_BEFORE_EXCLUSIVE'
+    '''END_TIME_BEFORE_EXCLUSIVE'''
+    END_TIME_AFTER_INCLUSIVE = 'END_TIME_AFTER_INCLUSIVE'
+    '''END_TIME_AFTER_INCLUSIVE'''
+    END_TIME_AFTER_EXCLUSIVE = 'END_TIME_AFTER_EXCLUSIVE'
+    '''END_TIME_AFTER_EXCLUSIVE'''
+    UNKNOWN = 'UNKNOWN'
+    '''UNKNOWN'''
+
+    def __reduce_ex__(self, proto):
+        return self.__class__, (self.name,)
+
+
+event_EventTimeFilterCondition.__name__ = "EventTimeFilterCondition"
+event_EventTimeFilterCondition.__qualname__ = "EventTimeFilterCondition"
+event_EventTimeFilterCondition.__module__ = "nominal_api.event"
 
 
 class event_EventType(ConjureEnumType):
@@ -6997,6 +7058,7 @@ class event_SearchQuery(ConjureUnionType):
     _search_text: Optional[str] = None
     _after: Optional["api_Timestamp"] = None
     _before: Optional["api_Timestamp"] = None
+    _advanced_time_filter: Optional["event_EventTimeFilter"] = None
     _asset: Optional[str] = None
     _template: Optional[str] = None
     _workbook: Optional[str] = None
@@ -7021,6 +7083,7 @@ class event_SearchQuery(ConjureUnionType):
             'search_text': ConjureFieldDefinition('searchText', str),
             'after': ConjureFieldDefinition('after', api_Timestamp),
             'before': ConjureFieldDefinition('before', api_Timestamp),
+            'advanced_time_filter': ConjureFieldDefinition('advancedTimeFilter', event_EventTimeFilter),
             'asset': ConjureFieldDefinition('asset', scout_rids_api_AssetRid),
             'template': ConjureFieldDefinition('template', scout_rids_api_TemplateRid),
             'workbook': ConjureFieldDefinition('workbook', scout_rids_api_NotebookRid),
@@ -7045,6 +7108,7 @@ class event_SearchQuery(ConjureUnionType):
             search_text: Optional[str] = None,
             after: Optional["api_Timestamp"] = None,
             before: Optional["api_Timestamp"] = None,
+            advanced_time_filter: Optional["event_EventTimeFilter"] = None,
             asset: Optional[str] = None,
             template: Optional[str] = None,
             workbook: Optional[str] = None,
@@ -7065,7 +7129,7 @@ class event_SearchQuery(ConjureUnionType):
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (search_text is not None) + (after is not None) + (before is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (created_by is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
+            if (search_text is not None) + (after is not None) + (before is not None) + (advanced_time_filter is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (created_by is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if search_text is not None:
@@ -7077,6 +7141,9 @@ class event_SearchQuery(ConjureUnionType):
             if before is not None:
                 self._before = before
                 self._type = 'before'
+            if advanced_time_filter is not None:
+                self._advanced_time_filter = advanced_time_filter
+                self._type = 'advancedTimeFilter'
             if asset is not None:
                 self._asset = asset
                 self._type = 'asset'
@@ -7144,6 +7211,11 @@ class event_SearchQuery(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._before = before
             self._type = 'before'
+        elif type_of_union == 'advancedTimeFilter':
+            if advanced_time_filter is None:
+                raise ValueError('a union value must not be None')
+            self._advanced_time_filter = advanced_time_filter
+            self._type = 'advancedTimeFilter'
         elif type_of_union == 'asset':
             if asset is None:
                 raise ValueError('a union value must not be None')
@@ -7236,15 +7308,21 @@ class event_SearchQuery(ConjureUnionType):
 
     @builtins.property
     def after(self) -> Optional["api_Timestamp"]:
-        """Filters to end times after this time, exclusive.
+        """Filters to events after this timestamp, exclusive.
+This includes events that start before, but end after this time.
         """
         return self._after
 
     @builtins.property
     def before(self) -> Optional["api_Timestamp"]:
-        """Filters to start times before this time, exclusive.
+        """Filters to events before this timestamp, exclusive.
+This includes events that start before, but end after this time.
         """
         return self._before
+
+    @builtins.property
+    def advanced_time_filter(self) -> Optional["event_EventTimeFilter"]:
+        return self._advanced_time_filter
 
     @builtins.property
     def asset(self) -> Optional[str]:
@@ -7323,6 +7401,8 @@ class event_SearchQuery(ConjureUnionType):
             return visitor._after(self.after)
         if self._type == 'before' and self.before is not None:
             return visitor._before(self.before)
+        if self._type == 'advancedTimeFilter' and self.advanced_time_filter is not None:
+            return visitor._advanced_time_filter(self.advanced_time_filter)
         if self._type == 'asset' and self.asset is not None:
             return visitor._asset(self.asset)
         if self._type == 'template' and self.template is not None:
@@ -7376,6 +7456,10 @@ class event_SearchQueryVisitor:
 
     @abstractmethod
     def _before(self, before: "api_Timestamp") -> Any:
+        pass
+
+    @abstractmethod
+    def _advanced_time_filter(self, advanced_time_filter: "event_EventTimeFilter") -> Any:
         pass
 
     @abstractmethod

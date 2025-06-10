@@ -39,18 +39,18 @@ class TestPageUnknownMissedEmailProjection(unittest.TestCase):
             return PageUnknownMissedEmailProjection(
                 content = [
                     mailslurp_client.models.unknown_missed_email_projection.UnknownMissedEmailProjection(
-                        subject = '0', 
                         created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                         to = [
                             '0'
                             ], 
+                        subject = '0', 
                         id = '0', 
                         from = '0', )
                     ], 
                 pageable = mailslurp_client.models.pageable_object.PageableObject(
+                    page_size = 56, 
                     paged = True, 
                     page_number = 56, 
-                    page_size = 56, 
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(

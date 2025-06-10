@@ -10,8 +10,9 @@ class V1ReplicaSetStatus:
     observed_generation: typing.Optional[int]
     ready_replicas: typing.Optional[int]
     replicas: int
+    terminating_replicas: typing.Optional[int]
     
-    def __init__(self, *, available_replicas: typing.Optional[int] = ..., conditions: typing.Optional[list[kubernetes.client.V1ReplicaSetCondition]] = ..., fully_labeled_replicas: typing.Optional[int] = ..., observed_generation: typing.Optional[int] = ..., ready_replicas: typing.Optional[int] = ..., replicas: int) -> None:
+    def __init__(self, *, available_replicas: typing.Optional[int] = ..., conditions: typing.Optional[list[kubernetes.client.V1ReplicaSetCondition]] = ..., fully_labeled_replicas: typing.Optional[int] = ..., observed_generation: typing.Optional[int] = ..., ready_replicas: typing.Optional[int] = ..., replicas: int, terminating_replicas: typing.Optional[int] = ...) -> None:
         ...
     def to_dict(self) -> V1ReplicaSetStatusDict:
         ...
@@ -22,3 +23,4 @@ class V1ReplicaSetStatusDict(typing.TypedDict, total=False):
     observedGeneration: typing.Optional[int]
     readyReplicas: typing.Optional[int]
     replicas: int
+    terminatingReplicas: typing.Optional[int]

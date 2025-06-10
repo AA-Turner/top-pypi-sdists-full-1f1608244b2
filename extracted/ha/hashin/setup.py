@@ -16,7 +16,7 @@ except ImportError:
 
 setup(
     name="hashin",
-    version="1.0.3",
+    version="1.0.4",
     description="Edits your requirements.txt by hashing them in",
     long_description=open(path.join(_here, "README.rst")).read(),
     author="Peter Bengtsson",
@@ -27,9 +27,8 @@ setup(
     url="https://github.com/peterbe/hashin",
     include_package_data=True,
     python_requires=">=3.9",
-    install_requires=["packaging", "pip-api"],
+    install_requires=["packaging", "pip"],
     tests_require=["pytest"],
-    setup_requires=["pytest-runner"],
     extras_require={"dev": ["tox", "twine"]},
     classifiers=[
         "Intended Audience :: Developers",

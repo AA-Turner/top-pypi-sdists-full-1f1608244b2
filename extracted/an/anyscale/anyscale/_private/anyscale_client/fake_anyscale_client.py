@@ -49,6 +49,7 @@ from anyscale.client.openapi_client.models import (
     WorkspaceDataplaneProxiedArtifacts,
 )
 from anyscale.client.openapi_client.models.create_schedule import CreateSchedule
+from anyscale.client.openapi_client.models.decorated_job_queue import DecoratedJobQueue
 from anyscale.client.openapi_client.models.decorated_schedule import DecoratedSchedule
 from anyscale.client.openapi_client.models.decorated_session import DecoratedSession
 from anyscale.client.openapi_client.models.session_ssh_key import SessionSshKey
@@ -150,6 +151,7 @@ class FakeAnyscaleClient(AnyscaleClientInterface):
         self._deleted_services: Dict[str, DecoratedProductionServiceV2APIModel] = {}
         self._jobs: Dict[str, ProductionJob] = {}
         self._job_runs: Dict[str, List[APIJobRun]] = defaultdict(list)
+        self._job_queues: Dict[str, DecoratedJobQueue] = {}
         self._project_to_id: Dict[Optional[str] : Dict[Optional[str], str]] = {}
         self._project_collaborators: Dict[str, List[CreateUserProjectCollaborator]] = {}
         self._rolled_out_model: Optional[ApplyProductionServiceV2Model] = None
@@ -701,6 +703,15 @@ class FakeAnyscaleClient(AnyscaleClientInterface):
 
     def update_job_run(self, prod_job_id: str, model: APIJobRun):
         self._job_runs[prod_job_id].append(model)
+
+    def list_job_queues(self) -> List[DecoratedJobQueue]:
+        return list(self._job_queues.values())
+
+    def get_job_queue(self, job_queue_id: str) -> Optional[DecoratedJobQueue]:
+        return self._job_queues.get(job_queue_id, None)
+
+    def update_job_queue(self, model: DecoratedJobQueue):
+        self._job_queues[model.id] = model
 
     def register_project_by_name(
         self,

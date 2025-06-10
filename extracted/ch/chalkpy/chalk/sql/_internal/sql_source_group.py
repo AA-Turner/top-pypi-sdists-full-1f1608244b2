@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 from chalk.features import Feature
 from chalk.sql._internal.chalk_query import ChalkQuery
 from chalk.sql._internal.query_execution_parameters import QueryExecutionParameters
+from chalk.sql._internal.sql_source import _ENABLE_ADD_TO_SQL_SOURCE_REGISTRIES  # pyright: ignore[reportPrivateUsage]
 from chalk.sql._internal.sql_source import BaseSQLSource
 from chalk.sql._internal.string_chalk_query import StringChalkQuery
 from chalk.sql.finalized_query import FinalizedChalkQuery
@@ -43,7 +44,8 @@ class SQLSourceGroup(BaseSQLSourceProtocol):
         self.name = name
         self._default = default
         self._tagged_sources = tagged_sources
-        self.registry.append(self)
+        if _ENABLE_ADD_TO_SQL_SOURCE_REGISTRIES.get():
+            self.registry.append(self)
 
         try:
             import sqlalchemy

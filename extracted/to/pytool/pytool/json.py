@@ -8,6 +8,7 @@ If the `bson` module exists, it allows `bson.ObjectId` objects to be decoded
 into JSON automatically.
 
 """
+
 from datetime import datetime
 
 import simplejson as json
@@ -56,8 +57,8 @@ def as_json(obj, **kwargs):
     :class:`bson.ObjectId`.
 
     :param object obj: An object to encode.
-    :param **kwargs: Any optional keyword arguments to pass to the \
-                       JSONEncoder
+    :param kwargs: Any optional keyword arguments to pass to the \
+                   JSONEncoder
     :returns: JSON encoded version of `obj`.
 
     .. versionadded:: 2.4

@@ -1757,7 +1757,7 @@ struct __pyx_obj_8whatshap_4core_PedMecHeuristic {
 };
 
 
-/* "whatshap/core.pyx":128
+/* "whatshap/core.pyx":161
  * 			return self.thisptr.getPSTag()
  * 
  * 	def __iter__(self):             # <<<<<<<<<<<<<<
@@ -1774,7 +1774,7 @@ struct __pyx_obj_8whatshap_4core___pyx_scope_struct____iter__ {
 };
 
 
-/* "whatshap/core.pyx":253
+/* "whatshap/core.pyx":292
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def __iter__(self):             # <<<<<<<<<<<<<<
@@ -1791,7 +1791,7 @@ struct __pyx_obj_8whatshap_4core___pyx_scope_struct_1___iter__ {
 };
 
 
-/* "whatshap/core.pyx":448
+/* "whatshap/core.pyx":487
  * 		return self.thisptr.size()
  * 
  * 	def __iter__(self):             # <<<<<<<<<<<<<<
@@ -2991,11 +2991,13 @@ static const char __pyx_k_source_id[] = "source_id";
 static const char __pyx_k_verbosity[] = "verbosity";
 static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ValueError[] = "ValueError";
+static const char __pyx_k_chromosome[] = "chromosome";
 static const char __pyx_k_get_length[] = "get_length";
 static const char __pyx_k_get_ploidy[] = "get_ploidy";
 static const char __pyx_k_has_BX_tag[] = "has_BX_tag";
 static const char __pyx_k_has_HP_tag[] = "has_HP_tag";
 static const char __pyx_k_has_PS_tag[] = "has_PS_tag";
+static const char __pyx_k_is_reverse[] = "is_reverse";
 static const char __pyx_k_namedtuple[] = "namedtuple";
 static const char __pyx_k_nr_alleles[] = "nr_alleles";
 static const char __pyx_k_numeric_id[] = "numeric_id";
@@ -3010,6 +3012,7 @@ static const char __pyx_k_c_positions[] = "c_positions";
 static const char __pyx_k_collections[] = "collections";
 static const char __pyx_k_ReadSet_sort[] = "ReadSet.sort";
 static const char __pyx_k_all_variants[] = "all_variants";
+static const char __pyx_k_chromosome_2[] = "_chromosome";
 static const char __pyx_k_is_coroutine[] = "_is_coroutine";
 static const char __pyx_k_stringsource[] = "<stringsource>";
 static const char __pyx_k_Caller_finish[] = "Caller.finish";
@@ -3020,6 +3023,7 @@ static const char __pyx_k_get_positions[] = "get_positions";
 static const char __pyx_k_is_homozygous[] = "is_homozygous";
 static const char __pyx_k_opt_trans_ptr[] = "opt_trans_ptr";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
+static const char __pyx_k_reference_end[] = "reference_end";
 static const char __pyx_k_variant_index[] = "variant_index";
 static const char __pyx_k_variants_list[] = "variants_list";
 static const char __pyx_k_whatshap_core[] = "whatshap.core";
@@ -3050,6 +3054,8 @@ static const char __pyx_k_Read_add_variant[] = "Read.add_variant";
 static const char __pyx_k_add_relationship[] = "add_relationship";
 static const char __pyx_k_genotypes_vector[] = "genotypes_vector";
 static const char __pyx_k_get_optimal_cost[] = "get_optimal_cost";
+static const char __pyx_k_is_supplementary[] = "is_supplementary";
+static const char __pyx_k_sub_alignment_id[] = "sub_alignment_id";
 static const char __pyx_k_Pedigree_genotype[] = "Pedigree.genotype";
 static const char __pyx_k_bam_alignment_pos[] = "bam_alignment_pos";
 static const char __pyx_k_compute_genotypes[] = "compute_genotypes";
@@ -3062,6 +3068,7 @@ static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_distrust_genotypes[] = "distrust_genotypes";
 static const char __pyx_k_numeric_sample_ids[] = "numeric_sample_ids";
+static const char __pyx_k_sub_alignment_id_2[] = "_sub_alignment_id";
 static const char __pyx_k_Caller_all_variants[] = "Caller.all_variants";
 static const char __pyx_k_Genotype___deepcopy[] = "Genotype.__deepcopy__";
 static const char __pyx_k_Genotype___getstate[] = "Genotype.__getstate__";
@@ -3132,7 +3139,7 @@ static const char __pyx_k_PedigreeDPTable_get_optimal_part[] = "PedigreeDPTable.
 static const char __pyx_k_PhredGenotypeLikelihoods___reduc[] = "PhredGenotypeLikelihoods.__reduce_cython__";
 static const char __pyx_k_PhredGenotypeLikelihoods___setst[] = "PhredGenotypeLikelihoods.__setstate_cython__";
 static const char __pyx_k_PhredGenotypeLikelihoods_genotyp[] = "PhredGenotypeLikelihoods.genotypes";
-static const char __pyx_k_Read_name_r_mapq_source_id_sampl[] = "Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})";
+static const char __pyx_k_Read_name_r_mapq_source_id_sampl[] = "Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={}, reference_end={}, chromosome={}, is_supplementary={}, is_reverse={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 /* #### Code section: decls ### */
 static int __pyx_pf_8whatshap_4core_16NumericSampleIds___cinit__(struct __pyx_obj_8whatshap_4core_NumericSampleIds *__pyx_v_self); /* proto */
@@ -3145,7 +3152,7 @@ static PyObject *__pyx_pf_8whatshap_4core_16NumericSampleIds_12__getstate__(stru
 static PyObject *__pyx_pf_8whatshap_4core_16NumericSampleIds_14__setstate__(struct __pyx_obj_8whatshap_4core_NumericSampleIds *__pyx_v_self, PyObject *__pyx_v_state); /* proto */
 static PyObject *__pyx_pf_8whatshap_4core_16NumericSampleIds_16__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8whatshap_4core_NumericSampleIds *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8whatshap_4core_16NumericSampleIds_18__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8whatshap_4core_NumericSampleIds *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self, PyObject *__pyx_v_name, int __pyx_v_mapq, int __pyx_v_source_id, int __pyx_v_sample_id, int __pyx_v_reference_start, PyObject *__pyx_v_BX_tag, int __pyx_v_HP_tag, int __pyx_v_PS_tag); /* proto */
+static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self, PyObject *__pyx_v_name, int __pyx_v_mapq, int __pyx_v_source_id, int __pyx_v_sample_id, int __pyx_v_reference_start, PyObject *__pyx_v_BX_tag, int __pyx_v_HP_tag, int __pyx_v_PS_tag, PyObject *__pyx_v_chromosome, PyObject *__pyx_v_sub_alignment_id, bool __pyx_v_is_supplementary, int __pyx_v_reference_end, bool __pyx_v_is_reverse); /* proto */
 static void __pyx_pf_8whatshap_4core_4Read_2__dealloc__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8whatshap_4core_4Read_4__repr__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8whatshap_4core_4Read_5mapqs___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
@@ -3153,6 +3160,11 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4name___get__(struct __pyx_obj_8
 static PyObject *__pyx_pf_8whatshap_4core_4Read_9source_id___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8whatshap_4core_4Read_9sample_id___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8whatshap_4core_4Read_15reference_start___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8whatshap_4core_4Read_13reference_end___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8whatshap_4core_4Read_10chromosome___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8whatshap_4core_4Read_16sub_alignment_id___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8whatshap_4core_4Read_16is_supplementary___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8whatshap_4core_4Read_10is_reverse___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8whatshap_4core_4Read_6BX_tag___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8whatshap_4core_4Read_6HP_tag___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8whatshap_4core_4Read_6PS_tag___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self); /* proto */
@@ -3489,6 +3501,8 @@ typedef struct {
   PyObject *__pyx_n_s_binomial_coefficient;
   PyObject *__pyx_n_s_c_positions;
   PyObject *__pyx_n_s_child_id;
+  PyObject *__pyx_n_s_chromosome;
+  PyObject *__pyx_n_s_chromosome_2;
   PyObject *__pyx_n_s_class_getitem;
   PyObject *__pyx_n_s_cline_in_traceback;
   PyObject *__pyx_n_s_close;
@@ -3540,7 +3554,9 @@ typedef struct {
   PyObject *__pyx_n_s_is_diploid_and_biallelic;
   PyObject *__pyx_n_s_is_homozygous;
   PyObject *__pyx_n_s_is_none;
+  PyObject *__pyx_n_s_is_reverse;
   PyObject *__pyx_n_s_is_sorted;
+  PyObject *__pyx_n_s_is_supplementary;
   PyObject *__pyx_kp_u_isenabled;
   PyObject *__pyx_n_s_items;
   PyObject *__pyx_n_s_iter;
@@ -3584,6 +3600,7 @@ typedef struct {
   PyObject *__pyx_n_s_reduce_cython;
   PyObject *__pyx_n_s_reduce_ex;
   PyObject *__pyx_n_s_reference;
+  PyObject *__pyx_n_s_reference_end;
   PyObject *__pyx_n_s_reference_start;
   PyObject *__pyx_n_s_result;
   PyObject *__pyx_n_s_results;
@@ -3598,6 +3615,8 @@ typedef struct {
   PyObject *__pyx_n_s_source_id;
   PyObject *__pyx_n_s_state;
   PyObject *__pyx_kp_s_stringsource;
+  PyObject *__pyx_n_s_sub_alignment_id;
+  PyObject *__pyx_n_s_sub_alignment_id_2;
   PyObject *__pyx_n_s_subset;
   PyObject *__pyx_n_s_test;
   PyObject *__pyx_n_s_throw;
@@ -3927,6 +3946,8 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_binomial_coefficient);
   Py_CLEAR(clear_module_state->__pyx_n_s_c_positions);
   Py_CLEAR(clear_module_state->__pyx_n_s_child_id);
+  Py_CLEAR(clear_module_state->__pyx_n_s_chromosome);
+  Py_CLEAR(clear_module_state->__pyx_n_s_chromosome_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_class_getitem);
   Py_CLEAR(clear_module_state->__pyx_n_s_cline_in_traceback);
   Py_CLEAR(clear_module_state->__pyx_n_s_close);
@@ -3978,7 +3999,9 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_is_diploid_and_biallelic);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_homozygous);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_none);
+  Py_CLEAR(clear_module_state->__pyx_n_s_is_reverse);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_sorted);
+  Py_CLEAR(clear_module_state->__pyx_n_s_is_supplementary);
   Py_CLEAR(clear_module_state->__pyx_kp_u_isenabled);
   Py_CLEAR(clear_module_state->__pyx_n_s_items);
   Py_CLEAR(clear_module_state->__pyx_n_s_iter);
@@ -4022,6 +4045,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_reduce_cython);
   Py_CLEAR(clear_module_state->__pyx_n_s_reduce_ex);
   Py_CLEAR(clear_module_state->__pyx_n_s_reference);
+  Py_CLEAR(clear_module_state->__pyx_n_s_reference_end);
   Py_CLEAR(clear_module_state->__pyx_n_s_reference_start);
   Py_CLEAR(clear_module_state->__pyx_n_s_result);
   Py_CLEAR(clear_module_state->__pyx_n_s_results);
@@ -4036,6 +4060,8 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_source_id);
   Py_CLEAR(clear_module_state->__pyx_n_s_state);
   Py_CLEAR(clear_module_state->__pyx_kp_s_stringsource);
+  Py_CLEAR(clear_module_state->__pyx_n_s_sub_alignment_id);
+  Py_CLEAR(clear_module_state->__pyx_n_s_sub_alignment_id_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_subset);
   Py_CLEAR(clear_module_state->__pyx_n_s_test);
   Py_CLEAR(clear_module_state->__pyx_n_s_throw);
@@ -4343,6 +4369,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_binomial_coefficient);
   Py_VISIT(traverse_module_state->__pyx_n_s_c_positions);
   Py_VISIT(traverse_module_state->__pyx_n_s_child_id);
+  Py_VISIT(traverse_module_state->__pyx_n_s_chromosome);
+  Py_VISIT(traverse_module_state->__pyx_n_s_chromosome_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_class_getitem);
   Py_VISIT(traverse_module_state->__pyx_n_s_cline_in_traceback);
   Py_VISIT(traverse_module_state->__pyx_n_s_close);
@@ -4394,7 +4422,9 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_is_diploid_and_biallelic);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_homozygous);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_none);
+  Py_VISIT(traverse_module_state->__pyx_n_s_is_reverse);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_sorted);
+  Py_VISIT(traverse_module_state->__pyx_n_s_is_supplementary);
   Py_VISIT(traverse_module_state->__pyx_kp_u_isenabled);
   Py_VISIT(traverse_module_state->__pyx_n_s_items);
   Py_VISIT(traverse_module_state->__pyx_n_s_iter);
@@ -4438,6 +4468,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_reduce_cython);
   Py_VISIT(traverse_module_state->__pyx_n_s_reduce_ex);
   Py_VISIT(traverse_module_state->__pyx_n_s_reference);
+  Py_VISIT(traverse_module_state->__pyx_n_s_reference_end);
   Py_VISIT(traverse_module_state->__pyx_n_s_reference_start);
   Py_VISIT(traverse_module_state->__pyx_n_s_result);
   Py_VISIT(traverse_module_state->__pyx_n_s_results);
@@ -4452,6 +4483,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_source_id);
   Py_VISIT(traverse_module_state->__pyx_n_s_state);
   Py_VISIT(traverse_module_state->__pyx_kp_s_stringsource);
+  Py_VISIT(traverse_module_state->__pyx_n_s_sub_alignment_id);
+  Py_VISIT(traverse_module_state->__pyx_n_s_sub_alignment_id_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_subset);
   Py_VISIT(traverse_module_state->__pyx_n_s_test);
   Py_VISIT(traverse_module_state->__pyx_n_s_throw);
@@ -4791,6 +4824,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_binomial_coefficient __pyx_mstate_global->__pyx_n_s_binomial_coefficient
 #define __pyx_n_s_c_positions __pyx_mstate_global->__pyx_n_s_c_positions
 #define __pyx_n_s_child_id __pyx_mstate_global->__pyx_n_s_child_id
+#define __pyx_n_s_chromosome __pyx_mstate_global->__pyx_n_s_chromosome
+#define __pyx_n_s_chromosome_2 __pyx_mstate_global->__pyx_n_s_chromosome_2
 #define __pyx_n_s_class_getitem __pyx_mstate_global->__pyx_n_s_class_getitem
 #define __pyx_n_s_cline_in_traceback __pyx_mstate_global->__pyx_n_s_cline_in_traceback
 #define __pyx_n_s_close __pyx_mstate_global->__pyx_n_s_close
@@ -4842,7 +4877,9 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_is_diploid_and_biallelic __pyx_mstate_global->__pyx_n_s_is_diploid_and_biallelic
 #define __pyx_n_s_is_homozygous __pyx_mstate_global->__pyx_n_s_is_homozygous
 #define __pyx_n_s_is_none __pyx_mstate_global->__pyx_n_s_is_none
+#define __pyx_n_s_is_reverse __pyx_mstate_global->__pyx_n_s_is_reverse
 #define __pyx_n_s_is_sorted __pyx_mstate_global->__pyx_n_s_is_sorted
+#define __pyx_n_s_is_supplementary __pyx_mstate_global->__pyx_n_s_is_supplementary
 #define __pyx_kp_u_isenabled __pyx_mstate_global->__pyx_kp_u_isenabled
 #define __pyx_n_s_items __pyx_mstate_global->__pyx_n_s_items
 #define __pyx_n_s_iter __pyx_mstate_global->__pyx_n_s_iter
@@ -4886,6 +4923,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_reduce_cython __pyx_mstate_global->__pyx_n_s_reduce_cython
 #define __pyx_n_s_reduce_ex __pyx_mstate_global->__pyx_n_s_reduce_ex
 #define __pyx_n_s_reference __pyx_mstate_global->__pyx_n_s_reference
+#define __pyx_n_s_reference_end __pyx_mstate_global->__pyx_n_s_reference_end
 #define __pyx_n_s_reference_start __pyx_mstate_global->__pyx_n_s_reference_start
 #define __pyx_n_s_result __pyx_mstate_global->__pyx_n_s_result
 #define __pyx_n_s_results __pyx_mstate_global->__pyx_n_s_results
@@ -4900,6 +4938,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_source_id __pyx_mstate_global->__pyx_n_s_source_id
 #define __pyx_n_s_state __pyx_mstate_global->__pyx_n_s_state
 #define __pyx_kp_s_stringsource __pyx_mstate_global->__pyx_kp_s_stringsource
+#define __pyx_n_s_sub_alignment_id __pyx_mstate_global->__pyx_n_s_sub_alignment_id
+#define __pyx_n_s_sub_alignment_id_2 __pyx_mstate_global->__pyx_n_s_sub_alignment_id_2
 #define __pyx_n_s_subset __pyx_mstate_global->__pyx_n_s_subset
 #define __pyx_n_s_test __pyx_mstate_global->__pyx_n_s_test
 #define __pyx_n_s_throw __pyx_mstate_global->__pyx_n_s_throw
@@ -8461,9 +8501,9 @@ static PyObject *__pyx_pf_8whatshap_4core_16NumericSampleIds_18__setstate_cython
 /* "whatshap/core.pyx":63
  * 
  * cdef class Read:
- * 	def __cinit__(self, str name = None, int mapq = 0, int source_id = 0, int sample_id = 0, int reference_start = -1, str BX_tag = None, int HP_tag = -1, int PS_tag = -1):             # <<<<<<<<<<<<<<
- * 		cdef string _name = b''
- * 		cdef string _BX_tag = b''
+ * 	def __cinit__(self, str name = None, int mapq = 0, int source_id = 0, int sample_id = 0, int reference_start = -1,             # <<<<<<<<<<<<<<
+ * 				  str BX_tag = None, int HP_tag = -1, int PS_tag = -1,
+ * 				  str chromosome = None, str sub_alignment_id = None, bool is_supplementary = False, int reference_end = -1, bool is_reverse = False):
  */
 
 /* Python wrapper */
@@ -8477,9 +8517,14 @@ static int __pyx_pw_8whatshap_4core_4Read_1__cinit__(PyObject *__pyx_v_self, PyO
   PyObject *__pyx_v_BX_tag = 0;
   int __pyx_v_HP_tag;
   int __pyx_v_PS_tag;
+  PyObject *__pyx_v_chromosome = 0;
+  PyObject *__pyx_v_sub_alignment_id = 0;
+  bool __pyx_v_is_supplementary;
+  int __pyx_v_reference_end;
+  bool __pyx_v_is_reverse;
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[8] = {0,0,0,0,0,0,0,0};
+  PyObject* values[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -8493,12 +8538,40 @@ static int __pyx_pw_8whatshap_4core_4Read_1__cinit__(PyObject *__pyx_v_self, PyO
   #endif
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   {
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_name,&__pyx_n_s_mapq,&__pyx_n_s_source_id,&__pyx_n_s_sample_id,&__pyx_n_s_reference_start,&__pyx_n_s_BX_tag,&__pyx_n_s_HP_tag,&__pyx_n_s_PS_tag,0};
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_name,&__pyx_n_s_mapq,&__pyx_n_s_source_id,&__pyx_n_s_sample_id,&__pyx_n_s_reference_start,&__pyx_n_s_BX_tag,&__pyx_n_s_HP_tag,&__pyx_n_s_PS_tag,&__pyx_n_s_chromosome,&__pyx_n_s_sub_alignment_id,&__pyx_n_s_is_supplementary,&__pyx_n_s_reference_end,&__pyx_n_s_is_reverse,0};
     values[0] = __Pyx_Arg_NewRef_VARARGS(((PyObject*)Py_None));
+
+    /* "whatshap/core.pyx":64
+ * cdef class Read:
+ * 	def __cinit__(self, str name = None, int mapq = 0, int source_id = 0, int sample_id = 0, int reference_start = -1,
+ * 				  str BX_tag = None, int HP_tag = -1, int PS_tag = -1,             # <<<<<<<<<<<<<<
+ * 				  str chromosome = None, str sub_alignment_id = None, bool is_supplementary = False, int reference_end = -1, bool is_reverse = False):
+ * 		cdef string _name = b''
+ */
     values[5] = __Pyx_Arg_NewRef_VARARGS(((PyObject*)Py_None));
+
+    /* "whatshap/core.pyx":65
+ * 	def __cinit__(self, str name = None, int mapq = 0, int source_id = 0, int sample_id = 0, int reference_start = -1,
+ * 				  str BX_tag = None, int HP_tag = -1, int PS_tag = -1,
+ * 				  str chromosome = None, str sub_alignment_id = None, bool is_supplementary = False, int reference_end = -1, bool is_reverse = False):             # <<<<<<<<<<<<<<
+ * 		cdef string _name = b''
+ * 		cdef string _BX_tag = b''
+ */
+    values[8] = __Pyx_Arg_NewRef_VARARGS(((PyObject*)Py_None));
+    values[9] = __Pyx_Arg_NewRef_VARARGS(((PyObject*)Py_None));
     if (__pyx_kwds) {
       Py_ssize_t kw_args;
       switch (__pyx_nargs) {
+        case 13: values[12] = __Pyx_Arg_VARARGS(__pyx_args, 12);
+        CYTHON_FALLTHROUGH;
+        case 12: values[11] = __Pyx_Arg_VARARGS(__pyx_args, 11);
+        CYTHON_FALLTHROUGH;
+        case 11: values[10] = __Pyx_Arg_VARARGS(__pyx_args, 10);
+        CYTHON_FALLTHROUGH;
+        case 10: values[9] = __Pyx_Arg_VARARGS(__pyx_args, 9);
+        CYTHON_FALLTHROUGH;
+        case  9: values[8] = __Pyx_Arg_VARARGS(__pyx_args, 8);
+        CYTHON_FALLTHROUGH;
         case  8: values[7] = __Pyx_Arg_VARARGS(__pyx_args, 7);
         CYTHON_FALLTHROUGH;
         case  7: values[6] = __Pyx_Arg_VARARGS(__pyx_args, 6);
@@ -8575,6 +8648,41 @@ static int __pyx_pw_8whatshap_4core_4Read_1__cinit__(PyObject *__pyx_v_self, PyO
           if (value) { values[7] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
           else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 63, __pyx_L3_error)
         }
+        CYTHON_FALLTHROUGH;
+        case  8:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_chromosome);
+          if (value) { values[8] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 63, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  9:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_sub_alignment_id);
+          if (value) { values[9] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 63, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 10:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_is_supplementary);
+          if (value) { values[10] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 63, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 11:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_reference_end);
+          if (value) { values[11] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 63, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 12:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_is_reverse);
+          if (value) { values[12] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 63, __pyx_L3_error)
+        }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
@@ -8582,6 +8690,16 @@ static int __pyx_pw_8whatshap_4core_4Read_1__cinit__(PyObject *__pyx_v_self, PyO
       }
     } else {
       switch (__pyx_nargs) {
+        case 13: values[12] = __Pyx_Arg_VARARGS(__pyx_args, 12);
+        CYTHON_FALLTHROUGH;
+        case 12: values[11] = __Pyx_Arg_VARARGS(__pyx_args, 11);
+        CYTHON_FALLTHROUGH;
+        case 11: values[10] = __Pyx_Arg_VARARGS(__pyx_args, 10);
+        CYTHON_FALLTHROUGH;
+        case 10: values[9] = __Pyx_Arg_VARARGS(__pyx_args, 9);
+        CYTHON_FALLTHROUGH;
+        case  9: values[8] = __Pyx_Arg_VARARGS(__pyx_args, 8);
+        CYTHON_FALLTHROUGH;
         case  8: values[7] = __Pyx_Arg_VARARGS(__pyx_args, 7);
         CYTHON_FALLTHROUGH;
         case  7: values[6] = __Pyx_Arg_VARARGS(__pyx_args, 6);
@@ -8625,19 +8743,36 @@ static int __pyx_pw_8whatshap_4core_4Read_1__cinit__(PyObject *__pyx_v_self, PyO
     }
     __pyx_v_BX_tag = ((PyObject*)values[5]);
     if (values[6]) {
-      __pyx_v_HP_tag = __Pyx_PyInt_As_int(values[6]); if (unlikely((__pyx_v_HP_tag == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 63, __pyx_L3_error)
+      __pyx_v_HP_tag = __Pyx_PyInt_As_int(values[6]); if (unlikely((__pyx_v_HP_tag == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 64, __pyx_L3_error)
     } else {
       __pyx_v_HP_tag = ((int)-1);
     }
     if (values[7]) {
-      __pyx_v_PS_tag = __Pyx_PyInt_As_int(values[7]); if (unlikely((__pyx_v_PS_tag == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 63, __pyx_L3_error)
+      __pyx_v_PS_tag = __Pyx_PyInt_As_int(values[7]); if (unlikely((__pyx_v_PS_tag == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 64, __pyx_L3_error)
     } else {
       __pyx_v_PS_tag = ((int)-1);
+    }
+    __pyx_v_chromosome = ((PyObject*)values[8]);
+    __pyx_v_sub_alignment_id = ((PyObject*)values[9]);
+    if (values[10]) {
+      __pyx_v_is_supplementary = __Pyx_PyObject_IsTrue(values[10]); if (unlikely((__pyx_v_is_supplementary == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 65, __pyx_L3_error)
+    } else {
+      __pyx_v_is_supplementary = ((bool)0);
+    }
+    if (values[11]) {
+      __pyx_v_reference_end = __Pyx_PyInt_As_int(values[11]); if (unlikely((__pyx_v_reference_end == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 65, __pyx_L3_error)
+    } else {
+      __pyx_v_reference_end = ((int)-1);
+    }
+    if (values[12]) {
+      __pyx_v_is_reverse = __Pyx_PyObject_IsTrue(values[12]); if (unlikely((__pyx_v_is_reverse == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 65, __pyx_L3_error)
+    } else {
+      __pyx_v_is_reverse = ((bool)0);
     }
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 0, 8, __pyx_nargs); __PYX_ERR(1, 63, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 0, 13, __pyx_nargs); __PYX_ERR(1, 63, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -8652,8 +8787,18 @@ static int __pyx_pw_8whatshap_4core_4Read_1__cinit__(PyObject *__pyx_v_self, PyO
   return -1;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_name), (&PyUnicode_Type), 1, "name", 1))) __PYX_ERR(1, 63, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_BX_tag), (&PyUnicode_Type), 1, "BX_tag", 1))) __PYX_ERR(1, 63, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8whatshap_4core_4Read___cinit__(((struct __pyx_obj_8whatshap_4core_Read *)__pyx_v_self), __pyx_v_name, __pyx_v_mapq, __pyx_v_source_id, __pyx_v_sample_id, __pyx_v_reference_start, __pyx_v_BX_tag, __pyx_v_HP_tag, __pyx_v_PS_tag);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_BX_tag), (&PyUnicode_Type), 1, "BX_tag", 1))) __PYX_ERR(1, 64, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_chromosome), (&PyUnicode_Type), 1, "chromosome", 1))) __PYX_ERR(1, 65, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sub_alignment_id), (&PyUnicode_Type), 1, "sub_alignment_id", 1))) __PYX_ERR(1, 65, __pyx_L1_error)
+  __pyx_r = __pyx_pf_8whatshap_4core_4Read___cinit__(((struct __pyx_obj_8whatshap_4core_Read *)__pyx_v_self), __pyx_v_name, __pyx_v_mapq, __pyx_v_source_id, __pyx_v_sample_id, __pyx_v_reference_start, __pyx_v_BX_tag, __pyx_v_HP_tag, __pyx_v_PS_tag, __pyx_v_chromosome, __pyx_v_sub_alignment_id, __pyx_v_is_supplementary, __pyx_v_reference_end, __pyx_v_is_reverse);
+
+  /* "whatshap/core.pyx":63
+ * 
+ * cdef class Read:
+ * 	def __cinit__(self, str name = None, int mapq = 0, int source_id = 0, int sample_id = 0, int reference_start = -1,             # <<<<<<<<<<<<<<
+ * 				  str BX_tag = None, int HP_tag = -1, int PS_tag = -1,
+ * 				  str chromosome = None, str sub_alignment_id = None, bool is_supplementary = False, int reference_end = -1, bool is_reverse = False):
+ */
 
   /* function exit code */
   goto __pyx_L0;
@@ -8670,9 +8815,11 @@ static int __pyx_pw_8whatshap_4core_4Read_1__cinit__(PyObject *__pyx_v_self, PyO
   return __pyx_r;
 }
 
-static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self, PyObject *__pyx_v_name, int __pyx_v_mapq, int __pyx_v_source_id, int __pyx_v_sample_id, int __pyx_v_reference_start, PyObject *__pyx_v_BX_tag, int __pyx_v_HP_tag, int __pyx_v_PS_tag) {
+static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self, PyObject *__pyx_v_name, int __pyx_v_mapq, int __pyx_v_source_id, int __pyx_v_sample_id, int __pyx_v_reference_start, PyObject *__pyx_v_BX_tag, int __pyx_v_HP_tag, int __pyx_v_PS_tag, PyObject *__pyx_v_chromosome, PyObject *__pyx_v_sub_alignment_id, bool __pyx_v_is_supplementary, int __pyx_v_reference_end, bool __pyx_v_is_reverse) {
   std::string __pyx_v__name;
   std::string __pyx_v__BX_tag;
+  std::string __pyx_v__chromosome;
+  std::string __pyx_v__sub_alignment_id;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   std::string __pyx_t_1;
@@ -8685,28 +8832,48 @@ static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__cinit__", 1);
 
-  /* "whatshap/core.pyx":64
- * cdef class Read:
- * 	def __cinit__(self, str name = None, int mapq = 0, int source_id = 0, int sample_id = 0, int reference_start = -1, str BX_tag = None, int HP_tag = -1, int PS_tag = -1):
+  /* "whatshap/core.pyx":66
+ * 				  str BX_tag = None, int HP_tag = -1, int PS_tag = -1,
+ * 				  str chromosome = None, str sub_alignment_id = None, bool is_supplementary = False, int reference_end = -1, bool is_reverse = False):
  * 		cdef string _name = b''             # <<<<<<<<<<<<<<
  * 		cdef string _BX_tag = b''
- * 
+ * 		cdef string _chromosome = b''
  */
-  __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 64, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 66, __pyx_L1_error)
   __pyx_v__name = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-  /* "whatshap/core.pyx":65
- * 	def __cinit__(self, str name = None, int mapq = 0, int source_id = 0, int sample_id = 0, int reference_start = -1, str BX_tag = None, int HP_tag = -1, int PS_tag = -1):
+  /* "whatshap/core.pyx":67
+ * 				  str chromosome = None, str sub_alignment_id = None, bool is_supplementary = False, int reference_end = -1, bool is_reverse = False):
  * 		cdef string _name = b''
  * 		cdef string _BX_tag = b''             # <<<<<<<<<<<<<<
+ * 		cdef string _chromosome = b''
+ * 		cdef string _sub_alignment_id = b''
+ */
+  __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 67, __pyx_L1_error)
+  __pyx_v__BX_tag = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
+
+  /* "whatshap/core.pyx":68
+ * 		cdef string _name = b''
+ * 		cdef string _BX_tag = b''
+ * 		cdef string _chromosome = b''             # <<<<<<<<<<<<<<
+ * 		cdef string _sub_alignment_id = b''
+ * 
+ */
+  __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 68, __pyx_L1_error)
+  __pyx_v__chromosome = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
+
+  /* "whatshap/core.pyx":69
+ * 		cdef string _BX_tag = b''
+ * 		cdef string _chromosome = b''
+ * 		cdef string _sub_alignment_id = b''             # <<<<<<<<<<<<<<
  * 
  * 		if name is None:
  */
-  __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 65, __pyx_L1_error)
-  __pyx_v__BX_tag = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
+  __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 69, __pyx_L1_error)
+  __pyx_v__sub_alignment_id = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-  /* "whatshap/core.pyx":67
- * 		cdef string _BX_tag = b''
+  /* "whatshap/core.pyx":71
+ * 		cdef string _sub_alignment_id = b''
  * 
  * 		if name is None:             # <<<<<<<<<<<<<<
  * 			self.thisptr = NULL
@@ -8715,7 +8882,7 @@ static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4
   __pyx_t_2 = (__pyx_v_name == ((PyObject*)Py_None));
   if (__pyx_t_2) {
 
-    /* "whatshap/core.pyx":68
+    /* "whatshap/core.pyx":72
  * 
  * 		if name is None:
  * 			self.thisptr = NULL             # <<<<<<<<<<<<<<
@@ -8724,7 +8891,7 @@ static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4
  */
     __pyx_v_self->thisptr = NULL;
 
-    /* "whatshap/core.pyx":69
+    /* "whatshap/core.pyx":73
  * 		if name is None:
  * 			self.thisptr = NULL
  * 			self.ownsptr = False             # <<<<<<<<<<<<<<
@@ -8733,8 +8900,8 @@ static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4
  */
     __pyx_v_self->ownsptr = 0;
 
-    /* "whatshap/core.pyx":67
- * 		cdef string _BX_tag = b''
+    /* "whatshap/core.pyx":71
+ * 		cdef string _sub_alignment_id = b''
  * 
  * 		if name is None:             # <<<<<<<<<<<<<<
  * 			self.thisptr = NULL
@@ -8743,7 +8910,7 @@ static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4
     goto __pyx_L3;
   }
 
-  /* "whatshap/core.pyx":72
+  /* "whatshap/core.pyx":76
  * 		else:
  * 			# TODO: Is this the best way to handle string arguments?
  * 			_name = name.encode('UTF-8')             # <<<<<<<<<<<<<<
@@ -8753,20 +8920,20 @@ static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4
   /*else*/ {
     if (unlikely(__pyx_v_name == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
-      __PYX_ERR(1, 72, __pyx_L1_error)
+      __PYX_ERR(1, 76, __pyx_L1_error)
     }
-    __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 72, __pyx_L1_error)
+    __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 76, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 72, __pyx_L1_error)
+    __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 76, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v__name = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-    /* "whatshap/core.pyx":73
+    /* "whatshap/core.pyx":77
  * 			# TODO: Is this the best way to handle string arguments?
  * 			_name = name.encode('UTF-8')
  * 			if BX_tag is not '' and BX_tag is not None:             # <<<<<<<<<<<<<<
  * 				_BX_tag = BX_tag.encode('UTF-8')
- * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)
+ * 			if chromosome is not b'' and chromosome is not None:
  */
     __pyx_t_4 = (__pyx_v_BX_tag != __pyx_kp_u_);
     if (__pyx_t_4) {
@@ -8779,50 +8946,138 @@ static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4
     __pyx_L5_bool_binop_done:;
     if (__pyx_t_2) {
 
-      /* "whatshap/core.pyx":74
+      /* "whatshap/core.pyx":78
  * 			_name = name.encode('UTF-8')
  * 			if BX_tag is not '' and BX_tag is not None:
  * 				_BX_tag = BX_tag.encode('UTF-8')             # <<<<<<<<<<<<<<
- * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)
- * 			self.ownsptr = True
+ * 			if chromosome is not b'' and chromosome is not None:
+ * 				_chromosome = chromosome.encode('UTF-8')
  */
       if (unlikely(__pyx_v_BX_tag == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
-        __PYX_ERR(1, 74, __pyx_L1_error)
+        __PYX_ERR(1, 78, __pyx_L1_error)
       }
-      __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_BX_tag); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 74, __pyx_L1_error)
+      __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_BX_tag); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 78, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 74, __pyx_L1_error)
+      __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 78, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v__BX_tag = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-      /* "whatshap/core.pyx":73
+      /* "whatshap/core.pyx":77
  * 			# TODO: Is this the best way to handle string arguments?
  * 			_name = name.encode('UTF-8')
  * 			if BX_tag is not '' and BX_tag is not None:             # <<<<<<<<<<<<<<
  * 				_BX_tag = BX_tag.encode('UTF-8')
- * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)
+ * 			if chromosome is not b'' and chromosome is not None:
  */
     }
 
-    /* "whatshap/core.pyx":75
+    /* "whatshap/core.pyx":79
  * 			if BX_tag is not '' and BX_tag is not None:
  * 				_BX_tag = BX_tag.encode('UTF-8')
- * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)             # <<<<<<<<<<<<<<
+ * 			if chromosome is not b'' and chromosome is not None:             # <<<<<<<<<<<<<<
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ */
+    __pyx_t_4 = (__pyx_v_chromosome != ((PyObject*)__pyx_kp_b_));
+    if (__pyx_t_4) {
+    } else {
+      __pyx_t_2 = __pyx_t_4;
+      goto __pyx_L8_bool_binop_done;
+    }
+    __pyx_t_4 = (__pyx_v_chromosome != ((PyObject*)Py_None));
+    __pyx_t_2 = __pyx_t_4;
+    __pyx_L8_bool_binop_done:;
+    if (__pyx_t_2) {
+
+      /* "whatshap/core.pyx":80
+ * 				_BX_tag = BX_tag.encode('UTF-8')
+ * 			if chromosome is not b'' and chromosome is not None:
+ * 				_chromosome = chromosome.encode('UTF-8')             # <<<<<<<<<<<<<<
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ */
+      if (unlikely(__pyx_v_chromosome == Py_None)) {
+        PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
+        __PYX_ERR(1, 80, __pyx_L1_error)
+      }
+      __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_chromosome); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 80, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 80, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_v__chromosome = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
+
+      /* "whatshap/core.pyx":79
+ * 			if BX_tag is not '' and BX_tag is not None:
+ * 				_BX_tag = BX_tag.encode('UTF-8')
+ * 			if chromosome is not b'' and chromosome is not None:             # <<<<<<<<<<<<<<
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ */
+    }
+
+    /* "whatshap/core.pyx":81
+ * 			if chromosome is not b'' and chromosome is not None:
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:             # <<<<<<<<<<<<<<
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)
+ */
+    __pyx_t_4 = (__pyx_v_sub_alignment_id != ((PyObject*)__pyx_kp_b_));
+    if (__pyx_t_4) {
+    } else {
+      __pyx_t_2 = __pyx_t_4;
+      goto __pyx_L11_bool_binop_done;
+    }
+    __pyx_t_4 = (__pyx_v_sub_alignment_id != ((PyObject*)Py_None));
+    __pyx_t_2 = __pyx_t_4;
+    __pyx_L11_bool_binop_done:;
+    if (__pyx_t_2) {
+
+      /* "whatshap/core.pyx":82
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')             # <<<<<<<<<<<<<<
+ * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)
+ * 			self.ownsptr = True
+ */
+      if (unlikely(__pyx_v_sub_alignment_id == Py_None)) {
+        PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
+        __PYX_ERR(1, 82, __pyx_L1_error)
+      }
+      __pyx_t_3 = PyUnicode_AsUTF8String(__pyx_v_sub_alignment_id); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 82, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_1 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 82, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_v__sub_alignment_id = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
+
+      /* "whatshap/core.pyx":81
+ * 			if chromosome is not b'' and chromosome is not None:
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:             # <<<<<<<<<<<<<<
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)
+ */
+    }
+
+    /* "whatshap/core.pyx":83
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)             # <<<<<<<<<<<<<<
  * 			self.ownsptr = True
  * 
  */
     try {
-      __pyx_t_5 = new Read(__pyx_v__name, __pyx_v_mapq, __pyx_v_source_id, __pyx_v_sample_id, __pyx_v_reference_start, __pyx_v__BX_tag, __pyx_v_HP_tag, __pyx_v_PS_tag);
+      __pyx_t_5 = new Read(__pyx_v__name, __pyx_v_mapq, __pyx_v_source_id, __pyx_v_sample_id, __pyx_v_reference_start, __pyx_v__BX_tag, __pyx_v_HP_tag, __pyx_v_PS_tag, __pyx_v__chromosome, __pyx_v__sub_alignment_id, __pyx_v_is_supplementary, __pyx_v_reference_end, __pyx_v_is_reverse);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 75, __pyx_L1_error)
+      __PYX_ERR(1, 83, __pyx_L1_error)
     }
     __pyx_v_self->thisptr = __pyx_t_5;
 
-    /* "whatshap/core.pyx":76
- * 				_BX_tag = BX_tag.encode('UTF-8')
- * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)
+    /* "whatshap/core.pyx":84
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ * 			self.thisptr = new cpp.Read(_name, mapq, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)
  * 			self.ownsptr = True             # <<<<<<<<<<<<<<
  * 
  * 	def __dealloc__(self):
@@ -8834,9 +9089,9 @@ static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4
   /* "whatshap/core.pyx":63
  * 
  * cdef class Read:
- * 	def __cinit__(self, str name = None, int mapq = 0, int source_id = 0, int sample_id = 0, int reference_start = -1, str BX_tag = None, int HP_tag = -1, int PS_tag = -1):             # <<<<<<<<<<<<<<
- * 		cdef string _name = b''
- * 		cdef string _BX_tag = b''
+ * 	def __cinit__(self, str name = None, int mapq = 0, int source_id = 0, int sample_id = 0, int reference_start = -1,             # <<<<<<<<<<<<<<
+ * 				  str BX_tag = None, int HP_tag = -1, int PS_tag = -1,
+ * 				  str chromosome = None, str sub_alignment_id = None, bool is_supplementary = False, int reference_end = -1, bool is_reverse = False):
  */
 
   /* function exit code */
@@ -8851,7 +9106,7 @@ static int __pyx_pf_8whatshap_4core_4Read___cinit__(struct __pyx_obj_8whatshap_4
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":78
+/* "whatshap/core.pyx":86
  * 			self.ownsptr = True
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -8878,7 +9133,7 @@ static void __pyx_pf_8whatshap_4core_4Read_2__dealloc__(struct __pyx_obj_8whatsh
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "whatshap/core.pyx":79
+  /* "whatshap/core.pyx":87
  * 
  * 	def __dealloc__(self):
  * 		if self.ownsptr:             # <<<<<<<<<<<<<<
@@ -8888,7 +9143,7 @@ static void __pyx_pf_8whatshap_4core_4Read_2__dealloc__(struct __pyx_obj_8whatsh
   __pyx_t_1 = (__pyx_v_self->ownsptr != 0);
   if (__pyx_t_1) {
 
-    /* "whatshap/core.pyx":80
+    /* "whatshap/core.pyx":88
  * 	def __dealloc__(self):
  * 		if self.ownsptr:
  * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -8900,14 +9155,14 @@ static void __pyx_pf_8whatshap_4core_4Read_2__dealloc__(struct __pyx_obj_8whatsh
       __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
       if (unlikely(!__pyx_t_1)) {
         __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-        __PYX_ERR(1, 80, __pyx_L1_error)
+        __PYX_ERR(1, 88, __pyx_L1_error)
       }
     }
     #else
-    if ((1)); else __PYX_ERR(1, 80, __pyx_L1_error)
+    if ((1)); else __PYX_ERR(1, 88, __pyx_L1_error)
     #endif
 
-    /* "whatshap/core.pyx":81
+    /* "whatshap/core.pyx":89
  * 		if self.ownsptr:
  * 			assert self.thisptr != NULL
  * 			del self.thisptr             # <<<<<<<<<<<<<<
@@ -8916,7 +9171,7 @@ static void __pyx_pf_8whatshap_4core_4Read_2__dealloc__(struct __pyx_obj_8whatsh
  */
     delete __pyx_v_self->thisptr;
 
-    /* "whatshap/core.pyx":79
+    /* "whatshap/core.pyx":87
  * 
  * 	def __dealloc__(self):
  * 		if self.ownsptr:             # <<<<<<<<<<<<<<
@@ -8925,7 +9180,7 @@ static void __pyx_pf_8whatshap_4core_4Read_2__dealloc__(struct __pyx_obj_8whatsh
  */
   }
 
-  /* "whatshap/core.pyx":78
+  /* "whatshap/core.pyx":86
  * 			self.ownsptr = True
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -8940,12 +9195,12 @@ static void __pyx_pf_8whatshap_4core_4Read_2__dealloc__(struct __pyx_obj_8whatsh
   __pyx_L0:;
 }
 
-/* "whatshap/core.pyx":83
+/* "whatshap/core.pyx":91
  * 			del self.thisptr
  * 
  * 	def __repr__(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
- * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(
+ * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={}, reference_end={}, chromosome={}, is_supplementary={}, is_reverse={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(
  */
 
 /* Python wrapper */
@@ -8979,85 +9234,97 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4__repr__(struct __pyx_obj_8what
   PyObject *__pyx_t_11 = NULL;
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
-  unsigned int __pyx_t_14;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
+  PyObject *__pyx_t_16 = NULL;
+  PyObject *__pyx_t_17 = NULL;
+  unsigned int __pyx_t_18;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__repr__", 1);
 
-  /* "whatshap/core.pyx":84
+  /* "whatshap/core.pyx":92
  * 
  * 	def __repr__(self):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
- * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(
- * 			self.name, self.mapqs, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, list(self))
+ * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={}, reference_end={}, chromosome={}, is_supplementary={}, is_reverse={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(
+ * 			self.name, self.mapqs, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.chromosome, self.is_supplementary, self.is_reverse, self.BX_tag, self.HP_tag, self.PS_tag, list(self))
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(__pyx_assertions_enabled())) {
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 84, __pyx_L1_error)
+      __PYX_ERR(1, 92, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 84, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 92, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":85
+  /* "whatshap/core.pyx":93
  * 	def __repr__(self):
  * 		assert self.thisptr != NULL
- * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(             # <<<<<<<<<<<<<<
- * 			self.name, self.mapqs, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, list(self))
+ * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={}, reference_end={}, chromosome={}, is_supplementary={}, is_reverse={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(             # <<<<<<<<<<<<<<
+ * 			self.name, self.mapqs, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.chromosome, self.is_supplementary, self.is_reverse, self.BX_tag, self.HP_tag, self.PS_tag, list(self))
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Read_name_r_mapq_source_id_sampl, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 85, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Read_name_r_mapq_source_id_sampl, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
 
-  /* "whatshap/core.pyx":86
+  /* "whatshap/core.pyx":94
  * 		assert self.thisptr != NULL
- * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(
- * 			self.name, self.mapqs, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, list(self))             # <<<<<<<<<<<<<<
+ * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={}, reference_end={}, chromosome={}, is_supplementary={}, is_reverse={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(
+ * 			self.name, self.mapqs, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.chromosome, self.is_supplementary, self.is_reverse, self.BX_tag, self.HP_tag, self.PS_tag, list(self))             # <<<<<<<<<<<<<<
  * 
  * 	property mapqs:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_name); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 86, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_name); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mapqs); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 86, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mapqs); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_source_id); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 86, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_source_id); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_sample_id); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 86, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_sample_id); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_reference_start); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 86, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_reference_start); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_BX_tag); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 86, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_reference_end); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_HP_tag); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 86, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_chromosome); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_PS_tag); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 86, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_is_supplementary); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_12 = PySequence_List(((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 86, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_is_reverse); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = NULL;
-  __pyx_t_14 = 0;
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_BX_tag); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 94, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_HP_tag); if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 94, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_15 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_PS_tag); if (unlikely(!__pyx_t_15)) __PYX_ERR(1, 94, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_16 = PySequence_List(((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_16)) __PYX_ERR(1, 94, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_17 = NULL;
+  __pyx_t_18 = 0;
   #if CYTHON_UNPACK_METHODS
   if (likely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_13 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_13)) {
+    __pyx_t_17 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_17)) {
       PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_13);
+      __Pyx_INCREF(__pyx_t_17);
       __Pyx_INCREF(function);
       __Pyx_DECREF_SET(__pyx_t_3, function);
-      __pyx_t_14 = 1;
+      __pyx_t_18 = 1;
     }
   }
   #endif
   {
-    PyObject *__pyx_callargs[10] = {__pyx_t_13, __pyx_t_4, __pyx_t_5, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12};
-    __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_14, 9+__pyx_t_14);
-    __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
+    PyObject *__pyx_callargs[14] = {__pyx_t_17, __pyx_t_4, __pyx_t_5, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16};
+    __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_18, 13+__pyx_t_18);
+    __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -9067,7 +9334,11 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4__repr__(struct __pyx_obj_8what
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 85, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+    __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 93, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
@@ -9075,12 +9346,12 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4__repr__(struct __pyx_obj_8what
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":83
+  /* "whatshap/core.pyx":91
  * 			del self.thisptr
  * 
  * 	def __repr__(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
- * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(
+ * 		return 'Read(name={!r}, mapq={}, source_id={}, sample_id={}, reference_start={}, reference_end={}, chromosome={}, is_supplementary={}, is_reverse={},  BX_tag={}, HP_tag={}, PS_tag={}, variants={})'.format(
  */
 
   /* function exit code */
@@ -9097,6 +9368,10 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4__repr__(struct __pyx_obj_8what
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
+  __Pyx_XDECREF(__pyx_t_16);
+  __Pyx_XDECREF(__pyx_t_17);
   __Pyx_AddTraceback("whatshap.core.Read.__repr__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -9105,7 +9380,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4__repr__(struct __pyx_obj_8what
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":89
+/* "whatshap/core.pyx":97
  * 
  * 	property mapqs:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9140,7 +9415,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_5mapqs___get__(struct __pyx_obj_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 1);
 
-  /* "whatshap/core.pyx":90
+  /* "whatshap/core.pyx":98
  * 	property mapqs:
  * 		def __get__(self):
  * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -9152,14 +9427,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_5mapqs___get__(struct __pyx_obj_
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 90, __pyx_L1_error)
+      __PYX_ERR(1, 98, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 90, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 98, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":91
+  /* "whatshap/core.pyx":99
  * 		def __get__(self):
  * 			assert self.thisptr != NULL
  * 			return tuple(self.thisptr.getMapqs())             # <<<<<<<<<<<<<<
@@ -9171,18 +9446,18 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_5mapqs___get__(struct __pyx_obj_
     __pyx_t_2 = __pyx_v_self->thisptr->getMapqs();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 91, __pyx_L1_error)
+    __PYX_ERR(1, 99, __pyx_L1_error)
   }
-  __pyx_t_3 = __pyx_convert_vector_to_py_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 91, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_to_py_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 99, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PySequence_Tuple(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 91, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PySequence_Tuple(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 99, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_4;
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":89
+  /* "whatshap/core.pyx":97
  * 
  * 	property mapqs:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9202,7 +9477,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_5mapqs___get__(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":94
+/* "whatshap/core.pyx":102
  * 
  * 	property name:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9236,7 +9511,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4name___get__(struct __pyx_obj_8
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 1);
 
-  /* "whatshap/core.pyx":95
+  /* "whatshap/core.pyx":103
  * 	property name:
  * 		def __get__(self):
  * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -9248,14 +9523,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4name___get__(struct __pyx_obj_8
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 95, __pyx_L1_error)
+      __PYX_ERR(1, 103, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 95, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 103, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":96
+  /* "whatshap/core.pyx":104
  * 		def __get__(self):
  * 			assert self.thisptr != NULL
  * 			return self.thisptr.getName().decode('utf-8')             # <<<<<<<<<<<<<<
@@ -9267,15 +9542,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4name___get__(struct __pyx_obj_8
     __pyx_t_2 = __pyx_v_self->thisptr->getName();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 96, __pyx_L1_error)
+    __PYX_ERR(1, 104, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 96, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 104, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":94
+  /* "whatshap/core.pyx":102
  * 
  * 	property name:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9294,7 +9569,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_4name___get__(struct __pyx_obj_8
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":99
+/* "whatshap/core.pyx":107
  * 
  * 	property source_id:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9328,7 +9603,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_9source_id___get__(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 1);
 
-  /* "whatshap/core.pyx":100
+  /* "whatshap/core.pyx":108
  * 	property source_id:
  * 		def __get__(self):
  * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -9340,14 +9615,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_9source_id___get__(struct __pyx_
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 100, __pyx_L1_error)
+      __PYX_ERR(1, 108, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 100, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 108, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":101
+  /* "whatshap/core.pyx":109
  * 		def __get__(self):
  * 			assert self.thisptr != NULL
  * 			return self.thisptr.getSourceID()             # <<<<<<<<<<<<<<
@@ -9359,15 +9634,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_9source_id___get__(struct __pyx_
     __pyx_t_2 = __pyx_v_self->thisptr->getSourceID();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 101, __pyx_L1_error)
+    __PYX_ERR(1, 109, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 101, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":99
+  /* "whatshap/core.pyx":107
  * 
  * 	property source_id:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9386,7 +9661,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_9source_id___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":104
+/* "whatshap/core.pyx":112
  * 
  * 	property sample_id:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9420,7 +9695,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_9sample_id___get__(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 1);
 
-  /* "whatshap/core.pyx":105
+  /* "whatshap/core.pyx":113
  * 	property sample_id:
  * 		def __get__(self):
  * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -9432,14 +9707,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_9sample_id___get__(struct __pyx_
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 105, __pyx_L1_error)
+      __PYX_ERR(1, 113, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 105, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 113, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":106
+  /* "whatshap/core.pyx":114
  * 		def __get__(self):
  * 			assert self.thisptr != NULL
  * 			return self.thisptr.getSampleID()             # <<<<<<<<<<<<<<
@@ -9451,15 +9726,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_9sample_id___get__(struct __pyx_
     __pyx_t_2 = __pyx_v_self->thisptr->getSampleID();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 106, __pyx_L1_error)
+    __PYX_ERR(1, 114, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 106, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":104
+  /* "whatshap/core.pyx":112
  * 
  * 	property sample_id:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9478,7 +9753,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_9sample_id___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":109
+/* "whatshap/core.pyx":117
  * 
  * 	property reference_start:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9512,7 +9787,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_15reference_start___get__(struct
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 1);
 
-  /* "whatshap/core.pyx":110
+  /* "whatshap/core.pyx":118
  * 	property reference_start:
  * 		def __get__(self):
  * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -9524,34 +9799,34 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_15reference_start___get__(struct
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 110, __pyx_L1_error)
+      __PYX_ERR(1, 118, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 110, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 118, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":111
+  /* "whatshap/core.pyx":119
  * 		def __get__(self):
  * 			assert self.thisptr != NULL
  * 			return self.thisptr.getReferenceStart()             # <<<<<<<<<<<<<<
  * 
- * 	property BX_tag:
+ * 	property reference_end:
  */
   __Pyx_XDECREF(__pyx_r);
   try {
     __pyx_t_2 = __pyx_v_self->thisptr->getReferenceStart();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 111, __pyx_L1_error)
+    __PYX_ERR(1, 119, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 111, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":109
+  /* "whatshap/core.pyx":117
  * 
  * 	property reference_start:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9570,7 +9845,467 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_15reference_start___get__(struct
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":114
+/* "whatshap/core.pyx":122
+ * 
+ * 	property reference_end:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.getReferenceEnd()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8whatshap_4core_4Read_13reference_end_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_8whatshap_4core_4Read_13reference_end_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_8whatshap_4core_4Read_13reference_end___get__(((struct __pyx_obj_8whatshap_4core_Read *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8whatshap_4core_4Read_13reference_end___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 1);
+
+  /* "whatshap/core.pyx":123
+ * 	property reference_end:
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
+ * 			return self.thisptr.getReferenceEnd()
+ * 
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(__pyx_assertions_enabled())) {
+    __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
+    if (unlikely(!__pyx_t_1)) {
+      __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
+      __PYX_ERR(1, 123, __pyx_L1_error)
+    }
+  }
+  #else
+  if ((1)); else __PYX_ERR(1, 123, __pyx_L1_error)
+  #endif
+
+  /* "whatshap/core.pyx":124
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.getReferenceEnd()             # <<<<<<<<<<<<<<
+ * 
+ * 	property chromosome:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  try {
+    __pyx_t_2 = __pyx_v_self->thisptr->getReferenceEnd();
+  } catch(...) {
+    __Pyx_CppExn2PyErr();
+    __PYX_ERR(1, 124, __pyx_L1_error)
+  }
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 124, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_r = __pyx_t_3;
+  __pyx_t_3 = 0;
+  goto __pyx_L0;
+
+  /* "whatshap/core.pyx":122
+ * 
+ * 	property reference_end:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.getReferenceEnd()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("whatshap.core.Read.reference_end.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "whatshap/core.pyx":127
+ * 
+ * 	property chromosome:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.getChromosome().decode('utf-8')
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8whatshap_4core_4Read_10chromosome_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_8whatshap_4core_4Read_10chromosome_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_8whatshap_4core_4Read_10chromosome___get__(((struct __pyx_obj_8whatshap_4core_Read *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8whatshap_4core_4Read_10chromosome___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  std::string __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 1);
+
+  /* "whatshap/core.pyx":128
+ * 	property chromosome:
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
+ * 			return self.thisptr.getChromosome().decode('utf-8')
+ * 
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(__pyx_assertions_enabled())) {
+    __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
+    if (unlikely(!__pyx_t_1)) {
+      __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
+      __PYX_ERR(1, 128, __pyx_L1_error)
+    }
+  }
+  #else
+  if ((1)); else __PYX_ERR(1, 128, __pyx_L1_error)
+  #endif
+
+  /* "whatshap/core.pyx":129
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.getChromosome().decode('utf-8')             # <<<<<<<<<<<<<<
+ * 
+ * 	property sub_alignment_id:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  try {
+    __pyx_t_2 = __pyx_v_self->thisptr->getChromosome();
+  } catch(...) {
+    __Pyx_CppExn2PyErr();
+    __PYX_ERR(1, 129, __pyx_L1_error)
+  }
+  __pyx_t_3 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 129, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_r = __pyx_t_3;
+  __pyx_t_3 = 0;
+  goto __pyx_L0;
+
+  /* "whatshap/core.pyx":127
+ * 
+ * 	property chromosome:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.getChromosome().decode('utf-8')
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("whatshap.core.Read.chromosome.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "whatshap/core.pyx":132
+ * 
+ * 	property sub_alignment_id:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.getReadSubAlignmentId().decode('utf-8')
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8whatshap_4core_4Read_16sub_alignment_id_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_8whatshap_4core_4Read_16sub_alignment_id_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_8whatshap_4core_4Read_16sub_alignment_id___get__(((struct __pyx_obj_8whatshap_4core_Read *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8whatshap_4core_4Read_16sub_alignment_id___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  std::string __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 1);
+
+  /* "whatshap/core.pyx":133
+ * 	property sub_alignment_id:
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
+ * 			return self.thisptr.getReadSubAlignmentId().decode('utf-8')
+ * 
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(__pyx_assertions_enabled())) {
+    __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
+    if (unlikely(!__pyx_t_1)) {
+      __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
+      __PYX_ERR(1, 133, __pyx_L1_error)
+    }
+  }
+  #else
+  if ((1)); else __PYX_ERR(1, 133, __pyx_L1_error)
+  #endif
+
+  /* "whatshap/core.pyx":134
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.getReadSubAlignmentId().decode('utf-8')             # <<<<<<<<<<<<<<
+ * 
+ * 	property is_supplementary:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  try {
+    __pyx_t_2 = __pyx_v_self->thisptr->getReadSubAlignmentId();
+  } catch(...) {
+    __Pyx_CppExn2PyErr();
+    __PYX_ERR(1, 134, __pyx_L1_error)
+  }
+  __pyx_t_3 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 134, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_r = __pyx_t_3;
+  __pyx_t_3 = 0;
+  goto __pyx_L0;
+
+  /* "whatshap/core.pyx":132
+ * 
+ * 	property sub_alignment_id:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.getReadSubAlignmentId().decode('utf-8')
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("whatshap.core.Read.sub_alignment_id.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "whatshap/core.pyx":137
+ * 
+ * 	property is_supplementary:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.isSupplementary()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8whatshap_4core_4Read_16is_supplementary_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_8whatshap_4core_4Read_16is_supplementary_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_8whatshap_4core_4Read_16is_supplementary___get__(((struct __pyx_obj_8whatshap_4core_Read *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8whatshap_4core_4Read_16is_supplementary___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  bool __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 1);
+
+  /* "whatshap/core.pyx":138
+ * 	property is_supplementary:
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
+ * 			return self.thisptr.isSupplementary()
+ * 
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(__pyx_assertions_enabled())) {
+    __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
+    if (unlikely(!__pyx_t_1)) {
+      __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
+      __PYX_ERR(1, 138, __pyx_L1_error)
+    }
+  }
+  #else
+  if ((1)); else __PYX_ERR(1, 138, __pyx_L1_error)
+  #endif
+
+  /* "whatshap/core.pyx":139
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.isSupplementary()             # <<<<<<<<<<<<<<
+ * 
+ * 	property is_reverse:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  try {
+    __pyx_t_2 = __pyx_v_self->thisptr->isSupplementary();
+  } catch(...) {
+    __Pyx_CppExn2PyErr();
+    __PYX_ERR(1, 139, __pyx_L1_error)
+  }
+  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 139, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_r = __pyx_t_3;
+  __pyx_t_3 = 0;
+  goto __pyx_L0;
+
+  /* "whatshap/core.pyx":137
+ * 
+ * 	property is_supplementary:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.isSupplementary()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("whatshap.core.Read.is_supplementary.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "whatshap/core.pyx":142
+ * 
+ * 	property is_reverse:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.isReverse()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8whatshap_4core_4Read_10is_reverse_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_8whatshap_4core_4Read_10is_reverse_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_8whatshap_4core_4Read_10is_reverse___get__(((struct __pyx_obj_8whatshap_4core_Read *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8whatshap_4core_4Read_10is_reverse___get__(struct __pyx_obj_8whatshap_4core_Read *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  bool __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 1);
+
+  /* "whatshap/core.pyx":143
+ * 	property is_reverse:
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
+ * 			return self.thisptr.isReverse()
+ * 
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(__pyx_assertions_enabled())) {
+    __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
+    if (unlikely(!__pyx_t_1)) {
+      __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
+      __PYX_ERR(1, 143, __pyx_L1_error)
+    }
+  }
+  #else
+  if ((1)); else __PYX_ERR(1, 143, __pyx_L1_error)
+  #endif
+
+  /* "whatshap/core.pyx":144
+ * 		def __get__(self):
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.isReverse()             # <<<<<<<<<<<<<<
+ * 
+ * 	property BX_tag:
+ */
+  __Pyx_XDECREF(__pyx_r);
+  try {
+    __pyx_t_2 = __pyx_v_self->thisptr->isReverse();
+  } catch(...) {
+    __Pyx_CppExn2PyErr();
+    __PYX_ERR(1, 144, __pyx_L1_error)
+  }
+  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 144, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_r = __pyx_t_3;
+  __pyx_t_3 = 0;
+  goto __pyx_L0;
+
+  /* "whatshap/core.pyx":142
+ * 
+ * 	property is_reverse:
+ * 		def __get__(self):             # <<<<<<<<<<<<<<
+ * 			assert self.thisptr != NULL
+ * 			return self.thisptr.isReverse()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("whatshap.core.Read.is_reverse.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "whatshap/core.pyx":147
  * 
  * 	property BX_tag:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9604,7 +10339,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6BX_tag___get__(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 1);
 
-  /* "whatshap/core.pyx":115
+  /* "whatshap/core.pyx":148
  * 	property BX_tag:
  * 		def __get__(self):
  * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -9616,14 +10351,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6BX_tag___get__(struct __pyx_obj
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 115, __pyx_L1_error)
+      __PYX_ERR(1, 148, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 115, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 148, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":116
+  /* "whatshap/core.pyx":149
  * 		def __get__(self):
  * 			assert self.thisptr != NULL
  * 			return self.thisptr.getBXTag().decode('utf-8')             # <<<<<<<<<<<<<<
@@ -9635,15 +10370,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6BX_tag___get__(struct __pyx_obj
     __pyx_t_2 = __pyx_v_self->thisptr->getBXTag();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 116, __pyx_L1_error)
+    __PYX_ERR(1, 149, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 116, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":114
+  /* "whatshap/core.pyx":147
  * 
  * 	property BX_tag:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9662,7 +10397,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6BX_tag___get__(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":119
+/* "whatshap/core.pyx":152
  * 
  * 	property HP_tag:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9696,7 +10431,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6HP_tag___get__(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 1);
 
-  /* "whatshap/core.pyx":120
+  /* "whatshap/core.pyx":153
  * 	property HP_tag:
  * 		def __get__(self):
  * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -9708,14 +10443,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6HP_tag___get__(struct __pyx_obj
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 120, __pyx_L1_error)
+      __PYX_ERR(1, 153, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 120, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 153, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":121
+  /* "whatshap/core.pyx":154
  * 		def __get__(self):
  * 			assert self.thisptr != NULL
  * 			return self.thisptr.getHPTag()             # <<<<<<<<<<<<<<
@@ -9727,15 +10462,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6HP_tag___get__(struct __pyx_obj
     __pyx_t_2 = __pyx_v_self->thisptr->getHPTag();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 121, __pyx_L1_error)
+    __PYX_ERR(1, 154, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 121, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":119
+  /* "whatshap/core.pyx":152
  * 
  * 	property HP_tag:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9754,7 +10489,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6HP_tag___get__(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":124
+/* "whatshap/core.pyx":157
  * 
  * 	property PS_tag:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9788,7 +10523,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6PS_tag___get__(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 1);
 
-  /* "whatshap/core.pyx":125
+  /* "whatshap/core.pyx":158
  * 	property PS_tag:
  * 		def __get__(self):
  * 			assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -9800,14 +10535,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6PS_tag___get__(struct __pyx_obj
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 125, __pyx_L1_error)
+      __PYX_ERR(1, 158, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 125, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 158, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":126
+  /* "whatshap/core.pyx":159
  * 		def __get__(self):
  * 			assert self.thisptr != NULL
  * 			return self.thisptr.getPSTag()             # <<<<<<<<<<<<<<
@@ -9819,15 +10554,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6PS_tag___get__(struct __pyx_obj
     __pyx_t_2 = __pyx_v_self->thisptr->getPSTag();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 126, __pyx_L1_error)
+    __PYX_ERR(1, 159, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 126, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 159, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":124
+  /* "whatshap/core.pyx":157
  * 
  * 	property PS_tag:
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -9847,7 +10582,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6PS_tag___get__(struct __pyx_obj
 }
 static PyObject *__pyx_gb_8whatshap_4core_4Read_8generator(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "whatshap/core.pyx":128
+/* "whatshap/core.pyx":161
  * 			return self.thisptr.getPSTag()
  * 
  * 	def __iter__(self):             # <<<<<<<<<<<<<<
@@ -9886,7 +10621,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6__iter__(struct __pyx_obj_8what
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_8whatshap_4core___pyx_scope_struct____iter__ *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(1, 128, __pyx_L1_error)
+    __PYX_ERR(1, 161, __pyx_L1_error)
   } else {
     __Pyx_GOTREF((PyObject *)__pyx_cur_scope);
   }
@@ -9894,7 +10629,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_6__iter__(struct __pyx_obj_8what
   __Pyx_INCREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   __Pyx_GIVEREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_8whatshap_4core_4Read_8generator, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_iter, __pyx_n_s_Read___iter, __pyx_n_s_whatshap_core); if (unlikely(!gen)) __PYX_ERR(1, 128, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_8whatshap_4core_4Read_8generator, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_iter, __pyx_n_s_Read___iter, __pyx_n_s_whatshap_core); if (unlikely(!gen)) __PYX_ERR(1, 161, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -9932,9 +10667,9 @@ static PyObject *__pyx_gb_8whatshap_4core_4Read_8generator(__pyx_CoroutineObject
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 128, __pyx_L1_error)
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 161, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":130
+  /* "whatshap/core.pyx":163
  * 	def __iter__(self):
  * 		"""Iterate over all variants in this read"""
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -9946,33 +10681,33 @@ static PyObject *__pyx_gb_8whatshap_4core_4Read_8generator(__pyx_CoroutineObject
     __pyx_t_1 = (__pyx_cur_scope->__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 130, __pyx_L1_error)
+      __PYX_ERR(1, 163, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 130, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 163, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":131
+  /* "whatshap/core.pyx":164
  * 		"""Iterate over all variants in this read"""
  * 		assert self.thisptr != NULL
  * 		for i in range(len(self)):             # <<<<<<<<<<<<<<
  * 			yield self[i]
  * 
  */
-  __pyx_t_2 = PyObject_Length(((PyObject *)__pyx_cur_scope->__pyx_v_self)); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(1, 131, __pyx_L1_error)
+  __pyx_t_2 = PyObject_Length(((PyObject *)__pyx_cur_scope->__pyx_v_self)); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(1, 164, __pyx_L1_error)
   __pyx_t_3 = __pyx_t_2;
   for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_cur_scope->__pyx_v_i = __pyx_t_4;
 
-    /* "whatshap/core.pyx":132
+    /* "whatshap/core.pyx":165
  * 		assert self.thisptr != NULL
  * 		for i in range(len(self)):
  * 			yield self[i]             # <<<<<<<<<<<<<<
  * 
  * 	def __len__(self):
  */
-    __pyx_t_5 = __Pyx_GetItemInt(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_cur_scope->__pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 132, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_GetItemInt(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_cur_scope->__pyx_v_i, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_r = __pyx_t_5;
     __pyx_t_5 = 0;
@@ -9989,11 +10724,11 @@ static PyObject *__pyx_gb_8whatshap_4core_4Read_8generator(__pyx_CoroutineObject
     __pyx_t_2 = __pyx_cur_scope->__pyx_t_0;
     __pyx_t_3 = __pyx_cur_scope->__pyx_t_1;
     __pyx_t_4 = __pyx_cur_scope->__pyx_t_2;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 132, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 165, __pyx_L1_error)
   }
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
-  /* "whatshap/core.pyx":128
+  /* "whatshap/core.pyx":161
  * 			return self.thisptr.getPSTag()
  * 
  * 	def __iter__(self):             # <<<<<<<<<<<<<<
@@ -10019,7 +10754,7 @@ static PyObject *__pyx_gb_8whatshap_4core_4Read_8generator(__pyx_CoroutineObject
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":134
+/* "whatshap/core.pyx":167
  * 			yield self[i]
  * 
  * 	def __len__(self):             # <<<<<<<<<<<<<<
@@ -10054,7 +10789,7 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_4Read_9__len__(struct __pyx_obj_8what
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "whatshap/core.pyx":136
+  /* "whatshap/core.pyx":169
  * 	def __len__(self):
  * 		"""Return number of variants in this read"""
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -10066,14 +10801,14 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_4Read_9__len__(struct __pyx_obj_8what
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 136, __pyx_L1_error)
+      __PYX_ERR(1, 169, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 136, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 169, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":137
+  /* "whatshap/core.pyx":170
  * 		"""Return number of variants in this read"""
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.getVariantCount()             # <<<<<<<<<<<<<<
@@ -10084,12 +10819,12 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_4Read_9__len__(struct __pyx_obj_8what
     __pyx_t_2 = __pyx_v_self->thisptr->getVariantCount();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 137, __pyx_L1_error)
+    __PYX_ERR(1, 170, __pyx_L1_error)
   }
   __pyx_r = __pyx_t_2;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":134
+  /* "whatshap/core.pyx":167
  * 			yield self[i]
  * 
  * 	def __len__(self):             # <<<<<<<<<<<<<<
@@ -10105,7 +10840,7 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_4Read_9__len__(struct __pyx_obj_8what
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":139
+/* "whatshap/core.pyx":172
  * 		return self.thisptr.getVariantCount()
  * 
  * 	def __getitem__(self, key):             # <<<<<<<<<<<<<<
@@ -10150,7 +10885,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
   __Pyx_RefNannySetupContext("__getitem__", 0);
   __Pyx_INCREF(__pyx_v_key);
 
-  /* "whatshap/core.pyx":141
+  /* "whatshap/core.pyx":174
  * 	def __getitem__(self, key):
  * 		"""Return Variant object at the given integer index"""
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -10162,14 +10897,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 141, __pyx_L1_error)
+      __PYX_ERR(1, 174, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 141, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 174, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":142
+  /* "whatshap/core.pyx":175
  * 		"""Return Variant object at the given integer index"""
  * 		assert self.thisptr != NULL
  * 		if isinstance(key, slice):             # <<<<<<<<<<<<<<
@@ -10179,20 +10914,20 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
   __pyx_t_1 = PySlice_Check(__pyx_v_key); 
   if (unlikely(__pyx_t_1)) {
 
-    /* "whatshap/core.pyx":143
+    /* "whatshap/core.pyx":176
  * 		assert self.thisptr != NULL
  * 		if isinstance(key, slice):
  * 			raise NotImplementedError("Read does not support slices")             # <<<<<<<<<<<<<<
  * 		assert isinstance(key, int)
  * 		cdef int n = self.thisptr.getVariantCount()
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_NotImplementedError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 143, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_NotImplementedError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 176, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(1, 143, __pyx_L1_error)
+    __PYX_ERR(1, 176, __pyx_L1_error)
 
-    /* "whatshap/core.pyx":142
+    /* "whatshap/core.pyx":175
  * 		"""Return Variant object at the given integer index"""
  * 		assert self.thisptr != NULL
  * 		if isinstance(key, slice):             # <<<<<<<<<<<<<<
@@ -10201,7 +10936,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
  */
   }
 
-  /* "whatshap/core.pyx":144
+  /* "whatshap/core.pyx":177
  * 		if isinstance(key, slice):
  * 			raise NotImplementedError("Read does not support slices")
  * 		assert isinstance(key, int)             # <<<<<<<<<<<<<<
@@ -10213,14 +10948,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
     __pyx_t_1 = PyInt_Check(__pyx_v_key); 
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 144, __pyx_L1_error)
+      __PYX_ERR(1, 177, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 144, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 177, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":145
+  /* "whatshap/core.pyx":178
  * 			raise NotImplementedError("Read does not support slices")
  * 		assert isinstance(key, int)
  * 		cdef int n = self.thisptr.getVariantCount()             # <<<<<<<<<<<<<<
@@ -10231,41 +10966,41 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
     __pyx_t_3 = __pyx_v_self->thisptr->getVariantCount();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 145, __pyx_L1_error)
+    __PYX_ERR(1, 178, __pyx_L1_error)
   }
   __pyx_v_n = __pyx_t_3;
 
-  /* "whatshap/core.pyx":146
+  /* "whatshap/core.pyx":179
  * 		assert isinstance(key, int)
  * 		cdef int n = self.thisptr.getVariantCount()
  * 		if not (-n <= key < n):             # <<<<<<<<<<<<<<
  * 			raise IndexError('Index out of bounds: {}'.format(key))
  * 		if key < 0:
  */
-  __pyx_t_2 = __Pyx_PyInt_From_int((-__pyx_v_n)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 146, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int((-__pyx_v_n)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 179, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_v_key, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 146, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_t_2, __pyx_v_key, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 179, __pyx_L1_error)
   if (__Pyx_PyObject_IsTrue(__pyx_t_4)) {
     __Pyx_DECREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 146, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 179, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_v_key, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 146, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_v_key, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 179, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(1, 146, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(1, 179, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_6 = (!__pyx_t_1);
   if (unlikely(__pyx_t_6)) {
 
-    /* "whatshap/core.pyx":147
+    /* "whatshap/core.pyx":180
  * 		cdef int n = self.thisptr.getVariantCount()
  * 		if not (-n <= key < n):
  * 			raise IndexError('Index out of bounds: {}'.format(key))             # <<<<<<<<<<<<<<
  * 		if key < 0:
  * 			key = n + key
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Index_out_of_bounds, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 147, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Index_out_of_bounds, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 180, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_5 = NULL;
     __pyx_t_7 = 0;
@@ -10285,18 +11020,18 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
       PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_v_key};
       __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 147, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 180, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_IndexError, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 147, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_IndexError, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 180, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(1, 147, __pyx_L1_error)
+    __PYX_ERR(1, 180, __pyx_L1_error)
 
-    /* "whatshap/core.pyx":146
+    /* "whatshap/core.pyx":179
  * 		assert isinstance(key, int)
  * 		cdef int n = self.thisptr.getVariantCount()
  * 		if not (-n <= key < n):             # <<<<<<<<<<<<<<
@@ -10305,34 +11040,34 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
  */
   }
 
-  /* "whatshap/core.pyx":148
+  /* "whatshap/core.pyx":181
  * 		if not (-n <= key < n):
  * 			raise IndexError('Index out of bounds: {}'.format(key))
  * 		if key < 0:             # <<<<<<<<<<<<<<
  * 			key = n + key
  * 		return Variant(
  */
-  __pyx_t_2 = PyObject_RichCompare(__pyx_v_key, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 148, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 148, __pyx_L1_error)
+  __pyx_t_2 = PyObject_RichCompare(__pyx_v_key, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 181, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 181, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (__pyx_t_6) {
 
-    /* "whatshap/core.pyx":149
+    /* "whatshap/core.pyx":182
  * 			raise IndexError('Index out of bounds: {}'.format(key))
  * 		if key < 0:
  * 			key = n + key             # <<<<<<<<<<<<<<
  * 		return Variant(
  * 			position=self.thisptr.getPosition(key),
  */
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 149, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 182, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_v_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 149, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_v_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 182, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF_SET(__pyx_v_key, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "whatshap/core.pyx":148
+    /* "whatshap/core.pyx":181
  * 		if not (-n <= key < n):
  * 			raise IndexError('Index out of bounds: {}'.format(key))
  * 		if key < 0:             # <<<<<<<<<<<<<<
@@ -10341,7 +11076,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
  */
   }
 
-  /* "whatshap/core.pyx":150
+  /* "whatshap/core.pyx":183
  * 		if key < 0:
  * 			key = n + key
  * 		return Variant(             # <<<<<<<<<<<<<<
@@ -10349,76 +11084,76 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
  * 			allele=self.thisptr.getAllele(key),
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_Variant); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 150, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_Variant); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
 
-  /* "whatshap/core.pyx":151
+  /* "whatshap/core.pyx":184
  * 			key = n + key
  * 		return Variant(
  * 			position=self.thisptr.getPosition(key),             # <<<<<<<<<<<<<<
  * 			allele=self.thisptr.getAllele(key),
  * 			quality=self.thisptr.getVariantQuality(key)
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 151, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_key); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 151, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_key); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 184, __pyx_L1_error)
   try {
     __pyx_t_8 = __pyx_v_self->thisptr->getPosition(__pyx_t_3);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 151, __pyx_L1_error)
+    __PYX_ERR(1, 184, __pyx_L1_error)
   }
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_t_8); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 151, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_t_8); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_position, __pyx_t_5) < 0) __PYX_ERR(1, 151, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_position, __pyx_t_5) < 0) __PYX_ERR(1, 184, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "whatshap/core.pyx":152
+  /* "whatshap/core.pyx":185
  * 		return Variant(
  * 			position=self.thisptr.getPosition(key),
  * 			allele=self.thisptr.getAllele(key),             # <<<<<<<<<<<<<<
  * 			quality=self.thisptr.getVariantQuality(key)
  * 		)
  */
-  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_key); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 152, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_key); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 185, __pyx_L1_error)
   try {
     __pyx_t_3 = __pyx_v_self->thisptr->getAllele(__pyx_t_8);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 152, __pyx_L1_error)
+    __PYX_ERR(1, 185, __pyx_L1_error)
   }
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 152, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 185, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_allele, __pyx_t_5) < 0) __PYX_ERR(1, 151, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_allele, __pyx_t_5) < 0) __PYX_ERR(1, 184, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "whatshap/core.pyx":153
+  /* "whatshap/core.pyx":186
  * 			position=self.thisptr.getPosition(key),
  * 			allele=self.thisptr.getAllele(key),
  * 			quality=self.thisptr.getVariantQuality(key)             # <<<<<<<<<<<<<<
  * 		)
  * 
  */
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_key); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 153, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_key); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 186, __pyx_L1_error)
   try {
     __pyx_t_8 = __pyx_v_self->thisptr->getVariantQuality(__pyx_t_3);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 153, __pyx_L1_error)
+    __PYX_ERR(1, 186, __pyx_L1_error)
   }
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_t_8); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 153, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_t_8); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_quality, __pyx_t_5) < 0) __PYX_ERR(1, 151, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_quality, __pyx_t_5) < 0) __PYX_ERR(1, 184, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "whatshap/core.pyx":150
+  /* "whatshap/core.pyx":183
  * 		if key < 0:
  * 			key = n + key
  * 		return Variant(             # <<<<<<<<<<<<<<
  * 			position=self.thisptr.getPosition(key),
  * 			allele=self.thisptr.getAllele(key),
  */
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 150, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -10426,7 +11161,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":139
+  /* "whatshap/core.pyx":172
  * 		return self.thisptr.getVariantCount()
  * 
  * 	def __getitem__(self, key):             # <<<<<<<<<<<<<<
@@ -10448,7 +11183,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_11__getitem__(struct __pyx_obj_8
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":156
+/* "whatshap/core.pyx":189
  * 		)
  * 
  * 	def __setitem__(self, index, variant):             # <<<<<<<<<<<<<<
@@ -10489,7 +11224,7 @@ static int __pyx_pf_8whatshap_4core_4Read_13__setitem__(struct __pyx_obj_8whatsh
   __Pyx_RefNannySetupContext("__setitem__", 0);
   __Pyx_INCREF(__pyx_v_index);
 
-  /* "whatshap/core.pyx":157
+  /* "whatshap/core.pyx":190
  * 
  * 	def __setitem__(self, index, variant):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -10501,14 +11236,14 @@ static int __pyx_pf_8whatshap_4core_4Read_13__setitem__(struct __pyx_obj_8whatsh
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 157, __pyx_L1_error)
+      __PYX_ERR(1, 190, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 157, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 190, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":158
+  /* "whatshap/core.pyx":191
  * 	def __setitem__(self, index, variant):
  * 		assert self.thisptr != NULL
  * 		cdef int n = self.thisptr.getVariantCount()             # <<<<<<<<<<<<<<
@@ -10519,41 +11254,41 @@ static int __pyx_pf_8whatshap_4core_4Read_13__setitem__(struct __pyx_obj_8whatsh
     __pyx_t_2 = __pyx_v_self->thisptr->getVariantCount();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 158, __pyx_L1_error)
+    __PYX_ERR(1, 191, __pyx_L1_error)
   }
   __pyx_v_n = __pyx_t_2;
 
-  /* "whatshap/core.pyx":159
+  /* "whatshap/core.pyx":192
  * 		assert self.thisptr != NULL
  * 		cdef int n = self.thisptr.getVariantCount()
  * 		if not (-n <= index < n):             # <<<<<<<<<<<<<<
  * 			raise IndexError('Index out of bounds: {}'.format(index))
  * 		if index < 0:
  */
-  __pyx_t_3 = __Pyx_PyInt_From_int((-__pyx_v_n)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 159, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int((-__pyx_v_n)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyObject_RichCompare(__pyx_t_3, __pyx_v_index, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 159, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_t_3, __pyx_v_index, Py_LE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 192, __pyx_L1_error)
   if (__Pyx_PyObject_IsTrue(__pyx_t_4)) {
     __Pyx_DECREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 159, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 192, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = PyObject_RichCompare(__pyx_v_index, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 159, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_v_index, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 192, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(1, 159, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(1, 192, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_6 = (!__pyx_t_1);
   if (unlikely(__pyx_t_6)) {
 
-    /* "whatshap/core.pyx":160
+    /* "whatshap/core.pyx":193
  * 		cdef int n = self.thisptr.getVariantCount()
  * 		if not (-n <= index < n):
  * 			raise IndexError('Index out of bounds: {}'.format(index))             # <<<<<<<<<<<<<<
  * 		if index < 0:
  * 			index = n + index
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Index_out_of_bounds, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 160, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Index_out_of_bounds, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 193, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_5 = NULL;
     __pyx_t_7 = 0;
@@ -10573,18 +11308,18 @@ static int __pyx_pf_8whatshap_4core_4Read_13__setitem__(struct __pyx_obj_8whatsh
       PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_v_index};
       __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 160, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_IndexError, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 160, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_IndexError, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 193, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(1, 160, __pyx_L1_error)
+    __PYX_ERR(1, 193, __pyx_L1_error)
 
-    /* "whatshap/core.pyx":159
+    /* "whatshap/core.pyx":192
  * 		assert self.thisptr != NULL
  * 		cdef int n = self.thisptr.getVariantCount()
  * 		if not (-n <= index < n):             # <<<<<<<<<<<<<<
@@ -10593,34 +11328,34 @@ static int __pyx_pf_8whatshap_4core_4Read_13__setitem__(struct __pyx_obj_8whatsh
  */
   }
 
-  /* "whatshap/core.pyx":161
+  /* "whatshap/core.pyx":194
  * 		if not (-n <= index < n):
  * 			raise IndexError('Index out of bounds: {}'.format(index))
  * 		if index < 0:             # <<<<<<<<<<<<<<
  * 			index = n + index
  * 		if not isinstance(variant, Variant):
  */
-  __pyx_t_3 = PyObject_RichCompare(__pyx_v_index, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 161, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 161, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_v_index, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 194, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 194, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_6) {
 
-    /* "whatshap/core.pyx":162
+    /* "whatshap/core.pyx":195
  * 			raise IndexError('Index out of bounds: {}'.format(index))
  * 		if index < 0:
  * 			index = n + index             # <<<<<<<<<<<<<<
  * 		if not isinstance(variant, Variant):
  * 			raise ValueError('Expected instance of Variant, but found {}'.format(type(variant)))
  */
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 162, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 195, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyNumber_Add(__pyx_t_3, __pyx_v_index); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 162, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Add(__pyx_t_3, __pyx_v_index); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 195, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF_SET(__pyx_v_index, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "whatshap/core.pyx":161
+    /* "whatshap/core.pyx":194
  * 		if not (-n <= index < n):
  * 			raise IndexError('Index out of bounds: {}'.format(index))
  * 		if index < 0:             # <<<<<<<<<<<<<<
@@ -10629,28 +11364,28 @@ static int __pyx_pf_8whatshap_4core_4Read_13__setitem__(struct __pyx_obj_8whatsh
  */
   }
 
-  /* "whatshap/core.pyx":163
+  /* "whatshap/core.pyx":196
  * 		if index < 0:
  * 			index = n + index
  * 		if not isinstance(variant, Variant):             # <<<<<<<<<<<<<<
  * 			raise ValueError('Expected instance of Variant, but found {}'.format(type(variant)))
  * 		self.thisptr.setPosition(index, variant.position)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_Variant); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 163, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_Variant); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 196, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = PyObject_IsInstance(__pyx_v_variant, __pyx_t_4); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(1, 163, __pyx_L1_error)
+  __pyx_t_6 = PyObject_IsInstance(__pyx_v_variant, __pyx_t_4); if (unlikely(__pyx_t_6 == ((int)-1))) __PYX_ERR(1, 196, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_1 = (!__pyx_t_6);
   if (unlikely(__pyx_t_1)) {
 
-    /* "whatshap/core.pyx":164
+    /* "whatshap/core.pyx":197
  * 			index = n + index
  * 		if not isinstance(variant, Variant):
  * 			raise ValueError('Expected instance of Variant, but found {}'.format(type(variant)))             # <<<<<<<<<<<<<<
  * 		self.thisptr.setPosition(index, variant.position)
  * 		self.thisptr.setAllele(index, variant.allele)
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Expected_instance_of_Variant_but, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 164, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Expected_instance_of_Variant_but, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 197, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_5 = NULL;
     __pyx_t_7 = 0;
@@ -10670,18 +11405,18 @@ static int __pyx_pf_8whatshap_4core_4Read_13__setitem__(struct __pyx_obj_8whatsh
       PyObject *__pyx_callargs[2] = {__pyx_t_5, ((PyObject *)Py_TYPE(__pyx_v_variant))};
       __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 164, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 197, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 164, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 197, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(1, 164, __pyx_L1_error)
+    __PYX_ERR(1, 197, __pyx_L1_error)
 
-    /* "whatshap/core.pyx":163
+    /* "whatshap/core.pyx":196
  * 		if index < 0:
  * 			index = n + index
  * 		if not isinstance(variant, Variant):             # <<<<<<<<<<<<<<
@@ -10690,64 +11425,64 @@ static int __pyx_pf_8whatshap_4core_4Read_13__setitem__(struct __pyx_obj_8whatsh
  */
   }
 
-  /* "whatshap/core.pyx":165
+  /* "whatshap/core.pyx":198
  * 		if not isinstance(variant, Variant):
  * 			raise ValueError('Expected instance of Variant, but found {}'.format(type(variant)))
  * 		self.thisptr.setPosition(index, variant.position)             # <<<<<<<<<<<<<<
  * 		self.thisptr.setAllele(index, variant.allele)
  * 		self.thisptr.setVariantQuality(index, variant.quality)
  */
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_index); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 165, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_variant, __pyx_n_s_position); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 165, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_index); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 198, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_variant, __pyx_n_s_position); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 198, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 165, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 198, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   try {
     __pyx_v_self->thisptr->setPosition(__pyx_t_2, __pyx_t_8);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 165, __pyx_L1_error)
+    __PYX_ERR(1, 198, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":166
+  /* "whatshap/core.pyx":199
  * 			raise ValueError('Expected instance of Variant, but found {}'.format(type(variant)))
  * 		self.thisptr.setPosition(index, variant.position)
  * 		self.thisptr.setAllele(index, variant.allele)             # <<<<<<<<<<<<<<
  * 		self.thisptr.setVariantQuality(index, variant.quality)
  * 
  */
-  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_index); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 166, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_variant, __pyx_n_s_allele); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 166, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_index); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 199, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_variant, __pyx_n_s_allele); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 199, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 166, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 199, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   try {
     __pyx_v_self->thisptr->setAllele(__pyx_t_8, __pyx_t_2);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 166, __pyx_L1_error)
+    __PYX_ERR(1, 199, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":167
+  /* "whatshap/core.pyx":200
  * 		self.thisptr.setPosition(index, variant.position)
  * 		self.thisptr.setAllele(index, variant.allele)
  * 		self.thisptr.setVariantQuality(index, variant.quality)             # <<<<<<<<<<<<<<
  * 
  * 	def __contains__(self, position):
  */
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_index); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 167, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_variant, __pyx_n_s_quality); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 167, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_index); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 200, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_variant, __pyx_n_s_quality); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 200, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 167, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 200, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   try {
     __pyx_v_self->thisptr->setVariantQuality(__pyx_t_2, __pyx_t_8);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 167, __pyx_L1_error)
+    __PYX_ERR(1, 200, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":156
+  /* "whatshap/core.pyx":189
  * 		)
  * 
  * 	def __setitem__(self, index, variant):             # <<<<<<<<<<<<<<
@@ -10770,7 +11505,7 @@ static int __pyx_pf_8whatshap_4core_4Read_13__setitem__(struct __pyx_obj_8whatsh
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":169
+/* "whatshap/core.pyx":202
  * 		self.thisptr.setVariantQuality(index, variant.quality)
  * 
  * 	def __contains__(self, position):             # <<<<<<<<<<<<<<
@@ -10812,7 +11547,7 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__contains__", 1);
 
-  /* "whatshap/core.pyx":173
+  /* "whatshap/core.pyx":206
  * 		A linear search is used.
  * 		"""
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -10824,14 +11559,14 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 173, __pyx_L1_error)
+      __PYX_ERR(1, 206, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 173, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 206, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":174
+  /* "whatshap/core.pyx":207
  * 		"""
  * 		assert self.thisptr != NULL
  * 		assert isinstance(position, int)             # <<<<<<<<<<<<<<
@@ -10843,14 +11578,14 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
     __pyx_t_1 = PyInt_Check(__pyx_v_position); 
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 174, __pyx_L1_error)
+      __PYX_ERR(1, 207, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 174, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 207, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":175
+  /* "whatshap/core.pyx":208
  * 		assert self.thisptr != NULL
  * 		assert isinstance(position, int)
  * 		for variant in self:             # <<<<<<<<<<<<<<
@@ -10862,9 +11597,9 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
     __pyx_t_3 = 0;
     __pyx_t_4 = NULL;
   } else {
-    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 175, __pyx_L1_error)
+    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 175, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 208, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_4)) {
@@ -10872,28 +11607,28 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
         {
           Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 175, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 208, __pyx_L1_error)
           #endif
           if (__pyx_t_3 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 175, __pyx_L1_error)
+        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 208, __pyx_L1_error)
         #else
-        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 175, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 208, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       } else {
         {
           Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 175, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 208, __pyx_L1_error)
           #endif
           if (__pyx_t_3 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 175, __pyx_L1_error)
+        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 208, __pyx_L1_error)
         #else
-        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 175, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 208, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       }
@@ -10903,7 +11638,7 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 175, __pyx_L1_error)
+          else __PYX_ERR(1, 208, __pyx_L1_error)
         }
         break;
       }
@@ -10912,22 +11647,22 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
     __Pyx_XDECREF_SET(__pyx_v_variant, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "whatshap/core.pyx":176
+    /* "whatshap/core.pyx":209
  * 		assert isinstance(position, int)
  * 		for variant in self:
  * 			if variant.position == position:             # <<<<<<<<<<<<<<
  * 				return True
  * 		return False
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_variant, __pyx_n_s_position); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 176, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_variant, __pyx_n_s_position); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 209, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = PyObject_RichCompare(__pyx_t_5, __pyx_v_position, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 176, __pyx_L1_error)
+    __pyx_t_6 = PyObject_RichCompare(__pyx_t_5, __pyx_v_position, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 209, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(1, 176, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(1, 209, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (__pyx_t_1) {
 
-      /* "whatshap/core.pyx":177
+      /* "whatshap/core.pyx":210
  * 		for variant in self:
  * 			if variant.position == position:
  * 				return True             # <<<<<<<<<<<<<<
@@ -10938,7 +11673,7 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       goto __pyx_L0;
 
-      /* "whatshap/core.pyx":176
+      /* "whatshap/core.pyx":209
  * 		assert isinstance(position, int)
  * 		for variant in self:
  * 			if variant.position == position:             # <<<<<<<<<<<<<<
@@ -10947,7 +11682,7 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
  */
     }
 
-    /* "whatshap/core.pyx":175
+    /* "whatshap/core.pyx":208
  * 		assert self.thisptr != NULL
  * 		assert isinstance(position, int)
  * 		for variant in self:             # <<<<<<<<<<<<<<
@@ -10957,7 +11692,7 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":178
+  /* "whatshap/core.pyx":211
  * 			if variant.position == position:
  * 				return True
  * 		return False             # <<<<<<<<<<<<<<
@@ -10967,7 +11702,7 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":169
+  /* "whatshap/core.pyx":202
  * 		self.thisptr.setVariantQuality(index, variant.quality)
  * 
  * 	def __contains__(self, position):             # <<<<<<<<<<<<<<
@@ -10988,7 +11723,7 @@ static int __pyx_pf_8whatshap_4core_4Read_15__contains__(struct __pyx_obj_8whats
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":180
+/* "whatshap/core.pyx":213
  * 		return False
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
@@ -11054,31 +11789,36 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
   PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
   PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__getstate__", 1);
 
-  /* "whatshap/core.pyx":181
+  /* "whatshap/core.pyx":214
  * 
  * 	def __getstate__(self):
  * 		mapqs = [mapq for mapq in self.mapqs]             # <<<<<<<<<<<<<<
  * 		variants = [(var.position, var.allele, var.quality) for var in self]
- * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, variants)
+ * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.BX_tag, self.HP_tag, self.PS_tag, self.chromosome, self.sub_alignment_id, self.is_supplementary, self.is_reverse, variants)
  */
   { /* enter inner scope */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 181, __pyx_L5_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 214, __pyx_L5_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mapqs); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 181, __pyx_L5_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mapqs); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 214, __pyx_L5_error)
     __Pyx_GOTREF(__pyx_t_2);
     if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
       __pyx_t_3 = __pyx_t_2; __Pyx_INCREF(__pyx_t_3);
       __pyx_t_4 = 0;
       __pyx_t_5 = NULL;
     } else {
-      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 181, __pyx_L5_error)
+      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 214, __pyx_L5_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 181, __pyx_L5_error)
+      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 214, __pyx_L5_error)
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     for (;;) {
@@ -11087,28 +11827,28 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 181, __pyx_L5_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 214, __pyx_L5_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 181, __pyx_L5_error)
+          __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 214, __pyx_L5_error)
           #else
-          __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 181, __pyx_L5_error)
+          __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 214, __pyx_L5_error)
           __Pyx_GOTREF(__pyx_t_2);
           #endif
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 181, __pyx_L5_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 214, __pyx_L5_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 181, __pyx_L5_error)
+          __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 214, __pyx_L5_error)
           #else
-          __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 181, __pyx_L5_error)
+          __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 214, __pyx_L5_error)
           __Pyx_GOTREF(__pyx_t_2);
           #endif
         }
@@ -11118,7 +11858,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 181, __pyx_L5_error)
+            else __PYX_ERR(1, 214, __pyx_L5_error)
           }
           break;
         }
@@ -11126,7 +11866,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
       }
       __Pyx_XDECREF_SET(__pyx_8genexpr1__pyx_v_mapq, __pyx_t_2);
       __pyx_t_2 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_8genexpr1__pyx_v_mapq))) __PYX_ERR(1, 181, __pyx_L5_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_8genexpr1__pyx_v_mapq))) __PYX_ERR(1, 214, __pyx_L5_error)
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_XDECREF(__pyx_8genexpr1__pyx_v_mapq); __pyx_8genexpr1__pyx_v_mapq = 0;
@@ -11139,24 +11879,24 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
   __pyx_v_mapqs = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "whatshap/core.pyx":182
+  /* "whatshap/core.pyx":215
  * 	def __getstate__(self):
  * 		mapqs = [mapq for mapq in self.mapqs]
  * 		variants = [(var.position, var.allele, var.quality) for var in self]             # <<<<<<<<<<<<<<
- * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, variants)
+ * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.BX_tag, self.HP_tag, self.PS_tag, self.chromosome, self.sub_alignment_id, self.is_supplementary, self.is_reverse, variants)
  * 
  */
   { /* enter inner scope */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 182, __pyx_L12_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 215, __pyx_L12_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (likely(PyList_CheckExact(((PyObject *)__pyx_v_self))) || PyTuple_CheckExact(((PyObject *)__pyx_v_self))) {
       __pyx_t_3 = ((PyObject *)__pyx_v_self); __Pyx_INCREF(__pyx_t_3);
       __pyx_t_4 = 0;
       __pyx_t_5 = NULL;
     } else {
-      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 182, __pyx_L12_error)
+      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 215, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 182, __pyx_L12_error)
+      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 215, __pyx_L12_error)
     }
     for (;;) {
       if (likely(!__pyx_t_5)) {
@@ -11164,28 +11904,28 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 182, __pyx_L12_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 215, __pyx_L12_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 182, __pyx_L12_error)
+          __pyx_t_2 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 215, __pyx_L12_error)
           #else
-          __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 182, __pyx_L12_error)
+          __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 215, __pyx_L12_error)
           __Pyx_GOTREF(__pyx_t_2);
           #endif
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 182, __pyx_L12_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 215, __pyx_L12_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 182, __pyx_L12_error)
+          __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_2); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 215, __pyx_L12_error)
           #else
-          __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 182, __pyx_L12_error)
+          __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 215, __pyx_L12_error)
           __Pyx_GOTREF(__pyx_t_2);
           #endif
         }
@@ -11195,7 +11935,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 182, __pyx_L12_error)
+            else __PYX_ERR(1, 215, __pyx_L12_error)
           }
           break;
         }
@@ -11203,24 +11943,24 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
       }
       __Pyx_XDECREF_SET(__pyx_8genexpr2__pyx_v_var, __pyx_t_2);
       __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_8genexpr2__pyx_v_var, __pyx_n_s_position); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 182, __pyx_L12_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_8genexpr2__pyx_v_var, __pyx_n_s_position); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 215, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_8genexpr2__pyx_v_var, __pyx_n_s_allele); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 182, __pyx_L12_error)
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_8genexpr2__pyx_v_var, __pyx_n_s_allele); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 215, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_8genexpr2__pyx_v_var, __pyx_n_s_quality); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 182, __pyx_L12_error)
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_8genexpr2__pyx_v_var, __pyx_n_s_quality); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 215, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 182, __pyx_L12_error)
+      __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 215, __pyx_L12_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_GIVEREF(__pyx_t_2);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_2)) __PYX_ERR(1, 182, __pyx_L12_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_2)) __PYX_ERR(1, 215, __pyx_L12_error);
       __Pyx_GIVEREF(__pyx_t_6);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_6)) __PYX_ERR(1, 182, __pyx_L12_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_6)) __PYX_ERR(1, 215, __pyx_L12_error);
       __Pyx_GIVEREF(__pyx_t_7);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 2, __pyx_t_7)) __PYX_ERR(1, 182, __pyx_L12_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 2, __pyx_t_7)) __PYX_ERR(1, 215, __pyx_L12_error);
       __pyx_t_2 = 0;
       __pyx_t_6 = 0;
       __pyx_t_7 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_8))) __PYX_ERR(1, 182, __pyx_L12_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_8))) __PYX_ERR(1, 215, __pyx_L12_error)
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -11234,50 +11974,70 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
   __pyx_v_variants = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "whatshap/core.pyx":183
+  /* "whatshap/core.pyx":216
  * 		mapqs = [mapq for mapq in self.mapqs]
  * 		variants = [(var.position, var.allele, var.quality) for var in self]
- * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, variants)             # <<<<<<<<<<<<<<
+ * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.BX_tag, self.HP_tag, self.PS_tag, self.chromosome, self.sub_alignment_id, self.is_supplementary, self.is_reverse, variants)             # <<<<<<<<<<<<<<
  * 
  * 	def __setstate__(self, state):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 183, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_source_id); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 183, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_source_id); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_sample_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 183, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_sample_id); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_reference_start); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 183, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_reference_start); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_BX_tag); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 183, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_reference_end); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_HP_tag); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 183, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_BX_tag); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_PS_tag); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 183, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_HP_tag); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyTuple_New(9); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 183, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_PS_tag); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_chromosome); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 216, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_sub_alignment_id); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 216, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_is_supplementary); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 216, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_is_reverse); if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 216, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_15 = PyTuple_New(14); if (unlikely(!__pyx_t_15)) __PYX_ERR(1, 216, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
   __Pyx_INCREF(__pyx_v_mapqs);
   __Pyx_GIVEREF(__pyx_v_mapqs);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_v_mapqs)) __PYX_ERR(1, 183, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_v_mapqs)) __PYX_ERR(1, 216, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_1)) __PYX_ERR(1, 183, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 1, __pyx_t_1)) __PYX_ERR(1, 216, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_3);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 2, __pyx_t_3)) __PYX_ERR(1, 183, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 2, __pyx_t_3)) __PYX_ERR(1, 216, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_8);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 3, __pyx_t_8)) __PYX_ERR(1, 183, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 3, __pyx_t_8)) __PYX_ERR(1, 216, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_7);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 4, __pyx_t_7)) __PYX_ERR(1, 183, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 4, __pyx_t_7)) __PYX_ERR(1, 216, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_6);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 5, __pyx_t_6)) __PYX_ERR(1, 183, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 5, __pyx_t_6)) __PYX_ERR(1, 216, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 6, __pyx_t_2)) __PYX_ERR(1, 183, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 6, __pyx_t_2)) __PYX_ERR(1, 216, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_9);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 7, __pyx_t_9)) __PYX_ERR(1, 183, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 7, __pyx_t_9)) __PYX_ERR(1, 216, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_10);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 8, __pyx_t_10)) __PYX_ERR(1, 216, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_11);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 9, __pyx_t_11)) __PYX_ERR(1, 216, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_12);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 10, __pyx_t_12)) __PYX_ERR(1, 216, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_13);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 11, __pyx_t_13)) __PYX_ERR(1, 216, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_14);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 12, __pyx_t_14)) __PYX_ERR(1, 216, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_variants);
   __Pyx_GIVEREF(__pyx_v_variants);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 8, __pyx_v_variants)) __PYX_ERR(1, 183, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_15, 13, __pyx_v_variants)) __PYX_ERR(1, 216, __pyx_L1_error);
   __pyx_t_1 = 0;
   __pyx_t_3 = 0;
   __pyx_t_8 = 0;
@@ -11285,11 +12045,16 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
   __pyx_t_6 = 0;
   __pyx_t_2 = 0;
   __pyx_t_9 = 0;
-  __pyx_r = __pyx_t_10;
   __pyx_t_10 = 0;
+  __pyx_t_11 = 0;
+  __pyx_t_12 = 0;
+  __pyx_t_13 = 0;
+  __pyx_t_14 = 0;
+  __pyx_r = __pyx_t_15;
+  __pyx_t_15 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":180
+  /* "whatshap/core.pyx":213
  * 		return False
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
@@ -11307,6 +12072,11 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
   __Pyx_AddTraceback("whatshap.core.Read.__getstate__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -11319,11 +12089,11 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_17__getstate__(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":185
- * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, variants)
+/* "whatshap/core.pyx":218
+ * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.BX_tag, self.HP_tag, self.PS_tag, self.chromosome, self.sub_alignment_id, self.is_supplementary, self.is_reverse, variants)
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
- * 		mapqs, name, source_id, sample_id, reference_start, BX_tag, HP_tag, PS_tag, variants = state
+ * 		mapqs, name, source_id, sample_id, reference_start, reference_end, BX_tag, HP_tag, PS_tag, chromosome, sub_alignment_id, is_supplementary, is_reverse, variants = state
  * 
  */
 
@@ -11380,12 +12150,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 185, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 218, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__setstate__") < 0)) __PYX_ERR(1, 185, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__setstate__") < 0)) __PYX_ERR(1, 218, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
@@ -11396,7 +12166,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__setstate__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 185, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__setstate__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 218, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -11429,12 +12199,19 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
   PyObject *__pyx_v_source_id = NULL;
   PyObject *__pyx_v_sample_id = NULL;
   PyObject *__pyx_v_reference_start = NULL;
+  PyObject *__pyx_v_reference_end = NULL;
   PyObject *__pyx_v_BX_tag = NULL;
   PyObject *__pyx_v_HP_tag = NULL;
   PyObject *__pyx_v_PS_tag = NULL;
+  PyObject *__pyx_v_chromosome = NULL;
+  PyObject *__pyx_v_sub_alignment_id = NULL;
+  PyObject *__pyx_v_is_supplementary = NULL;
+  PyObject *__pyx_v_is_reverse = NULL;
   PyObject *__pyx_v_variants = NULL;
   std::string __pyx_v__name;
   std::string __pyx_v__BX_tag;
+  std::string __pyx_v__chromosome;
+  std::string __pyx_v__sub_alignment_id;
   PyObject *__pyx_v_mapq = NULL;
   PyObject *__pyx_v_pos = NULL;
   PyObject *__pyx_v_allele = NULL;
@@ -11451,39 +12228,47 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
   PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
   PyObject *__pyx_t_10 = NULL;
-  PyObject *(*__pyx_t_11)(PyObject *);
-  std::string __pyx_t_12;
-  int __pyx_t_13;
-  unsigned int __pyx_t_14;
-  int __pyx_t_15;
-  int __pyx_t_16;
-  Py_ssize_t __pyx_t_17;
+  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
+  PyObject *(*__pyx_t_16)(PyObject *);
+  std::string __pyx_t_17;
   int __pyx_t_18;
-  int __pyx_t_19;
+  unsigned int __pyx_t_19;
   int __pyx_t_20;
   int __pyx_t_21;
-  int __pyx_t_22;
-  Read *__pyx_t_23;
-  PyObject *(*__pyx_t_24)(PyObject *);
+  Py_ssize_t __pyx_t_22;
+  int __pyx_t_23;
+  int __pyx_t_24;
+  int __pyx_t_25;
+  int __pyx_t_26;
+  int __pyx_t_27;
+  bool __pyx_t_28;
+  int __pyx_t_29;
+  bool __pyx_t_30;
+  Read *__pyx_t_31;
+  PyObject *(*__pyx_t_32)(PyObject *);
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__setstate__", 1);
 
-  /* "whatshap/core.pyx":186
+  /* "whatshap/core.pyx":219
  * 
  * 	def __setstate__(self, state):
- * 		mapqs, name, source_id, sample_id, reference_start, BX_tag, HP_tag, PS_tag, variants = state             # <<<<<<<<<<<<<<
+ * 		mapqs, name, source_id, sample_id, reference_start, reference_end, BX_tag, HP_tag, PS_tag, chromosome, sub_alignment_id, is_supplementary, is_reverse, variants = state             # <<<<<<<<<<<<<<
  * 
  * 		# TODO: Duplicated code from __cinit__ is ugly, but cinit cannot be used here directly
  */
   if ((likely(PyTuple_CheckExact(__pyx_v_state))) || (PyList_CheckExact(__pyx_v_state))) {
     PyObject* sequence = __pyx_v_state;
     Py_ssize_t size = __Pyx_PySequence_SIZE(sequence);
-    if (unlikely(size != 9)) {
-      if (size > 9) __Pyx_RaiseTooManyValuesError(9);
+    if (unlikely(size != 14)) {
+      if (size > 14) __Pyx_RaiseTooManyValuesError(14);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      __PYX_ERR(1, 186, __pyx_L1_error)
+      __PYX_ERR(1, 219, __pyx_L1_error)
     }
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -11496,6 +12281,11 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
       __pyx_t_7 = PyTuple_GET_ITEM(sequence, 6); 
       __pyx_t_8 = PyTuple_GET_ITEM(sequence, 7); 
       __pyx_t_9 = PyTuple_GET_ITEM(sequence, 8); 
+      __pyx_t_10 = PyTuple_GET_ITEM(sequence, 9); 
+      __pyx_t_11 = PyTuple_GET_ITEM(sequence, 10); 
+      __pyx_t_12 = PyTuple_GET_ITEM(sequence, 11); 
+      __pyx_t_13 = PyTuple_GET_ITEM(sequence, 12); 
+      __pyx_t_14 = PyTuple_GET_ITEM(sequence, 13); 
     } else {
       __pyx_t_1 = PyList_GET_ITEM(sequence, 0); 
       __pyx_t_2 = PyList_GET_ITEM(sequence, 1); 
@@ -11506,6 +12296,11 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
       __pyx_t_7 = PyList_GET_ITEM(sequence, 6); 
       __pyx_t_8 = PyList_GET_ITEM(sequence, 7); 
       __pyx_t_9 = PyList_GET_ITEM(sequence, 8); 
+      __pyx_t_10 = PyList_GET_ITEM(sequence, 9); 
+      __pyx_t_11 = PyList_GET_ITEM(sequence, 10); 
+      __pyx_t_12 = PyList_GET_ITEM(sequence, 11); 
+      __pyx_t_13 = PyList_GET_ITEM(sequence, 12); 
+      __pyx_t_14 = PyList_GET_ITEM(sequence, 13); 
     }
     __Pyx_INCREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_t_2);
@@ -11516,12 +12311,17 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
     __Pyx_INCREF(__pyx_t_7);
     __Pyx_INCREF(__pyx_t_8);
     __Pyx_INCREF(__pyx_t_9);
+    __Pyx_INCREF(__pyx_t_10);
+    __Pyx_INCREF(__pyx_t_11);
+    __Pyx_INCREF(__pyx_t_12);
+    __Pyx_INCREF(__pyx_t_13);
+    __Pyx_INCREF(__pyx_t_14);
     #else
     {
       Py_ssize_t i;
-      PyObject** temps[9] = {&__pyx_t_1,&__pyx_t_2,&__pyx_t_3,&__pyx_t_4,&__pyx_t_5,&__pyx_t_6,&__pyx_t_7,&__pyx_t_8,&__pyx_t_9};
-      for (i=0; i < 9; i++) {
-        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(1, 186, __pyx_L1_error)
+      PyObject** temps[14] = {&__pyx_t_1,&__pyx_t_2,&__pyx_t_3,&__pyx_t_4,&__pyx_t_5,&__pyx_t_6,&__pyx_t_7,&__pyx_t_8,&__pyx_t_9,&__pyx_t_10,&__pyx_t_11,&__pyx_t_12,&__pyx_t_13,&__pyx_t_14};
+      for (i=0; i < 14; i++) {
+        PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(1, 219, __pyx_L1_error)
         __Pyx_GOTREF(item);
         *(temps[i]) = item;
       }
@@ -11529,24 +12329,24 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
     #endif
   } else {
     Py_ssize_t index = -1;
-    PyObject** temps[9] = {&__pyx_t_1,&__pyx_t_2,&__pyx_t_3,&__pyx_t_4,&__pyx_t_5,&__pyx_t_6,&__pyx_t_7,&__pyx_t_8,&__pyx_t_9};
-    __pyx_t_10 = PyObject_GetIter(__pyx_v_state); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 186, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_11 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_10);
-    for (index=0; index < 9; index++) {
-      PyObject* item = __pyx_t_11(__pyx_t_10); if (unlikely(!item)) goto __pyx_L3_unpacking_failed;
+    PyObject** temps[14] = {&__pyx_t_1,&__pyx_t_2,&__pyx_t_3,&__pyx_t_4,&__pyx_t_5,&__pyx_t_6,&__pyx_t_7,&__pyx_t_8,&__pyx_t_9,&__pyx_t_10,&__pyx_t_11,&__pyx_t_12,&__pyx_t_13,&__pyx_t_14};
+    __pyx_t_15 = PyObject_GetIter(__pyx_v_state); if (unlikely(!__pyx_t_15)) __PYX_ERR(1, 219, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_15);
+    __pyx_t_16 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_15);
+    for (index=0; index < 14; index++) {
+      PyObject* item = __pyx_t_16(__pyx_t_15); if (unlikely(!item)) goto __pyx_L3_unpacking_failed;
       __Pyx_GOTREF(item);
       *(temps[index]) = item;
     }
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_11(__pyx_t_10), 9) < 0) __PYX_ERR(1, 186, __pyx_L1_error)
-    __pyx_t_11 = NULL;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_16(__pyx_t_15), 14) < 0) __PYX_ERR(1, 219, __pyx_L1_error)
+    __pyx_t_16 = NULL;
+    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
     goto __pyx_L4_unpacking_done;
     __pyx_L3_unpacking_failed:;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_11 = NULL;
+    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+    __pyx_t_16 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    __PYX_ERR(1, 186, __pyx_L1_error)
+    __PYX_ERR(1, 219, __pyx_L1_error)
     __pyx_L4_unpacking_done:;
   }
   __pyx_v_mapqs = __pyx_t_1;
@@ -11559,46 +12359,76 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
   __pyx_t_4 = 0;
   __pyx_v_reference_start = __pyx_t_5;
   __pyx_t_5 = 0;
-  __pyx_v_BX_tag = __pyx_t_6;
+  __pyx_v_reference_end = __pyx_t_6;
   __pyx_t_6 = 0;
-  __pyx_v_HP_tag = __pyx_t_7;
+  __pyx_v_BX_tag = __pyx_t_7;
   __pyx_t_7 = 0;
-  __pyx_v_PS_tag = __pyx_t_8;
+  __pyx_v_HP_tag = __pyx_t_8;
   __pyx_t_8 = 0;
-  __pyx_v_variants = __pyx_t_9;
+  __pyx_v_PS_tag = __pyx_t_9;
   __pyx_t_9 = 0;
+  __pyx_v_chromosome = __pyx_t_10;
+  __pyx_t_10 = 0;
+  __pyx_v_sub_alignment_id = __pyx_t_11;
+  __pyx_t_11 = 0;
+  __pyx_v_is_supplementary = __pyx_t_12;
+  __pyx_t_12 = 0;
+  __pyx_v_is_reverse = __pyx_t_13;
+  __pyx_t_13 = 0;
+  __pyx_v_variants = __pyx_t_14;
+  __pyx_t_14 = 0;
 
-  /* "whatshap/core.pyx":189
+  /* "whatshap/core.pyx":222
  * 
  * 		# TODO: Duplicated code from __cinit__ is ugly, but cinit cannot be used here directly
  * 		cdef string _name = b''             # <<<<<<<<<<<<<<
  * 		cdef string _BX_tag = b''
- * 
+ * 		cdef string _chromosome = b''
  */
-  __pyx_t_12 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 189, __pyx_L1_error)
-  __pyx_v__name = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_12);
+  __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 222, __pyx_L1_error)
+  __pyx_v__name = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17);
 
-  /* "whatshap/core.pyx":190
+  /* "whatshap/core.pyx":223
  * 		# TODO: Duplicated code from __cinit__ is ugly, but cinit cannot be used here directly
  * 		cdef string _name = b''
  * 		cdef string _BX_tag = b''             # <<<<<<<<<<<<<<
+ * 		cdef string _chromosome = b''
+ * 		cdef string _sub_alignment_id = b''
+ */
+  __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 223, __pyx_L1_error)
+  __pyx_v__BX_tag = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17);
+
+  /* "whatshap/core.pyx":224
+ * 		cdef string _name = b''
+ * 		cdef string _BX_tag = b''
+ * 		cdef string _chromosome = b''             # <<<<<<<<<<<<<<
+ * 		cdef string _sub_alignment_id = b''
+ * 
+ */
+  __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 224, __pyx_L1_error)
+  __pyx_v__chromosome = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17);
+
+  /* "whatshap/core.pyx":225
+ * 		cdef string _BX_tag = b''
+ * 		cdef string _chromosome = b''
+ * 		cdef string _sub_alignment_id = b''             # <<<<<<<<<<<<<<
  * 
  * 		if name is None:
  */
-  __pyx_t_12 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 190, __pyx_L1_error)
-  __pyx_v__BX_tag = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_12);
+  __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 225, __pyx_L1_error)
+  __pyx_v__sub_alignment_id = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17);
 
-  /* "whatshap/core.pyx":192
- * 		cdef string _BX_tag = b''
+  /* "whatshap/core.pyx":227
+ * 		cdef string _sub_alignment_id = b''
  * 
  * 		if name is None:             # <<<<<<<<<<<<<<
  * 			self.thisptr = NULL
  * 			self.ownsptr = False
  */
-  __pyx_t_13 = (__pyx_v_name == Py_None);
-  if (__pyx_t_13) {
+  __pyx_t_18 = (__pyx_v_name == Py_None);
+  if (__pyx_t_18) {
 
-    /* "whatshap/core.pyx":193
+    /* "whatshap/core.pyx":228
  * 
  * 		if name is None:
  * 			self.thisptr = NULL             # <<<<<<<<<<<<<<
@@ -11607,7 +12437,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
  */
     __pyx_v_self->thisptr = NULL;
 
-    /* "whatshap/core.pyx":194
+    /* "whatshap/core.pyx":229
  * 		if name is None:
  * 			self.thisptr = NULL
  * 			self.ownsptr = False             # <<<<<<<<<<<<<<
@@ -11616,8 +12446,8 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
  */
     __pyx_v_self->ownsptr = 0;
 
-    /* "whatshap/core.pyx":192
- * 		cdef string _BX_tag = b''
+    /* "whatshap/core.pyx":227
+ * 		cdef string _sub_alignment_id = b''
  * 
  * 		if name is None:             # <<<<<<<<<<<<<<
  * 			self.thisptr = NULL
@@ -11626,7 +12456,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
     goto __pyx_L5;
   }
 
-  /* "whatshap/core.pyx":197
+  /* "whatshap/core.pyx":232
  * 		else:
  * 			# TODO: Is this the best way to handle string arguments?
  * 			_name = name.encode('UTF-8')             # <<<<<<<<<<<<<<
@@ -11634,130 +12464,257 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
  * 				_BX_tag = BX_tag.encode('UTF-8')
  */
   /*else*/ {
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_name, __pyx_n_s_encode); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 197, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_7 = NULL;
-    __pyx_t_14 = 0;
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_name, __pyx_n_s_encode); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 232, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_12 = NULL;
+    __pyx_t_19 = 0;
     #if CYTHON_UNPACK_METHODS
-    if (likely(PyMethod_Check(__pyx_t_8))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_8);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
-        __Pyx_INCREF(__pyx_t_7);
+    if (likely(PyMethod_Check(__pyx_t_13))) {
+      __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_13);
+      if (likely(__pyx_t_12)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+        __Pyx_INCREF(__pyx_t_12);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_8, function);
-        __pyx_t_14 = 1;
+        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __pyx_t_19 = 1;
       }
     }
     #endif
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_7, __pyx_kp_u_UTF_8};
-      __pyx_t_9 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+1-__pyx_t_14, 1+__pyx_t_14);
-      __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 197, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      PyObject *__pyx_callargs[2] = {__pyx_t_12, __pyx_kp_u_UTF_8};
+      __pyx_t_14 = __Pyx_PyObject_FastCall(__pyx_t_13, __pyx_callargs+1-__pyx_t_19, 1+__pyx_t_19);
+      __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+      if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 232, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_14);
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     }
-    __pyx_t_12 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_9); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 197, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_v__name = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_12);
+    __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_14); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 232, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_v__name = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17);
 
-    /* "whatshap/core.pyx":198
+    /* "whatshap/core.pyx":233
  * 			# TODO: Is this the best way to handle string arguments?
  * 			_name = name.encode('UTF-8')
  * 			if BX_tag is not b'' and BX_tag is not None:             # <<<<<<<<<<<<<<
  * 				_BX_tag = BX_tag.encode('UTF-8')
- * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)
+ * 			if chromosome is not b'' and chromosome is not None:
  */
-    __pyx_t_15 = (__pyx_v_BX_tag != __pyx_kp_b_);
-    if (__pyx_t_15) {
+    __pyx_t_20 = (__pyx_v_BX_tag != __pyx_kp_b_);
+    if (__pyx_t_20) {
     } else {
-      __pyx_t_13 = __pyx_t_15;
+      __pyx_t_18 = __pyx_t_20;
       goto __pyx_L7_bool_binop_done;
     }
-    __pyx_t_15 = (__pyx_v_BX_tag != Py_None);
-    __pyx_t_13 = __pyx_t_15;
+    __pyx_t_20 = (__pyx_v_BX_tag != Py_None);
+    __pyx_t_18 = __pyx_t_20;
     __pyx_L7_bool_binop_done:;
-    if (__pyx_t_13) {
+    if (__pyx_t_18) {
 
-      /* "whatshap/core.pyx":199
+      /* "whatshap/core.pyx":234
  * 			_name = name.encode('UTF-8')
  * 			if BX_tag is not b'' and BX_tag is not None:
  * 				_BX_tag = BX_tag.encode('UTF-8')             # <<<<<<<<<<<<<<
- * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)
- * 			self.ownsptr = True
+ * 			if chromosome is not b'' and chromosome is not None:
+ * 				_chromosome = chromosome.encode('UTF-8')
  */
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_BX_tag, __pyx_n_s_encode); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 199, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_7 = NULL;
-      __pyx_t_14 = 0;
+      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_BX_tag, __pyx_n_s_encode); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 234, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __pyx_t_12 = NULL;
+      __pyx_t_19 = 0;
       #if CYTHON_UNPACK_METHODS
-      if (likely(PyMethod_Check(__pyx_t_8))) {
-        __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_8);
-        if (likely(__pyx_t_7)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
-          __Pyx_INCREF(__pyx_t_7);
+      if (likely(PyMethod_Check(__pyx_t_13))) {
+        __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_13);
+        if (likely(__pyx_t_12)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+          __Pyx_INCREF(__pyx_t_12);
           __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_8, function);
-          __pyx_t_14 = 1;
+          __Pyx_DECREF_SET(__pyx_t_13, function);
+          __pyx_t_19 = 1;
         }
       }
       #endif
       {
-        PyObject *__pyx_callargs[2] = {__pyx_t_7, __pyx_kp_u_UTF_8};
-        __pyx_t_9 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+1-__pyx_t_14, 1+__pyx_t_14);
-        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 199, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+        PyObject *__pyx_callargs[2] = {__pyx_t_12, __pyx_kp_u_UTF_8};
+        __pyx_t_14 = __Pyx_PyObject_FastCall(__pyx_t_13, __pyx_callargs+1-__pyx_t_19, 1+__pyx_t_19);
+        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+        if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 234, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       }
-      __pyx_t_12 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_9); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 199, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_v__BX_tag = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_12);
+      __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_14); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 234, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      __pyx_v__BX_tag = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17);
 
-      /* "whatshap/core.pyx":198
+      /* "whatshap/core.pyx":233
  * 			# TODO: Is this the best way to handle string arguments?
  * 			_name = name.encode('UTF-8')
  * 			if BX_tag is not b'' and BX_tag is not None:             # <<<<<<<<<<<<<<
  * 				_BX_tag = BX_tag.encode('UTF-8')
- * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)
+ * 			if chromosome is not b'' and chromosome is not None:
  */
     }
 
-    /* "whatshap/core.pyx":200
+    /* "whatshap/core.pyx":235
  * 			if BX_tag is not b'' and BX_tag is not None:
  * 				_BX_tag = BX_tag.encode('UTF-8')
- * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)             # <<<<<<<<<<<<<<
+ * 			if chromosome is not b'' and chromosome is not None:             # <<<<<<<<<<<<<<
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ */
+    __pyx_t_20 = (__pyx_v_chromosome != __pyx_kp_b_);
+    if (__pyx_t_20) {
+    } else {
+      __pyx_t_18 = __pyx_t_20;
+      goto __pyx_L10_bool_binop_done;
+    }
+    __pyx_t_20 = (__pyx_v_chromosome != Py_None);
+    __pyx_t_18 = __pyx_t_20;
+    __pyx_L10_bool_binop_done:;
+    if (__pyx_t_18) {
+
+      /* "whatshap/core.pyx":236
+ * 				_BX_tag = BX_tag.encode('UTF-8')
+ * 			if chromosome is not b'' and chromosome is not None:
+ * 				_chromosome = chromosome.encode('UTF-8')             # <<<<<<<<<<<<<<
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ */
+      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_chromosome, __pyx_n_s_encode); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 236, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __pyx_t_12 = NULL;
+      __pyx_t_19 = 0;
+      #if CYTHON_UNPACK_METHODS
+      if (likely(PyMethod_Check(__pyx_t_13))) {
+        __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_13);
+        if (likely(__pyx_t_12)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+          __Pyx_INCREF(__pyx_t_12);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_13, function);
+          __pyx_t_19 = 1;
+        }
+      }
+      #endif
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_12, __pyx_kp_u_UTF_8};
+        __pyx_t_14 = __Pyx_PyObject_FastCall(__pyx_t_13, __pyx_callargs+1-__pyx_t_19, 1+__pyx_t_19);
+        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+        if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 236, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      }
+      __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_14); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 236, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      __pyx_v__chromosome = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17);
+
+      /* "whatshap/core.pyx":235
+ * 			if BX_tag is not b'' and BX_tag is not None:
+ * 				_BX_tag = BX_tag.encode('UTF-8')
+ * 			if chromosome is not b'' and chromosome is not None:             # <<<<<<<<<<<<<<
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ */
+    }
+
+    /* "whatshap/core.pyx":237
+ * 			if chromosome is not b'' and chromosome is not None:
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:             # <<<<<<<<<<<<<<
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)
+ */
+    __pyx_t_20 = (__pyx_v_sub_alignment_id != __pyx_kp_b_);
+    if (__pyx_t_20) {
+    } else {
+      __pyx_t_18 = __pyx_t_20;
+      goto __pyx_L13_bool_binop_done;
+    }
+    __pyx_t_20 = (__pyx_v_sub_alignment_id != Py_None);
+    __pyx_t_18 = __pyx_t_20;
+    __pyx_L13_bool_binop_done:;
+    if (__pyx_t_18) {
+
+      /* "whatshap/core.pyx":238
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')             # <<<<<<<<<<<<<<
+ * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)
+ * 			self.ownsptr = True
+ */
+      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_sub_alignment_id, __pyx_n_s_encode); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 238, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __pyx_t_12 = NULL;
+      __pyx_t_19 = 0;
+      #if CYTHON_UNPACK_METHODS
+      if (likely(PyMethod_Check(__pyx_t_13))) {
+        __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_13);
+        if (likely(__pyx_t_12)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+          __Pyx_INCREF(__pyx_t_12);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_13, function);
+          __pyx_t_19 = 1;
+        }
+      }
+      #endif
+      {
+        PyObject *__pyx_callargs[2] = {__pyx_t_12, __pyx_kp_u_UTF_8};
+        __pyx_t_14 = __Pyx_PyObject_FastCall(__pyx_t_13, __pyx_callargs+1-__pyx_t_19, 1+__pyx_t_19);
+        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+        if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 238, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      }
+      __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_14); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 238, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      __pyx_v__sub_alignment_id = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17);
+
+      /* "whatshap/core.pyx":237
+ * 			if chromosome is not b'' and chromosome is not None:
+ * 				_chromosome = chromosome.encode('UTF-8')
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:             # <<<<<<<<<<<<<<
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)
+ */
+    }
+
+    /* "whatshap/core.pyx":239
+ * 			if sub_alignment_id is not b'' and sub_alignment_id is not None:
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)             # <<<<<<<<<<<<<<
  * 			self.ownsptr = True
  * 
  */
-    __pyx_t_17 = PyObject_Length(__pyx_v_mapqs); if (unlikely(__pyx_t_17 == ((Py_ssize_t)-1))) __PYX_ERR(1, 200, __pyx_L1_error)
-    __pyx_t_13 = (__pyx_t_17 > 0);
-    if (__pyx_t_13) {
-      __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_mapqs, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 200, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_18 = __Pyx_PyInt_As_int(__pyx_t_9); if (unlikely((__pyx_t_18 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 200, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_16 = __pyx_t_18;
+    __pyx_t_22 = PyObject_Length(__pyx_v_mapqs); if (unlikely(__pyx_t_22 == ((Py_ssize_t)-1))) __PYX_ERR(1, 239, __pyx_L1_error)
+    __pyx_t_18 = (__pyx_t_22 > 0);
+    if (__pyx_t_18) {
+      __pyx_t_14 = __Pyx_GetItemInt(__pyx_v_mapqs, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 239, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_14);
+      __pyx_t_23 = __Pyx_PyInt_As_int(__pyx_t_14); if (unlikely((__pyx_t_23 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 239, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      __pyx_t_21 = __pyx_t_23;
     } else {
-      __pyx_t_16 = 0;
+      __pyx_t_21 = 0;
     }
-    __pyx_t_18 = __Pyx_PyInt_As_int(__pyx_v_source_id); if (unlikely((__pyx_t_18 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 200, __pyx_L1_error)
-    __pyx_t_19 = __Pyx_PyInt_As_int(__pyx_v_sample_id); if (unlikely((__pyx_t_19 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 200, __pyx_L1_error)
-    __pyx_t_20 = __Pyx_PyInt_As_int(__pyx_v_reference_start); if (unlikely((__pyx_t_20 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 200, __pyx_L1_error)
-    __pyx_t_21 = __Pyx_PyInt_As_int(__pyx_v_HP_tag); if (unlikely((__pyx_t_21 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 200, __pyx_L1_error)
-    __pyx_t_22 = __Pyx_PyInt_As_int(__pyx_v_PS_tag); if (unlikely((__pyx_t_22 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 200, __pyx_L1_error)
+    __pyx_t_23 = __Pyx_PyInt_As_int(__pyx_v_source_id); if (unlikely((__pyx_t_23 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 239, __pyx_L1_error)
+    __pyx_t_24 = __Pyx_PyInt_As_int(__pyx_v_sample_id); if (unlikely((__pyx_t_24 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 239, __pyx_L1_error)
+    __pyx_t_25 = __Pyx_PyInt_As_int(__pyx_v_reference_start); if (unlikely((__pyx_t_25 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 239, __pyx_L1_error)
+    __pyx_t_26 = __Pyx_PyInt_As_int(__pyx_v_HP_tag); if (unlikely((__pyx_t_26 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 239, __pyx_L1_error)
+    __pyx_t_27 = __Pyx_PyInt_As_int(__pyx_v_PS_tag); if (unlikely((__pyx_t_27 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 239, __pyx_L1_error)
+    __pyx_t_28 = __Pyx_PyObject_IsTrue(__pyx_v_is_supplementary); if (unlikely((__pyx_t_28 == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 239, __pyx_L1_error)
+    __pyx_t_29 = __Pyx_PyInt_As_int(__pyx_v_reference_end); if (unlikely((__pyx_t_29 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 239, __pyx_L1_error)
+    __pyx_t_30 = __Pyx_PyObject_IsTrue(__pyx_v_is_reverse); if (unlikely((__pyx_t_30 == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 239, __pyx_L1_error)
     try {
-      __pyx_t_23 = new Read(__pyx_v__name, __pyx_t_16, __pyx_t_18, __pyx_t_19, __pyx_t_20, __pyx_v__BX_tag, __pyx_t_21, __pyx_t_22);
+      __pyx_t_31 = new Read(__pyx_v__name, __pyx_t_21, __pyx_t_23, __pyx_t_24, __pyx_t_25, __pyx_v__BX_tag, __pyx_t_26, __pyx_t_27, __pyx_v__chromosome, __pyx_v__sub_alignment_id, __pyx_t_28, __pyx_t_29, __pyx_t_30);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 200, __pyx_L1_error)
+      __PYX_ERR(1, 239, __pyx_L1_error)
     }
-    __pyx_v_self->thisptr = __pyx_t_23;
+    __pyx_v_self->thisptr = __pyx_t_31;
 
-    /* "whatshap/core.pyx":201
- * 				_BX_tag = BX_tag.encode('UTF-8')
- * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag)
+    /* "whatshap/core.pyx":240
+ * 				_sub_alignment_id = sub_alignment_id.encode('UTF-8')
+ * 			self.thisptr = new cpp.Read(_name, mapqs[0] if len(mapqs) > 0 else 0, source_id, sample_id, reference_start, _BX_tag, HP_tag, PS_tag, _chromosome, _sub_alignment_id, is_supplementary, reference_end, is_reverse)
  * 			self.ownsptr = True             # <<<<<<<<<<<<<<
  * 
  * 		for mapq in mapqs[1:]:
@@ -11766,105 +12723,105 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
   }
   __pyx_L5:;
 
-  /* "whatshap/core.pyx":203
+  /* "whatshap/core.pyx":242
  * 			self.ownsptr = True
  * 
  * 		for mapq in mapqs[1:]:             # <<<<<<<<<<<<<<
  * 			self.add_mapq(mapq)
  * 		for (pos, allele, quality) in variants:
  */
-  __pyx_t_9 = __Pyx_PyObject_GetSlice(__pyx_v_mapqs, 1, 0, NULL, NULL, &__pyx_slice__3, 1, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 203, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  if (likely(PyList_CheckExact(__pyx_t_9)) || PyTuple_CheckExact(__pyx_t_9)) {
-    __pyx_t_8 = __pyx_t_9; __Pyx_INCREF(__pyx_t_8);
-    __pyx_t_17 = 0;
-    __pyx_t_24 = NULL;
+  __pyx_t_14 = __Pyx_PyObject_GetSlice(__pyx_v_mapqs, 1, 0, NULL, NULL, &__pyx_slice__3, 1, 0, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 242, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  if (likely(PyList_CheckExact(__pyx_t_14)) || PyTuple_CheckExact(__pyx_t_14)) {
+    __pyx_t_13 = __pyx_t_14; __Pyx_INCREF(__pyx_t_13);
+    __pyx_t_22 = 0;
+    __pyx_t_32 = NULL;
   } else {
-    __pyx_t_17 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 203, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_24 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_8); if (unlikely(!__pyx_t_24)) __PYX_ERR(1, 203, __pyx_L1_error)
+    __pyx_t_22 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 242, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_32 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_13); if (unlikely(!__pyx_t_32)) __PYX_ERR(1, 242, __pyx_L1_error)
   }
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   for (;;) {
-    if (likely(!__pyx_t_24)) {
-      if (likely(PyList_CheckExact(__pyx_t_8))) {
+    if (likely(!__pyx_t_32)) {
+      if (likely(PyList_CheckExact(__pyx_t_13))) {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_8);
+          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_13);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 203, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 242, __pyx_L1_error)
           #endif
-          if (__pyx_t_17 >= __pyx_temp) break;
+          if (__pyx_t_22 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_9 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_17); __Pyx_INCREF(__pyx_t_9); __pyx_t_17++; if (unlikely((0 < 0))) __PYX_ERR(1, 203, __pyx_L1_error)
+        __pyx_t_14 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_22); __Pyx_INCREF(__pyx_t_14); __pyx_t_22++; if (unlikely((0 < 0))) __PYX_ERR(1, 242, __pyx_L1_error)
         #else
-        __pyx_t_9 = __Pyx_PySequence_ITEM(__pyx_t_8, __pyx_t_17); __pyx_t_17++; if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 203, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_14 = __Pyx_PySequence_ITEM(__pyx_t_13, __pyx_t_22); __pyx_t_22++; if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 242, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
         #endif
       } else {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_8);
+          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_13);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 203, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 242, __pyx_L1_error)
           #endif
-          if (__pyx_t_17 >= __pyx_temp) break;
+          if (__pyx_t_22 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_17); __Pyx_INCREF(__pyx_t_9); __pyx_t_17++; if (unlikely((0 < 0))) __PYX_ERR(1, 203, __pyx_L1_error)
+        __pyx_t_14 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_22); __Pyx_INCREF(__pyx_t_14); __pyx_t_22++; if (unlikely((0 < 0))) __PYX_ERR(1, 242, __pyx_L1_error)
         #else
-        __pyx_t_9 = __Pyx_PySequence_ITEM(__pyx_t_8, __pyx_t_17); __pyx_t_17++; if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 203, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_14 = __Pyx_PySequence_ITEM(__pyx_t_13, __pyx_t_22); __pyx_t_22++; if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 242, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
         #endif
       }
     } else {
-      __pyx_t_9 = __pyx_t_24(__pyx_t_8);
-      if (unlikely(!__pyx_t_9)) {
+      __pyx_t_14 = __pyx_t_32(__pyx_t_13);
+      if (unlikely(!__pyx_t_14)) {
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 203, __pyx_L1_error)
+          else __PYX_ERR(1, 242, __pyx_L1_error)
         }
         break;
       }
-      __Pyx_GOTREF(__pyx_t_9);
+      __Pyx_GOTREF(__pyx_t_14);
     }
-    __Pyx_XDECREF_SET(__pyx_v_mapq, __pyx_t_9);
-    __pyx_t_9 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_mapq, __pyx_t_14);
+    __pyx_t_14 = 0;
 
-    /* "whatshap/core.pyx":204
+    /* "whatshap/core.pyx":243
  * 
  * 		for mapq in mapqs[1:]:
  * 			self.add_mapq(mapq)             # <<<<<<<<<<<<<<
  * 		for (pos, allele, quality) in variants:
  * 			self.add_variant(pos, allele, quality)
  */
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_add_mapq); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 204, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_6 = NULL;
-    __pyx_t_14 = 0;
+    __pyx_t_12 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_add_mapq); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 243, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_11 = NULL;
+    __pyx_t_19 = 0;
     #if CYTHON_UNPACK_METHODS
-    if (likely(PyMethod_Check(__pyx_t_7))) {
-      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_7);
-      if (likely(__pyx_t_6)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
-        __Pyx_INCREF(__pyx_t_6);
+    if (likely(PyMethod_Check(__pyx_t_12))) {
+      __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_12);
+      if (likely(__pyx_t_11)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_12);
+        __Pyx_INCREF(__pyx_t_11);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_7, function);
-        __pyx_t_14 = 1;
+        __Pyx_DECREF_SET(__pyx_t_12, function);
+        __pyx_t_19 = 1;
       }
     }
     #endif
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_v_mapq};
-      __pyx_t_9 = __Pyx_PyObject_FastCall(__pyx_t_7, __pyx_callargs+1-__pyx_t_14, 1+__pyx_t_14);
-      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 204, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      PyObject *__pyx_callargs[2] = {__pyx_t_11, __pyx_v_mapq};
+      __pyx_t_14 = __Pyx_PyObject_FastCall(__pyx_t_12, __pyx_callargs+1-__pyx_t_19, 1+__pyx_t_19);
+      __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+      if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 243, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_14);
+      __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     }
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-    /* "whatshap/core.pyx":203
+    /* "whatshap/core.pyx":242
  * 			self.ownsptr = True
  * 
  * 		for mapq in mapqs[1:]:             # <<<<<<<<<<<<<<
@@ -11872,9 +12829,9 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
  * 		for (pos, allele, quality) in variants:
  */
   }
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-  /* "whatshap/core.pyx":205
+  /* "whatshap/core.pyx":244
  * 		for mapq in mapqs[1:]:
  * 			self.add_mapq(mapq)
  * 		for (pos, allele, quality) in variants:             # <<<<<<<<<<<<<<
@@ -11882,151 +12839,151 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
  * 
  */
   if (likely(PyList_CheckExact(__pyx_v_variants)) || PyTuple_CheckExact(__pyx_v_variants)) {
-    __pyx_t_8 = __pyx_v_variants; __Pyx_INCREF(__pyx_t_8);
-    __pyx_t_17 = 0;
-    __pyx_t_24 = NULL;
+    __pyx_t_13 = __pyx_v_variants; __Pyx_INCREF(__pyx_t_13);
+    __pyx_t_22 = 0;
+    __pyx_t_32 = NULL;
   } else {
-    __pyx_t_17 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_v_variants); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 205, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_24 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_8); if (unlikely(!__pyx_t_24)) __PYX_ERR(1, 205, __pyx_L1_error)
+    __pyx_t_22 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_v_variants); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 244, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_32 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_13); if (unlikely(!__pyx_t_32)) __PYX_ERR(1, 244, __pyx_L1_error)
   }
   for (;;) {
-    if (likely(!__pyx_t_24)) {
-      if (likely(PyList_CheckExact(__pyx_t_8))) {
+    if (likely(!__pyx_t_32)) {
+      if (likely(PyList_CheckExact(__pyx_t_13))) {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_8);
+          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_13);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 205, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 244, __pyx_L1_error)
           #endif
-          if (__pyx_t_17 >= __pyx_temp) break;
+          if (__pyx_t_22 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_9 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_17); __Pyx_INCREF(__pyx_t_9); __pyx_t_17++; if (unlikely((0 < 0))) __PYX_ERR(1, 205, __pyx_L1_error)
+        __pyx_t_14 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_22); __Pyx_INCREF(__pyx_t_14); __pyx_t_22++; if (unlikely((0 < 0))) __PYX_ERR(1, 244, __pyx_L1_error)
         #else
-        __pyx_t_9 = __Pyx_PySequence_ITEM(__pyx_t_8, __pyx_t_17); __pyx_t_17++; if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 205, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_14 = __Pyx_PySequence_ITEM(__pyx_t_13, __pyx_t_22); __pyx_t_22++; if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 244, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
         #endif
       } else {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_8);
+          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_13);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 205, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 244, __pyx_L1_error)
           #endif
-          if (__pyx_t_17 >= __pyx_temp) break;
+          if (__pyx_t_22 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_17); __Pyx_INCREF(__pyx_t_9); __pyx_t_17++; if (unlikely((0 < 0))) __PYX_ERR(1, 205, __pyx_L1_error)
+        __pyx_t_14 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_22); __Pyx_INCREF(__pyx_t_14); __pyx_t_22++; if (unlikely((0 < 0))) __PYX_ERR(1, 244, __pyx_L1_error)
         #else
-        __pyx_t_9 = __Pyx_PySequence_ITEM(__pyx_t_8, __pyx_t_17); __pyx_t_17++; if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 205, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_14 = __Pyx_PySequence_ITEM(__pyx_t_13, __pyx_t_22); __pyx_t_22++; if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 244, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_14);
         #endif
       }
     } else {
-      __pyx_t_9 = __pyx_t_24(__pyx_t_8);
-      if (unlikely(!__pyx_t_9)) {
+      __pyx_t_14 = __pyx_t_32(__pyx_t_13);
+      if (unlikely(!__pyx_t_14)) {
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 205, __pyx_L1_error)
+          else __PYX_ERR(1, 244, __pyx_L1_error)
         }
         break;
       }
-      __Pyx_GOTREF(__pyx_t_9);
+      __Pyx_GOTREF(__pyx_t_14);
     }
-    if ((likely(PyTuple_CheckExact(__pyx_t_9))) || (PyList_CheckExact(__pyx_t_9))) {
-      PyObject* sequence = __pyx_t_9;
+    if ((likely(PyTuple_CheckExact(__pyx_t_14))) || (PyList_CheckExact(__pyx_t_14))) {
+      PyObject* sequence = __pyx_t_14;
       Py_ssize_t size = __Pyx_PySequence_SIZE(sequence);
       if (unlikely(size != 3)) {
         if (size > 3) __Pyx_RaiseTooManyValuesError(3);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(1, 205, __pyx_L1_error)
+        __PYX_ERR(1, 244, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
-        __pyx_t_7 = PyTuple_GET_ITEM(sequence, 0); 
-        __pyx_t_6 = PyTuple_GET_ITEM(sequence, 1); 
-        __pyx_t_5 = PyTuple_GET_ITEM(sequence, 2); 
+        __pyx_t_12 = PyTuple_GET_ITEM(sequence, 0); 
+        __pyx_t_11 = PyTuple_GET_ITEM(sequence, 1); 
+        __pyx_t_10 = PyTuple_GET_ITEM(sequence, 2); 
       } else {
-        __pyx_t_7 = PyList_GET_ITEM(sequence, 0); 
-        __pyx_t_6 = PyList_GET_ITEM(sequence, 1); 
-        __pyx_t_5 = PyList_GET_ITEM(sequence, 2); 
+        __pyx_t_12 = PyList_GET_ITEM(sequence, 0); 
+        __pyx_t_11 = PyList_GET_ITEM(sequence, 1); 
+        __pyx_t_10 = PyList_GET_ITEM(sequence, 2); 
       }
-      __Pyx_INCREF(__pyx_t_7);
-      __Pyx_INCREF(__pyx_t_6);
-      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_12);
+      __Pyx_INCREF(__pyx_t_11);
+      __Pyx_INCREF(__pyx_t_10);
       #else
-      __pyx_t_7 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 205, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_6 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 205, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_5 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 205, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_12 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(1, 244, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_12);
+      __pyx_t_11 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 244, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_11);
+      __pyx_t_10 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 244, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
       #endif
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_4 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 205, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_9 = PyObject_GetIter(__pyx_t_14); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 244, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      __pyx_t_16 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_9);
+      index = 0; __pyx_t_12 = __pyx_t_16(__pyx_t_9); if (unlikely(!__pyx_t_12)) goto __pyx_L20_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_12);
+      index = 1; __pyx_t_11 = __pyx_t_16(__pyx_t_9); if (unlikely(!__pyx_t_11)) goto __pyx_L20_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_11);
+      index = 2; __pyx_t_10 = __pyx_t_16(__pyx_t_9); if (unlikely(!__pyx_t_10)) goto __pyx_L20_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_10);
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_16(__pyx_t_9), 3) < 0) __PYX_ERR(1, 244, __pyx_L1_error)
+      __pyx_t_16 = NULL;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_11 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_4);
-      index = 0; __pyx_t_7 = __pyx_t_11(__pyx_t_4); if (unlikely(!__pyx_t_7)) goto __pyx_L14_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_7);
-      index = 1; __pyx_t_6 = __pyx_t_11(__pyx_t_4); if (unlikely(!__pyx_t_6)) goto __pyx_L14_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_6);
-      index = 2; __pyx_t_5 = __pyx_t_11(__pyx_t_4); if (unlikely(!__pyx_t_5)) goto __pyx_L14_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_5);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_11(__pyx_t_4), 3) < 0) __PYX_ERR(1, 205, __pyx_L1_error)
-      __pyx_t_11 = NULL;
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      goto __pyx_L15_unpacking_done;
-      __pyx_L14_unpacking_failed:;
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_11 = NULL;
+      goto __pyx_L21_unpacking_done;
+      __pyx_L20_unpacking_failed:;
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __pyx_t_16 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(1, 205, __pyx_L1_error)
-      __pyx_L15_unpacking_done:;
+      __PYX_ERR(1, 244, __pyx_L1_error)
+      __pyx_L21_unpacking_done:;
     }
-    __Pyx_XDECREF_SET(__pyx_v_pos, __pyx_t_7);
-    __pyx_t_7 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_allele, __pyx_t_6);
-    __pyx_t_6 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_quality, __pyx_t_5);
-    __pyx_t_5 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_pos, __pyx_t_12);
+    __pyx_t_12 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_allele, __pyx_t_11);
+    __pyx_t_11 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_quality, __pyx_t_10);
+    __pyx_t_10 = 0;
 
-    /* "whatshap/core.pyx":206
+    /* "whatshap/core.pyx":245
  * 			self.add_mapq(mapq)
  * 		for (pos, allele, quality) in variants:
  * 			self.add_variant(pos, allele, quality)             # <<<<<<<<<<<<<<
  * 
  * 	def add_variant(self, int position, int allele, int quality):
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_add_variant); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 206, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = NULL;
-    __pyx_t_14 = 0;
+    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_add_variant); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 245, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_10);
+    __pyx_t_11 = NULL;
+    __pyx_t_19 = 0;
     #if CYTHON_UNPACK_METHODS
-    if (likely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
-      if (likely(__pyx_t_6)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-        __Pyx_INCREF(__pyx_t_6);
+    if (likely(PyMethod_Check(__pyx_t_10))) {
+      __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_10);
+      if (likely(__pyx_t_11)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
+        __Pyx_INCREF(__pyx_t_11);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_5, function);
-        __pyx_t_14 = 1;
+        __Pyx_DECREF_SET(__pyx_t_10, function);
+        __pyx_t_19 = 1;
       }
     }
     #endif
     {
-      PyObject *__pyx_callargs[4] = {__pyx_t_6, __pyx_v_pos, __pyx_v_allele, __pyx_v_quality};
-      __pyx_t_9 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_14, 3+__pyx_t_14);
-      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 206, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      PyObject *__pyx_callargs[4] = {__pyx_t_11, __pyx_v_pos, __pyx_v_allele, __pyx_v_quality};
+      __pyx_t_14 = __Pyx_PyObject_FastCall(__pyx_t_10, __pyx_callargs+1-__pyx_t_19, 3+__pyx_t_19);
+      __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+      if (unlikely(!__pyx_t_14)) __PYX_ERR(1, 245, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_14);
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     }
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-    /* "whatshap/core.pyx":205
+    /* "whatshap/core.pyx":244
  * 		for mapq in mapqs[1:]:
  * 			self.add_mapq(mapq)
  * 		for (pos, allele, quality) in variants:             # <<<<<<<<<<<<<<
@@ -12034,13 +12991,13 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
  * 
  */
   }
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-  /* "whatshap/core.pyx":185
- * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, variants)
+  /* "whatshap/core.pyx":218
+ * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.BX_tag, self.HP_tag, self.PS_tag, self.chromosome, self.sub_alignment_id, self.is_supplementary, self.is_reverse, variants)
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
- * 		mapqs, name, source_id, sample_id, reference_start, BX_tag, HP_tag, PS_tag, variants = state
+ * 		mapqs, name, source_id, sample_id, reference_start, reference_end, BX_tag, HP_tag, PS_tag, chromosome, sub_alignment_id, is_supplementary, is_reverse, variants = state
  * 
  */
 
@@ -12058,6 +13015,11 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
   __Pyx_AddTraceback("whatshap.core.Read.__setstate__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -12066,9 +13028,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
   __Pyx_XDECREF(__pyx_v_source_id);
   __Pyx_XDECREF(__pyx_v_sample_id);
   __Pyx_XDECREF(__pyx_v_reference_start);
+  __Pyx_XDECREF(__pyx_v_reference_end);
   __Pyx_XDECREF(__pyx_v_BX_tag);
   __Pyx_XDECREF(__pyx_v_HP_tag);
   __Pyx_XDECREF(__pyx_v_PS_tag);
+  __Pyx_XDECREF(__pyx_v_chromosome);
+  __Pyx_XDECREF(__pyx_v_sub_alignment_id);
+  __Pyx_XDECREF(__pyx_v_is_supplementary);
+  __Pyx_XDECREF(__pyx_v_is_reverse);
   __Pyx_XDECREF(__pyx_v_variants);
   __Pyx_XDECREF(__pyx_v_mapq);
   __Pyx_XDECREF(__pyx_v_pos);
@@ -12079,7 +13046,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_19__setstate__(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":208
+/* "whatshap/core.pyx":247
  * 			self.add_variant(pos, allele, quality)
  * 
  * 	def add_variant(self, int position, int allele, int quality):             # <<<<<<<<<<<<<<
@@ -12146,7 +13113,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 208, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 247, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -12154,9 +13121,9 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 208, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 247, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("add_variant", 1, 3, 3, 1); __PYX_ERR(1, 208, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_variant", 1, 3, 3, 1); __PYX_ERR(1, 247, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -12164,14 +13131,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 208, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 247, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("add_variant", 1, 3, 3, 2); __PYX_ERR(1, 208, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_variant", 1, 3, 3, 2); __PYX_ERR(1, 247, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_variant") < 0)) __PYX_ERR(1, 208, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_variant") < 0)) __PYX_ERR(1, 247, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
@@ -12180,13 +13147,13 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
       values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
     }
-    __pyx_v_position = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_position == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 208, __pyx_L3_error)
-    __pyx_v_allele = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_allele == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 208, __pyx_L3_error)
-    __pyx_v_quality = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_quality == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 208, __pyx_L3_error)
+    __pyx_v_position = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_position == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 247, __pyx_L3_error)
+    __pyx_v_allele = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_allele == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 247, __pyx_L3_error)
+    __pyx_v_quality = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_quality == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 247, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("add_variant", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 208, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("add_variant", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 247, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -12222,7 +13189,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_21add_variant(struct __pyx_obj_8
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("add_variant", 1);
 
-  /* "whatshap/core.pyx":209
+  /* "whatshap/core.pyx":248
  * 
  * 	def add_variant(self, int position, int allele, int quality):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -12234,14 +13201,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_21add_variant(struct __pyx_obj_8
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 209, __pyx_L1_error)
+      __PYX_ERR(1, 248, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 209, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 248, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":210
+  /* "whatshap/core.pyx":249
  * 	def add_variant(self, int position, int allele, int quality):
  * 		assert self.thisptr != NULL
  * 		self.thisptr.addVariant(position, allele, quality)             # <<<<<<<<<<<<<<
@@ -12252,10 +13219,10 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_21add_variant(struct __pyx_obj_8
     __pyx_v_self->thisptr->addVariant(__pyx_v_position, __pyx_v_allele, __pyx_v_quality);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 210, __pyx_L1_error)
+    __PYX_ERR(1, 249, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":208
+  /* "whatshap/core.pyx":247
  * 			self.add_variant(pos, allele, quality)
  * 
  * 	def add_variant(self, int position, int allele, int quality):             # <<<<<<<<<<<<<<
@@ -12275,7 +13242,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_21add_variant(struct __pyx_obj_8
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":212
+/* "whatshap/core.pyx":251
  * 		self.thisptr.addVariant(position, allele, quality)
  * 
  * 	def add_mapq(self, int mapq):             # <<<<<<<<<<<<<<
@@ -12336,23 +13303,23 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 212, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 251, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_mapq") < 0)) __PYX_ERR(1, 212, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_mapq") < 0)) __PYX_ERR(1, 251, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
     }
-    __pyx_v_mapq = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_mapq == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 212, __pyx_L3_error)
+    __pyx_v_mapq = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_mapq == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 251, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("add_mapq", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 212, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("add_mapq", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 251, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -12388,7 +13355,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_23add_mapq(struct __pyx_obj_8wha
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("add_mapq", 1);
 
-  /* "whatshap/core.pyx":213
+  /* "whatshap/core.pyx":252
  * 
  * 	def add_mapq(self, int mapq):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -12400,14 +13367,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_23add_mapq(struct __pyx_obj_8wha
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 213, __pyx_L1_error)
+      __PYX_ERR(1, 252, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 213, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 252, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":214
+  /* "whatshap/core.pyx":253
  * 	def add_mapq(self, int mapq):
  * 		assert self.thisptr != NULL
  * 		self.thisptr.addMapq(mapq)             # <<<<<<<<<<<<<<
@@ -12418,10 +13385,10 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_23add_mapq(struct __pyx_obj_8wha
     __pyx_v_self->thisptr->addMapq(__pyx_v_mapq);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 214, __pyx_L1_error)
+    __PYX_ERR(1, 253, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":212
+  /* "whatshap/core.pyx":251
  * 		self.thisptr.addVariant(position, allele, quality)
  * 
  * 	def add_mapq(self, int mapq):             # <<<<<<<<<<<<<<
@@ -12441,7 +13408,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_23add_mapq(struct __pyx_obj_8wha
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":216
+/* "whatshap/core.pyx":255
  * 		self.thisptr.addMapq(mapq)
  * 
  * 	def sort(self):             # <<<<<<<<<<<<<<
@@ -12499,7 +13466,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_25sort(struct __pyx_obj_8whatsha
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("sort", 1);
 
-  /* "whatshap/core.pyx":217
+  /* "whatshap/core.pyx":256
  * 
  * 	def sort(self):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -12511,14 +13478,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_25sort(struct __pyx_obj_8whatsha
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 217, __pyx_L1_error)
+      __PYX_ERR(1, 256, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 217, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 256, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":218
+  /* "whatshap/core.pyx":257
  * 	def sort(self):
  * 		assert self.thisptr != NULL
  * 		self.thisptr.sortVariants()             # <<<<<<<<<<<<<<
@@ -12529,10 +13496,10 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_25sort(struct __pyx_obj_8whatsha
     __pyx_v_self->thisptr->sortVariants();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 218, __pyx_L1_error)
+    __PYX_ERR(1, 257, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":216
+  /* "whatshap/core.pyx":255
  * 		self.thisptr.addMapq(mapq)
  * 
  * 	def sort(self):             # <<<<<<<<<<<<<<
@@ -12552,7 +13519,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_25sort(struct __pyx_obj_8whatsha
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":220
+/* "whatshap/core.pyx":259
  * 		self.thisptr.sortVariants()
  * 
  * 	def is_sorted(self):             # <<<<<<<<<<<<<<
@@ -12612,7 +13579,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_27is_sorted(struct __pyx_obj_8wh
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("is_sorted", 1);
 
-  /* "whatshap/core.pyx":221
+  /* "whatshap/core.pyx":260
  * 
  * 	def is_sorted(self):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -12624,14 +13591,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_27is_sorted(struct __pyx_obj_8wh
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 221, __pyx_L1_error)
+      __PYX_ERR(1, 260, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 221, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 260, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":222
+  /* "whatshap/core.pyx":261
  * 	def is_sorted(self):
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.isSorted()             # <<<<<<<<<<<<<<
@@ -12643,15 +13610,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_27is_sorted(struct __pyx_obj_8wh
     __pyx_t_2 = __pyx_v_self->thisptr->isSorted();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 222, __pyx_L1_error)
+    __PYX_ERR(1, 261, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 222, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 261, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":220
+  /* "whatshap/core.pyx":259
  * 		self.thisptr.sortVariants()
  * 
  * 	def is_sorted(self):             # <<<<<<<<<<<<<<
@@ -12670,7 +13637,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_27is_sorted(struct __pyx_obj_8wh
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":224
+/* "whatshap/core.pyx":263
  * 		return self.thisptr.isSorted()
  * 
  * 	def has_BX_tag(self):             # <<<<<<<<<<<<<<
@@ -12730,7 +13697,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_29has_BX_tag(struct __pyx_obj_8w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("has_BX_tag", 1);
 
-  /* "whatshap/core.pyx":225
+  /* "whatshap/core.pyx":264
  * 
  * 	def has_BX_tag(self):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -12742,14 +13709,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_29has_BX_tag(struct __pyx_obj_8w
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 225, __pyx_L1_error)
+      __PYX_ERR(1, 264, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 225, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 264, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":226
+  /* "whatshap/core.pyx":265
  * 	def has_BX_tag(self):
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.hasBXTag()             # <<<<<<<<<<<<<<
@@ -12761,15 +13728,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_29has_BX_tag(struct __pyx_obj_8w
     __pyx_t_2 = __pyx_v_self->thisptr->hasBXTag();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 226, __pyx_L1_error)
+    __PYX_ERR(1, 265, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 226, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 265, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":224
+  /* "whatshap/core.pyx":263
  * 		return self.thisptr.isSorted()
  * 
  * 	def has_BX_tag(self):             # <<<<<<<<<<<<<<
@@ -12788,7 +13755,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_29has_BX_tag(struct __pyx_obj_8w
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":228
+/* "whatshap/core.pyx":267
  * 		return self.thisptr.hasBXTag()
  * 
  * 	def has_HP_tag(self):             # <<<<<<<<<<<<<<
@@ -12848,7 +13815,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_31has_HP_tag(struct __pyx_obj_8w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("has_HP_tag", 1);
 
-  /* "whatshap/core.pyx":229
+  /* "whatshap/core.pyx":268
  * 
  * 	def has_HP_tag(self):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -12860,14 +13827,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_31has_HP_tag(struct __pyx_obj_8w
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 229, __pyx_L1_error)
+      __PYX_ERR(1, 268, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 229, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 268, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":230
+  /* "whatshap/core.pyx":269
  * 	def has_HP_tag(self):
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.hasBXTag()             # <<<<<<<<<<<<<<
@@ -12879,15 +13846,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_31has_HP_tag(struct __pyx_obj_8w
     __pyx_t_2 = __pyx_v_self->thisptr->hasBXTag();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 230, __pyx_L1_error)
+    __PYX_ERR(1, 269, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 230, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 269, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":228
+  /* "whatshap/core.pyx":267
  * 		return self.thisptr.hasBXTag()
  * 
  * 	def has_HP_tag(self):             # <<<<<<<<<<<<<<
@@ -12906,7 +13873,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_31has_HP_tag(struct __pyx_obj_8w
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":232
+/* "whatshap/core.pyx":271
  * 		return self.thisptr.hasBXTag()
  * 
  * 	def has_PS_tag(self):             # <<<<<<<<<<<<<<
@@ -12966,7 +13933,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_33has_PS_tag(struct __pyx_obj_8w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("has_PS_tag", 1);
 
-  /* "whatshap/core.pyx":233
+  /* "whatshap/core.pyx":272
  * 
  * 	def has_PS_tag(self):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -12978,14 +13945,14 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_33has_PS_tag(struct __pyx_obj_8w
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 233, __pyx_L1_error)
+      __PYX_ERR(1, 272, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 233, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 272, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":234
+  /* "whatshap/core.pyx":273
  * 	def has_PS_tag(self):
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.hasBXTag()             # <<<<<<<<<<<<<<
@@ -12997,15 +13964,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_33has_PS_tag(struct __pyx_obj_8w
     __pyx_t_2 = __pyx_v_self->thisptr->hasBXTag();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 234, __pyx_L1_error)
+    __PYX_ERR(1, 273, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 234, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyBool_FromLong(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 273, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":232
+  /* "whatshap/core.pyx":271
  * 		return self.thisptr.hasBXTag()
  * 
  * 	def has_PS_tag(self):             # <<<<<<<<<<<<<<
@@ -13238,7 +14205,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4Read_37__setstate_cython__(CYTHON_UNU
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":237
+/* "whatshap/core.pyx":276
  * 
  * cdef class ReadSet:
  * 	def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -13277,7 +14244,7 @@ static int __pyx_pf_8whatshap_4core_7ReadSet___cinit__(struct __pyx_obj_8whatsha
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "whatshap/core.pyx":238
+  /* "whatshap/core.pyx":277
  * cdef class ReadSet:
  * 	def __cinit__(self):
  * 		self.thisptr = new cpp.ReadSet()             # <<<<<<<<<<<<<<
@@ -13288,11 +14255,11 @@ static int __pyx_pf_8whatshap_4core_7ReadSet___cinit__(struct __pyx_obj_8whatsha
     __pyx_t_1 = new ReadSet();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 238, __pyx_L1_error)
+    __PYX_ERR(1, 277, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_1;
 
-  /* "whatshap/core.pyx":237
+  /* "whatshap/core.pyx":276
  * 
  * cdef class ReadSet:
  * 	def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -13310,7 +14277,7 @@ static int __pyx_pf_8whatshap_4core_7ReadSet___cinit__(struct __pyx_obj_8whatsha
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":240
+/* "whatshap/core.pyx":279
  * 		self.thisptr = new cpp.ReadSet()
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -13333,7 +14300,7 @@ static void __pyx_pw_8whatshap_4core_7ReadSet_3__dealloc__(PyObject *__pyx_v_sel
 
 static void __pyx_pf_8whatshap_4core_7ReadSet_2__dealloc__(struct __pyx_obj_8whatshap_4core_ReadSet *__pyx_v_self) {
 
-  /* "whatshap/core.pyx":241
+  /* "whatshap/core.pyx":280
  * 
  * 	def __dealloc__(self):
  * 		del self.thisptr             # <<<<<<<<<<<<<<
@@ -13342,7 +14309,7 @@ static void __pyx_pf_8whatshap_4core_7ReadSet_2__dealloc__(struct __pyx_obj_8wha
  */
   delete __pyx_v_self->thisptr;
 
-  /* "whatshap/core.pyx":240
+  /* "whatshap/core.pyx":279
  * 		self.thisptr = new cpp.ReadSet()
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -13353,7 +14320,7 @@ static void __pyx_pf_8whatshap_4core_7ReadSet_2__dealloc__(struct __pyx_obj_8wha
   /* function exit code */
 }
 
-/* "whatshap/core.pyx":243
+/* "whatshap/core.pyx":282
  * 		del self.thisptr
  * 
  * 	def add(self, Read read):             # <<<<<<<<<<<<<<
@@ -13415,12 +14382,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 243, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 282, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add") < 0)) __PYX_ERR(1, 243, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add") < 0)) __PYX_ERR(1, 282, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
@@ -13431,7 +14398,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("add", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 243, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("add", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 282, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -13445,7 +14412,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_read), __pyx_ptype_8whatshap_4core_Read, 1, "read", 0))) __PYX_ERR(1, 243, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_read), __pyx_ptype_8whatshap_4core_Read, 1, "read", 0))) __PYX_ERR(1, 282, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_7ReadSet_4add(((struct __pyx_obj_8whatshap_4core_ReadSet *)__pyx_v_self), __pyx_v_read);
 
   /* function exit code */
@@ -13472,7 +14439,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_4add(struct __pyx_obj_8whatsh
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("add", 1);
 
-  /* "whatshap/core.pyx":248
+  /* "whatshap/core.pyx":287
  * 		so that subsequent changes to the Read don't affect the
  * 		newly created copy that is added to the ReadSet."""
  * 		self.thisptr.add(new cpp.Read(read.thisptr[0]))             # <<<<<<<<<<<<<<
@@ -13483,16 +14450,16 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_4add(struct __pyx_obj_8whatsh
     __pyx_t_1 = new Read((__pyx_v_read->thisptr[0]));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 248, __pyx_L1_error)
+    __PYX_ERR(1, 287, __pyx_L1_error)
   }
   try {
     __pyx_v_self->thisptr->add(__pyx_t_1);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 248, __pyx_L1_error)
+    __PYX_ERR(1, 287, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":243
+  /* "whatshap/core.pyx":282
  * 		del self.thisptr
  * 
  * 	def add(self, Read read):             # <<<<<<<<<<<<<<
@@ -13512,7 +14479,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_4add(struct __pyx_obj_8whatsh
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":250
+/* "whatshap/core.pyx":289
  * 		self.thisptr.add(new cpp.Read(read.thisptr[0]))
  * 
  * 	def __str__(self):             # <<<<<<<<<<<<<<
@@ -13545,7 +14512,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_6__str__(struct __pyx_obj_8wh
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__str__", 1);
 
-  /* "whatshap/core.pyx":251
+  /* "whatshap/core.pyx":290
  * 
  * 	def __str__(self):
  * 		return self.thisptr.toString().decode('utf-8')             # <<<<<<<<<<<<<<
@@ -13557,15 +14524,15 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_6__str__(struct __pyx_obj_8wh
     __pyx_t_1 = __pyx_v_self->thisptr->toString();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 251, __pyx_L1_error)
+    __PYX_ERR(1, 290, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 251, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 290, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":250
+  /* "whatshap/core.pyx":289
  * 		self.thisptr.add(new cpp.Read(read.thisptr[0]))
  * 
  * 	def __str__(self):             # <<<<<<<<<<<<<<
@@ -13585,7 +14552,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_6__str__(struct __pyx_obj_8wh
 }
 static PyObject *__pyx_gb_8whatshap_4core_7ReadSet_10generator1(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "whatshap/core.pyx":253
+/* "whatshap/core.pyx":292
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def __iter__(self):             # <<<<<<<<<<<<<<
@@ -13620,7 +14587,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_8__iter__(struct __pyx_obj_8w
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_8whatshap_4core___pyx_scope_struct_1___iter__ *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(1, 253, __pyx_L1_error)
+    __PYX_ERR(1, 292, __pyx_L1_error)
   } else {
     __Pyx_GOTREF((PyObject *)__pyx_cur_scope);
   }
@@ -13628,7 +14595,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_8__iter__(struct __pyx_obj_8w
   __Pyx_INCREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   __Pyx_GIVEREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_8whatshap_4core_7ReadSet_10generator1, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_iter, __pyx_n_s_ReadSet___iter, __pyx_n_s_whatshap_core); if (unlikely(!gen)) __PYX_ERR(1, 253, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_8whatshap_4core_7ReadSet_10generator1, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_iter, __pyx_n_s_ReadSet___iter, __pyx_n_s_whatshap_core); if (unlikely(!gen)) __PYX_ERR(1, 292, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -13665,9 +14632,9 @@ static PyObject *__pyx_gb_8whatshap_4core_7ReadSet_10generator1(__pyx_CoroutineO
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 253, __pyx_L1_error)
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 292, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":254
+  /* "whatshap/core.pyx":293
  * 
  * 	def __iter__(self):
  * 		for i in range(self.thisptr.size()):             # <<<<<<<<<<<<<<
@@ -13678,20 +14645,20 @@ static PyObject *__pyx_gb_8whatshap_4core_7ReadSet_10generator1(__pyx_CoroutineO
     __pyx_t_1 = __pyx_cur_scope->__pyx_v_self->thisptr->size();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 254, __pyx_L1_error)
+    __PYX_ERR(1, 293, __pyx_L1_error)
   }
   __pyx_t_2 = __pyx_t_1;
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_cur_scope->__pyx_v_i = __pyx_t_3;
 
-    /* "whatshap/core.pyx":255
+    /* "whatshap/core.pyx":294
  * 	def __iter__(self):
  * 		for i in range(self.thisptr.size()):
  * 			yield self[i]             # <<<<<<<<<<<<<<
  * 
  * 	def __len__(self):
  */
-    __pyx_t_4 = __Pyx_GetItemInt(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_cur_scope->__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 255, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_cur_scope->__pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 294, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_r = __pyx_t_4;
     __pyx_t_4 = 0;
@@ -13708,11 +14675,11 @@ static PyObject *__pyx_gb_8whatshap_4core_7ReadSet_10generator1(__pyx_CoroutineO
     __pyx_t_1 = __pyx_cur_scope->__pyx_t_0;
     __pyx_t_2 = __pyx_cur_scope->__pyx_t_1;
     __pyx_t_3 = __pyx_cur_scope->__pyx_t_2;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 255, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 294, __pyx_L1_error)
   }
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
-  /* "whatshap/core.pyx":253
+  /* "whatshap/core.pyx":292
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def __iter__(self):             # <<<<<<<<<<<<<<
@@ -13738,7 +14705,7 @@ static PyObject *__pyx_gb_8whatshap_4core_7ReadSet_10generator1(__pyx_CoroutineO
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":257
+/* "whatshap/core.pyx":296
  * 			yield self[i]
  * 
  * 	def __len__(self):             # <<<<<<<<<<<<<<
@@ -13768,7 +14735,7 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_7ReadSet_11__len__(struct __pyx_obj_8
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "whatshap/core.pyx":258
+  /* "whatshap/core.pyx":297
  * 
  * 	def __len__(self):
  * 		return self.thisptr.size()             # <<<<<<<<<<<<<<
@@ -13779,12 +14746,12 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_7ReadSet_11__len__(struct __pyx_obj_8
     __pyx_t_1 = __pyx_v_self->thisptr->size();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 258, __pyx_L1_error)
+    __PYX_ERR(1, 297, __pyx_L1_error)
   }
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":257
+  /* "whatshap/core.pyx":296
  * 			yield self[i]
  * 
  * 	def __len__(self):             # <<<<<<<<<<<<<<
@@ -13800,7 +14767,7 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_7ReadSet_11__len__(struct __pyx_obj_8
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":260
+/* "whatshap/core.pyx":299
  * 		return self.thisptr.size()
  * 
  * 	def __getitem__(self, key):             # <<<<<<<<<<<<<<
@@ -13845,7 +14812,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__getitem__", 1);
 
-  /* "whatshap/core.pyx":261
+  /* "whatshap/core.pyx":300
  * 
  * 	def __getitem__(self, key):
  * 		if isinstance(key, slice):             # <<<<<<<<<<<<<<
@@ -13855,20 +14822,20 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
   __pyx_t_1 = PySlice_Check(__pyx_v_key); 
   if (unlikely(__pyx_t_1)) {
 
-    /* "whatshap/core.pyx":262
+    /* "whatshap/core.pyx":301
  * 	def __getitem__(self, key):
  * 		if isinstance(key, slice):
  * 			raise NotImplementedError('ReadSet does not support slices')             # <<<<<<<<<<<<<<
  * 		cdef string name = b''
  * 		cdef cpp.Read* cread = NULL
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_NotImplementedError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 262, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_NotImplementedError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 301, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(1, 262, __pyx_L1_error)
+    __PYX_ERR(1, 301, __pyx_L1_error)
 
-    /* "whatshap/core.pyx":261
+    /* "whatshap/core.pyx":300
  * 
  * 	def __getitem__(self, key):
  * 		if isinstance(key, slice):             # <<<<<<<<<<<<<<
@@ -13877,17 +14844,17 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
  */
   }
 
-  /* "whatshap/core.pyx":263
+  /* "whatshap/core.pyx":302
  * 		if isinstance(key, slice):
  * 			raise NotImplementedError('ReadSet does not support slices')
  * 		cdef string name = b''             # <<<<<<<<<<<<<<
  * 		cdef cpp.Read* cread = NULL
  * 		cdef Read read = Read()
  */
-  __pyx_t_3 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 263, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_kp_b_); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 302, __pyx_L1_error)
   __pyx_v_name = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-  /* "whatshap/core.pyx":264
+  /* "whatshap/core.pyx":303
  * 			raise NotImplementedError('ReadSet does not support slices')
  * 		cdef string name = b''
  * 		cdef cpp.Read* cread = NULL             # <<<<<<<<<<<<<<
@@ -13896,19 +14863,19 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
  */
   __pyx_v_cread = NULL;
 
-  /* "whatshap/core.pyx":265
+  /* "whatshap/core.pyx":304
  * 		cdef string name = b''
  * 		cdef cpp.Read* cread = NULL
  * 		cdef Read read = Read()             # <<<<<<<<<<<<<<
  * 		if isinstance(key, int):
  * 			read.thisptr = self.thisptr.get(key)
  */
-  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_Read)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 265, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_Read)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 304, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_read = ((struct __pyx_obj_8whatshap_4core_Read *)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":266
+  /* "whatshap/core.pyx":305
  * 		cdef cpp.Read* cread = NULL
  * 		cdef Read read = Read()
  * 		if isinstance(key, int):             # <<<<<<<<<<<<<<
@@ -13918,23 +14885,23 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
   __pyx_t_1 = PyInt_Check(__pyx_v_key); 
   if (__pyx_t_1) {
 
-    /* "whatshap/core.pyx":267
+    /* "whatshap/core.pyx":306
  * 		cdef Read read = Read()
  * 		if isinstance(key, int):
  * 			read.thisptr = self.thisptr.get(key)             # <<<<<<<<<<<<<<
  * 		elif isinstance(key, str):
  * 			raise NotImplementedError('Querying a ReadSet by read name is deprecated, please query by (source_id, name) instead')
  */
-    __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_key); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 267, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_key); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 306, __pyx_L1_error)
     try {
       __pyx_t_5 = __pyx_v_self->thisptr->get(__pyx_t_4);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 267, __pyx_L1_error)
+      __PYX_ERR(1, 306, __pyx_L1_error)
     }
     __pyx_v_read->thisptr = __pyx_t_5;
 
-    /* "whatshap/core.pyx":266
+    /* "whatshap/core.pyx":305
  * 		cdef cpp.Read* cread = NULL
  * 		cdef Read read = Read()
  * 		if isinstance(key, int):             # <<<<<<<<<<<<<<
@@ -13944,7 +14911,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
     goto __pyx_L4;
   }
 
-  /* "whatshap/core.pyx":268
+  /* "whatshap/core.pyx":307
  * 		if isinstance(key, int):
  * 			read.thisptr = self.thisptr.get(key)
  * 		elif isinstance(key, str):             # <<<<<<<<<<<<<<
@@ -13954,20 +14921,20 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
   __pyx_t_1 = PyUnicode_Check(__pyx_v_key); 
   if (unlikely(__pyx_t_1)) {
 
-    /* "whatshap/core.pyx":269
+    /* "whatshap/core.pyx":308
  * 			read.thisptr = self.thisptr.get(key)
  * 		elif isinstance(key, str):
  * 			raise NotImplementedError('Querying a ReadSet by read name is deprecated, please query by (source_id, name) instead')             # <<<<<<<<<<<<<<
  * 		elif isinstance(key, tuple) and (len(key) == 2) and (isinstance(key[0],int) and isinstance(key[1],str)):
  * 			source_id = key[0]
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_NotImplementedError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 269, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_NotImplementedError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 308, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_ERR(1, 269, __pyx_L1_error)
+    __PYX_ERR(1, 308, __pyx_L1_error)
 
-    /* "whatshap/core.pyx":268
+    /* "whatshap/core.pyx":307
  * 		if isinstance(key, int):
  * 			read.thisptr = self.thisptr.get(key)
  * 		elif isinstance(key, str):             # <<<<<<<<<<<<<<
@@ -13976,7 +14943,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
  */
   }
 
-  /* "whatshap/core.pyx":270
+  /* "whatshap/core.pyx":309
  * 		elif isinstance(key, str):
  * 			raise NotImplementedError('Querying a ReadSet by read name is deprecated, please query by (source_id, name) instead')
  * 		elif isinstance(key, tuple) and (len(key) == 2) and (isinstance(key[0],int) and isinstance(key[1],str)):             # <<<<<<<<<<<<<<
@@ -13989,14 +14956,14 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
     __pyx_t_1 = __pyx_t_6;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_7 = PyObject_Length(__pyx_v_key); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(1, 270, __pyx_L1_error)
+  __pyx_t_7 = PyObject_Length(__pyx_v_key); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(1, 309, __pyx_L1_error)
   __pyx_t_6 = (__pyx_t_7 == 2);
   if (__pyx_t_6) {
   } else {
     __pyx_t_1 = __pyx_t_6;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_key, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 270, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_key, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_6 = PyInt_Check(__pyx_t_2); 
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -14005,7 +14972,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
     __pyx_t_1 = __pyx_t_6;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_key, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 270, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_key, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_6 = PyUnicode_Check(__pyx_t_2); 
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -14013,28 +14980,28 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
   __pyx_L5_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "whatshap/core.pyx":271
+    /* "whatshap/core.pyx":310
  * 			raise NotImplementedError('Querying a ReadSet by read name is deprecated, please query by (source_id, name) instead')
  * 		elif isinstance(key, tuple) and (len(key) == 2) and (isinstance(key[0],int) and isinstance(key[1],str)):
  * 			source_id = key[0]             # <<<<<<<<<<<<<<
  * 			name = key[1].encode('UTF-8')
  * 			cread = self.thisptr.getByName(name, source_id)
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_key, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 271, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_key, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 310, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_v_source_id = __pyx_t_2;
     __pyx_t_2 = 0;
 
-    /* "whatshap/core.pyx":272
+    /* "whatshap/core.pyx":311
  * 		elif isinstance(key, tuple) and (len(key) == 2) and (isinstance(key[0],int) and isinstance(key[1],str)):
  * 			source_id = key[0]
  * 			name = key[1].encode('UTF-8')             # <<<<<<<<<<<<<<
  * 			cread = self.thisptr.getByName(name, source_id)
  * 			if cread == NULL:
  */
-    __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_key, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 272, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_key, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 311, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_encode); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 272, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_encode); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 311, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __pyx_t_8 = NULL;
@@ -14055,31 +15022,31 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
       PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_kp_u_UTF_8};
       __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_9, __pyx_callargs+1-__pyx_t_10, 1+__pyx_t_10);
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 272, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 311, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     }
-    __pyx_t_3 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_2); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 272, __pyx_L1_error)
+    __pyx_t_3 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_2); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 311, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_name = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-    /* "whatshap/core.pyx":273
+    /* "whatshap/core.pyx":312
  * 			source_id = key[0]
  * 			name = key[1].encode('UTF-8')
  * 			cread = self.thisptr.getByName(name, source_id)             # <<<<<<<<<<<<<<
  * 			if cread == NULL:
  * 				raise KeyError(key)
  */
-    __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_source_id); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 273, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_source_id); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 312, __pyx_L1_error)
     try {
       __pyx_t_5 = __pyx_v_self->thisptr->getByName(__pyx_v_name, __pyx_t_4);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 273, __pyx_L1_error)
+      __PYX_ERR(1, 312, __pyx_L1_error)
     }
     __pyx_v_cread = __pyx_t_5;
 
-    /* "whatshap/core.pyx":274
+    /* "whatshap/core.pyx":313
  * 			name = key[1].encode('UTF-8')
  * 			cread = self.thisptr.getByName(name, source_id)
  * 			if cread == NULL:             # <<<<<<<<<<<<<<
@@ -14089,20 +15056,20 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
     __pyx_t_1 = (__pyx_v_cread == NULL);
     if (unlikely(__pyx_t_1)) {
 
-      /* "whatshap/core.pyx":275
+      /* "whatshap/core.pyx":314
  * 			cread = self.thisptr.getByName(name, source_id)
  * 			if cread == NULL:
  * 				raise KeyError(key)             # <<<<<<<<<<<<<<
  * 			else:
  * 				read.thisptr = cread
  */
-      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_KeyError, __pyx_v_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 275, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_KeyError, __pyx_v_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 314, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_Raise(__pyx_t_2, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __PYX_ERR(1, 275, __pyx_L1_error)
+      __PYX_ERR(1, 314, __pyx_L1_error)
 
-      /* "whatshap/core.pyx":274
+      /* "whatshap/core.pyx":313
  * 			name = key[1].encode('UTF-8')
  * 			cread = self.thisptr.getByName(name, source_id)
  * 			if cread == NULL:             # <<<<<<<<<<<<<<
@@ -14111,7 +15078,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
  */
     }
 
-    /* "whatshap/core.pyx":277
+    /* "whatshap/core.pyx":316
  * 				raise KeyError(key)
  * 			else:
  * 				read.thisptr = cread             # <<<<<<<<<<<<<<
@@ -14122,7 +15089,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
       __pyx_v_read->thisptr = __pyx_v_cread;
     }
 
-    /* "whatshap/core.pyx":270
+    /* "whatshap/core.pyx":309
  * 		elif isinstance(key, str):
  * 			raise NotImplementedError('Querying a ReadSet by read name is deprecated, please query by (source_id, name) instead')
  * 		elif isinstance(key, tuple) and (len(key) == 2) and (isinstance(key[0],int) and isinstance(key[1],str)):             # <<<<<<<<<<<<<<
@@ -14132,7 +15099,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
     goto __pyx_L4;
   }
 
-  /* "whatshap/core.pyx":279
+  /* "whatshap/core.pyx":318
  * 				read.thisptr = cread
  * 		else:
  * 			assert False, 'Invalid key: {}'.format(key)             # <<<<<<<<<<<<<<
@@ -14143,7 +15110,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
     #ifndef CYTHON_WITHOUT_ASSERTIONS
     if (unlikely(__pyx_assertions_enabled())) {
       if (unlikely(!0)) {
-        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Invalid_key, __pyx_n_s_format); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 279, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Invalid_key, __pyx_n_s_format); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 318, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __pyx_t_8 = NULL;
         __pyx_t_10 = 0;
@@ -14163,25 +15130,25 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
           PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_v_key};
           __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_9, __pyx_callargs+1-__pyx_t_10, 1+__pyx_t_10);
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 279, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 318, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         }
-        __pyx_t_9 = PyTuple_Pack(1, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 279, __pyx_L1_error)
+        __pyx_t_9 = PyTuple_Pack(1, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 318, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_Raise(__pyx_builtin_AssertionError, __pyx_t_9, 0, 0);
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __PYX_ERR(1, 279, __pyx_L1_error)
+        __PYX_ERR(1, 318, __pyx_L1_error)
       }
     }
     #else
-    if ((1)); else __PYX_ERR(1, 279, __pyx_L1_error)
+    if ((1)); else __PYX_ERR(1, 318, __pyx_L1_error)
     #endif
   }
   __pyx_L4:;
 
-  /* "whatshap/core.pyx":280
+  /* "whatshap/core.pyx":319
  * 		else:
  * 			assert False, 'Invalid key: {}'.format(key)
  * 		return read             # <<<<<<<<<<<<<<
@@ -14193,7 +15160,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
   __pyx_r = ((PyObject *)__pyx_v_read);
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":260
+  /* "whatshap/core.pyx":299
  * 		return self.thisptr.size()
  * 
  * 	def __getitem__(self, key):             # <<<<<<<<<<<<<<
@@ -14216,7 +15183,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_13__getitem__(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":282
+/* "whatshap/core.pyx":321
  * 		return read
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
@@ -14279,7 +15246,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_15__getstate__(struct __pyx_o
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__getstate__", 1);
 
-  /* "whatshap/core.pyx":283
+  /* "whatshap/core.pyx":322
  * 
  * 	def __getstate__(self):
  * 		return ([read for read in self])             # <<<<<<<<<<<<<<
@@ -14288,16 +15255,16 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_15__getstate__(struct __pyx_o
  */
   __Pyx_XDECREF(__pyx_r);
   { /* enter inner scope */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 283, __pyx_L5_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 322, __pyx_L5_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (likely(PyList_CheckExact(((PyObject *)__pyx_v_self))) || PyTuple_CheckExact(((PyObject *)__pyx_v_self))) {
       __pyx_t_2 = ((PyObject *)__pyx_v_self); __Pyx_INCREF(__pyx_t_2);
       __pyx_t_3 = 0;
       __pyx_t_4 = NULL;
     } else {
-      __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 283, __pyx_L5_error)
+      __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(((PyObject *)__pyx_v_self)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 322, __pyx_L5_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_4 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 283, __pyx_L5_error)
+      __pyx_t_4 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 322, __pyx_L5_error)
     }
     for (;;) {
       if (likely(!__pyx_t_4)) {
@@ -14305,28 +15272,28 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_15__getstate__(struct __pyx_o
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_2);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 283, __pyx_L5_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 322, __pyx_L5_error)
             #endif
             if (__pyx_t_3 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 283, __pyx_L5_error)
+          __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 322, __pyx_L5_error)
           #else
-          __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 283, __pyx_L5_error)
+          __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 322, __pyx_L5_error)
           __Pyx_GOTREF(__pyx_t_5);
           #endif
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_2);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 283, __pyx_L5_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 322, __pyx_L5_error)
             #endif
             if (__pyx_t_3 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 283, __pyx_L5_error)
+          __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 322, __pyx_L5_error)
           #else
-          __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 283, __pyx_L5_error)
+          __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 322, __pyx_L5_error)
           __Pyx_GOTREF(__pyx_t_5);
           #endif
         }
@@ -14336,7 +15303,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_15__getstate__(struct __pyx_o
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 283, __pyx_L5_error)
+            else __PYX_ERR(1, 322, __pyx_L5_error)
           }
           break;
         }
@@ -14344,7 +15311,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_15__getstate__(struct __pyx_o
       }
       __Pyx_XDECREF_SET(__pyx_8genexpr3__pyx_v_read, __pyx_t_5);
       __pyx_t_5 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_8genexpr3__pyx_v_read))) __PYX_ERR(1, 283, __pyx_L5_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_8genexpr3__pyx_v_read))) __PYX_ERR(1, 322, __pyx_L5_error)
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF(__pyx_8genexpr3__pyx_v_read); __pyx_8genexpr3__pyx_v_read = 0;
@@ -14358,7 +15325,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_15__getstate__(struct __pyx_o
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":282
+  /* "whatshap/core.pyx":321
  * 		return read
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
@@ -14380,7 +15347,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_15__getstate__(struct __pyx_o
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":285
+/* "whatshap/core.pyx":324
  * 		return ([read for read in self])
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
@@ -14441,12 +15408,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 285, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 324, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__setstate__") < 0)) __PYX_ERR(1, 285, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__setstate__") < 0)) __PYX_ERR(1, 324, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
@@ -14457,7 +15424,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__setstate__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 285, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__setstate__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 324, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -14501,7 +15468,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_17__setstate__(struct __pyx_o
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__setstate__", 1);
 
-  /* "whatshap/core.pyx":286
+  /* "whatshap/core.pyx":325
  * 
  * 	def __setstate__(self, state):
  * 		self.thisptr = new cpp.ReadSet()             # <<<<<<<<<<<<<<
@@ -14512,11 +15479,11 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_17__setstate__(struct __pyx_o
     __pyx_t_1 = new ReadSet();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 286, __pyx_L1_error)
+    __PYX_ERR(1, 325, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_1;
 
-  /* "whatshap/core.pyx":287
+  /* "whatshap/core.pyx":326
  * 	def __setstate__(self, state):
  * 		self.thisptr = new cpp.ReadSet()
  * 		for read in state:             # <<<<<<<<<<<<<<
@@ -14528,9 +15495,9 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_17__setstate__(struct __pyx_o
     __pyx_t_3 = 0;
     __pyx_t_4 = NULL;
   } else {
-    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_state); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 287, __pyx_L1_error)
+    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_state); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 326, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 287, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 326, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_4)) {
@@ -14538,28 +15505,28 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_17__setstate__(struct __pyx_o
         {
           Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 287, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 326, __pyx_L1_error)
           #endif
           if (__pyx_t_3 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 287, __pyx_L1_error)
+        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 326, __pyx_L1_error)
         #else
-        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 287, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 326, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       } else {
         {
           Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 287, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 326, __pyx_L1_error)
           #endif
           if (__pyx_t_3 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 287, __pyx_L1_error)
+        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 326, __pyx_L1_error)
         #else
-        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 287, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 326, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       }
@@ -14569,7 +15536,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_17__setstate__(struct __pyx_o
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 287, __pyx_L1_error)
+          else __PYX_ERR(1, 326, __pyx_L1_error)
         }
         break;
       }
@@ -14578,14 +15545,14 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_17__setstate__(struct __pyx_o
     __Pyx_XDECREF_SET(__pyx_v_read, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "whatshap/core.pyx":288
+    /* "whatshap/core.pyx":327
  * 		self.thisptr = new cpp.ReadSet()
  * 		for read in state:
  * 			self.add(read)             # <<<<<<<<<<<<<<
  * 
  * 	#def get_by_name(self, name):
  */
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_add); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 288, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_add); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 327, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = NULL;
     __pyx_t_8 = 0;
@@ -14605,13 +15572,13 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_17__setstate__(struct __pyx_o
       PyObject *__pyx_callargs[2] = {__pyx_t_7, __pyx_v_read};
       __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 288, __pyx_L1_error)
+      if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 327, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "whatshap/core.pyx":287
+    /* "whatshap/core.pyx":326
  * 	def __setstate__(self, state):
  * 		self.thisptr = new cpp.ReadSet()
  * 		for read in state:             # <<<<<<<<<<<<<<
@@ -14621,7 +15588,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_17__setstate__(struct __pyx_o
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":285
+  /* "whatshap/core.pyx":324
  * 		return ([read for read in self])
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
@@ -14646,7 +15613,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_17__setstate__(struct __pyx_o
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":300
+/* "whatshap/core.pyx":339
  * 			#return read
  * 
  * 	def sort(self):             # <<<<<<<<<<<<<<
@@ -14704,7 +15671,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_19sort(struct __pyx_obj_8what
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("sort", 1);
 
-  /* "whatshap/core.pyx":304
+  /* "whatshap/core.pyx":343
  * 		this is not necessarily the variant with the lowest position, unless sort() has been
  * 		called on all contained reads. Ties are resolved by comparing the read name."""
  * 		self.thisptr.sort()             # <<<<<<<<<<<<<<
@@ -14715,10 +15682,10 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_19sort(struct __pyx_obj_8what
     __pyx_v_self->thisptr->sort();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 304, __pyx_L1_error)
+    __PYX_ERR(1, 343, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":300
+  /* "whatshap/core.pyx":339
  * 			#return read
  * 
  * 	def sort(self):             # <<<<<<<<<<<<<<
@@ -14738,7 +15705,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_19sort(struct __pyx_obj_8what
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":306
+/* "whatshap/core.pyx":345
  * 		self.thisptr.sort()
  * 
  * 	def subset(self, reads_to_select):             # <<<<<<<<<<<<<<
@@ -14799,12 +15766,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 306, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 345, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "subset") < 0)) __PYX_ERR(1, 306, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "subset") < 0)) __PYX_ERR(1, 345, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
@@ -14815,7 +15782,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("subset", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 306, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("subset", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 345, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -14860,7 +15827,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("subset", 1);
 
-  /* "whatshap/core.pyx":308
+  /* "whatshap/core.pyx":347
  * 	def subset(self, reads_to_select):
  * 		# TODO: is there a way of avoiding to unecessarily creating/destroying a ReadSet object?
  * 		cdef cpp.IndexSet* index_set = new cpp.IndexSet()             # <<<<<<<<<<<<<<
@@ -14871,11 +15838,11 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
     __pyx_t_1 = new IndexSet();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 308, __pyx_L1_error)
+    __PYX_ERR(1, 347, __pyx_L1_error)
   }
   __pyx_v_index_set = __pyx_t_1;
 
-  /* "whatshap/core.pyx":310
+  /* "whatshap/core.pyx":349
  * 		cdef cpp.IndexSet* index_set = new cpp.IndexSet()
  * 		cdef int i
  * 		for i in reads_to_select:             # <<<<<<<<<<<<<<
@@ -14887,9 +15854,9 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
     __pyx_t_3 = 0;
     __pyx_t_4 = NULL;
   } else {
-    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_reads_to_select); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 310, __pyx_L1_error)
+    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_reads_to_select); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 349, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 310, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 349, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_4)) {
@@ -14897,28 +15864,28 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
         {
           Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 310, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 349, __pyx_L1_error)
           #endif
           if (__pyx_t_3 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 310, __pyx_L1_error)
+        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 349, __pyx_L1_error)
         #else
-        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 310, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 349, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       } else {
         {
           Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 310, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 349, __pyx_L1_error)
           #endif
           if (__pyx_t_3 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 310, __pyx_L1_error)
+        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely((0 < 0))) __PYX_ERR(1, 349, __pyx_L1_error)
         #else
-        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 310, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 349, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       }
@@ -14928,17 +15895,17 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 310, __pyx_L1_error)
+          else __PYX_ERR(1, 349, __pyx_L1_error)
         }
         break;
       }
       __Pyx_GOTREF(__pyx_t_5);
     }
-    __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_t_5); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 310, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_t_5); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 349, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_v_i = __pyx_t_6;
 
-    /* "whatshap/core.pyx":311
+    /* "whatshap/core.pyx":350
  * 		cdef int i
  * 		for i in reads_to_select:
  * 			index_set.add(i)             # <<<<<<<<<<<<<<
@@ -14949,10 +15916,10 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
       __pyx_v_index_set->add(__pyx_v_i);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 311, __pyx_L1_error)
+      __PYX_ERR(1, 350, __pyx_L1_error)
     }
 
-    /* "whatshap/core.pyx":310
+    /* "whatshap/core.pyx":349
  * 		cdef cpp.IndexSet* index_set = new cpp.IndexSet()
  * 		cdef int i
  * 		for i in reads_to_select:             # <<<<<<<<<<<<<<
@@ -14962,19 +15929,19 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":312
+  /* "whatshap/core.pyx":351
  * 		for i in reads_to_select:
  * 			index_set.add(i)
  * 		result = ReadSet()             # <<<<<<<<<<<<<<
  * 		del result.thisptr
  * 		result.thisptr = self.thisptr.subset(index_set)
  */
-  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 312, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 351, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_result = ((struct __pyx_obj_8whatshap_4core_ReadSet *)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":313
+  /* "whatshap/core.pyx":352
  * 			index_set.add(i)
  * 		result = ReadSet()
  * 		del result.thisptr             # <<<<<<<<<<<<<<
@@ -14983,7 +15950,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
  */
   delete __pyx_v_result->thisptr;
 
-  /* "whatshap/core.pyx":314
+  /* "whatshap/core.pyx":353
  * 		result = ReadSet()
  * 		del result.thisptr
  * 		result.thisptr = self.thisptr.subset(index_set)             # <<<<<<<<<<<<<<
@@ -14994,11 +15961,11 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
     __pyx_t_7 = __pyx_v_self->thisptr->subset(__pyx_v_index_set);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 314, __pyx_L1_error)
+    __PYX_ERR(1, 353, __pyx_L1_error)
   }
   __pyx_v_result->thisptr = __pyx_t_7;
 
-  /* "whatshap/core.pyx":315
+  /* "whatshap/core.pyx":354
  * 		del result.thisptr
  * 		result.thisptr = self.thisptr.subset(index_set)
  * 		del index_set             # <<<<<<<<<<<<<<
@@ -15007,7 +15974,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
  */
   delete __pyx_v_index_set;
 
-  /* "whatshap/core.pyx":316
+  /* "whatshap/core.pyx":355
  * 		result.thisptr = self.thisptr.subset(index_set)
  * 		del index_set
  * 		return result             # <<<<<<<<<<<<<<
@@ -15019,7 +15986,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
   __pyx_r = ((PyObject *)__pyx_v_result);
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":306
+  /* "whatshap/core.pyx":345
  * 		self.thisptr.sort()
  * 
  * 	def subset(self, reads_to_select):             # <<<<<<<<<<<<<<
@@ -15040,7 +16007,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_21subset(struct __pyx_obj_8wh
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":318
+/* "whatshap/core.pyx":357
  * 		return result
  * 
  * 	def get_positions(self):             # <<<<<<<<<<<<<<
@@ -15101,7 +16068,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_23get_positions(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_positions", 1);
 
-  /* "whatshap/core.pyx":319
+  /* "whatshap/core.pyx":358
  * 
  * 	def get_positions(self):
  * 		cdef vector[unsigned int]* v = self.thisptr.get_positions()             # <<<<<<<<<<<<<<
@@ -15110,22 +16077,22 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_23get_positions(struct __pyx_
  */
   __pyx_v_v = __pyx_v_self->thisptr->get_positions();
 
-  /* "whatshap/core.pyx":320
+  /* "whatshap/core.pyx":359
  * 	def get_positions(self):
  * 		cdef vector[unsigned int]* v = self.thisptr.get_positions()
  * 		result = list(v[0])             # <<<<<<<<<<<<<<
  * 		del v
  * 		return result
  */
-  __pyx_t_1 = __pyx_convert_vector_to_py_unsigned_int((__pyx_v_v[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 320, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_vector_to_py_unsigned_int((__pyx_v_v[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 359, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PySequence_ListKeepNew(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 320, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PySequence_ListKeepNew(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 359, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_result = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":321
+  /* "whatshap/core.pyx":360
  * 		cdef vector[unsigned int]* v = self.thisptr.get_positions()
  * 		result = list(v[0])
  * 		del v             # <<<<<<<<<<<<<<
@@ -15134,7 +16101,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_23get_positions(struct __pyx_
  */
   delete __pyx_v_v;
 
-  /* "whatshap/core.pyx":322
+  /* "whatshap/core.pyx":361
  * 		result = list(v[0])
  * 		del v
  * 		return result             # <<<<<<<<<<<<<<
@@ -15146,7 +16113,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_23get_positions(struct __pyx_
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":318
+  /* "whatshap/core.pyx":357
  * 		return result
  * 
  * 	def get_positions(self):             # <<<<<<<<<<<<<<
@@ -15381,7 +16348,7 @@ static PyObject *__pyx_pf_8whatshap_4core_7ReadSet_27__setstate_cython__(CYTHON_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":326
+/* "whatshap/core.pyx":365
  * 
  * cdef class PedigreeDPTable:
  * 	def __cinit__(self, ReadSet readset, recombcost, Pedigree pedigree, bool distrust_genotypes = False, positions = None):             # <<<<<<<<<<<<<<
@@ -15438,7 +16405,7 @@ static int __pyx_pw_8whatshap_4core_15PedigreeDPTable_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 326, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 365, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -15446,9 +16413,9 @@ static int __pyx_pw_8whatshap_4core_15PedigreeDPTable_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 326, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 365, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, 1); __PYX_ERR(1, 326, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, 1); __PYX_ERR(1, 365, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -15456,28 +16423,28 @@ static int __pyx_pw_8whatshap_4core_15PedigreeDPTable_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 326, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 365, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, 2); __PYX_ERR(1, 326, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, 2); __PYX_ERR(1, 365, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_distrust_genotypes);
           if (value) { values[3] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 326, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 365, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_positions);
           if (value) { values[4] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 326, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 365, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 326, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 365, __pyx_L3_error)
       }
     } else {
       switch (__pyx_nargs) {
@@ -15496,7 +16463,7 @@ static int __pyx_pw_8whatshap_4core_15PedigreeDPTable_1__cinit__(PyObject *__pyx
     __pyx_v_recombcost = values[1];
     __pyx_v_pedigree = ((struct __pyx_obj_8whatshap_4core_Pedigree *)values[2]);
     if (values[3]) {
-      __pyx_v_distrust_genotypes = __Pyx_PyObject_IsTrue(values[3]); if (unlikely((__pyx_v_distrust_genotypes == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 326, __pyx_L3_error)
+      __pyx_v_distrust_genotypes = __Pyx_PyObject_IsTrue(values[3]); if (unlikely((__pyx_v_distrust_genotypes == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 365, __pyx_L3_error)
     } else {
       __pyx_v_distrust_genotypes = ((bool)0);
     }
@@ -15504,7 +16471,7 @@ static int __pyx_pw_8whatshap_4core_15PedigreeDPTable_1__cinit__(PyObject *__pyx
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, __pyx_nargs); __PYX_ERR(1, 326, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, __pyx_nargs); __PYX_ERR(1, 365, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -15518,8 +16485,8 @@ static int __pyx_pw_8whatshap_4core_15PedigreeDPTable_1__cinit__(PyObject *__pyx
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 326, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pedigree), __pyx_ptype_8whatshap_4core_Pedigree, 1, "pedigree", 0))) __PYX_ERR(1, 326, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 365, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pedigree), __pyx_ptype_8whatshap_4core_Pedigree, 1, "pedigree", 0))) __PYX_ERR(1, 365, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(((struct __pyx_obj_8whatshap_4core_PedigreeDPTable *)__pyx_v_self), __pyx_v_readset, __pyx_v_recombcost, __pyx_v_pedigree, __pyx_v_distrust_genotypes, __pyx_v_positions);
 
   /* function exit code */
@@ -15556,7 +16523,7 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__cinit__", 1);
 
-  /* "whatshap/core.pyx":331
+  /* "whatshap/core.pyx":370
  * 		in the read set must also be sorted (by position of their left-most variant).
  * 		"""
  * 		cdef vector[unsigned int]* c_positions = NULL             # <<<<<<<<<<<<<<
@@ -15565,7 +16532,7 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
  */
   __pyx_v_c_positions = NULL;
 
-  /* "whatshap/core.pyx":332
+  /* "whatshap/core.pyx":371
  * 		"""
  * 		cdef vector[unsigned int]* c_positions = NULL
  * 		if positions is not None:             # <<<<<<<<<<<<<<
@@ -15575,7 +16542,7 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
   __pyx_t_1 = (__pyx_v_positions != Py_None);
   if (__pyx_t_1) {
 
-    /* "whatshap/core.pyx":333
+    /* "whatshap/core.pyx":372
  * 		cdef vector[unsigned int]* c_positions = NULL
  * 		if positions is not None:
  * 			c_positions = new vector[unsigned int]()             # <<<<<<<<<<<<<<
@@ -15586,11 +16553,11 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
       __pyx_t_2 = new std::vector<unsigned int> ();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 333, __pyx_L1_error)
+      __PYX_ERR(1, 372, __pyx_L1_error)
     }
     __pyx_v_c_positions = __pyx_t_2;
 
-    /* "whatshap/core.pyx":334
+    /* "whatshap/core.pyx":373
  * 		if positions is not None:
  * 			c_positions = new vector[unsigned int]()
  * 			for pos in positions:             # <<<<<<<<<<<<<<
@@ -15602,9 +16569,9 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
       __pyx_t_4 = 0;
       __pyx_t_5 = NULL;
     } else {
-      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_positions); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 334, __pyx_L1_error)
+      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_positions); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 373, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 334, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 373, __pyx_L1_error)
     }
     for (;;) {
       if (likely(!__pyx_t_5)) {
@@ -15612,28 +16579,28 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 334, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 373, __pyx_L1_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 334, __pyx_L1_error)
+          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 373, __pyx_L1_error)
           #else
-          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 334, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 334, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 373, __pyx_L1_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 334, __pyx_L1_error)
+          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 373, __pyx_L1_error)
           #else
-          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 334, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 373, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         }
@@ -15643,7 +16610,7 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 334, __pyx_L1_error)
+            else __PYX_ERR(1, 373, __pyx_L1_error)
           }
           break;
         }
@@ -15652,22 +16619,22 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
       __Pyx_XDECREF_SET(__pyx_v_pos, __pyx_t_6);
       __pyx_t_6 = 0;
 
-      /* "whatshap/core.pyx":335
+      /* "whatshap/core.pyx":374
  * 			c_positions = new vector[unsigned int]()
  * 			for pos in positions:
  * 				c_positions.push_back(pos)             # <<<<<<<<<<<<<<
  * 		self.thisptr = new cpp.PedigreeDPTable(readset.thisptr, recombcost, pedigree.thisptr, distrust_genotypes, c_positions)
  * 		self.pedigree = pedigree
  */
-      __pyx_t_7 = __Pyx_PyInt_As_unsigned_int(__pyx_v_pos); if (unlikely((__pyx_t_7 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 335, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_unsigned_int(__pyx_v_pos); if (unlikely((__pyx_t_7 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 374, __pyx_L1_error)
       try {
         __pyx_v_c_positions->push_back(__pyx_t_7);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 335, __pyx_L1_error)
+        __PYX_ERR(1, 374, __pyx_L1_error)
       }
 
-      /* "whatshap/core.pyx":334
+      /* "whatshap/core.pyx":373
  * 		if positions is not None:
  * 			c_positions = new vector[unsigned int]()
  * 			for pos in positions:             # <<<<<<<<<<<<<<
@@ -15677,7 +16644,7 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "whatshap/core.pyx":332
+    /* "whatshap/core.pyx":371
  * 		"""
  * 		cdef vector[unsigned int]* c_positions = NULL
  * 		if positions is not None:             # <<<<<<<<<<<<<<
@@ -15686,23 +16653,23 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
  */
   }
 
-  /* "whatshap/core.pyx":336
+  /* "whatshap/core.pyx":375
  * 			for pos in positions:
  * 				c_positions.push_back(pos)
  * 		self.thisptr = new cpp.PedigreeDPTable(readset.thisptr, recombcost, pedigree.thisptr, distrust_genotypes, c_positions)             # <<<<<<<<<<<<<<
  * 		self.pedigree = pedigree
  * 
  */
-  __pyx_t_8 = __pyx_convert_vector_from_py_unsigned_int(__pyx_v_recombcost); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 336, __pyx_L1_error)
+  __pyx_t_8 = __pyx_convert_vector_from_py_unsigned_int(__pyx_v_recombcost); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 375, __pyx_L1_error)
   try {
     __pyx_t_9 = new PedigreeDPTable(__pyx_v_readset->thisptr, __pyx_t_8, __pyx_v_pedigree->thisptr, __pyx_v_distrust_genotypes, __pyx_v_c_positions);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 336, __pyx_L1_error)
+    __PYX_ERR(1, 375, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_9;
 
-  /* "whatshap/core.pyx":337
+  /* "whatshap/core.pyx":376
  * 				c_positions.push_back(pos)
  * 		self.thisptr = new cpp.PedigreeDPTable(readset.thisptr, recombcost, pedigree.thisptr, distrust_genotypes, c_positions)
  * 		self.pedigree = pedigree             # <<<<<<<<<<<<<<
@@ -15715,7 +16682,7 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
   __Pyx_DECREF((PyObject *)__pyx_v_self->pedigree);
   __pyx_v_self->pedigree = __pyx_v_pedigree;
 
-  /* "whatshap/core.pyx":326
+  /* "whatshap/core.pyx":365
  * 
  * cdef class PedigreeDPTable:
  * 	def __cinit__(self, ReadSet readset, recombcost, Pedigree pedigree, bool distrust_genotypes = False, positions = None):             # <<<<<<<<<<<<<<
@@ -15737,7 +16704,7 @@ static int __pyx_pf_8whatshap_4core_15PedigreeDPTable___cinit__(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":339
+/* "whatshap/core.pyx":378
  * 		self.pedigree = pedigree
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -15760,7 +16727,7 @@ static void __pyx_pw_8whatshap_4core_15PedigreeDPTable_3__dealloc__(PyObject *__
 
 static void __pyx_pf_8whatshap_4core_15PedigreeDPTable_2__dealloc__(struct __pyx_obj_8whatshap_4core_PedigreeDPTable *__pyx_v_self) {
 
-  /* "whatshap/core.pyx":340
+  /* "whatshap/core.pyx":379
  * 
  * 	def __dealloc__(self):
  * 		del self.thisptr             # <<<<<<<<<<<<<<
@@ -15769,7 +16736,7 @@ static void __pyx_pf_8whatshap_4core_15PedigreeDPTable_2__dealloc__(struct __pyx
  */
   delete __pyx_v_self->thisptr;
 
-  /* "whatshap/core.pyx":339
+  /* "whatshap/core.pyx":378
  * 		self.pedigree = pedigree
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -15780,7 +16747,7 @@ static void __pyx_pf_8whatshap_4core_15PedigreeDPTable_2__dealloc__(struct __pyx
   /* function exit code */
 }
 
-/* "whatshap/core.pyx":342
+/* "whatshap/core.pyx":381
  * 		del self.thisptr
  * 
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
@@ -15855,7 +16822,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_super_reads", 1);
 
-  /* "whatshap/core.pyx":349
+  /* "whatshap/core.pyx":388
  * 		TODO: Change that.
  * 		"""
  * 		cdef vector[cpp.ReadSet*]* read_sets = new vector[cpp.ReadSet*]()             # <<<<<<<<<<<<<<
@@ -15866,11 +16833,11 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
     __pyx_t_1 = new std::vector<ReadSet *> ();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 349, __pyx_L1_error)
+    __PYX_ERR(1, 388, __pyx_L1_error)
   }
   __pyx_v_read_sets = __pyx_t_1;
 
-  /* "whatshap/core.pyx":351
+  /* "whatshap/core.pyx":390
  * 		cdef vector[cpp.ReadSet*]* read_sets = new vector[cpp.ReadSet*]()
  * 
  * 		for i in range(len(self.pedigree)):             # <<<<<<<<<<<<<<
@@ -15879,13 +16846,13 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
  */
   __pyx_t_2 = ((PyObject *)__pyx_v_self->pedigree);
   __Pyx_INCREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_Length(__pyx_t_2); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(1, 351, __pyx_L1_error)
+  __pyx_t_3 = PyObject_Length(__pyx_t_2); if (unlikely(__pyx_t_3 == ((Py_ssize_t)-1))) __PYX_ERR(1, 390, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4 = __pyx_t_3;
   for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
     __pyx_v_i = __pyx_t_5;
 
-    /* "whatshap/core.pyx":352
+    /* "whatshap/core.pyx":391
  * 
  * 		for i in range(len(self.pedigree)):
  * 			read_sets.push_back(new cpp.ReadSet())             # <<<<<<<<<<<<<<
@@ -15896,17 +16863,17 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
       __pyx_t_6 = new ReadSet();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 352, __pyx_L1_error)
+      __PYX_ERR(1, 391, __pyx_L1_error)
     }
     try {
       __pyx_v_read_sets->push_back(__pyx_t_6);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 352, __pyx_L1_error)
+      __PYX_ERR(1, 391, __pyx_L1_error)
     }
   }
 
-  /* "whatshap/core.pyx":353
+  /* "whatshap/core.pyx":392
  * 		for i in range(len(self.pedigree)):
  * 			read_sets.push_back(new cpp.ReadSet())
  * 		transmission_vector_ptr = new vector[unsigned int]()             # <<<<<<<<<<<<<<
@@ -15917,11 +16884,11 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
     __pyx_t_7 = new std::vector<unsigned int> ();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 353, __pyx_L1_error)
+    __PYX_ERR(1, 392, __pyx_L1_error)
   }
   __pyx_v_transmission_vector_ptr = __pyx_t_7;
 
-  /* "whatshap/core.pyx":354
+  /* "whatshap/core.pyx":393
  * 			read_sets.push_back(new cpp.ReadSet())
  * 		transmission_vector_ptr = new vector[unsigned int]()
  * 		self.thisptr.get_super_reads(read_sets, transmission_vector_ptr)             # <<<<<<<<<<<<<<
@@ -15932,22 +16899,22 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
     __pyx_v_self->thisptr->get_super_reads(__pyx_v_read_sets, __pyx_v_transmission_vector_ptr);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 354, __pyx_L1_error)
+    __PYX_ERR(1, 393, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":356
+  /* "whatshap/core.pyx":395
  * 		self.thisptr.get_super_reads(read_sets, transmission_vector_ptr)
  * 
  * 		results = []             # <<<<<<<<<<<<<<
  * 		for i in range(read_sets.size()):
  * 			rs = ReadSet()
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 356, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 395, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_results = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":357
+  /* "whatshap/core.pyx":396
  * 
  * 		results = []
  * 		for i in range(read_sets.size()):             # <<<<<<<<<<<<<<
@@ -15959,19 +16926,19 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
   for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
     __pyx_v_i = __pyx_t_9;
 
-    /* "whatshap/core.pyx":358
+    /* "whatshap/core.pyx":397
  * 		results = []
  * 		for i in range(read_sets.size()):
  * 			rs = ReadSet()             # <<<<<<<<<<<<<<
  * 			del rs.thisptr
  * 			rs.thisptr = deref(read_sets)[i]
  */
-    __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 358, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 397, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_XDECREF_SET(__pyx_v_rs, ((struct __pyx_obj_8whatshap_4core_ReadSet *)__pyx_t_2));
     __pyx_t_2 = 0;
 
-    /* "whatshap/core.pyx":359
+    /* "whatshap/core.pyx":398
  * 		for i in range(read_sets.size()):
  * 			rs = ReadSet()
  * 			del rs.thisptr             # <<<<<<<<<<<<<<
@@ -15980,7 +16947,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
  */
     delete __pyx_v_rs->thisptr;
 
-    /* "whatshap/core.pyx":360
+    /* "whatshap/core.pyx":399
  * 			rs = ReadSet()
  * 			del rs.thisptr
  * 			rs.thisptr = deref(read_sets)[i]             # <<<<<<<<<<<<<<
@@ -15989,32 +16956,32 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
  */
     __pyx_v_rs->thisptr = ((*__pyx_v_read_sets)[__pyx_v_i]);
 
-    /* "whatshap/core.pyx":361
+    /* "whatshap/core.pyx":400
  * 			del rs.thisptr
  * 			rs.thisptr = deref(read_sets)[i]
  * 			results.append(rs)             # <<<<<<<<<<<<<<
  * 
  * 		python_transmission_vector = list(transmission_vector_ptr[0])
  */
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_v_results, ((PyObject *)__pyx_v_rs)); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(1, 361, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_v_results, ((PyObject *)__pyx_v_rs)); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(1, 400, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":363
+  /* "whatshap/core.pyx":402
  * 			results.append(rs)
  * 
  * 		python_transmission_vector = list(transmission_vector_ptr[0])             # <<<<<<<<<<<<<<
  * 		del transmission_vector_ptr
  * 		return results, python_transmission_vector
  */
-  __pyx_t_2 = __pyx_convert_vector_to_py_unsigned_int((__pyx_v_transmission_vector_ptr[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 363, __pyx_L1_error)
+  __pyx_t_2 = __pyx_convert_vector_to_py_unsigned_int((__pyx_v_transmission_vector_ptr[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 402, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_11 = __Pyx_PySequence_ListKeepNew(__pyx_t_2); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 363, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PySequence_ListKeepNew(__pyx_t_2); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 402, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_python_transmission_vector = ((PyObject*)__pyx_t_11);
   __pyx_t_11 = 0;
 
-  /* "whatshap/core.pyx":364
+  /* "whatshap/core.pyx":403
  * 
  * 		python_transmission_vector = list(transmission_vector_ptr[0])
  * 		del transmission_vector_ptr             # <<<<<<<<<<<<<<
@@ -16023,7 +16990,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
  */
   delete __pyx_v_transmission_vector_ptr;
 
-  /* "whatshap/core.pyx":365
+  /* "whatshap/core.pyx":404
  * 		python_transmission_vector = list(transmission_vector_ptr[0])
  * 		del transmission_vector_ptr
  * 		return results, python_transmission_vector             # <<<<<<<<<<<<<<
@@ -16031,19 +16998,19 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
  * 	def get_optimal_cost(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 365, __pyx_L1_error)
+  __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 404, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_INCREF(__pyx_v_results);
   __Pyx_GIVEREF(__pyx_v_results);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_v_results)) __PYX_ERR(1, 365, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_v_results)) __PYX_ERR(1, 404, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_python_transmission_vector);
   __Pyx_GIVEREF(__pyx_v_python_transmission_vector);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_v_python_transmission_vector)) __PYX_ERR(1, 365, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_v_python_transmission_vector)) __PYX_ERR(1, 404, __pyx_L1_error);
   __pyx_r = __pyx_t_11;
   __pyx_t_11 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":342
+  /* "whatshap/core.pyx":381
  * 		del self.thisptr
  * 
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
@@ -16066,7 +17033,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_4get_super_reads(str
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":367
+/* "whatshap/core.pyx":406
  * 		return results, python_transmission_vector
  * 
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
@@ -16126,7 +17093,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_6get_optimal_cost(st
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_optimal_cost", 1);
 
-  /* "whatshap/core.pyx":369
+  /* "whatshap/core.pyx":408
  * 	def get_optimal_cost(self):
  * 		"""Returns the cost resulting from solving the Minimum Error Correction (MEC) problem."""
  * 		return self.thisptr.get_optimal_score()             # <<<<<<<<<<<<<<
@@ -16138,15 +17105,15 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_6get_optimal_cost(st
     __pyx_t_1 = __pyx_v_self->thisptr->get_optimal_score();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 369, __pyx_L1_error)
+    __PYX_ERR(1, 408, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 369, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 408, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":367
+  /* "whatshap/core.pyx":406
  * 		return results, python_transmission_vector
  * 
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
@@ -16165,7 +17132,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_6get_optimal_cost(st
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":371
+/* "whatshap/core.pyx":410
  * 		return self.thisptr.get_optimal_score()
  * 
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
@@ -16231,7 +17198,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_8get_optimal_partiti
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_optimal_partitioning", 1);
 
-  /* "whatshap/core.pyx":374
+  /* "whatshap/core.pyx":413
  * 		"""Returns a list of the same size as the read set, where each entry is either 0 or 1,
  * 		telling whether the corresponding read is in partition 0 or in partition 1,"""
  * 		cdef vector[bool]* p = self.thisptr.get_optimal_partitioning()             # <<<<<<<<<<<<<<
@@ -16240,7 +17207,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_8get_optimal_partiti
  */
   __pyx_v_p = __pyx_v_self->thisptr->get_optimal_partitioning();
 
-  /* "whatshap/core.pyx":375
+  /* "whatshap/core.pyx":414
  * 		telling whether the corresponding read is in partition 0 or in partition 1,"""
  * 		cdef vector[bool]* p = self.thisptr.get_optimal_partitioning()
  * 		result = [0 if x else 1 for x in p[0]]             # <<<<<<<<<<<<<<
@@ -16248,7 +17215,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_8get_optimal_partiti
  * 		return result
  */
   { /* enter inner scope */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 375, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 414, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = (__pyx_v_p[0]).begin();
     for (;;) {
@@ -16264,14 +17231,14 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_8get_optimal_partiti
         __Pyx_INCREF(__pyx_int_1);
         __pyx_t_4 = __pyx_int_1;
       }
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(1, 375, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_4))) __PYX_ERR(1, 414, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
   } /* exit inner scope */
   __pyx_v_result = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "whatshap/core.pyx":376
+  /* "whatshap/core.pyx":415
  * 		cdef vector[bool]* p = self.thisptr.get_optimal_partitioning()
  * 		result = [0 if x else 1 for x in p[0]]
  * 		del p             # <<<<<<<<<<<<<<
@@ -16280,7 +17247,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_8get_optimal_partiti
  */
   delete __pyx_v_p;
 
-  /* "whatshap/core.pyx":377
+  /* "whatshap/core.pyx":416
  * 		result = [0 if x else 1 for x in p[0]]
  * 		del p
  * 		return result             # <<<<<<<<<<<<<<
@@ -16292,7 +17259,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_8get_optimal_partiti
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":371
+  /* "whatshap/core.pyx":410
  * 		return self.thisptr.get_optimal_score()
  * 
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
@@ -16527,7 +17494,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedigreeDPTable_12__setstate_cython_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":381
+/* "whatshap/core.pyx":420
  * 
  * cdef class Pedigree:
  * 	def __cinit__(self, numeric_sample_ids):             # <<<<<<<<<<<<<<
@@ -16571,12 +17538,12 @@ static int __pyx_pw_8whatshap_4core_8Pedigree_1__cinit__(PyObject *__pyx_v_self,
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 381, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 420, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 381, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 420, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
@@ -16587,7 +17554,7 @@ static int __pyx_pw_8whatshap_4core_8Pedigree_1__cinit__(PyObject *__pyx_v_self,
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 381, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 420, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -16624,7 +17591,7 @@ static int __pyx_pf_8whatshap_4core_8Pedigree___cinit__(struct __pyx_obj_8whatsh
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__cinit__", 1);
 
-  /* "whatshap/core.pyx":382
+  /* "whatshap/core.pyx":421
  * cdef class Pedigree:
  * 	def __cinit__(self, numeric_sample_ids):
  * 		self.thisptr = new cpp.Pedigree()             # <<<<<<<<<<<<<<
@@ -16635,18 +17602,18 @@ static int __pyx_pf_8whatshap_4core_8Pedigree___cinit__(struct __pyx_obj_8whatsh
     __pyx_t_1 = new Pedigree();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 382, __pyx_L1_error)
+    __PYX_ERR(1, 421, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_1;
 
-  /* "whatshap/core.pyx":383
+  /* "whatshap/core.pyx":422
  * 	def __cinit__(self, numeric_sample_ids):
  * 		self.thisptr = new cpp.Pedigree()
  * 		self.numeric_sample_ids = numeric_sample_ids             # <<<<<<<<<<<<<<
  * 
  * 	def __dealloc__(self):
  */
-  if (!(likely(((__pyx_v_numeric_sample_ids) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_numeric_sample_ids, __pyx_ptype_8whatshap_4core_NumericSampleIds))))) __PYX_ERR(1, 383, __pyx_L1_error)
+  if (!(likely(((__pyx_v_numeric_sample_ids) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_numeric_sample_ids, __pyx_ptype_8whatshap_4core_NumericSampleIds))))) __PYX_ERR(1, 422, __pyx_L1_error)
   __pyx_t_2 = __pyx_v_numeric_sample_ids;
   __Pyx_INCREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
@@ -16655,7 +17622,7 @@ static int __pyx_pf_8whatshap_4core_8Pedigree___cinit__(struct __pyx_obj_8whatsh
   __pyx_v_self->numeric_sample_ids = ((struct __pyx_obj_8whatshap_4core_NumericSampleIds *)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":381
+  /* "whatshap/core.pyx":420
  * 
  * cdef class Pedigree:
  * 	def __cinit__(self, numeric_sample_ids):             # <<<<<<<<<<<<<<
@@ -16675,7 +17642,7 @@ static int __pyx_pf_8whatshap_4core_8Pedigree___cinit__(struct __pyx_obj_8whatsh
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":385
+/* "whatshap/core.pyx":424
  * 		self.numeric_sample_ids = numeric_sample_ids
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -16698,7 +17665,7 @@ static void __pyx_pw_8whatshap_4core_8Pedigree_3__dealloc__(PyObject *__pyx_v_se
 
 static void __pyx_pf_8whatshap_4core_8Pedigree_2__dealloc__(struct __pyx_obj_8whatshap_4core_Pedigree *__pyx_v_self) {
 
-  /* "whatshap/core.pyx":386
+  /* "whatshap/core.pyx":425
  * 
  * 	def __dealloc__(self):
  * 		del self.thisptr             # <<<<<<<<<<<<<<
@@ -16707,7 +17674,7 @@ static void __pyx_pf_8whatshap_4core_8Pedigree_2__dealloc__(struct __pyx_obj_8wh
  */
   delete __pyx_v_self->thisptr;
 
-  /* "whatshap/core.pyx":385
+  /* "whatshap/core.pyx":424
  * 		self.numeric_sample_ids = numeric_sample_ids
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -16718,7 +17685,7 @@ static void __pyx_pf_8whatshap_4core_8Pedigree_2__dealloc__(struct __pyx_obj_8wh
   /* function exit code */
 }
 
-/* "whatshap/core.pyx":388
+/* "whatshap/core.pyx":427
  * 		del self.thisptr
  * 
  * 	def add_individual(self, id, genotypes, genotype_likelihoods=None):             # <<<<<<<<<<<<<<
@@ -16786,7 +17753,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 388, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 427, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -16794,21 +17761,21 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 388, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 427, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("add_individual", 0, 2, 3, 1); __PYX_ERR(1, 388, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_individual", 0, 2, 3, 1); __PYX_ERR(1, 427, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_genotype_likelihoods);
           if (value) { values[2] = __Pyx_Arg_NewRef_FASTCALL(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 388, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 427, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_individual") < 0)) __PYX_ERR(1, 388, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_individual") < 0)) __PYX_ERR(1, 427, __pyx_L3_error)
       }
     } else {
       switch (__pyx_nargs) {
@@ -16826,7 +17793,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("add_individual", 0, 2, 3, __pyx_nargs); __PYX_ERR(1, 388, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("add_individual", 0, 2, 3, __pyx_nargs); __PYX_ERR(1, 427, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -16874,7 +17841,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("add_individual", 1);
 
-  /* "whatshap/core.pyx":390
+  /* "whatshap/core.pyx":429
  * 	def add_individual(self, id, genotypes, genotype_likelihoods=None):
  * 		cdef vector[cpp.Genotype*] gt_vector
  * 		for gt in genotypes:             # <<<<<<<<<<<<<<
@@ -16886,9 +17853,9 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
     __pyx_t_2 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_genotypes); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 390, __pyx_L1_error)
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_genotypes); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 429, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 390, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 429, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
@@ -16896,28 +17863,28 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
         {
           Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 390, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 429, __pyx_L1_error)
           #endif
           if (__pyx_t_2 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 390, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 429, __pyx_L1_error)
         #else
-        __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 390, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 429, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         {
           Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_1);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 390, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 429, __pyx_L1_error)
           #endif
           if (__pyx_t_2 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 390, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 429, __pyx_L1_error)
         #else
-        __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 390, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 429, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -16927,7 +17894,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 390, __pyx_L1_error)
+          else __PYX_ERR(1, 429, __pyx_L1_error)
         }
         break;
       }
@@ -16936,28 +17903,28 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
     __Pyx_XDECREF_SET(__pyx_v_gt, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "whatshap/core.pyx":391
+    /* "whatshap/core.pyx":430
  * 		cdef vector[cpp.Genotype*] gt_vector
  * 		for gt in genotypes:
  * 			gt_vector.push_back(new cpp.Genotype((<Genotype?>gt).thisptr[0]))             # <<<<<<<<<<<<<<
  * 		cdef vector[cpp.PhredGenotypeLikelihoods*] gl_vector
  * 		if genotype_likelihoods:
  */
-    if (!(likely(__Pyx_TypeTest(__pyx_v_gt, __pyx_ptype_8whatshap_4core_Genotype)))) __PYX_ERR(1, 391, __pyx_L1_error)
+    if (!(likely(__Pyx_TypeTest(__pyx_v_gt, __pyx_ptype_8whatshap_4core_Genotype)))) __PYX_ERR(1, 430, __pyx_L1_error)
     try {
       __pyx_t_5 = new Genotype((((struct __pyx_obj_8whatshap_4core_Genotype *)__pyx_v_gt)->thisptr[0]));
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 391, __pyx_L1_error)
+      __PYX_ERR(1, 430, __pyx_L1_error)
     }
     try {
       __pyx_v_gt_vector.push_back(__pyx_t_5);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 391, __pyx_L1_error)
+      __PYX_ERR(1, 430, __pyx_L1_error)
     }
 
-    /* "whatshap/core.pyx":390
+    /* "whatshap/core.pyx":429
  * 	def add_individual(self, id, genotypes, genotype_likelihoods=None):
  * 		cdef vector[cpp.Genotype*] gt_vector
  * 		for gt in genotypes:             # <<<<<<<<<<<<<<
@@ -16967,17 +17934,17 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "whatshap/core.pyx":393
+  /* "whatshap/core.pyx":432
  * 			gt_vector.push_back(new cpp.Genotype((<Genotype?>gt).thisptr[0]))
  * 		cdef vector[cpp.PhredGenotypeLikelihoods*] gl_vector
  * 		if genotype_likelihoods:             # <<<<<<<<<<<<<<
  * 			for gl in genotype_likelihoods:
  * 				if gl is None:
  */
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_genotype_likelihoods); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 393, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_genotype_likelihoods); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 432, __pyx_L1_error)
   if (__pyx_t_6) {
 
-    /* "whatshap/core.pyx":394
+    /* "whatshap/core.pyx":433
  * 		cdef vector[cpp.PhredGenotypeLikelihoods*] gl_vector
  * 		if genotype_likelihoods:
  * 			for gl in genotype_likelihoods:             # <<<<<<<<<<<<<<
@@ -16989,9 +17956,9 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
       __pyx_t_2 = 0;
       __pyx_t_3 = NULL;
     } else {
-      __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_genotype_likelihoods); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 394, __pyx_L1_error)
+      __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_genotype_likelihoods); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 433, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_3 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 394, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 433, __pyx_L1_error)
     }
     for (;;) {
       if (likely(!__pyx_t_3)) {
@@ -16999,28 +17966,28 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 394, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 433, __pyx_L1_error)
             #endif
             if (__pyx_t_2 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 394, __pyx_L1_error)
+          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 433, __pyx_L1_error)
           #else
-          __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 394, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 433, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_1);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 394, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 433, __pyx_L1_error)
             #endif
             if (__pyx_t_2 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 394, __pyx_L1_error)
+          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 433, __pyx_L1_error)
           #else
-          __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 394, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 433, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         }
@@ -17030,7 +17997,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 394, __pyx_L1_error)
+            else __PYX_ERR(1, 433, __pyx_L1_error)
           }
           break;
         }
@@ -17039,7 +18006,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
       __Pyx_XDECREF_SET(__pyx_v_gl, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "whatshap/core.pyx":395
+      /* "whatshap/core.pyx":434
  * 		if genotype_likelihoods:
  * 			for gl in genotype_likelihoods:
  * 				if gl is None:             # <<<<<<<<<<<<<<
@@ -17049,7 +18016,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
       __pyx_t_6 = (__pyx_v_gl == Py_None);
       if (__pyx_t_6) {
 
-        /* "whatshap/core.pyx":396
+        /* "whatshap/core.pyx":435
  * 			for gl in genotype_likelihoods:
  * 				if gl is None:
  * 					gl_vector.push_back(NULL)             # <<<<<<<<<<<<<<
@@ -17060,10 +18027,10 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
           __pyx_v_gl_vector.push_back(NULL);
         } catch(...) {
           __Pyx_CppExn2PyErr();
-          __PYX_ERR(1, 396, __pyx_L1_error)
+          __PYX_ERR(1, 435, __pyx_L1_error)
         }
 
-        /* "whatshap/core.pyx":395
+        /* "whatshap/core.pyx":434
  * 		if genotype_likelihoods:
  * 			for gl in genotype_likelihoods:
  * 				if gl is None:             # <<<<<<<<<<<<<<
@@ -17073,7 +18040,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
         goto __pyx_L9;
       }
 
-      /* "whatshap/core.pyx":398
+      /* "whatshap/core.pyx":437
  * 					gl_vector.push_back(NULL)
  * 				else:
  * 					gl_vector.push_back(new cpp.PhredGenotypeLikelihoods((<PhredGenotypeLikelihoods?>gl).thisptr[0]) )             # <<<<<<<<<<<<<<
@@ -17081,23 +18048,23 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
  * 			for _ in genotypes:
  */
       /*else*/ {
-        if (!(likely(__Pyx_TypeTest(__pyx_v_gl, __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods)))) __PYX_ERR(1, 398, __pyx_L1_error)
+        if (!(likely(__Pyx_TypeTest(__pyx_v_gl, __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods)))) __PYX_ERR(1, 437, __pyx_L1_error)
         try {
           __pyx_t_7 = new PhredGenotypeLikelihoods((((struct __pyx_obj_8whatshap_4core_PhredGenotypeLikelihoods *)__pyx_v_gl)->thisptr[0]));
         } catch(...) {
           __Pyx_CppExn2PyErr();
-          __PYX_ERR(1, 398, __pyx_L1_error)
+          __PYX_ERR(1, 437, __pyx_L1_error)
         }
         try {
           __pyx_v_gl_vector.push_back(__pyx_t_7);
         } catch(...) {
           __Pyx_CppExn2PyErr();
-          __PYX_ERR(1, 398, __pyx_L1_error)
+          __PYX_ERR(1, 437, __pyx_L1_error)
         }
       }
       __pyx_L9:;
 
-      /* "whatshap/core.pyx":394
+      /* "whatshap/core.pyx":433
  * 		cdef vector[cpp.PhredGenotypeLikelihoods*] gl_vector
  * 		if genotype_likelihoods:
  * 			for gl in genotype_likelihoods:             # <<<<<<<<<<<<<<
@@ -17107,7 +18074,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "whatshap/core.pyx":393
+    /* "whatshap/core.pyx":432
  * 			gt_vector.push_back(new cpp.Genotype((<Genotype?>gt).thisptr[0]))
  * 		cdef vector[cpp.PhredGenotypeLikelihoods*] gl_vector
  * 		if genotype_likelihoods:             # <<<<<<<<<<<<<<
@@ -17117,7 +18084,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
     goto __pyx_L6;
   }
 
-  /* "whatshap/core.pyx":400
+  /* "whatshap/core.pyx":439
  * 					gl_vector.push_back(new cpp.PhredGenotypeLikelihoods((<PhredGenotypeLikelihoods?>gl).thisptr[0]) )
  * 		else:
  * 			for _ in genotypes:             # <<<<<<<<<<<<<<
@@ -17130,9 +18097,9 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
       __pyx_t_2 = 0;
       __pyx_t_3 = NULL;
     } else {
-      __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_genotypes); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 400, __pyx_L1_error)
+      __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_genotypes); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 439, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_3 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 400, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 439, __pyx_L1_error)
     }
     for (;;) {
       if (likely(!__pyx_t_3)) {
@@ -17140,28 +18107,28 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 400, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 439, __pyx_L1_error)
             #endif
             if (__pyx_t_2 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 400, __pyx_L1_error)
+          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 439, __pyx_L1_error)
           #else
-          __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 400, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 439, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_1);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 400, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 439, __pyx_L1_error)
             #endif
             if (__pyx_t_2 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 400, __pyx_L1_error)
+          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely((0 < 0))) __PYX_ERR(1, 439, __pyx_L1_error)
           #else
-          __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 400, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 439, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         }
@@ -17171,7 +18138,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 400, __pyx_L1_error)
+            else __PYX_ERR(1, 439, __pyx_L1_error)
           }
           break;
         }
@@ -17180,7 +18147,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
       __Pyx_XDECREF_SET(__pyx_v__, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "whatshap/core.pyx":401
+      /* "whatshap/core.pyx":440
  * 		else:
  * 			for _ in genotypes:
  * 				gl_vector.push_back(NULL)             # <<<<<<<<<<<<<<
@@ -17191,10 +18158,10 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
         __pyx_v_gl_vector.push_back(NULL);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 401, __pyx_L1_error)
+        __PYX_ERR(1, 440, __pyx_L1_error)
       }
 
-      /* "whatshap/core.pyx":400
+      /* "whatshap/core.pyx":439
  * 					gl_vector.push_back(new cpp.PhredGenotypeLikelihoods((<PhredGenotypeLikelihoods?>gl).thisptr[0]) )
  * 		else:
  * 			for _ in genotypes:             # <<<<<<<<<<<<<<
@@ -17206,25 +18173,25 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
   }
   __pyx_L6:;
 
-  /* "whatshap/core.pyx":402
+  /* "whatshap/core.pyx":441
  * 			for _ in genotypes:
  * 				gl_vector.push_back(NULL)
  * 		self.thisptr.addIndividual(self.numeric_sample_ids[id], gt_vector, gl_vector)             # <<<<<<<<<<<<<<
  * 
  * 	def add_relationship(self, father_id, mother_id, child_id):
  */
-  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 402, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 441, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_8 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_8 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 402, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_8 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 441, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   try {
     __pyx_v_self->thisptr->addIndividual(__pyx_t_8, __pyx_v_gt_vector, __pyx_v_gl_vector);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 402, __pyx_L1_error)
+    __PYX_ERR(1, 441, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":388
+  /* "whatshap/core.pyx":427
  * 		del self.thisptr
  * 
  * 	def add_individual(self, id, genotypes, genotype_likelihoods=None):             # <<<<<<<<<<<<<<
@@ -17249,7 +18216,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_4add_individual(struct __pyx
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":404
+/* "whatshap/core.pyx":443
  * 		self.thisptr.addIndividual(self.numeric_sample_ids[id], gt_vector, gl_vector)
  * 
  * 	def add_relationship(self, father_id, mother_id, child_id):             # <<<<<<<<<<<<<<
@@ -17316,7 +18283,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 404, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 443, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -17324,9 +18291,9 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 404, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 443, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("add_relationship", 1, 3, 3, 1); __PYX_ERR(1, 404, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_relationship", 1, 3, 3, 1); __PYX_ERR(1, 443, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -17334,14 +18301,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 404, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 443, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("add_relationship", 1, 3, 3, 2); __PYX_ERR(1, 404, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_relationship", 1, 3, 3, 2); __PYX_ERR(1, 443, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_relationship") < 0)) __PYX_ERR(1, 404, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_relationship") < 0)) __PYX_ERR(1, 443, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
@@ -17356,7 +18323,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("add_relationship", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 404, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("add_relationship", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 443, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -17395,33 +18362,33 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_6add_relationship(struct __p
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("add_relationship", 1);
 
-  /* "whatshap/core.pyx":405
+  /* "whatshap/core.pyx":444
  * 
  * 	def add_relationship(self, father_id, mother_id, child_id):
  * 		self.thisptr.addRelationship(self.numeric_sample_ids[father_id], self.numeric_sample_ids[mother_id], self.numeric_sample_ids[child_id])             # <<<<<<<<<<<<<<
  * 
  * 	property variant_count:
  */
-  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_father_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 405, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_father_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 444, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 405, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 444, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_mother_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 405, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_mother_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 444, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 405, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 444, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_child_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 405, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_child_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 444, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 405, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 444, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   try {
     __pyx_v_self->thisptr->addRelationship(__pyx_t_2, __pyx_t_3, __pyx_t_4);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 405, __pyx_L1_error)
+    __PYX_ERR(1, 444, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":404
+  /* "whatshap/core.pyx":443
  * 		self.thisptr.addIndividual(self.numeric_sample_ids[id], gt_vector, gl_vector)
  * 
  * 	def add_relationship(self, father_id, mother_id, child_id):             # <<<<<<<<<<<<<<
@@ -17442,7 +18409,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_6add_relationship(struct __p
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":409
+/* "whatshap/core.pyx":448
  * 	property variant_count:
  * 		"""Number of variants stored for each individual."""
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -17475,7 +18442,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_13variant_count___get__(stru
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 1);
 
-  /* "whatshap/core.pyx":410
+  /* "whatshap/core.pyx":449
  * 		"""Number of variants stored for each individual."""
  * 		def __get__(self):
  * 			return self.thisptr.get_variant_count()             # <<<<<<<<<<<<<<
@@ -17487,15 +18454,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_13variant_count___get__(stru
     __pyx_t_1 = __pyx_v_self->thisptr->get_variant_count();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 410, __pyx_L1_error)
+    __PYX_ERR(1, 449, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_unsigned_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 410, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_unsigned_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 449, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":409
+  /* "whatshap/core.pyx":448
  * 	property variant_count:
  * 		"""Number of variants stored for each individual."""
  * 		def __get__(self):             # <<<<<<<<<<<<<<
@@ -17514,7 +18481,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_13variant_count___get__(stru
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":412
+/* "whatshap/core.pyx":451
  * 			return self.thisptr.get_variant_count()
  * 
  * 	def genotype(self, sample_id, unsigned int variant_index):             # <<<<<<<<<<<<<<
@@ -17578,7 +18545,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 412, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 451, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -17586,14 +18553,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 412, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 451, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("genotype", 1, 2, 2, 1); __PYX_ERR(1, 412, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("genotype", 1, 2, 2, 1); __PYX_ERR(1, 451, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "genotype") < 0)) __PYX_ERR(1, 412, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "genotype") < 0)) __PYX_ERR(1, 451, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
@@ -17602,11 +18569,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
     }
     __pyx_v_sample_id = values[0];
-    __pyx_v_variant_index = __Pyx_PyInt_As_unsigned_int(values[1]); if (unlikely((__pyx_v_variant_index == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 412, __pyx_L3_error)
+    __pyx_v_variant_index = __Pyx_PyInt_As_unsigned_int(values[1]); if (unlikely((__pyx_v_variant_index == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 451, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("genotype", 1, 2, 2, __pyx_nargs); __PYX_ERR(1, 412, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("genotype", 1, 2, 2, __pyx_nargs); __PYX_ERR(1, 451, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -17647,26 +18614,26 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_8genotype(struct __pyx_obj_8
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("genotype", 1);
 
-  /* "whatshap/core.pyx":413
+  /* "whatshap/core.pyx":452
  * 
  * 	def genotype(self, sample_id, unsigned int variant_index):
  * 		cdef const cpp.Genotype* gt = self.thisptr.get_genotype_by_id(self.numeric_sample_ids[sample_id], variant_index)             # <<<<<<<<<<<<<<
  * 		return Genotype(gt[0].as_vector())
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_sample_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 413, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_sample_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 452, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 413, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 452, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   try {
     __pyx_t_3 = __pyx_v_self->thisptr->get_genotype_by_id(__pyx_t_2, __pyx_v_variant_index);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 413, __pyx_L1_error)
+    __PYX_ERR(1, 452, __pyx_L1_error)
   }
   __pyx_v_gt = __pyx_t_3;
 
-  /* "whatshap/core.pyx":414
+  /* "whatshap/core.pyx":453
  * 	def genotype(self, sample_id, unsigned int variant_index):
  * 		cdef const cpp.Genotype* gt = self.thisptr.get_genotype_by_id(self.numeric_sample_ids[sample_id], variant_index)
  * 		return Genotype(gt[0].as_vector())             # <<<<<<<<<<<<<<
@@ -17678,18 +18645,18 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_8genotype(struct __pyx_obj_8
     __pyx_t_4 = (__pyx_v_gt[0]).as_vector();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 414, __pyx_L1_error)
+    __PYX_ERR(1, 453, __pyx_L1_error)
   }
-  __pyx_t_1 = __pyx_convert_vector_to_py_uint32_t(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 414, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_vector_to_py_uint32_t(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 453, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_8whatshap_4core_Genotype), __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 414, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_8whatshap_4core_Genotype), __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 453, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_5;
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":412
+  /* "whatshap/core.pyx":451
  * 			return self.thisptr.get_variant_count()
  * 
  * 	def genotype(self, sample_id, unsigned int variant_index):             # <<<<<<<<<<<<<<
@@ -17709,7 +18676,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_8genotype(struct __pyx_obj_8
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":416
+/* "whatshap/core.pyx":455
  * 		return Genotype(gt[0].as_vector())
  * 
  * 	def genotype_likelihoods(self, sample_id, unsigned int variant_index):             # <<<<<<<<<<<<<<
@@ -17773,7 +18740,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 416, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 455, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -17781,14 +18748,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 416, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 455, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("genotype_likelihoods", 1, 2, 2, 1); __PYX_ERR(1, 416, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("genotype_likelihoods", 1, 2, 2, 1); __PYX_ERR(1, 455, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "genotype_likelihoods") < 0)) __PYX_ERR(1, 416, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "genotype_likelihoods") < 0)) __PYX_ERR(1, 455, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
@@ -17797,11 +18764,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
     }
     __pyx_v_sample_id = values[0];
-    __pyx_v_variant_index = __Pyx_PyInt_As_unsigned_int(values[1]); if (unlikely((__pyx_v_variant_index == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 416, __pyx_L3_error)
+    __pyx_v_variant_index = __Pyx_PyInt_As_unsigned_int(values[1]); if (unlikely((__pyx_v_variant_index == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 455, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("genotype_likelihoods", 1, 2, 2, __pyx_nargs); __PYX_ERR(1, 416, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("genotype_likelihoods", 1, 2, 2, __pyx_nargs); __PYX_ERR(1, 455, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -17845,26 +18812,26 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_10genotype_likelihoods(struc
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("genotype_likelihoods", 1);
 
-  /* "whatshap/core.pyx":417
+  /* "whatshap/core.pyx":456
  * 
  * 	def genotype_likelihoods(self, sample_id, unsigned int variant_index):
  * 		cdef const cpp.PhredGenotypeLikelihoods* gl = self.thisptr.get_genotype_likelihoods_by_id(self.numeric_sample_ids[sample_id], variant_index)             # <<<<<<<<<<<<<<
  * 		if gl == NULL:
  * 			return None
  */
-  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_sample_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 417, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_sample_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 456, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 417, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 456, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   try {
     __pyx_t_3 = __pyx_v_self->thisptr->get_genotype_likelihoods_by_id(__pyx_t_2, __pyx_v_variant_index);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 417, __pyx_L1_error)
+    __PYX_ERR(1, 456, __pyx_L1_error)
   }
   __pyx_v_gl = __pyx_t_3;
 
-  /* "whatshap/core.pyx":418
+  /* "whatshap/core.pyx":457
  * 	def genotype_likelihoods(self, sample_id, unsigned int variant_index):
  * 		cdef const cpp.PhredGenotypeLikelihoods* gl = self.thisptr.get_genotype_likelihoods_by_id(self.numeric_sample_ids[sample_id], variant_index)
  * 		if gl == NULL:             # <<<<<<<<<<<<<<
@@ -17874,7 +18841,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_10genotype_likelihoods(struc
   __pyx_t_4 = (__pyx_v_gl == NULL);
   if (__pyx_t_4) {
 
-    /* "whatshap/core.pyx":419
+    /* "whatshap/core.pyx":458
  * 		cdef const cpp.PhredGenotypeLikelihoods* gl = self.thisptr.get_genotype_likelihoods_by_id(self.numeric_sample_ids[sample_id], variant_index)
  * 		if gl == NULL:
  * 			return None             # <<<<<<<<<<<<<<
@@ -17885,7 +18852,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_10genotype_likelihoods(struc
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "whatshap/core.pyx":418
+    /* "whatshap/core.pyx":457
  * 	def genotype_likelihoods(self, sample_id, unsigned int variant_index):
  * 		cdef const cpp.PhredGenotypeLikelihoods* gl = self.thisptr.get_genotype_likelihoods_by_id(self.numeric_sample_ids[sample_id], variant_index)
  * 		if gl == NULL:             # <<<<<<<<<<<<<<
@@ -17894,7 +18861,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_10genotype_likelihoods(struc
  */
   }
 
-  /* "whatshap/core.pyx":421
+  /* "whatshap/core.pyx":460
  * 			return None
  * 		else:
  * 			return PhredGenotypeLikelihoods(gl[0].as_vector(), gl[0].get_ploidy(), gl[0].get_nr_alleles())             # <<<<<<<<<<<<<<
@@ -17907,38 +18874,38 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_10genotype_likelihoods(struc
       __pyx_t_5 = (__pyx_v_gl[0]).as_vector();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 421, __pyx_L1_error)
+      __PYX_ERR(1, 460, __pyx_L1_error)
     }
-    __pyx_t_1 = __pyx_convert_vector_to_py_double(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 421, __pyx_L1_error)
+    __pyx_t_1 = __pyx_convert_vector_to_py_double(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 460, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     try {
       __pyx_t_2 = (__pyx_v_gl[0]).get_ploidy();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 421, __pyx_L1_error)
+      __PYX_ERR(1, 460, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyInt_From_unsigned_int(__pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 421, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_unsigned_int(__pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 460, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     try {
       __pyx_t_2 = (__pyx_v_gl[0]).get_nr_alleles();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 421, __pyx_L1_error)
+      __PYX_ERR(1, 460, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_PyInt_From_unsigned_int(__pyx_t_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 421, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyInt_From_unsigned_int(__pyx_t_2); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 460, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 421, __pyx_L1_error)
+    __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 460, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_1);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_1)) __PYX_ERR(1, 421, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_1)) __PYX_ERR(1, 460, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_6);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_6)) __PYX_ERR(1, 421, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_6)) __PYX_ERR(1, 460, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_7);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 2, __pyx_t_7)) __PYX_ERR(1, 421, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 2, __pyx_t_7)) __PYX_ERR(1, 460, __pyx_L1_error);
     __pyx_t_1 = 0;
     __pyx_t_6 = 0;
     __pyx_t_7 = 0;
-    __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods), __pyx_t_8, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 421, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods), __pyx_t_8, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 460, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __pyx_r = __pyx_t_7;
@@ -17946,7 +18913,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_10genotype_likelihoods(struc
     goto __pyx_L0;
   }
 
-  /* "whatshap/core.pyx":416
+  /* "whatshap/core.pyx":455
  * 		return Genotype(gt[0].as_vector())
  * 
  * 	def genotype_likelihoods(self, sample_id, unsigned int variant_index):             # <<<<<<<<<<<<<<
@@ -17968,7 +18935,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_10genotype_likelihoods(struc
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":423
+/* "whatshap/core.pyx":462
  * 			return PhredGenotypeLikelihoods(gl[0].as_vector(), gl[0].get_ploidy(), gl[0].get_nr_alleles())
  * 
  * 	def __len__(self):             # <<<<<<<<<<<<<<
@@ -17994,7 +18961,7 @@ static Py_ssize_t __pyx_pw_8whatshap_4core_8Pedigree_13__len__(PyObject *__pyx_v
 static Py_ssize_t __pyx_pf_8whatshap_4core_8Pedigree_12__len__(struct __pyx_obj_8whatshap_4core_Pedigree *__pyx_v_self) {
   Py_ssize_t __pyx_r;
 
-  /* "whatshap/core.pyx":424
+  /* "whatshap/core.pyx":463
  * 
  * 	def __len__(self):
  * 		return self.thisptr.size()             # <<<<<<<<<<<<<<
@@ -18004,7 +18971,7 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_8Pedigree_12__len__(struct __pyx_obj_
   __pyx_r = __pyx_v_self->thisptr->size();
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":423
+  /* "whatshap/core.pyx":462
  * 			return PhredGenotypeLikelihoods(gl[0].as_vector(), gl[0].get_ploidy(), gl[0].get_nr_alleles())
  * 
  * 	def __len__(self):             # <<<<<<<<<<<<<<
@@ -18017,7 +18984,7 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_8Pedigree_12__len__(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":426
+/* "whatshap/core.pyx":465
  * 		return self.thisptr.size()
  * 
  * 	def __str__(self):             # <<<<<<<<<<<<<<
@@ -18050,7 +19017,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_14__str__(struct __pyx_obj_8
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__str__", 1);
 
-  /* "whatshap/core.pyx":427
+  /* "whatshap/core.pyx":466
  * 
  * 	def __str__(self):
  * 		return self.thisptr.toString().decode('utf-8')             # <<<<<<<<<<<<<<
@@ -18062,15 +19029,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_14__str__(struct __pyx_obj_8
     __pyx_t_1 = __pyx_v_self->thisptr->toString();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 427, __pyx_L1_error)
+    __PYX_ERR(1, 466, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 427, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 466, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":426
+  /* "whatshap/core.pyx":465
  * 		return self.thisptr.size()
  * 
  * 	def __str__(self):             # <<<<<<<<<<<<<<
@@ -18303,7 +19270,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Pedigree_18__setstate_cython__(CYTHON
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":431
+/* "whatshap/core.pyx":470
  * 
  * cdef class PhredGenotypeLikelihoods:
  * 	def __cinit__(self, vector[double] gl, unsigned int ploidy=2, unsigned int nr_alleles=2):             # <<<<<<<<<<<<<<
@@ -18353,26 +19320,26 @@ static int __pyx_pw_8whatshap_4core_24PhredGenotypeLikelihoods_1__cinit__(PyObje
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 431, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 470, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_ploidy);
           if (value) { values[1] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 431, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 470, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_nr_alleles);
           if (value) { values[2] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 431, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 470, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 431, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 470, __pyx_L3_error)
       }
     } else {
       switch (__pyx_nargs) {
@@ -18385,21 +19352,21 @@ static int __pyx_pw_8whatshap_4core_24PhredGenotypeLikelihoods_1__cinit__(PyObje
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_gl = __pyx_convert_vector_from_py_double(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 431, __pyx_L3_error)
+    __pyx_v_gl = __pyx_convert_vector_from_py_double(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 470, __pyx_L3_error)
     if (values[1]) {
-      __pyx_v_ploidy = __Pyx_PyInt_As_unsigned_int(values[1]); if (unlikely((__pyx_v_ploidy == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 431, __pyx_L3_error)
+      __pyx_v_ploidy = __Pyx_PyInt_As_unsigned_int(values[1]); if (unlikely((__pyx_v_ploidy == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 470, __pyx_L3_error)
     } else {
       __pyx_v_ploidy = ((unsigned int)2);
     }
     if (values[2]) {
-      __pyx_v_nr_alleles = __Pyx_PyInt_As_unsigned_int(values[2]); if (unlikely((__pyx_v_nr_alleles == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 431, __pyx_L3_error)
+      __pyx_v_nr_alleles = __Pyx_PyInt_As_unsigned_int(values[2]); if (unlikely((__pyx_v_nr_alleles == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 470, __pyx_L3_error)
     } else {
       __pyx_v_nr_alleles = ((unsigned int)2);
     }
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 1, 3, __pyx_nargs); __PYX_ERR(1, 431, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 1, 3, __pyx_nargs); __PYX_ERR(1, 470, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -18433,7 +19400,7 @@ static int __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods___cinit__(struct 
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "whatshap/core.pyx":432
+  /* "whatshap/core.pyx":471
  * cdef class PhredGenotypeLikelihoods:
  * 	def __cinit__(self, vector[double] gl, unsigned int ploidy=2, unsigned int nr_alleles=2):
  * 		self.thisptr = new cpp.PhredGenotypeLikelihoods(gl, ploidy, nr_alleles)             # <<<<<<<<<<<<<<
@@ -18444,11 +19411,11 @@ static int __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods___cinit__(struct 
     __pyx_t_1 = new PhredGenotypeLikelihoods(__pyx_v_gl, __pyx_v_ploidy, __pyx_v_nr_alleles);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 432, __pyx_L1_error)
+    __PYX_ERR(1, 471, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_1;
 
-  /* "whatshap/core.pyx":431
+  /* "whatshap/core.pyx":470
  * 
  * cdef class PhredGenotypeLikelihoods:
  * 	def __cinit__(self, vector[double] gl, unsigned int ploidy=2, unsigned int nr_alleles=2):             # <<<<<<<<<<<<<<
@@ -18466,7 +19433,7 @@ static int __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods___cinit__(struct 
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":434
+/* "whatshap/core.pyx":473
  * 		self.thisptr = new cpp.PhredGenotypeLikelihoods(gl, ploidy, nr_alleles)
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -18489,7 +19456,7 @@ static void __pyx_pw_8whatshap_4core_24PhredGenotypeLikelihoods_3__dealloc__(PyO
 
 static void __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_2__dealloc__(struct __pyx_obj_8whatshap_4core_PhredGenotypeLikelihoods *__pyx_v_self) {
 
-  /* "whatshap/core.pyx":435
+  /* "whatshap/core.pyx":474
  * 
  * 	def __dealloc__(self):
  * 		del self.thisptr             # <<<<<<<<<<<<<<
@@ -18498,7 +19465,7 @@ static void __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_2__dealloc__(str
  */
   delete __pyx_v_self->thisptr;
 
-  /* "whatshap/core.pyx":434
+  /* "whatshap/core.pyx":473
  * 		self.thisptr = new cpp.PhredGenotypeLikelihoods(gl, ploidy, nr_alleles)
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -18509,7 +19476,7 @@ static void __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_2__dealloc__(str
   /* function exit code */
 }
 
-/* "whatshap/core.pyx":437
+/* "whatshap/core.pyx":476
  * 		del self.thisptr
  * 
  * 	def __str__(self):             # <<<<<<<<<<<<<<
@@ -18542,7 +19509,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_4__str__(st
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__str__", 1);
 
-  /* "whatshap/core.pyx":438
+  /* "whatshap/core.pyx":477
  * 
  * 	def __str__(self):
  * 		return self.thisptr.toString().decode('utf-8')             # <<<<<<<<<<<<<<
@@ -18554,15 +19521,15 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_4__str__(st
     __pyx_t_1 = __pyx_v_self->thisptr->toString();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 438, __pyx_L1_error)
+    __PYX_ERR(1, 477, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 438, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 477, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":437
+  /* "whatshap/core.pyx":476
  * 		del self.thisptr
  * 
  * 	def __str__(self):             # <<<<<<<<<<<<<<
@@ -18581,7 +19548,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_4__str__(st
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":440
+/* "whatshap/core.pyx":479
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def __getitem__(self, Genotype genotype):             # <<<<<<<<<<<<<<
@@ -18600,7 +19567,7 @@ static PyObject *__pyx_pw_8whatshap_4core_24PhredGenotypeLikelihoods_7__getitem_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__getitem__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_genotype), __pyx_ptype_8whatshap_4core_Genotype, 1, "genotype", 0))) __PYX_ERR(1, 440, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_genotype), __pyx_ptype_8whatshap_4core_Genotype, 1, "genotype", 0))) __PYX_ERR(1, 479, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_6__getitem__(((struct __pyx_obj_8whatshap_4core_PhredGenotypeLikelihoods *)__pyx_v_self), ((struct __pyx_obj_8whatshap_4core_Genotype *)__pyx_v_genotype));
 
   /* function exit code */
@@ -18626,7 +19593,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_6__getitem_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__getitem__", 1);
 
-  /* "whatshap/core.pyx":441
+  /* "whatshap/core.pyx":480
  * 
  * 	def __getitem__(self, Genotype genotype):
  * 		assert self.thisptr != NULL             # <<<<<<<<<<<<<<
@@ -18638,14 +19605,14 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_6__getitem_
     __pyx_t_1 = (__pyx_v_self->thisptr != NULL);
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 441, __pyx_L1_error)
+      __PYX_ERR(1, 480, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 441, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 480, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":442
+  /* "whatshap/core.pyx":481
  * 	def __getitem__(self, Genotype genotype):
  * 		assert self.thisptr != NULL
  * 		assert genotype.is_diploid_and_biallelic()             # <<<<<<<<<<<<<<
@@ -18654,7 +19621,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_6__getitem_
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(__pyx_assertions_enabled())) {
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_genotype), __pyx_n_s_is_diploid_and_biallelic); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 442, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_genotype), __pyx_n_s_is_diploid_and_biallelic); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 481, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_4 = NULL;
     __pyx_t_5 = 0;
@@ -18674,22 +19641,22 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_6__getitem_
       PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
       __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 442, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 481, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(1, 442, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(1, 481, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (unlikely(!__pyx_t_1)) {
       __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(1, 442, __pyx_L1_error)
+      __PYX_ERR(1, 481, __pyx_L1_error)
     }
   }
   #else
-  if ((1)); else __PYX_ERR(1, 442, __pyx_L1_error)
+  if ((1)); else __PYX_ERR(1, 481, __pyx_L1_error)
   #endif
 
-  /* "whatshap/core.pyx":443
+  /* "whatshap/core.pyx":482
  * 		assert self.thisptr != NULL
  * 		assert genotype.is_diploid_and_biallelic()
  * 		return self.thisptr.get(genotype.thisptr[0])             # <<<<<<<<<<<<<<
@@ -18701,15 +19668,15 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_6__getitem_
     __pyx_t_6 = __pyx_v_self->thisptr->get((__pyx_v_genotype->thisptr[0]));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 443, __pyx_L1_error)
+    __PYX_ERR(1, 482, __pyx_L1_error)
   }
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 443, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 482, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":440
+  /* "whatshap/core.pyx":479
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def __getitem__(self, Genotype genotype):             # <<<<<<<<<<<<<<
@@ -18730,7 +19697,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_6__getitem_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":445
+/* "whatshap/core.pyx":484
  * 		return self.thisptr.get(genotype.thisptr[0])
  * 
  * 	def __len__(self):             # <<<<<<<<<<<<<<
@@ -18760,7 +19727,7 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_8__len__(s
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "whatshap/core.pyx":446
+  /* "whatshap/core.pyx":485
  * 
  * 	def __len__(self):
  * 		return self.thisptr.size()             # <<<<<<<<<<<<<<
@@ -18771,12 +19738,12 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_8__len__(s
     __pyx_t_1 = __pyx_v_self->thisptr->size();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 446, __pyx_L1_error)
+    __PYX_ERR(1, 485, __pyx_L1_error)
   }
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":445
+  /* "whatshap/core.pyx":484
  * 		return self.thisptr.get(genotype.thisptr[0])
  * 
  * 	def __len__(self):             # <<<<<<<<<<<<<<
@@ -18793,7 +19760,7 @@ static Py_ssize_t __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_8__len__(s
 }
 static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator2(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "whatshap/core.pyx":448
+/* "whatshap/core.pyx":487
  * 		return self.thisptr.size()
  * 
  * 	def __iter__(self):             # <<<<<<<<<<<<<<
@@ -18828,7 +19795,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_10__iter__(
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_8whatshap_4core___pyx_scope_struct_2___iter__ *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(1, 448, __pyx_L1_error)
+    __PYX_ERR(1, 487, __pyx_L1_error)
   } else {
     __Pyx_GOTREF((PyObject *)__pyx_cur_scope);
   }
@@ -18836,7 +19803,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_10__iter__(
   __Pyx_INCREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   __Pyx_GIVEREF((PyObject *)__pyx_cur_scope->__pyx_v_self);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator2, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_iter, __pyx_n_s_PhredGenotypeLikelihoods___iter, __pyx_n_s_whatshap_core); if (unlikely(!gen)) __PYX_ERR(1, 448, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator2, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_iter, __pyx_n_s_PhredGenotypeLikelihoods___iter, __pyx_n_s_whatshap_core); if (unlikely(!gen)) __PYX_ERR(1, 487, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -18875,16 +19842,16 @@ static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 448, __pyx_L1_error)
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 487, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":449
+  /* "whatshap/core.pyx":488
  * 
  * 	def __iter__(self):
  * 		for genotype in self.genotypes():             # <<<<<<<<<<<<<<
  * 			yield self[genotype]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_n_s_genotypes); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 449, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_n_s_genotypes); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 488, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -18904,7 +19871,7 @@ static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator
     PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 449, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 488, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
@@ -18913,9 +19880,9 @@ static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator
     __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 449, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 488, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 449, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 488, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
@@ -18924,28 +19891,28 @@ static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator
         {
           Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 449, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 488, __pyx_L1_error)
           #endif
           if (__pyx_t_5 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely((0 < 0))) __PYX_ERR(1, 449, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely((0 < 0))) __PYX_ERR(1, 488, __pyx_L1_error)
         #else
-        __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 449, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 488, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
         {
           Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 449, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 488, __pyx_L1_error)
           #endif
           if (__pyx_t_5 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely((0 < 0))) __PYX_ERR(1, 449, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_1); __pyx_t_5++; if (unlikely((0 < 0))) __PYX_ERR(1, 488, __pyx_L1_error)
         #else
-        __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 449, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 488, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -18955,7 +19922,7 @@ static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 449, __pyx_L1_error)
+          else __PYX_ERR(1, 488, __pyx_L1_error)
         }
         break;
       }
@@ -18966,14 +19933,14 @@ static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator
     __Pyx_GIVEREF(__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "whatshap/core.pyx":450
+    /* "whatshap/core.pyx":489
  * 	def __iter__(self):
  * 		for genotype in self.genotypes():
  * 			yield self[genotype]             # <<<<<<<<<<<<<<
  * 
  * 	def __eq__(self, PhredGenotypeLikelihoods other):
  */
-    __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_cur_scope->__pyx_v_genotype); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 450, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_cur_scope->__pyx_v_self), __pyx_cur_scope->__pyx_v_genotype); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 489, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -18993,9 +19960,9 @@ static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator
     __Pyx_XGOTREF(__pyx_t_2);
     __pyx_t_5 = __pyx_cur_scope->__pyx_t_1;
     __pyx_t_6 = __pyx_cur_scope->__pyx_t_2;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 450, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(1, 489, __pyx_L1_error)
 
-    /* "whatshap/core.pyx":449
+    /* "whatshap/core.pyx":488
  * 
  * 	def __iter__(self):
  * 		for genotype in self.genotypes():             # <<<<<<<<<<<<<<
@@ -19006,7 +19973,7 @@ static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
-  /* "whatshap/core.pyx":448
+  /* "whatshap/core.pyx":487
  * 		return self.thisptr.size()
  * 
  * 	def __iter__(self):             # <<<<<<<<<<<<<<
@@ -19034,7 +20001,7 @@ static PyObject *__pyx_gb_8whatshap_4core_24PhredGenotypeLikelihoods_12generator
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":452
+/* "whatshap/core.pyx":491
  * 			yield self[genotype]
  * 
  * 	def __eq__(self, PhredGenotypeLikelihoods other):             # <<<<<<<<<<<<<<
@@ -19053,7 +20020,7 @@ static PyObject *__pyx_pw_8whatshap_4core_24PhredGenotypeLikelihoods_14__eq__(Py
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__eq__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_other), __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods, 1, "other", 0))) __PYX_ERR(1, 452, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_other), __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods, 1, "other", 0))) __PYX_ERR(1, 491, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(((struct __pyx_obj_8whatshap_4core_PhredGenotypeLikelihoods *)__pyx_v_self), ((struct __pyx_obj_8whatshap_4core_PhredGenotypeLikelihoods *)__pyx_v_other));
 
   /* function exit code */
@@ -19082,14 +20049,14 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__eq__", 1);
 
-  /* "whatshap/core.pyx":453
+  /* "whatshap/core.pyx":492
  * 
  * 	def __eq__(self, PhredGenotypeLikelihoods other):
  * 		if self.genotypes() != other.genotypes():             # <<<<<<<<<<<<<<
  * 			return False
  * 		for genotype in self.genotypes():
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_genotypes); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 453, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_genotypes); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 492, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -19109,11 +20076,11 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
     PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 453, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 492, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_other), __pyx_n_s_genotypes); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 453, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_other), __pyx_n_s_genotypes); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 492, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_5 = NULL;
   __pyx_t_4 = 0;
@@ -19133,18 +20100,18 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
     PyObject *__pyx_callargs[2] = {__pyx_t_5, NULL};
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 453, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 492, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
-  __pyx_t_3 = PyObject_RichCompare(__pyx_t_1, __pyx_t_2, Py_NE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 453, __pyx_L1_error)
+  __pyx_t_3 = PyObject_RichCompare(__pyx_t_1, __pyx_t_2, Py_NE); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 492, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 453, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 492, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_6) {
 
-    /* "whatshap/core.pyx":454
+    /* "whatshap/core.pyx":493
  * 	def __eq__(self, PhredGenotypeLikelihoods other):
  * 		if self.genotypes() != other.genotypes():
  * 			return False             # <<<<<<<<<<<<<<
@@ -19156,7 +20123,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
     __pyx_r = Py_False;
     goto __pyx_L0;
 
-    /* "whatshap/core.pyx":453
+    /* "whatshap/core.pyx":492
  * 
  * 	def __eq__(self, PhredGenotypeLikelihoods other):
  * 		if self.genotypes() != other.genotypes():             # <<<<<<<<<<<<<<
@@ -19165,14 +20132,14 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
  */
   }
 
-  /* "whatshap/core.pyx":455
+  /* "whatshap/core.pyx":494
  * 		if self.genotypes() != other.genotypes():
  * 			return False
  * 		for genotype in self.genotypes():             # <<<<<<<<<<<<<<
  * 			if self[genotype] != other[genotype]:
  * 				return False
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_genotypes); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 455, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_genotypes); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 494, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_1 = NULL;
   __pyx_t_4 = 0;
@@ -19192,7 +20159,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
     PyObject *__pyx_callargs[2] = {__pyx_t_1, NULL};
     __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 455, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 494, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
@@ -19201,9 +20168,9 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
     __pyx_t_7 = 0;
     __pyx_t_8 = NULL;
   } else {
-    __pyx_t_7 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 455, __pyx_L1_error)
+    __pyx_t_7 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 494, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_8 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 455, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 494, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   for (;;) {
@@ -19212,28 +20179,28 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
         {
           Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 455, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 494, __pyx_L1_error)
           #endif
           if (__pyx_t_7 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_7); __Pyx_INCREF(__pyx_t_3); __pyx_t_7++; if (unlikely((0 < 0))) __PYX_ERR(1, 455, __pyx_L1_error)
+        __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_7); __Pyx_INCREF(__pyx_t_3); __pyx_t_7++; if (unlikely((0 < 0))) __PYX_ERR(1, 494, __pyx_L1_error)
         #else
-        __pyx_t_3 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 455, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 494, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         #endif
       } else {
         {
           Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_2);
           #if !CYTHON_ASSUME_SAFE_MACROS
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 455, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 494, __pyx_L1_error)
           #endif
           if (__pyx_t_7 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_7); __Pyx_INCREF(__pyx_t_3); __pyx_t_7++; if (unlikely((0 < 0))) __PYX_ERR(1, 455, __pyx_L1_error)
+        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_7); __Pyx_INCREF(__pyx_t_3); __pyx_t_7++; if (unlikely((0 < 0))) __PYX_ERR(1, 494, __pyx_L1_error)
         #else
-        __pyx_t_3 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 455, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PySequence_ITEM(__pyx_t_2, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 494, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         #endif
       }
@@ -19243,7 +20210,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 455, __pyx_L1_error)
+          else __PYX_ERR(1, 494, __pyx_L1_error)
         }
         break;
       }
@@ -19252,25 +20219,25 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
     __Pyx_XDECREF_SET(__pyx_v_genotype, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "whatshap/core.pyx":456
+    /* "whatshap/core.pyx":495
  * 			return False
  * 		for genotype in self.genotypes():
  * 			if self[genotype] != other[genotype]:             # <<<<<<<<<<<<<<
  * 				return False
  * 		return True
  */
-    __pyx_t_3 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self), __pyx_v_genotype); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 456, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self), __pyx_v_genotype); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_other), __pyx_v_genotype); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 456, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_other), __pyx_v_genotype); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 495, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = PyObject_RichCompare(__pyx_t_3, __pyx_t_1, Py_NE); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 456, __pyx_L1_error)
+    __pyx_t_5 = PyObject_RichCompare(__pyx_t_3, __pyx_t_1, Py_NE); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 495, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 456, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(1, 495, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (__pyx_t_6) {
 
-      /* "whatshap/core.pyx":457
+      /* "whatshap/core.pyx":496
  * 		for genotype in self.genotypes():
  * 			if self[genotype] != other[genotype]:
  * 				return False             # <<<<<<<<<<<<<<
@@ -19283,7 +20250,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       goto __pyx_L0;
 
-      /* "whatshap/core.pyx":456
+      /* "whatshap/core.pyx":495
  * 			return False
  * 		for genotype in self.genotypes():
  * 			if self[genotype] != other[genotype]:             # <<<<<<<<<<<<<<
@@ -19292,7 +20259,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
  */
     }
 
-    /* "whatshap/core.pyx":455
+    /* "whatshap/core.pyx":494
  * 		if self.genotypes() != other.genotypes():
  * 			return False
  * 		for genotype in self.genotypes():             # <<<<<<<<<<<<<<
@@ -19302,7 +20269,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":458
+  /* "whatshap/core.pyx":497
  * 			if self[genotype] != other[genotype]:
  * 				return False
  * 		return True             # <<<<<<<<<<<<<<
@@ -19314,7 +20281,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
   __pyx_r = Py_True;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":452
+  /* "whatshap/core.pyx":491
  * 			yield self[genotype]
  * 
  * 	def __eq__(self, PhredGenotypeLikelihoods other):             # <<<<<<<<<<<<<<
@@ -19337,7 +20304,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_13__eq__(st
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":460
+/* "whatshap/core.pyx":499
  * 		return True
  * 
  * 	def genotypes(self):             # <<<<<<<<<<<<<<
@@ -19404,7 +20371,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_15genotypes
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("genotypes", 1);
 
-  /* "whatshap/core.pyx":461
+  /* "whatshap/core.pyx":500
  * 
  * 	def genotypes(self):
  * 		cdef vector[cpp.Genotype]* genotypes = new vector[cpp.Genotype]()             # <<<<<<<<<<<<<<
@@ -19415,11 +20382,11 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_15genotypes
     __pyx_t_1 = new std::vector<Genotype> ();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 461, __pyx_L1_error)
+    __PYX_ERR(1, 500, __pyx_L1_error)
   }
   __pyx_v_genotypes = __pyx_t_1;
 
-  /* "whatshap/core.pyx":462
+  /* "whatshap/core.pyx":501
  * 	def genotypes(self):
  * 		cdef vector[cpp.Genotype]* genotypes = new vector[cpp.Genotype]()
  * 		self.thisptr.get_genotypes(deref(genotypes))             # <<<<<<<<<<<<<<
@@ -19430,10 +20397,10 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_15genotypes
     __pyx_v_self->thisptr->get_genotypes((*__pyx_v_genotypes));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 462, __pyx_L1_error)
+    __PYX_ERR(1, 501, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":463
+  /* "whatshap/core.pyx":502
  * 		cdef vector[cpp.Genotype]* genotypes = new vector[cpp.Genotype]()
  * 		self.thisptr.get_genotypes(deref(genotypes))
  * 		result = [Genotype(genotype.as_vector()) for genotype in genotypes[0]]             # <<<<<<<<<<<<<<
@@ -19441,7 +20408,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_15genotypes
  * 		return result
  */
   { /* enter inner scope */
-    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 463, __pyx_L1_error)
+    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 502, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = (__pyx_v_genotypes[0]).begin();
     for (;;) {
@@ -19453,21 +20420,21 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_15genotypes
         __pyx_t_5 = __pyx_8genexpr5__pyx_v_genotype.as_vector();
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 463, __pyx_L1_error)
+        __PYX_ERR(1, 502, __pyx_L1_error)
       }
-      __pyx_t_6 = __pyx_convert_vector_to_py_uint32_t(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 463, __pyx_L1_error)
+      __pyx_t_6 = __pyx_convert_vector_to_py_uint32_t(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 502, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_8whatshap_4core_Genotype), __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 463, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_8whatshap_4core_Genotype), __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 502, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_t_7))) __PYX_ERR(1, 463, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_t_7))) __PYX_ERR(1, 502, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     }
   } /* exit inner scope */
   __pyx_v_result = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":464
+  /* "whatshap/core.pyx":503
  * 		self.thisptr.get_genotypes(deref(genotypes))
  * 		result = [Genotype(genotype.as_vector()) for genotype in genotypes[0]]
  * 		del genotypes             # <<<<<<<<<<<<<<
@@ -19476,7 +20443,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_15genotypes
  */
   delete __pyx_v_genotypes;
 
-  /* "whatshap/core.pyx":465
+  /* "whatshap/core.pyx":504
  * 		result = [Genotype(genotype.as_vector()) for genotype in genotypes[0]]
  * 		del genotypes
  * 		return result             # <<<<<<<<<<<<<<
@@ -19488,7 +20455,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_15genotypes
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":460
+  /* "whatshap/core.pyx":499
  * 		return True
  * 
  * 	def genotypes(self):             # <<<<<<<<<<<<<<
@@ -19724,7 +20691,7 @@ static PyObject *__pyx_pf_8whatshap_4core_24PhredGenotypeLikelihoods_19__setstat
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":468
+/* "whatshap/core.pyx":507
  * 
  * 
  * def binomial_coefficient(int n, int k):             # <<<<<<<<<<<<<<
@@ -19788,7 +20755,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 468, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 507, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -19796,14 +20763,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 468, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 507, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("binomial_coefficient", 1, 2, 2, 1); __PYX_ERR(1, 468, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("binomial_coefficient", 1, 2, 2, 1); __PYX_ERR(1, 507, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "binomial_coefficient") < 0)) __PYX_ERR(1, 468, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "binomial_coefficient") < 0)) __PYX_ERR(1, 507, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
@@ -19811,12 +20778,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
       values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
     }
-    __pyx_v_n = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_n == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 468, __pyx_L3_error)
-    __pyx_v_k = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_k == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 468, __pyx_L3_error)
+    __pyx_v_n = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_n == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 507, __pyx_L3_error)
+    __pyx_v_k = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_k == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 507, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("binomial_coefficient", 1, 2, 2, __pyx_nargs); __PYX_ERR(1, 468, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("binomial_coefficient", 1, 2, 2, __pyx_nargs); __PYX_ERR(1, 507, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -19853,7 +20820,7 @@ static PyObject *__pyx_pf_8whatshap_4core_binomial_coefficient(CYTHON_UNUSED PyO
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("binomial_coefficient", 1);
 
-  /* "whatshap/core.pyx":469
+  /* "whatshap/core.pyx":508
  * 
  * def binomial_coefficient(int n, int k):
  * 	return cpp.binomial_coefficient(n, k)             # <<<<<<<<<<<<<<
@@ -19865,15 +20832,15 @@ static PyObject *__pyx_pf_8whatshap_4core_binomial_coefficient(CYTHON_UNUSED PyO
     __pyx_t_1 = binomial_coefficient(__pyx_v_n, __pyx_v_k);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 469, __pyx_L1_error)
+    __PYX_ERR(1, 508, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 469, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 508, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":468
+  /* "whatshap/core.pyx":507
  * 
  * 
  * def binomial_coefficient(int n, int k):             # <<<<<<<<<<<<<<
@@ -19892,7 +20859,7 @@ static PyObject *__pyx_pf_8whatshap_4core_binomial_coefficient(CYTHON_UNUSED PyO
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":474
+/* "whatshap/core.pyx":513
  * cdef class Genotype:
  * 
  * 	def __cinit__(self, vector[uint32_t] alleles):             # <<<<<<<<<<<<<<
@@ -19936,23 +20903,23 @@ static int __pyx_pw_8whatshap_4core_8Genotype_1__cinit__(PyObject *__pyx_v_self,
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 474, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 513, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 474, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 513, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_Arg_VARARGS(__pyx_args, 0);
     }
-    __pyx_v_alleles = __pyx_convert_vector_from_py_uint32_t(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 474, __pyx_L3_error)
+    __pyx_v_alleles = __pyx_convert_vector_from_py_uint32_t(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 513, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 474, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 513, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -19986,7 +20953,7 @@ static int __pyx_pf_8whatshap_4core_8Genotype___cinit__(struct __pyx_obj_8whatsh
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "whatshap/core.pyx":475
+  /* "whatshap/core.pyx":514
  * 
  * 	def __cinit__(self, vector[uint32_t] alleles):
  * 		self.thisptr = new cpp.Genotype(alleles)             # <<<<<<<<<<<<<<
@@ -19997,11 +20964,11 @@ static int __pyx_pf_8whatshap_4core_8Genotype___cinit__(struct __pyx_obj_8whatsh
     __pyx_t_1 = new Genotype(__pyx_v_alleles);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 475, __pyx_L1_error)
+    __PYX_ERR(1, 514, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_1;
 
-  /* "whatshap/core.pyx":474
+  /* "whatshap/core.pyx":513
  * cdef class Genotype:
  * 
  * 	def __cinit__(self, vector[uint32_t] alleles):             # <<<<<<<<<<<<<<
@@ -20019,7 +20986,7 @@ static int __pyx_pf_8whatshap_4core_8Genotype___cinit__(struct __pyx_obj_8whatsh
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":477
+/* "whatshap/core.pyx":516
  * 		self.thisptr = new cpp.Genotype(alleles)
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -20042,7 +21009,7 @@ static void __pyx_pw_8whatshap_4core_8Genotype_3__dealloc__(PyObject *__pyx_v_se
 
 static void __pyx_pf_8whatshap_4core_8Genotype_2__dealloc__(struct __pyx_obj_8whatshap_4core_Genotype *__pyx_v_self) {
 
-  /* "whatshap/core.pyx":478
+  /* "whatshap/core.pyx":517
  * 
  * 	def __dealloc__(self):
  * 		del self.thisptr             # <<<<<<<<<<<<<<
@@ -20051,7 +21018,7 @@ static void __pyx_pf_8whatshap_4core_8Genotype_2__dealloc__(struct __pyx_obj_8wh
  */
   delete __pyx_v_self->thisptr;
 
-  /* "whatshap/core.pyx":477
+  /* "whatshap/core.pyx":516
  * 		self.thisptr = new cpp.Genotype(alleles)
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -20062,7 +21029,7 @@ static void __pyx_pf_8whatshap_4core_8Genotype_2__dealloc__(struct __pyx_obj_8wh
   /* function exit code */
 }
 
-/* "whatshap/core.pyx":480
+/* "whatshap/core.pyx":519
  * 		del self.thisptr
  * 
  * 	def __str__(self):             # <<<<<<<<<<<<<<
@@ -20095,7 +21062,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_4__str__(struct __pyx_obj_8w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__str__", 1);
 
-  /* "whatshap/core.pyx":481
+  /* "whatshap/core.pyx":520
  * 
  * 	def __str__(self):
  * 		return self.thisptr.toString().decode('utf-8')             # <<<<<<<<<<<<<<
@@ -20107,15 +21074,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_4__str__(struct __pyx_obj_8w
     __pyx_t_1 = __pyx_v_self->thisptr->toString();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 481, __pyx_L1_error)
+    __PYX_ERR(1, 520, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 481, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 520, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":480
+  /* "whatshap/core.pyx":519
  * 		del self.thisptr
  * 
  * 	def __str__(self):             # <<<<<<<<<<<<<<
@@ -20134,7 +21101,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_4__str__(struct __pyx_obj_8w
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":483
+/* "whatshap/core.pyx":522
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def __repr__(self):             # <<<<<<<<<<<<<<
@@ -20167,7 +21134,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_6__repr__(struct __pyx_obj_8
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__repr__", 1);
 
-  /* "whatshap/core.pyx":484
+  /* "whatshap/core.pyx":523
  * 
  * 	def __repr__(self):
  * 		return self.thisptr.toString().decode('utf-8')             # <<<<<<<<<<<<<<
@@ -20179,15 +21146,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_6__repr__(struct __pyx_obj_8
     __pyx_t_1 = __pyx_v_self->thisptr->toString();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 484, __pyx_L1_error)
+    __PYX_ERR(1, 523, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 484, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_decode_cpp_string(__PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 523, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":483
+  /* "whatshap/core.pyx":522
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def __repr__(self):             # <<<<<<<<<<<<<<
@@ -20206,7 +21173,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_6__repr__(struct __pyx_obj_8
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":486
+/* "whatshap/core.pyx":525
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def is_none(self):             # <<<<<<<<<<<<<<
@@ -20265,7 +21232,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_8is_none(struct __pyx_obj_8w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("is_none", 1);
 
-  /* "whatshap/core.pyx":487
+  /* "whatshap/core.pyx":526
  * 
  * 	def is_none(self):
  * 		return self.thisptr.is_none()             # <<<<<<<<<<<<<<
@@ -20277,15 +21244,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_8is_none(struct __pyx_obj_8w
     __pyx_t_1 = __pyx_v_self->thisptr->is_none();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 487, __pyx_L1_error)
+    __PYX_ERR(1, 526, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 487, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 526, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":486
+  /* "whatshap/core.pyx":525
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def is_none(self):             # <<<<<<<<<<<<<<
@@ -20304,7 +21271,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_8is_none(struct __pyx_obj_8w
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":489
+/* "whatshap/core.pyx":528
  * 		return self.thisptr.is_none()
  * 
  * 	def get_index(self):             # <<<<<<<<<<<<<<
@@ -20363,7 +21330,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_10get_index(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_index", 1);
 
-  /* "whatshap/core.pyx":490
+  /* "whatshap/core.pyx":529
  * 
  * 	def get_index(self):
  * 		return self.thisptr.get_index()             # <<<<<<<<<<<<<<
@@ -20375,15 +21342,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_10get_index(struct __pyx_obj
     __pyx_t_1 = __pyx_v_self->thisptr->get_index();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 490, __pyx_L1_error)
+    __PYX_ERR(1, 529, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_uint64_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 490, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_uint64_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 529, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":489
+  /* "whatshap/core.pyx":528
  * 		return self.thisptr.is_none()
  * 
  * 	def get_index(self):             # <<<<<<<<<<<<<<
@@ -20402,7 +21369,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_10get_index(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":492
+/* "whatshap/core.pyx":531
  * 		return self.thisptr.get_index()
  * 
  * 	def as_vector(self):             # <<<<<<<<<<<<<<
@@ -20467,19 +21434,19 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_12as_vector(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("as_vector", 1);
 
-  /* "whatshap/core.pyx":493
+  /* "whatshap/core.pyx":532
  * 
  * 	def as_vector(self):
  * 		result = []             # <<<<<<<<<<<<<<
  * 		cdef vector[uint32_t] alleles = self.thisptr.as_vector()
  * 		for allele in alleles:
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 493, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 532, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_result = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "whatshap/core.pyx":494
+  /* "whatshap/core.pyx":533
  * 	def as_vector(self):
  * 		result = []
  * 		cdef vector[uint32_t] alleles = self.thisptr.as_vector()             # <<<<<<<<<<<<<<
@@ -20490,11 +21457,11 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_12as_vector(struct __pyx_obj
     __pyx_t_2 = __pyx_v_self->thisptr->as_vector();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 494, __pyx_L1_error)
+    __PYX_ERR(1, 533, __pyx_L1_error)
   }
   __pyx_v_alleles = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
 
-  /* "whatshap/core.pyx":495
+  /* "whatshap/core.pyx":534
  * 		result = []
  * 		cdef vector[uint32_t] alleles = self.thisptr.as_vector()
  * 		for allele in alleles:             # <<<<<<<<<<<<<<
@@ -20508,19 +21475,19 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_12as_vector(struct __pyx_obj
     ++__pyx_t_3;
     __pyx_v_allele = __pyx_t_4;
 
-    /* "whatshap/core.pyx":496
+    /* "whatshap/core.pyx":535
  * 		cdef vector[uint32_t] alleles = self.thisptr.as_vector()
  * 		for allele in alleles:
  * 			result.append(allele)             # <<<<<<<<<<<<<<
  * 		return alleles
  * 
  */
-    __pyx_t_1 = __Pyx_PyInt_From_uint32_t(__pyx_v_allele); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 496, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_From_uint32_t(__pyx_v_allele); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 535, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(1, 496, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(1, 535, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "whatshap/core.pyx":495
+    /* "whatshap/core.pyx":534
  * 		result = []
  * 		cdef vector[uint32_t] alleles = self.thisptr.as_vector()
  * 		for allele in alleles:             # <<<<<<<<<<<<<<
@@ -20529,7 +21496,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_12as_vector(struct __pyx_obj
  */
   }
 
-  /* "whatshap/core.pyx":497
+  /* "whatshap/core.pyx":536
  * 		for allele in alleles:
  * 			result.append(allele)
  * 		return alleles             # <<<<<<<<<<<<<<
@@ -20537,13 +21504,13 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_12as_vector(struct __pyx_obj
  * 	def is_homozygous(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_vector_to_py_uint32_t(__pyx_v_alleles); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 497, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_vector_to_py_uint32_t(__pyx_v_alleles); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 536, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":492
+  /* "whatshap/core.pyx":531
  * 		return self.thisptr.get_index()
  * 
  * 	def as_vector(self):             # <<<<<<<<<<<<<<
@@ -20563,7 +21530,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_12as_vector(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":499
+/* "whatshap/core.pyx":538
  * 		return alleles
  * 
  * 	def is_homozygous(self):             # <<<<<<<<<<<<<<
@@ -20622,7 +21589,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_14is_homozygous(struct __pyx
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("is_homozygous", 1);
 
-  /* "whatshap/core.pyx":500
+  /* "whatshap/core.pyx":539
  * 
  * 	def is_homozygous(self):
  * 		return self.thisptr.is_homozygous()             # <<<<<<<<<<<<<<
@@ -20634,15 +21601,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_14is_homozygous(struct __pyx
     __pyx_t_1 = __pyx_v_self->thisptr->is_homozygous();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 500, __pyx_L1_error)
+    __PYX_ERR(1, 539, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 500, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 539, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":499
+  /* "whatshap/core.pyx":538
  * 		return alleles
  * 
  * 	def is_homozygous(self):             # <<<<<<<<<<<<<<
@@ -20661,7 +21628,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_14is_homozygous(struct __pyx
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":502
+/* "whatshap/core.pyx":541
  * 		return self.thisptr.is_homozygous()
  * 
  * 	def is_diploid_and_biallelic(self):             # <<<<<<<<<<<<<<
@@ -20720,7 +21687,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_16is_diploid_and_biallelic(s
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("is_diploid_and_biallelic", 1);
 
-  /* "whatshap/core.pyx":503
+  /* "whatshap/core.pyx":542
  * 
  * 	def is_diploid_and_biallelic(self):
  * 		return self.thisptr.is_diploid_and_biallelic()             # <<<<<<<<<<<<<<
@@ -20732,15 +21699,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_16is_diploid_and_biallelic(s
     __pyx_t_1 = __pyx_v_self->thisptr->is_diploid_and_biallelic();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 503, __pyx_L1_error)
+    __PYX_ERR(1, 542, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 503, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 542, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":502
+  /* "whatshap/core.pyx":541
  * 		return self.thisptr.is_homozygous()
  * 
  * 	def is_diploid_and_biallelic(self):             # <<<<<<<<<<<<<<
@@ -20759,7 +21726,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_16is_diploid_and_biallelic(s
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":505
+/* "whatshap/core.pyx":544
  * 		return self.thisptr.is_diploid_and_biallelic()
  * 
  * 	def get_ploidy(self):             # <<<<<<<<<<<<<<
@@ -20818,7 +21785,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_18get_ploidy(struct __pyx_ob
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_ploidy", 1);
 
-  /* "whatshap/core.pyx":506
+  /* "whatshap/core.pyx":545
  * 
  * 	def get_ploidy(self):
  * 		return self.thisptr.get_ploidy()             # <<<<<<<<<<<<<<
@@ -20830,15 +21797,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_18get_ploidy(struct __pyx_ob
     __pyx_t_1 = __pyx_v_self->thisptr->get_ploidy();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 506, __pyx_L1_error)
+    __PYX_ERR(1, 545, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_uint32_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 506, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_uint32_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 545, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":505
+  /* "whatshap/core.pyx":544
  * 		return self.thisptr.is_diploid_and_biallelic()
  * 
  * 	def get_ploidy(self):             # <<<<<<<<<<<<<<
@@ -20857,7 +21824,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_18get_ploidy(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":508
+/* "whatshap/core.pyx":547
  * 		return self.thisptr.get_ploidy()
  * 
  * 	def __eq__(self, Genotype g):             # <<<<<<<<<<<<<<
@@ -20876,7 +21843,7 @@ static PyObject *__pyx_pw_8whatshap_4core_8Genotype_21__eq__(PyObject *__pyx_v_s
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__eq__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_g), __pyx_ptype_8whatshap_4core_Genotype, 1, "g", 0))) __PYX_ERR(1, 508, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_g), __pyx_ptype_8whatshap_4core_Genotype, 1, "g", 0))) __PYX_ERR(1, 547, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_8Genotype_20__eq__(((struct __pyx_obj_8whatshap_4core_Genotype *)__pyx_v_self), ((struct __pyx_obj_8whatshap_4core_Genotype *)__pyx_v_g));
 
   /* function exit code */
@@ -20898,7 +21865,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_20__eq__(struct __pyx_obj_8w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__eq__", 1);
 
-  /* "whatshap/core.pyx":509
+  /* "whatshap/core.pyx":548
  * 
  * 	def __eq__(self, Genotype g):
  * 		return self.thisptr[0] == g.thisptr[0]             # <<<<<<<<<<<<<<
@@ -20910,15 +21877,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_20__eq__(struct __pyx_obj_8w
     __pyx_t_1 = ((__pyx_v_self->thisptr[0]) == (__pyx_v_g->thisptr[0]));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 509, __pyx_L1_error)
+    __PYX_ERR(1, 548, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 509, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 548, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":508
+  /* "whatshap/core.pyx":547
  * 		return self.thisptr.get_ploidy()
  * 
  * 	def __eq__(self, Genotype g):             # <<<<<<<<<<<<<<
@@ -20937,7 +21904,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_20__eq__(struct __pyx_obj_8w
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":511
+/* "whatshap/core.pyx":550
  * 		return self.thisptr[0] == g.thisptr[0]
  * 
  * 	def __ne__(self, Genotype g):             # <<<<<<<<<<<<<<
@@ -20956,7 +21923,7 @@ static PyObject *__pyx_pw_8whatshap_4core_8Genotype_23__ne__(PyObject *__pyx_v_s
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__ne__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_g), __pyx_ptype_8whatshap_4core_Genotype, 1, "g", 0))) __PYX_ERR(1, 511, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_g), __pyx_ptype_8whatshap_4core_Genotype, 1, "g", 0))) __PYX_ERR(1, 550, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_8Genotype_22__ne__(((struct __pyx_obj_8whatshap_4core_Genotype *)__pyx_v_self), ((struct __pyx_obj_8whatshap_4core_Genotype *)__pyx_v_g));
 
   /* function exit code */
@@ -20978,7 +21945,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_22__ne__(struct __pyx_obj_8w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__ne__", 1);
 
-  /* "whatshap/core.pyx":512
+  /* "whatshap/core.pyx":551
  * 
  * 	def __ne__(self, Genotype g):
  * 		return self.thisptr[0] != g.thisptr[0]             # <<<<<<<<<<<<<<
@@ -20990,15 +21957,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_22__ne__(struct __pyx_obj_8w
     __pyx_t_1 = ((__pyx_v_self->thisptr[0]) != (__pyx_v_g->thisptr[0]));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 512, __pyx_L1_error)
+    __PYX_ERR(1, 551, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 512, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 551, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":511
+  /* "whatshap/core.pyx":550
  * 		return self.thisptr[0] == g.thisptr[0]
  * 
  * 	def __ne__(self, Genotype g):             # <<<<<<<<<<<<<<
@@ -21017,7 +21984,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_22__ne__(struct __pyx_obj_8w
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":514
+/* "whatshap/core.pyx":553
  * 		return self.thisptr[0] != g.thisptr[0]
  * 
  * 	def __lt__(self, Genotype g):             # <<<<<<<<<<<<<<
@@ -21036,7 +22003,7 @@ static PyObject *__pyx_pw_8whatshap_4core_8Genotype_25__lt__(PyObject *__pyx_v_s
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__lt__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_g), __pyx_ptype_8whatshap_4core_Genotype, 1, "g", 0))) __PYX_ERR(1, 514, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_g), __pyx_ptype_8whatshap_4core_Genotype, 1, "g", 0))) __PYX_ERR(1, 553, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_8Genotype_24__lt__(((struct __pyx_obj_8whatshap_4core_Genotype *)__pyx_v_self), ((struct __pyx_obj_8whatshap_4core_Genotype *)__pyx_v_g));
 
   /* function exit code */
@@ -21058,7 +22025,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_24__lt__(struct __pyx_obj_8w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__lt__", 1);
 
-  /* "whatshap/core.pyx":515
+  /* "whatshap/core.pyx":554
  * 
  * 	def __lt__(self, Genotype g):
  * 		return self.thisptr[0] < g.thisptr[0]             # <<<<<<<<<<<<<<
@@ -21070,15 +22037,15 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_24__lt__(struct __pyx_obj_8w
     __pyx_t_1 = ((__pyx_v_self->thisptr[0]) < (__pyx_v_g->thisptr[0]));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 515, __pyx_L1_error)
+    __PYX_ERR(1, 554, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 515, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 554, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":514
+  /* "whatshap/core.pyx":553
  * 		return self.thisptr[0] != g.thisptr[0]
  * 
  * 	def __lt__(self, Genotype g):             # <<<<<<<<<<<<<<
@@ -21097,7 +22064,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_24__lt__(struct __pyx_obj_8w
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":517
+/* "whatshap/core.pyx":556
  * 		return self.thisptr[0] < g.thisptr[0]
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
@@ -21159,7 +22126,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_26__getstate__(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__getstate__", 1);
 
-  /* "whatshap/core.pyx":518
+  /* "whatshap/core.pyx":557
  * 
  * 	def __getstate__(self):
  * 		return (self.thisptr.get_index(), self.thisptr.get_ploidy())             # <<<<<<<<<<<<<<
@@ -21171,31 +22138,31 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_26__getstate__(struct __pyx_
     __pyx_t_1 = __pyx_v_self->thisptr->get_index();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 518, __pyx_L1_error)
+    __PYX_ERR(1, 557, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_uint64_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 518, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_uint64_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 557, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   try {
     __pyx_t_3 = __pyx_v_self->thisptr->get_ploidy();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 518, __pyx_L1_error)
+    __PYX_ERR(1, 557, __pyx_L1_error)
   }
-  __pyx_t_4 = __Pyx_PyInt_From_uint32_t(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 518, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_uint32_t(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 557, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 518, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 557, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2)) __PYX_ERR(1, 518, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2)) __PYX_ERR(1, 557, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_4)) __PYX_ERR(1, 518, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_4)) __PYX_ERR(1, 557, __pyx_L1_error);
   __pyx_t_2 = 0;
   __pyx_t_4 = 0;
   __pyx_r = __pyx_t_5;
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":517
+  /* "whatshap/core.pyx":556
  * 		return self.thisptr[0] < g.thisptr[0]
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
@@ -21216,7 +22183,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_26__getstate__(struct __pyx_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":520
+/* "whatshap/core.pyx":559
  * 		return (self.thisptr.get_index(), self.thisptr.get_ploidy())
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
@@ -21277,12 +22244,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 520, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 559, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__setstate__") < 0)) __PYX_ERR(1, 520, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__setstate__") < 0)) __PYX_ERR(1, 559, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
@@ -21293,7 +22260,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__setstate__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 520, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__setstate__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 559, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -21340,7 +22307,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__setstate__", 1);
 
-  /* "whatshap/core.pyx":521
+  /* "whatshap/core.pyx":560
  * 
  * 	def __setstate__(self, state):
  * 		index, ploidy = state             # <<<<<<<<<<<<<<
@@ -21353,7 +22320,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
     if (unlikely(size != 2)) {
       if (size > 2) __Pyx_RaiseTooManyValuesError(2);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      __PYX_ERR(1, 521, __pyx_L1_error)
+      __PYX_ERR(1, 560, __pyx_L1_error)
     }
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -21366,21 +22333,21 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
     __Pyx_INCREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_t_2);
     #else
-    __pyx_t_1 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 521, __pyx_L1_error)
+    __pyx_t_1 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 560, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 521, __pyx_L1_error)
+    __pyx_t_2 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 560, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     #endif
   } else {
     Py_ssize_t index = -1;
-    __pyx_t_3 = PyObject_GetIter(__pyx_v_state); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 521, __pyx_L1_error)
+    __pyx_t_3 = PyObject_GetIter(__pyx_v_state); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 560, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_4 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3);
     index = 0; __pyx_t_1 = __pyx_t_4(__pyx_t_3); if (unlikely(!__pyx_t_1)) goto __pyx_L3_unpacking_failed;
     __Pyx_GOTREF(__pyx_t_1);
     index = 1; __pyx_t_2 = __pyx_t_4(__pyx_t_3); if (unlikely(!__pyx_t_2)) goto __pyx_L3_unpacking_failed;
     __Pyx_GOTREF(__pyx_t_2);
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_4(__pyx_t_3), 2) < 0) __PYX_ERR(1, 521, __pyx_L1_error)
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_4(__pyx_t_3), 2) < 0) __PYX_ERR(1, 560, __pyx_L1_error)
     __pyx_t_4 = NULL;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     goto __pyx_L4_unpacking_done;
@@ -21388,7 +22355,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_4 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    __PYX_ERR(1, 521, __pyx_L1_error)
+    __PYX_ERR(1, 560, __pyx_L1_error)
     __pyx_L4_unpacking_done:;
   }
   __pyx_v_index = __pyx_t_1;
@@ -21396,24 +22363,24 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
   __pyx_v_ploidy = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":522
+  /* "whatshap/core.pyx":561
  * 	def __setstate__(self, state):
  * 		index, ploidy = state
  * 		cdef vector[uint32_t] alleles = cpp.convert_index_to_alleles(index, ploidy)             # <<<<<<<<<<<<<<
  * 		if self.thisptr != NULL:
  * 			del self.thisptr
  */
-  __pyx_t_5 = __Pyx_PyInt_As_uint64_t(__pyx_v_index); if (unlikely((__pyx_t_5 == ((uint64_t)-1)) && PyErr_Occurred())) __PYX_ERR(1, 522, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyInt_As_uint32_t(__pyx_v_ploidy); if (unlikely((__pyx_t_6 == ((uint32_t)-1)) && PyErr_Occurred())) __PYX_ERR(1, 522, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_As_uint64_t(__pyx_v_index); if (unlikely((__pyx_t_5 == ((uint64_t)-1)) && PyErr_Occurred())) __PYX_ERR(1, 561, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_uint32_t(__pyx_v_ploidy); if (unlikely((__pyx_t_6 == ((uint32_t)-1)) && PyErr_Occurred())) __PYX_ERR(1, 561, __pyx_L1_error)
   try {
     __pyx_t_7 = convert_index_to_alleles(__pyx_t_5, __pyx_t_6);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 522, __pyx_L1_error)
+    __PYX_ERR(1, 561, __pyx_L1_error)
   }
   __pyx_v_alleles = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_7);
 
-  /* "whatshap/core.pyx":523
+  /* "whatshap/core.pyx":562
  * 		index, ploidy = state
  * 		cdef vector[uint32_t] alleles = cpp.convert_index_to_alleles(index, ploidy)
  * 		if self.thisptr != NULL:             # <<<<<<<<<<<<<<
@@ -21423,7 +22390,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
   __pyx_t_8 = (__pyx_v_self->thisptr != NULL);
   if (__pyx_t_8) {
 
-    /* "whatshap/core.pyx":524
+    /* "whatshap/core.pyx":563
  * 		cdef vector[uint32_t] alleles = cpp.convert_index_to_alleles(index, ploidy)
  * 		if self.thisptr != NULL:
  * 			del self.thisptr             # <<<<<<<<<<<<<<
@@ -21432,7 +22399,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
  */
     delete __pyx_v_self->thisptr;
 
-    /* "whatshap/core.pyx":523
+    /* "whatshap/core.pyx":562
  * 		index, ploidy = state
  * 		cdef vector[uint32_t] alleles = cpp.convert_index_to_alleles(index, ploidy)
  * 		if self.thisptr != NULL:             # <<<<<<<<<<<<<<
@@ -21441,7 +22408,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
  */
   }
 
-  /* "whatshap/core.pyx":525
+  /* "whatshap/core.pyx":564
  * 		if self.thisptr != NULL:
  * 			del self.thisptr
  * 		self.thisptr = new cpp.Genotype(alleles)             # <<<<<<<<<<<<<<
@@ -21452,11 +22419,11 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
     __pyx_t_9 = new Genotype(__pyx_v_alleles);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 525, __pyx_L1_error)
+    __PYX_ERR(1, 564, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_9;
 
-  /* "whatshap/core.pyx":520
+  /* "whatshap/core.pyx":559
  * 		return (self.thisptr.get_index(), self.thisptr.get_ploidy())
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
@@ -21481,7 +22448,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_28__setstate__(struct __pyx_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":527
+/* "whatshap/core.pyx":566
  * 		self.thisptr = new cpp.Genotype(alleles)
  * 
  * 	def __deepcopy__(self, memo):             # <<<<<<<<<<<<<<
@@ -21542,12 +22509,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 527, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 566, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__deepcopy__") < 0)) __PYX_ERR(1, 527, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__deepcopy__") < 0)) __PYX_ERR(1, 566, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
@@ -21558,7 +22525,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__deepcopy__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 527, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__deepcopy__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 566, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -21597,7 +22564,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_30__deepcopy__(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__deepcopy__", 1);
 
-  /* "whatshap/core.pyx":528
+  /* "whatshap/core.pyx":567
  * 
  * 	def __deepcopy__(self, memo):
  * 		return Genotype.__new__(Genotype, self.as_vector())             # <<<<<<<<<<<<<<
@@ -21605,7 +22572,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_30__deepcopy__(struct __pyx_
  * 	def __hash__(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_as_vector); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 528, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_as_vector); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 567, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -21625,23 +22592,23 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_30__deepcopy__(struct __pyx_
     PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 528, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 567, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 528, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 567, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1)) __PYX_ERR(1, 528, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1)) __PYX_ERR(1, 567, __pyx_L1_error);
   __pyx_t_1 = 0;
-  __pyx_t_1 = ((PyObject *)__pyx_tp_new_8whatshap_4core_Genotype(((PyTypeObject *)__pyx_ptype_8whatshap_4core_Genotype), __pyx_t_2, NULL)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 528, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_tp_new_8whatshap_4core_Genotype(((PyTypeObject *)__pyx_ptype_8whatshap_4core_Genotype), __pyx_t_2, NULL)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 567, __pyx_L1_error)
   __Pyx_GOTREF((PyObject *)__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = ((PyObject *)__pyx_t_1);
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":527
+  /* "whatshap/core.pyx":566
  * 		self.thisptr = new cpp.Genotype(alleles)
  * 
  * 	def __deepcopy__(self, memo):             # <<<<<<<<<<<<<<
@@ -21662,7 +22629,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_30__deepcopy__(struct __pyx_
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":530
+/* "whatshap/core.pyx":569
  * 		return Genotype.__new__(Genotype, self.as_vector())
  * 
  * 	def __hash__(self):             # <<<<<<<<<<<<<<
@@ -21696,7 +22663,7 @@ static Py_hash_t __pyx_pf_8whatshap_4core_8Genotype_32__hash__(struct __pyx_obj_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__hash__", 1);
 
-  /* "whatshap/core.pyx":531
+  /* "whatshap/core.pyx":570
  * 
  * 	def __hash__(self):
  * 		return hash(self.thisptr.get_index())             # <<<<<<<<<<<<<<
@@ -21707,16 +22674,16 @@ static Py_hash_t __pyx_pf_8whatshap_4core_8Genotype_32__hash__(struct __pyx_obj_
     __pyx_t_1 = __pyx_v_self->thisptr->get_index();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 531, __pyx_L1_error)
+    __PYX_ERR(1, 570, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_uint64_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 531, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_uint64_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 570, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyObject_Hash(__pyx_t_2); if (unlikely(__pyx_t_3 == ((Py_hash_t)-1))) __PYX_ERR(1, 531, __pyx_L1_error)
+  __pyx_t_3 = PyObject_Hash(__pyx_t_2); if (unlikely(__pyx_t_3 == ((Py_hash_t)-1))) __PYX_ERR(1, 570, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_3;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":530
+  /* "whatshap/core.pyx":569
  * 		return Genotype.__new__(Genotype, self.as_vector())
  * 
  * 	def __hash__(self):             # <<<<<<<<<<<<<<
@@ -21949,7 +22916,7 @@ static PyObject *__pyx_pf_8whatshap_4core_8Genotype_36__setstate_cython__(CYTHON
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":534
+/* "whatshap/core.pyx":573
  * 
  * 
  * def get_max_genotype_ploidy():             # <<<<<<<<<<<<<<
@@ -21983,7 +22950,7 @@ static PyObject *__pyx_pf_8whatshap_4core_2get_max_genotype_ploidy(CYTHON_UNUSED
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_max_genotype_ploidy", 1);
 
-  /* "whatshap/core.pyx":535
+  /* "whatshap/core.pyx":574
  * 
  * def get_max_genotype_ploidy():
  * 	return cpp.get_max_genotype_ploidy()             # <<<<<<<<<<<<<<
@@ -21995,15 +22962,15 @@ static PyObject *__pyx_pf_8whatshap_4core_2get_max_genotype_ploidy(CYTHON_UNUSED
     __pyx_t_1 = get_max_genotype_ploidy();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 535, __pyx_L1_error)
+    __PYX_ERR(1, 574, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_uint32_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 535, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_uint32_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 574, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":534
+  /* "whatshap/core.pyx":573
  * 
  * 
  * def get_max_genotype_ploidy():             # <<<<<<<<<<<<<<
@@ -22022,7 +22989,7 @@ static PyObject *__pyx_pf_8whatshap_4core_2get_max_genotype_ploidy(CYTHON_UNUSED
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":538
+/* "whatshap/core.pyx":577
  * 
  * 
  * def get_max_genotype_alleles():             # <<<<<<<<<<<<<<
@@ -22056,7 +23023,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4get_max_genotype_alleles(CYTHON_UNUSE
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_max_genotype_alleles", 1);
 
-  /* "whatshap/core.pyx":539
+  /* "whatshap/core.pyx":578
  * 
  * def get_max_genotype_alleles():
  * 	return cpp.get_max_genotype_alleles()             # <<<<<<<<<<<<<<
@@ -22068,15 +23035,15 @@ static PyObject *__pyx_pf_8whatshap_4core_4get_max_genotype_alleles(CYTHON_UNUSE
     __pyx_t_1 = get_max_genotype_alleles();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 539, __pyx_L1_error)
+    __PYX_ERR(1, 578, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_uint32_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 539, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_uint32_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 578, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":538
+  /* "whatshap/core.pyx":577
  * 
  * 
  * def get_max_genotype_alleles():             # <<<<<<<<<<<<<<
@@ -22095,7 +23062,7 @@ static PyObject *__pyx_pf_8whatshap_4core_4get_max_genotype_alleles(CYTHON_UNUSE
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":543
+/* "whatshap/core.pyx":582
  * 
  * cdef class GenotypeDPTable:
  * 	def __cinit__(self, numeric_sample_ids, ReadSet readset, recombcost, Pedigree pedigree, positions = None):             # <<<<<<<<<<<<<<
@@ -22152,7 +23119,7 @@ static int __pyx_pw_8whatshap_4core_15GenotypeDPTable_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 543, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 582, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -22160,9 +23127,9 @@ static int __pyx_pw_8whatshap_4core_15GenotypeDPTable_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 543, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 582, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 4, 5, 1); __PYX_ERR(1, 543, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 4, 5, 1); __PYX_ERR(1, 582, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -22170,9 +23137,9 @@ static int __pyx_pw_8whatshap_4core_15GenotypeDPTable_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 543, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 582, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 4, 5, 2); __PYX_ERR(1, 543, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 4, 5, 2); __PYX_ERR(1, 582, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
@@ -22180,21 +23147,21 @@ static int __pyx_pw_8whatshap_4core_15GenotypeDPTable_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[3]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 543, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 582, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 4, 5, 3); __PYX_ERR(1, 543, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 4, 5, 3); __PYX_ERR(1, 582, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_positions);
           if (value) { values[4] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 543, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 582, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 543, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 582, __pyx_L3_error)
       }
     } else {
       switch (__pyx_nargs) {
@@ -22216,7 +23183,7 @@ static int __pyx_pw_8whatshap_4core_15GenotypeDPTable_1__cinit__(PyObject *__pyx
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 4, 5, __pyx_nargs); __PYX_ERR(1, 543, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 4, 5, __pyx_nargs); __PYX_ERR(1, 582, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -22230,8 +23197,8 @@ static int __pyx_pw_8whatshap_4core_15GenotypeDPTable_1__cinit__(PyObject *__pyx
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 543, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pedigree), __pyx_ptype_8whatshap_4core_Pedigree, 1, "pedigree", 0))) __PYX_ERR(1, 543, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 582, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pedigree), __pyx_ptype_8whatshap_4core_Pedigree, 1, "pedigree", 0))) __PYX_ERR(1, 582, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(((struct __pyx_obj_8whatshap_4core_GenotypeDPTable *)__pyx_v_self), __pyx_v_numeric_sample_ids, __pyx_v_readset, __pyx_v_recombcost, __pyx_v_pedigree, __pyx_v_positions);
 
   /* function exit code */
@@ -22268,7 +23235,7 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__cinit__", 1);
 
-  /* "whatshap/core.pyx":548
+  /* "whatshap/core.pyx":587
  * 		in the read set must also be sorted (by position of their left-most variant).
  * 		"""
  * 		cdef vector[unsigned int]* c_positions = NULL             # <<<<<<<<<<<<<<
@@ -22277,7 +23244,7 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
  */
   __pyx_v_c_positions = NULL;
 
-  /* "whatshap/core.pyx":549
+  /* "whatshap/core.pyx":588
  * 		"""
  * 		cdef vector[unsigned int]* c_positions = NULL
  * 		if positions is not None:             # <<<<<<<<<<<<<<
@@ -22287,7 +23254,7 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
   __pyx_t_1 = (__pyx_v_positions != Py_None);
   if (__pyx_t_1) {
 
-    /* "whatshap/core.pyx":550
+    /* "whatshap/core.pyx":589
  * 		cdef vector[unsigned int]* c_positions = NULL
  * 		if positions is not None:
  * 			c_positions = new vector[unsigned int]()             # <<<<<<<<<<<<<<
@@ -22298,11 +23265,11 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
       __pyx_t_2 = new std::vector<unsigned int> ();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 550, __pyx_L1_error)
+      __PYX_ERR(1, 589, __pyx_L1_error)
     }
     __pyx_v_c_positions = __pyx_t_2;
 
-    /* "whatshap/core.pyx":551
+    /* "whatshap/core.pyx":590
  * 		if positions is not None:
  * 			c_positions = new vector[unsigned int]()
  * 			for pos in positions:             # <<<<<<<<<<<<<<
@@ -22314,9 +23281,9 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
       __pyx_t_4 = 0;
       __pyx_t_5 = NULL;
     } else {
-      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_positions); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 551, __pyx_L1_error)
+      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_positions); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 590, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 551, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 590, __pyx_L1_error)
     }
     for (;;) {
       if (likely(!__pyx_t_5)) {
@@ -22324,28 +23291,28 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 551, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 590, __pyx_L1_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 551, __pyx_L1_error)
+          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 590, __pyx_L1_error)
           #else
-          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 551, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 590, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 551, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 590, __pyx_L1_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 551, __pyx_L1_error)
+          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 590, __pyx_L1_error)
           #else
-          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 551, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 590, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         }
@@ -22355,7 +23322,7 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 551, __pyx_L1_error)
+            else __PYX_ERR(1, 590, __pyx_L1_error)
           }
           break;
         }
@@ -22364,22 +23331,22 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
       __Pyx_XDECREF_SET(__pyx_v_pos, __pyx_t_6);
       __pyx_t_6 = 0;
 
-      /* "whatshap/core.pyx":552
+      /* "whatshap/core.pyx":591
  * 			c_positions = new vector[unsigned int]()
  * 			for pos in positions:
  * 				c_positions.push_back(pos)             # <<<<<<<<<<<<<<
  * 		self.thisptr = new cpp.GenotypeDPTable(readset.thisptr, recombcost, pedigree.thisptr, c_positions)
  * 		self.pedigree = pedigree
  */
-      __pyx_t_7 = __Pyx_PyInt_As_unsigned_int(__pyx_v_pos); if (unlikely((__pyx_t_7 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 552, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_unsigned_int(__pyx_v_pos); if (unlikely((__pyx_t_7 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 591, __pyx_L1_error)
       try {
         __pyx_v_c_positions->push_back(__pyx_t_7);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 552, __pyx_L1_error)
+        __PYX_ERR(1, 591, __pyx_L1_error)
       }
 
-      /* "whatshap/core.pyx":551
+      /* "whatshap/core.pyx":590
  * 		if positions is not None:
  * 			c_positions = new vector[unsigned int]()
  * 			for pos in positions:             # <<<<<<<<<<<<<<
@@ -22389,7 +23356,7 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "whatshap/core.pyx":549
+    /* "whatshap/core.pyx":588
  * 		"""
  * 		cdef vector[unsigned int]* c_positions = NULL
  * 		if positions is not None:             # <<<<<<<<<<<<<<
@@ -22398,23 +23365,23 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
  */
   }
 
-  /* "whatshap/core.pyx":553
+  /* "whatshap/core.pyx":592
  * 			for pos in positions:
  * 				c_positions.push_back(pos)
  * 		self.thisptr = new cpp.GenotypeDPTable(readset.thisptr, recombcost, pedigree.thisptr, c_positions)             # <<<<<<<<<<<<<<
  * 		self.pedigree = pedigree
  * 		self.numeric_sample_ids = numeric_sample_ids
  */
-  __pyx_t_8 = __pyx_convert_vector_from_py_unsigned_int(__pyx_v_recombcost); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 553, __pyx_L1_error)
+  __pyx_t_8 = __pyx_convert_vector_from_py_unsigned_int(__pyx_v_recombcost); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 592, __pyx_L1_error)
   try {
     __pyx_t_9 = new GenotypeDPTable(__pyx_v_readset->thisptr, __pyx_t_8, __pyx_v_pedigree->thisptr, __pyx_v_c_positions);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 553, __pyx_L1_error)
+    __PYX_ERR(1, 592, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_9;
 
-  /* "whatshap/core.pyx":554
+  /* "whatshap/core.pyx":593
  * 				c_positions.push_back(pos)
  * 		self.thisptr = new cpp.GenotypeDPTable(readset.thisptr, recombcost, pedigree.thisptr, c_positions)
  * 		self.pedigree = pedigree             # <<<<<<<<<<<<<<
@@ -22427,14 +23394,14 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
   __Pyx_DECREF((PyObject *)__pyx_v_self->pedigree);
   __pyx_v_self->pedigree = __pyx_v_pedigree;
 
-  /* "whatshap/core.pyx":555
+  /* "whatshap/core.pyx":594
  * 		self.thisptr = new cpp.GenotypeDPTable(readset.thisptr, recombcost, pedigree.thisptr, c_positions)
  * 		self.pedigree = pedigree
  * 		self.numeric_sample_ids = numeric_sample_ids             # <<<<<<<<<<<<<<
  * 
  * 	def __dealloc__(self):
  */
-  if (!(likely(((__pyx_v_numeric_sample_ids) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_numeric_sample_ids, __pyx_ptype_8whatshap_4core_NumericSampleIds))))) __PYX_ERR(1, 555, __pyx_L1_error)
+  if (!(likely(((__pyx_v_numeric_sample_ids) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_numeric_sample_ids, __pyx_ptype_8whatshap_4core_NumericSampleIds))))) __PYX_ERR(1, 594, __pyx_L1_error)
   __pyx_t_3 = __pyx_v_numeric_sample_ids;
   __Pyx_INCREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_3);
@@ -22443,7 +23410,7 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
   __pyx_v_self->numeric_sample_ids = ((struct __pyx_obj_8whatshap_4core_NumericSampleIds *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "whatshap/core.pyx":543
+  /* "whatshap/core.pyx":582
  * 
  * cdef class GenotypeDPTable:
  * 	def __cinit__(self, numeric_sample_ids, ReadSet readset, recombcost, Pedigree pedigree, positions = None):             # <<<<<<<<<<<<<<
@@ -22465,7 +23432,7 @@ static int __pyx_pf_8whatshap_4core_15GenotypeDPTable___cinit__(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":557
+/* "whatshap/core.pyx":596
  * 		self.numeric_sample_ids = numeric_sample_ids
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -22488,7 +23455,7 @@ static void __pyx_pw_8whatshap_4core_15GenotypeDPTable_3__dealloc__(PyObject *__
 
 static void __pyx_pf_8whatshap_4core_15GenotypeDPTable_2__dealloc__(struct __pyx_obj_8whatshap_4core_GenotypeDPTable *__pyx_v_self) {
 
-  /* "whatshap/core.pyx":558
+  /* "whatshap/core.pyx":597
  * 
  * 	def __dealloc__(self):
  * 		del self.thisptr             # <<<<<<<<<<<<<<
@@ -22497,7 +23464,7 @@ static void __pyx_pf_8whatshap_4core_15GenotypeDPTable_2__dealloc__(struct __pyx
  */
   delete __pyx_v_self->thisptr;
 
-  /* "whatshap/core.pyx":557
+  /* "whatshap/core.pyx":596
  * 		self.numeric_sample_ids = numeric_sample_ids
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -22508,7 +23475,7 @@ static void __pyx_pf_8whatshap_4core_15GenotypeDPTable_2__dealloc__(struct __pyx
   /* function exit code */
 }
 
-/* "whatshap/core.pyx":560
+/* "whatshap/core.pyx":599
  * 		del self.thisptr
  * 
  * 	def get_genotype_likelihoods(self, sample_id, unsigned int pos):             # <<<<<<<<<<<<<<
@@ -22572,7 +23539,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 560, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 599, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -22580,14 +23547,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 560, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 599, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("get_genotype_likelihoods", 1, 2, 2, 1); __PYX_ERR(1, 560, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_genotype_likelihoods", 1, 2, 2, 1); __PYX_ERR(1, 599, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_genotype_likelihoods") < 0)) __PYX_ERR(1, 560, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_genotype_likelihoods") < 0)) __PYX_ERR(1, 599, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
@@ -22596,11 +23563,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
     }
     __pyx_v_sample_id = values[0];
-    __pyx_v_pos = __Pyx_PyInt_As_unsigned_int(values[1]); if (unlikely((__pyx_v_pos == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 560, __pyx_L3_error)
+    __pyx_v_pos = __Pyx_PyInt_As_unsigned_int(values[1]); if (unlikely((__pyx_v_pos == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 599, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_genotype_likelihoods", 1, 2, 2, __pyx_nargs); __PYX_ERR(1, 560, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_genotype_likelihoods", 1, 2, 2, __pyx_nargs); __PYX_ERR(1, 599, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -22639,7 +23606,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15GenotypeDPTable_4get_genotype_likeli
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_genotype_likelihoods", 1);
 
-  /* "whatshap/core.pyx":561
+  /* "whatshap/core.pyx":600
  * 
  * 	def get_genotype_likelihoods(self, sample_id, unsigned int pos):
  * 		return PhredGenotypeLikelihoods(self.thisptr.get_genotype_likelihoods(self.numeric_sample_ids[sample_id],pos))             # <<<<<<<<<<<<<<
@@ -22647,26 +23614,26 @@ static PyObject *__pyx_pf_8whatshap_4core_15GenotypeDPTable_4get_genotype_likeli
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_sample_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 561, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_self->numeric_sample_ids), __pyx_v_sample_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 600, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 561, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_unsigned_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 600, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   try {
     __pyx_t_3 = __pyx_v_self->thisptr->get_genotype_likelihoods(__pyx_t_2, __pyx_v_pos);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 561, __pyx_L1_error)
+    __PYX_ERR(1, 600, __pyx_L1_error)
   }
-  __pyx_t_1 = __pyx_convert_vector_to_py_long__double(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 561, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_vector_to_py_long__double(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 600, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods), __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 561, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods), __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 600, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_4;
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":560
+  /* "whatshap/core.pyx":599
  * 		del self.thisptr
  * 
  * 	def get_genotype_likelihoods(self, sample_id, unsigned int pos):             # <<<<<<<<<<<<<<
@@ -22900,7 +23867,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15GenotypeDPTable_8__setstate_cython__
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":564
+/* "whatshap/core.pyx":603
  * 
  * 
  * def compute_genotypes(ReadSet readset, positions = None):             # <<<<<<<<<<<<<<
@@ -22965,19 +23932,19 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 564, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 603, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_positions);
           if (value) { values[1] = __Pyx_Arg_NewRef_FASTCALL(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 564, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 603, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "compute_genotypes") < 0)) __PYX_ERR(1, 564, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "compute_genotypes") < 0)) __PYX_ERR(1, 603, __pyx_L3_error)
       }
     } else {
       switch (__pyx_nargs) {
@@ -22993,7 +23960,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("compute_genotypes", 0, 1, 2, __pyx_nargs); __PYX_ERR(1, 564, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("compute_genotypes", 0, 1, 2, __pyx_nargs); __PYX_ERR(1, 603, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -23007,7 +23974,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 564, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 603, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_6compute_genotypes(__pyx_self, __pyx_v_readset, __pyx_v_positions);
 
   /* function exit code */
@@ -23060,7 +24027,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("compute_genotypes", 1);
 
-  /* "whatshap/core.pyx":565
+  /* "whatshap/core.pyx":604
  * 
  * def compute_genotypes(ReadSet readset, positions = None):
  * 	cdef vector[cpp.Genotype]* genotypes_vector = new vector[cpp.Genotype]()             # <<<<<<<<<<<<<<
@@ -23071,11 +24038,11 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
     __pyx_t_1 = new std::vector<Genotype> ();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 565, __pyx_L1_error)
+    __PYX_ERR(1, 604, __pyx_L1_error)
   }
   __pyx_v_genotypes_vector = __pyx_t_1;
 
-  /* "whatshap/core.pyx":566
+  /* "whatshap/core.pyx":605
  * def compute_genotypes(ReadSet readset, positions = None):
  * 	cdef vector[cpp.Genotype]* genotypes_vector = new vector[cpp.Genotype]()
  * 	cdef vector[cpp.GenotypeDistribution]* gl_vector = new vector[cpp.GenotypeDistribution]()             # <<<<<<<<<<<<<<
@@ -23086,11 +24053,11 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
     __pyx_t_2 = new std::vector<GenotypeDistribution> ();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 566, __pyx_L1_error)
+    __PYX_ERR(1, 605, __pyx_L1_error)
   }
   __pyx_v_gl_vector = __pyx_t_2;
 
-  /* "whatshap/core.pyx":567
+  /* "whatshap/core.pyx":606
  * 	cdef vector[cpp.Genotype]* genotypes_vector = new vector[cpp.Genotype]()
  * 	cdef vector[cpp.GenotypeDistribution]* gl_vector = new vector[cpp.GenotypeDistribution]()
  * 	cdef vector[unsigned int]* c_positions = NULL             # <<<<<<<<<<<<<<
@@ -23099,7 +24066,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
  */
   __pyx_v_c_positions = NULL;
 
-  /* "whatshap/core.pyx":568
+  /* "whatshap/core.pyx":607
  * 	cdef vector[cpp.GenotypeDistribution]* gl_vector = new vector[cpp.GenotypeDistribution]()
  * 	cdef vector[unsigned int]* c_positions = NULL
  * 	if positions is not None:             # <<<<<<<<<<<<<<
@@ -23109,7 +24076,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
   __pyx_t_3 = (__pyx_v_positions != Py_None);
   if (__pyx_t_3) {
 
-    /* "whatshap/core.pyx":569
+    /* "whatshap/core.pyx":608
  * 	cdef vector[unsigned int]* c_positions = NULL
  * 	if positions is not None:
  * 		c_positions = new vector[unsigned int]()             # <<<<<<<<<<<<<<
@@ -23120,11 +24087,11 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
       __pyx_t_4 = new std::vector<unsigned int> ();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 569, __pyx_L1_error)
+      __PYX_ERR(1, 608, __pyx_L1_error)
     }
     __pyx_v_c_positions = __pyx_t_4;
 
-    /* "whatshap/core.pyx":570
+    /* "whatshap/core.pyx":609
  * 	if positions is not None:
  * 		c_positions = new vector[unsigned int]()
  * 		for pos in positions:             # <<<<<<<<<<<<<<
@@ -23136,9 +24103,9 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
       __pyx_t_6 = 0;
       __pyx_t_7 = NULL;
     } else {
-      __pyx_t_6 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_v_positions); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 570, __pyx_L1_error)
+      __pyx_t_6 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_v_positions); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 609, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_7 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_5); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 570, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_5); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 609, __pyx_L1_error)
     }
     for (;;) {
       if (likely(!__pyx_t_7)) {
@@ -23146,28 +24113,28 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_5);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 570, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 609, __pyx_L1_error)
             #endif
             if (__pyx_t_6 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_8 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_6); __Pyx_INCREF(__pyx_t_8); __pyx_t_6++; if (unlikely((0 < 0))) __PYX_ERR(1, 570, __pyx_L1_error)
+          __pyx_t_8 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_6); __Pyx_INCREF(__pyx_t_8); __pyx_t_6++; if (unlikely((0 < 0))) __PYX_ERR(1, 609, __pyx_L1_error)
           #else
-          __pyx_t_8 = __Pyx_PySequence_ITEM(__pyx_t_5, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 570, __pyx_L1_error)
+          __pyx_t_8 = __Pyx_PySequence_ITEM(__pyx_t_5, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 609, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
           #endif
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_5);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 570, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 609, __pyx_L1_error)
             #endif
             if (__pyx_t_6 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_8 = PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_6); __Pyx_INCREF(__pyx_t_8); __pyx_t_6++; if (unlikely((0 < 0))) __PYX_ERR(1, 570, __pyx_L1_error)
+          __pyx_t_8 = PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_6); __Pyx_INCREF(__pyx_t_8); __pyx_t_6++; if (unlikely((0 < 0))) __PYX_ERR(1, 609, __pyx_L1_error)
           #else
-          __pyx_t_8 = __Pyx_PySequence_ITEM(__pyx_t_5, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 570, __pyx_L1_error)
+          __pyx_t_8 = __Pyx_PySequence_ITEM(__pyx_t_5, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 609, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_8);
           #endif
         }
@@ -23177,7 +24144,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 570, __pyx_L1_error)
+            else __PYX_ERR(1, 609, __pyx_L1_error)
           }
           break;
         }
@@ -23186,22 +24153,22 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
       __Pyx_XDECREF_SET(__pyx_v_pos, __pyx_t_8);
       __pyx_t_8 = 0;
 
-      /* "whatshap/core.pyx":571
+      /* "whatshap/core.pyx":610
  * 		c_positions = new vector[unsigned int]()
  * 		for pos in positions:
  * 			c_positions.push_back(pos)             # <<<<<<<<<<<<<<
  * 	cpp.compute_genotypes(readset.thisptr[0], genotypes_vector, gl_vector, c_positions)
  * 	# TODO: Inefficient
  */
-      __pyx_t_9 = __Pyx_PyInt_As_unsigned_int(__pyx_v_pos); if (unlikely((__pyx_t_9 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 571, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyInt_As_unsigned_int(__pyx_v_pos); if (unlikely((__pyx_t_9 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 610, __pyx_L1_error)
       try {
         __pyx_v_c_positions->push_back(__pyx_t_9);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 571, __pyx_L1_error)
+        __PYX_ERR(1, 610, __pyx_L1_error)
       }
 
-      /* "whatshap/core.pyx":570
+      /* "whatshap/core.pyx":609
  * 	if positions is not None:
  * 		c_positions = new vector[unsigned int]()
  * 		for pos in positions:             # <<<<<<<<<<<<<<
@@ -23211,7 +24178,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "whatshap/core.pyx":568
+    /* "whatshap/core.pyx":607
  * 	cdef vector[cpp.GenotypeDistribution]* gl_vector = new vector[cpp.GenotypeDistribution]()
  * 	cdef vector[unsigned int]* c_positions = NULL
  * 	if positions is not None:             # <<<<<<<<<<<<<<
@@ -23220,7 +24187,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
  */
   }
 
-  /* "whatshap/core.pyx":572
+  /* "whatshap/core.pyx":611
  * 		for pos in positions:
  * 			c_positions.push_back(pos)
  * 	cpp.compute_genotypes(readset.thisptr[0], genotypes_vector, gl_vector, c_positions)             # <<<<<<<<<<<<<<
@@ -23231,10 +24198,10 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
     compute_genotypes((__pyx_v_readset->thisptr[0]), __pyx_v_genotypes_vector, __pyx_v_gl_vector, __pyx_v_c_positions);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 572, __pyx_L1_error)
+    __PYX_ERR(1, 611, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":574
+  /* "whatshap/core.pyx":613
  * 	cpp.compute_genotypes(readset.thisptr[0], genotypes_vector, gl_vector, c_positions)
  * 	# TODO: Inefficient
  * 	genotypes = [Genotype(genotype.as_vector()) for genotype in genotypes_vector[0]]             # <<<<<<<<<<<<<<
@@ -23242,7 +24209,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
  * 	gls = [(gl_vector[0][i].probabilityOf(0), gl_vector[0][i].probabilityOf(1), gl_vector[0][i].probabilityOf(2)) for i in range(gl_vector[0].size())]
  */
   { /* enter inner scope */
-    __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 574, __pyx_L1_error)
+    __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 613, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_10 = (__pyx_v_genotypes_vector[0]).begin();
     for (;;) {
@@ -23254,21 +24221,21 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
         __pyx_t_12 = __pyx_8genexpr6__pyx_v_genotype.as_vector();
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 574, __pyx_L1_error)
+        __PYX_ERR(1, 613, __pyx_L1_error)
       }
-      __pyx_t_8 = __pyx_convert_vector_to_py_uint32_t(__pyx_t_12); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 574, __pyx_L1_error)
+      __pyx_t_8 = __pyx_convert_vector_to_py_uint32_t(__pyx_t_12); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 613, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_13 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_8whatshap_4core_Genotype), __pyx_t_8); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 574, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_8whatshap_4core_Genotype), __pyx_t_8); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 613, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_5, (PyObject*)__pyx_t_13))) __PYX_ERR(1, 574, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_5, (PyObject*)__pyx_t_13))) __PYX_ERR(1, 613, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     }
   } /* exit inner scope */
   __pyx_v_genotypes = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "whatshap/core.pyx":576
+  /* "whatshap/core.pyx":615
  * 	genotypes = [Genotype(genotype.as_vector()) for genotype in genotypes_vector[0]]
  * 	#genotypes = list(genotypes_vector[0])
  * 	gls = [(gl_vector[0][i].probabilityOf(0), gl_vector[0][i].probabilityOf(1), gl_vector[0][i].probabilityOf(2)) for i in range(gl_vector[0].size())]             # <<<<<<<<<<<<<<
@@ -23276,7 +24243,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
  * 	del gl_vector
  */
   { /* enter inner scope */
-    __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 576, __pyx_L1_error)
+    __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 615, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_14 = (__pyx_v_gl_vector[0]).size();
     __pyx_t_15 = __pyx_t_14;
@@ -23286,45 +24253,45 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
         __pyx_t_17 = ((__pyx_v_gl_vector[0])[__pyx_8genexpr7__pyx_v_i]).probabilityOf(0);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 576, __pyx_L1_error)
+        __PYX_ERR(1, 615, __pyx_L1_error)
       }
-      __pyx_t_13 = PyFloat_FromDouble(__pyx_t_17); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 576, __pyx_L1_error)
+      __pyx_t_13 = PyFloat_FromDouble(__pyx_t_17); if (unlikely(!__pyx_t_13)) __PYX_ERR(1, 615, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       try {
         __pyx_t_17 = ((__pyx_v_gl_vector[0])[__pyx_8genexpr7__pyx_v_i]).probabilityOf(1);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 576, __pyx_L1_error)
+        __PYX_ERR(1, 615, __pyx_L1_error)
       }
-      __pyx_t_8 = PyFloat_FromDouble(__pyx_t_17); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 576, __pyx_L1_error)
+      __pyx_t_8 = PyFloat_FromDouble(__pyx_t_17); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 615, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       try {
         __pyx_t_17 = ((__pyx_v_gl_vector[0])[__pyx_8genexpr7__pyx_v_i]).probabilityOf(2);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 576, __pyx_L1_error)
+        __PYX_ERR(1, 615, __pyx_L1_error)
       }
-      __pyx_t_18 = PyFloat_FromDouble(__pyx_t_17); if (unlikely(!__pyx_t_18)) __PYX_ERR(1, 576, __pyx_L1_error)
+      __pyx_t_18 = PyFloat_FromDouble(__pyx_t_17); if (unlikely(!__pyx_t_18)) __PYX_ERR(1, 615, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_18);
-      __pyx_t_19 = PyTuple_New(3); if (unlikely(!__pyx_t_19)) __PYX_ERR(1, 576, __pyx_L1_error)
+      __pyx_t_19 = PyTuple_New(3); if (unlikely(!__pyx_t_19)) __PYX_ERR(1, 615, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_19);
       __Pyx_GIVEREF(__pyx_t_13);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_19, 0, __pyx_t_13)) __PYX_ERR(1, 576, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_19, 0, __pyx_t_13)) __PYX_ERR(1, 615, __pyx_L1_error);
       __Pyx_GIVEREF(__pyx_t_8);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_19, 1, __pyx_t_8)) __PYX_ERR(1, 576, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_19, 1, __pyx_t_8)) __PYX_ERR(1, 615, __pyx_L1_error);
       __Pyx_GIVEREF(__pyx_t_18);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_19, 2, __pyx_t_18)) __PYX_ERR(1, 576, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_19, 2, __pyx_t_18)) __PYX_ERR(1, 615, __pyx_L1_error);
       __pyx_t_13 = 0;
       __pyx_t_8 = 0;
       __pyx_t_18 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_5, (PyObject*)__pyx_t_19))) __PYX_ERR(1, 576, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_5, (PyObject*)__pyx_t_19))) __PYX_ERR(1, 615, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
     }
   } /* exit inner scope */
   __pyx_v_gls = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "whatshap/core.pyx":577
+  /* "whatshap/core.pyx":616
  * 	#genotypes = list(genotypes_vector[0])
  * 	gls = [(gl_vector[0][i].probabilityOf(0), gl_vector[0][i].probabilityOf(1), gl_vector[0][i].probabilityOf(2)) for i in range(gl_vector[0].size())]
  * 	del genotypes_vector             # <<<<<<<<<<<<<<
@@ -23333,7 +24300,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
  */
   delete __pyx_v_genotypes_vector;
 
-  /* "whatshap/core.pyx":578
+  /* "whatshap/core.pyx":617
  * 	gls = [(gl_vector[0][i].probabilityOf(0), gl_vector[0][i].probabilityOf(1), gl_vector[0][i].probabilityOf(2)) for i in range(gl_vector[0].size())]
  * 	del genotypes_vector
  * 	del gl_vector             # <<<<<<<<<<<<<<
@@ -23342,7 +24309,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
  */
   delete __pyx_v_gl_vector;
 
-  /* "whatshap/core.pyx":579
+  /* "whatshap/core.pyx":618
  * 	del genotypes_vector
  * 	del gl_vector
  * 	return genotypes, gls             # <<<<<<<<<<<<<<
@@ -23350,19 +24317,19 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 579, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 618, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_INCREF(__pyx_v_genotypes);
   __Pyx_GIVEREF(__pyx_v_genotypes);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_genotypes)) __PYX_ERR(1, 579, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_genotypes)) __PYX_ERR(1, 618, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_gls);
   __Pyx_GIVEREF(__pyx_v_gls);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_v_gls)) __PYX_ERR(1, 579, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_v_gls)) __PYX_ERR(1, 618, __pyx_L1_error);
   __pyx_r = __pyx_t_5;
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":564
+  /* "whatshap/core.pyx":603
  * 
  * 
  * def compute_genotypes(ReadSet readset, positions = None):             # <<<<<<<<<<<<<<
@@ -23388,7 +24355,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6compute_genotypes(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":583
+/* "whatshap/core.pyx":622
  * 
  * cdef class HapChatCore:
  * 	def __cinit__(self, ReadSet readset):             # <<<<<<<<<<<<<<
@@ -23432,12 +24399,12 @@ static int __pyx_pw_8whatshap_4core_11HapChatCore_1__cinit__(PyObject *__pyx_v_s
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 583, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 622, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 583, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 622, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
@@ -23448,7 +24415,7 @@ static int __pyx_pw_8whatshap_4core_11HapChatCore_1__cinit__(PyObject *__pyx_v_s
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 583, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 622, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -23462,7 +24429,7 @@ static int __pyx_pw_8whatshap_4core_11HapChatCore_1__cinit__(PyObject *__pyx_v_s
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 583, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 622, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_11HapChatCore___cinit__(((struct __pyx_obj_8whatshap_4core_HapChatCore *)__pyx_v_self), __pyx_v_readset);
 
   /* function exit code */
@@ -23483,7 +24450,7 @@ static int __pyx_pw_8whatshap_4core_11HapChatCore_1__cinit__(PyObject *__pyx_v_s
 static int __pyx_pf_8whatshap_4core_11HapChatCore___cinit__(struct __pyx_obj_8whatshap_4core_HapChatCore *__pyx_v_self, struct __pyx_obj_8whatshap_4core_ReadSet *__pyx_v_readset) {
   int __pyx_r;
 
-  /* "whatshap/core.pyx":584
+  /* "whatshap/core.pyx":623
  * cdef class HapChatCore:
  * 	def __cinit__(self, ReadSet readset):
  * 		self.thisptr = new cpp.HapChatCore(readset.thisptr)             # <<<<<<<<<<<<<<
@@ -23492,7 +24459,7 @@ static int __pyx_pf_8whatshap_4core_11HapChatCore___cinit__(struct __pyx_obj_8wh
  */
   __pyx_v_self->thisptr = new HapChatCore(__pyx_v_readset->thisptr);
 
-  /* "whatshap/core.pyx":583
+  /* "whatshap/core.pyx":622
  * 
  * cdef class HapChatCore:
  * 	def __cinit__(self, ReadSet readset):             # <<<<<<<<<<<<<<
@@ -23505,7 +24472,7 @@ static int __pyx_pf_8whatshap_4core_11HapChatCore___cinit__(struct __pyx_obj_8wh
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":585
+/* "whatshap/core.pyx":624
  * 	def __cinit__(self, ReadSet readset):
  * 		self.thisptr = new cpp.HapChatCore(readset.thisptr)
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -23528,7 +24495,7 @@ static void __pyx_pw_8whatshap_4core_11HapChatCore_3__dealloc__(PyObject *__pyx_
 
 static void __pyx_pf_8whatshap_4core_11HapChatCore_2__dealloc__(struct __pyx_obj_8whatshap_4core_HapChatCore *__pyx_v_self) {
 
-  /* "whatshap/core.pyx":586
+  /* "whatshap/core.pyx":625
  * 		self.thisptr = new cpp.HapChatCore(readset.thisptr)
  * 	def __dealloc__(self):
  * 		del self.thisptr             # <<<<<<<<<<<<<<
@@ -23537,7 +24504,7 @@ static void __pyx_pf_8whatshap_4core_11HapChatCore_2__dealloc__(struct __pyx_obj
  */
   delete __pyx_v_self->thisptr;
 
-  /* "whatshap/core.pyx":585
+  /* "whatshap/core.pyx":624
  * 	def __cinit__(self, ReadSet readset):
  * 		self.thisptr = new cpp.HapChatCore(readset.thisptr)
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -23548,7 +24515,7 @@ static void __pyx_pf_8whatshap_4core_11HapChatCore_2__dealloc__(struct __pyx_obj
   /* function exit code */
 }
 
-/* "whatshap/core.pyx":587
+/* "whatshap/core.pyx":626
  * 	def __dealloc__(self):
  * 		del self.thisptr
  * 	def get_length(self):             # <<<<<<<<<<<<<<
@@ -23606,7 +24573,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_4get_length(struct __pyx
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_length", 1);
 
-  /* "whatshap/core.pyx":588
+  /* "whatshap/core.pyx":627
  * 		del self.thisptr
  * 	def get_length(self):
  * 		return self.thisptr.get_length()             # <<<<<<<<<<<<<<
@@ -23614,13 +24581,13 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_4get_length(struct __pyx
  * 		cdef vector[cpp.ReadSet*]* read_sets = new vector[cpp.ReadSet*]()
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->thisptr->get_length()); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 588, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->thisptr->get_length()); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 627, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":587
+  /* "whatshap/core.pyx":626
  * 	def __dealloc__(self):
  * 		del self.thisptr
  * 	def get_length(self):             # <<<<<<<<<<<<<<
@@ -23639,7 +24606,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_4get_length(struct __pyx
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":589
+/* "whatshap/core.pyx":628
  * 	def get_length(self):
  * 		return self.thisptr.get_length()
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
@@ -23710,7 +24677,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_super_reads", 1);
 
-  /* "whatshap/core.pyx":590
+  /* "whatshap/core.pyx":629
  * 		return self.thisptr.get_length()
  * 	def get_super_reads(self):
  * 		cdef vector[cpp.ReadSet*]* read_sets = new vector[cpp.ReadSet*]()             # <<<<<<<<<<<<<<
@@ -23721,11 +24688,11 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
     __pyx_t_1 = new std::vector<ReadSet *> ();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 590, __pyx_L1_error)
+    __PYX_ERR(1, 629, __pyx_L1_error)
   }
   __pyx_v_read_sets = __pyx_t_1;
 
-  /* "whatshap/core.pyx":591
+  /* "whatshap/core.pyx":630
  * 	def get_super_reads(self):
  * 		cdef vector[cpp.ReadSet*]* read_sets = new vector[cpp.ReadSet*]()
  * 		leng=self.thisptr.get_length()             # <<<<<<<<<<<<<<
@@ -23734,7 +24701,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
  */
   __pyx_v_leng = __pyx_v_self->thisptr->get_length();
 
-  /* "whatshap/core.pyx":592
+  /* "whatshap/core.pyx":631
  * 		cdef vector[cpp.ReadSet*]* read_sets = new vector[cpp.ReadSet*]()
  * 		leng=self.thisptr.get_length()
  * 		for i in range(leng):             # <<<<<<<<<<<<<<
@@ -23746,7 +24713,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
   for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "whatshap/core.pyx":593
+    /* "whatshap/core.pyx":632
  * 		leng=self.thisptr.get_length()
  * 		for i in range(leng):
  * 			read_sets.push_back(new cpp.ReadSet())             # <<<<<<<<<<<<<<
@@ -23757,17 +24724,17 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
       __pyx_t_5 = new ReadSet();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 593, __pyx_L1_error)
+      __PYX_ERR(1, 632, __pyx_L1_error)
     }
     try {
       __pyx_v_read_sets->push_back(__pyx_t_5);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 593, __pyx_L1_error)
+      __PYX_ERR(1, 632, __pyx_L1_error)
     }
   }
 
-  /* "whatshap/core.pyx":594
+  /* "whatshap/core.pyx":633
  * 		for i in range(leng):
  * 			read_sets.push_back(new cpp.ReadSet())
  * 		self.thisptr.get_super_reads(read_sets)             # <<<<<<<<<<<<<<
@@ -23776,19 +24743,19 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
  */
   __pyx_v_self->thisptr->get_super_reads(__pyx_v_read_sets);
 
-  /* "whatshap/core.pyx":596
+  /* "whatshap/core.pyx":635
  * 		self.thisptr.get_super_reads(read_sets)
  * 
  * 		results = []             # <<<<<<<<<<<<<<
  * 		for i in range(read_sets.size()):
  * 			rs = ReadSet()
  */
-  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 596, __pyx_L1_error)
+  __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 635, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_v_results = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "whatshap/core.pyx":597
+  /* "whatshap/core.pyx":636
  * 
  * 		results = []
  * 		for i in range(read_sets.size()):             # <<<<<<<<<<<<<<
@@ -23800,19 +24767,19 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
   for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "whatshap/core.pyx":598
+    /* "whatshap/core.pyx":637
  * 		results = []
  * 		for i in range(read_sets.size()):
  * 			rs = ReadSet()             # <<<<<<<<<<<<<<
  * 			del rs.thisptr
  * 			rs.thisptr = deref(read_sets)[i]
  */
-    __pyx_t_6 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet)); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 598, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet)); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 637, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_XDECREF_SET(__pyx_v_rs, ((struct __pyx_obj_8whatshap_4core_ReadSet *)__pyx_t_6));
     __pyx_t_6 = 0;
 
-    /* "whatshap/core.pyx":599
+    /* "whatshap/core.pyx":638
  * 		for i in range(read_sets.size()):
  * 			rs = ReadSet()
  * 			del rs.thisptr             # <<<<<<<<<<<<<<
@@ -23821,7 +24788,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
  */
     delete __pyx_v_rs->thisptr;
 
-    /* "whatshap/core.pyx":600
+    /* "whatshap/core.pyx":639
  * 			rs = ReadSet()
  * 			del rs.thisptr
  * 			rs.thisptr = deref(read_sets)[i]             # <<<<<<<<<<<<<<
@@ -23830,17 +24797,17 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
  */
     __pyx_v_rs->thisptr = ((*__pyx_v_read_sets)[__pyx_v_i]);
 
-    /* "whatshap/core.pyx":601
+    /* "whatshap/core.pyx":640
  * 			del rs.thisptr
  * 			rs.thisptr = deref(read_sets)[i]
  * 			results.append(rs)             # <<<<<<<<<<<<<<
  * 
  * 		return results, None
  */
-    __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_results, ((PyObject *)__pyx_v_rs)); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(1, 601, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_results, ((PyObject *)__pyx_v_rs)); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(1, 640, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":603
+  /* "whatshap/core.pyx":642
  * 			results.append(rs)
  * 
  * 		return results, None             # <<<<<<<<<<<<<<
@@ -23848,19 +24815,19 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
  * 		return self.thisptr.get_optimal_cost()
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 603, __pyx_L1_error)
+  __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 642, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_INCREF(__pyx_v_results);
   __Pyx_GIVEREF(__pyx_v_results);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_v_results)) __PYX_ERR(1, 603, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_v_results)) __PYX_ERR(1, 642, __pyx_L1_error);
   __Pyx_INCREF(Py_None);
   __Pyx_GIVEREF(Py_None);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 1, Py_None)) __PYX_ERR(1, 603, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 1, Py_None)) __PYX_ERR(1, 642, __pyx_L1_error);
   __pyx_r = __pyx_t_6;
   __pyx_t_6 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":589
+  /* "whatshap/core.pyx":628
  * 	def get_length(self):
  * 		return self.thisptr.get_length()
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
@@ -23881,7 +24848,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_6get_super_reads(struct 
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":604
+/* "whatshap/core.pyx":643
  * 
  * 		return results, None
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
@@ -23939,7 +24906,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_8get_optimal_cost(struct
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_optimal_cost", 1);
 
-  /* "whatshap/core.pyx":605
+  /* "whatshap/core.pyx":644
  * 		return results, None
  * 	def get_optimal_cost(self):
  * 		return self.thisptr.get_optimal_cost()             # <<<<<<<<<<<<<<
@@ -23947,13 +24914,13 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_8get_optimal_cost(struct
  * 		cdef vector[bool]* p = self.thisptr.get_optimal_partitioning()
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->thisptr->get_optimal_cost()); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 605, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->thisptr->get_optimal_cost()); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 644, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":604
+  /* "whatshap/core.pyx":643
  * 
  * 		return results, None
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
@@ -23972,7 +24939,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_8get_optimal_cost(struct
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":606
+/* "whatshap/core.pyx":645
  * 	def get_optimal_cost(self):
  * 		return self.thisptr.get_optimal_cost()
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
@@ -24035,7 +25002,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_10get_optimal_partitioni
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_optimal_partitioning", 1);
 
-  /* "whatshap/core.pyx":607
+  /* "whatshap/core.pyx":646
  * 		return self.thisptr.get_optimal_cost()
  * 	def get_optimal_partitioning(self):
  * 		cdef vector[bool]* p = self.thisptr.get_optimal_partitioning()             # <<<<<<<<<<<<<<
@@ -24044,7 +25011,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_10get_optimal_partitioni
  */
   __pyx_v_p = __pyx_v_self->thisptr->get_optimal_partitioning();
 
-  /* "whatshap/core.pyx":608
+  /* "whatshap/core.pyx":647
  * 	def get_optimal_partitioning(self):
  * 		cdef vector[bool]* p = self.thisptr.get_optimal_partitioning()
  * 		result = ['*' for x in p[0]]             # <<<<<<<<<<<<<<
@@ -24052,7 +25019,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_10get_optimal_partitioni
  * 		return result
  */
   { /* enter inner scope */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 608, __pyx_L1_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 647, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = (__pyx_v_p[0]).begin();
     for (;;) {
@@ -24060,13 +25027,13 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_10get_optimal_partitioni
       __pyx_t_3 = *__pyx_t_2;
       ++__pyx_t_2;
       __pyx_8genexpr8__pyx_v_x = __pyx_t_3;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_kp_u__6))) __PYX_ERR(1, 608, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_kp_u__6))) __PYX_ERR(1, 647, __pyx_L1_error)
     }
   } /* exit inner scope */
   __pyx_v_result = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "whatshap/core.pyx":609
+  /* "whatshap/core.pyx":648
  * 		cdef vector[bool]* p = self.thisptr.get_optimal_partitioning()
  * 		result = ['*' for x in p[0]]
  * 		del p             # <<<<<<<<<<<<<<
@@ -24075,7 +25042,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_10get_optimal_partitioni
  */
   delete __pyx_v_p;
 
-  /* "whatshap/core.pyx":610
+  /* "whatshap/core.pyx":649
  * 		result = ['*' for x in p[0]]
  * 		del p
  * 		return result             # <<<<<<<<<<<<<<
@@ -24087,7 +25054,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_10get_optimal_partitioni
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":606
+  /* "whatshap/core.pyx":645
  * 	def get_optimal_cost(self):
  * 		return self.thisptr.get_optimal_cost()
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
@@ -24321,7 +25288,7 @@ static PyObject *__pyx_pf_8whatshap_4core_11HapChatCore_14__setstate_cython__(CY
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":613
+/* "whatshap/core.pyx":652
  * 
  * cdef class Caller:
  * 	def __cinit__(self, string reference, int k, int window ):             # <<<<<<<<<<<<<<
@@ -24371,7 +25338,7 @@ static int __pyx_pw_8whatshap_4core_6Caller_1__cinit__(PyObject *__pyx_v_self, P
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 613, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 652, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -24379,9 +25346,9 @@ static int __pyx_pw_8whatshap_4core_6Caller_1__cinit__(PyObject *__pyx_v_self, P
           (void)__Pyx_Arg_NewRef_VARARGS(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 613, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 652, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 3, 3, 1); __PYX_ERR(1, 613, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 3, 3, 1); __PYX_ERR(1, 652, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -24389,14 +25356,14 @@ static int __pyx_pw_8whatshap_4core_6Caller_1__cinit__(PyObject *__pyx_v_self, P
           (void)__Pyx_Arg_NewRef_VARARGS(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 613, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 652, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 3, 3, 2); __PYX_ERR(1, 613, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 3, 3, 2); __PYX_ERR(1, 652, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 613, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 652, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
@@ -24405,13 +25372,13 @@ static int __pyx_pw_8whatshap_4core_6Caller_1__cinit__(PyObject *__pyx_v_self, P
       values[1] = __Pyx_Arg_VARARGS(__pyx_args, 1);
       values[2] = __Pyx_Arg_VARARGS(__pyx_args, 2);
     }
-    __pyx_v_reference = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 613, __pyx_L3_error)
-    __pyx_v_k = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_k == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 613, __pyx_L3_error)
-    __pyx_v_window = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_window == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 613, __pyx_L3_error)
+    __pyx_v_reference = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 652, __pyx_L3_error)
+    __pyx_v_k = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_k == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 652, __pyx_L3_error)
+    __pyx_v_window = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_window == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 652, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 613, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 652, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -24445,7 +25412,7 @@ static int __pyx_pf_8whatshap_4core_6Caller___cinit__(struct __pyx_obj_8whatshap
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "whatshap/core.pyx":614
+  /* "whatshap/core.pyx":653
  * cdef class Caller:
  * 	def __cinit__(self, string reference, int k, int window ):
  * 		self.thisptr = new cpp.Caller(reference, k, window)             # <<<<<<<<<<<<<<
@@ -24456,11 +25423,11 @@ static int __pyx_pf_8whatshap_4core_6Caller___cinit__(struct __pyx_obj_8whatshap
     __pyx_t_1 = new Caller(__pyx_v_reference, __pyx_v_k, __pyx_v_window);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 614, __pyx_L1_error)
+    __PYX_ERR(1, 653, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_1;
 
-  /* "whatshap/core.pyx":613
+  /* "whatshap/core.pyx":652
  * 
  * cdef class Caller:
  * 	def __cinit__(self, string reference, int k, int window ):             # <<<<<<<<<<<<<<
@@ -24478,7 +25445,7 @@ static int __pyx_pf_8whatshap_4core_6Caller___cinit__(struct __pyx_obj_8whatshap
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":616
+/* "whatshap/core.pyx":655
  * 		self.thisptr = new cpp.Caller(reference, k, window)
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -24501,7 +25468,7 @@ static void __pyx_pw_8whatshap_4core_6Caller_3__dealloc__(PyObject *__pyx_v_self
 
 static void __pyx_pf_8whatshap_4core_6Caller_2__dealloc__(struct __pyx_obj_8whatshap_4core_Caller *__pyx_v_self) {
 
-  /* "whatshap/core.pyx":617
+  /* "whatshap/core.pyx":656
  * 
  * 	def __dealloc__(self):
  * 		del self.thisptr             # <<<<<<<<<<<<<<
@@ -24510,7 +25477,7 @@ static void __pyx_pf_8whatshap_4core_6Caller_2__dealloc__(struct __pyx_obj_8what
  */
   delete __pyx_v_self->thisptr;
 
-  /* "whatshap/core.pyx":616
+  /* "whatshap/core.pyx":655
  * 		self.thisptr = new cpp.Caller(reference, k, window)
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -24521,7 +25488,7 @@ static void __pyx_pf_8whatshap_4core_6Caller_2__dealloc__(struct __pyx_obj_8what
   /* function exit code */
 }
 
-/* "whatshap/core.pyx":619
+/* "whatshap/core.pyx":658
  * 		del self.thisptr
  * 
  * 	def all_variants(self, vector[pair[int,int]] variants_list):             # <<<<<<<<<<<<<<
@@ -24582,23 +25549,23 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 619, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 658, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "all_variants") < 0)) __PYX_ERR(1, 619, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "all_variants") < 0)) __PYX_ERR(1, 658, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
     }
-    __pyx_v_variants_list = __pyx_convert_vector_from_py_std_3a__3a_pair_3c_int_2c_int_3e___(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 619, __pyx_L3_error)
+    __pyx_v_variants_list = __pyx_convert_vector_from_py_std_3a__3a_pair_3c_int_2c_int_3e___(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 658, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("all_variants", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 619, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("all_variants", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 658, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -24637,7 +25604,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_4all_variants(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("all_variants", 1);
 
-  /* "whatshap/core.pyx":621
+  /* "whatshap/core.pyx":660
  * 	def all_variants(self, vector[pair[int,int]] variants_list):
  * 		cdef deque[pair[int,int]] v_list
  * 		for v in variants_list:             # <<<<<<<<<<<<<<
@@ -24651,7 +25618,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_4all_variants(struct __pyx_obj
     ++__pyx_t_1;
     __pyx_v_v = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
 
-    /* "whatshap/core.pyx":622
+    /* "whatshap/core.pyx":661
  * 		cdef deque[pair[int,int]] v_list
  * 		for v in variants_list:
  * 			v_list.push_back(v)             # <<<<<<<<<<<<<<
@@ -24662,10 +25629,10 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_4all_variants(struct __pyx_obj
       __pyx_v_v_list.push_back(__pyx_v_v);
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 622, __pyx_L1_error)
+      __PYX_ERR(1, 661, __pyx_L1_error)
     }
 
-    /* "whatshap/core.pyx":621
+    /* "whatshap/core.pyx":660
  * 	def all_variants(self, vector[pair[int,int]] variants_list):
  * 		cdef deque[pair[int,int]] v_list
  * 		for v in variants_list:             # <<<<<<<<<<<<<<
@@ -24674,7 +25641,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_4all_variants(struct __pyx_obj
  */
   }
 
-  /* "whatshap/core.pyx":623
+  /* "whatshap/core.pyx":662
  * 		for v in variants_list:
  * 			v_list.push_back(v)
  * 		self.thisptr.all_variants(v_list)             # <<<<<<<<<<<<<<
@@ -24685,10 +25652,10 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_4all_variants(struct __pyx_obj
     __pyx_v_self->thisptr->all_variants(__pyx_v_v_list);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 623, __pyx_L1_error)
+    __PYX_ERR(1, 662, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":619
+  /* "whatshap/core.pyx":658
  * 		del self.thisptr
  * 
  * 	def all_variants(self, vector[pair[int,int]] variants_list):             # <<<<<<<<<<<<<<
@@ -24708,7 +25675,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_4all_variants(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":625
+/* "whatshap/core.pyx":664
  * 		self.thisptr.all_variants(v_list)
  * 
  * 	def add_read(self, int bam_alignment_pos, vector[vector[int]]  bam_alignment_cigartuples, string bam_alignment_query, string outfile):             # <<<<<<<<<<<<<<
@@ -24778,7 +25745,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 625, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 664, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -24786,9 +25753,9 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 625, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 664, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("add_read", 1, 4, 4, 1); __PYX_ERR(1, 625, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_read", 1, 4, 4, 1); __PYX_ERR(1, 664, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -24796,9 +25763,9 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 625, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 664, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("add_read", 1, 4, 4, 2); __PYX_ERR(1, 625, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_read", 1, 4, 4, 2); __PYX_ERR(1, 664, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
@@ -24806,14 +25773,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[3]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 625, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 664, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("add_read", 1, 4, 4, 3); __PYX_ERR(1, 625, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("add_read", 1, 4, 4, 3); __PYX_ERR(1, 664, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_read") < 0)) __PYX_ERR(1, 625, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "add_read") < 0)) __PYX_ERR(1, 664, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 4)) {
       goto __pyx_L5_argtuple_error;
@@ -24823,14 +25790,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
       values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
     }
-    __pyx_v_bam_alignment_pos = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_bam_alignment_pos == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 625, __pyx_L3_error)
-    __pyx_v_bam_alignment_cigartuples = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_int_3e___(values[1]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 625, __pyx_L3_error)
-    __pyx_v_bam_alignment_query = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(values[2]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 625, __pyx_L3_error)
-    __pyx_v_outfile = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(values[3]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 625, __pyx_L3_error)
+    __pyx_v_bam_alignment_pos = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_bam_alignment_pos == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 664, __pyx_L3_error)
+    __pyx_v_bam_alignment_cigartuples = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_int_3e___(values[1]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 664, __pyx_L3_error)
+    __pyx_v_bam_alignment_query = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(values[2]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 664, __pyx_L3_error)
+    __pyx_v_outfile = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(values[3]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 664, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("add_read", 1, 4, 4, __pyx_nargs); __PYX_ERR(1, 625, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("add_read", 1, 4, 4, __pyx_nargs); __PYX_ERR(1, 664, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -24865,7 +25832,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_6add_read(struct __pyx_obj_8wh
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("add_read", 1);
 
-  /* "whatshap/core.pyx":626
+  /* "whatshap/core.pyx":665
  * 
  * 	def add_read(self, int bam_alignment_pos, vector[vector[int]]  bam_alignment_cigartuples, string bam_alignment_query, string outfile):
  * 		self.thisptr.add_read(bam_alignment_pos, bam_alignment_cigartuples, bam_alignment_query, outfile)             # <<<<<<<<<<<<<<
@@ -24876,10 +25843,10 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_6add_read(struct __pyx_obj_8wh
     __pyx_v_self->thisptr->add_read(__pyx_v_bam_alignment_pos, __pyx_v_bam_alignment_cigartuples, __pyx_v_bam_alignment_query, __pyx_v_outfile);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 626, __pyx_L1_error)
+    __PYX_ERR(1, 665, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":625
+  /* "whatshap/core.pyx":664
  * 		self.thisptr.all_variants(v_list)
  * 
  * 	def add_read(self, int bam_alignment_pos, vector[vector[int]]  bam_alignment_cigartuples, string bam_alignment_query, string outfile):             # <<<<<<<<<<<<<<
@@ -24899,7 +25866,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_6add_read(struct __pyx_obj_8wh
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":628
+/* "whatshap/core.pyx":667
  * 		self.thisptr.add_read(bam_alignment_pos, bam_alignment_cigartuples, bam_alignment_query, outfile)
  * 
  * 	def final_pop(self, string outfile):             # <<<<<<<<<<<<<<
@@ -24960,23 +25927,23 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
           (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 628, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 667, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "final_pop") < 0)) __PYX_ERR(1, 628, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "final_pop") < 0)) __PYX_ERR(1, 667, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
     }
-    __pyx_v_outfile = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 628, __pyx_L3_error)
+    __pyx_v_outfile = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(values[0]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 667, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("final_pop", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 628, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("final_pop", 1, 1, 1, __pyx_nargs); __PYX_ERR(1, 667, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -25011,7 +25978,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_8final_pop(struct __pyx_obj_8w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("final_pop", 1);
 
-  /* "whatshap/core.pyx":629
+  /* "whatshap/core.pyx":668
  * 
  * 	def final_pop(self, string outfile):
  * 		self.thisptr.final_pop(outfile)             # <<<<<<<<<<<<<<
@@ -25022,10 +25989,10 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_8final_pop(struct __pyx_obj_8w
     __pyx_v_self->thisptr->final_pop(__pyx_v_outfile);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 629, __pyx_L1_error)
+    __PYX_ERR(1, 668, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":628
+  /* "whatshap/core.pyx":667
  * 		self.thisptr.add_read(bam_alignment_pos, bam_alignment_cigartuples, bam_alignment_query, outfile)
  * 
  * 	def final_pop(self, string outfile):             # <<<<<<<<<<<<<<
@@ -25045,7 +26012,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_8final_pop(struct __pyx_obj_8w
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":631
+/* "whatshap/core.pyx":670
  * 		self.thisptr.final_pop(outfile)
  * 
  * 	def finish(self):             # <<<<<<<<<<<<<<
@@ -25320,7 +26287,7 @@ static PyObject *__pyx_pf_8whatshap_4core_6Caller_14__setstate_cython__(CYTHON_U
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":636
+/* "whatshap/core.pyx":675
  * 
  * cdef class PedMecHeuristic:
  * 	def __cinit__(self, ReadSet readset, vector[unsigned int] recombcost, Pedigree pedigree, int row_limit = 256, bool distrust_genotypes = False, positions = None, bool allow_mutations = True, int verbosity = 0):             # <<<<<<<<<<<<<<
@@ -25386,7 +26353,7 @@ static int __pyx_pw_8whatshap_4core_15PedMecHeuristic_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[0]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
@@ -25394,9 +26361,9 @@ static int __pyx_pw_8whatshap_4core_15PedMecHeuristic_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[1]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 8, 1); __PYX_ERR(1, 636, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 8, 1); __PYX_ERR(1, 675, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -25404,49 +26371,49 @@ static int __pyx_pw_8whatshap_4core_15PedMecHeuristic_1__cinit__(PyObject *__pyx
           (void)__Pyx_Arg_NewRef_VARARGS(values[2]);
           kw_args--;
         }
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 8, 2); __PYX_ERR(1, 636, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 8, 2); __PYX_ERR(1, 675, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_row_limit);
           if (value) { values[3] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_distrust_genotypes);
           if (value) { values[4] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_positions);
           if (value) { values[5] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_allow_mutations);
           if (value) { values[6] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_VARARGS(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_verbosity);
           if (value) { values[7] = __Pyx_Arg_NewRef_VARARGS(value); kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 636, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__cinit__") < 0)) __PYX_ERR(1, 675, __pyx_L3_error)
       }
     } else {
       switch (__pyx_nargs) {
@@ -25468,33 +26435,33 @@ static int __pyx_pw_8whatshap_4core_15PedMecHeuristic_1__cinit__(PyObject *__pyx
       }
     }
     __pyx_v_readset = ((struct __pyx_obj_8whatshap_4core_ReadSet *)values[0]);
-    __pyx_v_recombcost = __pyx_convert_vector_from_py_unsigned_int(values[1]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+    __pyx_v_recombcost = __pyx_convert_vector_from_py_unsigned_int(values[1]); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
     __pyx_v_pedigree = ((struct __pyx_obj_8whatshap_4core_Pedigree *)values[2]);
     if (values[3]) {
-      __pyx_v_row_limit = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_row_limit == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+      __pyx_v_row_limit = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_row_limit == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
     } else {
       __pyx_v_row_limit = ((int)0x100);
     }
     if (values[4]) {
-      __pyx_v_distrust_genotypes = __Pyx_PyObject_IsTrue(values[4]); if (unlikely((__pyx_v_distrust_genotypes == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+      __pyx_v_distrust_genotypes = __Pyx_PyObject_IsTrue(values[4]); if (unlikely((__pyx_v_distrust_genotypes == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
     } else {
       __pyx_v_distrust_genotypes = ((bool)0);
     }
     __pyx_v_positions = values[5];
     if (values[6]) {
-      __pyx_v_allow_mutations = __Pyx_PyObject_IsTrue(values[6]); if (unlikely((__pyx_v_allow_mutations == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+      __pyx_v_allow_mutations = __Pyx_PyObject_IsTrue(values[6]); if (unlikely((__pyx_v_allow_mutations == ((bool)-1)) && PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
     } else {
       __pyx_v_allow_mutations = ((bool)1);
     }
     if (values[7]) {
-      __pyx_v_verbosity = __Pyx_PyInt_As_int(values[7]); if (unlikely((__pyx_v_verbosity == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 636, __pyx_L3_error)
+      __pyx_v_verbosity = __Pyx_PyInt_As_int(values[7]); if (unlikely((__pyx_v_verbosity == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 675, __pyx_L3_error)
     } else {
       __pyx_v_verbosity = ((int)0);
     }
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 8, __pyx_nargs); __PYX_ERR(1, 636, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 8, __pyx_nargs); __PYX_ERR(1, 675, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -25508,8 +26475,8 @@ static int __pyx_pw_8whatshap_4core_15PedMecHeuristic_1__cinit__(PyObject *__pyx
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 636, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pedigree), __pyx_ptype_8whatshap_4core_Pedigree, 1, "pedigree", 0))) __PYX_ERR(1, 636, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_readset), __pyx_ptype_8whatshap_4core_ReadSet, 1, "readset", 0))) __PYX_ERR(1, 675, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pedigree), __pyx_ptype_8whatshap_4core_Pedigree, 1, "pedigree", 0))) __PYX_ERR(1, 675, __pyx_L1_error)
   __pyx_r = __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(((struct __pyx_obj_8whatshap_4core_PedMecHeuristic *)__pyx_v_self), __pyx_v_readset, __PYX_STD_MOVE_IF_SUPPORTED(__pyx_v_recombcost), __pyx_v_pedigree, __pyx_v_row_limit, __pyx_v_distrust_genotypes, __pyx_v_positions, __pyx_v_allow_mutations, __pyx_v_verbosity);
 
   /* function exit code */
@@ -25545,7 +26512,7 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__cinit__", 1);
 
-  /* "whatshap/core.pyx":641
+  /* "whatshap/core.pyx":680
  * 		in the read set must also be sorted (by position of their left-most variant).
  * 		"""
  * 		cdef vector[unsigned int]* c_positions = NULL             # <<<<<<<<<<<<<<
@@ -25554,7 +26521,7 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
  */
   __pyx_v_c_positions = NULL;
 
-  /* "whatshap/core.pyx":642
+  /* "whatshap/core.pyx":681
  * 		"""
  * 		cdef vector[unsigned int]* c_positions = NULL
  * 		if positions is not None:             # <<<<<<<<<<<<<<
@@ -25564,7 +26531,7 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
   __pyx_t_1 = (__pyx_v_positions != Py_None);
   if (__pyx_t_1) {
 
-    /* "whatshap/core.pyx":643
+    /* "whatshap/core.pyx":682
  * 		cdef vector[unsigned int]* c_positions = NULL
  * 		if positions is not None:
  * 			c_positions = new vector[unsigned int]()             # <<<<<<<<<<<<<<
@@ -25575,11 +26542,11 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
       __pyx_t_2 = new std::vector<unsigned int> ();
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(1, 643, __pyx_L1_error)
+      __PYX_ERR(1, 682, __pyx_L1_error)
     }
     __pyx_v_c_positions = __pyx_t_2;
 
-    /* "whatshap/core.pyx":644
+    /* "whatshap/core.pyx":683
  * 		if positions is not None:
  * 			c_positions = new vector[unsigned int]()
  * 			for pos in positions:             # <<<<<<<<<<<<<<
@@ -25591,9 +26558,9 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
       __pyx_t_4 = 0;
       __pyx_t_5 = NULL;
     } else {
-      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_positions); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 644, __pyx_L1_error)
+      __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_positions); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 683, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 644, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 683, __pyx_L1_error)
     }
     for (;;) {
       if (likely(!__pyx_t_5)) {
@@ -25601,28 +26568,28 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 644, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 683, __pyx_L1_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 644, __pyx_L1_error)
+          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 683, __pyx_L1_error)
           #else
-          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 644, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 683, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         } else {
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_3);
             #if !CYTHON_ASSUME_SAFE_MACROS
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 644, __pyx_L1_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 683, __pyx_L1_error)
             #endif
             if (__pyx_t_4 >= __pyx_temp) break;
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 644, __pyx_L1_error)
+          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely((0 < 0))) __PYX_ERR(1, 683, __pyx_L1_error)
           #else
-          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 644, __pyx_L1_error)
+          __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 683, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         }
@@ -25632,7 +26599,7 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 644, __pyx_L1_error)
+            else __PYX_ERR(1, 683, __pyx_L1_error)
           }
           break;
         }
@@ -25641,22 +26608,22 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
       __Pyx_XDECREF_SET(__pyx_v_pos, __pyx_t_6);
       __pyx_t_6 = 0;
 
-      /* "whatshap/core.pyx":645
+      /* "whatshap/core.pyx":684
  * 			c_positions = new vector[unsigned int]()
  * 			for pos in positions:
  * 				c_positions.push_back(pos)             # <<<<<<<<<<<<<<
  * 		self.thisptr = new cpp.PedMecHeuristic(readset.thisptr, recombcost, pedigree.thisptr, distrust_genotypes, c_positions, row_limit, allow_mutations, verbosity)
  * 		self.pedigree = pedigree
  */
-      __pyx_t_7 = __Pyx_PyInt_As_unsigned_int(__pyx_v_pos); if (unlikely((__pyx_t_7 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 645, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_unsigned_int(__pyx_v_pos); if (unlikely((__pyx_t_7 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(1, 684, __pyx_L1_error)
       try {
         __pyx_v_c_positions->push_back(__pyx_t_7);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(1, 645, __pyx_L1_error)
+        __PYX_ERR(1, 684, __pyx_L1_error)
       }
 
-      /* "whatshap/core.pyx":644
+      /* "whatshap/core.pyx":683
  * 		if positions is not None:
  * 			c_positions = new vector[unsigned int]()
  * 			for pos in positions:             # <<<<<<<<<<<<<<
@@ -25666,7 +26633,7 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "whatshap/core.pyx":642
+    /* "whatshap/core.pyx":681
  * 		"""
  * 		cdef vector[unsigned int]* c_positions = NULL
  * 		if positions is not None:             # <<<<<<<<<<<<<<
@@ -25675,7 +26642,7 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
  */
   }
 
-  /* "whatshap/core.pyx":646
+  /* "whatshap/core.pyx":685
  * 			for pos in positions:
  * 				c_positions.push_back(pos)
  * 		self.thisptr = new cpp.PedMecHeuristic(readset.thisptr, recombcost, pedigree.thisptr, distrust_genotypes, c_positions, row_limit, allow_mutations, verbosity)             # <<<<<<<<<<<<<<
@@ -25686,11 +26653,11 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
     __pyx_t_8 = new PedMecHeuristic(__pyx_v_readset->thisptr, __pyx_v_recombcost, __pyx_v_pedigree->thisptr, __pyx_v_distrust_genotypes, __pyx_v_c_positions, __pyx_v_row_limit, __pyx_v_allow_mutations, __pyx_v_verbosity);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 646, __pyx_L1_error)
+    __PYX_ERR(1, 685, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_8;
 
-  /* "whatshap/core.pyx":647
+  /* "whatshap/core.pyx":686
  * 				c_positions.push_back(pos)
  * 		self.thisptr = new cpp.PedMecHeuristic(readset.thisptr, recombcost, pedigree.thisptr, distrust_genotypes, c_positions, row_limit, allow_mutations, verbosity)
  * 		self.pedigree = pedigree             # <<<<<<<<<<<<<<
@@ -25703,7 +26670,7 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
   __Pyx_DECREF((PyObject *)__pyx_v_self->pedigree);
   __pyx_v_self->pedigree = __pyx_v_pedigree;
 
-  /* "whatshap/core.pyx":636
+  /* "whatshap/core.pyx":675
  * 
  * cdef class PedMecHeuristic:
  * 	def __cinit__(self, ReadSet readset, vector[unsigned int] recombcost, Pedigree pedigree, int row_limit = 256, bool distrust_genotypes = False, positions = None, bool allow_mutations = True, int verbosity = 0):             # <<<<<<<<<<<<<<
@@ -25725,7 +26692,7 @@ static int __pyx_pf_8whatshap_4core_15PedMecHeuristic___cinit__(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":649
+/* "whatshap/core.pyx":688
  * 		self.pedigree = pedigree
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -25748,7 +26715,7 @@ static void __pyx_pw_8whatshap_4core_15PedMecHeuristic_3__dealloc__(PyObject *__
 
 static void __pyx_pf_8whatshap_4core_15PedMecHeuristic_2__dealloc__(struct __pyx_obj_8whatshap_4core_PedMecHeuristic *__pyx_v_self) {
 
-  /* "whatshap/core.pyx":650
+  /* "whatshap/core.pyx":689
  * 
  * 	def __dealloc__(self):
  * 		del self.thisptr             # <<<<<<<<<<<<<<
@@ -25757,7 +26724,7 @@ static void __pyx_pf_8whatshap_4core_15PedMecHeuristic_2__dealloc__(struct __pyx
  */
   delete __pyx_v_self->thisptr;
 
-  /* "whatshap/core.pyx":649
+  /* "whatshap/core.pyx":688
  * 		self.pedigree = pedigree
  * 
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -25768,7 +26735,7 @@ static void __pyx_pf_8whatshap_4core_15PedMecHeuristic_2__dealloc__(struct __pyx
   /* function exit code */
 }
 
-/* "whatshap/core.pyx":652
+/* "whatshap/core.pyx":691
  * 		del self.thisptr
  * 
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
@@ -25839,7 +26806,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_super_reads", 1);
 
-  /* "whatshap/core.pyx":655
+  /* "whatshap/core.pyx":694
  * 		#Interface is identical to PedigreeDPTable
  * 
  * 		cdef vector[cpp.ReadSet*]* readSets = new vector[cpp.ReadSet*]()             # <<<<<<<<<<<<<<
@@ -25850,11 +26817,11 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
     __pyx_t_1 = new std::vector<ReadSet *> ();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 655, __pyx_L1_error)
+    __PYX_ERR(1, 694, __pyx_L1_error)
   }
   __pyx_v_readSets = __pyx_t_1;
 
-  /* "whatshap/core.pyx":657
+  /* "whatshap/core.pyx":696
  * 		cdef vector[cpp.ReadSet*]* readSets = new vector[cpp.ReadSet*]()
  * 		cdef vector[uint32_t]* opt_trans_ptr
  * 		self.thisptr.solve()             # <<<<<<<<<<<<<<
@@ -25865,10 +26832,10 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
     __pyx_v_self->thisptr->solve();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 657, __pyx_L1_error)
+    __PYX_ERR(1, 696, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":659
+  /* "whatshap/core.pyx":698
  * 		self.thisptr.solve()
  * 
  * 		opt_trans_ptr = self.thisptr.getOptTransmission()             # <<<<<<<<<<<<<<
@@ -25879,11 +26846,11 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
     __pyx_t_2 = __pyx_v_self->thisptr->getOptTransmission();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 659, __pyx_L1_error)
+    __PYX_ERR(1, 698, __pyx_L1_error)
   }
   __pyx_v_opt_trans_ptr = __pyx_t_2;
 
-  /* "whatshap/core.pyx":660
+  /* "whatshap/core.pyx":699
  * 
  * 		opt_trans_ptr = self.thisptr.getOptTransmission()
  * 		self.thisptr.getSuperReads(readSets)             # <<<<<<<<<<<<<<
@@ -25894,22 +26861,22 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
     __pyx_v_self->thisptr->getSuperReads(__pyx_v_readSets);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 660, __pyx_L1_error)
+    __PYX_ERR(1, 699, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":662
+  /* "whatshap/core.pyx":701
  * 		self.thisptr.getSuperReads(readSets)
  * 
  * 		results = []             # <<<<<<<<<<<<<<
  * 		for i in range(readSets.size()):
  * 			rs = ReadSet()
  */
-  __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 662, __pyx_L1_error)
+  __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 701, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_v_results = ((PyObject*)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "whatshap/core.pyx":663
+  /* "whatshap/core.pyx":702
  * 
  * 		results = []
  * 		for i in range(readSets.size()):             # <<<<<<<<<<<<<<
@@ -25921,19 +26888,19 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
   for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
     __pyx_v_i = __pyx_t_6;
 
-    /* "whatshap/core.pyx":664
+    /* "whatshap/core.pyx":703
  * 		results = []
  * 		for i in range(readSets.size()):
  * 			rs = ReadSet()             # <<<<<<<<<<<<<<
  * 			del rs.thisptr
  * 			rs.thisptr = deref(readSets)[i]
  */
-    __pyx_t_3 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 664, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 703, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_XDECREF_SET(__pyx_v_rs, ((struct __pyx_obj_8whatshap_4core_ReadSet *)__pyx_t_3));
     __pyx_t_3 = 0;
 
-    /* "whatshap/core.pyx":665
+    /* "whatshap/core.pyx":704
  * 		for i in range(readSets.size()):
  * 			rs = ReadSet()
  * 			del rs.thisptr             # <<<<<<<<<<<<<<
@@ -25942,7 +26909,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
  */
     delete __pyx_v_rs->thisptr;
 
-    /* "whatshap/core.pyx":666
+    /* "whatshap/core.pyx":705
  * 			rs = ReadSet()
  * 			del rs.thisptr
  * 			rs.thisptr = deref(readSets)[i]             # <<<<<<<<<<<<<<
@@ -25951,32 +26918,32 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
  */
     __pyx_v_rs->thisptr = ((*__pyx_v_readSets)[__pyx_v_i]);
 
-    /* "whatshap/core.pyx":667
+    /* "whatshap/core.pyx":706
  * 			del rs.thisptr
  * 			rs.thisptr = deref(readSets)[i]
  * 			results.append(rs)             # <<<<<<<<<<<<<<
  * 
  * 		python_transmission_vector = list(opt_trans_ptr[0])
  */
-    __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_results, ((PyObject *)__pyx_v_rs)); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(1, 667, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_results, ((PyObject *)__pyx_v_rs)); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(1, 706, __pyx_L1_error)
   }
 
-  /* "whatshap/core.pyx":669
+  /* "whatshap/core.pyx":708
  * 			results.append(rs)
  * 
  * 		python_transmission_vector = list(opt_trans_ptr[0])             # <<<<<<<<<<<<<<
  * 		del opt_trans_ptr
  * 		return results, python_transmission_vector
  */
-  __pyx_t_3 = __pyx_convert_vector_to_py_uint32_t((__pyx_v_opt_trans_ptr[0])); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 669, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_to_py_uint32_t((__pyx_v_opt_trans_ptr[0])); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 708, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_8 = __Pyx_PySequence_ListKeepNew(__pyx_t_3); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 669, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PySequence_ListKeepNew(__pyx_t_3); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 708, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_python_transmission_vector = ((PyObject*)__pyx_t_8);
   __pyx_t_8 = 0;
 
-  /* "whatshap/core.pyx":670
+  /* "whatshap/core.pyx":709
  * 
  * 		python_transmission_vector = list(opt_trans_ptr[0])
  * 		del opt_trans_ptr             # <<<<<<<<<<<<<<
@@ -25985,7 +26952,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
  */
   delete __pyx_v_opt_trans_ptr;
 
-  /* "whatshap/core.pyx":671
+  /* "whatshap/core.pyx":710
  * 		python_transmission_vector = list(opt_trans_ptr[0])
  * 		del opt_trans_ptr
  * 		return results, python_transmission_vector             # <<<<<<<<<<<<<<
@@ -25993,19 +26960,19 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
  * 	def get_optimal_cost(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 671, __pyx_L1_error)
+  __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 710, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_INCREF(__pyx_v_results);
   __Pyx_GIVEREF(__pyx_v_results);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_results)) __PYX_ERR(1, 671, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_results)) __PYX_ERR(1, 710, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_python_transmission_vector);
   __Pyx_GIVEREF(__pyx_v_python_transmission_vector);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_v_python_transmission_vector)) __PYX_ERR(1, 671, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_v_python_transmission_vector)) __PYX_ERR(1, 710, __pyx_L1_error);
   __pyx_r = __pyx_t_8;
   __pyx_t_8 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":652
+  /* "whatshap/core.pyx":691
  * 		del self.thisptr
  * 
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
@@ -26028,7 +26995,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_4get_super_reads(str
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":673
+/* "whatshap/core.pyx":712
  * 		return results, python_transmission_vector
  * 
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
@@ -26088,7 +27055,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_6get_optimal_cost(st
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_optimal_cost", 1);
 
-  /* "whatshap/core.pyx":675
+  /* "whatshap/core.pyx":714
  * 	def get_optimal_cost(self):
  * 		"""Returns the cost resulting from solving the Minimum Error Correction (MEC) problem."""
  * 		return self.thisptr.getOptScore()             # <<<<<<<<<<<<<<
@@ -26100,15 +27067,15 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_6get_optimal_cost(st
     __pyx_t_1 = __pyx_v_self->thisptr->getOptScore();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 675, __pyx_L1_error)
+    __PYX_ERR(1, 714, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 675, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 714, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":673
+  /* "whatshap/core.pyx":712
  * 		return results, python_transmission_vector
  * 
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
@@ -26127,7 +27094,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_6get_optimal_cost(st
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":677
+/* "whatshap/core.pyx":716
  * 		return self.thisptr.getOptScore()
  * 
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
@@ -26194,7 +27161,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_8get_optimal_partiti
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_optimal_partitioning", 1);
 
-  /* "whatshap/core.pyx":680
+  /* "whatshap/core.pyx":719
  * 		"""Returns a list of the same size as the read set, where each entry is either 0 or 1,
  * 		telling whether the corresponding read is in partition 0 or in partition 1,"""
  * 		cdef vector[bool]* p = self.thisptr.getOptBipartition()             # <<<<<<<<<<<<<<
@@ -26205,11 +27172,11 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_8get_optimal_partiti
     __pyx_t_1 = __pyx_v_self->thisptr->getOptBipartition();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 680, __pyx_L1_error)
+    __PYX_ERR(1, 719, __pyx_L1_error)
   }
   __pyx_v_p = __pyx_t_1;
 
-  /* "whatshap/core.pyx":681
+  /* "whatshap/core.pyx":720
  * 		telling whether the corresponding read is in partition 0 or in partition 1,"""
  * 		cdef vector[bool]* p = self.thisptr.getOptBipartition()
  * 		result = [0 if x else 1 for x in p[0]]             # <<<<<<<<<<<<<<
@@ -26217,7 +27184,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_8get_optimal_partiti
  * 		return result
  */
   { /* enter inner scope */
-    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 681, __pyx_L1_error)
+    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 720, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = (__pyx_v_p[0]).begin();
     for (;;) {
@@ -26233,14 +27200,14 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_8get_optimal_partiti
         __Pyx_INCREF(__pyx_int_1);
         __pyx_t_5 = __pyx_int_1;
       }
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_t_5))) __PYX_ERR(1, 681, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_t_5))) __PYX_ERR(1, 720, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
   } /* exit inner scope */
   __pyx_v_result = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":682
+  /* "whatshap/core.pyx":721
  * 		cdef vector[bool]* p = self.thisptr.getOptBipartition()
  * 		result = [0 if x else 1 for x in p[0]]
  * 		del p             # <<<<<<<<<<<<<<
@@ -26249,7 +27216,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_8get_optimal_partiti
  */
   delete __pyx_v_p;
 
-  /* "whatshap/core.pyx":683
+  /* "whatshap/core.pyx":722
  * 		result = [0 if x else 1 for x in p[0]]
  * 		del p
  * 		return result             # <<<<<<<<<<<<<<
@@ -26261,7 +27228,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_8get_optimal_partiti
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":677
+  /* "whatshap/core.pyx":716
  * 		return self.thisptr.getOptScore()
  * 
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
@@ -26282,7 +27249,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_8get_optimal_partiti
   return __pyx_r;
 }
 
-/* "whatshap/core.pyx":685
+/* "whatshap/core.pyx":724
  * 		return result
  * 
  * 	def get_mutations(self):             # <<<<<<<<<<<<<<
@@ -26345,7 +27312,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_10get_mutations(stru
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_mutations", 1);
 
-  /* "whatshap/core.pyx":689
+  /* "whatshap/core.pyx":728
  * 		one sub-list for each sample and the sub-list contains <hap_id, position> pairs of alleles
  * 		not following their respective parent."""
  * 		cdef vector[vector[pair[uint32_t, uint32_t]]]* m = self.thisptr.getMutations()             # <<<<<<<<<<<<<<
@@ -26356,26 +27323,26 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_10get_mutations(stru
     __pyx_t_1 = __pyx_v_self->thisptr->getMutations();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 689, __pyx_L1_error)
+    __PYX_ERR(1, 728, __pyx_L1_error)
   }
   __pyx_v_m = __pyx_t_1;
 
-  /* "whatshap/core.pyx":690
+  /* "whatshap/core.pyx":729
  * 		not following their respective parent."""
  * 		cdef vector[vector[pair[uint32_t, uint32_t]]]* m = self.thisptr.getMutations()
  * 		result = list (m[0])             # <<<<<<<<<<<<<<
  * 		#result = [[] for _ in range(len(m))]
  * 		#for i in range(len(m)):
  */
-  __pyx_t_2 = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_pair_3c_uint32_t_2c_uint32_t_3e____3e___((__pyx_v_m[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 690, __pyx_L1_error)
+  __pyx_t_2 = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_pair_3c_uint32_t_2c_uint32_t_3e____3e___((__pyx_v_m[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 729, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PySequence_ListKeepNew(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 690, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PySequence_ListKeepNew(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 729, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_result = ((PyObject*)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "whatshap/core.pyx":695
+  /* "whatshap/core.pyx":734
  * 		#	for pair in m[i]:
  * 		#		result[i].append(pair)
  * 		del m             # <<<<<<<<<<<<<<
@@ -26383,7 +27350,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_10get_mutations(stru
  */
   delete __pyx_v_m;
 
-  /* "whatshap/core.pyx":696
+  /* "whatshap/core.pyx":735
  * 		#		result[i].append(pair)
  * 		del m
  * 		return result             # <<<<<<<<<<<<<<
@@ -26393,7 +27360,7 @@ static PyObject *__pyx_pf_8whatshap_4core_15PedMecHeuristic_10get_mutations(stru
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "whatshap/core.pyx":685
+  /* "whatshap/core.pyx":724
  * 		return result
  * 
  * 	def get_mutations(self):             # <<<<<<<<<<<<<<
@@ -26921,6 +27888,26 @@ static PyObject *__pyx_getprop_8whatshap_4core_4Read_reference_start(PyObject *o
   return __pyx_pw_8whatshap_4core_4Read_15reference_start_1__get__(o);
 }
 
+static PyObject *__pyx_getprop_8whatshap_4core_4Read_reference_end(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_8whatshap_4core_4Read_13reference_end_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_8whatshap_4core_4Read_chromosome(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_8whatshap_4core_4Read_10chromosome_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_8whatshap_4core_4Read_sub_alignment_id(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_8whatshap_4core_4Read_16sub_alignment_id_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_8whatshap_4core_4Read_is_supplementary(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_8whatshap_4core_4Read_16is_supplementary_1__get__(o);
+}
+
+static PyObject *__pyx_getprop_8whatshap_4core_4Read_is_reverse(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_8whatshap_4core_4Read_10is_reverse_1__get__(o);
+}
+
 static PyObject *__pyx_getprop_8whatshap_4core_4Read_BX_tag(PyObject *o, CYTHON_UNUSED void *x) {
   return __pyx_pw_8whatshap_4core_4Read_6BX_tag_1__get__(o);
 }
@@ -26959,6 +27946,11 @@ static struct PyGetSetDef __pyx_getsets_8whatshap_4core_Read[] = {
   {(char *)"source_id", __pyx_getprop_8whatshap_4core_4Read_source_id, 0, (char *)0, 0},
   {(char *)"sample_id", __pyx_getprop_8whatshap_4core_4Read_sample_id, 0, (char *)0, 0},
   {(char *)"reference_start", __pyx_getprop_8whatshap_4core_4Read_reference_start, 0, (char *)0, 0},
+  {(char *)"reference_end", __pyx_getprop_8whatshap_4core_4Read_reference_end, 0, (char *)0, 0},
+  {(char *)"chromosome", __pyx_getprop_8whatshap_4core_4Read_chromosome, 0, (char *)0, 0},
+  {(char *)"sub_alignment_id", __pyx_getprop_8whatshap_4core_4Read_sub_alignment_id, 0, (char *)0, 0},
+  {(char *)"is_supplementary", __pyx_getprop_8whatshap_4core_4Read_is_supplementary, 0, (char *)0, 0},
+  {(char *)"is_reverse", __pyx_getprop_8whatshap_4core_4Read_is_reverse, 0, (char *)0, 0},
   {(char *)"BX_tag", __pyx_getprop_8whatshap_4core_4Read_BX_tag, 0, (char *)0, 0},
   {(char *)"HP_tag", __pyx_getprop_8whatshap_4core_4Read_HP_tag, 0, (char *)0, 0},
   {(char *)"PS_tag", __pyx_getprop_8whatshap_4core_4Read_PS_tag, 0, (char *)0, 0},
@@ -29401,6 +30393,8 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_binomial_coefficient, __pyx_k_binomial_coefficient, sizeof(__pyx_k_binomial_coefficient), 0, 0, 1, 1},
     {&__pyx_n_s_c_positions, __pyx_k_c_positions, sizeof(__pyx_k_c_positions), 0, 0, 1, 1},
     {&__pyx_n_s_child_id, __pyx_k_child_id, sizeof(__pyx_k_child_id), 0, 0, 1, 1},
+    {&__pyx_n_s_chromosome, __pyx_k_chromosome, sizeof(__pyx_k_chromosome), 0, 0, 1, 1},
+    {&__pyx_n_s_chromosome_2, __pyx_k_chromosome_2, sizeof(__pyx_k_chromosome_2), 0, 0, 1, 1},
     {&__pyx_n_s_class_getitem, __pyx_k_class_getitem, sizeof(__pyx_k_class_getitem), 0, 0, 1, 1},
     {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
     {&__pyx_n_s_close, __pyx_k_close, sizeof(__pyx_k_close), 0, 0, 1, 1},
@@ -29452,7 +30446,9 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_is_diploid_and_biallelic, __pyx_k_is_diploid_and_biallelic, sizeof(__pyx_k_is_diploid_and_biallelic), 0, 0, 1, 1},
     {&__pyx_n_s_is_homozygous, __pyx_k_is_homozygous, sizeof(__pyx_k_is_homozygous), 0, 0, 1, 1},
     {&__pyx_n_s_is_none, __pyx_k_is_none, sizeof(__pyx_k_is_none), 0, 0, 1, 1},
+    {&__pyx_n_s_is_reverse, __pyx_k_is_reverse, sizeof(__pyx_k_is_reverse), 0, 0, 1, 1},
     {&__pyx_n_s_is_sorted, __pyx_k_is_sorted, sizeof(__pyx_k_is_sorted), 0, 0, 1, 1},
+    {&__pyx_n_s_is_supplementary, __pyx_k_is_supplementary, sizeof(__pyx_k_is_supplementary), 0, 0, 1, 1},
     {&__pyx_kp_u_isenabled, __pyx_k_isenabled, sizeof(__pyx_k_isenabled), 0, 1, 0, 0},
     {&__pyx_n_s_items, __pyx_k_items, sizeof(__pyx_k_items), 0, 0, 1, 1},
     {&__pyx_n_s_iter, __pyx_k_iter, sizeof(__pyx_k_iter), 0, 0, 1, 1},
@@ -29496,6 +30492,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
     {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
     {&__pyx_n_s_reference, __pyx_k_reference, sizeof(__pyx_k_reference), 0, 0, 1, 1},
+    {&__pyx_n_s_reference_end, __pyx_k_reference_end, sizeof(__pyx_k_reference_end), 0, 0, 1, 1},
     {&__pyx_n_s_reference_start, __pyx_k_reference_start, sizeof(__pyx_k_reference_start), 0, 0, 1, 1},
     {&__pyx_n_s_result, __pyx_k_result, sizeof(__pyx_k_result), 0, 0, 1, 1},
     {&__pyx_n_s_results, __pyx_k_results, sizeof(__pyx_k_results), 0, 0, 1, 1},
@@ -29510,6 +30507,8 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_source_id, __pyx_k_source_id, sizeof(__pyx_k_source_id), 0, 0, 1, 1},
     {&__pyx_n_s_state, __pyx_k_state, sizeof(__pyx_k_state), 0, 0, 1, 1},
     {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
+    {&__pyx_n_s_sub_alignment_id, __pyx_k_sub_alignment_id, sizeof(__pyx_k_sub_alignment_id), 0, 0, 1, 1},
+    {&__pyx_n_s_sub_alignment_id_2, __pyx_k_sub_alignment_id_2, sizeof(__pyx_k_sub_alignment_id_2), 0, 0, 1, 1},
     {&__pyx_n_s_subset, __pyx_k_subset, sizeof(__pyx_k_subset), 0, 0, 1, 1},
     {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
     {&__pyx_n_s_throw, __pyx_k_throw, sizeof(__pyx_k_throw), 0, 0, 1, 1},
@@ -29533,12 +30532,12 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
 /* #### Code section: cached_builtins ### */
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 2, __pyx_L1_error)
-  __pyx_builtin_AssertionError = __Pyx_GetBuiltinName(__pyx_n_s_AssertionError); if (!__pyx_builtin_AssertionError) __PYX_ERR(1, 80, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 131, __pyx_L1_error)
-  __pyx_builtin_NotImplementedError = __Pyx_GetBuiltinName(__pyx_n_s_NotImplementedError); if (!__pyx_builtin_NotImplementedError) __PYX_ERR(1, 143, __pyx_L1_error)
-  __pyx_builtin_IndexError = __Pyx_GetBuiltinName(__pyx_n_s_IndexError); if (!__pyx_builtin_IndexError) __PYX_ERR(1, 147, __pyx_L1_error)
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 164, __pyx_L1_error)
-  __pyx_builtin_KeyError = __Pyx_GetBuiltinName(__pyx_n_s_KeyError); if (!__pyx_builtin_KeyError) __PYX_ERR(1, 275, __pyx_L1_error)
+  __pyx_builtin_AssertionError = __Pyx_GetBuiltinName(__pyx_n_s_AssertionError); if (!__pyx_builtin_AssertionError) __PYX_ERR(1, 88, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 164, __pyx_L1_error)
+  __pyx_builtin_NotImplementedError = __Pyx_GetBuiltinName(__pyx_n_s_NotImplementedError); if (!__pyx_builtin_NotImplementedError) __PYX_ERR(1, 176, __pyx_L1_error)
+  __pyx_builtin_IndexError = __Pyx_GetBuiltinName(__pyx_n_s_IndexError); if (!__pyx_builtin_IndexError) __PYX_ERR(1, 180, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 197, __pyx_L1_error)
+  __pyx_builtin_KeyError = __Pyx_GetBuiltinName(__pyx_n_s_KeyError); if (!__pyx_builtin_KeyError) __PYX_ERR(1, 314, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(0, 68, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -29550,47 +30549,47 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "whatshap/core.pyx":143
+  /* "whatshap/core.pyx":176
  * 		assert self.thisptr != NULL
  * 		if isinstance(key, slice):
  * 			raise NotImplementedError("Read does not support slices")             # <<<<<<<<<<<<<<
  * 		assert isinstance(key, int)
  * 		cdef int n = self.thisptr.getVariantCount()
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_Read_does_not_support_slices); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(1, 143, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_Read_does_not_support_slices); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(1, 176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "whatshap/core.pyx":203
+  /* "whatshap/core.pyx":242
  * 			self.ownsptr = True
  * 
  * 		for mapq in mapqs[1:]:             # <<<<<<<<<<<<<<
  * 			self.add_mapq(mapq)
  * 		for (pos, allele, quality) in variants:
  */
-  __pyx_slice__3 = PySlice_New(__pyx_int_1, Py_None, Py_None); if (unlikely(!__pyx_slice__3)) __PYX_ERR(1, 203, __pyx_L1_error)
+  __pyx_slice__3 = PySlice_New(__pyx_int_1, Py_None, Py_None); if (unlikely(!__pyx_slice__3)) __PYX_ERR(1, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice__3);
   __Pyx_GIVEREF(__pyx_slice__3);
 
-  /* "whatshap/core.pyx":262
+  /* "whatshap/core.pyx":301
  * 	def __getitem__(self, key):
  * 		if isinstance(key, slice):
  * 			raise NotImplementedError('ReadSet does not support slices')             # <<<<<<<<<<<<<<
  * 		cdef string name = b''
  * 		cdef cpp.Read* cread = NULL
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_u_ReadSet_does_not_support_slices); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(1, 262, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_u_ReadSet_does_not_support_slices); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(1, 301, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
-  /* "whatshap/core.pyx":269
+  /* "whatshap/core.pyx":308
  * 			read.thisptr = self.thisptr.get(key)
  * 		elif isinstance(key, str):
  * 			raise NotImplementedError('Querying a ReadSet by read name is deprecated, please query by (source_id, name) instead')             # <<<<<<<<<<<<<<
  * 		elif isinstance(key, tuple) and (len(key) == 2) and (isinstance(key[0],int) and isinstance(key[1],str)):
  * 			source_id = key[0]
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_u_Querying_a_ReadSet_by_read_name); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(1, 269, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_u_Querying_a_ReadSet_by_read_name); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(1, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
@@ -29657,98 +30656,98 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__16);
   __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":180
+  /* "whatshap/core.pyx":213
  * 		return False
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
  * 		mapqs = [mapq for mapq in self.mapqs]
  * 		variants = [(var.position, var.allele, var.quality) for var in self]
  */
-  __pyx_tuple__18 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_mapqs, __pyx_n_s_variants, __pyx_n_s_mapq, __pyx_n_s_var); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(1, 180, __pyx_L1_error)
+  __pyx_tuple__18 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_mapqs, __pyx_n_s_variants, __pyx_n_s_mapq, __pyx_n_s_var); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(1, 213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__18);
   __Pyx_GIVEREF(__pyx_tuple__18);
-  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_getstate, 180, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(1, 180, __pyx_L1_error)
+  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_getstate, 213, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(1, 213, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":185
- * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, variants)
+  /* "whatshap/core.pyx":218
+ * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.BX_tag, self.HP_tag, self.PS_tag, self.chromosome, self.sub_alignment_id, self.is_supplementary, self.is_reverse, variants)
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
- * 		mapqs, name, source_id, sample_id, reference_start, BX_tag, HP_tag, PS_tag, variants = state
+ * 		mapqs, name, source_id, sample_id, reference_start, reference_end, BX_tag, HP_tag, PS_tag, chromosome, sub_alignment_id, is_supplementary, is_reverse, variants = state
  * 
  */
-  __pyx_tuple__20 = PyTuple_Pack(17, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_mapqs, __pyx_n_s_name, __pyx_n_s_source_id, __pyx_n_s_sample_id, __pyx_n_s_reference_start, __pyx_n_s_BX_tag, __pyx_n_s_HP_tag, __pyx_n_s_PS_tag, __pyx_n_s_variants, __pyx_n_s_name_3, __pyx_n_s_BX_tag_2, __pyx_n_s_mapq, __pyx_n_s_pos, __pyx_n_s_allele, __pyx_n_s_quality); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(1, 185, __pyx_L1_error)
+  __pyx_tuple__20 = PyTuple_Pack(24, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_mapqs, __pyx_n_s_name, __pyx_n_s_source_id, __pyx_n_s_sample_id, __pyx_n_s_reference_start, __pyx_n_s_reference_end, __pyx_n_s_BX_tag, __pyx_n_s_HP_tag, __pyx_n_s_PS_tag, __pyx_n_s_chromosome, __pyx_n_s_sub_alignment_id, __pyx_n_s_is_supplementary, __pyx_n_s_is_reverse, __pyx_n_s_variants, __pyx_n_s_name_3, __pyx_n_s_BX_tag_2, __pyx_n_s_chromosome_2, __pyx_n_s_sub_alignment_id_2, __pyx_n_s_mapq, __pyx_n_s_pos, __pyx_n_s_allele, __pyx_n_s_quality); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(1, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
-  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_setstate, 185, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(1, 185, __pyx_L1_error)
+  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 24, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_setstate, 218, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(1, 218, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":208
+  /* "whatshap/core.pyx":247
  * 			self.add_variant(pos, allele, quality)
  * 
  * 	def add_variant(self, int position, int allele, int quality):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		self.thisptr.addVariant(position, allele, quality)
  */
-  __pyx_tuple__22 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_position, __pyx_n_s_allele, __pyx_n_s_quality); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(1, 208, __pyx_L1_error)
+  __pyx_tuple__22 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_position, __pyx_n_s_allele, __pyx_n_s_quality); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(1, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__22);
   __Pyx_GIVEREF(__pyx_tuple__22);
-  __pyx_codeobj__23 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__22, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_variant, 208, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__23)) __PYX_ERR(1, 208, __pyx_L1_error)
+  __pyx_codeobj__23 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__22, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_variant, 247, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__23)) __PYX_ERR(1, 247, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":212
+  /* "whatshap/core.pyx":251
  * 		self.thisptr.addVariant(position, allele, quality)
  * 
  * 	def add_mapq(self, int mapq):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		self.thisptr.addMapq(mapq)
  */
-  __pyx_tuple__24 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_mapq); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 212, __pyx_L1_error)
+  __pyx_tuple__24 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_mapq); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 251, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__24);
   __Pyx_GIVEREF(__pyx_tuple__24);
-  __pyx_codeobj__25 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_mapq, 212, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__25)) __PYX_ERR(1, 212, __pyx_L1_error)
+  __pyx_codeobj__25 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_mapq, 251, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__25)) __PYX_ERR(1, 251, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":216
+  /* "whatshap/core.pyx":255
  * 		self.thisptr.addMapq(mapq)
  * 
  * 	def sort(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		self.thisptr.sortVariants()
  */
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_sort, 216, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(1, 216, __pyx_L1_error)
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_sort, 255, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(1, 255, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":220
+  /* "whatshap/core.pyx":259
  * 		self.thisptr.sortVariants()
  * 
  * 	def is_sorted(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.isSorted()
  */
-  __pyx_codeobj__27 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_is_sorted, 220, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__27)) __PYX_ERR(1, 220, __pyx_L1_error)
+  __pyx_codeobj__27 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_is_sorted, 259, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__27)) __PYX_ERR(1, 259, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":224
+  /* "whatshap/core.pyx":263
  * 		return self.thisptr.isSorted()
  * 
  * 	def has_BX_tag(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.hasBXTag()
  */
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_has_BX_tag, 224, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(1, 224, __pyx_L1_error)
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_has_BX_tag, 263, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(1, 263, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":228
+  /* "whatshap/core.pyx":267
  * 		return self.thisptr.hasBXTag()
  * 
  * 	def has_HP_tag(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.hasBXTag()
  */
-  __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_has_HP_tag, 228, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(1, 228, __pyx_L1_error)
+  __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_has_HP_tag, 267, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(1, 267, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":232
+  /* "whatshap/core.pyx":271
  * 		return self.thisptr.hasBXTag()
  * 
  * 	def has_PS_tag(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.hasBXTag()
  */
-  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_has_PS_tag, 232, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(1, 232, __pyx_L1_error)
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_has_PS_tag, 271, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(1, 271, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -29765,71 +30764,71 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  */
   __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":243
+  /* "whatshap/core.pyx":282
  * 		del self.thisptr
  * 
  * 	def add(self, Read read):             # <<<<<<<<<<<<<<
  * 		"""Adds a read to the set.
  * 		WARNING: this will internally create a copy of the wrapped C++ Read object,
  */
-  __pyx_tuple__33 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_read); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(1, 243, __pyx_L1_error)
+  __pyx_tuple__33 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_read); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(1, 282, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__33);
   __Pyx_GIVEREF(__pyx_tuple__33);
-  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add, 243, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(1, 243, __pyx_L1_error)
+  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add, 282, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(1, 282, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":282
+  /* "whatshap/core.pyx":321
  * 		return read
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
  * 		return ([read for read in self])
  * 
  */
-  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_getstate, 282, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(1, 282, __pyx_L1_error)
+  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_getstate, 321, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(1, 321, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":285
+  /* "whatshap/core.pyx":324
  * 		return ([read for read in self])
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
  * 		self.thisptr = new cpp.ReadSet()
  * 		for read in state:
  */
-  __pyx_tuple__36 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_read); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(1, 285, __pyx_L1_error)
+  __pyx_tuple__36 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_read); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(1, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__36);
   __Pyx_GIVEREF(__pyx_tuple__36);
-  __pyx_codeobj__37 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_setstate, 285, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__37)) __PYX_ERR(1, 285, __pyx_L1_error)
+  __pyx_codeobj__37 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_setstate, 324, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__37)) __PYX_ERR(1, 324, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":300
+  /* "whatshap/core.pyx":339
  * 			#return read
  * 
  * 	def sort(self):             # <<<<<<<<<<<<<<
  * 		"""Sort contained reads by the position of the first variant they contain. Note that
  * 		this is not necessarily the variant with the lowest position, unless sort() has been
  */
-  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_sort, 300, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(1, 300, __pyx_L1_error)
+  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_sort, 339, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(1, 339, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":306
+  /* "whatshap/core.pyx":345
  * 		self.thisptr.sort()
  * 
  * 	def subset(self, reads_to_select):             # <<<<<<<<<<<<<<
  * 		# TODO: is there a way of avoiding to unecessarily creating/destroying a ReadSet object?
  * 		cdef cpp.IndexSet* index_set = new cpp.IndexSet()
  */
-  __pyx_tuple__39 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_reads_to_select, __pyx_n_s_index_set, __pyx_n_s_i, __pyx_n_s_result); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(1, 306, __pyx_L1_error)
+  __pyx_tuple__39 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_reads_to_select, __pyx_n_s_index_set, __pyx_n_s_i, __pyx_n_s_result); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(1, 345, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__39);
   __Pyx_GIVEREF(__pyx_tuple__39);
-  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_subset, 306, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(1, 306, __pyx_L1_error)
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_subset, 345, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(1, 345, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":318
+  /* "whatshap/core.pyx":357
  * 		return result
  * 
  * 	def get_positions(self):             # <<<<<<<<<<<<<<
  * 		cdef vector[unsigned int]* v = self.thisptr.get_positions()
  * 		result = list(v[0])
  */
-  __pyx_tuple__41 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_v, __pyx_n_s_result); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(1, 318, __pyx_L1_error)
+  __pyx_tuple__41 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_v, __pyx_n_s_result); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(1, 357, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__41);
   __Pyx_GIVEREF(__pyx_tuple__41);
-  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_positions, 318, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(1, 318, __pyx_L1_error)
+  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_positions, 357, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(1, 357, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -29846,38 +30845,38 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  */
   __pyx_codeobj__44 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__44)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":342
+  /* "whatshap/core.pyx":381
  * 		del self.thisptr
  * 
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
  * 		"""Obtain optimal-score haplotypes. Returns a triple (mother, father, child)
  * 		IMPORTANT: The ReadSet given at construction time must not have been altered.
  */
-  __pyx_tuple__45 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_read_sets, __pyx_n_s_i, __pyx_n_s_transmission_vector_ptr, __pyx_n_s_results, __pyx_n_s_rs, __pyx_n_s_python_transmission_vector); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(1, 342, __pyx_L1_error)
+  __pyx_tuple__45 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_read_sets, __pyx_n_s_i, __pyx_n_s_transmission_vector_ptr, __pyx_n_s_results, __pyx_n_s_rs, __pyx_n_s_python_transmission_vector); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(1, 381, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__45);
   __Pyx_GIVEREF(__pyx_tuple__45);
-  __pyx_codeobj__46 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__45, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_super_reads, 342, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__46)) __PYX_ERR(1, 342, __pyx_L1_error)
+  __pyx_codeobj__46 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__45, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_super_reads, 381, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__46)) __PYX_ERR(1, 381, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":367
+  /* "whatshap/core.pyx":406
  * 		return results, python_transmission_vector
  * 
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
  * 		"""Returns the cost resulting from solving the Minimum Error Correction (MEC) problem."""
  * 		return self.thisptr.get_optimal_score()
  */
-  __pyx_codeobj__47 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_cost, 367, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__47)) __PYX_ERR(1, 367, __pyx_L1_error)
+  __pyx_codeobj__47 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_cost, 406, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__47)) __PYX_ERR(1, 406, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":371
+  /* "whatshap/core.pyx":410
  * 		return self.thisptr.get_optimal_score()
  * 
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
  * 		"""Returns a list of the same size as the read set, where each entry is either 0 or 1,
  * 		telling whether the corresponding read is in partition 0 or in partition 1,"""
  */
-  __pyx_tuple__48 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_p, __pyx_n_s_result, __pyx_n_s_x); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(1, 371, __pyx_L1_error)
+  __pyx_tuple__48 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_p, __pyx_n_s_result, __pyx_n_s_x); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(1, 410, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__48);
   __Pyx_GIVEREF(__pyx_tuple__48);
-  __pyx_codeobj__49 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__48, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_partitioning, 371, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__49)) __PYX_ERR(1, 371, __pyx_L1_error)
+  __pyx_codeobj__49 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__48, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_partitioning, 410, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__49)) __PYX_ERR(1, 410, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -29894,56 +30893,56 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  */
   __pyx_codeobj__51 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__51)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":388
+  /* "whatshap/core.pyx":427
  * 		del self.thisptr
  * 
  * 	def add_individual(self, id, genotypes, genotype_likelihoods=None):             # <<<<<<<<<<<<<<
  * 		cdef vector[cpp.Genotype*] gt_vector
  * 		for gt in genotypes:
  */
-  __pyx_tuple__53 = PyTuple_Pack(9, __pyx_n_s_self, __pyx_n_s_id, __pyx_n_s_genotypes, __pyx_n_s_genotype_likelihoods, __pyx_n_s_gt_vector, __pyx_n_s_gt, __pyx_n_s_gl_vector, __pyx_n_s_gl, __pyx_n_s__52); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(1, 388, __pyx_L1_error)
+  __pyx_tuple__53 = PyTuple_Pack(9, __pyx_n_s_self, __pyx_n_s_id, __pyx_n_s_genotypes, __pyx_n_s_genotype_likelihoods, __pyx_n_s_gt_vector, __pyx_n_s_gt, __pyx_n_s_gl_vector, __pyx_n_s_gl, __pyx_n_s__52); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(1, 427, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__53);
   __Pyx_GIVEREF(__pyx_tuple__53);
-  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_individual, 388, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(1, 388, __pyx_L1_error)
-  __pyx_tuple__55 = PyTuple_Pack(1, Py_None); if (unlikely(!__pyx_tuple__55)) __PYX_ERR(1, 388, __pyx_L1_error)
+  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_individual, 427, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(1, 427, __pyx_L1_error)
+  __pyx_tuple__55 = PyTuple_Pack(1, Py_None); if (unlikely(!__pyx_tuple__55)) __PYX_ERR(1, 427, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__55);
   __Pyx_GIVEREF(__pyx_tuple__55);
 
-  /* "whatshap/core.pyx":404
+  /* "whatshap/core.pyx":443
  * 		self.thisptr.addIndividual(self.numeric_sample_ids[id], gt_vector, gl_vector)
  * 
  * 	def add_relationship(self, father_id, mother_id, child_id):             # <<<<<<<<<<<<<<
  * 		self.thisptr.addRelationship(self.numeric_sample_ids[father_id], self.numeric_sample_ids[mother_id], self.numeric_sample_ids[child_id])
  * 
  */
-  __pyx_tuple__56 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_father_id, __pyx_n_s_mother_id, __pyx_n_s_child_id); if (unlikely(!__pyx_tuple__56)) __PYX_ERR(1, 404, __pyx_L1_error)
+  __pyx_tuple__56 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_father_id, __pyx_n_s_mother_id, __pyx_n_s_child_id); if (unlikely(!__pyx_tuple__56)) __PYX_ERR(1, 443, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__56);
   __Pyx_GIVEREF(__pyx_tuple__56);
-  __pyx_codeobj__57 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__56, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_relationship, 404, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__57)) __PYX_ERR(1, 404, __pyx_L1_error)
+  __pyx_codeobj__57 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__56, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_relationship, 443, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__57)) __PYX_ERR(1, 443, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":412
+  /* "whatshap/core.pyx":451
  * 			return self.thisptr.get_variant_count()
  * 
  * 	def genotype(self, sample_id, unsigned int variant_index):             # <<<<<<<<<<<<<<
  * 		cdef const cpp.Genotype* gt = self.thisptr.get_genotype_by_id(self.numeric_sample_ids[sample_id], variant_index)
  * 		return Genotype(gt[0].as_vector())
  */
-  __pyx_tuple__58 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_sample_id, __pyx_n_s_variant_index, __pyx_n_s_gt); if (unlikely(!__pyx_tuple__58)) __PYX_ERR(1, 412, __pyx_L1_error)
+  __pyx_tuple__58 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_sample_id, __pyx_n_s_variant_index, __pyx_n_s_gt); if (unlikely(!__pyx_tuple__58)) __PYX_ERR(1, 451, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__58);
   __Pyx_GIVEREF(__pyx_tuple__58);
-  __pyx_codeobj__59 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__58, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_genotype, 412, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__59)) __PYX_ERR(1, 412, __pyx_L1_error)
+  __pyx_codeobj__59 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__58, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_genotype, 451, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__59)) __PYX_ERR(1, 451, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":416
+  /* "whatshap/core.pyx":455
  * 		return Genotype(gt[0].as_vector())
  * 
  * 	def genotype_likelihoods(self, sample_id, unsigned int variant_index):             # <<<<<<<<<<<<<<
  * 		cdef const cpp.PhredGenotypeLikelihoods* gl = self.thisptr.get_genotype_likelihoods_by_id(self.numeric_sample_ids[sample_id], variant_index)
  * 		if gl == NULL:
  */
-  __pyx_tuple__60 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_sample_id, __pyx_n_s_variant_index, __pyx_n_s_gl); if (unlikely(!__pyx_tuple__60)) __PYX_ERR(1, 416, __pyx_L1_error)
+  __pyx_tuple__60 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_sample_id, __pyx_n_s_variant_index, __pyx_n_s_gl); if (unlikely(!__pyx_tuple__60)) __PYX_ERR(1, 455, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__60);
   __Pyx_GIVEREF(__pyx_tuple__60);
-  __pyx_codeobj__61 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__60, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_genotype_likelihoods, 416, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__61)) __PYX_ERR(1, 416, __pyx_L1_error)
+  __pyx_codeobj__61 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__60, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_genotype_likelihoods, 455, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__61)) __PYX_ERR(1, 455, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -29960,17 +30959,17 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  */
   __pyx_codeobj__63 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__63)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":460
+  /* "whatshap/core.pyx":499
  * 		return True
  * 
  * 	def genotypes(self):             # <<<<<<<<<<<<<<
  * 		cdef vector[cpp.Genotype]* genotypes = new vector[cpp.Genotype]()
  * 		self.thisptr.get_genotypes(deref(genotypes))
  */
-  __pyx_tuple__64 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_genotypes, __pyx_n_s_result, __pyx_n_s_genotype); if (unlikely(!__pyx_tuple__64)) __PYX_ERR(1, 460, __pyx_L1_error)
+  __pyx_tuple__64 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_genotypes, __pyx_n_s_result, __pyx_n_s_genotype); if (unlikely(!__pyx_tuple__64)) __PYX_ERR(1, 499, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__64);
   __Pyx_GIVEREF(__pyx_tuple__64);
-  __pyx_codeobj__65 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__64, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_genotypes, 460, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__65)) __PYX_ERR(1, 460, __pyx_L1_error)
+  __pyx_codeobj__65 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__64, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_genotypes, 499, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__65)) __PYX_ERR(1, 499, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -29987,107 +30986,107 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  */
   __pyx_codeobj__67 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__67)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":468
+  /* "whatshap/core.pyx":507
  * 
  * 
  * def binomial_coefficient(int n, int k):             # <<<<<<<<<<<<<<
  * 	return cpp.binomial_coefficient(n, k)
  * 
  */
-  __pyx_tuple__68 = PyTuple_Pack(2, __pyx_n_s_n, __pyx_n_s_k); if (unlikely(!__pyx_tuple__68)) __PYX_ERR(1, 468, __pyx_L1_error)
+  __pyx_tuple__68 = PyTuple_Pack(2, __pyx_n_s_n, __pyx_n_s_k); if (unlikely(!__pyx_tuple__68)) __PYX_ERR(1, 507, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__68);
   __Pyx_GIVEREF(__pyx_tuple__68);
-  __pyx_codeobj__69 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__68, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_binomial_coefficient, 468, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__69)) __PYX_ERR(1, 468, __pyx_L1_error)
+  __pyx_codeobj__69 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__68, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_binomial_coefficient, 507, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__69)) __PYX_ERR(1, 507, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":486
+  /* "whatshap/core.pyx":525
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def is_none(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.is_none()
  * 
  */
-  __pyx_codeobj__70 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_is_none, 486, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__70)) __PYX_ERR(1, 486, __pyx_L1_error)
+  __pyx_codeobj__70 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_is_none, 525, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__70)) __PYX_ERR(1, 525, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":489
+  /* "whatshap/core.pyx":528
  * 		return self.thisptr.is_none()
  * 
  * 	def get_index(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.get_index()
  * 
  */
-  __pyx_codeobj__71 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_index, 489, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__71)) __PYX_ERR(1, 489, __pyx_L1_error)
+  __pyx_codeobj__71 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_index, 528, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__71)) __PYX_ERR(1, 528, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":492
+  /* "whatshap/core.pyx":531
  * 		return self.thisptr.get_index()
  * 
  * 	def as_vector(self):             # <<<<<<<<<<<<<<
  * 		result = []
  * 		cdef vector[uint32_t] alleles = self.thisptr.as_vector()
  */
-  __pyx_tuple__72 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_result, __pyx_n_s_alleles, __pyx_n_s_allele); if (unlikely(!__pyx_tuple__72)) __PYX_ERR(1, 492, __pyx_L1_error)
+  __pyx_tuple__72 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_result, __pyx_n_s_alleles, __pyx_n_s_allele); if (unlikely(!__pyx_tuple__72)) __PYX_ERR(1, 531, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__72);
   __Pyx_GIVEREF(__pyx_tuple__72);
-  __pyx_codeobj__73 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__72, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_as_vector, 492, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__73)) __PYX_ERR(1, 492, __pyx_L1_error)
+  __pyx_codeobj__73 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__72, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_as_vector, 531, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__73)) __PYX_ERR(1, 531, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":499
+  /* "whatshap/core.pyx":538
  * 		return alleles
  * 
  * 	def is_homozygous(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.is_homozygous()
  * 
  */
-  __pyx_codeobj__74 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_is_homozygous, 499, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__74)) __PYX_ERR(1, 499, __pyx_L1_error)
+  __pyx_codeobj__74 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_is_homozygous, 538, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__74)) __PYX_ERR(1, 538, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":502
+  /* "whatshap/core.pyx":541
  * 		return self.thisptr.is_homozygous()
  * 
  * 	def is_diploid_and_biallelic(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.is_diploid_and_biallelic()
  * 
  */
-  __pyx_codeobj__75 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_is_diploid_and_biallelic, 502, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__75)) __PYX_ERR(1, 502, __pyx_L1_error)
+  __pyx_codeobj__75 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_is_diploid_and_biallelic, 541, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__75)) __PYX_ERR(1, 541, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":505
+  /* "whatshap/core.pyx":544
  * 		return self.thisptr.is_diploid_and_biallelic()
  * 
  * 	def get_ploidy(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.get_ploidy()
  * 
  */
-  __pyx_codeobj__76 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_ploidy, 505, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__76)) __PYX_ERR(1, 505, __pyx_L1_error)
+  __pyx_codeobj__76 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_ploidy, 544, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__76)) __PYX_ERR(1, 544, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":517
+  /* "whatshap/core.pyx":556
  * 		return self.thisptr[0] < g.thisptr[0]
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
  * 		return (self.thisptr.get_index(), self.thisptr.get_ploidy())
  * 
  */
-  __pyx_codeobj__77 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_getstate, 517, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__77)) __PYX_ERR(1, 517, __pyx_L1_error)
+  __pyx_codeobj__77 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_getstate, 556, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__77)) __PYX_ERR(1, 556, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":520
+  /* "whatshap/core.pyx":559
  * 		return (self.thisptr.get_index(), self.thisptr.get_ploidy())
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
  * 		index, ploidy = state
  * 		cdef vector[uint32_t] alleles = cpp.convert_index_to_alleles(index, ploidy)
  */
-  __pyx_tuple__78 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_index, __pyx_n_s_ploidy, __pyx_n_s_alleles); if (unlikely(!__pyx_tuple__78)) __PYX_ERR(1, 520, __pyx_L1_error)
+  __pyx_tuple__78 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_state, __pyx_n_s_index, __pyx_n_s_ploidy, __pyx_n_s_alleles); if (unlikely(!__pyx_tuple__78)) __PYX_ERR(1, 559, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__78);
   __Pyx_GIVEREF(__pyx_tuple__78);
-  __pyx_codeobj__79 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__78, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_setstate, 520, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__79)) __PYX_ERR(1, 520, __pyx_L1_error)
+  __pyx_codeobj__79 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__78, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_setstate, 559, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__79)) __PYX_ERR(1, 559, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":527
+  /* "whatshap/core.pyx":566
  * 		self.thisptr = new cpp.Genotype(alleles)
  * 
  * 	def __deepcopy__(self, memo):             # <<<<<<<<<<<<<<
  * 		return Genotype.__new__(Genotype, self.as_vector())
  * 
  */
-  __pyx_tuple__80 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_memo); if (unlikely(!__pyx_tuple__80)) __PYX_ERR(1, 527, __pyx_L1_error)
+  __pyx_tuple__80 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_memo); if (unlikely(!__pyx_tuple__80)) __PYX_ERR(1, 566, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__80);
   __Pyx_GIVEREF(__pyx_tuple__80);
-  __pyx_codeobj__81 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__80, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_deepcopy, 527, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__81)) __PYX_ERR(1, 527, __pyx_L1_error)
+  __pyx_codeobj__81 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__80, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_deepcopy, 566, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__81)) __PYX_ERR(1, 566, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -30104,35 +31103,35 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  */
   __pyx_codeobj__83 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__83)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":534
+  /* "whatshap/core.pyx":573
  * 
  * 
  * def get_max_genotype_ploidy():             # <<<<<<<<<<<<<<
  * 	return cpp.get_max_genotype_ploidy()
  * 
  */
-  __pyx_codeobj__84 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_max_genotype_ploidy, 534, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__84)) __PYX_ERR(1, 534, __pyx_L1_error)
+  __pyx_codeobj__84 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_max_genotype_ploidy, 573, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__84)) __PYX_ERR(1, 573, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":538
+  /* "whatshap/core.pyx":577
  * 
  * 
  * def get_max_genotype_alleles():             # <<<<<<<<<<<<<<
  * 	return cpp.get_max_genotype_alleles()
  * 
  */
-  __pyx_codeobj__85 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_max_genotype_alleles, 538, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__85)) __PYX_ERR(1, 538, __pyx_L1_error)
+  __pyx_codeobj__85 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_max_genotype_alleles, 577, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__85)) __PYX_ERR(1, 577, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":560
+  /* "whatshap/core.pyx":599
  * 		del self.thisptr
  * 
  * 	def get_genotype_likelihoods(self, sample_id, unsigned int pos):             # <<<<<<<<<<<<<<
  * 		return PhredGenotypeLikelihoods(self.thisptr.get_genotype_likelihoods(self.numeric_sample_ids[sample_id],pos))
  * 
  */
-  __pyx_tuple__86 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_sample_id, __pyx_n_s_pos); if (unlikely(!__pyx_tuple__86)) __PYX_ERR(1, 560, __pyx_L1_error)
+  __pyx_tuple__86 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_sample_id, __pyx_n_s_pos); if (unlikely(!__pyx_tuple__86)) __PYX_ERR(1, 599, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__86);
   __Pyx_GIVEREF(__pyx_tuple__86);
-  __pyx_codeobj__87 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__86, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_genotype_likelihoods, 560, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__87)) __PYX_ERR(1, 560, __pyx_L1_error)
+  __pyx_codeobj__87 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__86, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_genotype_likelihoods, 599, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__87)) __PYX_ERR(1, 599, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -30149,56 +31148,56 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  */
   __pyx_codeobj__89 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__89)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":564
+  /* "whatshap/core.pyx":603
  * 
  * 
  * def compute_genotypes(ReadSet readset, positions = None):             # <<<<<<<<<<<<<<
  * 	cdef vector[cpp.Genotype]* genotypes_vector = new vector[cpp.Genotype]()
  * 	cdef vector[cpp.GenotypeDistribution]* gl_vector = new vector[cpp.GenotypeDistribution]()
  */
-  __pyx_tuple__90 = PyTuple_Pack(10, __pyx_n_s_readset, __pyx_n_s_positions, __pyx_n_s_genotypes_vector, __pyx_n_s_gl_vector, __pyx_n_s_c_positions, __pyx_n_s_pos, __pyx_n_s_genotypes, __pyx_n_s_gls, __pyx_n_s_genotype, __pyx_n_s_i); if (unlikely(!__pyx_tuple__90)) __PYX_ERR(1, 564, __pyx_L1_error)
+  __pyx_tuple__90 = PyTuple_Pack(10, __pyx_n_s_readset, __pyx_n_s_positions, __pyx_n_s_genotypes_vector, __pyx_n_s_gl_vector, __pyx_n_s_c_positions, __pyx_n_s_pos, __pyx_n_s_genotypes, __pyx_n_s_gls, __pyx_n_s_genotype, __pyx_n_s_i); if (unlikely(!__pyx_tuple__90)) __PYX_ERR(1, 603, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__90);
   __Pyx_GIVEREF(__pyx_tuple__90);
-  __pyx_codeobj__91 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__90, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_compute_genotypes, 564, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__91)) __PYX_ERR(1, 564, __pyx_L1_error)
+  __pyx_codeobj__91 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__90, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_compute_genotypes, 603, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__91)) __PYX_ERR(1, 603, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":587
+  /* "whatshap/core.pyx":626
  * 	def __dealloc__(self):
  * 		del self.thisptr
  * 	def get_length(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.get_length()
  * 	def get_super_reads(self):
  */
-  __pyx_codeobj__92 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_length, 587, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__92)) __PYX_ERR(1, 587, __pyx_L1_error)
+  __pyx_codeobj__92 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_length, 626, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__92)) __PYX_ERR(1, 626, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":589
+  /* "whatshap/core.pyx":628
  * 	def get_length(self):
  * 		return self.thisptr.get_length()
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
  * 		cdef vector[cpp.ReadSet*]* read_sets = new vector[cpp.ReadSet*]()
  * 		leng=self.thisptr.get_length()
  */
-  __pyx_tuple__93 = PyTuple_Pack(6, __pyx_n_s_self, __pyx_n_s_read_sets, __pyx_n_s_leng, __pyx_n_s_i, __pyx_n_s_results, __pyx_n_s_rs); if (unlikely(!__pyx_tuple__93)) __PYX_ERR(1, 589, __pyx_L1_error)
+  __pyx_tuple__93 = PyTuple_Pack(6, __pyx_n_s_self, __pyx_n_s_read_sets, __pyx_n_s_leng, __pyx_n_s_i, __pyx_n_s_results, __pyx_n_s_rs); if (unlikely(!__pyx_tuple__93)) __PYX_ERR(1, 628, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__93);
   __Pyx_GIVEREF(__pyx_tuple__93);
-  __pyx_codeobj__94 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__93, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_super_reads, 589, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__94)) __PYX_ERR(1, 589, __pyx_L1_error)
+  __pyx_codeobj__94 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__93, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_super_reads, 628, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__94)) __PYX_ERR(1, 628, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":604
+  /* "whatshap/core.pyx":643
  * 
  * 		return results, None
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.get_optimal_cost()
  * 	def get_optimal_partitioning(self):
  */
-  __pyx_codeobj__95 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_cost, 604, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__95)) __PYX_ERR(1, 604, __pyx_L1_error)
+  __pyx_codeobj__95 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_cost, 643, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__95)) __PYX_ERR(1, 643, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":606
+  /* "whatshap/core.pyx":645
  * 	def get_optimal_cost(self):
  * 		return self.thisptr.get_optimal_cost()
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
  * 		cdef vector[bool]* p = self.thisptr.get_optimal_partitioning()
  * 		result = ['*' for x in p[0]]
  */
-  __pyx_codeobj__96 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__48, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_partitioning, 606, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__96)) __PYX_ERR(1, 606, __pyx_L1_error)
+  __pyx_codeobj__96 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__48, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_partitioning, 645, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__96)) __PYX_ERR(1, 645, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -30215,50 +31214,50 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  */
   __pyx_codeobj__98 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__98)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":619
+  /* "whatshap/core.pyx":658
  * 		del self.thisptr
  * 
  * 	def all_variants(self, vector[pair[int,int]] variants_list):             # <<<<<<<<<<<<<<
  * 		cdef deque[pair[int,int]] v_list
  * 		for v in variants_list:
  */
-  __pyx_tuple__99 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_variants_list, __pyx_n_s_v_list, __pyx_n_s_v); if (unlikely(!__pyx_tuple__99)) __PYX_ERR(1, 619, __pyx_L1_error)
+  __pyx_tuple__99 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_variants_list, __pyx_n_s_v_list, __pyx_n_s_v); if (unlikely(!__pyx_tuple__99)) __PYX_ERR(1, 658, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__99);
   __Pyx_GIVEREF(__pyx_tuple__99);
-  __pyx_codeobj__100 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__99, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_all_variants, 619, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__100)) __PYX_ERR(1, 619, __pyx_L1_error)
+  __pyx_codeobj__100 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__99, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_all_variants, 658, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__100)) __PYX_ERR(1, 658, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":625
+  /* "whatshap/core.pyx":664
  * 		self.thisptr.all_variants(v_list)
  * 
  * 	def add_read(self, int bam_alignment_pos, vector[vector[int]]  bam_alignment_cigartuples, string bam_alignment_query, string outfile):             # <<<<<<<<<<<<<<
  * 		self.thisptr.add_read(bam_alignment_pos, bam_alignment_cigartuples, bam_alignment_query, outfile)
  * 
  */
-  __pyx_tuple__101 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_bam_alignment_pos, __pyx_n_s_bam_alignment_cigartuples, __pyx_n_s_bam_alignment_query, __pyx_n_s_outfile); if (unlikely(!__pyx_tuple__101)) __PYX_ERR(1, 625, __pyx_L1_error)
+  __pyx_tuple__101 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_bam_alignment_pos, __pyx_n_s_bam_alignment_cigartuples, __pyx_n_s_bam_alignment_query, __pyx_n_s_outfile); if (unlikely(!__pyx_tuple__101)) __PYX_ERR(1, 664, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__101);
   __Pyx_GIVEREF(__pyx_tuple__101);
-  __pyx_codeobj__102 = (PyObject*)__Pyx_PyCode_New(5, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__101, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_read, 625, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__102)) __PYX_ERR(1, 625, __pyx_L1_error)
+  __pyx_codeobj__102 = (PyObject*)__Pyx_PyCode_New(5, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__101, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_add_read, 664, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__102)) __PYX_ERR(1, 664, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":628
+  /* "whatshap/core.pyx":667
  * 		self.thisptr.add_read(bam_alignment_pos, bam_alignment_cigartuples, bam_alignment_query, outfile)
  * 
  * 	def final_pop(self, string outfile):             # <<<<<<<<<<<<<<
  * 		self.thisptr.final_pop(outfile)
  * 
  */
-  __pyx_tuple__103 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_outfile); if (unlikely(!__pyx_tuple__103)) __PYX_ERR(1, 628, __pyx_L1_error)
+  __pyx_tuple__103 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_outfile); if (unlikely(!__pyx_tuple__103)) __PYX_ERR(1, 667, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__103);
   __Pyx_GIVEREF(__pyx_tuple__103);
-  __pyx_codeobj__104 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__103, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_final_pop, 628, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__104)) __PYX_ERR(1, 628, __pyx_L1_error)
+  __pyx_codeobj__104 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__103, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_final_pop, 667, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__104)) __PYX_ERR(1, 667, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":631
+  /* "whatshap/core.pyx":670
  * 		self.thisptr.final_pop(outfile)
  * 
  * 	def finish(self):             # <<<<<<<<<<<<<<
  * 		pass
  * 
  */
-  __pyx_codeobj__105 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_finish, 631, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__105)) __PYX_ERR(1, 631, __pyx_L1_error)
+  __pyx_codeobj__105 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_finish, 670, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__105)) __PYX_ERR(1, 670, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -30275,47 +31274,47 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  */
   __pyx_codeobj__107 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__107)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":652
+  /* "whatshap/core.pyx":691
  * 		del self.thisptr
  * 
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
  * 		#Interface is identical to PedigreeDPTable
  * 
  */
-  __pyx_tuple__108 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_readSets, __pyx_n_s_opt_trans_ptr, __pyx_n_s_results, __pyx_n_s_i, __pyx_n_s_rs, __pyx_n_s_python_transmission_vector); if (unlikely(!__pyx_tuple__108)) __PYX_ERR(1, 652, __pyx_L1_error)
+  __pyx_tuple__108 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_readSets, __pyx_n_s_opt_trans_ptr, __pyx_n_s_results, __pyx_n_s_i, __pyx_n_s_rs, __pyx_n_s_python_transmission_vector); if (unlikely(!__pyx_tuple__108)) __PYX_ERR(1, 691, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__108);
   __Pyx_GIVEREF(__pyx_tuple__108);
-  __pyx_codeobj__109 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__108, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_super_reads, 652, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__109)) __PYX_ERR(1, 652, __pyx_L1_error)
+  __pyx_codeobj__109 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__108, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_super_reads, 691, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__109)) __PYX_ERR(1, 691, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":673
+  /* "whatshap/core.pyx":712
  * 		return results, python_transmission_vector
  * 
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
  * 		"""Returns the cost resulting from solving the Minimum Error Correction (MEC) problem."""
  * 		return self.thisptr.getOptScore()
  */
-  __pyx_codeobj__110 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_cost, 673, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__110)) __PYX_ERR(1, 673, __pyx_L1_error)
+  __pyx_codeobj__110 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_cost, 712, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__110)) __PYX_ERR(1, 712, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":677
+  /* "whatshap/core.pyx":716
  * 		return self.thisptr.getOptScore()
  * 
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
  * 		"""Returns a list of the same size as the read set, where each entry is either 0 or 1,
  * 		telling whether the corresponding read is in partition 0 or in partition 1,"""
  */
-  __pyx_codeobj__111 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__48, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_partitioning, 677, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__111)) __PYX_ERR(1, 677, __pyx_L1_error)
+  __pyx_codeobj__111 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__48, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_optimal_partitioning, 716, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__111)) __PYX_ERR(1, 716, __pyx_L1_error)
 
-  /* "whatshap/core.pyx":685
+  /* "whatshap/core.pyx":724
  * 		return result
  * 
  * 	def get_mutations(self):             # <<<<<<<<<<<<<<
  * 		"""Returns a 2D-list indicating which alleles contain a mutation. The outer list contains
  * 		one sub-list for each sample and the sub-list contains <hap_id, position> pairs of alleles
  */
-  __pyx_tuple__112 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_m, __pyx_n_s_result); if (unlikely(!__pyx_tuple__112)) __PYX_ERR(1, 685, __pyx_L1_error)
+  __pyx_tuple__112 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_m, __pyx_n_s_result); if (unlikely(!__pyx_tuple__112)) __PYX_ERR(1, 724, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__112);
   __Pyx_GIVEREF(__pyx_tuple__112);
-  __pyx_codeobj__113 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__112, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_mutations, 685, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__113)) __PYX_ERR(1, 685, __pyx_L1_error)
+  __pyx_codeobj__113 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__112, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_whatshap_core_pyx, __pyx_n_s_get_mutations, 724, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__113)) __PYX_ERR(1, 724, __pyx_L1_error)
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
@@ -30487,15 +31486,15 @@ static int __Pyx_modinit_type_init_code(void) {
   if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_Read) < 0) __PYX_ERR(1, 62, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core_ReadSet = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_ReadSet_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_ReadSet)) __PYX_ERR(1, 236, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_ReadSet_spec, __pyx_ptype_8whatshap_4core_ReadSet) < 0) __PYX_ERR(1, 236, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core_ReadSet = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_ReadSet_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_ReadSet)) __PYX_ERR(1, 275, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_ReadSet_spec, __pyx_ptype_8whatshap_4core_ReadSet) < 0) __PYX_ERR(1, 275, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core_ReadSet = &__pyx_type_8whatshap_4core_ReadSet;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_ReadSet) < 0) __PYX_ERR(1, 236, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_ReadSet) < 0) __PYX_ERR(1, 275, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core_ReadSet->tp_print = 0;
@@ -30505,20 +31504,20 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_8whatshap_4core_ReadSet->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_ReadSet, (PyObject *) __pyx_ptype_8whatshap_4core_ReadSet) < 0) __PYX_ERR(1, 236, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_ReadSet, (PyObject *) __pyx_ptype_8whatshap_4core_ReadSet) < 0) __PYX_ERR(1, 275, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_ReadSet) < 0) __PYX_ERR(1, 236, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_ReadSet) < 0) __PYX_ERR(1, 275, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core_Pedigree = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_Pedigree_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_Pedigree)) __PYX_ERR(1, 380, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_Pedigree_spec, __pyx_ptype_8whatshap_4core_Pedigree) < 0) __PYX_ERR(1, 380, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core_Pedigree = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_Pedigree_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_Pedigree)) __PYX_ERR(1, 419, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_Pedigree_spec, __pyx_ptype_8whatshap_4core_Pedigree) < 0) __PYX_ERR(1, 419, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core_Pedigree = &__pyx_type_8whatshap_4core_Pedigree;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_Pedigree) < 0) __PYX_ERR(1, 380, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_Pedigree) < 0) __PYX_ERR(1, 419, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core_Pedigree->tp_print = 0;
@@ -30528,20 +31527,20 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_8whatshap_4core_Pedigree->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Pedigree, (PyObject *) __pyx_ptype_8whatshap_4core_Pedigree) < 0) __PYX_ERR(1, 380, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Pedigree, (PyObject *) __pyx_ptype_8whatshap_4core_Pedigree) < 0) __PYX_ERR(1, 419, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_Pedigree) < 0) __PYX_ERR(1, 380, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_Pedigree) < 0) __PYX_ERR(1, 419, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core_PedigreeDPTable = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_PedigreeDPTable_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_PedigreeDPTable)) __PYX_ERR(1, 325, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_PedigreeDPTable_spec, __pyx_ptype_8whatshap_4core_PedigreeDPTable) < 0) __PYX_ERR(1, 325, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core_PedigreeDPTable = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_PedigreeDPTable_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_PedigreeDPTable)) __PYX_ERR(1, 364, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_PedigreeDPTable_spec, __pyx_ptype_8whatshap_4core_PedigreeDPTable) < 0) __PYX_ERR(1, 364, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core_PedigreeDPTable = &__pyx_type_8whatshap_4core_PedigreeDPTable;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_PedigreeDPTable) < 0) __PYX_ERR(1, 325, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_PedigreeDPTable) < 0) __PYX_ERR(1, 364, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core_PedigreeDPTable->tp_print = 0;
@@ -30551,20 +31550,20 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_8whatshap_4core_PedigreeDPTable->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PedigreeDPTable, (PyObject *) __pyx_ptype_8whatshap_4core_PedigreeDPTable) < 0) __PYX_ERR(1, 325, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PedigreeDPTable, (PyObject *) __pyx_ptype_8whatshap_4core_PedigreeDPTable) < 0) __PYX_ERR(1, 364, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_PedigreeDPTable) < 0) __PYX_ERR(1, 325, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_PedigreeDPTable) < 0) __PYX_ERR(1, 364, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_PhredGenotypeLikelihoods_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods)) __PYX_ERR(1, 430, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_PhredGenotypeLikelihoods_spec, __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods) < 0) __PYX_ERR(1, 430, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_PhredGenotypeLikelihoods_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods)) __PYX_ERR(1, 469, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_PhredGenotypeLikelihoods_spec, __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods) < 0) __PYX_ERR(1, 469, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods = &__pyx_type_8whatshap_4core_PhredGenotypeLikelihoods;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods) < 0) __PYX_ERR(1, 430, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods) < 0) __PYX_ERR(1, 469, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods->tp_print = 0;
@@ -30574,20 +31573,20 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PhredGenotypeLikelihoods, (PyObject *) __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods) < 0) __PYX_ERR(1, 430, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PhredGenotypeLikelihoods, (PyObject *) __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods) < 0) __PYX_ERR(1, 469, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods) < 0) __PYX_ERR(1, 430, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods) < 0) __PYX_ERR(1, 469, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core_Genotype = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_Genotype_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_Genotype)) __PYX_ERR(1, 472, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_Genotype_spec, __pyx_ptype_8whatshap_4core_Genotype) < 0) __PYX_ERR(1, 472, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core_Genotype = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_Genotype_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_Genotype)) __PYX_ERR(1, 511, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_Genotype_spec, __pyx_ptype_8whatshap_4core_Genotype) < 0) __PYX_ERR(1, 511, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core_Genotype = &__pyx_type_8whatshap_4core_Genotype;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_Genotype) < 0) __PYX_ERR(1, 472, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_Genotype) < 0) __PYX_ERR(1, 511, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core_Genotype->tp_print = 0;
@@ -30597,20 +31596,20 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_8whatshap_4core_Genotype->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Genotype, (PyObject *) __pyx_ptype_8whatshap_4core_Genotype) < 0) __PYX_ERR(1, 472, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Genotype, (PyObject *) __pyx_ptype_8whatshap_4core_Genotype) < 0) __PYX_ERR(1, 511, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_Genotype) < 0) __PYX_ERR(1, 472, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_Genotype) < 0) __PYX_ERR(1, 511, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core_GenotypeDPTable = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_GenotypeDPTable_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_GenotypeDPTable)) __PYX_ERR(1, 542, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_GenotypeDPTable_spec, __pyx_ptype_8whatshap_4core_GenotypeDPTable) < 0) __PYX_ERR(1, 542, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core_GenotypeDPTable = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_GenotypeDPTable_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_GenotypeDPTable)) __PYX_ERR(1, 581, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_GenotypeDPTable_spec, __pyx_ptype_8whatshap_4core_GenotypeDPTable) < 0) __PYX_ERR(1, 581, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core_GenotypeDPTable = &__pyx_type_8whatshap_4core_GenotypeDPTable;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_GenotypeDPTable) < 0) __PYX_ERR(1, 542, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_GenotypeDPTable) < 0) __PYX_ERR(1, 581, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core_GenotypeDPTable->tp_print = 0;
@@ -30620,20 +31619,20 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_8whatshap_4core_GenotypeDPTable->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GenotypeDPTable, (PyObject *) __pyx_ptype_8whatshap_4core_GenotypeDPTable) < 0) __PYX_ERR(1, 542, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_GenotypeDPTable, (PyObject *) __pyx_ptype_8whatshap_4core_GenotypeDPTable) < 0) __PYX_ERR(1, 581, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_GenotypeDPTable) < 0) __PYX_ERR(1, 542, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_GenotypeDPTable) < 0) __PYX_ERR(1, 581, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core_HapChatCore = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_HapChatCore_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_HapChatCore)) __PYX_ERR(1, 582, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_HapChatCore_spec, __pyx_ptype_8whatshap_4core_HapChatCore) < 0) __PYX_ERR(1, 582, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core_HapChatCore = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_HapChatCore_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_HapChatCore)) __PYX_ERR(1, 621, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_HapChatCore_spec, __pyx_ptype_8whatshap_4core_HapChatCore) < 0) __PYX_ERR(1, 621, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core_HapChatCore = &__pyx_type_8whatshap_4core_HapChatCore;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_HapChatCore) < 0) __PYX_ERR(1, 582, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_HapChatCore) < 0) __PYX_ERR(1, 621, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core_HapChatCore->tp_print = 0;
@@ -30643,20 +31642,20 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_8whatshap_4core_HapChatCore->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_HapChatCore, (PyObject *) __pyx_ptype_8whatshap_4core_HapChatCore) < 0) __PYX_ERR(1, 582, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_HapChatCore, (PyObject *) __pyx_ptype_8whatshap_4core_HapChatCore) < 0) __PYX_ERR(1, 621, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_HapChatCore) < 0) __PYX_ERR(1, 582, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_HapChatCore) < 0) __PYX_ERR(1, 621, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core_Caller = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_Caller_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_Caller)) __PYX_ERR(1, 612, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_Caller_spec, __pyx_ptype_8whatshap_4core_Caller) < 0) __PYX_ERR(1, 612, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core_Caller = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_Caller_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_Caller)) __PYX_ERR(1, 651, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_Caller_spec, __pyx_ptype_8whatshap_4core_Caller) < 0) __PYX_ERR(1, 651, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core_Caller = &__pyx_type_8whatshap_4core_Caller;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_Caller) < 0) __PYX_ERR(1, 612, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_Caller) < 0) __PYX_ERR(1, 651, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core_Caller->tp_print = 0;
@@ -30666,20 +31665,20 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_8whatshap_4core_Caller->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Caller, (PyObject *) __pyx_ptype_8whatshap_4core_Caller) < 0) __PYX_ERR(1, 612, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Caller, (PyObject *) __pyx_ptype_8whatshap_4core_Caller) < 0) __PYX_ERR(1, 651, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_Caller) < 0) __PYX_ERR(1, 612, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_Caller) < 0) __PYX_ERR(1, 651, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core_PedMecHeuristic = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_PedMecHeuristic_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_PedMecHeuristic)) __PYX_ERR(1, 635, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_PedMecHeuristic_spec, __pyx_ptype_8whatshap_4core_PedMecHeuristic) < 0) __PYX_ERR(1, 635, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core_PedMecHeuristic = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core_PedMecHeuristic_spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core_PedMecHeuristic)) __PYX_ERR(1, 674, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core_PedMecHeuristic_spec, __pyx_ptype_8whatshap_4core_PedMecHeuristic) < 0) __PYX_ERR(1, 674, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core_PedMecHeuristic = &__pyx_type_8whatshap_4core_PedMecHeuristic;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_PedMecHeuristic) < 0) __PYX_ERR(1, 635, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core_PedMecHeuristic) < 0) __PYX_ERR(1, 674, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core_PedMecHeuristic->tp_print = 0;
@@ -30689,20 +31688,20 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_ptype_8whatshap_4core_PedMecHeuristic->tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PedMecHeuristic, (PyObject *) __pyx_ptype_8whatshap_4core_PedMecHeuristic) < 0) __PYX_ERR(1, 635, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_PedMecHeuristic, (PyObject *) __pyx_ptype_8whatshap_4core_PedMecHeuristic) < 0) __PYX_ERR(1, 674, __pyx_L1_error)
   #if !CYTHON_COMPILING_IN_LIMITED_API
-  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_PedMecHeuristic) < 0) __PYX_ERR(1, 635, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_ptype_8whatshap_4core_PedMecHeuristic) < 0) __PYX_ERR(1, 674, __pyx_L1_error)
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__ = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core___pyx_scope_struct____iter___spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__)) __PYX_ERR(1, 128, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core___pyx_scope_struct____iter___spec, __pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__) < 0) __PYX_ERR(1, 128, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__ = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core___pyx_scope_struct____iter___spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__)) __PYX_ERR(1, 161, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core___pyx_scope_struct____iter___spec, __pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__) < 0) __PYX_ERR(1, 161, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__ = &__pyx_type_8whatshap_4core___pyx_scope_struct____iter__;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__) < 0) __PYX_ERR(1, 128, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__) < 0) __PYX_ERR(1, 161, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core___pyx_scope_struct____iter__->tp_print = 0;
@@ -30713,15 +31712,15 @@ static int __Pyx_modinit_type_init_code(void) {
   }
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__ = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core___pyx_scope_struct_1___iter___spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__)) __PYX_ERR(1, 253, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core___pyx_scope_struct_1___iter___spec, __pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__) < 0) __PYX_ERR(1, 253, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__ = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core___pyx_scope_struct_1___iter___spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__)) __PYX_ERR(1, 292, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core___pyx_scope_struct_1___iter___spec, __pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__) < 0) __PYX_ERR(1, 292, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__ = &__pyx_type_8whatshap_4core___pyx_scope_struct_1___iter__;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__) < 0) __PYX_ERR(1, 253, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__) < 0) __PYX_ERR(1, 292, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core___pyx_scope_struct_1___iter__->tp_print = 0;
@@ -30732,15 +31731,15 @@ static int __Pyx_modinit_type_init_code(void) {
   }
   #endif
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__ = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core___pyx_scope_struct_2___iter___spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__)) __PYX_ERR(1, 448, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core___pyx_scope_struct_2___iter___spec, __pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__) < 0) __PYX_ERR(1, 448, __pyx_L1_error)
+  __pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__ = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8whatshap_4core___pyx_scope_struct_2___iter___spec, NULL); if (unlikely(!__pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__)) __PYX_ERR(1, 487, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8whatshap_4core___pyx_scope_struct_2___iter___spec, __pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__) < 0) __PYX_ERR(1, 487, __pyx_L1_error)
   #else
   __pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__ = &__pyx_type_8whatshap_4core___pyx_scope_struct_2___iter__;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__) < 0) __PYX_ERR(1, 448, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__) < 0) __PYX_ERR(1, 487, __pyx_L1_error)
   #endif
   #if PY_MAJOR_VERSION < 3
   __pyx_ptype_8whatshap_4core___pyx_scope_struct_2___iter__->tp_print = 0;
@@ -31175,120 +32174,120 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":180
+  /* "whatshap/core.pyx":213
  * 		return False
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
  * 		mapqs = [mapq for mapq in self.mapqs]
  * 		variants = [(var.position, var.allele, var.quality) for var in self]
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_18__getstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read___getstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 180, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_18__getstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read___getstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_getstate, __pyx_t_2) < 0) __PYX_ERR(1, 180, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_getstate, __pyx_t_2) < 0) __PYX_ERR(1, 213, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Read);
 
-  /* "whatshap/core.pyx":185
- * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.BX_tag, self.HP_tag, self.PS_tag, variants)
+  /* "whatshap/core.pyx":218
+ * 		return (mapqs, self.name, self.source_id, self.sample_id, self.reference_start, self.reference_end, self.BX_tag, self.HP_tag, self.PS_tag, self.chromosome, self.sub_alignment_id, self.is_supplementary, self.is_reverse, variants)
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
- * 		mapqs, name, source_id, sample_id, reference_start, BX_tag, HP_tag, PS_tag, variants = state
+ * 		mapqs, name, source_id, sample_id, reference_start, reference_end, BX_tag, HP_tag, PS_tag, chromosome, sub_alignment_id, is_supplementary, is_reverse, variants = state
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_20__setstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read___setstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__21)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 185, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_20__setstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read___setstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__21)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_setstate, __pyx_t_2) < 0) __PYX_ERR(1, 185, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_setstate, __pyx_t_2) < 0) __PYX_ERR(1, 218, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Read);
 
-  /* "whatshap/core.pyx":208
+  /* "whatshap/core.pyx":247
  * 			self.add_variant(pos, allele, quality)
  * 
  * 	def add_variant(self, int position, int allele, int quality):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		self.thisptr.addVariant(position, allele, quality)
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_22add_variant, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_add_variant, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__23)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 208, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_22add_variant, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_add_variant, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__23)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_add_variant, __pyx_t_2) < 0) __PYX_ERR(1, 208, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_add_variant, __pyx_t_2) < 0) __PYX_ERR(1, 247, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Read);
 
-  /* "whatshap/core.pyx":212
+  /* "whatshap/core.pyx":251
  * 		self.thisptr.addVariant(position, allele, quality)
  * 
  * 	def add_mapq(self, int mapq):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		self.thisptr.addMapq(mapq)
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_24add_mapq, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_add_mapq, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__25)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 212, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_24add_mapq, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_add_mapq, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__25)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 251, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_add_mapq, __pyx_t_2) < 0) __PYX_ERR(1, 212, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_add_mapq, __pyx_t_2) < 0) __PYX_ERR(1, 251, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Read);
 
-  /* "whatshap/core.pyx":216
+  /* "whatshap/core.pyx":255
  * 		self.thisptr.addMapq(mapq)
  * 
  * 	def sort(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		self.thisptr.sortVariants()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_26sort, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_sort, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 216, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_26sort, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_sort, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 255, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_sort, __pyx_t_2) < 0) __PYX_ERR(1, 216, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_sort, __pyx_t_2) < 0) __PYX_ERR(1, 255, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Read);
 
-  /* "whatshap/core.pyx":220
+  /* "whatshap/core.pyx":259
  * 		self.thisptr.sortVariants()
  * 
  * 	def is_sorted(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.isSorted()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_28is_sorted, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_is_sorted, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__27)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 220, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_28is_sorted, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_is_sorted, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__27)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 259, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_is_sorted, __pyx_t_2) < 0) __PYX_ERR(1, 220, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_is_sorted, __pyx_t_2) < 0) __PYX_ERR(1, 259, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Read);
 
-  /* "whatshap/core.pyx":224
+  /* "whatshap/core.pyx":263
  * 		return self.thisptr.isSorted()
  * 
  * 	def has_BX_tag(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.hasBXTag()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_30has_BX_tag, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_has_BX_tag, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 224, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_30has_BX_tag, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_has_BX_tag, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 263, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_has_BX_tag, __pyx_t_2) < 0) __PYX_ERR(1, 224, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_has_BX_tag, __pyx_t_2) < 0) __PYX_ERR(1, 263, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Read);
 
-  /* "whatshap/core.pyx":228
+  /* "whatshap/core.pyx":267
  * 		return self.thisptr.hasBXTag()
  * 
  * 	def has_HP_tag(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.hasBXTag()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_32has_HP_tag, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_has_HP_tag, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__29)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 228, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_32has_HP_tag, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_has_HP_tag, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__29)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 267, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_has_HP_tag, __pyx_t_2) < 0) __PYX_ERR(1, 228, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_has_HP_tag, __pyx_t_2) < 0) __PYX_ERR(1, 267, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Read);
 
-  /* "whatshap/core.pyx":232
+  /* "whatshap/core.pyx":271
  * 		return self.thisptr.hasBXTag()
  * 
  * 	def has_PS_tag(self):             # <<<<<<<<<<<<<<
  * 		assert self.thisptr != NULL
  * 		return self.thisptr.hasBXTag()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_34has_PS_tag, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_has_PS_tag, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 232, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_4Read_34has_PS_tag, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Read_has_PS_tag, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 271, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_has_PS_tag, __pyx_t_2) < 0) __PYX_ERR(1, 232, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Read, __pyx_n_s_has_PS_tag, __pyx_t_2) < 0) __PYX_ERR(1, 271, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Read);
 
@@ -31313,81 +32312,81 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":243
+  /* "whatshap/core.pyx":282
  * 		del self.thisptr
  * 
  * 	def add(self, Read read):             # <<<<<<<<<<<<<<
  * 		"""Adds a read to the set.
  * 		WARNING: this will internally create a copy of the wrapped C++ Read object,
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_5add, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet_add, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__34)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 243, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_5add, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet_add, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__34)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 282, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_add, __pyx_t_2) < 0) __PYX_ERR(1, 243, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_add, __pyx_t_2) < 0) __PYX_ERR(1, 282, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_ReadSet);
 
-  /* "whatshap/core.pyx":282
+  /* "whatshap/core.pyx":321
  * 		return read
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
  * 		return ([read for read in self])
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_16__getstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet___getstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 282, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_16__getstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet___getstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 321, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_getstate, __pyx_t_2) < 0) __PYX_ERR(1, 282, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_getstate, __pyx_t_2) < 0) __PYX_ERR(1, 321, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_ReadSet);
 
-  /* "whatshap/core.pyx":285
+  /* "whatshap/core.pyx":324
  * 		return ([read for read in self])
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
  * 		self.thisptr = new cpp.ReadSet()
  * 		for read in state:
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_18__setstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet___setstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__37)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 285, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_18__setstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet___setstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__37)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 324, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_setstate, __pyx_t_2) < 0) __PYX_ERR(1, 285, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_setstate, __pyx_t_2) < 0) __PYX_ERR(1, 324, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_ReadSet);
 
-  /* "whatshap/core.pyx":300
+  /* "whatshap/core.pyx":339
  * 			#return read
  * 
  * 	def sort(self):             # <<<<<<<<<<<<<<
  * 		"""Sort contained reads by the position of the first variant they contain. Note that
  * 		this is not necessarily the variant with the lowest position, unless sort() has been
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_20sort, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet_sort, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 300, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_20sort, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet_sort, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 339, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_sort, __pyx_t_2) < 0) __PYX_ERR(1, 300, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_sort, __pyx_t_2) < 0) __PYX_ERR(1, 339, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_ReadSet);
 
-  /* "whatshap/core.pyx":306
+  /* "whatshap/core.pyx":345
  * 		self.thisptr.sort()
  * 
  * 	def subset(self, reads_to_select):             # <<<<<<<<<<<<<<
  * 		# TODO: is there a way of avoiding to unecessarily creating/destroying a ReadSet object?
  * 		cdef cpp.IndexSet* index_set = new cpp.IndexSet()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_22subset, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet_subset, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 306, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_22subset, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet_subset, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 345, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_subset, __pyx_t_2) < 0) __PYX_ERR(1, 306, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_subset, __pyx_t_2) < 0) __PYX_ERR(1, 345, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_ReadSet);
 
-  /* "whatshap/core.pyx":318
+  /* "whatshap/core.pyx":357
  * 		return result
  * 
  * 	def get_positions(self):             # <<<<<<<<<<<<<<
  * 		cdef vector[unsigned int]* v = self.thisptr.get_positions()
  * 		result = list(v[0])
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_24get_positions, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet_get_positions, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__42)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 318, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7ReadSet_24get_positions, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_ReadSet_get_positions, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__42)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 357, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_get_positions, __pyx_t_2) < 0) __PYX_ERR(1, 318, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_ReadSet, __pyx_n_s_get_positions, __pyx_t_2) < 0) __PYX_ERR(1, 357, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_ReadSet);
 
@@ -31412,42 +32411,42 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":342
+  /* "whatshap/core.pyx":381
  * 		del self.thisptr
  * 
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
  * 		"""Obtain optimal-score haplotypes. Returns a triple (mother, father, child)
  * 		IMPORTANT: The ReadSet given at construction time must not have been altered.
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedigreeDPTable_5get_super_reads, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedigreeDPTable_get_super_reads, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__46)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 342, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedigreeDPTable_5get_super_reads, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedigreeDPTable_get_super_reads, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__46)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 381, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedigreeDPTable, __pyx_n_s_get_super_reads, __pyx_t_2) < 0) __PYX_ERR(1, 342, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedigreeDPTable, __pyx_n_s_get_super_reads, __pyx_t_2) < 0) __PYX_ERR(1, 381, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_PedigreeDPTable);
 
-  /* "whatshap/core.pyx":367
+  /* "whatshap/core.pyx":406
  * 		return results, python_transmission_vector
  * 
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
  * 		"""Returns the cost resulting from solving the Minimum Error Correction (MEC) problem."""
  * 		return self.thisptr.get_optimal_score()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedigreeDPTable_7get_optimal_cost, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedigreeDPTable_get_optimal_cost, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__47)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 367, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedigreeDPTable_7get_optimal_cost, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedigreeDPTable_get_optimal_cost, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__47)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 406, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedigreeDPTable, __pyx_n_s_get_optimal_cost, __pyx_t_2) < 0) __PYX_ERR(1, 367, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedigreeDPTable, __pyx_n_s_get_optimal_cost, __pyx_t_2) < 0) __PYX_ERR(1, 406, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_PedigreeDPTable);
 
-  /* "whatshap/core.pyx":371
+  /* "whatshap/core.pyx":410
  * 		return self.thisptr.get_optimal_score()
  * 
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
  * 		"""Returns a list of the same size as the read set, where each entry is either 0 or 1,
  * 		telling whether the corresponding read is in partition 0 or in partition 1,"""
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedigreeDPTable_9get_optimal_partitioning, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedigreeDPTable_get_optimal_part, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__49)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 371, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedigreeDPTable_9get_optimal_partitioning, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedigreeDPTable_get_optimal_part, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__49)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 410, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedigreeDPTable, __pyx_n_s_get_optimal_partitioning, __pyx_t_2) < 0) __PYX_ERR(1, 371, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedigreeDPTable, __pyx_n_s_get_optimal_partitioning, __pyx_t_2) < 0) __PYX_ERR(1, 410, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_PedigreeDPTable);
 
@@ -31472,56 +32471,56 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":388
+  /* "whatshap/core.pyx":427
  * 		del self.thisptr
  * 
  * 	def add_individual(self, id, genotypes, genotype_likelihoods=None):             # <<<<<<<<<<<<<<
  * 		cdef vector[cpp.Genotype*] gt_vector
  * 		for gt in genotypes:
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Pedigree_5add_individual, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Pedigree_add_individual, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 388, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Pedigree_5add_individual, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Pedigree_add_individual, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__54)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 427, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__55);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Pedigree, __pyx_n_s_add_individual, __pyx_t_2) < 0) __PYX_ERR(1, 388, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Pedigree, __pyx_n_s_add_individual, __pyx_t_2) < 0) __PYX_ERR(1, 427, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Pedigree);
 
-  /* "whatshap/core.pyx":404
+  /* "whatshap/core.pyx":443
  * 		self.thisptr.addIndividual(self.numeric_sample_ids[id], gt_vector, gl_vector)
  * 
  * 	def add_relationship(self, father_id, mother_id, child_id):             # <<<<<<<<<<<<<<
  * 		self.thisptr.addRelationship(self.numeric_sample_ids[father_id], self.numeric_sample_ids[mother_id], self.numeric_sample_ids[child_id])
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Pedigree_7add_relationship, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Pedigree_add_relationship, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__57)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 404, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Pedigree_7add_relationship, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Pedigree_add_relationship, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__57)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 443, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Pedigree, __pyx_n_s_add_relationship, __pyx_t_2) < 0) __PYX_ERR(1, 404, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Pedigree, __pyx_n_s_add_relationship, __pyx_t_2) < 0) __PYX_ERR(1, 443, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Pedigree);
 
-  /* "whatshap/core.pyx":412
+  /* "whatshap/core.pyx":451
  * 			return self.thisptr.get_variant_count()
  * 
  * 	def genotype(self, sample_id, unsigned int variant_index):             # <<<<<<<<<<<<<<
  * 		cdef const cpp.Genotype* gt = self.thisptr.get_genotype_by_id(self.numeric_sample_ids[sample_id], variant_index)
  * 		return Genotype(gt[0].as_vector())
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Pedigree_9genotype, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Pedigree_genotype, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__59)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 412, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Pedigree_9genotype, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Pedigree_genotype, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__59)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 451, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Pedigree, __pyx_n_s_genotype, __pyx_t_2) < 0) __PYX_ERR(1, 412, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Pedigree, __pyx_n_s_genotype, __pyx_t_2) < 0) __PYX_ERR(1, 451, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Pedigree);
 
-  /* "whatshap/core.pyx":416
+  /* "whatshap/core.pyx":455
  * 		return Genotype(gt[0].as_vector())
  * 
  * 	def genotype_likelihoods(self, sample_id, unsigned int variant_index):             # <<<<<<<<<<<<<<
  * 		cdef const cpp.PhredGenotypeLikelihoods* gl = self.thisptr.get_genotype_likelihoods_by_id(self.numeric_sample_ids[sample_id], variant_index)
  * 		if gl == NULL:
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Pedigree_11genotype_likelihoods, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Pedigree_genotype_likelihoods, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__61)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 416, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Pedigree_11genotype_likelihoods, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Pedigree_genotype_likelihoods, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__61)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 455, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Pedigree, __pyx_n_s_genotype_likelihoods, __pyx_t_2) < 0) __PYX_ERR(1, 416, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Pedigree, __pyx_n_s_genotype_likelihoods, __pyx_t_2) < 0) __PYX_ERR(1, 455, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Pedigree);
 
@@ -31546,16 +32545,16 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":460
+  /* "whatshap/core.pyx":499
  * 		return True
  * 
  * 	def genotypes(self):             # <<<<<<<<<<<<<<
  * 		cdef vector[cpp.Genotype]* genotypes = new vector[cpp.Genotype]()
  * 		self.thisptr.get_genotypes(deref(genotypes))
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_24PhredGenotypeLikelihoods_16genotypes, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PhredGenotypeLikelihoods_genotyp, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 460, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_24PhredGenotypeLikelihoods_16genotypes, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PhredGenotypeLikelihoods_genotyp, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 499, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods, __pyx_n_s_genotypes, __pyx_t_2) < 0) __PYX_ERR(1, 460, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods, __pyx_n_s_genotypes, __pyx_t_2) < 0) __PYX_ERR(1, 499, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_PhredGenotypeLikelihoods);
 
@@ -31580,132 +32579,132 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":468
+  /* "whatshap/core.pyx":507
  * 
  * 
  * def binomial_coefficient(int n, int k):             # <<<<<<<<<<<<<<
  * 	return cpp.binomial_coefficient(n, k)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_1binomial_coefficient, 0, __pyx_n_s_binomial_coefficient, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__69)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 468, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_1binomial_coefficient, 0, __pyx_n_s_binomial_coefficient, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__69)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 507, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_binomial_coefficient, __pyx_t_2) < 0) __PYX_ERR(1, 468, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_binomial_coefficient, __pyx_t_2) < 0) __PYX_ERR(1, 507, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":486
+  /* "whatshap/core.pyx":525
  * 		return self.thisptr.toString().decode('utf-8')
  * 
  * 	def is_none(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.is_none()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_9is_none, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_is_none, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__70)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 486, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_9is_none, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_is_none, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__70)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 525, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_is_none, __pyx_t_2) < 0) __PYX_ERR(1, 486, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_is_none, __pyx_t_2) < 0) __PYX_ERR(1, 525, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Genotype);
 
-  /* "whatshap/core.pyx":489
+  /* "whatshap/core.pyx":528
  * 		return self.thisptr.is_none()
  * 
  * 	def get_index(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.get_index()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_11get_index, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_get_index, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__71)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 489, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_11get_index, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_get_index, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__71)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 528, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_get_index, __pyx_t_2) < 0) __PYX_ERR(1, 489, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_get_index, __pyx_t_2) < 0) __PYX_ERR(1, 528, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Genotype);
 
-  /* "whatshap/core.pyx":492
+  /* "whatshap/core.pyx":531
  * 		return self.thisptr.get_index()
  * 
  * 	def as_vector(self):             # <<<<<<<<<<<<<<
  * 		result = []
  * 		cdef vector[uint32_t] alleles = self.thisptr.as_vector()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_13as_vector, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_as_vector, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__73)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 492, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_13as_vector, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_as_vector, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__73)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 531, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_as_vector, __pyx_t_2) < 0) __PYX_ERR(1, 492, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_as_vector, __pyx_t_2) < 0) __PYX_ERR(1, 531, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Genotype);
 
-  /* "whatshap/core.pyx":499
+  /* "whatshap/core.pyx":538
  * 		return alleles
  * 
  * 	def is_homozygous(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.is_homozygous()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_15is_homozygous, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_is_homozygous, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__74)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 499, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_15is_homozygous, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_is_homozygous, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__74)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 538, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_is_homozygous, __pyx_t_2) < 0) __PYX_ERR(1, 499, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_is_homozygous, __pyx_t_2) < 0) __PYX_ERR(1, 538, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Genotype);
 
-  /* "whatshap/core.pyx":502
+  /* "whatshap/core.pyx":541
  * 		return self.thisptr.is_homozygous()
  * 
  * 	def is_diploid_and_biallelic(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.is_diploid_and_biallelic()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_17is_diploid_and_biallelic, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_is_diploid_and_bialleli, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__75)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 502, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_17is_diploid_and_biallelic, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_is_diploid_and_bialleli, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__75)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 541, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_is_diploid_and_biallelic, __pyx_t_2) < 0) __PYX_ERR(1, 502, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_is_diploid_and_biallelic, __pyx_t_2) < 0) __PYX_ERR(1, 541, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Genotype);
 
-  /* "whatshap/core.pyx":505
+  /* "whatshap/core.pyx":544
  * 		return self.thisptr.is_diploid_and_biallelic()
  * 
  * 	def get_ploidy(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.get_ploidy()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_19get_ploidy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_get_ploidy, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__76)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 505, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_19get_ploidy, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype_get_ploidy, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__76)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 544, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_get_ploidy, __pyx_t_2) < 0) __PYX_ERR(1, 505, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_get_ploidy, __pyx_t_2) < 0) __PYX_ERR(1, 544, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Genotype);
 
-  /* "whatshap/core.pyx":517
+  /* "whatshap/core.pyx":556
  * 		return self.thisptr[0] < g.thisptr[0]
  * 
  * 	def __getstate__(self):             # <<<<<<<<<<<<<<
  * 		return (self.thisptr.get_index(), self.thisptr.get_ploidy())
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_27__getstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype___getstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__77)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 517, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_27__getstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype___getstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__77)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 556, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_getstate, __pyx_t_2) < 0) __PYX_ERR(1, 517, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_getstate, __pyx_t_2) < 0) __PYX_ERR(1, 556, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Genotype);
 
-  /* "whatshap/core.pyx":520
+  /* "whatshap/core.pyx":559
  * 		return (self.thisptr.get_index(), self.thisptr.get_ploidy())
  * 
  * 	def __setstate__(self, state):             # <<<<<<<<<<<<<<
  * 		index, ploidy = state
  * 		cdef vector[uint32_t] alleles = cpp.convert_index_to_alleles(index, ploidy)
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_29__setstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype___setstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__79)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 520, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_29__setstate__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype___setstate, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__79)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 559, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_setstate, __pyx_t_2) < 0) __PYX_ERR(1, 520, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_setstate, __pyx_t_2) < 0) __PYX_ERR(1, 559, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Genotype);
 
-  /* "whatshap/core.pyx":527
+  /* "whatshap/core.pyx":566
  * 		self.thisptr = new cpp.Genotype(alleles)
  * 
  * 	def __deepcopy__(self, memo):             # <<<<<<<<<<<<<<
  * 		return Genotype.__new__(Genotype, self.as_vector())
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_31__deepcopy__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype___deepcopy, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__81)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 527, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_8Genotype_31__deepcopy__, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Genotype___deepcopy, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__81)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 566, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_deepcopy, __pyx_t_2) < 0) __PYX_ERR(1, 527, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Genotype, __pyx_n_s_deepcopy, __pyx_t_2) < 0) __PYX_ERR(1, 566, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Genotype);
 
@@ -31730,40 +32729,40 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":534
+  /* "whatshap/core.pyx":573
  * 
  * 
  * def get_max_genotype_ploidy():             # <<<<<<<<<<<<<<
  * 	return cpp.get_max_genotype_ploidy()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_3get_max_genotype_ploidy, 0, __pyx_n_s_get_max_genotype_ploidy, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__84)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 534, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_3get_max_genotype_ploidy, 0, __pyx_n_s_get_max_genotype_ploidy, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__84)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 573, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_max_genotype_ploidy, __pyx_t_2) < 0) __PYX_ERR(1, 534, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_max_genotype_ploidy, __pyx_t_2) < 0) __PYX_ERR(1, 573, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":538
+  /* "whatshap/core.pyx":577
  * 
  * 
  * def get_max_genotype_alleles():             # <<<<<<<<<<<<<<
  * 	return cpp.get_max_genotype_alleles()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_5get_max_genotype_alleles, 0, __pyx_n_s_get_max_genotype_alleles, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__85)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 538, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_5get_max_genotype_alleles, 0, __pyx_n_s_get_max_genotype_alleles, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__85)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 577, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_max_genotype_alleles, __pyx_t_2) < 0) __PYX_ERR(1, 538, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_max_genotype_alleles, __pyx_t_2) < 0) __PYX_ERR(1, 577, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":560
+  /* "whatshap/core.pyx":599
  * 		del self.thisptr
  * 
  * 	def get_genotype_likelihoods(self, sample_id, unsigned int pos):             # <<<<<<<<<<<<<<
  * 		return PhredGenotypeLikelihoods(self.thisptr.get_genotype_likelihoods(self.numeric_sample_ids[sample_id],pos))
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15GenotypeDPTable_5get_genotype_likelihoods, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GenotypeDPTable_get_genotype_lik, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__87)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 560, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15GenotypeDPTable_5get_genotype_likelihoods, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_GenotypeDPTable_get_genotype_lik, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__87)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 599, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_GenotypeDPTable, __pyx_n_s_get_genotype_likelihoods, __pyx_t_2) < 0) __PYX_ERR(1, 560, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_GenotypeDPTable, __pyx_n_s_get_genotype_likelihoods, __pyx_t_2) < 0) __PYX_ERR(1, 599, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_GenotypeDPTable);
 
@@ -31788,68 +32787,68 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":564
+  /* "whatshap/core.pyx":603
  * 
  * 
  * def compute_genotypes(ReadSet readset, positions = None):             # <<<<<<<<<<<<<<
  * 	cdef vector[cpp.Genotype]* genotypes_vector = new vector[cpp.Genotype]()
  * 	cdef vector[cpp.GenotypeDistribution]* gl_vector = new vector[cpp.GenotypeDistribution]()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7compute_genotypes, 0, __pyx_n_s_compute_genotypes, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__91)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 564, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_7compute_genotypes, 0, __pyx_n_s_compute_genotypes, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__91)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 603, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__55);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_compute_genotypes, __pyx_t_2) < 0) __PYX_ERR(1, 564, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_compute_genotypes, __pyx_t_2) < 0) __PYX_ERR(1, 603, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":587
+  /* "whatshap/core.pyx":626
  * 	def __dealloc__(self):
  * 		del self.thisptr
  * 	def get_length(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.get_length()
  * 	def get_super_reads(self):
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_11HapChatCore_5get_length, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_HapChatCore_get_length, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__92)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 587, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_11HapChatCore_5get_length, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_HapChatCore_get_length, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__92)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 626, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_HapChatCore, __pyx_n_s_get_length, __pyx_t_2) < 0) __PYX_ERR(1, 587, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_HapChatCore, __pyx_n_s_get_length, __pyx_t_2) < 0) __PYX_ERR(1, 626, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_HapChatCore);
 
-  /* "whatshap/core.pyx":589
+  /* "whatshap/core.pyx":628
  * 	def get_length(self):
  * 		return self.thisptr.get_length()
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
  * 		cdef vector[cpp.ReadSet*]* read_sets = new vector[cpp.ReadSet*]()
  * 		leng=self.thisptr.get_length()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_11HapChatCore_7get_super_reads, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_HapChatCore_get_super_reads, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__94)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 589, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_11HapChatCore_7get_super_reads, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_HapChatCore_get_super_reads, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__94)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 628, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_HapChatCore, __pyx_n_s_get_super_reads, __pyx_t_2) < 0) __PYX_ERR(1, 589, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_HapChatCore, __pyx_n_s_get_super_reads, __pyx_t_2) < 0) __PYX_ERR(1, 628, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_HapChatCore);
 
-  /* "whatshap/core.pyx":604
+  /* "whatshap/core.pyx":643
  * 
  * 		return results, None
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
  * 		return self.thisptr.get_optimal_cost()
  * 	def get_optimal_partitioning(self):
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_11HapChatCore_9get_optimal_cost, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_HapChatCore_get_optimal_cost, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__95)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 604, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_11HapChatCore_9get_optimal_cost, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_HapChatCore_get_optimal_cost, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__95)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 643, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_HapChatCore, __pyx_n_s_get_optimal_cost, __pyx_t_2) < 0) __PYX_ERR(1, 604, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_HapChatCore, __pyx_n_s_get_optimal_cost, __pyx_t_2) < 0) __PYX_ERR(1, 643, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_HapChatCore);
 
-  /* "whatshap/core.pyx":606
+  /* "whatshap/core.pyx":645
  * 	def get_optimal_cost(self):
  * 		return self.thisptr.get_optimal_cost()
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
  * 		cdef vector[bool]* p = self.thisptr.get_optimal_partitioning()
  * 		result = ['*' for x in p[0]]
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_11HapChatCore_11get_optimal_partitioning, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_HapChatCore_get_optimal_partitio, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__96)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 606, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_11HapChatCore_11get_optimal_partitioning, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_HapChatCore_get_optimal_partitio, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__96)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 645, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_HapChatCore, __pyx_n_s_get_optimal_partitioning, __pyx_t_2) < 0) __PYX_ERR(1, 606, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_HapChatCore, __pyx_n_s_get_optimal_partitioning, __pyx_t_2) < 0) __PYX_ERR(1, 645, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_HapChatCore);
 
@@ -31874,55 +32873,55 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":619
+  /* "whatshap/core.pyx":658
  * 		del self.thisptr
  * 
  * 	def all_variants(self, vector[pair[int,int]] variants_list):             # <<<<<<<<<<<<<<
  * 		cdef deque[pair[int,int]] v_list
  * 		for v in variants_list:
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_6Caller_5all_variants, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Caller_all_variants, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__100)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 619, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_6Caller_5all_variants, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Caller_all_variants, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__100)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 658, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Caller, __pyx_n_s_all_variants, __pyx_t_2) < 0) __PYX_ERR(1, 619, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Caller, __pyx_n_s_all_variants, __pyx_t_2) < 0) __PYX_ERR(1, 658, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Caller);
 
-  /* "whatshap/core.pyx":625
+  /* "whatshap/core.pyx":664
  * 		self.thisptr.all_variants(v_list)
  * 
  * 	def add_read(self, int bam_alignment_pos, vector[vector[int]]  bam_alignment_cigartuples, string bam_alignment_query, string outfile):             # <<<<<<<<<<<<<<
  * 		self.thisptr.add_read(bam_alignment_pos, bam_alignment_cigartuples, bam_alignment_query, outfile)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_6Caller_7add_read, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Caller_add_read, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__102)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 625, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_6Caller_7add_read, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Caller_add_read, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__102)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 664, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Caller, __pyx_n_s_add_read, __pyx_t_2) < 0) __PYX_ERR(1, 625, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Caller, __pyx_n_s_add_read, __pyx_t_2) < 0) __PYX_ERR(1, 664, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Caller);
 
-  /* "whatshap/core.pyx":628
+  /* "whatshap/core.pyx":667
  * 		self.thisptr.add_read(bam_alignment_pos, bam_alignment_cigartuples, bam_alignment_query, outfile)
  * 
  * 	def final_pop(self, string outfile):             # <<<<<<<<<<<<<<
  * 		self.thisptr.final_pop(outfile)
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_6Caller_9final_pop, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Caller_final_pop, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__104)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 628, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_6Caller_9final_pop, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Caller_final_pop, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__104)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 667, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Caller, __pyx_n_s_final_pop, __pyx_t_2) < 0) __PYX_ERR(1, 628, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Caller, __pyx_n_s_final_pop, __pyx_t_2) < 0) __PYX_ERR(1, 667, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Caller);
 
-  /* "whatshap/core.pyx":631
+  /* "whatshap/core.pyx":670
  * 		self.thisptr.final_pop(outfile)
  * 
  * 	def finish(self):             # <<<<<<<<<<<<<<
  * 		pass
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_6Caller_11finish, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Caller_finish, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__105)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 631, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_6Caller_11finish, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_Caller_finish, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__105)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 670, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Caller, __pyx_n_s_finish, __pyx_t_2) < 0) __PYX_ERR(1, 631, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_Caller, __pyx_n_s_finish, __pyx_t_2) < 0) __PYX_ERR(1, 670, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_Caller);
 
@@ -31947,55 +32946,55 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "whatshap/core.pyx":652
+  /* "whatshap/core.pyx":691
  * 		del self.thisptr
  * 
  * 	def get_super_reads(self):             # <<<<<<<<<<<<<<
  * 		#Interface is identical to PedigreeDPTable
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedMecHeuristic_5get_super_reads, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedMecHeuristic_get_super_reads, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__109)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 652, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedMecHeuristic_5get_super_reads, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedMecHeuristic_get_super_reads, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__109)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 691, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedMecHeuristic, __pyx_n_s_get_super_reads, __pyx_t_2) < 0) __PYX_ERR(1, 652, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedMecHeuristic, __pyx_n_s_get_super_reads, __pyx_t_2) < 0) __PYX_ERR(1, 691, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_PedMecHeuristic);
 
-  /* "whatshap/core.pyx":673
+  /* "whatshap/core.pyx":712
  * 		return results, python_transmission_vector
  * 
  * 	def get_optimal_cost(self):             # <<<<<<<<<<<<<<
  * 		"""Returns the cost resulting from solving the Minimum Error Correction (MEC) problem."""
  * 		return self.thisptr.getOptScore()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedMecHeuristic_7get_optimal_cost, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedMecHeuristic_get_optimal_cost, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__110)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 673, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedMecHeuristic_7get_optimal_cost, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedMecHeuristic_get_optimal_cost, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__110)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 712, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedMecHeuristic, __pyx_n_s_get_optimal_cost, __pyx_t_2) < 0) __PYX_ERR(1, 673, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedMecHeuristic, __pyx_n_s_get_optimal_cost, __pyx_t_2) < 0) __PYX_ERR(1, 712, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_PedMecHeuristic);
 
-  /* "whatshap/core.pyx":677
+  /* "whatshap/core.pyx":716
  * 		return self.thisptr.getOptScore()
  * 
  * 	def get_optimal_partitioning(self):             # <<<<<<<<<<<<<<
  * 		"""Returns a list of the same size as the read set, where each entry is either 0 or 1,
  * 		telling whether the corresponding read is in partition 0 or in partition 1,"""
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedMecHeuristic_9get_optimal_partitioning, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedMecHeuristic_get_optimal_part, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__111)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 677, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedMecHeuristic_9get_optimal_partitioning, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedMecHeuristic_get_optimal_part, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__111)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 716, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedMecHeuristic, __pyx_n_s_get_optimal_partitioning, __pyx_t_2) < 0) __PYX_ERR(1, 677, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedMecHeuristic, __pyx_n_s_get_optimal_partitioning, __pyx_t_2) < 0) __PYX_ERR(1, 716, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_PedMecHeuristic);
 
-  /* "whatshap/core.pyx":685
+  /* "whatshap/core.pyx":724
  * 		return result
  * 
  * 	def get_mutations(self):             # <<<<<<<<<<<<<<
  * 		"""Returns a 2D-list indicating which alleles contain a mutation. The outer list contains
  * 		one sub-list for each sample and the sub-list contains <hap_id, position> pairs of alleles
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedMecHeuristic_11get_mutations, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedMecHeuristic_get_mutations, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__113)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 685, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_8whatshap_4core_15PedMecHeuristic_11get_mutations, __Pyx_CYFUNCTION_CCLASS, __pyx_n_s_PedMecHeuristic_get_mutations, NULL, __pyx_n_s_whatshap_core, __pyx_d, ((PyObject *)__pyx_codeobj__113)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 724, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedMecHeuristic, __pyx_n_s_get_mutations, __pyx_t_2) < 0) __PYX_ERR(1, 685, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict((PyObject *)__pyx_ptype_8whatshap_4core_PedMecHeuristic, __pyx_n_s_get_mutations, __pyx_t_2) < 0) __PYX_ERR(1, 724, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_ptype_8whatshap_4core_PedMecHeuristic);
 

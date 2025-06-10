@@ -39,10 +39,8 @@ class TestPageSentEmailProjection(unittest.TestCase):
             return PageSentEmailProjection(
                 content = [
                     mailslurp_client.models.sent_email_projection.SentEmailProjection(
-                        subject = '0', 
                         id = '0', 
-                        thread_id = '0', 
-                        in_reply_to = '0', 
+                        subject = '0', 
                         from = '0', 
                         sender = mailslurp_client.models.sender.Sender(
                             raw_value = '0', 
@@ -83,15 +81,17 @@ class TestPageSentEmailProjection(unittest.TestCase):
                             '0'
                             ], 
                         message_id = '0', 
+                        in_reply_to = '0', 
                         body_excerpt = '0', 
                         text_excerpt = '0', 
                         body_md5_hash = '0', 
-                        virtual_send = True, )
+                        virtual_send = True, 
+                        thread_id = '0', )
                     ], 
                 pageable = mailslurp_client.models.pageable_object.PageableObject(
+                    page_size = 56, 
                     paged = True, 
                     page_number = 56, 
-                    page_size = 56, 
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(

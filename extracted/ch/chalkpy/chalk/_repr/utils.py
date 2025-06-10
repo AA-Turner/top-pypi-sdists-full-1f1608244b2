@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from enum import Enum
-from typing import Any
+from typing import Any, List
 
 import pandas as pd
 
@@ -8,7 +10,7 @@ from chalk.features import DataFrame
 MAX_REPR_DEPTH = 2
 
 
-def get_repr_value(raw: Any, depth: int = 0) -> Any:
+def get_repr_value(raw: Any, depth: int = 0) -> object:
     limit = 10 if depth < MAX_REPR_DEPTH else 0
     if isinstance(raw, (pd.DataFrame, DataFrame)):
         return f"DataFrame[shape={raw.shape}]"
@@ -27,18 +29,24 @@ def get_repr_value(raw: Any, depth: int = 0) -> Any:
         row_tag = "row" if num_rows == 1 else "rows"
         return f"has_many[ {num_rows} {row_tag} x {num_cols} {col_tag}  ]"
     elif isinstance(raw, list):
-        reprs = []
+        reprs: List[str] = []
         for elem in raw[:limit]:
             if isinstance(elem, (dict, list)):
-                reprs.append(get_repr_value(elem, depth + 1))
+                elem_repr = get_repr_value(elem, depth + 1)
+                if type(elem_repr) is not str:
+                    # Must convert the element to a `str` so that we can
+                    # concatenate later.
+                    elem_repr = repr(elem_repr)
+                reprs.append(elem_repr)
             else:
                 reprs.append(repr(elem))
         if len(raw) > limit:
             reprs.append("...")
-        list_contents = f", ".join(reprs)
+
+        list_contents = ", ".join(reprs)
         return f"[{list_contents}]"
     elif isinstance(raw, dict):
-        reprs = []
+        reprs: List[str] = []
         idx = 0
         for key, val in raw.items():
             if idx >= limit:
@@ -52,7 +60,7 @@ def get_repr_value(raw: Any, depth: int = 0) -> Any:
             reprs.append(f"{key_repr}: {value_repr}")
         if len(raw) > limit:
             reprs.append("...")
-        dict_contents = f", ".join(reprs)
+        dict_contents = ", ".join(reprs)
         return f"{{{dict_contents}}}"
     else:
         return raw

@@ -34,66 +34,43 @@ class PhoneMessageThreadProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'last_body': 'str',
         'phone_number': 'str',
         'phone_number_id': 'str',
         'other_phone_number': 'str',
         'last_message_direction': 'str',
+        'last_body': 'str',
         'last_created': 'datetime'
     }
 
     attribute_map = {
-        'last_body': 'lastBody',
         'phone_number': 'phoneNumber',
         'phone_number_id': 'phoneNumberId',
         'other_phone_number': 'otherPhoneNumber',
         'last_message_direction': 'lastMessageDirection',
+        'last_body': 'lastBody',
         'last_created': 'lastCreated'
     }
 
-    def __init__(self, last_body=None, phone_number=None, phone_number_id=None, other_phone_number=None, last_message_direction=None, last_created=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, phone_number=None, phone_number_id=None, other_phone_number=None, last_message_direction=None, last_body=None, last_created=None, local_vars_configuration=None):  # noqa: E501
         """PhoneMessageThreadProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._last_body = None
         self._phone_number = None
         self._phone_number_id = None
         self._other_phone_number = None
         self._last_message_direction = None
+        self._last_body = None
         self._last_created = None
         self.discriminator = None
 
-        self.last_body = last_body
         self.phone_number = phone_number
         self.phone_number_id = phone_number_id
         self.other_phone_number = other_phone_number
         self.last_message_direction = last_message_direction
+        self.last_body = last_body
         self.last_created = last_created
-
-    @property
-    def last_body(self):
-        """Gets the last_body of this PhoneMessageThreadProjection.  # noqa: E501
-
-
-        :return: The last_body of this PhoneMessageThreadProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._last_body
-
-    @last_body.setter
-    def last_body(self, last_body):
-        """Sets the last_body of this PhoneMessageThreadProjection.
-
-
-        :param last_body: The last_body of this PhoneMessageThreadProjection.  # noqa: E501
-        :type: str
-        """
-        if self.local_vars_configuration.client_side_validation and last_body is None:  # noqa: E501
-            raise ValueError("Invalid value for `last_body`, must not be `None`")  # noqa: E501
-
-        self._last_body = last_body
 
     @property
     def phone_number(self):
@@ -192,6 +169,29 @@ class PhoneMessageThreadProjection(object):
             )
 
         self._last_message_direction = last_message_direction
+
+    @property
+    def last_body(self):
+        """Gets the last_body of this PhoneMessageThreadProjection.  # noqa: E501
+
+
+        :return: The last_body of this PhoneMessageThreadProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._last_body
+
+    @last_body.setter
+    def last_body(self, last_body):
+        """Sets the last_body of this PhoneMessageThreadProjection.
+
+
+        :param last_body: The last_body of this PhoneMessageThreadProjection.  # noqa: E501
+        :type: str
+        """
+        if self.local_vars_configuration.client_side_validation and last_body is None:  # noqa: E501
+            raise ValueError("Invalid value for `last_body`, must not be `None`")  # noqa: E501
+
+        self._last_body = last_body
 
     @property
     def last_created(self):

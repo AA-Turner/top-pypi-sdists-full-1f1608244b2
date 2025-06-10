@@ -174,7 +174,7 @@ def get_function_arg_annotations(node: ast.FunctionDef | ast.AsyncFunctionDef) -
 class _ChalkFunctionReturnFinder(ast.NodeVisitor):
     def __init__(self):
         super().__init__()
-        self.nodes = []
+        self.nodes: "List[ast.Return]" = []
 
     def visit_Return(self, node: ast.Return) -> None:
         self.nodes.append(node)
@@ -182,7 +182,7 @@ class _ChalkFunctionReturnFinder(ast.NodeVisitor):
 
 
 def get_function_return_statement(node: ast.FunctionDef | ast.AsyncFunctionDef) -> List[ast.AST | None]:
-    returns = []
+    returns: "List[ast.AST | None]" = []
     return_finder = _ChalkFunctionReturnFinder()
     return_finder.visit(node)
     for return_stmt in return_finder.nodes:

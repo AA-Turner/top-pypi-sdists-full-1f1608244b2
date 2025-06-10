@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "pepperize.cdk-autoscaling-gitlab-runner",
-    "version": "0.2.709",
+    "version": "0.2.711",
     "description": "AWS CDK GitLab Runner autoscaling on EC2 instances using docker+machine executor.",
     "license": "MIT",
     "url": "https://github.com/pepperize/cdk-autoscaling-gitlab-runner.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "pepperize_cdk_autoscaling_gitlab_runner._jsii": [
-            "cdk-autoscaling-gitlab-runner@0.2.709.jsii.tgz"
+            "cdk-autoscaling-gitlab-runner@0.2.711.jsii.tgz"
         ],
         "pepperize_cdk_autoscaling_gitlab_runner": [
             "py.typed"

@@ -1,9 +1,15 @@
+from dataclasses import dataclass
+from enum import Enum
+import importlib.resources
 from io import StringIO
 from json import dumps as json_dumps
 import pathlib
+import shlex
 import subprocess
+import sys
 import tempfile
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
+from urllib.parse import urlparse
 
 import click
 import yaml
@@ -26,6 +32,12 @@ from anyscale.workspace.models import (
 
 log = BlockLogger()  # CLI Logger
 
+# Constants for SSH configuration
+HTTPS_PORT = "443"
+SSH_TIMEOUT_SECONDS = 45
+WSS_PATH = "/sshws"
+PREFERRED_AUTH_METHOD = "PreferredAuthentications=publickey"
+
 
 def _validate_workspace_name_and_id(
     name: Optional[str], id: Optional[str]  # noqa: A002
@@ -35,6 +47,339 @@ def _validate_workspace_name_and_id(
 
     if name is not None and id is not None:
         raise click.ClickException("Only one of '--name' and '--id' can be provided.")
+
+
+def _check_workspace_is_running(
+    name: Optional[str],
+    id: Optional[str],  # noqa: A002
+    cloud: Optional[str],
+    project: Optional[str],
+) -> None:
+    """Verify that the workspace is in RUNNING state."""
+    try:
+        workspace_status = anyscale.workspace.status(
+            name=name, id=id, cloud=cloud, project=project
+        )
+        if workspace_status != WorkspaceState.RUNNING:
+            raise click.ClickException(
+                f"Workspace must be running to SSH into it. Current status: {workspace_status}"
+            )
+    except ValueError as e:
+        # Handle workspace not found or other value errors
+        error_msg = str(e)
+        if "not found" in error_msg.lower():
+            workspace_identifier = name if name else id
+            raise click.ClickException(
+                f"Workspace '{workspace_identifier}' not found. Please check the workspace name/id and try again."
+            )
+        else:
+            raise click.ClickException(f"Error checking workspace status: {error_msg}")
+    except (AttributeError, KeyError, TypeError):
+        # Handle any other errors from status check
+        raise click.ClickException(
+            "Failed to check workspace status. Please ensure the workspace exists and you have access to it."
+        )
+
+
+def _get_workspace_directory_name(
+    name: Optional[str],
+    id: Optional[str],  # noqa: A002
+    cloud: Optional[str],
+    project: Optional[str],
+) -> str:
+    """Get the default directory name for the workspace."""
+    try:
+        workspace_private_sdk = _LAZY_SDK_SINGLETONS[_WORKSPACE_SDK_SINGLETON_KEY]
+        return workspace_private_sdk.get_default_dir_name(
+            name=name, id=id, cloud=cloud, project=project
+        )
+    except (AttributeError, KeyError, ValueError, TypeError):
+        # Handle errors getting default directory name
+        raise click.ClickException(
+            "Failed to retrieve workspace configuration. Please try again later."
+        )
+
+
+def _create_directory_setup_command(dir_name: str) -> str:
+    """Create shell command to set up the workspace directory."""
+    # Even though dir_name comes from our API, we should still shell escape it.
+    dir_name_escaped = shlex.quote(dir_name)
+    return (
+        f'if [ -d "$HOME/{dir_name_escaped}" ]; then '
+        f'cd "$HOME/{dir_name_escaped}"; '
+        f"else "
+        f'mkdir -p "$HOME/{dir_name_escaped}" 2>/dev/null && '
+        f'cd "$HOME/{dir_name_escaped}" && '
+        f'echo "Created directory $HOME/{dir_name_escaped} (it did not exist)." >&2 || '
+        f'echo "Warning: Could not access or create directory $HOME/{dir_name_escaped}. Staying in home directory." >&2; '
+        f"fi"
+    )
+
+
+class ConnectionType(Enum):
+    HTTPS = "https"
+    LEGACY = "legacy"
+
+
+@dataclass
+class SSHConfig:
+    """Configuration for SSH connection to workspace."""
+
+    target_host: str
+    config_file: str
+    connection_type: ConnectionType
+    proxy_command: Optional[str] = None
+    port: Optional[str] = None
+
+    @property
+    def ssh_options(self) -> List[str]:
+        """Get SSH options based on connection type."""
+        if self.connection_type == ConnectionType.HTTPS:
+            options = [
+                "-p",
+                self.port or HTTPS_PORT,
+                "-o",
+                PREFERRED_AUTH_METHOD,
+            ]
+            if self.proxy_command:
+                options.extend(["-o", f"ProxyCommand={self.proxy_command}"])
+            return options
+        return []
+
+
+def _setup_https_connection(
+    workspace_obj: Workspace, workspace_private_sdk, host_name: str, config_file: str
+) -> SSHConfig:
+    """Set up HTTPS connection and return SSHConfig object."""
+    cluster = workspace_private_sdk.client.get_workspace_cluster(workspace_obj.id)
+
+    if not cluster:
+        raise click.ClickException(
+            "Could not retrieve cluster details for the workspace."
+        )
+
+    # Get hostname with multiple fallback methods
+    public_hostname = _get_public_hostname(cluster)
+
+    # Get cluster access token
+    cluster_access_token = _get_cluster_access_token(cluster, workspace_private_sdk)
+
+    # Set up proxy command
+    proxy_cmd = _create_proxy_command(public_hostname, cluster_access_token)
+
+    return SSHConfig(
+        target_host=f"ray@{host_name}",
+        config_file=config_file,
+        connection_type=ConnectionType.HTTPS,
+        proxy_command=proxy_cmd,
+        port=HTTPS_PORT,
+    )
+
+
+def _get_public_hostname(cluster) -> str:
+    """Extract public hostname from cluster with fallback methods."""
+    # Attempt 1: Use cluster.hostname
+    if hasattr(cluster, "hostname") and cluster.hostname:
+        return cluster.hostname
+
+    # Attempt 2: Fallback to parsing webterminal_auth_url
+    if hasattr(cluster, "webterminal_auth_url") and cluster.webterminal_auth_url:
+        parsed_url = urlparse(cluster.webterminal_auth_url)
+        if parsed_url.netloc:
+            return parsed_url.netloc
+
+        # webterminal_auth_url was present but parsing failed
+        raise click.ClickException(
+            "Could not extract hostname from cluster configuration. "
+            "The URL appears to be malformed."
+        )
+
+    # Both methods failed
+    raise click.ClickException(
+        "Could not retrieve hostname for HTTPS connection. "
+        "Required cluster configuration is not available."
+    )
+
+
+def _get_cluster_access_token(cluster, workspace_private_sdk) -> str:
+    """Get cluster access token for HTTPS connection."""
+    if not hasattr(cluster, "id") or not cluster.id:
+        raise click.ClickException(
+            "Cluster configuration is incomplete, cannot retrieve access token."
+        )
+
+    from anyscale.client.openapi_client.exceptions import (
+        ApiException,
+        ApiTypeError,
+        ApiValueError,
+    )
+
+    try:
+        # We need to use the internal API here as there's no public API available
+        # This might be updated in future SDK versions
+        cluster_access_token = workspace_private_sdk.client._internal_api_client.get_cluster_access_token_api_v2_authentication_cluster_id_cluster_access_token_get(  # noqa: SLF001
+            cluster_id=cluster.id
+        )
+
+        if not cluster_access_token:
+            raise click.ClickException(
+                "Failed to retrieve authentication token. Please try again."
+            )
+
+        return cluster_access_token
+
+    except (ApiException, ApiTypeError, ApiValueError):
+        # Don't expose API details in error messages
+        raise click.ClickException(
+            "Failed to authenticate. Please check your permissions and try again."
+        ) from None
+    except click.ClickException:
+        raise  # Re-raise click exceptions as-is
+    except (AttributeError, KeyError, ValueError, TypeError, RuntimeError) as e:
+        # Generic error without exposing internal details
+        raise click.ClickException(
+            "An error occurred during authentication. Please try again."
+        ) from e
+
+
+def _create_proxy_command(public_hostname: str, cluster_access_token: str) -> str:
+    """Create the proxy command for HTTPS connection."""
+    wss_url = f"wss://{public_hostname}{WSS_PATH}"
+
+    try:
+        with importlib.resources.path(
+            "anyscale.utils", "ssh_websocket_proxy.py"
+        ) as proxy_path:
+            proxy_script_path = str(proxy_path)
+    except (ModuleNotFoundError, ImportError) as e:
+        raise click.ClickException(f"Could not locate SSH proxy script: {e}") from e
+
+    # Properly escape the proxy command arguments
+    return " ".join(
+        [
+            shlex.quote(sys.executable),
+            shlex.quote(proxy_script_path),
+            shlex.quote(wss_url),
+            shlex.quote(cluster_access_token),
+        ]
+    )
+
+
+def _build_ssh_command(
+    ssh_config: SSHConfig, user_args: List[str], shell_command: str,
+) -> List[str]:
+    """Build the final SSH command with all options."""
+    # Build SSH command with basic options
+    base_cmd = (
+        ["ssh"]
+        + ANYSCALE_WORKSPACES_SSH_OPTIONS
+        + ssh_config.ssh_options
+        + [ssh_config.target_host, "-F", ssh_config.config_file]
+    )
+
+    # Process user-supplied arguments
+    if not user_args:
+        # No user args, use default interactive shell
+        return base_cmd + ["-tt", f"bash -c '{shell_command} && exec bash -i'"]
+
+    # Parse user arguments into options and commands
+    user_options, user_command = _parse_user_args(user_args)
+
+    ssh_cmd = base_cmd + user_options
+
+    if user_command:
+        # User supplied their own command, use it directly
+        ssh_cmd.extend(user_command)
+    else:
+        # Only options provided, add interactive shell
+        # Use -tt for interactive shell unless -T or -N was specified
+        if not any(opt in {"-T", "-N"} for opt in user_options):
+            ssh_cmd.append("-tt")
+        ssh_cmd.append(f"bash -c '{shell_command} && exec bash -i'")
+
+    return ssh_cmd
+
+
+def _parse_user_args(user_args: List[str]) -> Tuple[List[str], List[str]]:
+    """Parse user arguments into options and commands."""
+    # Find where command section starts (first non-option argument)
+    command_start_idx = None
+    for i, arg in enumerate(user_args):
+        if arg and not arg.startswith("-"):
+            command_start_idx = i
+            break
+
+    if command_start_idx is not None:
+        user_options = [arg for arg in user_args[:command_start_idx] if arg]
+        user_command = [arg for arg in user_args[command_start_idx:] if arg]
+    else:
+        user_options = [arg for arg in user_args if arg]
+        user_command = []
+
+    return user_options, user_command
+
+
+def _try_https_connection(
+    workspace_obj: Workspace,
+    workspace_private_sdk,
+    host_name: str,
+    config_file: str,
+    ctx_args: List[str],
+    shell_command: str,
+) -> bool:
+    """Attempt HTTPS SSH connection. Returns True if successful."""
+    try:
+        cluster = workspace_private_sdk.client.get_workspace_cluster(workspace_obj.id)
+        if not cluster:
+            return False
+
+        ssh_config = _setup_https_connection(
+            workspace_obj, workspace_private_sdk, host_name, config_file
+        )
+
+        ssh_cmd = _build_ssh_command(ssh_config, ctx_args, shell_command)
+
+        # Try HTTPS connection with a timeout
+        result = subprocess.run(
+            ssh_cmd,
+            check=False,
+            timeout=SSH_TIMEOUT_SECONDS,
+            stderr=subprocess.DEVNULL,
+        )
+
+        return result.returncode == 0
+
+    except subprocess.TimeoutExpired:
+        print(
+            "HTTPS connection timed out or failed (SSH proxy may not be available), "
+            "falling back to Legacy SSH connection..."
+        )
+        return False
+    except OSError:
+        print(
+            "HTTPS connection timed out or failed (SSH proxy may not be available), "
+            "falling back to Legacy SSH connection..."
+        )
+        return False
+    except (click.ClickException, ValueError, AttributeError, KeyError, TypeError):
+        print("HTTPS setup failed, falling back to Legacy SSH connection...")
+        return False
+
+
+def _execute_legacy_ssh(
+    ssh_target_host: str, config_file: str, ctx_args: List[str], shell_command: str,
+) -> None:
+    """Execute legacy SSH connection."""
+    legacy_ssh_config = SSHConfig(
+        target_host=ssh_target_host,
+        config_file=config_file,
+        connection_type=ConnectionType.LEGACY,
+        proxy_command=None,
+        port=None,
+    )
+
+    ssh_cmd = _build_ssh_command(legacy_ssh_config, ctx_args, shell_command)
+    subprocess.run(ssh_cmd, check=False)
 
 
 @click.group("workspace_v2", help="Anyscale workspace commands V2.")
@@ -416,6 +761,12 @@ id should be used, specifying both will result in an error.
     type=str,
     help="Named project to use for the workpsace. If not provided, the default project for the cloud will be used.",
 )
+@click.option(
+    "--legacy",
+    is_flag=True,
+    default=False,
+    help="Use legacy SSH connection method, bypassing HTTPS SSH.",
+)
 @click.pass_context
 def ssh(
     ctx,
@@ -423,6 +774,7 @@ def ssh(
     name: Optional[str],
     cloud: Optional[str],
     project: Optional[str],
+    legacy: bool,
 ) -> None:
     """SSH into a workspace.
 
@@ -431,34 +783,119 @@ id should be used, specifying both will result in an error.
 
     You may pass extra args for the ssh command, for example to setup port forwarding:
     anyscale workspace_v2 ssh -n workspace-name -- -L 9000:localhost:9000
+
+    Use the --legacy flag to bypass HTTPS SSH and use the legacy connection method directly.
     """
+    try:
+        _validate_workspace_name_and_id(name=name, id=id)
 
-    _validate_workspace_name_and_id(name=name, id=id)
-    assert (
-        anyscale.workspace.status(name=name, id=id, cloud=cloud, project=project)
-        == WorkspaceState.RUNNING
-    ), "Workspace must be running to SSH into it."
-    workspace_private_sdk = _LAZY_SDK_SINGLETONS[_WORKSPACE_SDK_SINGLETON_KEY]
-    dir_name = workspace_private_sdk.get_default_dir_name(
-        name=name, id=id, cloud=cloud, project=project
-    )
-    command = f"cd {dir_name} && /bin/bash"
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        host_name, config_file = anyscale.workspace.generate_ssh_config_file(
-            name=name, id=id, cloud=cloud, project=project, ssh_config_path=tmpdirname
-        )
-        args = ctx.args
-        ssh_command = (
-            ["ssh"]
-            + ANYSCALE_WORKSPACES_SSH_OPTIONS
-            + [host_name]
-            + ["-F", config_file]
-            + ["-tt"]
-            + (args if args and len(args) > 0 else [""])
-            + [f"bash -i -c {command}"]
+        # Verify workspace is running
+        _check_workspace_is_running(name, id, cloud, project)
+
+        # Inform user that connection might take time (earliest point after verifying workspace is running)
+        connection_mode = " (Legacy SSH)" if legacy else ""
+        print(
+            f"Connecting to workspace{connection_mode}... This might take a while. Press Ctrl+C to cancel."
         )
 
-        subprocess.run(ssh_command, check=False)
+        # Get workspace directory name
+        dir_name = _get_workspace_directory_name(name, id, cloud, project)
+
+        # Create the shell command that will:
+        # 1. Try to cd to the directory
+        # 2. If that fails, create it and cd to it
+        # 3. If that fails too, just stay in home directory with a warning
+        shell_command = _create_directory_setup_command(dir_name)
+
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            try:
+                host_name, config_file = anyscale.workspace.generate_ssh_config_file(
+                    name=name,
+                    id=id,
+                    cloud=cloud,
+                    project=project,
+                    ssh_config_path=tmpdirname,
+                )
+            except ValueError as e:
+                error_msg = str(e)
+                if "not found" in error_msg.lower():
+                    workspace_identifier = name if name else id
+                    raise click.ClickException(
+                        f"Workspace '{workspace_identifier}' not found or not accessible."
+                    )
+                else:
+                    raise click.ClickException("Failed to generate SSH configuration.")
+            except (
+                OSError,
+                IOError,
+                RuntimeError,
+                AttributeError,
+                KeyError,
+                TypeError,
+            ):
+                # Handle any other errors from SSH config generation
+                raise click.ClickException(
+                    "Failed to generate SSH configuration. Please check your network connection and try again."
+                )
+
+            # Get workspace and cluster information to determine connection method
+            ssh_target_host = host_name
+
+            # Skip HTTPS if --legacy flag is used
+            https_connection_successful = False
+            if not legacy:
+                # Try HTTPS first (unless legacy flag is set)
+                try:
+                    workspace_obj = anyscale.workspace.get(
+                        name=name, id=id, cloud=cloud, project=project
+                    )
+                    workspace_private_sdk = _LAZY_SDK_SINGLETONS[
+                        _WORKSPACE_SDK_SINGLETON_KEY
+                    ]
+                    cluster = workspace_private_sdk.client.get_workspace_cluster(
+                        workspace_obj.id
+                    )
+
+                    if cluster:
+                        https_connection_successful = _try_https_connection(
+                            workspace_obj,
+                            workspace_private_sdk,
+                            host_name,
+                            config_file,
+                            ctx.args,
+                            shell_command,
+                        )
+
+                except (ValueError, AttributeError, KeyError, TypeError):
+                    # If we can't get workspace/cluster info, proceed with legacy SSH
+                    pass
+
+            # Run legacy SSH command if HTTPS wasn't successful or --legacy was specified
+            if not https_connection_successful:
+                _execute_legacy_ssh(
+                    ssh_target_host, config_file, ctx.args, shell_command
+                )
+
+    except click.ClickException:
+        # Re-raise click exceptions as they already have user-friendly messages
+        raise
+    except KeyboardInterrupt:
+        # Handle Ctrl+C gracefully
+        raise click.ClickException("SSH connection cancelled by user.")
+    except (
+        OSError,
+        IOError,
+        RuntimeError,
+        ValueError,
+        AttributeError,
+        KeyError,
+        TypeError,
+    ):
+        # Catch any unexpected exceptions and provide a generic user-friendly message
+        raise click.ClickException(
+            "An unexpected error occurred while establishing SSH connection. "
+            "Please try again or contact support if the issue persists."
+        )
 
 
 @workspace_cli.command(

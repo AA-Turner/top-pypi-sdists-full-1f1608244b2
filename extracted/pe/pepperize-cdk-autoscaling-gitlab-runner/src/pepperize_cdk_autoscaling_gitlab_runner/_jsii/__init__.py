@@ -36,9 +36,9 @@ import pepperize_cdk_vpc._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@pepperize/cdk-autoscaling-gitlab-runner",
-    "0.2.709",
+    "0.2.711",
     __name__[0:-6],
-    "cdk-autoscaling-gitlab-runner@0.2.709.jsii.tgz",
+    "cdk-autoscaling-gitlab-runner@0.2.711.jsii.tgz",
 )
 
 __all__ = [

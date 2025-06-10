@@ -30,7 +30,7 @@ from chalk.utils.cached_type_hints import cached_get_type_hints
 from chalk.utils.collections import is_namedtuple, unwrap_optional_and_annotated_if_needed
 from chalk.utils.enum import get_enum_value_type
 from chalk.utils.json import JSON
-from chalk.utils.pydanticutil.pydantic_compat import is_pydantic_basemodel
+from chalk.utils.pydanticutil.pydantic_compat import construct_pydantic_model, is_pydantic_basemodel
 
 TRich = TypeVar("TRich")
 T = TypeVar("T")
@@ -90,7 +90,7 @@ def _structure_struct(obj: Any, typ: Type):
     if isinstance(typ, type) and is_pydantic_basemodel(typ):  # pyright: ignore[reportUnnecessaryIsInstance]
         # Using .construct to bypass pydantic validation, which could fail if there are null values in kwargs
         # and the field is not annotated as null
-        return typ.construct(**kwargs)
+        return construct_pydantic_model(typ, **kwargs)
     else:
         return typ(**kwargs)
 

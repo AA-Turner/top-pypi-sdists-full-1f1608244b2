@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: airbyte-source-facebook-marketing
-Version: 3.4.9
+Version: 3.5.0
 Summary: Source implementation for Facebook Marketing.
 License: ELv2
 Author: Airbyte

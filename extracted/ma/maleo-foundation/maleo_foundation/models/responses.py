@@ -19,6 +19,11 @@ class BaseResponses:
         message:str = "Invalid expand"
         description:str = "Invalid expand field(s) configuration are given. Check 'other' for more information."
 
+    class InvalidSystemRole(BadRequest):
+        code:str = "MAL-ISR-001"
+        message:str = "Invalid system role"
+        description:str = "Invalid system role is detected in authorization token. Check 'other' for more information."
+
     class Unauthorized(Fail):
         code:str = "MAL-ATH-001"
         message:str = "Unauthorized Request"

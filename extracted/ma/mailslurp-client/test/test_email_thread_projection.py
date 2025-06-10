@@ -37,7 +37,6 @@ class TestEmailThreadProjection(unittest.TestCase):
         # model = mailslurp_client.models.email_thread_projection.EmailThreadProjection()  # noqa: E501
         if include_optional :
             return EmailThreadProjection(
-                subject = '0', 
                 sender = mailslurp_client.models.sender_projection.SenderProjection(
                     email_address = '0', 
                     raw_value = '0', 
@@ -85,6 +84,7 @@ class TestEmailThreadProjection(unittest.TestCase):
                     email_address = '0', 
                     raw_value = '0', 
                     name = '0', ), 
+                subject = '0', 
                 id = '0', 
                 _from = '0'
             )

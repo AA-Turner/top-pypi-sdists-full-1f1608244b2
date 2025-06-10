@@ -13,6 +13,7 @@ Usage::
     from mypy_boto3_customer_profiles.client import CustomerProfilesClient
     from mypy_boto3_customer_profiles.paginator import (
         GetSimilarProfilesPaginator,
+        ListDomainLayoutsPaginator,
         ListEventStreamsPaginator,
         ListEventTriggersPaginator,
         ListObjectTypeAttributesPaginator,
@@ -24,6 +25,7 @@ Usage::
     client: CustomerProfilesClient = session.client("customer-profiles")
 
     get_similar_profiles_paginator: GetSimilarProfilesPaginator = client.get_paginator("get_similar_profiles")
+    list_domain_layouts_paginator: ListDomainLayoutsPaginator = client.get_paginator("list_domain_layouts")
     list_event_streams_paginator: ListEventStreamsPaginator = client.get_paginator("list_event_streams")
     list_event_triggers_paginator: ListEventTriggersPaginator = client.get_paginator("list_event_triggers")
     list_object_type_attributes_paginator: ListObjectTypeAttributesPaginator = client.get_paginator("list_object_type_attributes")
@@ -42,6 +44,8 @@ from botocore.paginate import PageIterator, Paginator
 from .type_defs import (
     GetSimilarProfilesRequestPaginateTypeDef,
     GetSimilarProfilesResponseTypeDef,
+    ListDomainLayoutsRequestPaginateTypeDef,
+    ListDomainLayoutsResponseTypeDef,
     ListEventStreamsRequestPaginateTypeDef,
     ListEventStreamsResponseTypeDef,
     ListEventTriggersRequestPaginateTypeDef,
@@ -61,6 +65,7 @@ else:
 
 __all__ = (
     "GetSimilarProfilesPaginator",
+    "ListDomainLayoutsPaginator",
     "ListEventStreamsPaginator",
     "ListEventTriggersPaginator",
     "ListObjectTypeAttributesPaginator",
@@ -84,6 +89,24 @@ class GetSimilarProfilesPaginator(_GetSimilarProfilesPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/customer-profiles/paginator/GetSimilarProfiles.html#CustomerProfiles.Paginator.GetSimilarProfiles.paginate)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_customer_profiles/paginators/#getsimilarprofilespaginator)
+        """
+
+if TYPE_CHECKING:
+    _ListDomainLayoutsPaginatorBase = Paginator[ListDomainLayoutsResponseTypeDef]
+else:
+    _ListDomainLayoutsPaginatorBase = Paginator  # type: ignore[assignment]
+
+class ListDomainLayoutsPaginator(_ListDomainLayoutsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/customer-profiles/paginator/ListDomainLayouts.html#CustomerProfiles.Paginator.ListDomainLayouts)
+    [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_customer_profiles/paginators/#listdomainlayoutspaginator)
+    """
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListDomainLayoutsRequestPaginateTypeDef]
+    ) -> PageIterator[ListDomainLayoutsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/customer-profiles/paginator/ListDomainLayouts.html#CustomerProfiles.Paginator.ListDomainLayouts.paginate)
+        [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_customer_profiles/paginators/#listdomainlayoutspaginator)
         """
 
 if TYPE_CHECKING:

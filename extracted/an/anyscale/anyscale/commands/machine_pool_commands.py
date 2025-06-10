@@ -260,7 +260,13 @@ def list_machine_pools(format_: str) -> None:
         raise click.ClickException(f"Invalid output format '{format}'.")
 
 
-@machine_pool_cli.command(name="attach", help="Attach a machine pool to a cloud.")
+@machine_pool_cli.command(
+    name="attach",
+    help="Attach a machine pool to a cloud.",
+    cls=AnyscaleCommand,
+    example=command_examples.MACHINE_POOL_ATTACH_EXAMPLE,
+    is_beta=True,
+)
 @click.option("--name", type=str, required=True, help="Provide a machine pool name.")
 @click.option("--cloud", type=str, required=True, help="Provide a cloud name.")
 def attach_machine_pool_to_cloud(name: str, cloud: str) -> None:
@@ -271,7 +277,13 @@ def attach_machine_pool_to_cloud(name: str, cloud: str) -> None:
     print(f"Attached machine pool '{name}' to cloud '{cloud}'.")
 
 
-@machine_pool_cli.command(name="detach", help="Detach a machine pool from a cloud.")
+@machine_pool_cli.command(
+    name="detach",
+    help="Detach a machine pool from a cloud.",
+    cls=AnyscaleCommand,
+    example=command_examples.MACHINE_POOL_DETACH_EXAMPLE,
+    is_beta=True,
+)
 @click.option("--name", type=str, required=True, help="Provide a machine pool name.")
 @click.option("--cloud", type=str, required=True, help="Provide a cloud name.")
 def detach_machine_pool_from_cloud(name: str, cloud: str) -> None:

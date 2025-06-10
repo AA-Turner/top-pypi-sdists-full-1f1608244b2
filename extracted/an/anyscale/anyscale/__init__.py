@@ -25,6 +25,7 @@ from anyscale import (
     image,
     integrations,
     job,
+    job_queue,
     llm,
     organization_invitation,
     project,
@@ -46,6 +47,7 @@ from anyscale.compute_config import ComputeConfigSDK
 from anyscale.connect import ClientBuilder
 from anyscale.image import ImageSDK
 from anyscale.job import JobSDK
+from anyscale.job_queue import JobQueueSDK
 from anyscale.llm import LLMSDK
 from anyscale.organization_invitation import OrganizationInvitationSDK
 from anyscale.project import ProjectSDK
@@ -119,6 +121,7 @@ class Anyscale:
             client=self._anyscale_client
         )
         self._job_sdk = JobSDK(client=self._anyscale_client)
+        self._job_queue_sdk = JobQueueSDK(client=self._anyscale_client)
         self._service_sdk = ServiceSDK(client=self._anyscale_client)
         self._compute_config_sdk = ComputeConfigSDK(client=self._anyscale_client)
         self._cloud_sdk = CloudSDK(client=self._anyscale_client)
@@ -146,6 +149,9 @@ class Anyscale:
             client=client, logger=logger, timer=timer
         )
         obj._job_sdk = JobSDK(client=client, logger=logger, timer=timer)  # noqa: SLF001
+        obj._job_queue_sdk = JobQueueSDK(  # noqa: SLF001
+            client=client, logger=logger, timer=timer
+        )
         obj._service_sdk = ServiceSDK(  # noqa: SLF001
             client=client, logger=logger, timer=timer
         )
@@ -186,6 +192,10 @@ class Anyscale:
     @property
     def job(self) -> JobSDK:  # noqa: F811
         return self._job_sdk
+
+    @property
+    def job_queue(self) -> JobQueueSDK:  # noqa: F811
+        return self._job_queue_sdk
 
     @property
     def service(self) -> ServiceSDK:  # noqa: F811

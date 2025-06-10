@@ -39,17 +39,17 @@ class TestPagePhoneMessageThreadProjection(unittest.TestCase):
             return PagePhoneMessageThreadProjection(
                 content = [
                     mailslurp_client.models.phone_message_thread_projection.PhoneMessageThreadProjection(
-                        last_body = '0', 
                         phone_number = '0', 
                         phone_number_id = '0', 
                         other_phone_number = '0', 
                         last_message_direction = 'OUTBOUND', 
+                        last_body = '0', 
                         last_created = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), )
                     ], 
                 pageable = mailslurp_client.models.pageable_object.PageableObject(
+                    page_size = 56, 
                     paged = True, 
                     page_number = 56, 
-                    page_size = 56, 
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(

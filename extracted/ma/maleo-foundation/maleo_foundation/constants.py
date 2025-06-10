@@ -1,4 +1,5 @@
 import re
+from typing import List
 from uuid import UUID
 from maleo_foundation.enums import BaseEnums
 from maleo_foundation.types import BaseTypes
@@ -31,3 +32,12 @@ IDENTIFIER_TYPE_VALUE_TYPE_MAP:dict[
     BaseEnums.IdentifierTypes.ID: int,
     BaseEnums.IdentifierTypes.UUID: UUID
 }
+ALL_STATUSES:List[BaseEnums.StatusType] = [
+    BaseEnums.StatusType.ACTIVE,
+    BaseEnums.StatusType.INACTIVE,
+    BaseEnums.StatusType.DELETED
+]
+VISIBLE_STATUSES:List[BaseEnums.StatusType] = [
+    BaseEnums.StatusType.ACTIVE,
+    BaseEnums.StatusType.INACTIVE
+]

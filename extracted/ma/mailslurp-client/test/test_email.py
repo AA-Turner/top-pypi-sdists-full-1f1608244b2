@@ -113,8 +113,8 @@ class TestEmail(unittest.TestCase):
                 in_reply_to = '0', 
                 favourite = True, 
                 size_bytes = 56, 
-                xamp_html = True, 
-                html = True
+                html = True, 
+                xamp_html = True
             )
         else :
             return Email(

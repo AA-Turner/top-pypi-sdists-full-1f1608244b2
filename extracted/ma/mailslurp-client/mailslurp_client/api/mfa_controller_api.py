@@ -517,8 +517,9 @@ class MFAControllerApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: (required)
-        :param datetime at:
+        :param str id: ID of the TOTP device to get the code for (required)
+        :param datetime at: Optional time to get code for. If not provided, current time is used.
+        :param int min_seconds_until_expire: Optional minimum time until code expires. Will hold thread open until period reached.
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -543,8 +544,9 @@ class MFAControllerApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: (required)
-        :param datetime at:
+        :param str id: ID of the TOTP device to get the code for (required)
+        :param datetime at: Optional time to get code for. If not provided, current time is used.
+        :param int min_seconds_until_expire: Optional minimum time until code expires. Will hold thread open until period reached.
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -563,7 +565,8 @@ class MFAControllerApi(object):
 
         all_params = [
             'id',
-            'at'
+            'at',
+            'min_seconds_until_expire'
         ]
         all_params.extend(
             [
@@ -587,6 +590,10 @@ class MFAControllerApi(object):
                                                         local_var_params['id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `id` when calling `get_totp_device_code`")  # noqa: E501
 
+        if self.api_client.client_side_validation and 'min_seconds_until_expire' in local_var_params and local_var_params['min_seconds_until_expire'] > 30:  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `min_seconds_until_expire` when calling `get_totp_device_code`, must be a value less than or equal to `30`")  # noqa: E501
+        if self.api_client.client_side_validation and 'min_seconds_until_expire' in local_var_params and local_var_params['min_seconds_until_expire'] < 1:  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `min_seconds_until_expire` when calling `get_totp_device_code`, must be a value greater than or equal to `1`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -596,6 +603,8 @@ class MFAControllerApi(object):
         query_params = []
         if 'at' in local_var_params and local_var_params['at'] is not None:  # noqa: E501
             query_params.append(('at', local_var_params['at']))  # noqa: E501
+        if 'min_seconds_until_expire' in local_var_params and local_var_params['min_seconds_until_expire'] is not None:  # noqa: E501
+            query_params.append(('minSecondsUntilExpire', local_var_params['min_seconds_until_expire']))  # noqa: E501
 
         header_params = {}
 

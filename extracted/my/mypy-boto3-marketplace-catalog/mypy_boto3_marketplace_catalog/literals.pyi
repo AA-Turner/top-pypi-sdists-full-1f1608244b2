@@ -33,6 +33,8 @@ __all__ = (
     "IntentType",
     "ListChangeSetsPaginatorName",
     "ListEntitiesPaginatorName",
+    "MachineLearningProductSortByType",
+    "MachineLearningProductVisibilityStringType",
     "MarketplaceCatalogServiceName",
     "OfferSortByType",
     "OfferStateStringType",
@@ -60,6 +62,10 @@ FailureCodeType = Literal["CLIENT_ERROR", "SERVER_FAULT"]
 IntentType = Literal["APPLY", "VALIDATE"]
 ListChangeSetsPaginatorName = Literal["list_change_sets"]
 ListEntitiesPaginatorName = Literal["list_entities"]
+MachineLearningProductSortByType = Literal[
+    "EntityId", "LastModifiedDate", "ProductTitle", "Visibility"
+]
+MachineLearningProductVisibilityStringType = Literal["Draft", "Limited", "Public", "Restricted"]
 OfferSortByType = Literal[
     "AvailabilityEndDate",
     "BuyerAccounts",
@@ -240,6 +246,7 @@ ServiceName = Literal[
     "es",
     "events",
     "evidently",
+    "evs",
     "finspace",
     "finspace-data",
     "firehose",
@@ -392,7 +399,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -453,7 +459,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -461,6 +466,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

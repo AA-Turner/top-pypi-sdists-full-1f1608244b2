@@ -312,6 +312,16 @@ MACHINE POOL       ID                             Clouds
 can-testing        mp_8ogdz85mdwxb8a92yo44nn84ox
 """
 
+MACHINE_POOL_ATTACH_EXAMPLE = """\
+$ anyscale machine-pool attach --name can-testing --cloud my-cloud
+Attached machine pool 'can-testing' to cloud 'my-cloud'.
+"""
+
+MACHINE_POOL_DETACH_EXAMPLE = """\
+$ anyscale machine-pool detach --name can-testing --cloud my-cloud
+Detached machine pool 'can-testing' from cloud 'my-cloud'.
+"""
+
 LLM_MODELS_GET_EXAMPLE = """
 $ anyscale llm model get --model-id my-model-id
 Output

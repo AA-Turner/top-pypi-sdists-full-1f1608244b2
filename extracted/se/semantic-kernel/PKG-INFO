@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: semantic-kernel
-Version: 1.32.2
+Version: 1.33.0
 Summary: Semantic Kernel Python SDK
 Author-email: Microsoft <SK-Support@microsoft.com>
 Requires-Python: >=3.10
@@ -16,7 +16,7 @@ Classifier: Framework :: Pydantic :: 2
 Classifier: Typing :: Typed
 License-File: LICENSE
 Requires-Dist: azure-ai-projects >= 1.0.0b11
-Requires-Dist: azure-ai-agents >= 1.0.0
+Requires-Dist: azure-ai-agents >= 1.1.0b1
 Requires-Dist: aiohttp ~= 3.8
 Requires-Dist: cloudevents ~=1.0
 Requires-Dist: pydantic >=2.0,!=2.10.0,!=2.10.1,!=2.10.2,!=2.10.3,<2.12
@@ -52,7 +52,7 @@ Requires-Dist: dapr>=1.14.0 ; extra == "dapr"
 Requires-Dist: dapr-ext-fastapi>=1.14.0 ; extra == "dapr"
 Requires-Dist: flask-dapr>=1.14.0 ; extra == "dapr"
 Requires-Dist: faiss-cpu>=1.10.0 ; extra == "faiss"
-Requires-Dist: google-cloud-aiplatform == 1.93.0 ; extra == "google"
+Requires-Dist: google-cloud-aiplatform == 1.95.1 ; extra == "google"
 Requires-Dist: google-generativeai ~= 0.8 ; extra == "google"
 Requires-Dist: transformers[torch] ~= 4.28 ; extra == "hugging-face"
 Requires-Dist: sentence-transformers >= 2.2,< 5.0 ; extra == "hugging-face"

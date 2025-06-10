@@ -15,19 +15,23 @@ from anyscale.client.openapi_client.models import (
     CreateResourceQuota,
     CreateUserProjectCollaborator,
     DecoratedComputeTemplate,
+    DecoratedjobqueueListResponse,
     DecoratedlistserviceapimodelListResponse,
     DecoratedProductionServiceV2APIModel,
     DeletedPlatformFineTunedModel,
     FineTunedModel,
     InternalProductionJob,
+    JobQueueSortDirective,
     OrganizationCollaborator,
     OrganizationInvitation,
     Project,
     ResourceQuota,
     ServerSessionToken,
+    SessionState,
     WorkspaceDataplaneProxiedArtifacts,
 )
 from anyscale.client.openapi_client.models.create_schedule import CreateSchedule
+from anyscale.client.openapi_client.models.decorated_job_queue import DecoratedJobQueue
 from anyscale.client.openapi_client.models.decorated_schedule import DecoratedSchedule
 from anyscale.client.openapi_client.models.decorated_session import DecoratedSession
 from anyscale.client.openapi_client.models.production_job import ProductionJob
@@ -367,11 +371,45 @@ class AnyscaleClientInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def get_job_queue(self, job_queue_id: str) -> Optional[DecoratedJobQueue]:
+        """Get a job queue by id.
+
+        Returns None if not found.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def update_job_queue(
+        self,
+        job_queue_id: str,
+        max_concurrency: Optional[int] = None,
+        idle_timeout_s: Optional[int] = None,
+    ) -> DecoratedJobQueue:
+        """Update a job queue."""
+        raise NotImplementedError
+
+    @abstractmethod
     def get_job_runs(self, job_id: str) -> List[APIJobRun]:
         """Returns all job runs for a given job id.
 
         Returned in ascending order by creation time.
         """
+        raise NotImplementedError
+
+    @abstractmethod
+    def list_job_queues(
+        self,
+        *,
+        name: Optional[str] = None,
+        creator_id: Optional[str] = None,
+        cluster_status: Optional[SessionState] = None,
+        project: Optional[str] = None,
+        cloud: Optional[str] = None,
+        count: Optional[int] = None,
+        paging_token: Optional[str] = None,
+        sorting_directives: Optional[List[JobQueueSortDirective]] = None,
+    ) -> DecoratedjobqueueListResponse:
+        """List job queues."""
         raise NotImplementedError
 
     @abstractmethod

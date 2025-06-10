@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 # version
-__version__ = "v4.1.1"
+__version__ = "v4.2.0"
 
 # entry point for the deepgram python sdk
 import logging
@@ -340,16 +340,14 @@ from .client import (
     AgentKeepAlive,
     # sub level
     Listen,
-    ListenProvider,
     Speak,
-    SpeakProvider,
     Header,
     Item,
     Properties,
     Parameters,
     Function,
     Think,
-    ThinkProvider,
+    Provider,
     Agent,
     Input,
     Output,

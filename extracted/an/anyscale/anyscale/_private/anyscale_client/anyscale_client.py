@@ -60,6 +60,7 @@ from anyscale.client.openapi_client.models import (
     Dataset as InternalDataset,
     DatasetUpload,
     DecoratedComputeTemplate,
+    DecoratedjobqueueListResponse,
     DecoratedlistserviceapimodelListResponse,
     DecoratedProductionServiceV2APIModel,
     DecoratedSession,
@@ -68,6 +69,8 @@ from anyscale.client.openapi_client.models import (
     FineTunedModel,
     FinetunedmodelListResponse,
     InternalProductionJob,
+    JobQueueSortDirective,
+    JobQueuesQuery,
     ListResourceQuotasQuery,
     OrganizationCollaborator,
     OrganizationInvitation,
@@ -75,13 +78,18 @@ from anyscale.client.openapi_client.models import (
     ResourceQuotaStatus,
     ServerSessionToken,
     SessionSshKey,
+    SessionState,
     StartSessionOptions,
     StopSessionOptions,
     WorkspaceDataplaneProxiedArtifacts,
 )
 from anyscale.client.openapi_client.models.create_schedule import CreateSchedule
+from anyscale.client.openapi_client.models.decorated_job_queue import DecoratedJobQueue
 from anyscale.client.openapi_client.models.decorated_schedule import DecoratedSchedule
 from anyscale.client.openapi_client.models.production_job import ProductionJob
+from anyscale.client.openapi_client.models.update_job_queue_request import (
+    UpdateJobQueueRequest,
+)
 from anyscale.client.openapi_client.rest import ApiException as InternalApiException
 from anyscale.cluster_compute import parse_cluster_compute_name_version
 from anyscale.feature_flags import FLAG_DEFAULT_WORKING_DIR_FOR_PROJ
@@ -1153,6 +1161,67 @@ class AnyscaleClient(AnyscaleClientInterface):
             ),
         )
         return job_runs
+
+    @handle_api_exceptions
+    def get_job_queue(self, job_queue_id: str) -> Optional[DecoratedJobQueue]:
+        try:
+            return self._internal_api_client.get_job_queue_api_v2_job_queues_job_queue_id_get(
+                job_queue_id
+            ).result
+        except InternalApiException as e:
+            if e.status == 404:
+                return None
+
+            raise e from None
+
+    @handle_api_exceptions
+    def update_job_queue(
+        self,
+        job_queue_id: str,
+        max_concurrency: Optional[int] = None,
+        idle_timeout_s: Optional[int] = None,
+    ) -> DecoratedJobQueue:
+        if max_concurrency is None and idle_timeout_s is None:
+            raise ValueError("No fields to update")
+
+        return self._internal_api_client.update_job_queue_api_v2_job_queues_job_queue_id_put(
+            job_queue_id,
+            update_job_queue_request=UpdateJobQueueRequest(
+                max_concurrency=max_concurrency, idle_timeout_sec=idle_timeout_s,
+            ),
+        ).result
+
+    @handle_api_exceptions
+    def list_job_queues(
+        self,
+        *,
+        name: Optional[str] = None,
+        creator_id: Optional[str] = None,
+        cluster_status: Optional[SessionState] = None,
+        project: Optional[str] = None,
+        cloud: Optional[str] = None,
+        count: Optional[int] = None,
+        paging_token: Optional[str] = None,
+        sorting_directives: Optional[List[JobQueueSortDirective]] = None,
+    ) -> DecoratedjobqueueListResponse:
+        cloud_id = self.get_cloud_id(cloud_name=cloud) if cloud else None
+        project_id = (
+            self.get_project_id(parent_cloud_id=cloud_id, name=project)
+            if project
+            else None
+        )
+
+        return self._internal_api_client.list_job_queues_api_v2_job_queues_post(
+            job_queues_query=JobQueuesQuery(
+                name=name,
+                creator_id=creator_id,
+                cluster_status=cluster_status,
+                project_id=project_id,
+                cloud_id=cloud_id,
+                paging=PageQuery(count=count, paging_token=paging_token),
+                sorting_directives=sorting_directives,
+            ),
+        )
 
     @handle_api_exceptions
     def rollout_service(

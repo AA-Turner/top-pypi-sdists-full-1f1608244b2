@@ -6,7 +6,7 @@ import sys
 from abc import abstractmethod
 from collections.abc import Mapping
 from io import BytesIO
-from typing import TYPE_CHECKING, Any, Dict, Iterable, Literal, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Literal, Tuple, Union
 
 from typing_extensions import Self, dataclass_transform, get_type_hints
 
@@ -176,7 +176,7 @@ class ByteBaseModel(ByteSerializable):
 
     @classmethod
     def get_byte_serializable_classes(cls):
-        byte_serializable_classes_in_order = []
+        byte_serializable_classes_in_order: List[type] = []
         for c in cls.get_field_annotations().values():
             if isinstance(c, str):
                 if hasattr(sys.modules[__name__], c):

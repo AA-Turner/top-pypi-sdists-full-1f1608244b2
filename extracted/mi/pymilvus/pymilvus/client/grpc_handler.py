@@ -823,9 +823,9 @@ class GrpcHandler:
         )
         response = self._stub.Upsert(request, timeout=timeout, metadata=_api_level_md(**kwargs))
         if response.status.error_code == common_pb2.SchemaMismatch:
-            schema = self.update_schema(collection_name, timeout)
+            self.update_schema(collection_name, timeout)
             request = self._prepare_row_upsert_request(
-                collection_name, entities, partition_name, schema, timeout, **kwargs
+                collection_name, entities, partition_name, timeout, **kwargs
             )
             response = self._stub.Upsert(
                 request=request, timeout=timeout, metadata=_api_level_md(**kwargs)
@@ -2327,15 +2327,24 @@ class GrpcHandler:
     def run_analyzer(
         self,
         texts: Union[str, List[str]],
-        analyzer_params: Union[str, Dict],
+        analyzer_params: Optional[Union[str, Dict]] = None,
         with_hash: bool = False,
         with_detail: bool = False,
+        collection_name: Optional[str] = None,
+        field_name: Optional[str] = None,
+        analyzer_names: Optional[Union[str, List[str]]] = None,
         timeout: Optional[float] = None,
         **kwargs,
     ):
         check_pass_param(timeout=timeout)
         req = Prepare.run_analyzer(
-            texts, analyzer_params, with_hash=with_hash, with_detail=with_detail
+            texts,
+            analyzer_params=analyzer_params,
+            with_hash=with_hash,
+            with_detail=with_detail,
+            collection_name=collection_name,
+            field_name=field_name,
+            analyzer_names=analyzer_names,
         )
         resp = self._stub.RunAnalyzer(req, timeout=timeout, metadata=_api_level_md(**kwargs))
         check_status(resp.status)

@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: clerk-backend-api
-Version: 3.0.2
+Version: 3.0.3
 Summary: Python Client SDK for clerk.dev
 Author: Clerk
 Requires-Python: >=3.9.2
@@ -484,7 +484,6 @@ with Clerk(
     res = clerk.users.set_profile_image(user_id="usr_test123", file={
         "file_name": "example.file",
         "content": open("example.file", "rb"),
-        "content_type": "<value>",
     })
 
     assert res is not None

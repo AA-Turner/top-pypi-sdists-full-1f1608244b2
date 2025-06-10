@@ -121,7 +121,7 @@ cli.add_command(version_cli)
 cli.add_command(list_cli)
 cli.add_command(cluster_env_cli)
 cli.add_command(job_cli)
-# cli.add_command(job_queue_cli) # TODO will be enabled later
+cli.add_command(job_queue_cli)
 cli.add_command(schedule_cli)
 cli.add_command(service_cli)
 cli.add_command(cluster_cli)

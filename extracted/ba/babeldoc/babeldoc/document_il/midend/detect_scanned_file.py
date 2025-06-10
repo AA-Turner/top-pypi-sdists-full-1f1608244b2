@@ -71,7 +71,7 @@ class DetectScannedFile:
                 contents_list = page.get_contents()
                 for index in contents_list:
                     contents = doc.xref_stream(index)
-                    if regex.search(rb"/Artifact(\s*\<\<|\s+BDC)", contents):
+                    if regex.search(rb"/Artifact(\s*\<\<\s*/MCID\s+|\s+BDC)", contents):
                         hit_list[page.number] += 1
                     if regex.search(rb"\s3\s+Tr\s", contents):
                         hit_list[page.number] += 1
@@ -86,6 +86,8 @@ class DetectScannedFile:
             for page in docs.page
             if self.translation_config.should_translate_page(page.page_number + 1)
         ]
+        if not pages_to_translate:
+            return
         mupdf = pymupdf.open(self.translation_config.get_working_file_path("input.pdf"))
         total = len(pages_to_translate)
         threshold = 0.8 * total

@@ -12,6 +12,7 @@ class V1PodStatus:
     init_container_statuses: typing.Optional[list[kubernetes.client.V1ContainerStatus]]
     message: typing.Optional[str]
     nominated_node_name: typing.Optional[str]
+    observed_generation: typing.Optional[int]
     phase: typing.Optional[str]
     pod_ip: typing.Optional[str]
     pod_i_ps: typing.Optional[list[kubernetes.client.V1PodIP]]
@@ -21,7 +22,7 @@ class V1PodStatus:
     resource_claim_statuses: typing.Optional[list[kubernetes.client.V1PodResourceClaimStatus]]
     start_time: typing.Optional[datetime.datetime]
     
-    def __init__(self, *, conditions: typing.Optional[list[kubernetes.client.V1PodCondition]] = ..., container_statuses: typing.Optional[list[kubernetes.client.V1ContainerStatus]] = ..., ephemeral_container_statuses: typing.Optional[list[kubernetes.client.V1ContainerStatus]] = ..., host_ip: typing.Optional[str] = ..., host_i_ps: typing.Optional[list[kubernetes.client.V1HostIP]] = ..., init_container_statuses: typing.Optional[list[kubernetes.client.V1ContainerStatus]] = ..., message: typing.Optional[str] = ..., nominated_node_name: typing.Optional[str] = ..., phase: typing.Optional[str] = ..., pod_ip: typing.Optional[str] = ..., pod_i_ps: typing.Optional[list[kubernetes.client.V1PodIP]] = ..., qos_class: typing.Optional[str] = ..., reason: typing.Optional[str] = ..., resize: typing.Optional[str] = ..., resource_claim_statuses: typing.Optional[list[kubernetes.client.V1PodResourceClaimStatus]] = ..., start_time: typing.Optional[datetime.datetime] = ...) -> None:
+    def __init__(self, *, conditions: typing.Optional[list[kubernetes.client.V1PodCondition]] = ..., container_statuses: typing.Optional[list[kubernetes.client.V1ContainerStatus]] = ..., ephemeral_container_statuses: typing.Optional[list[kubernetes.client.V1ContainerStatus]] = ..., host_ip: typing.Optional[str] = ..., host_i_ps: typing.Optional[list[kubernetes.client.V1HostIP]] = ..., init_container_statuses: typing.Optional[list[kubernetes.client.V1ContainerStatus]] = ..., message: typing.Optional[str] = ..., nominated_node_name: typing.Optional[str] = ..., observed_generation: typing.Optional[int] = ..., phase: typing.Optional[str] = ..., pod_ip: typing.Optional[str] = ..., pod_i_ps: typing.Optional[list[kubernetes.client.V1PodIP]] = ..., qos_class: typing.Optional[str] = ..., reason: typing.Optional[str] = ..., resize: typing.Optional[str] = ..., resource_claim_statuses: typing.Optional[list[kubernetes.client.V1PodResourceClaimStatus]] = ..., start_time: typing.Optional[datetime.datetime] = ...) -> None:
         ...
     def to_dict(self) -> V1PodStatusDict:
         ...
@@ -34,6 +35,7 @@ class V1PodStatusDict(typing.TypedDict, total=False):
     initContainerStatuses: typing.Optional[list[kubernetes.client.V1ContainerStatusDict]]
     message: typing.Optional[str]
     nominatedNodeName: typing.Optional[str]
+    observedGeneration: typing.Optional[int]
     phase: typing.Optional[str]
     podIP: typing.Optional[str]
     podIPs: typing.Optional[list[kubernetes.client.V1PodIPDict]]

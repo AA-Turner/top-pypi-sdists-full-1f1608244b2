@@ -34,63 +34,42 @@ class UnknownMissedEmailProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'subject': 'str',
         'created_at': 'datetime',
         'to': 'list[str]',
+        'subject': 'str',
         'id': 'str',
         '_from': 'str'
     }
 
     attribute_map = {
-        'subject': 'subject',
         'created_at': 'createdAt',
         'to': 'to',
+        'subject': 'subject',
         'id': 'id',
         '_from': 'from'
     }
 
-    def __init__(self, subject=None, created_at=None, to=None, id=None, _from=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, created_at=None, to=None, subject=None, id=None, _from=None, local_vars_configuration=None):  # noqa: E501
         """UnknownMissedEmailProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._subject = None
         self._created_at = None
         self._to = None
+        self._subject = None
         self._id = None
         self.__from = None
         self.discriminator = None
 
-        if subject is not None:
-            self.subject = subject
         self.created_at = created_at
         if to is not None:
             self.to = to
+        if subject is not None:
+            self.subject = subject
         self.id = id
         if _from is not None:
             self._from = _from
-
-    @property
-    def subject(self):
-        """Gets the subject of this UnknownMissedEmailProjection.  # noqa: E501
-
-
-        :return: The subject of this UnknownMissedEmailProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._subject
-
-    @subject.setter
-    def subject(self, subject):
-        """Sets the subject of this UnknownMissedEmailProjection.
-
-
-        :param subject: The subject of this UnknownMissedEmailProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._subject = subject
 
     @property
     def created_at(self):
@@ -135,6 +114,27 @@ class UnknownMissedEmailProjection(object):
         """
 
         self._to = to
+
+    @property
+    def subject(self):
+        """Gets the subject of this UnknownMissedEmailProjection.  # noqa: E501
+
+
+        :return: The subject of this UnknownMissedEmailProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._subject
+
+    @subject.setter
+    def subject(self, subject):
+        """Sets the subject of this UnknownMissedEmailProjection.
+
+
+        :param subject: The subject of this UnknownMissedEmailProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._subject = subject
 
     @property
     def id(self):

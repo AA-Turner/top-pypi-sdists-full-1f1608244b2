@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING, List, Mapping, Optional, Sequence, Type, Union
 
 import pyarrow as pa
@@ -14,7 +13,7 @@ else:
         from pydantic import BaseModel
 
 from chalk.features.underscore import Underscore, UnderscoreFunction
-from chalk.utils.pydanticutil.pydantic_compat import is_pydantic_v1
+from chalk.utils.pydanticutil.pydantic_compat import get_pydantic_output_structure
 
 
 def message(role: str | Underscore, content: str | Underscore):
@@ -141,12 +140,8 @@ def completion(
         output_structure_json = None
     elif isinstance(output_structure, str):
         output_structure_json = output_structure
-    elif is_pydantic_v1():
-        output_structure_json = output_structure.schema_json()
     else:
-        output_structure_json = json.dumps(
-            output_structure.model_json_schema()  # pyright: ignore[reportAttributeAccessIssue]
-        )
+        output_structure_json = get_pydantic_output_structure(output_structure)
 
     return UnderscoreFunction(
         "completion",

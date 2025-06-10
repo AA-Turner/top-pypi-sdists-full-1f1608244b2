@@ -2,10 +2,23 @@ import itertools
 from json import dumps as json_dumps
 from typing import Any, Callable, Dict, Iterator, List, Optional
 
+import click
 from rich.console import Console
 from rich.table import Table
 
-from anyscale.util import AnyscaleJSONEncoder
+from anyscale.util import AnyscaleJSONEncoder, validate_non_negative_arg
+
+
+MAX_PAGE_SIZE = 50
+NON_INTERACTIVE_DEFAULT_MAX_ITEMS = 10
+
+
+def validate_page_size(ctx, param, value):
+    """Click callback to validate page size argument."""
+    value = validate_non_negative_arg(ctx, param, value)
+    if value is not None and value > MAX_PAGE_SIZE:
+        raise click.BadParameter(f"must be less than or equal to {MAX_PAGE_SIZE}.")
+    return value
 
 
 def _paginate(iterator: Iterator[Any], page_size: Optional[int]) -> Iterator[List[Any]]:

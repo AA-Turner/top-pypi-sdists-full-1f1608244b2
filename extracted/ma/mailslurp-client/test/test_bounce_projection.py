@@ -37,11 +37,11 @@ class TestBounceProjection(unittest.TestCase):
         # model = mailslurp_client.models.bounce_projection.BounceProjection()  # noqa: E501
         if include_optional :
             return BounceProjection(
-                subject = '0', 
                 sender = '0', 
                 created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                 bounce_type = '0', 
                 bounce_mta = '0', 
+                subject = '0', 
                 id = '0'
             )
         else :

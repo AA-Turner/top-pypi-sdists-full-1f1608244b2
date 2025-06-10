@@ -2603,7 +2603,9 @@ SubnetCidrBlockStateCodeType = Literal[
     "associated", "associating", "disassociated", "disassociating", "failed", "failing"
 ]
 SubnetCidrReservationTypeType = Literal["explicit", "prefix"]
-SubnetStateType = Literal["available", "pending", "unavailable"]
+SubnetStateType = Literal[
+    "available", "failed", "failed-insufficient-capacity", "pending", "unavailable"
+]
 SummaryStatusType = Literal["impaired", "initializing", "insufficient-data", "not-applicable", "ok"]
 SupportedAdditionalProcessorFeatureType = Literal["amd-sev-snp"]
 SystemStatusOkWaiterName = Literal["system_status_ok"]

@@ -34,10 +34,8 @@ class SentEmailProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'subject': 'str',
         'id': 'str',
-        'thread_id': 'str',
-        'in_reply_to': 'str',
+        'subject': 'str',
         '_from': 'str',
         'sender': 'Sender',
         'recipients': 'EmailRecipients',
@@ -49,17 +47,17 @@ class SentEmailProjection(object):
         'cc': 'list[str]',
         'bcc': 'list[str]',
         'message_id': 'str',
+        'in_reply_to': 'str',
         'body_excerpt': 'str',
         'text_excerpt': 'str',
         'body_md5_hash': 'str',
-        'virtual_send': 'bool'
+        'virtual_send': 'bool',
+        'thread_id': 'str'
     }
 
     attribute_map = {
-        'subject': 'subject',
         'id': 'id',
-        'thread_id': 'threadId',
-        'in_reply_to': 'inReplyTo',
+        'subject': 'subject',
         '_from': 'from',
         'sender': 'sender',
         'recipients': 'recipients',
@@ -71,22 +69,22 @@ class SentEmailProjection(object):
         'cc': 'cc',
         'bcc': 'bcc',
         'message_id': 'messageId',
+        'in_reply_to': 'inReplyTo',
         'body_excerpt': 'bodyExcerpt',
         'text_excerpt': 'textExcerpt',
         'body_md5_hash': 'bodyMD5Hash',
-        'virtual_send': 'virtualSend'
+        'virtual_send': 'virtualSend',
+        'thread_id': 'threadId'
     }
 
-    def __init__(self, subject=None, id=None, thread_id=None, in_reply_to=None, _from=None, sender=None, recipients=None, attachments=None, inbox_id=None, user_id=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, body_excerpt=None, text_excerpt=None, body_md5_hash=None, virtual_send=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, id=None, subject=None, _from=None, sender=None, recipients=None, attachments=None, inbox_id=None, user_id=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, in_reply_to=None, body_excerpt=None, text_excerpt=None, body_md5_hash=None, virtual_send=None, thread_id=None, local_vars_configuration=None):  # noqa: E501
         """SentEmailProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._subject = None
         self._id = None
-        self._thread_id = None
-        self._in_reply_to = None
+        self._subject = None
         self.__from = None
         self._sender = None
         self._recipients = None
@@ -98,16 +96,16 @@ class SentEmailProjection(object):
         self._cc = None
         self._bcc = None
         self._message_id = None
+        self._in_reply_to = None
         self._body_excerpt = None
         self._text_excerpt = None
         self._body_md5_hash = None
         self._virtual_send = None
+        self._thread_id = None
         self.discriminator = None
 
-        self.subject = subject
         self.id = id
-        self.thread_id = thread_id
-        self.in_reply_to = in_reply_to
+        self.subject = subject
         self._from = _from
         self.sender = sender
         self.recipients = recipients
@@ -119,31 +117,12 @@ class SentEmailProjection(object):
         self.cc = cc
         self.bcc = bcc
         self.message_id = message_id
+        self.in_reply_to = in_reply_to
         self.body_excerpt = body_excerpt
         self.text_excerpt = text_excerpt
         self.body_md5_hash = body_md5_hash
         self.virtual_send = virtual_send
-
-    @property
-    def subject(self):
-        """Gets the subject of this SentEmailProjection.  # noqa: E501
-
-
-        :return: The subject of this SentEmailProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._subject
-
-    @subject.setter
-    def subject(self, subject):
-        """Sets the subject of this SentEmailProjection.
-
-
-        :param subject: The subject of this SentEmailProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._subject = subject
+        self.thread_id = thread_id
 
     @property
     def id(self):
@@ -169,46 +148,25 @@ class SentEmailProjection(object):
         self._id = id
 
     @property
-    def thread_id(self):
-        """Gets the thread_id of this SentEmailProjection.  # noqa: E501
+    def subject(self):
+        """Gets the subject of this SentEmailProjection.  # noqa: E501
 
 
-        :return: The thread_id of this SentEmailProjection.  # noqa: E501
+        :return: The subject of this SentEmailProjection.  # noqa: E501
         :rtype: str
         """
-        return self._thread_id
+        return self._subject
 
-    @thread_id.setter
-    def thread_id(self, thread_id):
-        """Sets the thread_id of this SentEmailProjection.
+    @subject.setter
+    def subject(self, subject):
+        """Sets the subject of this SentEmailProjection.
 
 
-        :param thread_id: The thread_id of this SentEmailProjection.  # noqa: E501
+        :param subject: The subject of this SentEmailProjection.  # noqa: E501
         :type: str
         """
 
-        self._thread_id = thread_id
-
-    @property
-    def in_reply_to(self):
-        """Gets the in_reply_to of this SentEmailProjection.  # noqa: E501
-
-
-        :return: The in_reply_to of this SentEmailProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._in_reply_to
-
-    @in_reply_to.setter
-    def in_reply_to(self, in_reply_to):
-        """Sets the in_reply_to of this SentEmailProjection.
-
-
-        :param in_reply_to: The in_reply_to of this SentEmailProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._in_reply_to = in_reply_to
+        self._subject = subject
 
     @property
     def _from(self):
@@ -454,6 +412,27 @@ class SentEmailProjection(object):
         self._message_id = message_id
 
     @property
+    def in_reply_to(self):
+        """Gets the in_reply_to of this SentEmailProjection.  # noqa: E501
+
+
+        :return: The in_reply_to of this SentEmailProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._in_reply_to
+
+    @in_reply_to.setter
+    def in_reply_to(self, in_reply_to):
+        """Sets the in_reply_to of this SentEmailProjection.
+
+
+        :param in_reply_to: The in_reply_to of this SentEmailProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._in_reply_to = in_reply_to
+
+    @property
     def body_excerpt(self):
         """Gets the body_excerpt of this SentEmailProjection.  # noqa: E501
 
@@ -538,6 +517,27 @@ class SentEmailProjection(object):
             raise ValueError("Invalid value for `virtual_send`, must not be `None`")  # noqa: E501
 
         self._virtual_send = virtual_send
+
+    @property
+    def thread_id(self):
+        """Gets the thread_id of this SentEmailProjection.  # noqa: E501
+
+
+        :return: The thread_id of this SentEmailProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._thread_id
+
+    @thread_id.setter
+    def thread_id(self, thread_id):
+        """Sets the thread_id of this SentEmailProjection.
+
+
+        :param thread_id: The thread_id of this SentEmailProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._thread_id = thread_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

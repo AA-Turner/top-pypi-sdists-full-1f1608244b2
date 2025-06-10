@@ -960,6 +960,10 @@ class Series(bigframes.operations.base.SeriesMethods, vendored_pandas_series.Ser
         as_series.name = self.name
         return as_series
 
+    def item(self):
+        # Docstring is in third_party/bigframes_vendored/pandas/core/series.py
+        return self.peek(2).item()
+
     def nlargest(self, n: int = 5, keep: str = "first") -> Series:
         if keep not in ("first", "last", "all"):
             raise ValueError("'keep must be one of 'first', 'last', or 'all'")
@@ -979,8 +983,10 @@ class Series(bigframes.operations.base.SeriesMethods, vendored_pandas_series.Ser
         )
 
     def isin(self, values) -> "Series" | None:
-        if isinstance(values, (Series,)):
+        if isinstance(values, Series):
             return Series(self._block.isin(values._block))
+        if isinstance(values, indexes.Index):
+            return Series(self._block.isin(values.to_series()._block))
         if not _is_list_like(values):
             raise TypeError(
                 "only list-like objects are allowed to be passed to "

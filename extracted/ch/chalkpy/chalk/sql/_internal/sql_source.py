@@ -9,6 +9,7 @@ import os
 import os.path
 import traceback
 import warnings
+from contextvars import ContextVar
 from dataclasses import dataclass
 from enum import Enum
 from os import PathLike
@@ -66,6 +67,10 @@ TTableIngestMixIn = TypeVar("TTableIngestMixIn", bound="TableIngestMixIn")
 CHALK_QUERY_LOGGING = env_var_bool("CHALK_QUERY_LOGGING")
 
 _logger = get_logger(__name__)
+
+_ENABLE_ADD_TO_SQL_SOURCE_REGISTRIES: ContextVar[bool] = ContextVar(
+    "_ENABLE_ADD_TO_SQL_SOURCE_REGISTRIES", default=True
+)
 
 
 @dataclass
@@ -192,7 +197,8 @@ class BaseSQLSource(BaseSQLSourceProtocol):
 
         self._incremental_settings = None
         self._resolver_and_sqlfile_to_sqlstring: Dict[Tuple[str, str], str] = {}
-        self.registry.append(self)
+        if _ENABLE_ADD_TO_SQL_SOURCE_REGISTRIES.get():
+            self.registry.append(self)
         self.name = name
         if engine_args is None:
             engine_args = {}

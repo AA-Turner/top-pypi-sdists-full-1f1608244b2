@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: anyscale
-Version: 0.26.29
+Version: 0.26.30
 Summary: Command Line Interface for Anyscale
 Author: Anyscale Inc.
 License: AS License
@@ -37,6 +37,8 @@ Requires-Dist: log_symbols>=0.0.14
 Requires-Dist: spinners>=0.0.24
 Requires-Dist: termcolor>=1.1.0
 Requires-Dist: colorama>=0.3.9
+Requires-Dist: websockets; python_version > "3.8"
+Requires-Dist: websockets==13.1.0; python_version <= "3.8"
 Provides-Extra: backend
 Requires-Dist: terminado==0.10.1; extra == "backend"
 Requires-Dist: tornado; extra == "backend"

@@ -34,7 +34,6 @@ class EmailThreadProjection(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'subject': 'str',
         'sender': 'SenderProjection',
         'recipients': 'EmailRecipientsProjection',
         'inbox_id': 'str',
@@ -52,12 +51,12 @@ class EmailThreadProjection(object):
         'last_created_at': 'datetime',
         'last_from': 'str',
         'last_sender': 'SenderProjection',
+        'subject': 'str',
         'id': 'str',
         '_from': 'str'
     }
 
     attribute_map = {
-        'subject': 'subject',
         'sender': 'sender',
         'recipients': 'recipients',
         'inbox_id': 'inboxId',
@@ -75,17 +74,17 @@ class EmailThreadProjection(object):
         'last_created_at': 'lastCreatedAt',
         'last_from': 'lastFrom',
         'last_sender': 'lastSender',
+        'subject': 'subject',
         'id': 'id',
         '_from': 'from'
     }
 
-    def __init__(self, subject=None, sender=None, recipients=None, inbox_id=None, user_id=None, updated_at=None, created_at=None, to=None, cc=None, bcc=None, has_attachments=None, unread=None, message_count=None, last_body_excerpt=None, last_text_excerpt=None, last_created_at=None, last_from=None, last_sender=None, id=None, _from=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, sender=None, recipients=None, inbox_id=None, user_id=None, updated_at=None, created_at=None, to=None, cc=None, bcc=None, has_attachments=None, unread=None, message_count=None, last_body_excerpt=None, last_text_excerpt=None, last_created_at=None, last_from=None, last_sender=None, subject=None, id=None, _from=None, local_vars_configuration=None):  # noqa: E501
         """EmailThreadProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._subject = None
         self._sender = None
         self._recipients = None
         self._inbox_id = None
@@ -103,12 +102,11 @@ class EmailThreadProjection(object):
         self._last_created_at = None
         self._last_from = None
         self._last_sender = None
+        self._subject = None
         self._id = None
         self.__from = None
         self.discriminator = None
 
-        if subject is not None:
-            self.subject = subject
         if sender is not None:
             self.sender = sender
         if recipients is not None:
@@ -136,32 +134,11 @@ class EmailThreadProjection(object):
             self.last_from = last_from
         if last_sender is not None:
             self.last_sender = last_sender
+        if subject is not None:
+            self.subject = subject
         self.id = id
         if _from is not None:
             self._from = _from
-
-    @property
-    def subject(self):
-        """Gets the subject of this EmailThreadProjection.  # noqa: E501
-
-        Thread topic subject  # noqa: E501
-
-        :return: The subject of this EmailThreadProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._subject
-
-    @subject.setter
-    def subject(self, subject):
-        """Sets the subject of this EmailThreadProjection.
-
-        Thread topic subject  # noqa: E501
-
-        :param subject: The subject of this EmailThreadProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._subject = subject
 
     @property
     def sender(self):
@@ -561,6 +538,29 @@ class EmailThreadProjection(object):
         """
 
         self._last_sender = last_sender
+
+    @property
+    def subject(self):
+        """Gets the subject of this EmailThreadProjection.  # noqa: E501
+
+        Thread topic subject  # noqa: E501
+
+        :return: The subject of this EmailThreadProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._subject
+
+    @subject.setter
+    def subject(self, subject):
+        """Sets the subject of this EmailThreadProjection.
+
+        Thread topic subject  # noqa: E501
+
+        :param subject: The subject of this EmailThreadProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._subject = subject
 
     @property
     def id(self):

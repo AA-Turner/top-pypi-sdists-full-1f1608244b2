@@ -68,6 +68,7 @@ py_library(
         requirement("google-api-python-client"),
         requirement("google-cloud-filestore"),
         requirement("google-cloud-storage"),
+        requirement("websockets"),
     ],
 )
 

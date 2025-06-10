@@ -215,7 +215,7 @@ def _standardize_utc_timezone_format(df: pl.DataFrame) -> pl.DataFrame:
             if isinstance(inner_type, Datetime) and getattr(inner_type, "time_zone", None) == "+00:00":
                 return col_expr.list.eval(pl.element().dt.convert_time_zone("UTC"))
             elif isinstance(inner_type, Struct):
-                field_exprs = []
+                field_exprs: List[pl.Expr] = []
                 for field in inner_type.fields:
                     if isinstance(field.dtype, Datetime) and getattr(field.dtype, "time_zone", None) == "+00:00":
                         field_exprs.append(
@@ -244,7 +244,7 @@ def _standardize_utc_timezone_format(df: pl.DataFrame) -> pl.DataFrame:
 
         # Recursive case 2: Struct type
         elif isinstance(dtype, Struct):
-            field_exprs = []
+            field_exprs: List[pl.Expr] = []
             for field in dtype.fields:
                 if isinstance(field.dtype, Datetime) and getattr(field.dtype, "time_zone", None) == "+00:00":
                     field_exprs.append(col_expr.struct.field(field.name).dt.convert_time_zone("UTC").alias(field.name))
@@ -260,7 +260,7 @@ def _standardize_utc_timezone_format(df: pl.DataFrame) -> pl.DataFrame:
         else:
             return col_expr
 
-    exprs = []
+    exprs: List[pl.Expr] = []
     for col_name, column_dtype in df.schema.items():
         column_expr = pl.col(col_name)
         processed_expr = process_type(column_expr, column_dtype).alias(col_name)
@@ -542,7 +542,7 @@ def _extract_df_columns(
         ]
 
         df = df.groupby("pkey").agg(cols)
-        decoded_stmts = []
+        decoded_stmts: List[pl.Expr] = []
         for col in df.columns:
             if col == "pkey":
                 continue
@@ -558,7 +558,7 @@ def _extract_df_columns(
     elif version != DatasetVersion.DATASET_WRITER:
         raise ValueError(f"Unsupported version: {version}")
 
-    decoded_stmts = []
+    decoded_stmts: List[pl.Expr] = []
     feature_name_to_metadata = None if column_metadata is None else {x.feature_fqn: x for x in column_metadata}
     for col, dtype in zip(df.columns, df.dtypes):
         if version in (
@@ -1307,14 +1307,14 @@ class DatasetRevisionImpl(DatasetRevision):
         # would reduce visibility on any bad rows in the dataframe, making it harder to debug (which is the whole point
         # of resolver replay)
 
-        output_col = []
+        output_col: List[Any] = []
         __ts_series = raw_input_df["__ts__"]
         no_ts_input_df = raw_input_df.drop(["__ts__"])
         for (row_i, args), __ts in zip(enumerate(no_ts_input_df.rows()), __ts_series):
             print(
                 f"resolver_replay: Running resolver {resolver.fqn} on args {truncate_output(str(args))} at time {str(__ts)}"
             )
-            actual_args = []
+            actual_args: List[Any] = []
             for i, input in enumerate(resolver.inputs):
                 contains_packed_df_name = f"{i}_packed_df" in no_ts_input_df.columns
                 if unwrap_feature(input).is_has_many or contains_packed_df_name:

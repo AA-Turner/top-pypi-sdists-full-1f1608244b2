@@ -52,7 +52,12 @@ from chalk.utils import paths
 from chalk.utils.collections import get_unique_item, unwrap_optional_and_annotated_if_needed
 from chalk.utils.duration import CronTab, Duration, timedelta_to_duration
 from chalk.utils.json import JSON
-from chalk.utils.pydanticutil.pydantic_compat import is_pydantic_basemodel, is_pydantic_basemodel_instance
+from chalk.utils.pydanticutil.pydantic_compat import (
+    get_pydantic_model_json,
+    get_pydantic_output_structure,
+    is_pydantic_basemodel,
+    is_pydantic_basemodel_instance,
+)
 from chalk.utils.string import to_snake_case
 
 if TYPE_CHECKING:
@@ -355,7 +360,7 @@ def convert_type_to_gql(
             converted_type = _convert_type(t.typ, is_windowed=False)
             schema = None
             if is_pydantic_basemodel(t.typ):
-                schema = json.loads(t.typ.schema_json())
+                schema = json.loads(get_pydantic_output_structure(t.typ))
             return UpsertStreamResolverParamGQL(
                 message=UpsertStreamResolverParamMessageGQL(
                     name=t.name,
@@ -374,8 +379,8 @@ def convert_type_to_gql(
                 schema = pydantic.dataclasses.dataclass(t.typ).__pydantic_model__.schema()
             elif is_pydantic_basemodel_instance(t.default_value):
                 assert is_pydantic_basemodel(t.typ)
-                default_value = json.loads(t.default_value.json())
-                schema = json.loads(t.typ.schema_json())
+                default_value = json.loads(get_pydantic_model_json(t.default_value))
+                schema = get_pydantic_output_structure(t.typ)
             return UpsertStreamResolverParamGQL(
                 state=UpsertStreamResolverParamKeyedStateGQL(
                     name=t.name,
