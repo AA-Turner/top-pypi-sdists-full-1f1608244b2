@@ -10,6 +10,7 @@ from .oai.capability import (
     get_settings,
     get_token_auth,
 )
+from .utils.account import split_name
 from .utils.client_utils import EndpointsBase, create_client_response
 from .utils.httpx_auth import BearerAuth
 from .utils.jwt_utils import sign_jwt
@@ -28,11 +29,12 @@ __all__ = [
     "get_service_account_auth",
     "get_settings",
     "get_token_auth",
+    "split_name",
+    "EndpointsBase",
     "create_client_response",
     "BearerAuth",
     "sign_jwt",
     "NextPageTokenInterface",
     "PaginationBase",
     "create_next_page_token",
-    "EndpointsBase",
 ]

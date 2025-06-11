@@ -8,6 +8,7 @@ try:
     import torch
     from lightning_utilities import apply_to_collection
     from torch import BoolTensor, IntTensor, Tensor
+    from torchmetrics import MetricCollection
     from torchmetrics.detection.mean_ap import MeanAveragePrecision
 except ImportError:
     raise unittest.SkipTest("Skipping all tests for torchmetrics.")
@@ -141,6 +142,8 @@ _inputs = {
 
 
 class TestTorchmetricsLib(TestCase):
+    maxDiff = None
+
     def setUp(self):
         # Preds should be a list of elements, where each element is a dict
         # containing 3 keys: boxes, scores, labels
@@ -288,6 +291,11 @@ class TestTorchmetricsLib(TestCase):
                 if key == "classes":
                     continue
                 assert torch.allclose(result_macro[key], result_micro[key])
+
+    def test_metric_collection(self):
+        metrics = MetricCollection([MeanAveragePrecision(average="macro", backend="faster_coco_eval")])
+        result = metrics(self.preds, self.target)
+        self.assertDictEqual(result, self.valid_result)
 
 
 if __name__ == "__main__":

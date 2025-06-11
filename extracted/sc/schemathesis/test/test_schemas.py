@@ -1,9 +1,8 @@
 import pytest
 
 import schemathesis
-from schemathesis.exceptions import OperationNotFound, OperationSchemaError, SchemaError
-from schemathesis.experimental import OPEN_API_3_1
-from schemathesis.internal.result import Err, Ok
+from schemathesis.core.errors import InvalidSchema, LoaderError, OperationNotFound
+from schemathesis.core.result import Err, Ok
 from schemathesis.specs.openapi.parameters import OpenAPI20Body
 from schemathesis.specs.openapi.schemas import InliningResolver
 
@@ -14,8 +13,8 @@ def test_base_path_suffix(swagger_20, base_path):
     swagger_20.raw_schema["basePath"] = base_path
     # Then base path ends with "/" anyway in the swagger instance
     assert swagger_20.base_path == "/v1/"
-    assert swagger_20.verbose_name == "Swagger 2.0"
-    assert swagger_20.spec_version == "2.0"
+    assert swagger_20.specification.name == "Open API 2.0"
+    assert swagger_20.specification.version == "2.0"
 
 
 @pytest.mark.parametrize(
@@ -38,13 +37,13 @@ def test_open_api_base_path(openapi_30, server, base_path):
     assert openapi_30.base_path == base_path
 
 
-def test_open_api_verbose_name(openapi_30):
-    assert openapi_30.verbose_name == "Open API 3.0.0"
-    assert openapi_30.spec_version == "3.0.0"
+def test_open_api_specification(openapi_30):
+    assert openapi_30.specification.name == "Open API 3.0.0"
+    assert openapi_30.specification.version == "3.0.0"
 
 
 def test_resolver_cache(simple_schema, mocker):
-    schema = schemathesis.from_dict(simple_schema)
+    schema = schemathesis.openapi.from_dict(simple_schema)
     spy = mocker.patch("schemathesis.specs.openapi.schemas.InliningResolver", wraps=InliningResolver)
     assert "_resolver" not in schema.__dict__
     assert isinstance(schema.resolver, InliningResolver)
@@ -79,7 +78,7 @@ def test_resolving_multiple_files():
             }
         },
     }
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     assert len(schema["/teapot"]["post"].body) == 1
     body = schema["/teapot"]["post"].body[0]
     assert isinstance(body, OpenAPI20Body)
@@ -106,7 +105,7 @@ def test_resolving_multiple_files():
 
 
 def test_resolving_relative_files():
-    schema = schemathesis.from_path("test/data/relative_files/main.yaml")
+    schema = schemathesis.openapi.from_path("test/data/relative_files/main.yaml")
     operations = list(schema.get_all_operations())
     errors = [op.err() for op in operations if isinstance(op, Err)]
     assert not errors
@@ -117,7 +116,7 @@ def test_schema_parsing_error(simple_schema):
     simple_schema["paths"]["/users"]["get"]["parameters"] = [{"$ref": "#/definitions/SimpleIntRef"}]
     simple_schema["paths"]["/foo"] = {"post": RESPONSES}
     # Then it is not detectable during the schema validation
-    schema = schemathesis.from_dict(simple_schema)
+    schema = schemathesis.openapi.from_dict(simple_schema)
     # And is represented as an `Err` instance during operations parsing
     operations = list(schema.get_all_operations())
     assert len(operations) == 2
@@ -133,15 +132,12 @@ def test_schema_parsing_error(simple_schema):
     assert oks[0].method == "post"
 
 
-@pytest.mark.parametrize(
-    ("validate_schema", "expected_exception"), [(False, OperationSchemaError), (True, SchemaError)]
-)
-def test_not_recoverable_schema_error(simple_schema, validate_schema, expected_exception):
+def test_not_recoverable_schema_error(simple_schema):
     # When there is an error in the API schema that leads to inability to generate any tests
     del simple_schema["paths"]
-    # Then it is an explicit exception either during schema loading or processing API operations
-    with pytest.raises(expected_exception):
-        schema = schemathesis.from_dict(simple_schema, validate_schema=validate_schema)
+    # Then it is an explicit exception during processing API operations
+    with pytest.raises(InvalidSchema):
+        schema = schemathesis.openapi.from_dict(simple_schema)
         list(schema.get_all_operations())
 
 
@@ -150,19 +146,15 @@ def test_no_paths_on_openapi_3_1():
         "openapi": "3.1.0",
         "info": {"title": "Test", "version": "0.1.0"},
     }
-    OPEN_API_3_1.enable()
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     assert list(schema.get_all_operations()) == []
 
 
 def test_schema_error_on_path(simple_schema):
     # When there is an error that affects only a subset of paths
     simple_schema["paths"] = {None: "", "/foo": {"post": RESPONSES}}
-    # Then it should be rejected during loading if schema validation is enabled
-    with pytest.raises(SchemaError):
-        schemathesis.from_dict(simple_schema, validate_schema=True)
-    # And should produce an `Err` instance on operation parsing
-    schema = schemathesis.from_dict(simple_schema, validate_schema=False)
+    # Then it should produce an `Err` instance on operation parsing
+    schema = schemathesis.openapi.from_dict(simple_schema)
     operations = list(schema.get_all_operations())
     assert len(operations) == 2
     errors = [op for op in operations if isinstance(op, Err)]
@@ -195,7 +187,7 @@ SCHEMA = {
     ],
 )
 def test_get_operation(operation_id, reference, path, method):
-    schema = schemathesis.from_dict(SCHEMA)
+    schema = schemathesis.openapi.from_dict(SCHEMA)
     for getter, key in ((schema.get_operation_by_id, operation_id), (schema.get_operation_by_reference, reference)):
         operation = getter(key)
         assert operation.path == path
@@ -213,7 +205,7 @@ def test_get_operation_by_id_in_referenced_path(ctx):
             },
         },
     )
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
     operation = schema.get_operation_by_id("getFoo")
     assert operation.path == "/foo"
     assert operation.method.upper() == "GET"
@@ -236,7 +228,7 @@ def test_get_operation_by_id_in_referenced_path_shared_parameters(ctx):
             },
         },
     )
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
     operation = schema.get_operation_by_id("getFoo")
     assert operation.path == "/foo"
     assert operation.method.upper() == "GET"
@@ -248,8 +240,7 @@ def test_get_operation_by_id_no_paths_on_openapi_3_1():
         "openapi": "3.1.0",
         "info": {"title": "Test", "version": "0.1.0"},
     }
-    OPEN_API_3_1.enable()
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     with pytest.raises(OperationNotFound):
         schema.get_operation_by_id("getFoo")
 
@@ -263,20 +254,20 @@ def test_get_operation_by_id_no_paths_on_openapi_3_1():
 )
 def test_missing_payload_schema(request, fixture, path):
     raw_schema = request.getfixturevalue(fixture)
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     operation = schema[path]["GET"]
     assert operation.get_raw_payload_schema("application/xml") is None
     assert operation.get_resolved_payload_schema("application/xml") is None
 
 
 def test_missing_payload_schema_media_type(open_api_3_schema_with_yaml_payload):
-    schema = schemathesis.from_dict(open_api_3_schema_with_yaml_payload)
+    schema = schemathesis.openapi.from_dict(open_api_3_schema_with_yaml_payload)
     assert schema["/yaml"]["POST"].get_raw_payload_schema("application/xml") is None
 
 
 def test_ssl_error(server):
-    with pytest.raises(SchemaError) as exc:
-        schemathesis.from_uri(f"https://127.0.0.1:{server['port']}")
+    with pytest.raises(LoaderError) as exc:
+        schemathesis.openapi.from_url(f"https://127.0.0.1:{server['port']}")
     assert exc.value.message == "SSL verification problem"
     assert exc.value.extras[0].startswith(
         ("[SSL: WRONG_VERSION_NUMBER] wrong version number", "[SSL] record layer failure")

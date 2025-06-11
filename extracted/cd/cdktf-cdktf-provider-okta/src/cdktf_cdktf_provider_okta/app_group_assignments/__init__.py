@@ -1,7 +1,7 @@
 r'''
 # `okta_app_group_assignments`
 
-Refer to the Terraform Registry for docs: [`okta_app_group_assignments`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments).
+Refer to the Terraform Registry for docs: [`okta_app_group_assignments`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppGroupAssignments(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appGroupAssignments.AppGroupAssignments",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments okta_app_group_assignments}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments okta_app_group_assignments}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class AppGroupAssignments(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments okta_app_group_assignments} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments okta_app_group_assignments} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param app_id: The ID of the application to assign a group to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#app_id AppGroupAssignments#app_id}
-        :param group: group block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#group AppGroupAssignments#group}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#id AppGroupAssignments#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#timeouts AppGroupAssignments#timeouts}
+        :param app_id: The ID of the application to assign a group to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#app_id AppGroupAssignments#app_id}
+        :param group: group block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#group AppGroupAssignments#group}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#id AppGroupAssignments#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#timeouts AppGroupAssignments#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class AppGroupAssignments(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppGroupAssignments to import.
-        :param import_from_id: The id of the existing AppGroupAssignments that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppGroupAssignments that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppGroupAssignments to import is found.
         '''
         if __debug__:
@@ -145,9 +145,9 @@ class AppGroupAssignments(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#create AppGroupAssignments#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#read AppGroupAssignments#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#update AppGroupAssignments#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#create AppGroupAssignments#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#read AppGroupAssignments#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#update AppGroupAssignments#update}.
         '''
         value = AppGroupAssignmentsTimeouts(create=create, read=read, update=update)
 
@@ -278,10 +278,10 @@ class AppGroupAssignmentsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param app_id: The ID of the application to assign a group to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#app_id AppGroupAssignments#app_id}
-        :param group: group block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#group AppGroupAssignments#group}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#id AppGroupAssignments#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#timeouts AppGroupAssignments#timeouts}
+        :param app_id: The ID of the application to assign a group to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#app_id AppGroupAssignments#app_id}
+        :param group: group block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#group AppGroupAssignments#group}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#id AppGroupAssignments#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#timeouts AppGroupAssignments#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -392,7 +392,7 @@ class AppGroupAssignmentsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_id(self) -> builtins.str:
         '''The ID of the application to assign a group to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#app_id AppGroupAssignments#app_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#app_id AppGroupAssignments#app_id}
         '''
         result = self._values.get("app_id")
         assert result is not None, "Required property 'app_id' is missing"
@@ -404,14 +404,14 @@ class AppGroupAssignmentsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["AppGroupAssignmentsGroup"]]]:
         '''group block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#group AppGroupAssignments#group}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#group AppGroupAssignments#group}
         '''
         result = self._values.get("group")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["AppGroupAssignmentsGroup"]]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#id AppGroupAssignments#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#id AppGroupAssignments#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -423,7 +423,7 @@ class AppGroupAssignmentsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["AppGroupAssignmentsTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#timeouts AppGroupAssignments#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#timeouts AppGroupAssignments#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["AppGroupAssignmentsTimeouts"], result)
@@ -454,9 +454,9 @@ class AppGroupAssignmentsGroup:
         profile: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param id: A group to associate with the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#id AppGroupAssignments#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param priority: Priority of group assignment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#priority AppGroupAssignments#priority}
-        :param profile: JSON document containing `application profile <https://developer.okta.com/docs/reference/api/apps/#profile-object>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#profile AppGroupAssignments#profile}
+        :param id: A group to associate with the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#id AppGroupAssignments#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param priority: Priority of group assignment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#priority AppGroupAssignments#priority}
+        :param profile: JSON document containing `application profile <https://developer.okta.com/docs/reference/api/apps/#profile-object>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#profile AppGroupAssignments#profile}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__638190b2f90536c935316e36ed5544b7d129b3dd5555ef3a37a63c9e9b8330c9)
@@ -475,7 +475,7 @@ class AppGroupAssignmentsGroup:
     def id(self) -> builtins.str:
         '''A group to associate with the application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#id AppGroupAssignments#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#id AppGroupAssignments#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -488,7 +488,7 @@ class AppGroupAssignmentsGroup:
     def priority(self) -> typing.Optional[jsii.Number]:
         '''Priority of group assignment.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#priority AppGroupAssignments#priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#priority AppGroupAssignments#priority}
         '''
         result = self._values.get("priority")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -497,7 +497,7 @@ class AppGroupAssignmentsGroup:
     def profile(self) -> typing.Optional[builtins.str]:
         '''JSON document containing `application profile <https://developer.okta.com/docs/reference/api/apps/#profile-object>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#profile AppGroupAssignments#profile}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#profile AppGroupAssignments#profile}
         '''
         result = self._values.get("profile")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -721,9 +721,9 @@ class AppGroupAssignmentsTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#create AppGroupAssignments#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#read AppGroupAssignments#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#update AppGroupAssignments#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#create AppGroupAssignments#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#read AppGroupAssignments#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#update AppGroupAssignments#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__d05f479027be7c3885b480aae1bb21f8b7cd68bc2f3f7a2f0ea8b5732a65d31d)
@@ -740,19 +740,19 @@ class AppGroupAssignmentsTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#create AppGroupAssignments#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#create AppGroupAssignments#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#read AppGroupAssignments#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#read AppGroupAssignments#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_group_assignments#update AppGroupAssignments#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_group_assignments#update AppGroupAssignments#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 

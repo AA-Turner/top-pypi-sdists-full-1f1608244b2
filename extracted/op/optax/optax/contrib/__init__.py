@@ -18,6 +18,14 @@
 
 from optax.contrib._acprop import acprop
 from optax.contrib._acprop import scale_by_acprop
+from optax.contrib._ademamix import ademamix
+from optax.contrib._ademamix import scale_by_ademamix
+from optax.contrib._ademamix import scale_by_simplified_ademamix
+from optax.contrib._ademamix import ScaleByAdemamixState
+from optax.contrib._ademamix import ScaleBySimplifiedAdEMAMixState
+from optax.contrib._ademamix import simplified_ademamix
+from optax.contrib._adopt import adopt
+from optax.contrib._adopt import scale_by_adopt
 from optax.contrib._cocob import cocob
 from optax.contrib._cocob import COCOBState
 from optax.contrib._cocob import scale_by_cocob
@@ -35,6 +43,9 @@ from optax.contrib._momo import momo
 from optax.contrib._momo import momo_adam
 from optax.contrib._momo import MomoAdamState
 from optax.contrib._momo import MomoState
+from optax.contrib._muon import muon
+from optax.contrib._muon import MuonState
+from optax.contrib._muon import scale_by_muon
 from optax.contrib._privacy import differentially_private_aggregate
 from optax.contrib._privacy import DifferentiallyPrivateAggregateState
 from optax.contrib._privacy import dpsgd
@@ -51,3 +62,7 @@ from optax.contrib._schedule_free import schedule_free_adamw
 from optax.contrib._schedule_free import schedule_free_eval_params
 from optax.contrib._schedule_free import schedule_free_sgd
 from optax.contrib._schedule_free import ScheduleFreeState
+from optax.contrib._sophia import hutchinson_estimator_diag_hessian
+from optax.contrib._sophia import HutchinsonState
+from optax.contrib._sophia import sophia
+from optax.contrib._sophia import SophiaState

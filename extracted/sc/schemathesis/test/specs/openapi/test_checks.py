@@ -1,10 +1,19 @@
 import pytest
+import yaml
 
 import schemathesis
-from schemathesis.exceptions import CheckFailed
-from schemathesis.generation import DataGenerationMethod
-from schemathesis.internal.checks import CheckConfig, CheckContext, PositiveDataAcceptanceConfig
-from schemathesis.models import Case, GenerationMetadata, TestPhase
+from schemathesis.checks import CheckContext
+from schemathesis.config._checks import ChecksConfig
+from schemathesis.core.failures import Failure
+from schemathesis.core.transport import Response
+from schemathesis.generation import GenerationMode
+from schemathesis.generation.meta import (
+    CaseMetadata,
+    ComponentInfo,
+    ComponentKind,
+    GenerationInfo,
+    PhaseInfo,
+)
 from schemathesis.specs.openapi.checks import (
     ResourcePath,
     _is_prefix_operation,
@@ -74,18 +83,26 @@ def test_is_prefix_operation(lhs, lhs_vars, rhs, rhs_vars, expected):
     assert _is_prefix_operation(ResourcePath(lhs, lhs_vars), ResourcePath(rhs, rhs_vars)) == expected
 
 
-def build_metadata(path_parameters=None, query=None, headers=None, cookies=None, body=None):
-    return GenerationMetadata(
-        path_parameters=path_parameters,
-        query=query,
-        headers=headers,
-        cookies=cookies,
-        body=body,
-        phase=TestPhase.GENERATE,
-        description=None,
-        location=None,
-        parameter=None,
-        parameter_location=None,
+def build_metadata(
+    path_parameters=None, query=None, headers=None, cookies=None, body=None, generation_mode=GenerationMode.POSITIVE
+):
+    return CaseMetadata(
+        generation=GenerationInfo(
+            time=0.1,
+            mode=generation_mode,
+        ),
+        components={
+            kind: ComponentInfo(mode=value)
+            for kind, value in [
+                (ComponentKind.QUERY, query),
+                (ComponentKind.PATH_PARAMETERS, path_parameters),
+                (ComponentKind.HEADERS, headers),
+                (ComponentKind.COOKIES, cookies),
+                (ComponentKind.BODY, body),
+            ]
+            if value is not None
+        },
+        phase=PhaseInfo.generate(),
     )
 
 
@@ -118,13 +135,13 @@ def sample_schema(ctx):
     [
         ({}, False),
         (
-            {"meta": build_metadata(body=DataGenerationMethod.negative)},
+            {"_meta": build_metadata(body=GenerationMode.NEGATIVE)},
             False,
         ),
         (
             {
                 "query": {"key": 1},
-                "meta": build_metadata(query=DataGenerationMethod.negative),
+                "_meta": build_metadata(query=GenerationMode.NEGATIVE),
             },
             False,
         ),
@@ -132,14 +149,14 @@ def sample_schema(ctx):
             {
                 "query": {"key": 1},
                 "headers": {"X-Key": 42},
-                "meta": build_metadata(query=DataGenerationMethod.negative),
+                "_meta": build_metadata(query=GenerationMode.NEGATIVE),
             },
             False,
         ),
         (
             {
                 "query": {"key": 5, "unknown": 3},
-                "meta": build_metadata(query=DataGenerationMethod.negative),
+                "_meta": build_metadata(query=GenerationMode.NEGATIVE),
             },
             True,
         ),
@@ -147,36 +164,50 @@ def sample_schema(ctx):
             {
                 "query": {"key": 5, "unknown": 3},
                 "headers": {"X-Key": 42},
-                "meta": build_metadata(query=DataGenerationMethod.negative),
+                "_meta": build_metadata(query=GenerationMode.NEGATIVE),
             },
             True,
         ),
     ],
 )
 def test_has_only_additional_properties_in_non_body_parameters(sample_schema, kwargs, expected):
-    schema = schemathesis.from_dict(sample_schema)
+    schema = schemathesis.openapi.from_dict(sample_schema)
     operation = schema["/test"]["POST"]
-    case = Case(operation=operation, generation_time=0.0, **kwargs)
+    case = operation.Case(**kwargs)
     assert has_only_additional_properties_in_non_body_parameters(case) is expected
 
 
 def test_negative_data_rejection_on_additional_properties(response_factory, sample_schema):
     # See GH-2312
     response = response_factory.requests()
-    schema = schemathesis.from_dict(sample_schema)
+    schema = schemathesis.openapi.from_dict(sample_schema)
     operation = schema["/test"]["POST"]
-    case = Case(
-        operation=operation,
-        generation_time=0.0,
-        meta=build_metadata(query=DataGenerationMethod.negative),
-        data_generation_method=DataGenerationMethod.negative,
+    case = operation.Case(
+        _meta=build_metadata(
+            query=GenerationMode.NEGATIVE,
+            generation_mode=GenerationMode.NEGATIVE,
+        ),
         query={"key": 5, "unknown": 3},
     )
-    assert negative_data_rejection(CheckContext(override=None, auth=None, headers=None), response, case) is None
+    assert (
+        negative_data_rejection(
+            CheckContext(
+                override=None,
+                auth=None,
+                headers=None,
+                config=ChecksConfig(),
+                transport_kwargs=None,
+            ),
+            response,
+            case,
+        )
+        is None
+    )
 
 
 def test_response_schema_conformance_with_unspecified_method(response_factory, sample_schema):
     response = response_factory.requests()
+    response = Response.from_requests(response, True)
     sample_schema["paths"]["/test"]["post"]["responses"] = {
         "200": {
             "description": "Successful response",
@@ -193,13 +224,20 @@ def test_response_schema_conformance_with_unspecified_method(response_factory, s
     }
     schema = schemathesis.openapi.from_dict(sample_schema)
     operation = schema["/test"]["POST"]
-    meta = build_metadata()
-    meta.description = "Unspecified HTTP method: PUT"
-    case = Case(
-        operation=operation,
-        generation_time=0.0,
-        meta=meta,
-        data_generation_method=DataGenerationMethod.negative,
+    case = operation.Case(
+        _meta=CaseMetadata(
+            generation=GenerationInfo(
+                time=0.1,
+                mode=GenerationMode.NEGATIVE,
+            ),
+            components={
+                ComponentKind.QUERY: ComponentInfo(mode=GenerationMode.NEGATIVE),
+            },
+            phase=PhaseInfo.coverage(
+                description="Unspecified HTTP method: PUT",
+            ),
+        ),
+        query={"key": 5, "unknown": 3},
     )
 
     result = response_schema_conformance(
@@ -207,6 +245,7 @@ def test_response_schema_conformance_with_unspecified_method(response_factory, s
             override=None,
             auth=None,
             headers=None,
+            config=ChecksConfig(),
             transport_kwargs=None,
         ),
         response,
@@ -216,7 +255,7 @@ def test_response_schema_conformance_with_unspecified_method(response_factory, s
 
 
 @pytest.mark.parametrize(
-    ("status_code", "allowed_statuses", "is_positive", "should_raise"),
+    ("status_code", "expected_statuses", "is_positive", "should_raise"),
     [
         (200, ["200", "400"], True, False),
         (400, ["200", "400"], True, False),
@@ -242,30 +281,31 @@ def test_positive_data_acceptance(
     response_factory,
     sample_schema,
     status_code,
-    allowed_statuses,
+    expected_statuses,
     is_positive,
     should_raise,
 ):
-    schema = schemathesis.from_dict(sample_schema)
+    schema = schemathesis.openapi.from_dict(sample_schema)
     operation = schema["/test"]["POST"]
     response = response_factory.requests(status_code=status_code)
-    case = Case(
-        operation=operation,
-        generation_time=0.0,
-        meta=build_metadata(query=DataGenerationMethod.positive if is_positive else DataGenerationMethod.negative),
-        data_generation_method=DataGenerationMethod.positive if is_positive else DataGenerationMethod.negative,
+    case = operation.Case(
+        _meta=build_metadata(
+            query=GenerationMode.POSITIVE if is_positive else GenerationMode.NEGATIVE,
+            generation_mode=GenerationMode.POSITIVE if is_positive else GenerationMode.NEGATIVE,
+        ),
     )
     ctx = CheckContext(
         override=None,
         auth=None,
         headers=None,
-        config=CheckConfig(positive_data_acceptance=PositiveDataAcceptanceConfig(allowed_statuses=allowed_statuses)),
+        config=ChecksConfig.from_dict({"positive_data_acceptance": {"expected-statuses": expected_statuses}}),
+        transport_kwargs=None,
     )
 
     if should_raise:
-        with pytest.raises(CheckFailed) as exc_info:
+        with pytest.raises(Failure) as exc_info:
             positive_data_acceptance(ctx, response, case)
-        assert "Rejected positive data" in str(exc_info.value)
+        assert "Rejected positive data" in exc_info.value.title
     else:
         assert positive_data_acceptance(ctx, response, case) is None
 
@@ -280,7 +320,6 @@ def test_positive_data_acceptance(
     ],
 )
 @pytest.mark.operations("success", "basic")
-@pytest.mark.snapshot(replace_statistic=True)
 def test_missing_required_header(ctx, cli, openapi3_base_url, snapshot_cli, path, header_name, expected_status):
     schema_path = ctx.openapi.write_schema(
         {
@@ -298,19 +337,79 @@ def test_missing_required_header(ctx, cli, openapi3_base_url, snapshot_cli, path
     assert (
         cli.run(
             str(schema_path),
-            f"--base-url={openapi3_base_url}",
-            "--hypothesis-phases=explicit",
-            "--data-generation-method=negative",
-            "--experimental=coverage-phase",
-            f"--experimental-missing-required-header-allowed-statuses={expected_status}",
+            f"--url={openapi3_base_url}",
+            "--phases=coverage",
+            "--mode=negative",
+            "--checks=missing_required_header",
+            config={"checks": {"missing_required_header": {"expected-statuses": [expected_status]}}},
         )
         == snapshot_cli
     )
 
 
+@pytest.mark.operations("success")
+def test_missing_required_accept_header(ctx, cli, openapi3_base_url, tmp_path):
+    cassette_path = tmp_path / "missing_accept_header.yaml"
+
+    schema_path = ctx.openapi.write_schema(
+        {
+            "/success": {
+                "get": {
+                    "parameters": [
+                        {
+                            "name": "Accept",
+                            "in": "header",
+                            "required": True,
+                            "schema": {"type": "string", "enum": ["application/json"]},
+                        },
+                    ],
+                    "responses": {"200": {"description": "OK"}},
+                }
+            }
+        }
+    )
+
+    cli.run(
+        str(schema_path),
+        f"--url={openapi3_base_url}",
+        f"--report-vcr-path={cassette_path}",
+        "--phases=coverage",
+        "--mode=negative",
+        "--checks=missing_required_header",
+        "--max-examples=1",
+    )
+
+    # Load and verify the cassette
+    with cassette_path.open(encoding="utf-8") as fd:
+        cassette = yaml.safe_load(fd)
+    interactions = cassette["http_interactions"]
+
+    missing_header_interaction = None
+    for interaction in interactions:
+        if (
+            interaction["phase"]["name"] == "coverage"
+            and interaction["generation"]["mode"] == "negative"
+            and interaction["phase"]["data"]["description"] == "Missing `Accept` at header"
+        ):
+            missing_header_interaction = interaction
+            break
+
+    assert missing_header_interaction is not None, "Should find missing required header test case"
+    phase_data = missing_header_interaction["phase"]["data"]
+    assert phase_data["parameter"] == "Accept"
+    assert phase_data["parameter_location"] == "header"
+
+    request_headers = missing_header_interaction["request"]["headers"]
+    assert "Accept" not in request_headers, f"Accept header should be missing, but found: {request_headers}"
+
+    checks = missing_header_interaction["checks"]
+    missing_header_check = next((c for c in checks if c["name"] == "missing_required_header"), None)
+    assert missing_header_check is not None
+    assert missing_header_check["status"] == "FAILURE"
+
+
 @pytest.mark.parametrize("path, method", [("/success", "get"), ("/basic", "post")])
 @pytest.mark.operations("success")
-@pytest.mark.snapshot(replace_statistic=True)
 def test_method_not_allowed(ctx, cli, openapi3_base_url, snapshot_cli, path, method):
     schema_path = ctx.openapi.write_schema(
         {
@@ -324,10 +423,9 @@ def test_method_not_allowed(ctx, cli, openapi3_base_url, snapshot_cli, path, met
     assert (
         cli.run(
             str(schema_path),
-            f"--base-url={openapi3_base_url}",
-            "--hypothesis-phases=explicit",
-            "--data-generation-method=negative",
-            "--experimental=coverage-phase",
+            f"--url={openapi3_base_url}",
+            "--phases=coverage",
+            "--mode=negative",
         )
         == snapshot_cli
     )

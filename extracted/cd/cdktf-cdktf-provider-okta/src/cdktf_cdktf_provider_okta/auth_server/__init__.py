@@ -1,7 +1,7 @@
 r'''
 # `okta_auth_server`
 
-Refer to the Terraform Registry for docs: [`okta_auth_server`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server).
+Refer to the Terraform Registry for docs: [`okta_auth_server`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AuthServer(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.authServer.AuthServer",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server okta_auth_server}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server okta_auth_server}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class AuthServer(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server okta_auth_server} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server okta_auth_server} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param audiences: The recipients that the tokens are intended for. This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#audiences AuthServer#audiences}
-        :param name: The name of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#name AuthServer#name}
-        :param credentials_rotation_mode: The key rotation mode for the authorization server. Can be ``AUTO`` or ``MANUAL``. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#credentials_rotation_mode AuthServer#credentials_rotation_mode}
-        :param description: The description of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#description AuthServer#description}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#id AuthServer#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param issuer_mode: *Early Access Property*. Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#issuer_mode AuthServer#issuer_mode}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#status AuthServer#status}
+        :param audiences: The recipients that the tokens are intended for. This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#audiences AuthServer#audiences}
+        :param name: The name of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#name AuthServer#name}
+        :param credentials_rotation_mode: The key rotation mode for the authorization server. Can be ``AUTO`` or ``MANUAL``. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#credentials_rotation_mode AuthServer#credentials_rotation_mode}
+        :param description: The description of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#description AuthServer#description}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#id AuthServer#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param issuer_mode: *Early Access Property*. Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#issuer_mode AuthServer#issuer_mode}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#status AuthServer#status}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class AuthServer(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AuthServer to import.
-        :param import_from_id: The id of the existing AuthServer that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AuthServer that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AuthServer to import is found.
         '''
         if __debug__:
@@ -352,13 +352,13 @@ class AuthServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param audiences: The recipients that the tokens are intended for. This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#audiences AuthServer#audiences}
-        :param name: The name of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#name AuthServer#name}
-        :param credentials_rotation_mode: The key rotation mode for the authorization server. Can be ``AUTO`` or ``MANUAL``. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#credentials_rotation_mode AuthServer#credentials_rotation_mode}
-        :param description: The description of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#description AuthServer#description}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#id AuthServer#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param issuer_mode: *Early Access Property*. Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#issuer_mode AuthServer#issuer_mode}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#status AuthServer#status}
+        :param audiences: The recipients that the tokens are intended for. This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#audiences AuthServer#audiences}
+        :param name: The name of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#name AuthServer#name}
+        :param credentials_rotation_mode: The key rotation mode for the authorization server. Can be ``AUTO`` or ``MANUAL``. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#credentials_rotation_mode AuthServer#credentials_rotation_mode}
+        :param description: The description of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#description AuthServer#description}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#id AuthServer#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param issuer_mode: *Early Access Property*. Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#issuer_mode AuthServer#issuer_mode}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#status AuthServer#status}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -477,7 +477,7 @@ class AuthServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#audiences AuthServer#audiences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#audiences AuthServer#audiences}
         '''
         result = self._values.get("audiences")
         assert result is not None, "Required property 'audiences' is missing"
@@ -487,7 +487,7 @@ class AuthServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The name of the authorization server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#name AuthServer#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#name AuthServer#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -497,7 +497,7 @@ class AuthServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def credentials_rotation_mode(self) -> typing.Optional[builtins.str]:
         '''The key rotation mode for the authorization server. Can be ``AUTO`` or ``MANUAL``. Default: ``AUTO``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#credentials_rotation_mode AuthServer#credentials_rotation_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#credentials_rotation_mode AuthServer#credentials_rotation_mode}
         '''
         result = self._values.get("credentials_rotation_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -506,14 +506,14 @@ class AuthServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''The description of the authorization server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#description AuthServer#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#description AuthServer#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#id AuthServer#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#id AuthServer#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -527,7 +527,7 @@ class AuthServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#issuer_mode AuthServer#issuer_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#issuer_mode AuthServer#issuer_mode}
         '''
         result = self._values.get("issuer_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -536,7 +536,7 @@ class AuthServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Default to ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server#status AuthServer#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server#status AuthServer#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)

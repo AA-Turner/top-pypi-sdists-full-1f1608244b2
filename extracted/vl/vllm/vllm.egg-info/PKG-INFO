@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: vllm
-Version: 0.9.0.1
+Version: 0.9.1
 Summary: A high-throughput and memory-efficient inference and serving engine for LLMs
 Author: vLLM Team
 License-Expression: Apache-2.0
@@ -35,7 +35,7 @@ Requires-Dist: protobuf
 Requires-Dist: fastapi[standard]>=0.115.0
 Requires-Dist: aiohttp
 Requires-Dist: openai>=1.52.0
-Requires-Dist: pydantic>=2.9
+Requires-Dist: pydantic>=2.10
 Requires-Dist: prometheus_client>=0.18.0
 Requires-Dist: pillow
 Requires-Dist: prometheus-fastapi-instrumentator>=7.0.0
@@ -58,7 +58,7 @@ Requires-Dist: pyyaml
 Requires-Dist: six>=1.16.0; python_version > "3.11"
 Requires-Dist: setuptools<80,>=77.0.3; python_version > "3.11"
 Requires-Dist: einops
-Requires-Dist: compressed-tensors==0.9.4
+Requires-Dist: compressed-tensors==0.10.1
 Requires-Dist: depyf==0.18.0
 Requires-Dist: cloudpickle
 Requires-Dist: watchfiles
@@ -76,6 +76,9 @@ Requires-Dist: torch==2.7.0
 Requires-Dist: torchaudio==2.7.0
 Requires-Dist: torchvision==0.22.0
 Requires-Dist: xformers==0.0.30; platform_system == "Linux" and platform_machine == "x86_64"
+Provides-Extra: bench
+Requires-Dist: pandas; extra == "bench"
+Requires-Dist: datasets; extra == "bench"
 Provides-Extra: tensorizer
 Requires-Dist: tensorizer>=2.9.0; extra == "tensorizer"
 Provides-Extra: fastsafetensors
@@ -152,8 +155,8 @@ vLLM is fast with:
 - Efficient management of attention key and value memory with [**PagedAttention**](https://blog.vllm.ai/2023/06/20/vllm.html)
 - Continuous batching of incoming requests
 - Fast model execution with CUDA/HIP graph
-- Quantizations: [GPTQ](https://arxiv.org/abs/2210.17323), [AWQ](https://arxiv.org/abs/2306.00978), [AutoRound](https://arxiv.org/abs/2309.05516),INT4, INT8, and FP8.
-- Optimized CUDA kernels, including integration with FlashAttention and FlashInfer.
+- Quantizations: [GPTQ](https://arxiv.org/abs/2210.17323), [AWQ](https://arxiv.org/abs/2306.00978), [AutoRound](https://arxiv.org/abs/2309.05516), INT4, INT8, and FP8
+- Optimized CUDA kernels, including integration with FlashAttention and FlashInfer
 - Speculative decoding
 - Chunked prefill
 
@@ -166,14 +169,14 @@ vLLM is flexible and easy to use with:
 - Tensor parallelism and pipeline parallelism support for distributed inference
 - Streaming outputs
 - OpenAI-compatible API server
-- Support NVIDIA GPUs, AMD CPUs and GPUs, Intel CPUs and GPUs, PowerPC CPUs, TPU, and AWS Neuron.
+- Support NVIDIA GPUs, AMD CPUs and GPUs, Intel CPUs and GPUs, PowerPC CPUs, TPU, and AWS Neuron
 - Prefix caching support
 - Multi-LoRA support
 
 vLLM seamlessly supports most popular open-source models on HuggingFace, including:
 - Transformer-like LLMs (e.g., Llama)
 - Mixture-of-Expert LLMs (e.g., Mixtral, Deepseek-V2 and V3)
-- Embedding Models (e.g. E5-Mistral)
+- Embedding Models (e.g., E5-Mistral)
 - Multi-modal LLMs (e.g., LLaVA)
 
 Find the full list of supported models [here](https://docs.vllm.ai/en/latest/models/supported_models.html).
@@ -256,4 +259,4 @@ If you use vLLM for your research, please cite our [paper](https://arxiv.org/abs
 
 ## Media Kit
 
-- If you wish to use vLLM's logo, please refer to [our media kit repo](https://github.com/vllm-project/media-kit).
+- If you wish to use vLLM's logo, please refer to [our media kit repo](https://github.com/vllm-project/media-kit)

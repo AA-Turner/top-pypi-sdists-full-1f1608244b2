@@ -1,7 +1,7 @@
 r'''
 # `okta_auth_server_default`
 
-Refer to the Terraform Registry for docs: [`okta_auth_server_default`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default).
+Refer to the Terraform Registry for docs: [`okta_auth_server_default`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AuthServerDefault(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.authServerDefault.AuthServerDefault",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default okta_auth_server_default}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default okta_auth_server_default}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class AuthServerDefault(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default okta_auth_server_default} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default okta_auth_server_default} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param audiences: The recipients that the tokens are intended for. This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#audiences AuthServerDefault#audiences}
-        :param credentials_rotation_mode: The key rotation mode for the authorization server. Can be ``AUTO`` or ``MANUAL``. Default: ``MANUAL``.Credential rotation mode, in many cases you cannot set this to MANUAL, the API will ignore the value and you will get a perpetual diff. This should rarely be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#credentials_rotation_mode AuthServerDefault#credentials_rotation_mode}
-        :param description: The description of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#description AuthServerDefault#description}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#id AuthServerDefault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param issuer_mode: *Early Access Property*. Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#issuer_mode AuthServerDefault#issuer_mode}
-        :param name: The name of the authorization server. Not necessary but left for backwards capacity with legacy implementation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#name AuthServerDefault#name}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#status AuthServerDefault#status}
+        :param audiences: The recipients that the tokens are intended for. This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#audiences AuthServerDefault#audiences}
+        :param credentials_rotation_mode: The key rotation mode for the authorization server. Can be ``AUTO`` or ``MANUAL``. Default: ``MANUAL``.Credential rotation mode, in many cases you cannot set this to MANUAL, the API will ignore the value and you will get a perpetual diff. This should rarely be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#credentials_rotation_mode AuthServerDefault#credentials_rotation_mode}
+        :param description: The description of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#description AuthServerDefault#description}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#id AuthServerDefault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param issuer_mode: *Early Access Property*. Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#issuer_mode AuthServerDefault#issuer_mode}
+        :param name: The name of the authorization server. Not necessary but left for backwards capacity with legacy implementation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#name AuthServerDefault#name}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#status AuthServerDefault#status}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class AuthServerDefault(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AuthServerDefault to import.
-        :param import_from_id: The id of the existing AuthServerDefault that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AuthServerDefault that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AuthServerDefault to import is found.
         '''
         if __debug__:
@@ -360,13 +360,13 @@ class AuthServerDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param audiences: The recipients that the tokens are intended for. This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#audiences AuthServerDefault#audiences}
-        :param credentials_rotation_mode: The key rotation mode for the authorization server. Can be ``AUTO`` or ``MANUAL``. Default: ``MANUAL``.Credential rotation mode, in many cases you cannot set this to MANUAL, the API will ignore the value and you will get a perpetual diff. This should rarely be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#credentials_rotation_mode AuthServerDefault#credentials_rotation_mode}
-        :param description: The description of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#description AuthServerDefault#description}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#id AuthServerDefault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param issuer_mode: *Early Access Property*. Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#issuer_mode AuthServerDefault#issuer_mode}
-        :param name: The name of the authorization server. Not necessary but left for backwards capacity with legacy implementation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#name AuthServerDefault#name}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#status AuthServerDefault#status}
+        :param audiences: The recipients that the tokens are intended for. This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#audiences AuthServerDefault#audiences}
+        :param credentials_rotation_mode: The key rotation mode for the authorization server. Can be ``AUTO`` or ``MANUAL``. Default: ``MANUAL``.Credential rotation mode, in many cases you cannot set this to MANUAL, the API will ignore the value and you will get a perpetual diff. This should rarely be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#credentials_rotation_mode AuthServerDefault#credentials_rotation_mode}
+        :param description: The description of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#description AuthServerDefault#description}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#id AuthServerDefault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param issuer_mode: *Early Access Property*. Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#issuer_mode AuthServerDefault#issuer_mode}
+        :param name: The name of the authorization server. Not necessary but left for backwards capacity with legacy implementation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#name AuthServerDefault#name}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#status AuthServerDefault#status}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -486,7 +486,7 @@ class AuthServerDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This becomes the ``aud`` claim in an access token. Currently Okta only supports a single value here.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#audiences AuthServerDefault#audiences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#audiences AuthServerDefault#audiences}
         '''
         result = self._values.get("audiences")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -497,7 +497,7 @@ class AuthServerDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Can be ``AUTO`` or ``MANUAL``. Default: ``MANUAL``.Credential rotation mode, in many cases you cannot set this to MANUAL, the API will ignore the value and you will get a perpetual diff. This should rarely be used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#credentials_rotation_mode AuthServerDefault#credentials_rotation_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#credentials_rotation_mode AuthServerDefault#credentials_rotation_mode}
         '''
         result = self._values.get("credentials_rotation_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -506,14 +506,14 @@ class AuthServerDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''The description of the authorization server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#description AuthServerDefault#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#description AuthServerDefault#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#id AuthServerDefault#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#id AuthServerDefault#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -527,7 +527,7 @@ class AuthServerDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Allows you to use a custom issuer URL. It can be set to ``CUSTOM_URL``, ``ORG_URL``, or ``DYNAMIC``. Default: ``ORG_URL``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#issuer_mode AuthServerDefault#issuer_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#issuer_mode AuthServerDefault#issuer_mode}
         '''
         result = self._values.get("issuer_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -536,7 +536,7 @@ class AuthServerDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> typing.Optional[builtins.str]:
         '''The name of the authorization server. Not necessary but left for backwards capacity with legacy implementation.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#name AuthServerDefault#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#name AuthServerDefault#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -545,7 +545,7 @@ class AuthServerDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Default to ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_default#status AuthServerDefault#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_default#status AuthServerDefault#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)

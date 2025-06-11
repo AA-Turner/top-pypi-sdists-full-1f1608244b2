@@ -1,4 +1,5 @@
 import json
+import logging
 from io import BytesIO
 from unittest.mock import patch
 
@@ -14,7 +15,6 @@ from faker import Faker
 from pytest_factoryboy import LazyFixture
 
 from ..backends.abstract import AbstractDataBackend
-from ..exceptions import ImportError
 from ..models import (
     ImportCredential,
     ImportSource,
@@ -24,6 +24,8 @@ from ..models import (
     import_data_as_task,
 )
 from ..utils import nest_row
+
+logger = logging.getLogger("io")
 
 fake = Faker()
 
@@ -255,15 +257,11 @@ class TestImportSourceModel:
         else:
             assert import_source.data == {}
 
-    def test_import_data_error(self, import_source):
+    def test_import_data_error(self, caplog, import_source):
         assert import_source.status == ImportSource.Status.PENDING
-        with pytest.raises(ImportError):
+        with caplog.at_level(logging.ERROR):
             import_source.import_data()
         assert import_source.status == ImportSource.Status.ERROR
-
-    def test_not_silent_raise_error(self, import_source):
-        with pytest.raises(Exception):
-            import_source.import_data(silent=False)
 
 
 @pytest.mark.django_db

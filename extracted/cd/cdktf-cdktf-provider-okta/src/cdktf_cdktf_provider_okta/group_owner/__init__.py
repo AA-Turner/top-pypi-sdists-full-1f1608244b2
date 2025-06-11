@@ -1,7 +1,7 @@
 r'''
 # `okta_group_owner`
 
-Refer to the Terraform Registry for docs: [`okta_group_owner`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner).
+Refer to the Terraform Registry for docs: [`okta_group_owner`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class GroupOwner(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.groupOwner.GroupOwner",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner okta_group_owner}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner okta_group_owner}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class GroupOwner(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner okta_group_owner} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner okta_group_owner} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param group_id: The id of the group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#group_id GroupOwner#group_id}
-        :param id_of_group_owner: The user id of the group owner. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#id_of_group_owner GroupOwner#id_of_group_owner}
-        :param type: The entity type of the owner. Enum: "GROUP" "USER". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#type GroupOwner#type}
+        :param group_id: The id of the group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#group_id GroupOwner#group_id}
+        :param id_of_group_owner: The user id of the group owner. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#id_of_group_owner GroupOwner#id_of_group_owner}
+        :param type: The entity type of the owner. Enum: "GROUP" "USER". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#type GroupOwner#type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class GroupOwner(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the GroupOwner to import.
-        :param import_from_id: The id of the existing GroupOwner that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing GroupOwner that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the GroupOwner to import is found.
         '''
         if __debug__:
@@ -249,9 +249,9 @@ class GroupOwnerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param group_id: The id of the group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#group_id GroupOwner#group_id}
-        :param id_of_group_owner: The user id of the group owner. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#id_of_group_owner GroupOwner#id_of_group_owner}
-        :param type: The entity type of the owner. Enum: "GROUP" "USER". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#type GroupOwner#type}
+        :param group_id: The id of the group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#group_id GroupOwner#group_id}
+        :param id_of_group_owner: The user id of the group owner. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#id_of_group_owner GroupOwner#id_of_group_owner}
+        :param type: The entity type of the owner. Enum: "GROUP" "USER". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#type GroupOwner#type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -355,7 +355,7 @@ class GroupOwnerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def group_id(self) -> builtins.str:
         '''The id of the group.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#group_id GroupOwner#group_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#group_id GroupOwner#group_id}
         '''
         result = self._values.get("group_id")
         assert result is not None, "Required property 'group_id' is missing"
@@ -365,7 +365,7 @@ class GroupOwnerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def id_of_group_owner(self) -> builtins.str:
         '''The user id of the group owner.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#id_of_group_owner GroupOwner#id_of_group_owner}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#id_of_group_owner GroupOwner#id_of_group_owner}
         '''
         result = self._values.get("id_of_group_owner")
         assert result is not None, "Required property 'id_of_group_owner' is missing"
@@ -375,7 +375,7 @@ class GroupOwnerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''The entity type of the owner. Enum: "GROUP" "USER".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_owner#type GroupOwner#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_owner#type GroupOwner#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"

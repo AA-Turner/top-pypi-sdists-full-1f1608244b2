@@ -1,7 +1,7 @@
 r'''
 # `data_okta_email_smtp_server`
 
-Refer to the Terraform Registry for docs: [`data_okta_email_smtp_server`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/email_smtp_server).
+Refer to the Terraform Registry for docs: [`data_okta_email_smtp_server`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/email_smtp_server).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaEmailSmtpServer(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaEmailSmtpServer.DataOktaEmailSmtpServer",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/email_smtp_server okta_email_smtp_server}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/email_smtp_server okta_email_smtp_server}.'''
 
     def __init__(
         self,
@@ -60,11 +60,11 @@ class DataOktaEmailSmtpServer(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/email_smtp_server okta_email_smtp_server} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/email_smtp_server okta_email_smtp_server} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param id: The ID of the SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/email_smtp_server#id DataOktaEmailSmtpServer#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param id: The ID of the SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/email_smtp_server#id DataOktaEmailSmtpServer#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -103,7 +103,7 @@ class DataOktaEmailSmtpServer(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaEmailSmtpServer to import.
-        :param import_from_id: The id of the existing DataOktaEmailSmtpServer that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/email_smtp_server#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaEmailSmtpServer that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/email_smtp_server#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaEmailSmtpServer to import is found.
         '''
         if __debug__:
@@ -205,7 +205,7 @@ class DataOktaEmailSmtpServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param id: The ID of the SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/email_smtp_server#id DataOktaEmailSmtpServer#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param id: The ID of the SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/email_smtp_server#id DataOktaEmailSmtpServer#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -305,7 +305,7 @@ class DataOktaEmailSmtpServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def id(self) -> builtins.str:
         '''The ID of the SMTP server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/email_smtp_server#id DataOktaEmailSmtpServer#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/email_smtp_server#id DataOktaEmailSmtpServer#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

@@ -1,7 +1,7 @@
 r'''
 # `okta_app_saml`
 
-Refer to the Terraform Registry for docs: [`okta_app_saml`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml).
+Refer to the Terraform Registry for docs: [`okta_app_saml`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppSaml(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appSaml.AppSaml",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml okta_app_saml}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml okta_app_saml}.'''
 
     def __init__(
         self,
@@ -108,59 +108,59 @@ class AppSaml(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml okta_app_saml} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml okta_app_saml} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#label AppSaml#label}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#accessibility_error_redirect_url AppSaml#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#accessibility_login_redirect_url AppSaml#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#accessibility_self_service AppSaml#accessibility_self_service}
-        :param acs_endpoints: An array of ACS endpoints. You can configure a maximum of 100 endpoints. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#acs_endpoints AppSaml#acs_endpoints}
-        :param acs_endpoints_indices: acs_endpoints_indices block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#acs_endpoints_indices AppSaml#acs_endpoints_indices}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#admin_note AppSaml#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#app_links_json AppSaml#app_links_json}
-        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#app_settings_json AppSaml#app_settings_json}
-        :param assertion_signed: Determines whether the SAML assertion is digitally signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#assertion_signed AppSaml#assertion_signed}
-        :param attribute_statements: attribute_statements block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#attribute_statements AppSaml#attribute_statements}
-        :param audience: Audience Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#audience AppSaml#audience}
-        :param authentication_policy: The ID of the associated ``app_signon_policy``. If this property is removed from the application the ``default`` sign-on-policy will be associated with this application.y Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#authentication_policy AppSaml#authentication_policy}
-        :param authn_context_class_ref: Identifies the SAML authentication context class for the assertion’s authentication statement. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#authn_context_class_ref AppSaml#authn_context_class_ref}
-        :param auto_submit_toolbar: Display auto submit toolbar. Default is: ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#auto_submit_toolbar AppSaml#auto_submit_toolbar}
-        :param default_relay_state: Identifies a specific application resource in an IDP initiated SSO scenario. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#default_relay_state AppSaml#default_relay_state}
-        :param destination: Identifies the location where the SAML response is intended to be sent inside of the SAML assertion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#destination AppSaml#destination}
-        :param digest_algorithm: Determines the digest algorithm used to digitally sign the SAML assertion and response. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#digest_algorithm AppSaml#digest_algorithm}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#enduser_note AppSaml#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#hide_ios AppSaml#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#hide_web AppSaml#hide_web}
-        :param honor_force_authn: Prompt user to re-authenticate if SP asks for it. Default is: ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#honor_force_authn AppSaml#honor_force_authn}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#id AppSaml#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param idp_issuer: SAML issuer ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#idp_issuer AppSaml#idp_issuer}
-        :param implicit_assignment: *Early Access Property*. Enable Federation Broker Mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#implicit_assignment AppSaml#implicit_assignment}
-        :param inline_hook_id: Saml Inline Hook setting. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#inline_hook_id AppSaml#inline_hook_id}
-        :param key_name: Certificate name. This modulates the rotation of keys. New name == new key. Required to be set with ``key_years_valid``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#key_name AppSaml#key_name}
-        :param key_years_valid: Number of years the certificate is valid (2 - 10 years). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#key_years_valid AppSaml#key_years_valid}
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#logo AppSaml#logo}
-        :param preconfigured_app: Name of application from the Okta Integration Network. For instance 'slack'. If not included a custom app will be created. If not provided the following arguments are required: 'sso_url' 'recipient' 'destination' 'audience' 'subject_name_id_template' 'subject_name_id_format' 'signature_algorithm' 'digest_algorithm' 'authn_context_class_ref' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#preconfigured_app AppSaml#preconfigured_app}
-        :param recipient: The location where the app may present the SAML assertion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#recipient AppSaml#recipient}
-        :param request_compressed: Denotes whether the request is compressed or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#request_compressed AppSaml#request_compressed}
-        :param response_signed: Determines whether the SAML auth response message is digitally signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#response_signed AppSaml#response_signed}
-        :param saml_signed_request_enabled: SAML Signed Request enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#saml_signed_request_enabled AppSaml#saml_signed_request_enabled}
-        :param saml_version: SAML version for the app's sign-on mode. Valid values are: ``2.0`` or ``1.1``. Default is ``2.0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#saml_version AppSaml#saml_version}
-        :param signature_algorithm: Signature algorithm used to digitally sign the assertion and response. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#signature_algorithm AppSaml#signature_algorithm}
-        :param single_logout_certificate: x509 encoded certificate that the Service Provider uses to sign Single Logout requests. Note: should be provided without ``-----BEGIN CERTIFICATE-----`` and ``-----END CERTIFICATE-----``, see `official documentation <https://developer.okta.com/docs/reference/api/apps/#service-provider-certificate>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#single_logout_certificate AppSaml#single_logout_certificate}
-        :param single_logout_issuer: The issuer of the Service Provider that generates the Single Logout request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#single_logout_issuer AppSaml#single_logout_issuer}
-        :param single_logout_url: The location where the logout response is sent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#single_logout_url AppSaml#single_logout_url}
-        :param sp_issuer: SAML SP issuer ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#sp_issuer AppSaml#sp_issuer}
-        :param sso_url: Single Sign On URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#sso_url AppSaml#sso_url}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#status AppSaml#status}
-        :param subject_name_id_format: Identifies the SAML processing rules. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#subject_name_id_format AppSaml#subject_name_id_format}
-        :param subject_name_id_template: Template for app user's username when a user is assigned to the app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#subject_name_id_template AppSaml#subject_name_id_template}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#timeouts AppSaml#timeouts}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template AppSaml#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template_push_status AppSaml#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template_suffix AppSaml#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template_type AppSaml#user_name_template_type}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#label AppSaml#label}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#accessibility_error_redirect_url AppSaml#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#accessibility_login_redirect_url AppSaml#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#accessibility_self_service AppSaml#accessibility_self_service}
+        :param acs_endpoints: An array of ACS endpoints. You can configure a maximum of 100 endpoints. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#acs_endpoints AppSaml#acs_endpoints}
+        :param acs_endpoints_indices: acs_endpoints_indices block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#acs_endpoints_indices AppSaml#acs_endpoints_indices}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#admin_note AppSaml#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#app_links_json AppSaml#app_links_json}
+        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#app_settings_json AppSaml#app_settings_json}
+        :param assertion_signed: Determines whether the SAML assertion is digitally signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#assertion_signed AppSaml#assertion_signed}
+        :param attribute_statements: attribute_statements block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#attribute_statements AppSaml#attribute_statements}
+        :param audience: Audience Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#audience AppSaml#audience}
+        :param authentication_policy: The ID of the associated ``app_signon_policy``. If this property is removed from the application the ``default`` sign-on-policy will be associated with this application.y Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#authentication_policy AppSaml#authentication_policy}
+        :param authn_context_class_ref: Identifies the SAML authentication context class for the assertion’s authentication statement. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#authn_context_class_ref AppSaml#authn_context_class_ref}
+        :param auto_submit_toolbar: Display auto submit toolbar. Default is: ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#auto_submit_toolbar AppSaml#auto_submit_toolbar}
+        :param default_relay_state: Identifies a specific application resource in an IDP initiated SSO scenario. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#default_relay_state AppSaml#default_relay_state}
+        :param destination: Identifies the location where the SAML response is intended to be sent inside of the SAML assertion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#destination AppSaml#destination}
+        :param digest_algorithm: Determines the digest algorithm used to digitally sign the SAML assertion and response. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#digest_algorithm AppSaml#digest_algorithm}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#enduser_note AppSaml#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#hide_ios AppSaml#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#hide_web AppSaml#hide_web}
+        :param honor_force_authn: Prompt user to re-authenticate if SP asks for it. Default is: ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#honor_force_authn AppSaml#honor_force_authn}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#id AppSaml#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param idp_issuer: SAML issuer ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#idp_issuer AppSaml#idp_issuer}
+        :param implicit_assignment: *Early Access Property*. Enable Federation Broker Mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#implicit_assignment AppSaml#implicit_assignment}
+        :param inline_hook_id: Saml Inline Hook setting. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#inline_hook_id AppSaml#inline_hook_id}
+        :param key_name: Certificate name. This modulates the rotation of keys. New name == new key. Required to be set with ``key_years_valid``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#key_name AppSaml#key_name}
+        :param key_years_valid: Number of years the certificate is valid (2 - 10 years). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#key_years_valid AppSaml#key_years_valid}
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#logo AppSaml#logo}
+        :param preconfigured_app: Name of application from the Okta Integration Network. For instance 'slack'. If not included a custom app will be created. If not provided the following arguments are required: 'sso_url' 'recipient' 'destination' 'audience' 'subject_name_id_template' 'subject_name_id_format' 'signature_algorithm' 'digest_algorithm' 'authn_context_class_ref' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#preconfigured_app AppSaml#preconfigured_app}
+        :param recipient: The location where the app may present the SAML assertion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#recipient AppSaml#recipient}
+        :param request_compressed: Denotes whether the request is compressed or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#request_compressed AppSaml#request_compressed}
+        :param response_signed: Determines whether the SAML auth response message is digitally signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#response_signed AppSaml#response_signed}
+        :param saml_signed_request_enabled: SAML Signed Request enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#saml_signed_request_enabled AppSaml#saml_signed_request_enabled}
+        :param saml_version: SAML version for the app's sign-on mode. Valid values are: ``2.0`` or ``1.1``. Default is ``2.0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#saml_version AppSaml#saml_version}
+        :param signature_algorithm: Signature algorithm used to digitally sign the assertion and response. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#signature_algorithm AppSaml#signature_algorithm}
+        :param single_logout_certificate: x509 encoded certificate that the Service Provider uses to sign Single Logout requests. Note: should be provided without ``-----BEGIN CERTIFICATE-----`` and ``-----END CERTIFICATE-----``, see `official documentation <https://developer.okta.com/docs/reference/api/apps/#service-provider-certificate>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#single_logout_certificate AppSaml#single_logout_certificate}
+        :param single_logout_issuer: The issuer of the Service Provider that generates the Single Logout request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#single_logout_issuer AppSaml#single_logout_issuer}
+        :param single_logout_url: The location where the logout response is sent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#single_logout_url AppSaml#single_logout_url}
+        :param sp_issuer: SAML SP issuer ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#sp_issuer AppSaml#sp_issuer}
+        :param sso_url: Single Sign On URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#sso_url AppSaml#sso_url}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#status AppSaml#status}
+        :param subject_name_id_format: Identifies the SAML processing rules. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#subject_name_id_format AppSaml#subject_name_id_format}
+        :param subject_name_id_template: Template for app user's username when a user is assigned to the app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#subject_name_id_template AppSaml#subject_name_id_template}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#timeouts AppSaml#timeouts}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template AppSaml#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template_push_status AppSaml#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template_suffix AppSaml#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template_type AppSaml#user_name_template_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -247,7 +247,7 @@ class AppSaml(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppSaml to import.
-        :param import_from_id: The id of the existing AppSaml that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppSaml that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppSaml to import is found.
         '''
         if __debug__:
@@ -293,9 +293,9 @@ class AppSaml(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#create AppSaml#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#read AppSaml#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#update AppSaml#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#create AppSaml#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#read AppSaml#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#update AppSaml#update}.
         '''
         value = AppSamlTimeouts(create=create, read=read, update=update)
 
@@ -1469,8 +1469,8 @@ class AppSaml(
 class AppSamlAcsEndpointsIndices:
     def __init__(self, *, index: jsii.Number, url: builtins.str) -> None:
         '''
-        :param index: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#index AppSaml#index}.
-        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#url AppSaml#url}.
+        :param index: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#index AppSaml#index}.
+        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#url AppSaml#url}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__7fe12e64f8635bfff05630ac98f9df713b10f91b3ba072e5c2cb4afaed67b9ab)
@@ -1483,14 +1483,14 @@ class AppSamlAcsEndpointsIndices:
 
     @builtins.property
     def index(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#index AppSaml#index}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#index AppSaml#index}.'''
         result = self._values.get("index")
         assert result is not None, "Required property 'index' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
     def url(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#url AppSaml#url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#url AppSaml#url}.'''
         result = self._values.get("url")
         assert result is not None, "Required property 'url' is missing"
         return typing.cast(builtins.str, result)
@@ -1699,12 +1699,12 @@ class AppSamlAttributeStatements:
         values: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param name: The reference name of the attribute statement. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#name AppSaml#name}
-        :param filter_type: Type of group attribute filter. Valid values are: ``STARTS_WITH``, ``EQUALS``, ``CONTAINS``, or ``REGEX``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#filter_type AppSaml#filter_type}
-        :param filter_value: Filter value to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#filter_value AppSaml#filter_value}
-        :param namespace: The attribute namespace. It can be set to ``urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified``, ``urn:oasis:names:tc:SAML:2.0:attrname-format:uri``, or ``urn:oasis:names:tc:SAML:2.0:attrname-format:basic``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#namespace AppSaml#namespace}
-        :param type: The type of attribute statements object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#type AppSaml#type}
-        :param values: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#values AppSaml#values}.
+        :param name: The reference name of the attribute statement. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#name AppSaml#name}
+        :param filter_type: Type of group attribute filter. Valid values are: ``STARTS_WITH``, ``EQUALS``, ``CONTAINS``, or ``REGEX``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#filter_type AppSaml#filter_type}
+        :param filter_value: Filter value to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#filter_value AppSaml#filter_value}
+        :param namespace: The attribute namespace. It can be set to ``urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified``, ``urn:oasis:names:tc:SAML:2.0:attrname-format:uri``, or ``urn:oasis:names:tc:SAML:2.0:attrname-format:basic``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#namespace AppSaml#namespace}
+        :param type: The type of attribute statements object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#type AppSaml#type}
+        :param values: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#values AppSaml#values}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__fee1bfdc331b5f25567acb8488149b5b5b87b054e2b7327de5eb6fd77dcec318)
@@ -1732,7 +1732,7 @@ class AppSamlAttributeStatements:
     def name(self) -> builtins.str:
         '''The reference name of the attribute statement.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#name AppSaml#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#name AppSaml#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1742,7 +1742,7 @@ class AppSamlAttributeStatements:
     def filter_type(self) -> typing.Optional[builtins.str]:
         '''Type of group attribute filter. Valid values are: ``STARTS_WITH``, ``EQUALS``, ``CONTAINS``, or ``REGEX``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#filter_type AppSaml#filter_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#filter_type AppSaml#filter_type}
         '''
         result = self._values.get("filter_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1751,7 +1751,7 @@ class AppSamlAttributeStatements:
     def filter_value(self) -> typing.Optional[builtins.str]:
         '''Filter value to use.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#filter_value AppSaml#filter_value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#filter_value AppSaml#filter_value}
         '''
         result = self._values.get("filter_value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1760,7 +1760,7 @@ class AppSamlAttributeStatements:
     def namespace(self) -> typing.Optional[builtins.str]:
         '''The attribute namespace. It can be set to ``urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified``, ``urn:oasis:names:tc:SAML:2.0:attrname-format:uri``, or ``urn:oasis:names:tc:SAML:2.0:attrname-format:basic``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#namespace AppSaml#namespace}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#namespace AppSaml#namespace}
         '''
         result = self._values.get("namespace")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1769,14 +1769,14 @@ class AppSamlAttributeStatements:
     def type(self) -> typing.Optional[builtins.str]:
         '''The type of attribute statements object.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#type AppSaml#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#type AppSaml#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def values(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#values AppSaml#values}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#values AppSaml#values}.'''
         result = self._values.get("values")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -2179,55 +2179,55 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#label AppSaml#label}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#accessibility_error_redirect_url AppSaml#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#accessibility_login_redirect_url AppSaml#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#accessibility_self_service AppSaml#accessibility_self_service}
-        :param acs_endpoints: An array of ACS endpoints. You can configure a maximum of 100 endpoints. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#acs_endpoints AppSaml#acs_endpoints}
-        :param acs_endpoints_indices: acs_endpoints_indices block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#acs_endpoints_indices AppSaml#acs_endpoints_indices}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#admin_note AppSaml#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#app_links_json AppSaml#app_links_json}
-        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#app_settings_json AppSaml#app_settings_json}
-        :param assertion_signed: Determines whether the SAML assertion is digitally signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#assertion_signed AppSaml#assertion_signed}
-        :param attribute_statements: attribute_statements block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#attribute_statements AppSaml#attribute_statements}
-        :param audience: Audience Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#audience AppSaml#audience}
-        :param authentication_policy: The ID of the associated ``app_signon_policy``. If this property is removed from the application the ``default`` sign-on-policy will be associated with this application.y Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#authentication_policy AppSaml#authentication_policy}
-        :param authn_context_class_ref: Identifies the SAML authentication context class for the assertion’s authentication statement. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#authn_context_class_ref AppSaml#authn_context_class_ref}
-        :param auto_submit_toolbar: Display auto submit toolbar. Default is: ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#auto_submit_toolbar AppSaml#auto_submit_toolbar}
-        :param default_relay_state: Identifies a specific application resource in an IDP initiated SSO scenario. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#default_relay_state AppSaml#default_relay_state}
-        :param destination: Identifies the location where the SAML response is intended to be sent inside of the SAML assertion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#destination AppSaml#destination}
-        :param digest_algorithm: Determines the digest algorithm used to digitally sign the SAML assertion and response. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#digest_algorithm AppSaml#digest_algorithm}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#enduser_note AppSaml#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#hide_ios AppSaml#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#hide_web AppSaml#hide_web}
-        :param honor_force_authn: Prompt user to re-authenticate if SP asks for it. Default is: ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#honor_force_authn AppSaml#honor_force_authn}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#id AppSaml#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param idp_issuer: SAML issuer ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#idp_issuer AppSaml#idp_issuer}
-        :param implicit_assignment: *Early Access Property*. Enable Federation Broker Mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#implicit_assignment AppSaml#implicit_assignment}
-        :param inline_hook_id: Saml Inline Hook setting. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#inline_hook_id AppSaml#inline_hook_id}
-        :param key_name: Certificate name. This modulates the rotation of keys. New name == new key. Required to be set with ``key_years_valid``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#key_name AppSaml#key_name}
-        :param key_years_valid: Number of years the certificate is valid (2 - 10 years). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#key_years_valid AppSaml#key_years_valid}
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#logo AppSaml#logo}
-        :param preconfigured_app: Name of application from the Okta Integration Network. For instance 'slack'. If not included a custom app will be created. If not provided the following arguments are required: 'sso_url' 'recipient' 'destination' 'audience' 'subject_name_id_template' 'subject_name_id_format' 'signature_algorithm' 'digest_algorithm' 'authn_context_class_ref' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#preconfigured_app AppSaml#preconfigured_app}
-        :param recipient: The location where the app may present the SAML assertion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#recipient AppSaml#recipient}
-        :param request_compressed: Denotes whether the request is compressed or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#request_compressed AppSaml#request_compressed}
-        :param response_signed: Determines whether the SAML auth response message is digitally signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#response_signed AppSaml#response_signed}
-        :param saml_signed_request_enabled: SAML Signed Request enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#saml_signed_request_enabled AppSaml#saml_signed_request_enabled}
-        :param saml_version: SAML version for the app's sign-on mode. Valid values are: ``2.0`` or ``1.1``. Default is ``2.0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#saml_version AppSaml#saml_version}
-        :param signature_algorithm: Signature algorithm used to digitally sign the assertion and response. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#signature_algorithm AppSaml#signature_algorithm}
-        :param single_logout_certificate: x509 encoded certificate that the Service Provider uses to sign Single Logout requests. Note: should be provided without ``-----BEGIN CERTIFICATE-----`` and ``-----END CERTIFICATE-----``, see `official documentation <https://developer.okta.com/docs/reference/api/apps/#service-provider-certificate>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#single_logout_certificate AppSaml#single_logout_certificate}
-        :param single_logout_issuer: The issuer of the Service Provider that generates the Single Logout request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#single_logout_issuer AppSaml#single_logout_issuer}
-        :param single_logout_url: The location where the logout response is sent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#single_logout_url AppSaml#single_logout_url}
-        :param sp_issuer: SAML SP issuer ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#sp_issuer AppSaml#sp_issuer}
-        :param sso_url: Single Sign On URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#sso_url AppSaml#sso_url}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#status AppSaml#status}
-        :param subject_name_id_format: Identifies the SAML processing rules. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#subject_name_id_format AppSaml#subject_name_id_format}
-        :param subject_name_id_template: Template for app user's username when a user is assigned to the app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#subject_name_id_template AppSaml#subject_name_id_template}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#timeouts AppSaml#timeouts}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template AppSaml#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template_push_status AppSaml#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template_suffix AppSaml#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template_type AppSaml#user_name_template_type}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#label AppSaml#label}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#accessibility_error_redirect_url AppSaml#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#accessibility_login_redirect_url AppSaml#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#accessibility_self_service AppSaml#accessibility_self_service}
+        :param acs_endpoints: An array of ACS endpoints. You can configure a maximum of 100 endpoints. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#acs_endpoints AppSaml#acs_endpoints}
+        :param acs_endpoints_indices: acs_endpoints_indices block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#acs_endpoints_indices AppSaml#acs_endpoints_indices}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#admin_note AppSaml#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#app_links_json AppSaml#app_links_json}
+        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#app_settings_json AppSaml#app_settings_json}
+        :param assertion_signed: Determines whether the SAML assertion is digitally signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#assertion_signed AppSaml#assertion_signed}
+        :param attribute_statements: attribute_statements block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#attribute_statements AppSaml#attribute_statements}
+        :param audience: Audience Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#audience AppSaml#audience}
+        :param authentication_policy: The ID of the associated ``app_signon_policy``. If this property is removed from the application the ``default`` sign-on-policy will be associated with this application.y Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#authentication_policy AppSaml#authentication_policy}
+        :param authn_context_class_ref: Identifies the SAML authentication context class for the assertion’s authentication statement. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#authn_context_class_ref AppSaml#authn_context_class_ref}
+        :param auto_submit_toolbar: Display auto submit toolbar. Default is: ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#auto_submit_toolbar AppSaml#auto_submit_toolbar}
+        :param default_relay_state: Identifies a specific application resource in an IDP initiated SSO scenario. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#default_relay_state AppSaml#default_relay_state}
+        :param destination: Identifies the location where the SAML response is intended to be sent inside of the SAML assertion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#destination AppSaml#destination}
+        :param digest_algorithm: Determines the digest algorithm used to digitally sign the SAML assertion and response. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#digest_algorithm AppSaml#digest_algorithm}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#enduser_note AppSaml#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#hide_ios AppSaml#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#hide_web AppSaml#hide_web}
+        :param honor_force_authn: Prompt user to re-authenticate if SP asks for it. Default is: ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#honor_force_authn AppSaml#honor_force_authn}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#id AppSaml#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param idp_issuer: SAML issuer ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#idp_issuer AppSaml#idp_issuer}
+        :param implicit_assignment: *Early Access Property*. Enable Federation Broker Mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#implicit_assignment AppSaml#implicit_assignment}
+        :param inline_hook_id: Saml Inline Hook setting. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#inline_hook_id AppSaml#inline_hook_id}
+        :param key_name: Certificate name. This modulates the rotation of keys. New name == new key. Required to be set with ``key_years_valid``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#key_name AppSaml#key_name}
+        :param key_years_valid: Number of years the certificate is valid (2 - 10 years). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#key_years_valid AppSaml#key_years_valid}
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#logo AppSaml#logo}
+        :param preconfigured_app: Name of application from the Okta Integration Network. For instance 'slack'. If not included a custom app will be created. If not provided the following arguments are required: 'sso_url' 'recipient' 'destination' 'audience' 'subject_name_id_template' 'subject_name_id_format' 'signature_algorithm' 'digest_algorithm' 'authn_context_class_ref' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#preconfigured_app AppSaml#preconfigured_app}
+        :param recipient: The location where the app may present the SAML assertion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#recipient AppSaml#recipient}
+        :param request_compressed: Denotes whether the request is compressed or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#request_compressed AppSaml#request_compressed}
+        :param response_signed: Determines whether the SAML auth response message is digitally signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#response_signed AppSaml#response_signed}
+        :param saml_signed_request_enabled: SAML Signed Request enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#saml_signed_request_enabled AppSaml#saml_signed_request_enabled}
+        :param saml_version: SAML version for the app's sign-on mode. Valid values are: ``2.0`` or ``1.1``. Default is ``2.0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#saml_version AppSaml#saml_version}
+        :param signature_algorithm: Signature algorithm used to digitally sign the assertion and response. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#signature_algorithm AppSaml#signature_algorithm}
+        :param single_logout_certificate: x509 encoded certificate that the Service Provider uses to sign Single Logout requests. Note: should be provided without ``-----BEGIN CERTIFICATE-----`` and ``-----END CERTIFICATE-----``, see `official documentation <https://developer.okta.com/docs/reference/api/apps/#service-provider-certificate>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#single_logout_certificate AppSaml#single_logout_certificate}
+        :param single_logout_issuer: The issuer of the Service Provider that generates the Single Logout request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#single_logout_issuer AppSaml#single_logout_issuer}
+        :param single_logout_url: The location where the logout response is sent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#single_logout_url AppSaml#single_logout_url}
+        :param sp_issuer: SAML SP issuer ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#sp_issuer AppSaml#sp_issuer}
+        :param sso_url: Single Sign On URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#sso_url AppSaml#sso_url}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#status AppSaml#status}
+        :param subject_name_id_format: Identifies the SAML processing rules. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#subject_name_id_format AppSaml#subject_name_id_format}
+        :param subject_name_id_template: Template for app user's username when a user is assigned to the app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#subject_name_id_template AppSaml#subject_name_id_template}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#timeouts AppSaml#timeouts}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template AppSaml#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template_push_status AppSaml#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template_suffix AppSaml#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template_type AppSaml#user_name_template_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -2473,7 +2473,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def label(self) -> builtins.str:
         '''The Application's display name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#label AppSaml#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#label AppSaml#label}
         '''
         result = self._values.get("label")
         assert result is not None, "Required property 'label' is missing"
@@ -2483,7 +2483,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_error_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom error page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#accessibility_error_redirect_url AppSaml#accessibility_error_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#accessibility_error_redirect_url AppSaml#accessibility_error_redirect_url}
         '''
         result = self._values.get("accessibility_error_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2492,7 +2492,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_login_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom login page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#accessibility_login_redirect_url AppSaml#accessibility_login_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#accessibility_login_redirect_url AppSaml#accessibility_login_redirect_url}
         '''
         result = self._values.get("accessibility_login_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2503,7 +2503,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Enable self service. Default is ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#accessibility_self_service AppSaml#accessibility_self_service}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#accessibility_self_service AppSaml#accessibility_self_service}
         '''
         result = self._values.get("accessibility_self_service")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2512,7 +2512,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def acs_endpoints(self) -> typing.Optional[typing.List[builtins.str]]:
         '''An array of ACS endpoints. You can configure a maximum of 100 endpoints.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#acs_endpoints AppSaml#acs_endpoints}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#acs_endpoints AppSaml#acs_endpoints}
         '''
         result = self._values.get("acs_endpoints")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2523,7 +2523,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[AppSamlAcsEndpointsIndices]]]:
         '''acs_endpoints_indices block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#acs_endpoints_indices AppSaml#acs_endpoints_indices}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#acs_endpoints_indices AppSaml#acs_endpoints_indices}
         '''
         result = self._values.get("acs_endpoints_indices")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[AppSamlAcsEndpointsIndices]]], result)
@@ -2532,7 +2532,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def admin_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for admins.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#admin_note AppSaml#admin_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#admin_note AppSaml#admin_note}
         '''
         result = self._values.get("admin_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2541,7 +2541,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_links_json(self) -> typing.Optional[builtins.str]:
         '''Displays specific appLinks for the app. The value for each application link should be boolean.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#app_links_json AppSaml#app_links_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#app_links_json AppSaml#app_links_json}
         '''
         result = self._values.get("app_links_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2550,7 +2550,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_settings_json(self) -> typing.Optional[builtins.str]:
         '''Application settings in JSON format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#app_settings_json AppSaml#app_settings_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#app_settings_json AppSaml#app_settings_json}
         '''
         result = self._values.get("app_settings_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2561,7 +2561,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether the SAML assertion is digitally signed.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#assertion_signed AppSaml#assertion_signed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#assertion_signed AppSaml#assertion_signed}
         '''
         result = self._values.get("assertion_signed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2572,7 +2572,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[AppSamlAttributeStatements]]]:
         '''attribute_statements block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#attribute_statements AppSaml#attribute_statements}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#attribute_statements AppSaml#attribute_statements}
         '''
         result = self._values.get("attribute_statements")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[AppSamlAttributeStatements]]], result)
@@ -2581,7 +2581,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def audience(self) -> typing.Optional[builtins.str]:
         '''Audience Restriction.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#audience AppSaml#audience}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#audience AppSaml#audience}
         '''
         result = self._values.get("audience")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2592,7 +2592,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         If this property is removed from the application the ``default`` sign-on-policy will be associated with this application.y
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#authentication_policy AppSaml#authentication_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#authentication_policy AppSaml#authentication_policy}
         '''
         result = self._values.get("authentication_policy")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2601,7 +2601,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def authn_context_class_ref(self) -> typing.Optional[builtins.str]:
         '''Identifies the SAML authentication context class for the assertion’s authentication statement.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#authn_context_class_ref AppSaml#authn_context_class_ref}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#authn_context_class_ref AppSaml#authn_context_class_ref}
         '''
         result = self._values.get("authn_context_class_ref")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2612,7 +2612,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Display auto submit toolbar. Default is: ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#auto_submit_toolbar AppSaml#auto_submit_toolbar}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#auto_submit_toolbar AppSaml#auto_submit_toolbar}
         '''
         result = self._values.get("auto_submit_toolbar")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2621,7 +2621,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def default_relay_state(self) -> typing.Optional[builtins.str]:
         '''Identifies a specific application resource in an IDP initiated SSO scenario.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#default_relay_state AppSaml#default_relay_state}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#default_relay_state AppSaml#default_relay_state}
         '''
         result = self._values.get("default_relay_state")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2630,7 +2630,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def destination(self) -> typing.Optional[builtins.str]:
         '''Identifies the location where the SAML response is intended to be sent inside of the SAML assertion.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#destination AppSaml#destination}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#destination AppSaml#destination}
         '''
         result = self._values.get("destination")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2639,7 +2639,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def digest_algorithm(self) -> typing.Optional[builtins.str]:
         '''Determines the digest algorithm used to digitally sign the SAML assertion and response.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#digest_algorithm AppSaml#digest_algorithm}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#digest_algorithm AppSaml#digest_algorithm}
         '''
         result = self._values.get("digest_algorithm")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2648,7 +2648,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enduser_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for end users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#enduser_note AppSaml#enduser_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#enduser_note AppSaml#enduser_note}
         '''
         result = self._values.get("enduser_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2659,7 +2659,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon on mobile app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#hide_ios AppSaml#hide_ios}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#hide_ios AppSaml#hide_ios}
         '''
         result = self._values.get("hide_ios")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2670,7 +2670,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon to users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#hide_web AppSaml#hide_web}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#hide_web AppSaml#hide_web}
         '''
         result = self._values.get("hide_web")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2681,14 +2681,14 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Prompt user to re-authenticate if SP asks for it. Default is: ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#honor_force_authn AppSaml#honor_force_authn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#honor_force_authn AppSaml#honor_force_authn}
         '''
         result = self._values.get("honor_force_authn")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#id AppSaml#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#id AppSaml#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -2700,7 +2700,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def idp_issuer(self) -> typing.Optional[builtins.str]:
         '''SAML issuer ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#idp_issuer AppSaml#idp_issuer}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#idp_issuer AppSaml#idp_issuer}
         '''
         result = self._values.get("idp_issuer")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2711,7 +2711,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''*Early Access Property*. Enable Federation Broker Mode.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#implicit_assignment AppSaml#implicit_assignment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#implicit_assignment AppSaml#implicit_assignment}
         '''
         result = self._values.get("implicit_assignment")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2720,7 +2720,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def inline_hook_id(self) -> typing.Optional[builtins.str]:
         '''Saml Inline Hook setting.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#inline_hook_id AppSaml#inline_hook_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#inline_hook_id AppSaml#inline_hook_id}
         '''
         result = self._values.get("inline_hook_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2729,7 +2729,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def key_name(self) -> typing.Optional[builtins.str]:
         '''Certificate name. This modulates the rotation of keys. New name == new key. Required to be set with ``key_years_valid``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#key_name AppSaml#key_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#key_name AppSaml#key_name}
         '''
         result = self._values.get("key_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2738,7 +2738,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def key_years_valid(self) -> typing.Optional[jsii.Number]:
         '''Number of years the certificate is valid (2 - 10 years).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#key_years_valid AppSaml#key_years_valid}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#key_years_valid AppSaml#key_years_valid}
         '''
         result = self._values.get("key_years_valid")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -2749,7 +2749,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The file must be in PNG, JPG, or GIF format, and less than 1 MB in size.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#logo AppSaml#logo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#logo AppSaml#logo}
         '''
         result = self._values.get("logo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2769,7 +2769,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         'digest_algorithm'
         'authn_context_class_ref'
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#preconfigured_app AppSaml#preconfigured_app}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#preconfigured_app AppSaml#preconfigured_app}
         '''
         result = self._values.get("preconfigured_app")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2778,7 +2778,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def recipient(self) -> typing.Optional[builtins.str]:
         '''The location where the app may present the SAML assertion.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#recipient AppSaml#recipient}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#recipient AppSaml#recipient}
         '''
         result = self._values.get("recipient")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2789,7 +2789,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Denotes whether the request is compressed or not.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#request_compressed AppSaml#request_compressed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#request_compressed AppSaml#request_compressed}
         '''
         result = self._values.get("request_compressed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2800,7 +2800,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether the SAML auth response message is digitally signed.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#response_signed AppSaml#response_signed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#response_signed AppSaml#response_signed}
         '''
         result = self._values.get("response_signed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2811,7 +2811,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''SAML Signed Request enabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#saml_signed_request_enabled AppSaml#saml_signed_request_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#saml_signed_request_enabled AppSaml#saml_signed_request_enabled}
         '''
         result = self._values.get("saml_signed_request_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2820,7 +2820,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def saml_version(self) -> typing.Optional[builtins.str]:
         '''SAML version for the app's sign-on mode. Valid values are: ``2.0`` or ``1.1``. Default is ``2.0``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#saml_version AppSaml#saml_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#saml_version AppSaml#saml_version}
         '''
         result = self._values.get("saml_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2829,7 +2829,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def signature_algorithm(self) -> typing.Optional[builtins.str]:
         '''Signature algorithm used to digitally sign the assertion and response.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#signature_algorithm AppSaml#signature_algorithm}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#signature_algorithm AppSaml#signature_algorithm}
         '''
         result = self._values.get("signature_algorithm")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2840,7 +2840,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Note: should be provided without ``-----BEGIN CERTIFICATE-----`` and ``-----END CERTIFICATE-----``, see `official documentation <https://developer.okta.com/docs/reference/api/apps/#service-provider-certificate>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#single_logout_certificate AppSaml#single_logout_certificate}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#single_logout_certificate AppSaml#single_logout_certificate}
         '''
         result = self._values.get("single_logout_certificate")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2849,7 +2849,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def single_logout_issuer(self) -> typing.Optional[builtins.str]:
         '''The issuer of the Service Provider that generates the Single Logout request.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#single_logout_issuer AppSaml#single_logout_issuer}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#single_logout_issuer AppSaml#single_logout_issuer}
         '''
         result = self._values.get("single_logout_issuer")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2858,7 +2858,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def single_logout_url(self) -> typing.Optional[builtins.str]:
         '''The location where the logout response is sent.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#single_logout_url AppSaml#single_logout_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#single_logout_url AppSaml#single_logout_url}
         '''
         result = self._values.get("single_logout_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2867,7 +2867,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def sp_issuer(self) -> typing.Optional[builtins.str]:
         '''SAML SP issuer ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#sp_issuer AppSaml#sp_issuer}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#sp_issuer AppSaml#sp_issuer}
         '''
         result = self._values.get("sp_issuer")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2876,7 +2876,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def sso_url(self) -> typing.Optional[builtins.str]:
         '''Single Sign On URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#sso_url AppSaml#sso_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#sso_url AppSaml#sso_url}
         '''
         result = self._values.get("sso_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2885,7 +2885,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Status of application. By default, it is ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#status AppSaml#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#status AppSaml#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2894,7 +2894,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def subject_name_id_format(self) -> typing.Optional[builtins.str]:
         '''Identifies the SAML processing rules.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#subject_name_id_format AppSaml#subject_name_id_format}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#subject_name_id_format AppSaml#subject_name_id_format}
         '''
         result = self._values.get("subject_name_id_format")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2903,7 +2903,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def subject_name_id_template(self) -> typing.Optional[builtins.str]:
         '''Template for app user's username when a user is assigned to the app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#subject_name_id_template AppSaml#subject_name_id_template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#subject_name_id_template AppSaml#subject_name_id_template}
         '''
         result = self._values.get("subject_name_id_template")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2912,7 +2912,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["AppSamlTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#timeouts AppSaml#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#timeouts AppSaml#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["AppSamlTimeouts"], result)
@@ -2921,7 +2921,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template(self) -> typing.Optional[builtins.str]:
         '''Username template. Default: ``${source.login}``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template AppSaml#user_name_template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template AppSaml#user_name_template}
         '''
         result = self._values.get("user_name_template")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2930,7 +2930,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_push_status(self) -> typing.Optional[builtins.str]:
         '''Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template_push_status AppSaml#user_name_template_push_status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template_push_status AppSaml#user_name_template_push_status}
         '''
         result = self._values.get("user_name_template_push_status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2939,7 +2939,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_suffix(self) -> typing.Optional[builtins.str]:
         '''Username template suffix.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template_suffix AppSaml#user_name_template_suffix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template_suffix AppSaml#user_name_template_suffix}
         '''
         result = self._values.get("user_name_template_suffix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2948,7 +2948,7 @@ class AppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_type(self) -> typing.Optional[builtins.str]:
         '''Username template type. Default: ``BUILT_IN``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#user_name_template_type AppSaml#user_name_template_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#user_name_template_type AppSaml#user_name_template_type}
         '''
         result = self._values.get("user_name_template_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3162,9 +3162,9 @@ class AppSamlTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#create AppSaml#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#read AppSaml#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#update AppSaml#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#create AppSaml#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#read AppSaml#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#update AppSaml#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a0af0921536fc5288aa4fe76e1a6260630775282ef8a7e0648e92e6beaccdb6e)
@@ -3181,19 +3181,19 @@ class AppSamlTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#create AppSaml#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#create AppSaml#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#read AppSaml#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#read AppSaml#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_saml#update AppSaml#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_saml#update AppSaml#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 

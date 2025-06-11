@@ -1,12 +1,9 @@
-import sys
-
-from flask import Flask, jsonify, request
 import pytest
 from _pytest.main import ExitCode
+from flask import Flask, jsonify, request
 
 import schemathesis
-from schemathesis.cli import reset_checks
-from schemathesis.extra._flask import run_server
+from schemathesis.checks import CHECKS
 
 
 @pytest.fixture
@@ -17,7 +14,7 @@ def new_check():
 
     yield check_function
 
-    reset_checks()
+    CHECKS.unregister(check_function.__name__)
 
 
 def test_register_returns_a_value(new_check):
@@ -25,49 +22,6 @@ def test_register_returns_a_value(new_check):
     # Then this function should be available for further usage
     # See #721
     assert new_check is not None
-
-
-@pytest.mark.parametrize(
-    ("exclude_checks", "expected_exit_code", "expected_result"),
-    [
-        ("not_a_server_error", ExitCode.TESTS_FAILED, "1 passed, 1 failed in"),
-        ("not_a_server_error,status_code_conformance", ExitCode.OK, "2 passed in"),
-    ],
-)
-def test_exclude_checks(ctx, cli, exclude_checks, expected_exit_code, expected_result):
-    module = ctx.write_pymodule(
-        """
-from fastapi import FastAPI
-from fastapi import HTTPException
-
-app = FastAPI()
-
-@app.get("/api/success")
-async def success():
-    return {"success": True}
-
-@app.get("/api/failure")
-async def failure():
-    raise HTTPException(status_code=500)
-"""
-    )
-    result = cli.run(
-        "/openapi.json",
-        "--checks",
-        "all",
-        "--exclude-checks",
-        exclude_checks,
-        "--app",
-        f"{module}:app",
-        "--force-schema-version=30",
-    )
-
-    for check in exclude_checks.split(","):
-        assert check not in result.stdout
-
-    assert result.exit_code == expected_exit_code, result.stdout
-
-    assert expected_result in result.stdout
 
 
 def test_negative_data_rejection(ctx, cli, openapi3_base_url):
@@ -83,18 +37,18 @@ def test_negative_data_rejection(ctx, cli, openapi3_base_url):
     )
     result = cli.run(
         str(schema_path),
-        f"--base-url={openapi3_base_url}",
+        f"--url={openapi3_base_url}",
         "--checks",
         "negative_data_rejection",
-        "-D",
+        "--mode",
         "negative",
-        "--hypothesis-max-examples=5",
+        "--max-examples=5",
     )
     assert result.exit_code == ExitCode.TESTS_FAILED
 
 
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_statistic=True)
-def test_negative_data_rejection_displays_all_cases(cli, snapshot_cli):
+@pytest.mark.snapshot(replace_reproduce_with=True)
+def test_negative_data_rejection_displays_all_cases(app_runner, cli, snapshot_cli):
     raw_schema = {
         "openapi": "3.0.0",
         "paths": {
@@ -152,48 +106,75 @@ def test_negative_data_rejection_displays_all_cases(cli, snapshot_cli):
             return jsonify({"message": "negative"}), 406
         return jsonify({"incorrect": "positive"}), 200
 
-    port = run_server(app)
+    port = app_runner.run_flask_app(app)
 
     assert (
         cli.run(
             f"http://127.0.0.1:{port}/openapi.json",
-            "-call",
-            "--data-generation-method=all",
-            "--experimental=coverage-phase",
-            "--experimental-no-failfast",
-            "--experimental-negative-data-rejection-allowed-statuses=400,401,403,404,422,428,5xx",
+            "--mode=all",
+            "--phases=coverage",
+            "--continue-on-failure",
+            config={
+                "checks": {
+                    "negative_data_rejection": {"expected-statuses": ["400", "401", "403", "404", "422", "428", "5xx"]}
+                }
+            },
         )
         == snapshot_cli
     )
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="typing.Annotated is not available in Python 3.8")
-@pytest.mark.snapshot(replace_statistic=True)
-def test_deduplication_on_sanitized_header(ctx, cli, snapshot_cli):
-    # See GH-2294
-    module = ctx.write_pymodule(
-        """
-from typing import Annotated
+def test_format_parameter_csv_response(app_runner, cli, snapshot_cli):
+    raw_schema = {
+        "openapi": "3.0.0",
+        "paths": {
+            "/data": {
+                "get": {
+                    "parameters": [
+                        {
+                            "name": "format",
+                            "in": "query",
+                            "schema": {
+                                "type": "string",
+                                "enum": ["json", "csv"],
+                            },
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Data response",
+                            "content": {
+                                "application/json": {"schema": {"type": "object"}},
+                            },
+                        }
+                    },
+                }
+            }
+        },
+    }
+    app = Flask(__name__)
 
-from fastapi import FastAPI, HTTPException, Header
+    @app.route("/openapi.json")
+    def schema():
+        return jsonify(raw_schema)
 
-app = FastAPI()
+    @app.route("/data", methods=["GET"])
+    def data_endpoint():
+        format_param = request.args.get("format", "json")
 
-@app.get("/users")
-def get_users(x_token: Annotated[str, Header()]):
-    if x_token:
-        raise HTTPException(status_code=500, detail="Internal server error")
-    raise HTTPException(status_code=400, detail="Bad header")
-        """
-    )
+        if format_param == "csv":
+            return "name,age\nJohn,25", 200, {"Content-Type": ""}
+        return jsonify({"name": "John", "age": 25})
+
+    port = app_runner.run_flask_app(app)
+
     assert (
         cli.run(
-            "/openapi.json",
-            "--checks",
-            "all",
-            "--app",
-            f"{module}:app",
-            "--force-schema-version=30",
+            f"http://127.0.0.1:{port}/openapi.json",
+            "-c response_schema_conformance",
+            "--mode=positive",
+            "--phases=fuzzing",
+            "--continue-on-failure",
         )
         == snapshot_cli
     )
@@ -216,46 +197,49 @@ def schema(ctx):
 
 
 @pytest.mark.parametrize(
-    "args",
+    "expected_statuses",
     [
-        [],  # Default case
-        ["--experimental-positive-data-acceptance-allowed-statuses=404"],
-        ["--experimental-positive-data-acceptance-allowed-statuses=405"],
-        ["--experimental-positive-data-acceptance-allowed-statuses=2xx,404"],
-        ["--experimental-positive-data-acceptance-allowed-statuses=200"],
-        ["--experimental-positive-data-acceptance-allowed-statuses=200,404"],
-        ["--experimental-positive-data-acceptance-allowed-statuses=2xx"],
-        ["--experimental-positive-data-acceptance-allowed-statuses=4xx"],
+        None,  # Default case
+        ["404"],
+        ["405"],
+        ["2xx", "404"],
+        ["200"],
+        ["200", "404"],
+        ["2xx"],
+        ["4xx"],
         # Invalid status code
-        ["--experimental-positive-data-acceptance-allowed-statuses=200,600"],
+        ["200", "600"],
         # Invalid wildcard
-        ["--experimental-positive-data-acceptance-allowed-statuses=xxx"],
-        ["--experimental-positive-data-acceptance-allowed-statuses=200,201,400,401"],
+        ["xxx"],
+        ["200", 201, 400, 401],
     ],
 )
-def test_positive_data_acceptance(ctx, cli, snapshot_cli, schema, openapi3_base_url, args):
+def test_positive_data_acceptance(ctx, cli, snapshot_cli, schema, openapi3_base_url, expected_statuses):
     schema_path = ctx.makefile(schema)
+    kwargs = {}
+    if expected_statuses is not None:
+        kwargs["config"] = {"checks": {"positive_data_acceptance": {"expected-statuses": expected_statuses}}}
+
     assert (
         cli.run(
             str(schema_path),
-            f"--base-url={openapi3_base_url}",
-            "--hypothesis-max-examples=5",
-            "--experimental=positive_data_acceptance",
-            *args,
+            f"--url={openapi3_base_url}",
+            "--max-examples=5",
+            "--checks=positive_data_acceptance",
+            **kwargs,
         )
         == snapshot_cli
     )
 
 
-def test_positive_data_acceptance_with_env_vars(ctx, cli, snapshot_cli, schema, openapi3_base_url, monkeypatch):
-    schema_path = ctx.makefile(schema)
-    monkeypatch.setenv("SCHEMATHESIS_EXPERIMENTAL_POSITIVE_DATA_ACCEPTANCE", "true")
-    monkeypatch.setenv("SCHEMATHESIS_EXPERIMENTAL_POSITIVE_DATA_ACCEPTANCE_ALLOWED_STATUSES", "403")
+def test_not_a_server_error(cli, snapshot_cli, openapi3_schema_url):
     assert (
         cli.run(
-            str(schema_path),
-            f"--base-url={openapi3_base_url}",
-            "--hypothesis-max-examples=5",
+            openapi3_schema_url,
+            "--max-examples=5",
+            "--checks=not_a_server_error",
+            "--mode=positive",
+            config={"checks": {"not_a_server_error": {"expected-statuses": ["2xx", "4xx", "500"]}}},
         )
         == snapshot_cli
     )

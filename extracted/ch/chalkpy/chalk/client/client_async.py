@@ -156,6 +156,7 @@ class AsyncChalkClient:
         required_resolver_tags: list[str] | None = None,
         planner_options: Mapping[str, Union[str, int, bool]] | None = None,
         request_timeout: Optional[float] = None,
+        connect_timeout: Optional[float] = None,
         headers: Mapping[str, str] | None = None,
         query_context: Mapping[str, Union[str, int, float, bool, None]] | str | None = None,
     ) -> OnlineQueryResult:
@@ -245,6 +246,9 @@ class AsyncChalkClient:
         request_timeout
             Float value indicating number of seconds that the request should wait before timing out
             at the network level. May not cancel resources on the server processing the query.
+        connect_timeout
+            Float value indicating number of seconds to wait for establishing a connection.
+            This is separate from request_timeout and controls only the connection phase.
         headers
             Additional headers to provide with the request.
 

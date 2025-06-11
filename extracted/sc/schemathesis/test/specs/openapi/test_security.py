@@ -2,7 +2,6 @@ import pytest
 from hypothesis import HealthCheck, given, settings
 
 import schemathesis
-from schemathesis.generation import GenerationConfig
 from schemathesis.specs.openapi.references import InliningResolver
 from schemathesis.specs.openapi.security import OpenAPISecurityProcessor
 
@@ -73,7 +72,7 @@ SCHEMA_WITH_PARAMETER_AND_SECURITY_SCHEME = {
 def test_name_clash(kwargs, expected):
     # Operation definition should take precedence over security schemes
     # Explicit headers should take precedence over everything else
-    schema = schemathesis.from_dict(SCHEMA_WITH_PARAMETER_AND_SECURITY_SCHEME, validate_schema=True)
+    schema = schemathesis.openapi.from_dict(SCHEMA_WITH_PARAMETER_AND_SECURITY_SCHEME)
 
     @given(case=schema["/test"]["GET"].as_strategy(**kwargs))
     def test(case):
@@ -94,11 +93,8 @@ def test_without_security_parameters(with_security_parameters):
         },
         "security": [{"basic_auth": []}],
     }
-    schema = schemathesis.from_dict(
-        schema,
-        validate_schema=True,
-        generation_config=GenerationConfig(with_security_parameters=with_security_parameters),
-    )
+    schema = schemathesis.openapi.from_dict(schema)
+    schema.config.generation.update(with_security_parameters=with_security_parameters)
 
     @given(case=schema["/test"]["GET"].as_strategy())
     @settings(max_examples=20, suppress_health_check=list(HealthCheck))
@@ -106,6 +102,6 @@ def test_without_security_parameters(with_security_parameters):
         if with_security_parameters:
             assert "Authorization" in case.headers
         else:
-            assert case.headers is None
+            assert case.headers == {}
 
     test()

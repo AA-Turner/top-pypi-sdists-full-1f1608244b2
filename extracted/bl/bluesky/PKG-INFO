@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: bluesky
-Version: 1.14.1
+Version: 1.14.2
 Summary: Experiment specification & orchestration.
 Author: danielballan
 License: BSD 3-Clause License
@@ -43,6 +43,7 @@ Classifier: Programming Language :: Python :: 3.12
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
+License-File: LICENSE_README
 Requires-Dist: cycler
 Requires-Dist: event-model>=1.19.8
 Requires-Dist: historydict
@@ -97,6 +98,7 @@ Requires-Dist: sphinx<7.3; extra == "dev"
 Requires-Dist: sphinx-autobuild; extra == "dev"
 Requires-Dist: sphinx-copybutton; extra == "dev"
 Requires-Dist: sphinx-design; extra == "dev"
+Requires-Dist: sphinxcontrib-mermaid; extra == "dev"
 Requires-Dist: sphinx_rtd_theme; extra == "dev"
 Requires-Dist: streamz; extra == "dev"
 Requires-Dist: suitcase-jsonl; extra == "dev"

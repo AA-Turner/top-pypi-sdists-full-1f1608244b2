@@ -4,14 +4,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from requests.structures import CaseInsensitiveDict
 
-from .. import references
+from schemathesis.core.transforms import UNRESOLVABLE, Unresolvable, resolve_pointer
+from schemathesis.generation.stateful.state_machine import StepOutput
+from schemathesis.transport.requests import REQUESTS_TRANSPORT
 
 if TYPE_CHECKING:
-    from .context import ExpressionContext
     from .extractors import Extractor
 
 
@@ -19,12 +20,12 @@ if TYPE_CHECKING:
 class Node:
     """Generic expression node."""
 
-    def evaluate(self, context: ExpressionContext) -> str:
+    def evaluate(self, output: StepOutput) -> str | Unresolvable:
         raise NotImplementedError
 
 
 @unique
-class NodeType(Enum):
+class NodeType(str, Enum):
     URL = "$url"
     METHOD = "$method"
     STATUS_CODE = "$statusCode"
@@ -38,7 +39,7 @@ class String(Node):
 
     value: str
 
-    def evaluate(self, context: ExpressionContext) -> str:
+    def evaluate(self, output: StepOutput) -> str | Unresolvable:
         """String tokens are passed as they are.
 
         ``foo{$request.path.id}``
@@ -52,24 +53,29 @@ class String(Node):
 class URL(Node):
     """A node for `$url` expression."""
 
-    def evaluate(self, context: ExpressionContext) -> str:
-        return context.case.get_full_url()
+    def evaluate(self, output: StepOutput) -> str | Unresolvable:
+        import requests
+
+        base_url = output.case.operation.base_url or "http://127.0.0.1"
+        kwargs = REQUESTS_TRANSPORT.serialize_case(output.case, base_url=base_url)
+        prepared = requests.Request(**kwargs).prepare()
+        return cast(str, prepared.url)
 
 
 @dataclass
 class Method(Node):
     """A node for `$method` expression."""
 
-    def evaluate(self, context: ExpressionContext) -> str:
-        return context.case.operation.method.upper()
+    def evaluate(self, output: StepOutput) -> str | Unresolvable:
+        return output.case.operation.method.upper()
 
 
 @dataclass
 class StatusCode(Node):
     """A node for `$statusCode` expression."""
 
-    def evaluate(self, context: ExpressionContext) -> str:
-        return str(context.response.status_code)
+    def evaluate(self, output: StepOutput) -> str | Unresolvable:
+        return str(output.response.status_code)
 
 
 @dataclass
@@ -80,19 +86,19 @@ class NonBodyRequest(Node):
     parameter: str
     extractor: Extractor | None = None
 
-    def evaluate(self, context: ExpressionContext) -> str:
-        container: dict | CaseInsensitiveDict = {
-            "query": context.case.query,
-            "path": context.case.path_parameters,
-            "header": context.case.headers,
+    def evaluate(self, output: StepOutput) -> str | Unresolvable:
+        container = {
+            "query": output.case.query,
+            "path": output.case.path_parameters,
+            "header": output.case.headers,
         }[self.location] or {}
         if self.location == "header":
             container = CaseInsensitiveDict(container)
         value = container.get(self.parameter)
         if value is None:
-            return ""
+            return UNRESOLVABLE
         if self.extractor is not None:
-            return self.extractor.extract(value) or ""
+            return self.extractor.extract(value) or UNRESOLVABLE
         return value
 
 
@@ -102,14 +108,11 @@ class BodyRequest(Node):
 
     pointer: str | None = None
 
-    def evaluate(self, context: ExpressionContext) -> Any:
-        document = context.case.body
+    def evaluate(self, output: StepOutput) -> Any | Unresolvable:
+        document = output.case.body
         if self.pointer is None:
             return document
-        resolved = references.resolve_pointer(document, self.pointer[1:])
-        if resolved is references.UNRESOLVABLE:
-            return None
-        return resolved
+        return resolve_pointer(document, self.pointer[1:])
 
 
 @dataclass
@@ -119,13 +122,13 @@ class HeaderResponse(Node):
     parameter: str
     extractor: Extractor | None = None
 
-    def evaluate(self, context: ExpressionContext) -> str:
-        value = context.response.headers.get(self.parameter)
+    def evaluate(self, output: StepOutput) -> str | Unresolvable:
+        value = output.response.headers.get(self.parameter.lower())
         if value is None:
-            return ""
+            return UNRESOLVABLE
         if self.extractor is not None:
-            return self.extractor.extract(value) or ""
-        return value
+            return self.extractor.extract(value[0]) or UNRESOLVABLE
+        return value[0]
 
 
 @dataclass
@@ -134,17 +137,9 @@ class BodyResponse(Node):
 
     pointer: str | None = None
 
-    def evaluate(self, context: ExpressionContext) -> Any:
-        from ....transports.responses import WSGIResponse
-
-        if isinstance(context.response, WSGIResponse):
-            document = context.response.json
-        else:
-            document = context.response.json()
+    def evaluate(self, output: StepOutput) -> Any:
+        document = output.response.json()
         if self.pointer is None:
             # We need the parsed document - data will be serialized before sending to the application
             return document
-        resolved = references.resolve_pointer(document, self.pointer[1:])
-        if resolved is references.UNRESOLVABLE:
-            return None
-        return resolved
+        return resolve_pointer(document, self.pointer[1:])

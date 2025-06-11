@@ -15,21 +15,23 @@
 """Tests for methods in `inject.py`."""
 
 import functools
-from typing import NamedTuple
+from typing import NamedTuple, Union
 
 from absl.testing import absltest
 from absl.testing import parameterized
 import chex
 import jax
+from jax import random
 import jax.numpy as jnp
 import numpy as np
+
 from optax._src import base
 from optax._src import clipping
 from optax._src import transform
 from optax._src import wrappers
 from optax.schedules import _inject
 from optax.schedules import _schedule
-from optax.tree_utils import _state_utils
+import optax.tree
 
 
 class ExampleState(NamedTuple):
@@ -64,7 +66,7 @@ class InjectHyperparamsTest(chex.TestCase):
     state = self.variant(optim.init)(params)
 
     # A no-op change, to verify that tree map works.
-    state = _state_utils.tree_map_params(optim, lambda v: v, state)
+    state = optax.tree.map_params(optim, lambda v: v, state)
 
     update_fn = self.variant(optim.update)
     expected_step_size = [3.0] * 2 + [15.0] * 6 + [30.0] * 5 + [45.0] * 3
@@ -162,6 +164,44 @@ class InjectHyperparamsTest(chex.TestCase):
     assert not set(state.hyperparams.keys()).intersection(set(static_args))
 
   @chex.all_variants
+  def test_prng_key_not_hyperparameter(self):
+    """Check that random.key can be handled by :func:``inject_hyperparams``."""
+
+    def random_noise_optimizer(
+        key: chex.PRNGKey, scale: jax.Array
+    ) -> base.GradientTransformation:
+      def init_fn(params_like: base.Params) -> tuple[chex.PRNGKey,
+                                                     Union[jax.Array, float]]:
+        del params_like
+        return (key, scale)
+
+      def update_fn(
+          updates: base.Updates,
+          state: tuple[chex.PRNGKey, jax.Array],
+          params: None = None,
+      ) -> tuple[base.Updates, tuple[chex.PRNGKey, Union[jax.Array, float]]]:
+        del params
+        key, scale = state
+        keyit = iter(random.split(key, len(jax.tree.leaves(updates)) + 1))
+        new_updates = jax.tree.map(
+            lambda x: scale * random.normal(next(keyit), x.shape), updates
+        )
+        new_key = next(keyit)
+        return new_updates, (new_key, scale)
+
+      return base.GradientTransformation(init_fn, update_fn)
+
+    optim = _inject.inject_hyperparams(random_noise_optimizer)(
+        key=random.key(17), scale=1e-3
+    )
+
+    params = [jnp.ones((1, 2)), jnp.ones(2), jnp.ones((1, 1, 1))]
+    grads = params
+    state = self.variant(optim.init)(params)
+    _, state = self.variant(optim.update)(grads, state)
+    del state
+
+  @chex.all_variants
   @parameterized.named_parameters(
       ('bf16hyp f32param bf16grad', jnp.bfloat16, jnp.float32, jnp.bfloat16),
       ('bf16hyp f32param f32_grads', jnp.bfloat16, jnp.float32, jnp.float32),
@@ -222,7 +262,7 @@ class StatefulTest(chex.TestCase):
           my_schedule(count), my_wrapped_schedule(state), atol=0.0
       )
       count = count + 1
-      extra_args = dict(loss=jnp.ones([], dtype=jnp.float32))
+      extra_args = {'loss': jnp.ones([], dtype=jnp.float32)}
       state = my_wrapped_schedule.update(state, **extra_args)
       np.testing.assert_allclose(count, state, atol=0.0)
 
@@ -240,7 +280,7 @@ class StatefulTest(chex.TestCase):
     )
     state = self.variant(tx.init)(params)
 
-    extra_args = dict(addendum=0.3 * jnp.ones((), dtype=jnp.float32))
+    extra_args = {'addendum': 0.3 * jnp.ones((), dtype=jnp.float32)}
     _, state = self.variant(tx.update)(
         grads, state, params=params, **extra_args
     )

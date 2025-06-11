@@ -225,7 +225,7 @@ def wait_for_element_disappear(object, type, timeout=10):
 
     return find_elements.backcode__dont_use__wait_for_d(driver, object, type, timeout=tempo)
 
-def selectfox(elemento, method, key):
+def selectfox(elemento, method, key, pure: None):
     """
     Seleciona uma opção em um elemento <select>.
 
@@ -264,9 +264,15 @@ def selectfox(elemento, method, key):
     if method == "text":
         elements = WebDriverWait(elemento, 10).until(EC.visibility_of_all_elements_located((By.XPATH, '//option')))
         for elm in elements:
-            if key.lower().strip() in elm.text.lower().strip():
-                select.select_by_visible_text(elm.text)
-                return
+            if pure:
+                if key == elm.text:
+                    select.select_by_visible_text(elm.text)
+                    return
+            else:
+                if key.lower().strip() in elm.text.lower().strip():
+                    select.select_by_visible_text(elm.text)
+                    return
+
         raise ModuleNotFoundError(f"Option {key} não encontrada")
 
     if method == "index":

@@ -1,7 +1,7 @@
 r'''
 # `okta_inline_hook`
 
-Refer to the Terraform Registry for docs: [`okta_inline_hook`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook).
+Refer to the Terraform Registry for docs: [`okta_inline_hook`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class InlineHook(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.inlineHook.InlineHook",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook okta_inline_hook}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook okta_inline_hook}.'''
 
     def __init__(
         self,
@@ -68,19 +68,19 @@ class InlineHook(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook okta_inline_hook} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook okta_inline_hook} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: The inline hook display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#name InlineHook#name}
-        :param type: The type of hook to create. `See here for supported types <https://developer.okta.com/docs/reference/api/inline-hooks/#supported-inline-hook-types>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#type InlineHook#type}
-        :param version: The version of the hook. The currently-supported version is ``1.0.0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#version InlineHook#version}
-        :param auth: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#auth InlineHook#auth}.
-        :param channel: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#channel InlineHook#channel}.
-        :param channel_json: true channel object for the inline hook API contract. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#channel_json InlineHook#channel_json}
-        :param headers: headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#headers InlineHook#headers}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#id InlineHook#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#status InlineHook#status}
+        :param name: The inline hook display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#name InlineHook#name}
+        :param type: The type of hook to create. `See here for supported types <https://developer.okta.com/docs/reference/api/inline-hooks/#supported-inline-hook-types>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#type InlineHook#type}
+        :param version: The version of the hook. The currently-supported version is ``1.0.0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#version InlineHook#version}
+        :param auth: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#auth InlineHook#auth}.
+        :param channel: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#channel InlineHook#channel}.
+        :param channel_json: true channel object for the inline hook API contract. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#channel_json InlineHook#channel_json}
+        :param headers: headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#headers InlineHook#headers}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#id InlineHook#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#status InlineHook#status}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -127,7 +127,7 @@ class InlineHook(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the InlineHook to import.
-        :param import_from_id: The id of the existing InlineHook that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing InlineHook that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the InlineHook to import is found.
         '''
         if __debug__:
@@ -390,15 +390,15 @@ class InlineHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: The inline hook display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#name InlineHook#name}
-        :param type: The type of hook to create. `See here for supported types <https://developer.okta.com/docs/reference/api/inline-hooks/#supported-inline-hook-types>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#type InlineHook#type}
-        :param version: The version of the hook. The currently-supported version is ``1.0.0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#version InlineHook#version}
-        :param auth: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#auth InlineHook#auth}.
-        :param channel: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#channel InlineHook#channel}.
-        :param channel_json: true channel object for the inline hook API contract. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#channel_json InlineHook#channel_json}
-        :param headers: headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#headers InlineHook#headers}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#id InlineHook#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#status InlineHook#status}
+        :param name: The inline hook display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#name InlineHook#name}
+        :param type: The type of hook to create. `See here for supported types <https://developer.okta.com/docs/reference/api/inline-hooks/#supported-inline-hook-types>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#type InlineHook#type}
+        :param version: The version of the hook. The currently-supported version is ``1.0.0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#version InlineHook#version}
+        :param auth: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#auth InlineHook#auth}.
+        :param channel: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#channel InlineHook#channel}.
+        :param channel_json: true channel object for the inline hook API contract. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#channel_json InlineHook#channel_json}
+        :param headers: headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#headers InlineHook#headers}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#id InlineHook#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#status InlineHook#status}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -520,7 +520,7 @@ class InlineHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The inline hook display name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#name InlineHook#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#name InlineHook#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -530,7 +530,7 @@ class InlineHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''The type of hook to create. `See here for supported types <https://developer.okta.com/docs/reference/api/inline-hooks/#supported-inline-hook-types>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#type InlineHook#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#type InlineHook#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -540,7 +540,7 @@ class InlineHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def version(self) -> builtins.str:
         '''The version of the hook. The currently-supported version is ``1.0.0``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#version InlineHook#version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#version InlineHook#version}
         '''
         result = self._values.get("version")
         assert result is not None, "Required property 'version' is missing"
@@ -548,13 +548,13 @@ class InlineHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def auth(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#auth InlineHook#auth}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#auth InlineHook#auth}.'''
         result = self._values.get("auth")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def channel(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#channel InlineHook#channel}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#channel InlineHook#channel}.'''
         result = self._values.get("channel")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -562,7 +562,7 @@ class InlineHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def channel_json(self) -> typing.Optional[builtins.str]:
         '''true channel object for the inline hook API contract.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#channel_json InlineHook#channel_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#channel_json InlineHook#channel_json}
         '''
         result = self._values.get("channel_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -573,14 +573,14 @@ class InlineHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["InlineHookHeaders"]]]:
         '''headers block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#headers InlineHook#headers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#headers InlineHook#headers}
         '''
         result = self._values.get("headers")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["InlineHookHeaders"]]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#id InlineHook#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#id InlineHook#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -592,7 +592,7 @@ class InlineHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Default to ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#status InlineHook#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#status InlineHook#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -622,8 +622,8 @@ class InlineHookHeaders:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#key InlineHook#key}.
-        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#value InlineHook#value}.
+        :param key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#key InlineHook#key}.
+        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#value InlineHook#value}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__bf66e8e865d9aceb6d4f428cc5464192eadcae40a7303cf6e360dae8dcc77a9b)
@@ -637,13 +637,13 @@ class InlineHookHeaders:
 
     @builtins.property
     def key(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#key InlineHook#key}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#key InlineHook#key}.'''
         result = self._values.get("key")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def value(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/inline_hook#value InlineHook#value}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/inline_hook#value InlineHook#value}.'''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
 

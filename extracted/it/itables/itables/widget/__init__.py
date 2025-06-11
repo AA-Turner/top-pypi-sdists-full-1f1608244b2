@@ -3,10 +3,10 @@ import pathlib
 
 import anywidget
 import traitlets
-from typing_extensions import Unpack
+from typing_extensions import Optional, Unpack
 
 from itables.javascript import get_itables_extension_arguments
-from itables.typing import ITableOptions
+from itables.typing import DataFrameOrSeries, ITableOptions
 
 try:
     __version__ = importlib.metadata.version("itables_anywidget")
@@ -21,8 +21,11 @@ class ITable(anywidget.AnyWidget):
     # public traits
     caption = traitlets.Unicode().tag(sync=True)
     classes = traitlets.Unicode().tag(sync=True)
-    style = traitlets.Unicode().tag(sync=True)
     selected_rows = traitlets.List(traitlets.Int()).tag(sync=True)
+
+    # this trait is private - it was initially public but
+    # that was causing issue #407, so we now use a property and setter
+    _style = traitlets.Unicode().tag(sync=True)
 
     # private traits that relate to df or to the DataTable arguments
     # (use .update() to update them)
@@ -30,16 +33,16 @@ class ITable(anywidget.AnyWidget):
 
     def __init__(
         self,
-        df=None,
-        *args,
+        df: Optional[DataFrameOrSeries] = None,
+        caption: Optional[str] = None,
         **kwargs: Unpack[ITableOptions],
     ) -> None:
         super().__init__()
-        dt_args, other_args = get_itables_extension_arguments(df, *args, **kwargs)
+        dt_args, other_args = get_itables_extension_arguments(df, caption, **kwargs)
         self._df = df
         self.caption = other_args.pop("caption") or ""
         self.classes = other_args.pop("classes")
-        self.style = other_args.pop("style")
+        self._style = other_args.pop("style")
         self.selected_rows = other_args.pop("selected_rows")
 
         self._dt_args = dt_args
@@ -47,8 +50,8 @@ class ITable(anywidget.AnyWidget):
 
     def update(
         self,
-        df=None,
-        *args,
+        df: Optional[DataFrameOrSeries] = None,
+        caption: Optional[str] = None,
         **kwargs: Unpack[ITableOptions],
     ):
         """
@@ -67,17 +70,18 @@ class ITable(anywidget.AnyWidget):
             df = self._df
         if "selected_rows" not in kwargs:
             kwargs["selected_rows"] = self.selected_rows
-        if "caption" not in kwargs and self.caption is not None:
-            kwargs["caption"] = self.caption
+        if caption is None and self.caption is not None:
+            caption = self.caption
         if "classes" not in kwargs:
             kwargs["classes"] = self.classes
         if "style" not in kwargs:
             kwargs["style"] = self.style
+            pass
 
-        dt_args, other_args = get_itables_extension_arguments(df, *args, **kwargs)
+        dt_args, other_args = get_itables_extension_arguments(df, caption, **kwargs)
 
         self.classes = other_args.pop("classes")
-        self.style = other_args.pop("style")
+        self._style = other_args.pop("style")
         self.caption = other_args.pop("caption")
 
         if df is None:
@@ -100,9 +104,17 @@ class ITable(anywidget.AnyWidget):
         self.selected_rows = other_args.pop("selected_rows")
 
     @property
-    def df(self):
+    def df(self) -> Optional[DataFrameOrSeries]:
         return self._df
 
     @df.setter
-    def df(self, df):
+    def df(self, df: Optional[DataFrameOrSeries]):
         self.update(df)
+
+    @property
+    def style(self) -> str:
+        return self._style
+
+    @style.setter
+    def style(self, style: str):
+        self._style = style

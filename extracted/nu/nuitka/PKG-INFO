@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Nuitka
-Version: 2.7.6
+Version: 2.7.7
 Summary: Python compiler with full language support and CPython compatibility
 Home-page: https://nuitka.net
 Author: Kay Hayen
@@ -44,6 +44,7 @@ Classifier: Operating System :: MacOS
 Classifier: Operating System :: Android
 Classifier: License :: OSI Approved :: Apache Software License
 Description-Content-Type: text/x-rst
+Provides-Extra: build-wheel
 License-File: LICENSE.txt
 
 .. image:: https://img.shields.io/pypi/pyversions/Nuitka.svg

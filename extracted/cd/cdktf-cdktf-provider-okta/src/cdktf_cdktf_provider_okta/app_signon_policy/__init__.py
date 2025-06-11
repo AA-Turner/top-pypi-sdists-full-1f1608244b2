@@ -1,7 +1,7 @@
 r'''
 # `okta_app_signon_policy`
 
-Refer to the Terraform Registry for docs: [`okta_app_signon_policy`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy).
+Refer to the Terraform Registry for docs: [`okta_app_signon_policy`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppSignonPolicy(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appSignonPolicy.AppSignonPolicy",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy okta_app_signon_policy}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy okta_app_signon_policy}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class AppSignonPolicy(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy okta_app_signon_policy} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy okta_app_signon_policy} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param description: Description of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#description AppSignonPolicy#description}
-        :param name: Name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#name AppSignonPolicy#name}
-        :param catch_all: If false, the default rule of the policy is set access to ``DENY``. Otherwise default behavior of the default rule is to leave access at ``ALLOW``. **WARNING** setting this attribute to false changes policy rule's default behavior. Use at your own risk. This is only applied during creation and does not affect import or update. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#catch_all AppSignonPolicy#catch_all}
-        :param priority: Priority of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#priority AppSignonPolicy#priority}
+        :param description: Description of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#description AppSignonPolicy#description}
+        :param name: Name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#name AppSignonPolicy#name}
+        :param catch_all: If false, the default rule of the policy is set access to ``DENY``. Otherwise default behavior of the default rule is to leave access at ``ALLOW``. **WARNING** setting this attribute to false changes policy rule's default behavior. Use at your own risk. This is only applied during creation and does not affect import or update. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#catch_all AppSignonPolicy#catch_all}
+        :param priority: Priority of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#priority AppSignonPolicy#priority}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class AppSignonPolicy(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppSignonPolicy to import.
-        :param import_from_id: The id of the existing AppSignonPolicy that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppSignonPolicy that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppSignonPolicy to import is found.
         '''
         if __debug__:
@@ -269,10 +269,10 @@ class AppSignonPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param description: Description of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#description AppSignonPolicy#description}
-        :param name: Name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#name AppSignonPolicy#name}
-        :param catch_all: If false, the default rule of the policy is set access to ``DENY``. Otherwise default behavior of the default rule is to leave access at ``ALLOW``. **WARNING** setting this attribute to false changes policy rule's default behavior. Use at your own risk. This is only applied during creation and does not affect import or update. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#catch_all AppSignonPolicy#catch_all}
-        :param priority: Priority of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#priority AppSignonPolicy#priority}
+        :param description: Description of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#description AppSignonPolicy#description}
+        :param name: Name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#name AppSignonPolicy#name}
+        :param catch_all: If false, the default rule of the policy is set access to ``DENY``. Otherwise default behavior of the default rule is to leave access at ``ALLOW``. **WARNING** setting this attribute to false changes policy rule's default behavior. Use at your own risk. This is only applied during creation and does not affect import or update. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#catch_all AppSignonPolicy#catch_all}
+        :param priority: Priority of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#priority AppSignonPolicy#priority}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -380,7 +380,7 @@ class AppSignonPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> builtins.str:
         '''Description of the policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#description AppSignonPolicy#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#description AppSignonPolicy#description}
         '''
         result = self._values.get("description")
         assert result is not None, "Required property 'description' is missing"
@@ -390,7 +390,7 @@ class AppSignonPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#name AppSignonPolicy#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#name AppSignonPolicy#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -404,7 +404,7 @@ class AppSignonPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Otherwise default behavior of the default rule is to leave access at ``ALLOW``.  **WARNING** setting this attribute to false changes policy rule's default behavior. Use at your own risk. This is only applied during creation and does not affect import or update.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#catch_all AppSignonPolicy#catch_all}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#catch_all AppSignonPolicy#catch_all}
         '''
         result = self._values.get("catch_all")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -413,7 +413,7 @@ class AppSignonPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def priority(self) -> typing.Optional[jsii.Number]:
         '''Priority of the policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_signon_policy#priority AppSignonPolicy#priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_signon_policy#priority AppSignonPolicy#priority}
         '''
         result = self._values.get("priority")
         return typing.cast(typing.Optional[jsii.Number], result)

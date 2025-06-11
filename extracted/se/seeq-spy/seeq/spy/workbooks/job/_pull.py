@@ -91,8 +91,6 @@ def pull(job_folder: str, workbooks_df: Union[pd.DataFrame, str], *, resume: boo
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     util.safe_makedirs(job_folder, exist_ok=True)

@@ -3,7 +3,7 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 import schemathesis
-from schemathesis.exceptions import UsageError
+from schemathesis.core.errors import IncorrectUsage
 from schemathesis.graphql import nodes
 from schemathesis.specs.graphql.scalars import CUSTOM_SCALARS
 
@@ -35,7 +35,7 @@ type Query {
     test()
 
 
-def test_custom_scalar_in_cli(testdir, cli, snapshot_cli):
+def test_custom_scalar_in_cli(testdir, cli, snapshot_cli, graphql_url):
     schema_file = testdir.make_graphql_schema_file(
         """
 scalar FooBar
@@ -45,10 +45,10 @@ type Query {
 }
     """,
     )
-    assert cli.run(str(schema_file), "--dry-run") == snapshot_cli
+    assert cli.run(str(schema_file), f"--url={graphql_url}") == snapshot_cli
 
 
-def test_built_in_scalars_in_cli(testdir, cli, snapshot_cli):
+def test_built_in_scalars_in_cli(testdir, cli, graphql_url):
     schema_file = testdir.make_graphql_schema_file(
         """
 scalar Date
@@ -73,7 +73,9 @@ type Query {
   getByUUID(value: UUID!): Int!
 }""",
     )
-    assert cli.run(str(schema_file), "--dry-run", "--hypothesis-max-examples=5") == snapshot_cli
+    result = cli.run(str(schema_file), "--max-examples=5", f"--url={graphql_url}")
+    # Queries can be constructed, but the backend does not implement the fields
+    assert result.stdout.count("Cannot query field") == 18
 
 
 @pytest.mark.parametrize(
@@ -84,5 +86,5 @@ type Query {
     ],
 )
 def test_invalid_strategy(name, value, expected):
-    with pytest.raises(UsageError, match=expected):
+    with pytest.raises(IncorrectUsage, match=expected):
         schemathesis.graphql.scalar(name, value)

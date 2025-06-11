@@ -88,14 +88,9 @@ def get_cluster_compute_from_name(
 
     version = None
 
-    enable_compute_config_versioning = api_client.check_is_feature_flag_on_api_v2_userinfo_check_is_feature_flag_on_get(
-        "compute-config-versioning"
-    ).result.is_on
-
-    if enable_compute_config_versioning:
-        (cluster_compute_name, version,) = parse_cluster_compute_name_version(
-            cluster_compute_name
-        )
+    (cluster_compute_name, version,) = parse_cluster_compute_name_version(
+        cluster_compute_name
+    )
 
     cluster_computes = api_client.search_compute_templates_api_v2_compute_templates_search_post(
         ComputeTemplateQuery(

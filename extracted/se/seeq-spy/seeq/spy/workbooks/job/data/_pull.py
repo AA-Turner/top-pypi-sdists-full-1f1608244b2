@@ -3,12 +3,12 @@ from __future__ import annotations
 import copy
 import json
 import os
-import sys
 import textwrap
 from datetime import datetime, timedelta
 from typing import Optional, Union
 
 import pandas as pd
+import sys
 
 from seeq import spy
 from seeq.base import util
@@ -70,8 +70,6 @@ def pull(job_folder, *, resume: bool = True, errors: Optional[str] = None, quiet
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     all_usages = load_data_usage(job_folder)

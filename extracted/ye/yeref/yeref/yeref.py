@@ -4020,6 +4020,36 @@ async def check_schema_exists(schema_name, db_pool):
         return result
 
 
+async def not_del_if_payments(chat_id, status, MEDIA_D, BASE_P):
+    try:
+        sql = "SELECT USER_VARS, USER_LSTS FROM \"USER\" WHERE USER_TID=$1"
+        data_users = await db_select_pg(sql, (chat_id,), BASE_P)
+        if not len(data_users): return
+        print(f"{data_users=}")
+        USER_VARS, USER_LSTS = data_users[0]
+
+        USER_LSTS = json.loads(USER_LSTS or USER_LSTS_)
+        USER_TXS = USER_LSTS.get("USER_TXS", [])
+        USER_PAYMENTS = USER_LSTS.get("USER_PAYMENTS", [])
+        USER_STATUSES = USER_LSTS.get("USER_STATUSES", [])
+
+        if len(USER_TXS) or len(USER_PAYMENTS):
+            dt_ = datetime.now(timezone.utc).strftime('%d-%m-%Y_%H-%M-%S')
+            USER_STATUSES.append({status: dt_})
+            USER_LSTS["USER_STATUSES"] = USER_STATUSES
+            USER_LSTS = json.dumps(USER_LSTS, ensure_ascii=False)
+
+            sql = "UPDATE \"USER\" SET USER_LSTS=$1 WHERE USER_TID=$2"
+            await db_change_pg(sql, (USER_LSTS, chat_id,), BASE_P)
+        elif status in ['left', 'kicked']:
+            sql = "DELETE FROM \"USER\" WHERE USER_TID=$1"
+            await db_change_pg(sql, (chat_id,), BASE_P)
+            print("DELETE FROM \"USER\" WHERE USER_TID=$1")
+
+        shutil.rmtree(os.path.join(MEDIA_D, str(chat_id)))
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(0, 1), 2))
 # endregion
 
 
@@ -5030,6 +5060,7 @@ async def outsource_generate(lst, path='link_path'):
                                 print(f"g4f: {res}")
                     elif item['type'] == 'img':
                         providers = await get_neuro_keys(path, "image")
+
                         for provider_name, provider_keys in providers.items():
                             for api_key in provider_keys:
                                 try:
@@ -5226,14 +5257,15 @@ async def outsource_generate(lst, path='link_path'):
                                         res = await client.images.generate(prompt=item['prompt'],
                                                                            model=f"gpt-image-1",
                                                                            n=1,  # max 1 for dalle-3
-                                                                           quality="low",   # low 3 rub, medium 12 rub
-                                                                           response_format='url',
+                                                                           quality="low",   # low 2,55 rub, medium 12 rub
+                                                                           # response_format='url',
                                                                            size="1024x1024",
                                                                            # size="512x512",
                                                                            # size="256x256",
                                                                            )
+                                        # print(f"{res.data=}")
                                         for it in res.data:
-                                            result.append({'type': item['type'], 'answer': it.url})
+                                            result.append({'type': item['type'], 'answer': it.b64_json})
                                             return
                                 except Exception as e:
                                     logger.info(log_ % f"{api_key} " + str(e))
@@ -8597,18 +8629,20 @@ async def upd_user_data_main(data, web_app_init_data, BASE_P, BOT_TOKEN_E18B, re
 
         sql = f""" 
         INSERT INTO \"USER\" (
-            USER_TID, USER_USERNAME, USER_FULLNAME, USER_GAMES, USER_VARS, USER_LSTS
+            USER_TID, USER_USERNAME, USER_FULLNAME, USER_LZ, USER_DT, USER_GAMES, USER_VARS, USER_LSTS
         )
-        VALUES ($1, $2, $3, $4, $5, $6)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         ON CONFLICT (USER_TID) DO UPDATE
         SET 
             USER_USERNAME = EXCLUDED.USER_USERNAME,
             USER_FULLNAME = EXCLUDED.USER_FULLNAME,
+            USER_LZ = EXCLUDED.USER_LZ,
+            USER_DT = EXCLUDED.USER_DT,
             USER_GAMES = EXCLUDED.USER_GAMES,
             USER_VARS = EXCLUDED.USER_VARS,
             USER_LSTS = EXCLUDED.USER_LSTS
         """
-        await db_change_pg(sql, (USER_TID, username, full_name,
+        await db_change_pg(sql, (USER_TID, username, full_name, lz, USER_VARS['USER_DT'],
                                  json.dumps(USER_GAMES, ensure_ascii=False),
                                  json.dumps(USER_VARS, ensure_ascii=False),
                                  json.dumps(USER_LSTS, ensure_ascii=False),), BASE_P)

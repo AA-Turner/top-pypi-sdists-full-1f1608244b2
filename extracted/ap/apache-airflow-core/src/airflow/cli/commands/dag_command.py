@@ -24,11 +24,9 @@ import errno
 import json
 import logging
 import operator
-import os
 import re
 import subprocess
 import sys
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from sqlalchemy import func, select
@@ -41,10 +39,8 @@ from airflow.dag_processing.bundles.manager import DagBundlesManager
 from airflow.exceptions import AirflowException
 from airflow.jobs.job import Job
 from airflow.models import DagBag, DagModel, DagRun, TaskInstance
-from airflow.models.dag import DAG
 from airflow.models.errors import ParseImportError
 from airflow.models.serialized_dag import SerializedDagModel
-from airflow.sdk.definitions._internal.dag_parsing_context import _airflow_parsing_context_manager
 from airflow.utils import cli as cli_utils, timezone
 from airflow.utils.cli import get_dag, suppress_logs_and_warning, validate_dag_bundle_arg
 from airflow.utils.dot_renderer import render_dag, render_dag_dependencies
@@ -57,6 +53,7 @@ if TYPE_CHECKING:
     from graphviz.dot import Dot
     from sqlalchemy.orm import Session
 
+    from airflow.models.dag import DAG
     from airflow.timetables.base import DataInterval
 
 DAG_DETAIL_FIELDS = {*DAGResponse.model_fields, *DAGResponse.model_computed_fields}
@@ -230,10 +227,10 @@ def _get_dagbag_dag_details(dag: DAG) -> dict:
     return {
         "dag_id": dag.dag_id,
         "dag_display_name": dag.dag_display_name,
-        "bundle_name": dag.get_bundle_name(),
-        "bundle_version": dag.get_bundle_version(),
-        "is_paused": dag.get_is_paused(),
-        "is_stale": dag.get_is_stale(),
+        "bundle_name": dag.get_bundle_name() if hasattr(dag, "get_bundle_name") else None,
+        "bundle_version": dag.get_bundle_version() if hasattr(dag, "get_bundle_version") else None,
+        "is_paused": dag.get_is_paused() if hasattr(dag, "get_is_paused") else None,
+        "is_stale": dag.get_is_stale() if hasattr(dag, "get_is_stale") else None,
         "last_parsed_time": None,
         "last_expired": None,
         "relative_fileloc": dag.relative_fileloc,
@@ -343,15 +340,38 @@ def dag_list_dags(args, session: Session = NEW_SESSION) -> None:
             file=sys.stderr,
         )
 
-    dagbag = DagBag(read_dags_from_db=True)
-    dagbag.collect_dags_from_db()
+    dagbag_import_errors = 0
+    dags_list = []
+    if args.local:
+        # Get import errors from the local area
+        if args.bundle_name:
+            manager = DagBundlesManager()
+            validate_dag_bundle_arg(args.bundle_name)
+            all_bundles = list(manager.get_all_dag_bundles())
+            bundles_to_search = set(args.bundle_name)
 
-    # Get import errors from the DB
-    query = select(func.count()).select_from(ParseImportError)
-    if args.bundle_name:
-        query = query.where(ParseImportError.bundle_name.in_(args.bundle_name))
+            for bundle in all_bundles:
+                if bundle.name in bundles_to_search:
+                    dagbag = DagBag(bundle.path, bundle_path=bundle.path)
+                    dagbag.collect_dags()
+                    dags_list.extend(list(dagbag.dags.values()))
+                    dagbag_import_errors += len(dagbag.import_errors)
+        else:
+            dagbag = DagBag()
+            dagbag.collect_dags()
+            dags_list.extend(list(dagbag.dags.values()))
+            dagbag_import_errors += len(dagbag.import_errors)
+    else:
+        # Get import errors from the DB
+        dagbag = DagBag(read_dags_from_db=True)
+        dagbag.collect_dags_from_db()
+        dags_list = list(dagbag.dags.values())
 
-    dagbag_import_errors = session.scalar(query)
+        query = select(func.count()).select_from(ParseImportError)
+        if args.bundle_name:
+            query = query.where(ParseImportError.bundle_name.in_(args.bundle_name))
+
+        dagbag_import_errors = session.scalar(query)
 
     if dagbag_import_errors > 0:
         from rich import print as rich_print
@@ -382,7 +402,7 @@ def dag_list_dags(args, session: Session = NEW_SESSION) -> None:
 
     AirflowConsole().print_as(
         data=sorted(
-            filter_dags_by_bundle(list(dagbag.dags.values()), args.bundle_name),
+            filter_dags_by_bundle(dags_list, args.bundle_name if not args.local else None),
             key=operator.attrgetter("dag_id"),
         ),
         output=args.output,
@@ -420,22 +440,41 @@ def dag_list_import_errors(args, session: Session = NEW_SESSION) -> None:
     """Display dags with import errors on the command line."""
     data = []
 
-    # Get import errors from the DB
-    query = select(ParseImportError)
-    if args.bundle_name:
-        validate_dag_bundle_arg(args.bundle_name)
-        query = query.where(ParseImportError.bundle_name.in_(args.bundle_name))
+    if args.local:
+        # Get import errors from local areas
+        if args.bundle_name:
+            manager = DagBundlesManager()
+            validate_dag_bundle_arg(args.bundle_name)
+            all_bundles = list(manager.get_all_dag_bundles())
+            bundles_to_search = set(args.bundle_name)
 
-    dagbag_import_errors = session.scalars(query).all()
+            for bundle in all_bundles:
+                if bundle.name in bundles_to_search:
+                    dagbag = DagBag(bundle.path, bundle_path=bundle.path)
+                    for filename, errors in dagbag.import_errors.items():
+                        data.append({"bundle_name": bundle.name, "filepath": filename, "error": errors})
+        else:
+            dagbag = DagBag()
+            for filename, errors in dagbag.import_errors.items():
+                data.append({"filepath": filename, "error": errors})
 
-    for import_error in dagbag_import_errors:
-        data.append(
-            {
-                "bundle_name": import_error.bundle_name,
-                "filepath": import_error.filename,
-                "error": import_error.stacktrace,
-            }
-        )
+    else:
+        # Get import errors from the DB
+        query = select(ParseImportError)
+        if args.bundle_name:
+            validate_dag_bundle_arg(args.bundle_name)
+            query = query.where(ParseImportError.bundle_name.in_(args.bundle_name))
+
+        dagbag_import_errors = session.scalars(query).all()
+
+        for import_error in dagbag_import_errors:
+            data.append(
+                {
+                    "bundle_name": import_error.bundle_name,
+                    "filepath": import_error.filename,
+                    "error": import_error.stacktrace,
+                }
+            )
     AirflowConsole().print_as(
         data=data,
         output=args.output,
@@ -549,29 +588,6 @@ def dag_list_dag_runs(args, dag: DAG | None = None, session: Session = NEW_SESSI
     AirflowConsole().print_as(data=dag_runs, output=args.output, mapper=_render_dagrun)
 
 
-def _parse_and_get_dag(dag_id: str) -> DAG | None:
-    """Given a dag_id, determine the bundle and relative fileloc from the db, then parse and return the DAG."""
-    db_dag = get_dag(bundle_names=None, dag_id=dag_id, from_db=True)
-    bundle_name = db_dag.get_bundle_name()
-    if bundle_name is None:
-        raise AirflowException(
-            f"Bundle name for DAG {dag_id!r} is not found in the database. This should not happen."
-        )
-    if db_dag.relative_fileloc is None:
-        raise AirflowException(
-            f"Relative fileloc for DAG {dag_id!r} is not found in the database. This should not happen."
-        )
-    bundle = DagBundlesManager().get_bundle(bundle_name)
-    bundle.initialize()
-    dag_absolute_path = os.fspath(Path(bundle.path, db_dag.relative_fileloc))
-
-    with _airflow_parsing_context_manager(dag_id=dag_id):
-        bag = DagBag(
-            dag_folder=dag_absolute_path, include_examples=False, safe_mode=False, load_op_links=False
-        )
-        return bag.dags.get(dag_id)
-
-
 @cli_utils.action_cli
 @providers_configuration_loaded
 @provide_session
@@ -590,19 +606,17 @@ def dag_test(args, dag: DAG | None = None, session: Session = NEW_SESSION) -> No
         re.compile(args.mark_success_pattern) if args.mark_success_pattern is not None else None
     )
 
-    dag = dag or _parse_and_get_dag(args.dag_id)
+    dag = dag or get_dag(bundle_names=args.bundle_name, dag_id=args.dag_id, dagfile_path=args.dagfile_path)
     if not dag:
         raise AirflowException(
             f"Dag {args.dag_id!r} could not be found; either it does not exist or it failed to parse."
         )
 
-    dag = DAG.from_sdk_dag(dag)
     dr: DagRun = dag.test(
         logical_date=logical_date,
         run_conf=run_conf,
         use_executor=use_executor,
         mark_success_pattern=mark_success_pattern,
-        session=session,
     )
     show_dagrun = args.show_dagrun
     imgcat = args.imgcat_dagrun

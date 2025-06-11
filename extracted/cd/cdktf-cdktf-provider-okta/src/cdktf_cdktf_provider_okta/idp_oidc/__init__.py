@@ -1,7 +1,7 @@
 r'''
 # `okta_idp_oidc`
 
-Refer to the Terraform Registry for docs: [`okta_idp_oidc`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc).
+Refer to the Terraform Registry for docs: [`okta_idp_oidc`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class IdpOidc(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.idpOidc.IdpOidc",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc okta_idp_oidc}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc okta_idp_oidc}.'''
 
     def __init__(
         self,
@@ -93,44 +93,44 @@ class IdpOidc(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc okta_idp_oidc} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc okta_idp_oidc} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param authorization_binding: The method of making an authorization request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#authorization_binding IdpOidc#authorization_binding}
-        :param authorization_url: IdP Authorization Server (AS) endpoint to request consent from the user and obtain an authorization code grant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#authorization_url IdpOidc#authorization_url}
-        :param client_id: Unique identifier issued by AS for the Okta IdP instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#client_id IdpOidc#client_id}
-        :param client_secret: Client secret issued by AS for the Okta IdP instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#client_secret IdpOidc#client_secret}
-        :param issuer_url: URI that identifies the issuer. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#issuer_url IdpOidc#issuer_url}
-        :param jwks_binding: The method of making a request for the OIDC JWKS. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#jwks_binding IdpOidc#jwks_binding}
-        :param jwks_url: Endpoint where the keys signer publishes its keys in a JWK Set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#jwks_url IdpOidc#jwks_url}
-        :param name: Name of the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#name IdpOidc#name}
-        :param scopes: The scopes of the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#scopes IdpOidc#scopes}
-        :param token_binding: The method of making a token request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#token_binding IdpOidc#token_binding}
-        :param token_url: IdP Authorization Server (AS) endpoint to exchange the authorization code grant for an access token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#token_url IdpOidc#token_url}
-        :param account_link_action: Specifies the account linking action for an IdP user. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#account_link_action IdpOidc#account_link_action}
-        :param account_link_group_include: Group memberships to determine link candidates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#account_link_group_include IdpOidc#account_link_group_include}
-        :param deprovisioned_action: Action for a previously deprovisioned IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#deprovisioned_action IdpOidc#deprovisioned_action}
-        :param groups_action: Provisioning action for IdP user's group memberships. It can be ``NONE``, ``SYNC``, ``APPEND``, or ``ASSIGN``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_action IdpOidc#groups_action}
-        :param groups_assignment: List of Okta Group IDs to add an IdP user as a member with the ``ASSIGN`` ``groups_action``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_assignment IdpOidc#groups_assignment}
-        :param groups_attribute: IdP user profile attribute name (case-insensitive) for an array value that contains group memberships. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_attribute IdpOidc#groups_attribute}
-        :param groups_filter: Whitelist of Okta Group identifiers that are allowed for the ``APPEND`` or ``SYNC`` ``groups_action``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_filter IdpOidc#groups_filter}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#id IdpOidc#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param issuer_mode: Indicates whether Okta uses the original Okta org domain URL, a custom domain URL, or dynamic. It can be ``ORG_URL``, ``CUSTOM_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#issuer_mode IdpOidc#issuer_mode}
-        :param max_clock_skew: Maximum allowable clock-skew when processing messages from the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#max_clock_skew IdpOidc#max_clock_skew}
-        :param pkce_required: Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/idps/#oauth-2-0-and-openid-connect-client-object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#pkce_required IdpOidc#pkce_required}
-        :param profile_master: Determines if the IdP should act as a source of truth for user profile attributes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#profile_master IdpOidc#profile_master}
-        :param protocol_type: The type of protocol to use. It can be ``OIDC`` or ``OAUTH2``. Default: ``OIDC``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#protocol_type IdpOidc#protocol_type}
-        :param provisioning_action: Provisioning action for an IdP user during authentication. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#provisioning_action IdpOidc#provisioning_action}
-        :param request_signature_algorithm: The HMAC Signature Algorithm used when signing an authorization request. Defaults to ``HS256``. It can be ``HS256``, ``HS384``, ``HS512``, ``SHA-256``. ``RS256``, ``RS384``, or ``RS512``. NOTE: ``SHA-256`` an undocumented legacy value and not continue to be valid. See API docs https://developer.okta.com/docs/reference/api/idps/#oidc-request-signature-algorithm-object Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#request_signature_algorithm IdpOidc#request_signature_algorithm}
-        :param request_signature_scope: Specifies whether to digitally sign an AuthnRequest messages to the IdP. Defaults to ``REQUEST``. It can be ``REQUEST`` or ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#request_signature_scope IdpOidc#request_signature_scope}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#status IdpOidc#status}
-        :param subject_match_attribute: Okta user profile attribute for matching transformed IdP username. Only for matchType ``CUSTOM_ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#subject_match_attribute IdpOidc#subject_match_attribute}
-        :param subject_match_type: Determines the Okta user profile attribute match conditions for account linking and authentication of the transformed IdP username. By default, it is set to ``USERNAME``. It can be set to ``USERNAME``, ``EMAIL``, ``USERNAME_OR_EMAIL`` or ``CUSTOM_ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#subject_match_type IdpOidc#subject_match_type}
-        :param suspended_action: Action for a previously suspended IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#suspended_action IdpOidc#suspended_action}
-        :param user_info_binding: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#user_info_binding IdpOidc#user_info_binding}.
-        :param user_info_url: Protected resource endpoint that returns claims about the authenticated user. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#user_info_url IdpOidc#user_info_url}
-        :param username_template: Okta EL Expression to generate or transform a unique username for the IdP user. Default: ``idpuser.email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#username_template IdpOidc#username_template}
+        :param authorization_binding: The method of making an authorization request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#authorization_binding IdpOidc#authorization_binding}
+        :param authorization_url: IdP Authorization Server (AS) endpoint to request consent from the user and obtain an authorization code grant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#authorization_url IdpOidc#authorization_url}
+        :param client_id: Unique identifier issued by AS for the Okta IdP instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#client_id IdpOidc#client_id}
+        :param client_secret: Client secret issued by AS for the Okta IdP instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#client_secret IdpOidc#client_secret}
+        :param issuer_url: URI that identifies the issuer. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#issuer_url IdpOidc#issuer_url}
+        :param jwks_binding: The method of making a request for the OIDC JWKS. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#jwks_binding IdpOidc#jwks_binding}
+        :param jwks_url: Endpoint where the keys signer publishes its keys in a JWK Set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#jwks_url IdpOidc#jwks_url}
+        :param name: Name of the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#name IdpOidc#name}
+        :param scopes: The scopes of the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#scopes IdpOidc#scopes}
+        :param token_binding: The method of making a token request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#token_binding IdpOidc#token_binding}
+        :param token_url: IdP Authorization Server (AS) endpoint to exchange the authorization code grant for an access token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#token_url IdpOidc#token_url}
+        :param account_link_action: Specifies the account linking action for an IdP user. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#account_link_action IdpOidc#account_link_action}
+        :param account_link_group_include: Group memberships to determine link candidates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#account_link_group_include IdpOidc#account_link_group_include}
+        :param deprovisioned_action: Action for a previously deprovisioned IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#deprovisioned_action IdpOidc#deprovisioned_action}
+        :param groups_action: Provisioning action for IdP user's group memberships. It can be ``NONE``, ``SYNC``, ``APPEND``, or ``ASSIGN``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_action IdpOidc#groups_action}
+        :param groups_assignment: List of Okta Group IDs to add an IdP user as a member with the ``ASSIGN`` ``groups_action``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_assignment IdpOidc#groups_assignment}
+        :param groups_attribute: IdP user profile attribute name (case-insensitive) for an array value that contains group memberships. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_attribute IdpOidc#groups_attribute}
+        :param groups_filter: Whitelist of Okta Group identifiers that are allowed for the ``APPEND`` or ``SYNC`` ``groups_action``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_filter IdpOidc#groups_filter}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#id IdpOidc#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param issuer_mode: Indicates whether Okta uses the original Okta org domain URL, a custom domain URL, or dynamic. It can be ``ORG_URL``, ``CUSTOM_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#issuer_mode IdpOidc#issuer_mode}
+        :param max_clock_skew: Maximum allowable clock-skew when processing messages from the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#max_clock_skew IdpOidc#max_clock_skew}
+        :param pkce_required: Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/idps/#oauth-2-0-and-openid-connect-client-object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#pkce_required IdpOidc#pkce_required}
+        :param profile_master: Determines if the IdP should act as a source of truth for user profile attributes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#profile_master IdpOidc#profile_master}
+        :param protocol_type: The type of protocol to use. It can be ``OIDC`` or ``OAUTH2``. Default: ``OIDC``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#protocol_type IdpOidc#protocol_type}
+        :param provisioning_action: Provisioning action for an IdP user during authentication. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#provisioning_action IdpOidc#provisioning_action}
+        :param request_signature_algorithm: The HMAC Signature Algorithm used when signing an authorization request. Defaults to ``HS256``. It can be ``HS256``, ``HS384``, ``HS512``, ``SHA-256``. ``RS256``, ``RS384``, or ``RS512``. NOTE: ``SHA-256`` an undocumented legacy value and not continue to be valid. See API docs https://developer.okta.com/docs/reference/api/idps/#oidc-request-signature-algorithm-object Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#request_signature_algorithm IdpOidc#request_signature_algorithm}
+        :param request_signature_scope: Specifies whether to digitally sign an AuthnRequest messages to the IdP. Defaults to ``REQUEST``. It can be ``REQUEST`` or ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#request_signature_scope IdpOidc#request_signature_scope}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#status IdpOidc#status}
+        :param subject_match_attribute: Okta user profile attribute for matching transformed IdP username. Only for matchType ``CUSTOM_ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#subject_match_attribute IdpOidc#subject_match_attribute}
+        :param subject_match_type: Determines the Okta user profile attribute match conditions for account linking and authentication of the transformed IdP username. By default, it is set to ``USERNAME``. It can be set to ``USERNAME``, ``EMAIL``, ``USERNAME_OR_EMAIL`` or ``CUSTOM_ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#subject_match_type IdpOidc#subject_match_type}
+        :param suspended_action: Action for a previously suspended IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#suspended_action IdpOidc#suspended_action}
+        :param user_info_binding: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#user_info_binding IdpOidc#user_info_binding}.
+        :param user_info_url: Protected resource endpoint that returns claims about the authenticated user. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#user_info_url IdpOidc#user_info_url}
+        :param username_template: Okta EL Expression to generate or transform a unique username for the IdP user. Default: ``idpuser.email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#username_template IdpOidc#username_template}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -202,7 +202,7 @@ class IdpOidc(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the IdpOidc to import.
-        :param import_from_id: The id of the existing IdpOidc that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing IdpOidc that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the IdpOidc to import is found.
         '''
         if __debug__:
@@ -1022,40 +1022,40 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param authorization_binding: The method of making an authorization request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#authorization_binding IdpOidc#authorization_binding}
-        :param authorization_url: IdP Authorization Server (AS) endpoint to request consent from the user and obtain an authorization code grant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#authorization_url IdpOidc#authorization_url}
-        :param client_id: Unique identifier issued by AS for the Okta IdP instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#client_id IdpOidc#client_id}
-        :param client_secret: Client secret issued by AS for the Okta IdP instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#client_secret IdpOidc#client_secret}
-        :param issuer_url: URI that identifies the issuer. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#issuer_url IdpOidc#issuer_url}
-        :param jwks_binding: The method of making a request for the OIDC JWKS. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#jwks_binding IdpOidc#jwks_binding}
-        :param jwks_url: Endpoint where the keys signer publishes its keys in a JWK Set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#jwks_url IdpOidc#jwks_url}
-        :param name: Name of the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#name IdpOidc#name}
-        :param scopes: The scopes of the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#scopes IdpOidc#scopes}
-        :param token_binding: The method of making a token request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#token_binding IdpOidc#token_binding}
-        :param token_url: IdP Authorization Server (AS) endpoint to exchange the authorization code grant for an access token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#token_url IdpOidc#token_url}
-        :param account_link_action: Specifies the account linking action for an IdP user. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#account_link_action IdpOidc#account_link_action}
-        :param account_link_group_include: Group memberships to determine link candidates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#account_link_group_include IdpOidc#account_link_group_include}
-        :param deprovisioned_action: Action for a previously deprovisioned IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#deprovisioned_action IdpOidc#deprovisioned_action}
-        :param groups_action: Provisioning action for IdP user's group memberships. It can be ``NONE``, ``SYNC``, ``APPEND``, or ``ASSIGN``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_action IdpOidc#groups_action}
-        :param groups_assignment: List of Okta Group IDs to add an IdP user as a member with the ``ASSIGN`` ``groups_action``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_assignment IdpOidc#groups_assignment}
-        :param groups_attribute: IdP user profile attribute name (case-insensitive) for an array value that contains group memberships. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_attribute IdpOidc#groups_attribute}
-        :param groups_filter: Whitelist of Okta Group identifiers that are allowed for the ``APPEND`` or ``SYNC`` ``groups_action``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_filter IdpOidc#groups_filter}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#id IdpOidc#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param issuer_mode: Indicates whether Okta uses the original Okta org domain URL, a custom domain URL, or dynamic. It can be ``ORG_URL``, ``CUSTOM_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#issuer_mode IdpOidc#issuer_mode}
-        :param max_clock_skew: Maximum allowable clock-skew when processing messages from the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#max_clock_skew IdpOidc#max_clock_skew}
-        :param pkce_required: Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/idps/#oauth-2-0-and-openid-connect-client-object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#pkce_required IdpOidc#pkce_required}
-        :param profile_master: Determines if the IdP should act as a source of truth for user profile attributes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#profile_master IdpOidc#profile_master}
-        :param protocol_type: The type of protocol to use. It can be ``OIDC`` or ``OAUTH2``. Default: ``OIDC``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#protocol_type IdpOidc#protocol_type}
-        :param provisioning_action: Provisioning action for an IdP user during authentication. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#provisioning_action IdpOidc#provisioning_action}
-        :param request_signature_algorithm: The HMAC Signature Algorithm used when signing an authorization request. Defaults to ``HS256``. It can be ``HS256``, ``HS384``, ``HS512``, ``SHA-256``. ``RS256``, ``RS384``, or ``RS512``. NOTE: ``SHA-256`` an undocumented legacy value and not continue to be valid. See API docs https://developer.okta.com/docs/reference/api/idps/#oidc-request-signature-algorithm-object Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#request_signature_algorithm IdpOidc#request_signature_algorithm}
-        :param request_signature_scope: Specifies whether to digitally sign an AuthnRequest messages to the IdP. Defaults to ``REQUEST``. It can be ``REQUEST`` or ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#request_signature_scope IdpOidc#request_signature_scope}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#status IdpOidc#status}
-        :param subject_match_attribute: Okta user profile attribute for matching transformed IdP username. Only for matchType ``CUSTOM_ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#subject_match_attribute IdpOidc#subject_match_attribute}
-        :param subject_match_type: Determines the Okta user profile attribute match conditions for account linking and authentication of the transformed IdP username. By default, it is set to ``USERNAME``. It can be set to ``USERNAME``, ``EMAIL``, ``USERNAME_OR_EMAIL`` or ``CUSTOM_ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#subject_match_type IdpOidc#subject_match_type}
-        :param suspended_action: Action for a previously suspended IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#suspended_action IdpOidc#suspended_action}
-        :param user_info_binding: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#user_info_binding IdpOidc#user_info_binding}.
-        :param user_info_url: Protected resource endpoint that returns claims about the authenticated user. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#user_info_url IdpOidc#user_info_url}
-        :param username_template: Okta EL Expression to generate or transform a unique username for the IdP user. Default: ``idpuser.email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#username_template IdpOidc#username_template}
+        :param authorization_binding: The method of making an authorization request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#authorization_binding IdpOidc#authorization_binding}
+        :param authorization_url: IdP Authorization Server (AS) endpoint to request consent from the user and obtain an authorization code grant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#authorization_url IdpOidc#authorization_url}
+        :param client_id: Unique identifier issued by AS for the Okta IdP instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#client_id IdpOidc#client_id}
+        :param client_secret: Client secret issued by AS for the Okta IdP instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#client_secret IdpOidc#client_secret}
+        :param issuer_url: URI that identifies the issuer. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#issuer_url IdpOidc#issuer_url}
+        :param jwks_binding: The method of making a request for the OIDC JWKS. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#jwks_binding IdpOidc#jwks_binding}
+        :param jwks_url: Endpoint where the keys signer publishes its keys in a JWK Set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#jwks_url IdpOidc#jwks_url}
+        :param name: Name of the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#name IdpOidc#name}
+        :param scopes: The scopes of the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#scopes IdpOidc#scopes}
+        :param token_binding: The method of making a token request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#token_binding IdpOidc#token_binding}
+        :param token_url: IdP Authorization Server (AS) endpoint to exchange the authorization code grant for an access token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#token_url IdpOidc#token_url}
+        :param account_link_action: Specifies the account linking action for an IdP user. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#account_link_action IdpOidc#account_link_action}
+        :param account_link_group_include: Group memberships to determine link candidates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#account_link_group_include IdpOidc#account_link_group_include}
+        :param deprovisioned_action: Action for a previously deprovisioned IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#deprovisioned_action IdpOidc#deprovisioned_action}
+        :param groups_action: Provisioning action for IdP user's group memberships. It can be ``NONE``, ``SYNC``, ``APPEND``, or ``ASSIGN``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_action IdpOidc#groups_action}
+        :param groups_assignment: List of Okta Group IDs to add an IdP user as a member with the ``ASSIGN`` ``groups_action``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_assignment IdpOidc#groups_assignment}
+        :param groups_attribute: IdP user profile attribute name (case-insensitive) for an array value that contains group memberships. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_attribute IdpOidc#groups_attribute}
+        :param groups_filter: Whitelist of Okta Group identifiers that are allowed for the ``APPEND`` or ``SYNC`` ``groups_action``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_filter IdpOidc#groups_filter}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#id IdpOidc#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param issuer_mode: Indicates whether Okta uses the original Okta org domain URL, a custom domain URL, or dynamic. It can be ``ORG_URL``, ``CUSTOM_URL``, or ``DYNAMIC``. Default: ``ORG_URL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#issuer_mode IdpOidc#issuer_mode}
+        :param max_clock_skew: Maximum allowable clock-skew when processing messages from the IdP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#max_clock_skew IdpOidc#max_clock_skew}
+        :param pkce_required: Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/idps/#oauth-2-0-and-openid-connect-client-object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#pkce_required IdpOidc#pkce_required}
+        :param profile_master: Determines if the IdP should act as a source of truth for user profile attributes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#profile_master IdpOidc#profile_master}
+        :param protocol_type: The type of protocol to use. It can be ``OIDC`` or ``OAUTH2``. Default: ``OIDC``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#protocol_type IdpOidc#protocol_type}
+        :param provisioning_action: Provisioning action for an IdP user during authentication. Default: ``AUTO``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#provisioning_action IdpOidc#provisioning_action}
+        :param request_signature_algorithm: The HMAC Signature Algorithm used when signing an authorization request. Defaults to ``HS256``. It can be ``HS256``, ``HS384``, ``HS512``, ``SHA-256``. ``RS256``, ``RS384``, or ``RS512``. NOTE: ``SHA-256`` an undocumented legacy value and not continue to be valid. See API docs https://developer.okta.com/docs/reference/api/idps/#oidc-request-signature-algorithm-object Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#request_signature_algorithm IdpOidc#request_signature_algorithm}
+        :param request_signature_scope: Specifies whether to digitally sign an AuthnRequest messages to the IdP. Defaults to ``REQUEST``. It can be ``REQUEST`` or ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#request_signature_scope IdpOidc#request_signature_scope}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#status IdpOidc#status}
+        :param subject_match_attribute: Okta user profile attribute for matching transformed IdP username. Only for matchType ``CUSTOM_ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#subject_match_attribute IdpOidc#subject_match_attribute}
+        :param subject_match_type: Determines the Okta user profile attribute match conditions for account linking and authentication of the transformed IdP username. By default, it is set to ``USERNAME``. It can be set to ``USERNAME``, ``EMAIL``, ``USERNAME_OR_EMAIL`` or ``CUSTOM_ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#subject_match_type IdpOidc#subject_match_type}
+        :param suspended_action: Action for a previously suspended IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#suspended_action IdpOidc#suspended_action}
+        :param user_info_binding: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#user_info_binding IdpOidc#user_info_binding}.
+        :param user_info_url: Protected resource endpoint that returns claims about the authenticated user. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#user_info_url IdpOidc#user_info_url}
+        :param username_template: Okta EL Expression to generate or transform a unique username for the IdP user. Default: ``idpuser.email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#username_template IdpOidc#username_template}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1244,7 +1244,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def authorization_binding(self) -> builtins.str:
         '''The method of making an authorization request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#authorization_binding IdpOidc#authorization_binding}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#authorization_binding IdpOidc#authorization_binding}
         '''
         result = self._values.get("authorization_binding")
         assert result is not None, "Required property 'authorization_binding' is missing"
@@ -1254,7 +1254,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def authorization_url(self) -> builtins.str:
         '''IdP Authorization Server (AS) endpoint to request consent from the user and obtain an authorization code grant.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#authorization_url IdpOidc#authorization_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#authorization_url IdpOidc#authorization_url}
         '''
         result = self._values.get("authorization_url")
         assert result is not None, "Required property 'authorization_url' is missing"
@@ -1264,7 +1264,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def client_id(self) -> builtins.str:
         '''Unique identifier issued by AS for the Okta IdP instance.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#client_id IdpOidc#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#client_id IdpOidc#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -1274,7 +1274,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def client_secret(self) -> builtins.str:
         '''Client secret issued by AS for the Okta IdP instance.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#client_secret IdpOidc#client_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#client_secret IdpOidc#client_secret}
         '''
         result = self._values.get("client_secret")
         assert result is not None, "Required property 'client_secret' is missing"
@@ -1284,7 +1284,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def issuer_url(self) -> builtins.str:
         '''URI that identifies the issuer.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#issuer_url IdpOidc#issuer_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#issuer_url IdpOidc#issuer_url}
         '''
         result = self._values.get("issuer_url")
         assert result is not None, "Required property 'issuer_url' is missing"
@@ -1294,7 +1294,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def jwks_binding(self) -> builtins.str:
         '''The method of making a request for the OIDC JWKS. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#jwks_binding IdpOidc#jwks_binding}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#jwks_binding IdpOidc#jwks_binding}
         '''
         result = self._values.get("jwks_binding")
         assert result is not None, "Required property 'jwks_binding' is missing"
@@ -1304,7 +1304,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def jwks_url(self) -> builtins.str:
         '''Endpoint where the keys signer publishes its keys in a JWK Set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#jwks_url IdpOidc#jwks_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#jwks_url IdpOidc#jwks_url}
         '''
         result = self._values.get("jwks_url")
         assert result is not None, "Required property 'jwks_url' is missing"
@@ -1314,7 +1314,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the IdP.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#name IdpOidc#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#name IdpOidc#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1324,7 +1324,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def scopes(self) -> typing.List[builtins.str]:
         '''The scopes of the IdP.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#scopes IdpOidc#scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#scopes IdpOidc#scopes}
         '''
         result = self._values.get("scopes")
         assert result is not None, "Required property 'scopes' is missing"
@@ -1334,7 +1334,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def token_binding(self) -> builtins.str:
         '''The method of making a token request. It can be set to ``HTTP-POST`` or ``HTTP-REDIRECT``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#token_binding IdpOidc#token_binding}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#token_binding IdpOidc#token_binding}
         '''
         result = self._values.get("token_binding")
         assert result is not None, "Required property 'token_binding' is missing"
@@ -1344,7 +1344,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def token_url(self) -> builtins.str:
         '''IdP Authorization Server (AS) endpoint to exchange the authorization code grant for an access token.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#token_url IdpOidc#token_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#token_url IdpOidc#token_url}
         '''
         result = self._values.get("token_url")
         assert result is not None, "Required property 'token_url' is missing"
@@ -1354,7 +1354,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def account_link_action(self) -> typing.Optional[builtins.str]:
         '''Specifies the account linking action for an IdP user. Default: ``AUTO``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#account_link_action IdpOidc#account_link_action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#account_link_action IdpOidc#account_link_action}
         '''
         result = self._values.get("account_link_action")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1363,7 +1363,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def account_link_group_include(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Group memberships to determine link candidates.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#account_link_group_include IdpOidc#account_link_group_include}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#account_link_group_include IdpOidc#account_link_group_include}
         '''
         result = self._values.get("account_link_group_include")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1372,7 +1372,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def deprovisioned_action(self) -> typing.Optional[builtins.str]:
         '''Action for a previously deprovisioned IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#deprovisioned_action IdpOidc#deprovisioned_action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#deprovisioned_action IdpOidc#deprovisioned_action}
         '''
         result = self._values.get("deprovisioned_action")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1381,7 +1381,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def groups_action(self) -> typing.Optional[builtins.str]:
         '''Provisioning action for IdP user's group memberships. It can be ``NONE``, ``SYNC``, ``APPEND``, or ``ASSIGN``. Default: ``NONE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_action IdpOidc#groups_action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_action IdpOidc#groups_action}
         '''
         result = self._values.get("groups_action")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1390,7 +1390,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def groups_assignment(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of Okta Group IDs to add an IdP user as a member with the ``ASSIGN`` ``groups_action``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_assignment IdpOidc#groups_assignment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_assignment IdpOidc#groups_assignment}
         '''
         result = self._values.get("groups_assignment")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1399,7 +1399,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def groups_attribute(self) -> typing.Optional[builtins.str]:
         '''IdP user profile attribute name (case-insensitive) for an array value that contains group memberships.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_attribute IdpOidc#groups_attribute}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_attribute IdpOidc#groups_attribute}
         '''
         result = self._values.get("groups_attribute")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1408,14 +1408,14 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def groups_filter(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Whitelist of Okta Group identifiers that are allowed for the ``APPEND`` or ``SYNC`` ``groups_action``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#groups_filter IdpOidc#groups_filter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#groups_filter IdpOidc#groups_filter}
         '''
         result = self._values.get("groups_filter")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#id IdpOidc#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#id IdpOidc#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1429,7 +1429,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         It can be ``ORG_URL``, ``CUSTOM_URL``, or ``DYNAMIC``. Default: ``ORG_URL``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#issuer_mode IdpOidc#issuer_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#issuer_mode IdpOidc#issuer_mode}
         '''
         result = self._values.get("issuer_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1438,7 +1438,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def max_clock_skew(self) -> typing.Optional[jsii.Number]:
         '''Maximum allowable clock-skew when processing messages from the IdP.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#max_clock_skew IdpOidc#max_clock_skew}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#max_clock_skew IdpOidc#max_clock_skew}
         '''
         result = self._values.get("max_clock_skew")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1449,7 +1449,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/idps/#oauth-2-0-and-openid-connect-client-object.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#pkce_required IdpOidc#pkce_required}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#pkce_required IdpOidc#pkce_required}
         '''
         result = self._values.get("pkce_required")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1460,7 +1460,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines if the IdP should act as a source of truth for user profile attributes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#profile_master IdpOidc#profile_master}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#profile_master IdpOidc#profile_master}
         '''
         result = self._values.get("profile_master")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1469,7 +1469,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def protocol_type(self) -> typing.Optional[builtins.str]:
         '''The type of protocol to use. It can be ``OIDC`` or ``OAUTH2``. Default: ``OIDC``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#protocol_type IdpOidc#protocol_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#protocol_type IdpOidc#protocol_type}
         '''
         result = self._values.get("protocol_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1478,7 +1478,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def provisioning_action(self) -> typing.Optional[builtins.str]:
         '''Provisioning action for an IdP user during authentication. Default: ``AUTO``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#provisioning_action IdpOidc#provisioning_action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#provisioning_action IdpOidc#provisioning_action}
         '''
         result = self._values.get("provisioning_action")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1489,7 +1489,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Defaults to ``HS256``. It can be ``HS256``, ``HS384``, ``HS512``, ``SHA-256``. ``RS256``, ``RS384``, or ``RS512``. NOTE: ``SHA-256`` an undocumented legacy value and not continue to be valid. See API docs https://developer.okta.com/docs/reference/api/idps/#oidc-request-signature-algorithm-object
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#request_signature_algorithm IdpOidc#request_signature_algorithm}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#request_signature_algorithm IdpOidc#request_signature_algorithm}
         '''
         result = self._values.get("request_signature_algorithm")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1500,7 +1500,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Defaults to ``REQUEST``. It can be ``REQUEST`` or ``NONE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#request_signature_scope IdpOidc#request_signature_scope}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#request_signature_scope IdpOidc#request_signature_scope}
         '''
         result = self._values.get("request_signature_scope")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1509,7 +1509,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Default to ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#status IdpOidc#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#status IdpOidc#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1518,7 +1518,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def subject_match_attribute(self) -> typing.Optional[builtins.str]:
         '''Okta user profile attribute for matching transformed IdP username. Only for matchType ``CUSTOM_ATTRIBUTE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#subject_match_attribute IdpOidc#subject_match_attribute}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#subject_match_attribute IdpOidc#subject_match_attribute}
         '''
         result = self._values.get("subject_match_attribute")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1529,7 +1529,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         By default, it is set to ``USERNAME``. It can be set to ``USERNAME``, ``EMAIL``, ``USERNAME_OR_EMAIL`` or ``CUSTOM_ATTRIBUTE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#subject_match_type IdpOidc#subject_match_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#subject_match_type IdpOidc#subject_match_type}
         '''
         result = self._values.get("subject_match_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1538,14 +1538,14 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def suspended_action(self) -> typing.Optional[builtins.str]:
         '''Action for a previously suspended IdP user during authentication. Can be ``NONE`` or ``REACTIVATE``. Default: ``NONE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#suspended_action IdpOidc#suspended_action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#suspended_action IdpOidc#suspended_action}
         '''
         result = self._values.get("suspended_action")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def user_info_binding(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#user_info_binding IdpOidc#user_info_binding}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#user_info_binding IdpOidc#user_info_binding}.'''
         result = self._values.get("user_info_binding")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1553,7 +1553,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_info_url(self) -> typing.Optional[builtins.str]:
         '''Protected resource endpoint that returns claims about the authenticated user.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#user_info_url IdpOidc#user_info_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#user_info_url IdpOidc#user_info_url}
         '''
         result = self._values.get("user_info_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1562,7 +1562,7 @@ class IdpOidcConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def username_template(self) -> typing.Optional[builtins.str]:
         '''Okta EL Expression to generate or transform a unique username for the IdP user. Default: ``idpuser.email``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_oidc#username_template IdpOidc#username_template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_oidc#username_template IdpOidc#username_template}
         '''
         result = self._values.get("username_template")
         return typing.cast(typing.Optional[builtins.str], result)

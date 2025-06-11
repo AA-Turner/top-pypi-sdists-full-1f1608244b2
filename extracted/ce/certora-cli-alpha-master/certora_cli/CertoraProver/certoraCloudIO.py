@@ -953,6 +953,8 @@ class CloudVerification:
         for i in range(self.verification_request_retries):
             try:
                 response = requests.post(verify_url, json=auth_data, headers=headers, timeout=60)
+                cloud_logger.debug(f"\n\n=================\n\nresponse - Status Code: {response.status_code}\n\n"
+                                   f"Headers:\n {response.headers}\n\nText:\n {response.text}\n\n=================\n\n")
                 if response is None:
                     continue
                 status = response.status_code

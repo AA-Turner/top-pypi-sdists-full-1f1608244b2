@@ -15,7 +15,6 @@ import {
   DagStatsService,
   DagVersionService,
   DagWarningService,
-  DagsService,
   DashboardService,
   DependenciesService,
   EventLogService,
@@ -1147,6 +1146,95 @@ export const useDagServiceGetDagTags = <
     ...options,
   });
 /**
+ * Recent Dag Runs
+ * Get recent DAG runs.
+ * @param data The data for the request.
+ * @param data.dagRunsLimit
+ * @param data.limit
+ * @param data.offset
+ * @param data.tags
+ * @param data.tagsMatchMode
+ * @param data.owners
+ * @param data.dagIds
+ * @param data.dagIdPattern
+ * @param data.dagDisplayNamePattern
+ * @param data.excludeStale
+ * @param data.paused
+ * @param data.lastDagRunState
+ * @returns DAGWithLatestDagRunsCollectionResponse Successful Response
+ * @throws ApiError
+ */
+export const useDagServiceRecentDagRuns = <
+  TData = Common.DagServiceRecentDagRunsDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    dagDisplayNamePattern,
+    dagIdPattern,
+    dagIds,
+    dagRunsLimit,
+    excludeStale,
+    lastDagRunState,
+    limit,
+    offset,
+    owners,
+    paused,
+    tags,
+    tagsMatchMode,
+  }: {
+    dagDisplayNamePattern?: string;
+    dagIdPattern?: string;
+    dagIds?: string[];
+    dagRunsLimit?: number;
+    excludeStale?: boolean;
+    lastDagRunState?: DagRunState;
+    limit?: number;
+    offset?: number;
+    owners?: string[];
+    paused?: boolean;
+    tags?: string[];
+    tagsMatchMode?: "any" | "all";
+  } = {},
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseDagServiceRecentDagRunsKeyFn(
+      {
+        dagDisplayNamePattern,
+        dagIdPattern,
+        dagIds,
+        dagRunsLimit,
+        excludeStale,
+        lastDagRunState,
+        limit,
+        offset,
+        owners,
+        paused,
+        tags,
+        tagsMatchMode,
+      },
+      queryKey,
+    ),
+    queryFn: () =>
+      DagService.recentDagRuns({
+        dagDisplayNamePattern,
+        dagIdPattern,
+        dagIds,
+        dagRunsLimit,
+        excludeStale,
+        lastDagRunState,
+        limit,
+        offset,
+        owners,
+        paused,
+        tags,
+        tagsMatchMode,
+      }) as TData,
+    ...options,
+  });
+/**
  * Get Event Log
  * @param data The data for the request.
  * @param data.eventLogId
@@ -1530,8 +1618,8 @@ export const useTaskInstanceServiceGetMappedTaskInstances = <
  * @returns TaskDependencyCollectionResponse Successful Response
  * @throws ApiError
  */
-export const useTaskInstanceServiceGetTaskInstanceDependencies = <
-  TData = Common.TaskInstanceServiceGetTaskInstanceDependenciesDefaultResponse,
+export const useTaskInstanceServiceGetTaskInstanceDependenciesByMapIndex = <
+  TData = Common.TaskInstanceServiceGetTaskInstanceDependenciesByMapIndexDefaultResponse,
   TError = unknown,
   TQueryKey extends Array<unknown> = unknown[],
 >(
@@ -1550,12 +1638,17 @@ export const useTaskInstanceServiceGetTaskInstanceDependencies = <
   options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useQuery<TData, TError>({
-    queryKey: Common.UseTaskInstanceServiceGetTaskInstanceDependenciesKeyFn(
+    queryKey: Common.UseTaskInstanceServiceGetTaskInstanceDependenciesByMapIndexKeyFn(
       { dagId, dagRunId, mapIndex, taskId },
       queryKey,
     ),
     queryFn: () =>
-      TaskInstanceService.getTaskInstanceDependencies({ dagId, dagRunId, mapIndex, taskId }) as TData,
+      TaskInstanceService.getTaskInstanceDependenciesByMapIndex({
+        dagId,
+        dagRunId,
+        mapIndex,
+        taskId,
+      }) as TData,
     ...options,
   });
 /**
@@ -1569,8 +1662,8 @@ export const useTaskInstanceServiceGetTaskInstanceDependencies = <
  * @returns TaskDependencyCollectionResponse Successful Response
  * @throws ApiError
  */
-export const useTaskInstanceServiceGetTaskInstanceDependencies1 = <
-  TData = Common.TaskInstanceServiceGetTaskInstanceDependencies1DefaultResponse,
+export const useTaskInstanceServiceGetTaskInstanceDependencies = <
+  TData = Common.TaskInstanceServiceGetTaskInstanceDependenciesDefaultResponse,
   TError = unknown,
   TQueryKey extends Array<unknown> = unknown[],
 >(
@@ -1589,12 +1682,12 @@ export const useTaskInstanceServiceGetTaskInstanceDependencies1 = <
   options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useQuery<TData, TError>({
-    queryKey: Common.UseTaskInstanceServiceGetTaskInstanceDependencies1KeyFn(
+    queryKey: Common.UseTaskInstanceServiceGetTaskInstanceDependenciesKeyFn(
       { dagId, dagRunId, mapIndex, taskId },
       queryKey,
     ),
     queryFn: () =>
-      TaskInstanceService.getTaskInstanceDependencies1({ dagId, dagRunId, mapIndex, taskId }) as TData,
+      TaskInstanceService.getTaskInstanceDependencies({ dagId, dagRunId, mapIndex, taskId }) as TData,
     ...options,
   });
 /**
@@ -1988,7 +2081,7 @@ export const useTaskInstanceServiceGetLog = <
     token,
     tryNumber,
   }: {
-    accept?: "application/json" | "text/plain" | "*/*";
+    accept?: "application/json" | "*/*" | "application/x-ndjson";
     dagId: string;
     dagRunId: string;
     fullContent?: boolean;
@@ -2703,95 +2796,6 @@ export const useAuthLinksServiceGetAuthMenus = <
   useQuery<TData, TError>({
     queryKey: Common.UseAuthLinksServiceGetAuthMenusKeyFn(queryKey),
     queryFn: () => AuthLinksService.getAuthMenus() as TData,
-    ...options,
-  });
-/**
- * Recent Dag Runs
- * Get recent DAG runs.
- * @param data The data for the request.
- * @param data.dagRunsLimit
- * @param data.limit
- * @param data.offset
- * @param data.tags
- * @param data.tagsMatchMode
- * @param data.owners
- * @param data.dagIds
- * @param data.dagIdPattern
- * @param data.dagDisplayNamePattern
- * @param data.excludeStale
- * @param data.paused
- * @param data.lastDagRunState
- * @returns DAGWithLatestDagRunsCollectionResponse Successful Response
- * @throws ApiError
- */
-export const useDagsServiceRecentDagRuns = <
-  TData = Common.DagsServiceRecentDagRunsDefaultResponse,
-  TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
->(
-  {
-    dagDisplayNamePattern,
-    dagIdPattern,
-    dagIds,
-    dagRunsLimit,
-    excludeStale,
-    lastDagRunState,
-    limit,
-    offset,
-    owners,
-    paused,
-    tags,
-    tagsMatchMode,
-  }: {
-    dagDisplayNamePattern?: string;
-    dagIdPattern?: string;
-    dagIds?: string[];
-    dagRunsLimit?: number;
-    excludeStale?: boolean;
-    lastDagRunState?: DagRunState;
-    limit?: number;
-    offset?: number;
-    owners?: string[];
-    paused?: boolean;
-    tags?: string[];
-    tagsMatchMode?: "any" | "all";
-  } = {},
-  queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
-) =>
-  useQuery<TData, TError>({
-    queryKey: Common.UseDagsServiceRecentDagRunsKeyFn(
-      {
-        dagDisplayNamePattern,
-        dagIdPattern,
-        dagIds,
-        dagRunsLimit,
-        excludeStale,
-        lastDagRunState,
-        limit,
-        offset,
-        owners,
-        paused,
-        tags,
-        tagsMatchMode,
-      },
-      queryKey,
-    ),
-    queryFn: () =>
-      DagsService.recentDagRuns({
-        dagDisplayNamePattern,
-        dagIdPattern,
-        dagIds,
-        dagRunsLimit,
-        excludeStale,
-        lastDagRunState,
-        limit,
-        offset,
-        owners,
-        paused,
-        tags,
-        tagsMatchMode,
-      }) as TData,
     ...options,
   });
 /**
@@ -3871,7 +3875,6 @@ export const useDagRunServicePatchDagRun = <
  * @param data.dagIdPattern
  * @param data.excludeStale
  * @param data.paused
- * @param data.lastDagRunState
  * @returns DAGCollectionResponse Successful Response
  * @throws ApiError
  */
@@ -3887,7 +3890,6 @@ export const useDagServicePatchDags = <
       {
         dagIdPattern?: string;
         excludeStale?: boolean;
-        lastDagRunState?: DagRunState;
         limit?: number;
         offset?: number;
         owners?: string[];
@@ -3908,7 +3910,6 @@ export const useDagServicePatchDags = <
     {
       dagIdPattern?: string;
       excludeStale?: boolean;
-      lastDagRunState?: DagRunState;
       limit?: number;
       offset?: number;
       owners?: string[];
@@ -3923,7 +3924,6 @@ export const useDagServicePatchDags = <
     mutationFn: ({
       dagIdPattern,
       excludeStale,
-      lastDagRunState,
       limit,
       offset,
       owners,
@@ -3936,7 +3936,6 @@ export const useDagServicePatchDags = <
       DagService.patchDags({
         dagIdPattern,
         excludeStale,
-        lastDagRunState,
         limit,
         offset,
         owners,
@@ -4001,7 +4000,7 @@ export const useDagServicePatchDag = <
  * @param data.requestBody
  * @param data.mapIndex
  * @param data.updateMask
- * @returns TaskInstanceResponse Successful Response
+ * @returns TaskInstanceCollectionResponse Successful Response
  * @throws ApiError
  */
 export const useTaskInstanceServicePatchTaskInstance = <
@@ -4060,11 +4059,11 @@ export const useTaskInstanceServicePatchTaskInstance = <
  * @param data.mapIndex
  * @param data.requestBody
  * @param data.updateMask
- * @returns TaskInstanceResponse Successful Response
+ * @returns TaskInstanceCollectionResponse Successful Response
  * @throws ApiError
  */
-export const useTaskInstanceServicePatchTaskInstance1 = <
-  TData = Common.TaskInstanceServicePatchTaskInstance1MutationResult,
+export const useTaskInstanceServicePatchTaskInstanceByMapIndex = <
+  TData = Common.TaskInstanceServicePatchTaskInstanceByMapIndexMutationResult,
   TError = unknown,
   TContext = unknown,
 >(
@@ -4099,7 +4098,7 @@ export const useTaskInstanceServicePatchTaskInstance1 = <
     TContext
   >({
     mutationFn: ({ dagId, dagRunId, mapIndex, requestBody, taskId, updateMask }) =>
-      TaskInstanceService.patchTaskInstance1({
+      TaskInstanceService.patchTaskInstanceByMapIndex({
         dagId,
         dagRunId,
         mapIndex,
@@ -4118,71 +4117,71 @@ export const useTaskInstanceServicePatchTaskInstance1 = <
  * @param data.taskId
  * @param data.mapIndex
  * @param data.requestBody
+ * @param data.updateMask
+ * @returns TaskInstanceCollectionResponse Successful Response
+ * @throws ApiError
+ */
+export const useTaskInstanceServicePatchTaskInstanceDryRunByMapIndex = <
+  TData = Common.TaskInstanceServicePatchTaskInstanceDryRunByMapIndexMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        dagId: string;
+        dagRunId: string;
+        mapIndex: number;
+        requestBody: PatchTaskInstanceBody;
+        taskId: string;
+        updateMask?: string[];
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      dagId: string;
+      dagRunId: string;
+      mapIndex: number;
+      requestBody: PatchTaskInstanceBody;
+      taskId: string;
+      updateMask?: string[];
+    },
+    TContext
+  >({
+    mutationFn: ({ dagId, dagRunId, mapIndex, requestBody, taskId, updateMask }) =>
+      TaskInstanceService.patchTaskInstanceDryRunByMapIndex({
+        dagId,
+        dagRunId,
+        mapIndex,
+        requestBody,
+        taskId,
+        updateMask,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+/**
+ * Patch Task Instance Dry Run
+ * Update a task instance dry_run mode.
+ * @param data The data for the request.
+ * @param data.dagId
+ * @param data.dagRunId
+ * @param data.taskId
+ * @param data.requestBody
+ * @param data.mapIndex
  * @param data.updateMask
  * @returns TaskInstanceCollectionResponse Successful Response
  * @throws ApiError
  */
 export const useTaskInstanceServicePatchTaskInstanceDryRun = <
   TData = Common.TaskInstanceServicePatchTaskInstanceDryRunMutationResult,
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: Omit<
-    UseMutationOptions<
-      TData,
-      TError,
-      {
-        dagId: string;
-        dagRunId: string;
-        mapIndex: number;
-        requestBody: PatchTaskInstanceBody;
-        taskId: string;
-        updateMask?: string[];
-      },
-      TContext
-    >,
-    "mutationFn"
-  >,
-) =>
-  useMutation<
-    TData,
-    TError,
-    {
-      dagId: string;
-      dagRunId: string;
-      mapIndex: number;
-      requestBody: PatchTaskInstanceBody;
-      taskId: string;
-      updateMask?: string[];
-    },
-    TContext
-  >({
-    mutationFn: ({ dagId, dagRunId, mapIndex, requestBody, taskId, updateMask }) =>
-      TaskInstanceService.patchTaskInstanceDryRun({
-        dagId,
-        dagRunId,
-        mapIndex,
-        requestBody,
-        taskId,
-        updateMask,
-      }) as unknown as Promise<TData>,
-    ...options,
-  });
-/**
- * Patch Task Instance Dry Run
- * Update a task instance dry_run mode.
- * @param data The data for the request.
- * @param data.dagId
- * @param data.dagRunId
- * @param data.taskId
- * @param data.requestBody
- * @param data.mapIndex
- * @param data.updateMask
- * @returns TaskInstanceCollectionResponse Successful Response
- * @throws ApiError
- */
-export const useTaskInstanceServicePatchTaskInstanceDryRun1 = <
-  TData = Common.TaskInstanceServicePatchTaskInstanceDryRun1MutationResult,
   TError = unknown,
   TContext = unknown,
 >(
@@ -4217,7 +4216,7 @@ export const useTaskInstanceServicePatchTaskInstanceDryRun1 = <
     TContext
   >({
     mutationFn: ({ dagId, dagRunId, mapIndex, requestBody, taskId, updateMask }) =>
-      TaskInstanceService.patchTaskInstanceDryRun1({
+      TaskInstanceService.patchTaskInstanceDryRun({
         dagId,
         dagRunId,
         mapIndex,

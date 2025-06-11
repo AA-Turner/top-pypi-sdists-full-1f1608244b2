@@ -1,11 +1,10 @@
-from unittest.mock import ANY
-
 import pytest
 from hypothesis import strategies as st
 
 import schemathesis
-from schemathesis import DataGenerationMethod
-from schemathesis.models import APIOperation, Case
+from schemathesis.generation.meta import CaseMetadata, GenerationInfo, PhaseInfo
+from schemathesis.generation.modes import GenerationMode
+from schemathesis.schemas import APIOperation
 
 
 def test_contains(swagger_20):
@@ -13,7 +12,7 @@ def test_contains(swagger_20):
 
 
 def test_getitem(simple_schema):
-    swagger = schemathesis.from_dict(simple_schema)
+    swagger = schemathesis.openapi.from_dict(simple_schema)
     assert isinstance(swagger["/users"]["GET"], APIOperation)
 
 
@@ -39,8 +38,10 @@ def test_as_strategy(swagger_20):
     operation = swagger_20["/users"]["GET"]
     strategy = operation.as_strategy()
     assert isinstance(strategy, st.SearchStrategy)
-    assert strategy.example() == Case(
-        operation, generation_time=ANY, data_generation_method=DataGenerationMethod.positive, meta=ANY
+    assert strategy.example() == operation.Case(
+        _meta=CaseMetadata(
+            generation=GenerationInfo(time=0.0, mode=GenerationMode.POSITIVE), components={}, phase=PhaseInfo.generate()
+        ),
     )
 
 
@@ -64,6 +65,6 @@ def test_reference_in_path():
             }
         },
     }
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     strategy = schema["/{key}"]["GET"].as_strategy()
     assert isinstance(strategy.example().path_parameters["key"], str)

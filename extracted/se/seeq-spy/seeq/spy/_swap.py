@@ -121,8 +121,6 @@ def swap(items: pd.DataFrame, assets: pd.DataFrame, *, partial_swaps_ok: bool = 
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     old_asset_format = _common.resolve_old_asset_format_arg(old_asset_format, assets)

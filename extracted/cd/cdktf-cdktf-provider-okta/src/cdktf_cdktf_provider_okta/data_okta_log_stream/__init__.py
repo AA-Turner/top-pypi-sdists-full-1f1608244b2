@@ -1,7 +1,7 @@
 r'''
 # `data_okta_log_stream`
 
-Refer to the Terraform Registry for docs: [`data_okta_log_stream`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream).
+Refer to the Terraform Registry for docs: [`data_okta_log_stream`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaLogStream(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaLogStream.DataOktaLogStream",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream okta_log_stream}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream okta_log_stream}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class DataOktaLogStream(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream okta_log_stream} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream okta_log_stream} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param id: ID of the log stream to retrieve, conflicts with ``name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream#id DataOktaLogStream#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Unique name for the Log Stream object, conflicts with ``id``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream#name DataOktaLogStream#name}
+        :param id: ID of the log stream to retrieve, conflicts with ``name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream#id DataOktaLogStream#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Unique name for the Log Stream object, conflicts with ``id``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream#name DataOktaLogStream#name}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class DataOktaLogStream(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaLogStream to import.
-        :param import_from_id: The id of the existing DataOktaLogStream that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaLogStream that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaLogStream to import is found.
         '''
         if __debug__:
@@ -225,8 +225,8 @@ class DataOktaLogStreamConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param id: ID of the log stream to retrieve, conflicts with ``name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream#id DataOktaLogStream#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Unique name for the Log Stream object, conflicts with ``id``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream#name DataOktaLogStream#name}
+        :param id: ID of the log stream to retrieve, conflicts with ``name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream#id DataOktaLogStream#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Unique name for the Log Stream object, conflicts with ``id``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream#name DataOktaLogStream#name}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -329,7 +329,7 @@ class DataOktaLogStreamConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def id(self) -> typing.Optional[builtins.str]:
         '''ID of the log stream to retrieve, conflicts with ``name``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream#id DataOktaLogStream#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream#id DataOktaLogStream#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -341,7 +341,7 @@ class DataOktaLogStreamConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> typing.Optional[builtins.str]:
         '''Unique name for the Log Stream object, conflicts with ``id``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/log_stream#name DataOktaLogStream#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/log_stream#name DataOktaLogStream#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)

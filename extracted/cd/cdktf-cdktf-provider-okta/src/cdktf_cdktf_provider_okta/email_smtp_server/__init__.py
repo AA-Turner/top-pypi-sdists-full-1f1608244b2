@@ -1,7 +1,7 @@
 r'''
 # `okta_email_smtp_server`
 
-Refer to the Terraform Registry for docs: [`okta_email_smtp_server`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server).
+Refer to the Terraform Registry for docs: [`okta_email_smtp_server`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class EmailSmtpServer(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.emailSmtpServer.EmailSmtpServer",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server okta_email_smtp_server}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server okta_email_smtp_server}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class EmailSmtpServer(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server okta_email_smtp_server} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server okta_email_smtp_server} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param alias: Human-readable name for your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#alias EmailSmtpServer#alias}
-        :param host: Hostname or IP address of your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#host EmailSmtpServer#host}
-        :param password: User name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#password EmailSmtpServer#password}
-        :param port: Port number of your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#port EmailSmtpServer#port}
-        :param username: Display name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#username EmailSmtpServer#username}
-        :param enabled: If true, routes all email traffic through your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#enabled EmailSmtpServer#enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#id EmailSmtpServer#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param alias: Human-readable name for your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#alias EmailSmtpServer#alias}
+        :param host: Hostname or IP address of your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#host EmailSmtpServer#host}
+        :param password: User name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#password EmailSmtpServer#password}
+        :param port: Port number of your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#port EmailSmtpServer#port}
+        :param username: Display name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#username EmailSmtpServer#username}
+        :param enabled: If true, routes all email traffic through your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#enabled EmailSmtpServer#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#id EmailSmtpServer#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class EmailSmtpServer(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the EmailSmtpServer to import.
-        :param import_from_id: The id of the existing EmailSmtpServer that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing EmailSmtpServer that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the EmailSmtpServer to import is found.
         '''
         if __debug__:
@@ -325,13 +325,13 @@ class EmailSmtpServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param alias: Human-readable name for your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#alias EmailSmtpServer#alias}
-        :param host: Hostname or IP address of your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#host EmailSmtpServer#host}
-        :param password: User name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#password EmailSmtpServer#password}
-        :param port: Port number of your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#port EmailSmtpServer#port}
-        :param username: Display name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#username EmailSmtpServer#username}
-        :param enabled: If true, routes all email traffic through your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#enabled EmailSmtpServer#enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#id EmailSmtpServer#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param alias: Human-readable name for your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#alias EmailSmtpServer#alias}
+        :param host: Hostname or IP address of your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#host EmailSmtpServer#host}
+        :param password: User name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#password EmailSmtpServer#password}
+        :param port: Port number of your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#port EmailSmtpServer#port}
+        :param username: Display name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#username EmailSmtpServer#username}
+        :param enabled: If true, routes all email traffic through your SMTP server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#enabled EmailSmtpServer#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#id EmailSmtpServer#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -445,7 +445,7 @@ class EmailSmtpServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def alias(self) -> builtins.str:
         '''Human-readable name for your SMTP server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#alias EmailSmtpServer#alias}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#alias EmailSmtpServer#alias}
         '''
         result = self._values.get("alias")
         assert result is not None, "Required property 'alias' is missing"
@@ -455,7 +455,7 @@ class EmailSmtpServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def host(self) -> builtins.str:
         '''Hostname or IP address of your SMTP server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#host EmailSmtpServer#host}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#host EmailSmtpServer#host}
         '''
         result = self._values.get("host")
         assert result is not None, "Required property 'host' is missing"
@@ -465,7 +465,7 @@ class EmailSmtpServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def password(self) -> builtins.str:
         '''User name of the email domain.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#password EmailSmtpServer#password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#password EmailSmtpServer#password}
         '''
         result = self._values.get("password")
         assert result is not None, "Required property 'password' is missing"
@@ -475,7 +475,7 @@ class EmailSmtpServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def port(self) -> jsii.Number:
         '''Port number of your SMTP server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#port EmailSmtpServer#port}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#port EmailSmtpServer#port}
         '''
         result = self._values.get("port")
         assert result is not None, "Required property 'port' is missing"
@@ -485,7 +485,7 @@ class EmailSmtpServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def username(self) -> builtins.str:
         '''Display name of the email domain.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#username EmailSmtpServer#username}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#username EmailSmtpServer#username}
         '''
         result = self._values.get("username")
         assert result is not None, "Required property 'username' is missing"
@@ -497,14 +497,14 @@ class EmailSmtpServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''If true, routes all email traffic through your SMTP server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#enabled EmailSmtpServer#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#enabled EmailSmtpServer#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_smtp_server#id EmailSmtpServer#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_smtp_server#id EmailSmtpServer#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

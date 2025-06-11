@@ -1,7 +1,7 @@
 r'''
 # `data_okta_idp_saml`
 
-Refer to the Terraform Registry for docs: [`data_okta_idp_saml`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml).
+Refer to the Terraform Registry for docs: [`data_okta_idp_saml`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaIdpSaml(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaIdpSaml.DataOktaIdpSaml",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml okta_idp_saml}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml okta_idp_saml}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class DataOktaIdpSaml(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml okta_idp_saml} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml okta_idp_saml} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param id: Id of idp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml#id DataOktaIdpSaml#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Name of the idp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml#name DataOktaIdpSaml#name}
+        :param id: Id of idp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml#id DataOktaIdpSaml#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Name of the idp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml#name DataOktaIdpSaml#name}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class DataOktaIdpSaml(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaIdpSaml to import.
-        :param import_from_id: The id of the existing DataOktaIdpSaml that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaIdpSaml that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaIdpSaml to import is found.
         '''
         if __debug__:
@@ -270,8 +270,8 @@ class DataOktaIdpSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param id: Id of idp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml#id DataOktaIdpSaml#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Name of the idp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml#name DataOktaIdpSaml#name}
+        :param id: Id of idp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml#id DataOktaIdpSaml#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Name of the idp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml#name DataOktaIdpSaml#name}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -374,7 +374,7 @@ class DataOktaIdpSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def id(self) -> typing.Optional[builtins.str]:
         '''Id of idp.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml#id DataOktaIdpSaml#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml#id DataOktaIdpSaml#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -386,7 +386,7 @@ class DataOktaIdpSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> typing.Optional[builtins.str]:
         '''Name of the idp.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/idp_saml#name DataOktaIdpSaml#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/idp_saml#name DataOktaIdpSaml#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)

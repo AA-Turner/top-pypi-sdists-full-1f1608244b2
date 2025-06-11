@@ -25,7 +25,7 @@ from optax._src import alias
 from optax._src import combine
 from optax._src import transform
 from optax._src import update
-import optax.tree_utils as otu
+import optax.tree
 
 STEPS = 50
 LR = 1e-2
@@ -129,7 +129,7 @@ class TransformTest(parameterized.TestCase):
 
       # Manually scale updates.
       def rescale(t):
-        return t * factor  # pylint:disable=cell-var-from-loop
+        return t * factor  # pylint:disable=cell-var-from-loop  # noqa: B023
 
       manual_updates = jax.tree.map(rescale, updates)
       # Check the rescaled updates match.
@@ -197,7 +197,7 @@ class TransformTest(parameterized.TestCase):
 
   def test_rms_match_adam(self):
     """Test scale_by_rms add_eps_in_sqrt=False matches scale_by_adam(b1=0)."""
-    fun = lambda x: otu.tree_l2_norm(x, squared=True)
+    fun = lambda x: optax.tree.norm(x, squared=True)
 
     rms = transform.scale_by_rms(
         decay=0.999, eps_in_sqrt=False, bias_correction=True

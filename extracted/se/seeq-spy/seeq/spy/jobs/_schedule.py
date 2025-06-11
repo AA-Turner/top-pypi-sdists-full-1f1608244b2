@@ -140,9 +140,6 @@ def schedule(schedule_spec: str, datalab_notebook_url: Optional[str] = None, lab
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet)
-
     try:
         return schedule_df(session, pd.DataFrame([{'Schedule': schedule_spec}]) if schedule_spec else None,
                            datalab_notebook_url=datalab_notebook_url, label=label, user=user, suspend=suspend,
@@ -154,6 +151,7 @@ def schedule(schedule_spec: str, datalab_notebook_url: Optional[str] = None, lab
             raise
 
 
+@Status.handle_keyboard_interrupt()
 def unschedule(datalab_notebook_url: Optional[str] = None, label: Optional[str] = None, quiet: Optional[bool] = None,
                status: Optional[Status] = None, session: Optional[Session] = None):
     """
@@ -205,8 +203,6 @@ def unschedule(datalab_notebook_url: Optional[str] = None, label: Optional[str] 
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors='raise')
     schedule_df(session, jobs_df=None, datalab_notebook_url=datalab_notebook_url, label=label, status=status)
 
 

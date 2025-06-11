@@ -1,5 +1,4 @@
-import platform
-from unittest.mock import ANY
+from unittest.mock import ANY, Mock
 
 import pytest
 import requests
@@ -7,12 +6,13 @@ import strawberry
 from hypothesis import HealthCheck, Phase, find, given, settings
 
 import schemathesis
-from schemathesis.checks import not_a_server_error
-from schemathesis.constants import SCHEMATHESIS_TEST_CASE_HEADER, USER_AGENT
-from schemathesis.exceptions import CheckFailed, SchemaError
-from schemathesis.extra._flask import run_server as run_flask_server
-from schemathesis.specs.graphql.loaders import extract_schema_from_response, get_introspection_query
-from schemathesis.specs.graphql.schemas import GraphQLCase
+from schemathesis.checks import CheckContext, not_a_server_error
+from schemathesis.config import ChecksConfig
+from schemathesis.core import SCHEMATHESIS_TEST_CASE_HEADER
+from schemathesis.core.errors import LoaderError
+from schemathesis.core.failures import Failure, FailureGroup
+from schemathesis.core.transport import USER_AGENT
+from schemathesis.graphql.loaders import extract_schema_from_response, get_introspection_query
 from schemathesis.specs.graphql.validation import validate_graphql_response
 from schemathesis.specs.openapi.checks import (
     ensure_resource_availability,
@@ -21,14 +21,15 @@ from schemathesis.specs.openapi.checks import (
     positive_data_acceptance,
     use_after_free,
 )
-from schemathesis.transports import WSGITransport
+from schemathesis.transport.prepare import get_default_headers
+from schemathesis.transport.wsgi import WSGI_TRANSPORT
 from test.apps import _graphql as graphql
 from test.apps._graphql.schema import Author
 from test.utils import assert_requests_call
 
 
 def test_raw_schema(graphql_schema):
-    assert graphql_schema.verbose_name == "GraphQL"
+    assert graphql_schema.specification.name == "GraphQL"
 
 
 def test_tags(graphql_schema):
@@ -52,48 +53,34 @@ def test_as_wsgi_kwargs(graphql_strategy):
     expected = {
         "method": "POST",
         "path": "/graphql",
-        "query_string": None,
+        "query_string": {},
         "json": {"query": case.body},
-        "headers": {"User-Agent": USER_AGENT, SCHEMATHESIS_TEST_CASE_HEADER: ANY, "Content-Type": "application/json"},
+        "headers": {
+            **get_default_headers(),
+            "User-Agent": USER_AGENT,
+            SCHEMATHESIS_TEST_CASE_HEADER: ANY,
+            "Content-Type": "application/json",
+        },
     }
-    assert WSGITransport(None).serialize_case(case) == expected
-    assert case.as_werkzeug_kwargs() == expected
+    assert WSGI_TRANSPORT.serialize_case(case) == expected
 
 
-@pytest.mark.parametrize(
-    ("kwargs", "base_path", "expected"),
-    [
-        ({"base_url": "http://0.0.0.0:1234/something"}, "/something", "http://0.0.0.0:1234/something"),
-        ({"port": 8888}, "/graphql", "http://127.0.0.1:8888/graphql"),
-    ],
-)
 @pytest.mark.filterwarnings("ignore:.*method is good for exploring strategies.*")
-def test_custom_base_url(graphql_url, kwargs, base_path, expected):
-    # When a custom Base URL is specified
-    if "port" in kwargs:
-        with pytest.raises(SchemaError) as exc:
-            schemathesis.graphql.from_url(graphql_url, **kwargs)
-        if platform.system() == "Windows":
-            detail = "[WinError 10061] No connection could be made because the target machine actively refused it"
-        elif platform.system() == "Darwin":
-            detail = "[Errno 61] Connection refused"
-        else:
-            detail = "[Errno 111] Connection refused"
-        assert exc.value.extras == [f"Failed to establish a new connection: {detail}"]
-    else:
-        schema = schemathesis.graphql.from_url(graphql_url, **kwargs)
-        # Then the base path is changed, in this case it is the only available path
-        assert schema.base_path == base_path
-        strategy = schema["Query"]["getBooks"].as_strategy()
-        case = strategy.example()
-        # And all requests should go to the specified URL
-        assert case.as_transport_kwargs()["url"] == expected
+def test_custom_base_url(graphql_url):
+    schema = schemathesis.graphql.from_url(graphql_url)
+    schema.config.update(base_url="http://0.0.0.0:1234/something")
+
+    # Then the base path is changed, in this case it is the only available path
+    assert schema.base_path == "/something"
+    strategy = schema["Query"]["getBooks"].as_strategy()
+    case = strategy.example()
+    # And all requests should go to the specified URL
+    assert case.as_transport_kwargs()["url"] == "http://0.0.0.0:1234/something"
 
 
 @pytest.mark.parametrize("kwargs", [{"body": "SomeQuery"}, {"body": b'{"query": "SomeQuery"}'}])
 def test_make_case(graphql_schema, kwargs):
-    case = graphql_schema["Query"]["getBooks"].make_case(**kwargs)
-    assert isinstance(case, GraphQLCase)
+    case = graphql_schema["Query"]["getBooks"].Case(**kwargs)
     assert_requests_call(case)
 
 
@@ -106,18 +93,29 @@ def test_make_case(graphql_schema, kwargs):
 )
 def test_response_validation(graphql_schema, response_factory, kwargs, expected):
     response = response_factory.requests(status_code=200, **kwargs)
-    case = graphql_schema["Query"]["getBooks"].make_case(body="Q")
-    with pytest.raises(CheckFailed, match=expected):
-        not_a_server_error(None, response, case)
+    case = graphql_schema["Query"]["getBooks"].Case(body="Q")
+    with pytest.raises(Failure, match=expected):
+        not_a_server_error(
+            CheckContext(
+                override=None,
+                auth=None,
+                headers=None,
+                config=ChecksConfig(),
+                transport_kwargs=None,
+            ),
+            response,
+            case,
+        )
 
 
 def test_client_error(graphql_schema):
-    case = graphql_schema["Query"]["getBooks"].make_case(body="invalid query")
-    with pytest.raises(CheckFailed, match="Syntax Error: Unexpected Name 'invalid'"):
+    case = graphql_schema["Query"]["getBooks"].Case(body="invalid query")
+    with pytest.raises(FailureGroup) as exc:
         case.call_and_validate()
+    assert "Syntax Error: Unexpected Name 'invalid'." in str(exc.value.exceptions[0])
 
 
-def test_server_error(graphql_path):
+def test_server_error(graphql_path, app_runner):
     @strawberry.type
     class Query:
         @strawberry.field
@@ -131,7 +129,7 @@ def test_server_error(graphql_path):
     gql_schema = strawberry.Schema(Query)
 
     app = graphql._flask.create_app(graphql_path, schema=gql_schema)
-    port = run_flask_server(app)
+    port = app_runner.run_flask_app(app)
     graphql_url = f"http://127.0.0.1:{port}{graphql_path}"
     graphql_schema = schemathesis.graphql.from_url(graphql_url)
 
@@ -140,8 +138,9 @@ def test_server_error(graphql_path):
     def test(case):
         case.call_and_validate()
 
-    with pytest.raises(CheckFailed, match="Hidden 1 / 0 bug"):
+    with pytest.raises(FailureGroup) as exc:
         test()
+    assert "Hidden 1 / 0 bug" in str(exc.value.exceptions[0])
 
 
 def test_multiple_server_error():
@@ -153,11 +152,10 @@ def test_multiple_server_error():
             {"message": "Third bug", "path": ["showBug2"]},
         ],
     }
+    with pytest.raises(Failure, match="GraphQL server error") as exc:
+        validate_graphql_response(Mock(operation=Mock(label="GET/ foo")), payload)
 
-    with pytest.raises(CheckFailed, match="GraphQL server error") as exc:
-        validate_graphql_response(payload)
-
-    assert exc.value.context.message == "1. Hidden 1 / 0 bug\n\n2. Another bug\n\n3. Third bug"
+    assert exc.value.message == "1. Hidden 1 / 0 bug\n\n2. Another bug\n\n3. Third bug"
 
 
 def test_no_query(graphql_url):
@@ -170,7 +168,7 @@ def test_no_query(graphql_url):
     schema = schemathesis.graphql.from_dict(raw_schema)
     # Then no operations should be collected
     assert list(schema.get_all_operations()) == []
-    assert schema.operations_count == 0
+    assert schema.statistic.operations.total == 0
 
 
 @pytest.mark.parametrize("with_data_key", [True, False])
@@ -180,14 +178,14 @@ def test_data_key(graphql_url, with_data_key):
     if not with_data_key:
         decoded = decoded["data"]
     schema = schemathesis.graphql.from_dict(decoded)
-    assert schema.operations_count == 4
+    assert schema.statistic.operations.total == 4
 
 
 def test_malformed_response(graphql_url):
     response = requests.post(graphql_url, json={"query": get_introspection_query()}, timeout=1)
     response._content += b"42"
-    with pytest.raises(SchemaError, match="Received unsupported content while expecting a JSON payload for GraphQL"):
-        extract_schema_from_response(response)
+    with pytest.raises(LoaderError, match="Received unsupported content while expecting a JSON payload for GraphQL"):
+        extract_schema_from_response(response, lambda r: r.json())
 
 
 def test_operations_count(graphql_url):
@@ -195,7 +193,7 @@ def test_operations_count(graphql_url):
     decoded = response.json()
     raw_schema = decoded["data"]
     schema = schemathesis.graphql.from_dict(raw_schema)
-    assert schema.operations_count == 4
+    assert schema.statistic.operations.total == 4
 
 
 CUSTOM_QUERY_NAME = "MyQuery"
@@ -249,17 +247,17 @@ type Query {
         ),
     ],
 )
-def test_schema_error(testdir, cli, snapshot_cli, schema, extension):
+def test_schema_error(testdir, cli, snapshot_cli, schema, extension, graphql_url):
     schema_file = testdir.make_graphql_schema_file(schema, extension=extension)
-    assert cli.run(str(schema_file), "--dry-run") == snapshot_cli
+    assert cli.run(str(schema_file), f"--url={graphql_url}") == snapshot_cli
 
 
 @pytest.mark.parametrize("arg", ["--include-name=Query.getBooks", "--exclude-name=Query.getBooks"])
 def test_filter_operations(cli, graphql_url, snapshot_cli, arg):
-    assert cli.run(graphql_url, "--hypothesis-max-examples=1", "--dry-run", arg) == snapshot_cli
+    assert cli.run(graphql_url, "--max-examples=1", arg) == snapshot_cli
 
 
-def test_disallow_null(ctx, cli, testdir, snapshot_cli):
+def test_disallow_null(ctx, cli, testdir, snapshot_cli, graphql_url):
     schema = """type Query {
     getValue(value: Int): Int
 }
@@ -280,9 +278,8 @@ def filter_body(context, body):
         cli.main(
             "run",
             str(schema_file),
-            "--dry-run",
+            f"--url={graphql_url}",
             "--generation-graphql-allow-null=false",
-            "--show-trace",
             hooks=module,
         )
         == snapshot_cli
@@ -290,7 +287,7 @@ def filter_body(context, body):
 
 
 def test_unknown_type_name(graphql_schema):
-    with pytest.raises(KeyError, match="`Qwery` type not found. Did you mean `Query`?"):
+    with pytest.raises(LookupError, match="`Qwery` type not found. Did you mean `Query`?"):
         graphql_schema["Qwery"]["getBooks"]
 
 
@@ -302,13 +299,16 @@ def test_unknown_type_name(graphql_schema):
     ],
 )
 def test_unknown_field_name(graphql_schema, name, expected):
-    with pytest.raises(KeyError, match=expected):
+    with pytest.raises(LookupError, match=expected):
         graphql_schema["Query"][name]
 
 
 def test_field_map_operations(graphql_schema):
     assert len(graphql_schema["Query"]) == 2
     assert list(iter(graphql_schema["Query"])) == ["getBooks", "getAuthors"]
+    assert graphql_schema.find_operation_by_label("Query.getBooks") is not None
+    assert graphql_schema.find_operation_by_label("Query.getBookz") is None
+    assert graphql_schema.find_operation_by_label("getBookz") is None
 
 
 def test_repr(graphql_schema):
@@ -338,5 +338,5 @@ def test_schema_as_strategy(graphql_schema):
 )
 def test_ignored_checks(graphql_schema, check):
     # Just in case
-    case = graphql_schema["Query"]["getBooks"].make_case()
+    case = graphql_schema["Query"]["getBooks"].Case()
     assert check(None, None, case)

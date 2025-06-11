@@ -100,7 +100,7 @@ if TYPE_CHECKING:
     from inspect import Parameter
 
     from airflow.models import DagRun
-    from airflow.models.expandinput import ExpandInput
+    from airflow.models.expandinput import SchedulerExpandInput
     from airflow.sdk import BaseOperatorLink
     from airflow.sdk.definitions._internal.node import DAGNode
     from airflow.sdk.types import Operator
@@ -251,12 +251,26 @@ class _PriorityWeightStrategyNotRegistered(AirflowException):
 
 
 def _encode_trigger(trigger: BaseEventTrigger | dict):
+    def _ensure_serialized(d):
+        """
+        Make sure the kwargs dict is JSON-serializable.
+
+        This is done with BaseSerialization logic. A simple check is added to
+        ensure we don't double-serialize, which is possible when a trigger goes
+        through multiple serialization layers.
+        """
+        if isinstance(d, dict) and Encoding.TYPE in d:
+            return d
+        return BaseSerialization.serialize(d)
+
     if isinstance(trigger, dict):
-        return trigger
-    classpath, kwargs = trigger.serialize()
+        classpath = trigger["classpath"]
+        kwargs = trigger["kwargs"]
+    else:
+        classpath, kwargs = trigger.serialize()
     return {
         "classpath": classpath,
-        "kwargs": kwargs,
+        "kwargs": {k: _ensure_serialized(v) for k, v in kwargs.items()},
     }
 
 
@@ -324,6 +338,18 @@ def decode_asset_condition(var: dict[str, Any]) -> BaseAsset:
 
 
 def decode_asset(var: dict[str, Any]):
+    def _smart_decode_trigger_kwargs(d):
+        """
+        Slightly clean up kwargs for display.
+
+        This detects one level of BaseSerialization and tries to deserialize the
+        content, removing some __type __var ugliness when the value is displayed
+        in UI to the user.
+        """
+        if not isinstance(d, dict) or Encoding.TYPE not in d:
+            return d
+        return BaseSerialization.deserialize(d)
+
     watchers = var.get("watchers", [])
     return Asset(
         name=var["name"],
@@ -331,7 +357,14 @@ def decode_asset(var: dict[str, Any]):
         group=var["group"],
         extra=var["extra"],
         watchers=[
-            SerializedAssetWatcher(name=watcher["name"], trigger=watcher["trigger"]) for watcher in watchers
+            SerializedAssetWatcher(
+                name=watcher["name"],
+                trigger={
+                    "classpath": watcher["trigger"]["classpath"],
+                    "kwargs": _smart_decode_trigger_kwargs(watcher["trigger"]["kwargs"]),
+                },
+            )
+            for watcher in watchers
         ],
     )
 
@@ -544,7 +577,7 @@ class _ExpandInputRef(NamedTuple):
         possible ExpandInput cases.
         """
 
-    def deref(self, dag: DAG) -> ExpandInput:
+    def deref(self, dag: DAG) -> SchedulerExpandInput:
         """
         De-reference into a concrete ExpandInput object.
 

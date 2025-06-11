@@ -43,7 +43,7 @@ class ScaleGradientTest(parameterized.TestCase):
       outputs = jax.tree.map(lambda x: x**2, outputs)
       return sum(jax.tree.leaves(outputs))
 
-    inputs = dict(a=-1.0, b=dict(c=(2.0,), d=0.0))
+    inputs = {'a': -1.0, 'b': {'c': (2.0,), 'd': 0.0}}
 
     grad = jax.grad(fn)
     grads = grad(inputs)
@@ -100,7 +100,7 @@ class MultiNormalDiagFromLogScaleTest(parameterized.TestCase):
     loc_shape = scale_shape = (2, 3)
     loc, scale = self._get_loc_scale(loc_shape, scale_shape)
     dist = utils.multi_normal(loc, scale)
-    samples = dist.sample(sample_shape, jax.random.PRNGKey(239))
+    samples = dist.sample(sample_shape, jax.random.key(239))
     self.assertEqual(samples.shape, tuple(sample_shape) + loc_shape)
 
   @parameterized.named_parameters([

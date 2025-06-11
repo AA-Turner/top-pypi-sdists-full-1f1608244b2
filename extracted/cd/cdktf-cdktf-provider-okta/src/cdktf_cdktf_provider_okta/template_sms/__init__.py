@@ -1,7 +1,7 @@
 r'''
 # `okta_template_sms`
 
-Refer to the Terraform Registry for docs: [`okta_template_sms`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms).
+Refer to the Terraform Registry for docs: [`okta_template_sms`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class TemplateSms(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.templateSms.TemplateSms",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms okta_template_sms}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms okta_template_sms}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class TemplateSms(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms okta_template_sms} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms okta_template_sms} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param template: SMS default template. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#template TemplateSms#template}
-        :param type: SMS template type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#type TemplateSms#type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#id TemplateSms#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param translations: translations block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#translations TemplateSms#translations}
+        :param template: SMS default template. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#template TemplateSms#template}
+        :param type: SMS template type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#type TemplateSms#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#id TemplateSms#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param translations: translations block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#translations TemplateSms#translations}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class TemplateSms(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the TemplateSms to import.
-        :param import_from_id: The id of the existing TemplateSms that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing TemplateSms that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the TemplateSms to import is found.
         '''
         if __debug__:
@@ -262,10 +262,10 @@ class TemplateSmsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param template: SMS default template. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#template TemplateSms#template}
-        :param type: SMS template type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#type TemplateSms#type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#id TemplateSms#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param translations: translations block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#translations TemplateSms#translations}
+        :param template: SMS default template. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#template TemplateSms#template}
+        :param type: SMS template type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#type TemplateSms#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#id TemplateSms#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param translations: translations block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#translations TemplateSms#translations}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -373,7 +373,7 @@ class TemplateSmsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def template(self) -> builtins.str:
         '''SMS default template.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#template TemplateSms#template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#template TemplateSms#template}
         '''
         result = self._values.get("template")
         assert result is not None, "Required property 'template' is missing"
@@ -383,7 +383,7 @@ class TemplateSmsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''SMS template type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#type TemplateSms#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#type TemplateSms#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -391,7 +391,7 @@ class TemplateSmsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#id TemplateSms#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#id TemplateSms#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -405,7 +405,7 @@ class TemplateSmsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["TemplateSmsTranslations"]]]:
         '''translations block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#translations TemplateSms#translations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#translations TemplateSms#translations}
         '''
         result = self._values.get("translations")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["TemplateSmsTranslations"]]], result)
@@ -430,8 +430,8 @@ class TemplateSmsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 class TemplateSmsTranslations:
     def __init__(self, *, language: builtins.str, template: builtins.str) -> None:
         '''
-        :param language: The language to map the template to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#language TemplateSms#language}
-        :param template: The SMS message. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#template TemplateSms#template}
+        :param language: The language to map the template to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#language TemplateSms#language}
+        :param template: The SMS message. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#template TemplateSms#template}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__06826e373cb6e5f1d2d2a90b592201e2393be0775608baedaac249d1d1f01781)
@@ -446,7 +446,7 @@ class TemplateSmsTranslations:
     def language(self) -> builtins.str:
         '''The language to map the template to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#language TemplateSms#language}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#language TemplateSms#language}
         '''
         result = self._values.get("language")
         assert result is not None, "Required property 'language' is missing"
@@ -456,7 +456,7 @@ class TemplateSmsTranslations:
     def template(self) -> builtins.str:
         '''The SMS message.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/template_sms#template TemplateSms#template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/template_sms#template TemplateSms#template}
         '''
         result = self._values.get("template")
         assert result is not None, "Required property 'template' is missing"

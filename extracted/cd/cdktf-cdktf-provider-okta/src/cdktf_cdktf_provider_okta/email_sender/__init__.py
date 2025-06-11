@@ -1,7 +1,7 @@
 r'''
 # `okta_email_sender`
 
-Refer to the Terraform Registry for docs: [`okta_email_sender`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender).
+Refer to the Terraform Registry for docs: [`okta_email_sender`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class EmailSender(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.emailSender.EmailSender",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender okta_email_sender}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender okta_email_sender}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class EmailSender(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender okta_email_sender} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender okta_email_sender} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param from_address: Email address to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#from_address EmailSender#from_address}
-        :param from_name: Name of sender. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#from_name EmailSender#from_name}
-        :param subdomain: Mail domain to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#subdomain EmailSender#subdomain}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#id EmailSender#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param from_address: Email address to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#from_address EmailSender#from_address}
+        :param from_name: Name of sender. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#from_name EmailSender#from_name}
+        :param subdomain: Mail domain to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#subdomain EmailSender#subdomain}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#id EmailSender#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class EmailSender(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the EmailSender to import.
-        :param import_from_id: The id of the existing EmailSender that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing EmailSender that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the EmailSender to import is found.
         '''
         if __debug__:
@@ -260,10 +260,10 @@ class EmailSenderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param from_address: Email address to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#from_address EmailSender#from_address}
-        :param from_name: Name of sender. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#from_name EmailSender#from_name}
-        :param subdomain: Mail domain to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#subdomain EmailSender#subdomain}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#id EmailSender#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param from_address: Email address to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#from_address EmailSender#from_address}
+        :param from_name: Name of sender. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#from_name EmailSender#from_name}
+        :param subdomain: Mail domain to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#subdomain EmailSender#subdomain}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#id EmailSender#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -370,7 +370,7 @@ class EmailSenderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def from_address(self) -> builtins.str:
         '''Email address to send from.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#from_address EmailSender#from_address}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#from_address EmailSender#from_address}
         '''
         result = self._values.get("from_address")
         assert result is not None, "Required property 'from_address' is missing"
@@ -380,7 +380,7 @@ class EmailSenderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def from_name(self) -> builtins.str:
         '''Name of sender.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#from_name EmailSender#from_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#from_name EmailSender#from_name}
         '''
         result = self._values.get("from_name")
         assert result is not None, "Required property 'from_name' is missing"
@@ -390,7 +390,7 @@ class EmailSenderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def subdomain(self) -> builtins.str:
         '''Mail domain to send from.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#subdomain EmailSender#subdomain}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#subdomain EmailSender#subdomain}
         '''
         result = self._values.get("subdomain")
         assert result is not None, "Required property 'subdomain' is missing"
@@ -398,7 +398,7 @@ class EmailSenderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_sender#id EmailSender#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_sender#id EmailSender#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

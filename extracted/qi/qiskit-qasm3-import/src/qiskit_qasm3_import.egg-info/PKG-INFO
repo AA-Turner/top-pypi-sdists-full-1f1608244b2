@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: qiskit-qasm3-import
-Version: 0.5.1
+Version: 0.6.0
 Summary: Importer for parsing OpenQASM 3 strings into Qiskit circuits
 Home-page: https://github.com/Qiskit/qiskit-qasm3-import
 Author: Jake Lishman
@@ -13,6 +13,7 @@ License-File: LICENSE
 Requires-Dist: qiskit>=0.37.0
 Requires-Dist: openqasm3[parser]<2.0,>=0.4
 Provides-Extra: all
+Dynamic: license-file
 
 # Importer from OpenQASM 3 to Qiskit
 

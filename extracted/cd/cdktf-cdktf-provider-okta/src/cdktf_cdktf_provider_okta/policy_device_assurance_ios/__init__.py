@@ -1,7 +1,7 @@
 r'''
 # `okta_policy_device_assurance_ios`
 
-Refer to the Terraform Registry for docs: [`okta_policy_device_assurance_ios`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios).
+Refer to the Terraform Registry for docs: [`okta_policy_device_assurance_ios`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PolicyDeviceAssuranceIos(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.policyDeviceAssuranceIos.PolicyDeviceAssuranceIos",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios okta_policy_device_assurance_ios}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios okta_policy_device_assurance_ios}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class PolicyDeviceAssuranceIos(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios okta_policy_device_assurance_ios} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios okta_policy_device_assurance_ios} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#name PolicyDeviceAssuranceIos#name}
-        :param jailbreak: Is the device jailbroken in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#jailbreak PolicyDeviceAssuranceIos#jailbreak}
-        :param os_version: Minimum os version of the device in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#os_version PolicyDeviceAssuranceIos#os_version}
-        :param screenlock_type: List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#screenlock_type PolicyDeviceAssuranceIos#screenlock_type}
+        :param name: Name of the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#name PolicyDeviceAssuranceIos#name}
+        :param jailbreak: Is the device jailbroken in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#jailbreak PolicyDeviceAssuranceIos#jailbreak}
+        :param os_version: Minimum os version of the device in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#os_version PolicyDeviceAssuranceIos#os_version}
+        :param screenlock_type: List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#screenlock_type PolicyDeviceAssuranceIos#screenlock_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class PolicyDeviceAssuranceIos(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PolicyDeviceAssuranceIos to import.
-        :param import_from_id: The id of the existing PolicyDeviceAssuranceIos that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PolicyDeviceAssuranceIos that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PolicyDeviceAssuranceIos to import is found.
         '''
         if __debug__:
@@ -293,10 +293,10 @@ class PolicyDeviceAssuranceIosConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#name PolicyDeviceAssuranceIos#name}
-        :param jailbreak: Is the device jailbroken in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#jailbreak PolicyDeviceAssuranceIos#jailbreak}
-        :param os_version: Minimum os version of the device in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#os_version PolicyDeviceAssuranceIos#os_version}
-        :param screenlock_type: List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#screenlock_type PolicyDeviceAssuranceIos#screenlock_type}
+        :param name: Name of the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#name PolicyDeviceAssuranceIos#name}
+        :param jailbreak: Is the device jailbroken in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#jailbreak PolicyDeviceAssuranceIos#jailbreak}
+        :param os_version: Minimum os version of the device in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#os_version PolicyDeviceAssuranceIos#os_version}
+        :param screenlock_type: List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#screenlock_type PolicyDeviceAssuranceIos#screenlock_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -405,7 +405,7 @@ class PolicyDeviceAssuranceIosConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the device assurance policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#name PolicyDeviceAssuranceIos#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#name PolicyDeviceAssuranceIos#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -417,7 +417,7 @@ class PolicyDeviceAssuranceIosConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Is the device jailbroken in the device assurance policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#jailbreak PolicyDeviceAssuranceIos#jailbreak}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#jailbreak PolicyDeviceAssuranceIos#jailbreak}
         '''
         result = self._values.get("jailbreak")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -426,7 +426,7 @@ class PolicyDeviceAssuranceIosConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def os_version(self) -> typing.Optional[builtins.str]:
         '''Minimum os version of the device in the device assurance policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#os_version PolicyDeviceAssuranceIos#os_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#os_version PolicyDeviceAssuranceIos#os_version}
         '''
         result = self._values.get("os_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -435,7 +435,7 @@ class PolicyDeviceAssuranceIosConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def screenlock_type(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_ios#screenlock_type PolicyDeviceAssuranceIos#screenlock_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_device_assurance_ios#screenlock_type PolicyDeviceAssuranceIos#screenlock_type}
         '''
         result = self._values.get("screenlock_type")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)

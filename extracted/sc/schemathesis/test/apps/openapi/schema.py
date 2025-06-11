@@ -211,7 +211,7 @@ def _make_openapi_2_schema(operations: tuple[str, ...]) -> dict:
                     {"name": "note", "in": "formData", "required": True, "type": "string"},
                     {"name": "data", "in": "formData", "required": True, "type": "file"},
                 ],
-                "responses": {"200": {"description": "OK"}},
+                "responses": {"200": {"description": "OK"}, "default": {"description": "Everything else"}},
             }
         elif name == "form":
             schema = {
@@ -225,7 +225,7 @@ def _make_openapi_2_schema(operations: tuple[str, ...]) -> dict:
         elif name == "custom_format":
             schema = {
                 "parameters": [{"name": "id", "in": "query", "required": True, "type": "string", "format": "digits"}],
-                "responses": {"200": {"description": "OK"}},
+                "responses": {"200": {"description": "OK"}, "default": {"description": "Everything else"}},
             }
         elif name == "multipart":
             schema = {
@@ -387,7 +387,18 @@ def _make_openapi_2_schema(operations: tuple[str, ...]) -> dict:
                         },
                     },
                 ],
-                "responses": {"200": {"description": "OK"}, "404": {"description": "Not found"}},
+                "responses": {
+                    "200": {
+                        "x-links": {
+                            "GetUserById": {
+                                "operationId": "getUser",
+                                "parameters": {"path.user_id": "$request.path.user_id"},
+                            }
+                        },
+                        "description": "OK",
+                    },
+                    "404": {"description": "Not found"},
+                },
             }
         elif name == "csv_payload":
             schema = {
@@ -582,7 +593,7 @@ def _make_openapi_3_schema(operations: tuple[str, ...]) -> dict:
                         }
                     },
                 },
-                "responses": {"200": {"description": "OK"}},
+                "responses": {"200": {"description": "OK"}, "default": {"description": "Everything else"}},
             }
         elif name == "form":
             schema = {
@@ -609,7 +620,7 @@ def _make_openapi_3_schema(operations: tuple[str, ...]) -> dict:
                 "parameters": [
                     {"name": "id", "in": "query", "required": True, "schema": {"type": "string", "format": "digits"}}
                 ],
-                "responses": {"200": {"description": "OK"}},
+                "responses": {"200": {"description": "OK"}, "default": {"description": "Everything else"}},
             }
         elif name == "multipart":
             schema = {
@@ -802,7 +813,18 @@ def _make_openapi_3_schema(operations: tuple[str, ...]) -> dict:
                     },
                     "required": True,
                 },
-                "responses": {"200": {"description": "OK"}, "404": {"description": "Not found"}},
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "links": {
+                            "GetUserById": {
+                                "operationId": "getUser",
+                                "parameters": {"path.user_id": "$request.path.user_id"},
+                            }
+                        },
+                    },
+                    "404": {"description": "Not found"},
+                },
             }
         elif name == "csv_payload":
             schema = {

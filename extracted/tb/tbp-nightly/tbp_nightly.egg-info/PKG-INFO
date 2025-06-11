@@ -1,31 +1,23 @@
 Metadata-Version: 2.4
 Name: tbp-nightly
-Version: 2.20.9a20250609
-Summary: Profile Tensorboard Plugin
-Home-page: https://github.com/openxla/xprof
+Version: 2.21.0a20250610
+Summary: XProf Profiler Plugin
+Home-page: https://github.com/openxla/xprof-nightly
 Author: Google Inc.
 Author-email: packages@tensorflow.org
 License: Apache 2.0
-Keywords: jax pytorch xla tensorflow tensorboard xprof profile plugin
+Keywords: jax pytorch xla tensorflow tensorboard xprof-nightly profile plugin
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Education
 Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: Apache Software License
-Classifier: Programming Language :: Python :: 2
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Scientific/Engineering :: Mathematics
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Software Development :: Libraries
-Requires-Python: >= 2.7, != 3.0.*, != 3.1.*
+Requires-Python: >= 3.9, < 3.13
 Description-Content-Type: text/markdown
-Requires-Dist: gviz_api>=1.9.0
-Requires-Dist: protobuf>=3.19.6
-Requires-Dist: setuptools>=41.0.0
-Requires-Dist: six>=1.10.0
-Requires-Dist: werkzeug>=0.11.15
-Requires-Dist: etils[epath]>=1.0.0
-Requires-Dist: cheroot>=10.0.1
-Requires-Dist: fsspec[gcs]>=2024.10.0
+Requires-Dist: xprof-nightly==2.21.0a20250610
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
@@ -107,8 +99,8 @@ nightly package.
 To install the nightly version of profiler:
 
 ```
-$ pip uninstall tensorboard-plugin-profile
-$ pip install tbp-nightly
+$ pip uninstall xprof
+$ pip install xprof-nightly
 ```
 
 Without TensorBoard:

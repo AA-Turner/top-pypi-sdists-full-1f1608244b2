@@ -1,7 +1,7 @@
 r'''
 # `okta_user_schema_property`
 
-Refer to the Terraform Registry for docs: [`okta_user_schema_property`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property).
+Refer to the Terraform Registry for docs: [`okta_user_schema_property`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class UserSchemaProperty(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.userSchemaProperty.UserSchemaProperty",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property okta_user_schema_property}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property okta_user_schema_property}.'''
 
     def __init__(
         self,
@@ -81,32 +81,32 @@ class UserSchemaProperty(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property okta_user_schema_property} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property okta_user_schema_property} Resource.
 
         :param scope_: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#index UserSchemaProperty#index}
-        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
-        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#type UserSchemaProperty#type}
-        :param array_enum: Array of values that an array property's items can be set to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#array_enum UserSchemaProperty#array_enum}
-        :param array_one_of: array_one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#array_one_of UserSchemaProperty#array_one_of}
-        :param array_type: The type of the array elements if ``type`` is set to ``array``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#array_type UserSchemaProperty#array_type}
-        :param description: The description of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#description UserSchemaProperty#description}
-        :param enum: Array of values a primitive property can be set to. See ``array_enum`` for arrays. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#enum UserSchemaProperty#enum}
-        :param external_name: External name of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#external_name UserSchemaProperty#external_name}
-        :param external_namespace: External namespace of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#external_namespace UserSchemaProperty#external_namespace}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#id UserSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param master: Master priority for the user schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#master UserSchemaProperty#master}
-        :param master_override_priority: master_override_priority block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#master_override_priority UserSchemaProperty#master_override_priority}
-        :param max_length: The maximum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#max_length UserSchemaProperty#max_length}
-        :param min_length: The minimum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#min_length UserSchemaProperty#min_length}
-        :param one_of: one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#one_of UserSchemaProperty#one_of}
-        :param pattern: The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#pattern UserSchemaProperty#pattern}
-        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#permissions UserSchemaProperty#permissions}
-        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#required UserSchemaProperty#required}
-        :param scope: determines whether an app user attribute can be set at the Individual or Group Level. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#scope UserSchemaProperty#scope}
-        :param unique: Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#unique UserSchemaProperty#unique}
-        :param user_type: User type ID. By default, it is ``default``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#user_type UserSchemaProperty#user_type}
+        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#index UserSchemaProperty#index}
+        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
+        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#type UserSchemaProperty#type}
+        :param array_enum: Array of values that an array property's items can be set to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#array_enum UserSchemaProperty#array_enum}
+        :param array_one_of: array_one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#array_one_of UserSchemaProperty#array_one_of}
+        :param array_type: The type of the array elements if ``type`` is set to ``array``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#array_type UserSchemaProperty#array_type}
+        :param description: The description of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#description UserSchemaProperty#description}
+        :param enum: Array of values a primitive property can be set to. See ``array_enum`` for arrays. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#enum UserSchemaProperty#enum}
+        :param external_name: External name of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#external_name UserSchemaProperty#external_name}
+        :param external_namespace: External namespace of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#external_namespace UserSchemaProperty#external_namespace}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#id UserSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param master: Master priority for the user schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#master UserSchemaProperty#master}
+        :param master_override_priority: master_override_priority block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#master_override_priority UserSchemaProperty#master_override_priority}
+        :param max_length: The maximum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#max_length UserSchemaProperty#max_length}
+        :param min_length: The minimum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#min_length UserSchemaProperty#min_length}
+        :param one_of: one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#one_of UserSchemaProperty#one_of}
+        :param pattern: The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#pattern UserSchemaProperty#pattern}
+        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#permissions UserSchemaProperty#permissions}
+        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#required UserSchemaProperty#required}
+        :param scope: determines whether an app user attribute can be set at the Individual or Group Level. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#scope UserSchemaProperty#scope}
+        :param unique: Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#unique UserSchemaProperty#unique}
+        :param user_type: User type ID. By default, it is ``default``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#user_type UserSchemaProperty#user_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -166,7 +166,7 @@ class UserSchemaProperty(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the UserSchemaProperty to import.
-        :param import_from_id: The id of the existing UserSchemaProperty that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing UserSchemaProperty that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the UserSchemaProperty to import is found.
         '''
         if __debug__:
@@ -680,8 +680,8 @@ class UserSchemaProperty(
 class UserSchemaPropertyArrayOneOf:
     def __init__(self, *, const: builtins.str, title: builtins.str) -> None:
         '''
-        :param const: Value mapping to member of ``array_enum``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#const UserSchemaProperty#const}
-        :param title: Display name for the enum value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
+        :param const: Value mapping to member of ``array_enum``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#const UserSchemaProperty#const}
+        :param title: Display name for the enum value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ab10738fc35d57acf20ca4596814e4025a7063b4ba53b692b58b8d3367935fc6)
@@ -696,7 +696,7 @@ class UserSchemaPropertyArrayOneOf:
     def const(self) -> builtins.str:
         '''Value mapping to member of ``array_enum``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#const UserSchemaProperty#const}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#const UserSchemaProperty#const}
         '''
         result = self._values.get("const")
         assert result is not None, "Required property 'const' is missing"
@@ -706,7 +706,7 @@ class UserSchemaPropertyArrayOneOf:
     def title(self) -> builtins.str:
         '''Display name for the enum value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
         '''
         result = self._values.get("title")
         assert result is not None, "Required property 'title' is missing"
@@ -969,28 +969,28 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#index UserSchemaProperty#index}
-        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
-        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#type UserSchemaProperty#type}
-        :param array_enum: Array of values that an array property's items can be set to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#array_enum UserSchemaProperty#array_enum}
-        :param array_one_of: array_one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#array_one_of UserSchemaProperty#array_one_of}
-        :param array_type: The type of the array elements if ``type`` is set to ``array``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#array_type UserSchemaProperty#array_type}
-        :param description: The description of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#description UserSchemaProperty#description}
-        :param enum: Array of values a primitive property can be set to. See ``array_enum`` for arrays. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#enum UserSchemaProperty#enum}
-        :param external_name: External name of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#external_name UserSchemaProperty#external_name}
-        :param external_namespace: External namespace of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#external_namespace UserSchemaProperty#external_namespace}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#id UserSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param master: Master priority for the user schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#master UserSchemaProperty#master}
-        :param master_override_priority: master_override_priority block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#master_override_priority UserSchemaProperty#master_override_priority}
-        :param max_length: The maximum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#max_length UserSchemaProperty#max_length}
-        :param min_length: The minimum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#min_length UserSchemaProperty#min_length}
-        :param one_of: one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#one_of UserSchemaProperty#one_of}
-        :param pattern: The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#pattern UserSchemaProperty#pattern}
-        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#permissions UserSchemaProperty#permissions}
-        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#required UserSchemaProperty#required}
-        :param scope: determines whether an app user attribute can be set at the Individual or Group Level. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#scope UserSchemaProperty#scope}
-        :param unique: Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#unique UserSchemaProperty#unique}
-        :param user_type: User type ID. By default, it is ``default``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#user_type UserSchemaProperty#user_type}
+        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#index UserSchemaProperty#index}
+        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
+        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#type UserSchemaProperty#type}
+        :param array_enum: Array of values that an array property's items can be set to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#array_enum UserSchemaProperty#array_enum}
+        :param array_one_of: array_one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#array_one_of UserSchemaProperty#array_one_of}
+        :param array_type: The type of the array elements if ``type`` is set to ``array``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#array_type UserSchemaProperty#array_type}
+        :param description: The description of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#description UserSchemaProperty#description}
+        :param enum: Array of values a primitive property can be set to. See ``array_enum`` for arrays. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#enum UserSchemaProperty#enum}
+        :param external_name: External name of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#external_name UserSchemaProperty#external_name}
+        :param external_namespace: External namespace of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#external_namespace UserSchemaProperty#external_namespace}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#id UserSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param master: Master priority for the user schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#master UserSchemaProperty#master}
+        :param master_override_priority: master_override_priority block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#master_override_priority UserSchemaProperty#master_override_priority}
+        :param max_length: The maximum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#max_length UserSchemaProperty#max_length}
+        :param min_length: The minimum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#min_length UserSchemaProperty#min_length}
+        :param one_of: one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#one_of UserSchemaProperty#one_of}
+        :param pattern: The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#pattern UserSchemaProperty#pattern}
+        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#permissions UserSchemaProperty#permissions}
+        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#required UserSchemaProperty#required}
+        :param scope: determines whether an app user attribute can be set at the Individual or Group Level. Default: ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#scope UserSchemaProperty#scope}
+        :param unique: Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#unique UserSchemaProperty#unique}
+        :param user_type: User type ID. By default, it is ``default``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#user_type UserSchemaProperty#user_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1151,7 +1151,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def index(self) -> builtins.str:
         '''Subschema unique string identifier.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#index UserSchemaProperty#index}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#index UserSchemaProperty#index}
         '''
         result = self._values.get("index")
         assert result is not None, "Required property 'index' is missing"
@@ -1161,7 +1161,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def title(self) -> builtins.str:
         '''Subschema title (display name).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
         '''
         result = self._values.get("title")
         assert result is not None, "Required property 'title' is missing"
@@ -1171,7 +1171,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#type UserSchemaProperty#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#type UserSchemaProperty#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -1181,7 +1181,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def array_enum(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Array of values that an array property's items can be set to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#array_enum UserSchemaProperty#array_enum}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#array_enum UserSchemaProperty#array_enum}
         '''
         result = self._values.get("array_enum")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1192,7 +1192,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[UserSchemaPropertyArrayOneOf]]]:
         '''array_one_of block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#array_one_of UserSchemaProperty#array_one_of}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#array_one_of UserSchemaProperty#array_one_of}
         '''
         result = self._values.get("array_one_of")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[UserSchemaPropertyArrayOneOf]]], result)
@@ -1201,7 +1201,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def array_type(self) -> typing.Optional[builtins.str]:
         '''The type of the array elements if ``type`` is set to ``array``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#array_type UserSchemaProperty#array_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#array_type UserSchemaProperty#array_type}
         '''
         result = self._values.get("array_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1210,7 +1210,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''The description of the user schema property.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#description UserSchemaProperty#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#description UserSchemaProperty#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1219,7 +1219,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enum(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Array of values a primitive property can be set to. See ``array_enum`` for arrays.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#enum UserSchemaProperty#enum}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#enum UserSchemaProperty#enum}
         '''
         result = self._values.get("enum")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1228,7 +1228,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def external_name(self) -> typing.Optional[builtins.str]:
         '''External name of the user schema property.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#external_name UserSchemaProperty#external_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#external_name UserSchemaProperty#external_name}
         '''
         result = self._values.get("external_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1237,14 +1237,14 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def external_namespace(self) -> typing.Optional[builtins.str]:
         '''External namespace of the user schema property.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#external_namespace UserSchemaProperty#external_namespace}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#external_namespace UserSchemaProperty#external_namespace}
         '''
         result = self._values.get("external_namespace")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#id UserSchemaProperty#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#id UserSchemaProperty#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1256,7 +1256,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def master(self) -> typing.Optional[builtins.str]:
         '''Master priority for the user schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#master UserSchemaProperty#master}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#master UserSchemaProperty#master}
         '''
         result = self._values.get("master")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1267,7 +1267,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["UserSchemaPropertyMasterOverridePriority"]]]:
         '''master_override_priority block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#master_override_priority UserSchemaProperty#master_override_priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#master_override_priority UserSchemaProperty#master_override_priority}
         '''
         result = self._values.get("master_override_priority")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["UserSchemaPropertyMasterOverridePriority"]]], result)
@@ -1276,7 +1276,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def max_length(self) -> typing.Optional[jsii.Number]:
         '''The maximum length of the user property value. Only applies to type ``string``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#max_length UserSchemaProperty#max_length}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#max_length UserSchemaProperty#max_length}
         '''
         result = self._values.get("max_length")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1285,7 +1285,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def min_length(self) -> typing.Optional[jsii.Number]:
         '''The minimum length of the user property value. Only applies to type ``string``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#min_length UserSchemaProperty#min_length}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#min_length UserSchemaProperty#min_length}
         '''
         result = self._values.get("min_length")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1296,7 +1296,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["UserSchemaPropertyOneOf"]]]:
         '''one_of block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#one_of UserSchemaProperty#one_of}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#one_of UserSchemaProperty#one_of}
         '''
         result = self._values.get("one_of")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["UserSchemaPropertyOneOf"]]], result)
@@ -1305,7 +1305,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def pattern(self) -> typing.Optional[builtins.str]:
         '''The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#pattern UserSchemaProperty#pattern}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#pattern UserSchemaProperty#pattern}
         '''
         result = self._values.get("pattern")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1314,7 +1314,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def permissions(self) -> typing.Optional[builtins.str]:
         '''Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#permissions UserSchemaProperty#permissions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#permissions UserSchemaProperty#permissions}
         '''
         result = self._values.get("permissions")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1325,7 +1325,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the subschema is required.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#required UserSchemaProperty#required}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#required UserSchemaProperty#required}
         '''
         result = self._values.get("required")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1334,7 +1334,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def scope(self) -> typing.Optional[builtins.str]:
         '''determines whether an app user attribute can be set at the Individual or Group Level. Default: ``NONE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#scope UserSchemaProperty#scope}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#scope UserSchemaProperty#scope}
         '''
         result = self._values.get("scope")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1343,7 +1343,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def unique(self) -> typing.Optional[builtins.str]:
         '''Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#unique UserSchemaProperty#unique}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#unique UserSchemaProperty#unique}
         '''
         result = self._values.get("unique")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1352,7 +1352,7 @@ class UserSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_type(self) -> typing.Optional[builtins.str]:
         '''User type ID. By default, it is ``default``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#user_type UserSchemaProperty#user_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#user_type UserSchemaProperty#user_type}
         '''
         result = self._values.get("user_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1382,8 +1382,8 @@ class UserSchemaPropertyMasterOverridePriority:
         type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#value UserSchemaProperty#value}.
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#type UserSchemaProperty#type}.
+        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#value UserSchemaProperty#value}.
+        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#type UserSchemaProperty#type}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__926a35fba986870a2e5273a78f8c50f1fe6fcf4b3cc53a9dd3d40355b0ef1983)
@@ -1397,14 +1397,14 @@ class UserSchemaPropertyMasterOverridePriority:
 
     @builtins.property
     def value(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#value UserSchemaProperty#value}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#value UserSchemaProperty#value}.'''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#type UserSchemaProperty#type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#type UserSchemaProperty#type}.'''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1603,8 +1603,8 @@ class UserSchemaPropertyMasterOverridePriorityOutputReference(
 class UserSchemaPropertyOneOf:
     def __init__(self, *, const: builtins.str, title: builtins.str) -> None:
         '''
-        :param const: Enum value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#const UserSchemaProperty#const}
-        :param title: Enum title. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
+        :param const: Enum value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#const UserSchemaProperty#const}
+        :param title: Enum title. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5d18882081b49bace254a50bc1e1996c9bd4d4eb2ca8d4f54cd439a61caf325d)
@@ -1619,7 +1619,7 @@ class UserSchemaPropertyOneOf:
     def const(self) -> builtins.str:
         '''Enum value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#const UserSchemaProperty#const}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#const UserSchemaProperty#const}
         '''
         result = self._values.get("const")
         assert result is not None, "Required property 'const' is missing"
@@ -1629,7 +1629,7 @@ class UserSchemaPropertyOneOf:
     def title(self) -> builtins.str:
         '''Enum title.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_schema_property#title UserSchemaProperty#title}
         '''
         result = self._values.get("title")
         assert result is not None, "Required property 'title' is missing"

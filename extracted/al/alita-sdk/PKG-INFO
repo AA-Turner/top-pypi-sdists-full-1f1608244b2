@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: alita_sdk
-Version: 0.3.130
+Version: 0.3.135
 Summary: SDK for building langchain agents using resources from Alita
 Author-email: Artem Rozumenko <artyom.rozumenko@gmail.com>, Mikalai Biazruchka <mikalai_biazruchka@epam.com>, Roman Mitusov <roman_mitusov@epam.com>, Ivan Krakhmaliuk <lifedjik@gmail.com>
 Project-URL: Homepage, https://projectalita.ai
@@ -70,7 +70,7 @@ Requires-Dist: rlpycairo==0.3.0
 Requires-Dist: cairocffi==1.7.1
 Requires-Dist: docx2txt==0.8
 Requires-Dist: mammoth==1.9.0
-Requires-Dist: elitea-analyse==0.1.1
+Requires-Dist: elitea-analyse==0.1.2
 Requires-Dist: opentelemetry-exporter-otlp-proto-grpc==1.25.0
 Dynamic: license-file
 

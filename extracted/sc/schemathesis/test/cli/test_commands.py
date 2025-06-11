@@ -1,13 +1,10 @@
 import http.client
-import json
 import os
 import pathlib
 import platform
 import sys
 import time
-from unittest.mock import ANY
 from urllib.parse import urljoin
-from xml.etree import ElementTree
 
 import hypothesis
 import pytest
@@ -16,59 +13,35 @@ import trustme
 import urllib3.exceptions
 import yaml
 from _pytest.main import ExitCode
-from aiohttp.test_utils import unused_port
-from hypothesis.database import DirectoryBasedExampleDatabase, InMemoryExampleDatabase
 
-from schemathesis._dependency_versions import IS_PYTEST_ABOVE_7
-from schemathesis._override import CaseOverride
-from schemathesis.checks import ALL_CHECKS, DEFAULT_CHECKS, not_a_server_error
-from schemathesis.cli import (
-    DEPRECATED_PRE_RUN_OPTION_WARNING,
-    LoaderConfig,
-    execute,
-    get_exit_code,
-    reset_checks,
-)
-from schemathesis.cli.cassettes import CassetteFormat
-from schemathesis.cli.constants import HealthCheck, Phase
-from schemathesis.code_samples import CodeSampleStyle
-from schemathesis.constants import DEFAULT_DEADLINE, DEFAULT_RESPONSE_TIMEOUT, FLAKY_FAILURE_MESSAGE
-from schemathesis.extra._flask import run_server
-from schemathesis.generation import DataGenerationMethod, GenerationConfig
-from schemathesis.internal.checks import CheckConfig
-from schemathesis.internal.datetime import current_datetime
-from schemathesis.internal.output import OutputConfig
-from schemathesis.models import APIOperation, Case
-from schemathesis.runner import from_schema
-from schemathesis.runner.impl import threadpool
-from schemathesis.runner.probes import ProbeConfig
+from schemathesis.schemas import APIOperation
 from schemathesis.specs.openapi import unregister_string_format
-from schemathesis.specs.openapi.checks import status_code_conformance
-from schemathesis.stateful import Stateful
-from schemathesis.targets import DEFAULT_TARGETS
-from schemathesis.transports import RequestConfig, WSGITransport
 from test.apps._graphql._flask import create_app as create_graphql_app
 from test.apps.openapi._flask import create_app as create_openapi_app
-from test.utils import HERE, SIMPLE_PATH, flaky, strip_style_win32
+from test.utils import HERE, SIMPLE_PATH, flaky
 
-PHASES = ", ".join(x.name for x in Phase)
-HEALTH_CHECKS = "|".join(x.name for x in HealthCheck)
+skip_py39 = pytest.mark.skipif(
+    sys.version_info < (3, 10), reason="Older version of Click that treats exit codes differently"
+)
 
 
+@skip_py39
 def test_commands_help(cli, snapshot_cli):
     assert cli.main() == snapshot_cli
 
 
+@skip_py39
 def test_run_subprocess(testdir):
     # To verify that CLI entry point is installed properly
     result = testdir.run("schemathesis")
-    assert result.ret == ExitCode.OK
+    assert result.ret == ExitCode.INTERRUPTED
 
 
 @pytest.mark.skipif(platform.system() == "Windows", reason="Requires extra setup on Windows")
+@skip_py39
 def test_run_as_module(testdir):
     result = testdir.run("python", "-m", "schemathesis.cli")
-    assert result.ret == ExitCode.OK
+    assert result.ret == ExitCode.INTERRUPTED
 
 
 @pytest.mark.parametrize(
@@ -76,42 +49,26 @@ def test_run_as_module(testdir):
     [
         (),
         (SIMPLE_PATH,),
-        (SIMPLE_PATH, "--base-url=test"),
-        (SIMPLE_PATH, "--base-url=127.0.0.1:8080"),
+        (SIMPLE_PATH, "--url=test"),
+        (SIMPLE_PATH, "--url=127.0.0.1:8080"),
         ("http://127.0.0.1", "--request-timeout=-5"),
         ("http://127.0.0.1", "--request-timeout=0"),
-        ("http://127.0.0.1", "--method=+"),
         ("http://127.0.0.1", "--auth=123"),
         ("http://127.0.0.1", "--auth=:pass"),
         ("http://127.0.0.1", "--auth=тест:pass"),
         ("http://127.0.0.1", "--auth=user:тест"),
-        ("http://127.0.0.1", "--auth-type=random"),
         ("http://127.0.0.1", "--header=123"),
         ("http://127.0.0.1", "--header=:"),
         ("http://127.0.0.1", "--header= :"),
         ("http://127.0.0.1", "--header=тест:test"),
         ("http://127.0.0.1", "--header=test:тест"),
-        ("http://127.0.0.1", "--hypothesis-phases=explicit,first,second"),
-        ("http://127.0.0.1", "--hypothesis-deadline=wrong"),
-        ("http://127.0.0.1", "--hypothesis-deadline=0"),
         ("//test",),
         ("http://127.0.0.1", "--max-response-time=0"),
         ("unknown.json",),
-        ("unknown.json", "--base-url=http://127.0.0.1"),
+        ("unknown.json", "--url=http://127.0.0.1"),
         ("--help",),
         ("http://127.0.0.1", "--generation-codec=foobar"),
-        ("http://127.0.0.1", "--set-query", "key=a\ud800b"),
-        ("http://127.0.0.1", "--set-query", "key"),
-        ("http://127.0.0.1", "--set-query", "=v"),
-        ("http://127.0.0.1", "--set-header", "Token=тест"),
-        ("http://127.0.0.1", "--set-cookie", "SESSION_ID=тест"),
-        ("http://127.0.0.1", "--set-path", "user_id=\ud800b"),
-        ("http://127.0.0.1", "--set-query", "key=value", "--set-query", "key=value"),
-        ("http://127.0.0.1", "--set-header", "Authorization=value", "--auth", "foo:bar"),
-        ("http://127.0.0.1", "--set-header", "Authorization=value", "-H", "Authorization: value"),
-        ("http://127.0.0.1", "--hypothesis-no-phases=unknown"),
-        ("http://127.0.0.1", "--hypothesis-no-phases=explicit", "--hypothesis-phases=explicit"),
-        ("http://127.0.0.1", "--cassette-format=unknown"),
+        ("http://127.0.0.1", "--report=unknown"),
     ],
 )
 def test_run_output(cli, args, snapshot_cli):
@@ -155,25 +112,6 @@ def test_certificate_only_key(cli, tmp_path, snapshot_cli):
     assert cli.run("http://127.0.0.1", f"--request-cert-key={tmp_path}") == snapshot_cli
 
 
-@pytest.mark.operations("invalid")
-def test_invalid_operation_suggestion(cli, cli_args, snapshot_cli):
-    # When the app's schema contains errors
-    # Then the whole Schemathesis run should fail
-    # And there should be a suggestion to disable schema validation
-    assert cli.run(*cli_args, "--validate-schema=true") == snapshot_cli
-
-
-@pytest.mark.operations("invalid")
-def test_invalid_operation_suggestion_disabled(cli, cli_args):
-    # When the app's schema contains errors
-    # And schema validation is disabled
-    result = cli.run(*cli_args, "--validate-schema=false")
-    # Then the whole Schemathesis run should fail
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    # And there should be no suggestion
-    assert "You can disable input schema validation" not in result.stdout
-
-
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.parametrize("header", ["Authorization", "authorization"])
 def test_auth_and_authorization_header_are_disallowed(cli, schema_url, header, snapshot_cli):
@@ -190,21 +128,13 @@ def test_schema_not_available(cli, workers, snapshot_cli):
     assert cli.run("http://127.0.0.1:1/schema.yaml", f"--workers={workers}") == snapshot_cli
 
 
-def test_schema_not_available_wsgi(cli, loadable_flask_app, snapshot_cli):
-    # When the given schema is unreachable
-    # Then the whole Schemathesis run should fail
-    # And error message is displayed
-    assert cli.run("unknown.yaml", f"--app={loadable_flask_app}") == snapshot_cli
-
-
-@pytest.mark.parametrize("args", [(), ("--force-schema-version=30",)])
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("success")
-def test_empty_schema_file(testdir, cli, snapshot_cli, args):
+def test_empty_schema_file(testdir, cli, snapshot_cli):
     # When the schema file is empty
     filename = testdir.makefile(".json", schema="")
     # Then a proper error should be reported
-    assert cli.run(str(filename), "--base-url=http://127.0.0.1:1", *args) == snapshot_cli
+    assert cli.run(str(filename), "--url=http://127.0.0.1:1") == snapshot_cli
 
 
 @pytest.mark.openapi_version("3.0")
@@ -224,287 +154,44 @@ def test_certificates(cli, schema_url, mocker):
         result = cli.run(schema_url, f"--request-cert={cert_path}")
         assert result.exit_code == ExitCode.OK, result.stdout
         # Then both schema & test network calls should use this cert
-        assert len(request.call_args_list) == 2
+        assert len(request.call_args_list) == 9
         assert request.call_args_list[0][1]["cert"] == request.call_args_list[1][1]["cert"] == str(cert_path)
 
 
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("success")
 def test_hypothesis_database_with_derandomize(cli, schema_url, snapshot_cli):
-    assert cli.run(schema_url, "--hypothesis-database=:memory:", "--hypothesis-derandomize") == snapshot_cli
-
-
-SCHEMA_URI = "https://example.schemathesis.io/openapi.json"
-
-
-@pytest.mark.parametrize(
-    ("args", "expected"),
-    [
-        ([], {}),
-        (["--exitfirst"], {"exit_first": True}),
-        (["--workers=2"], {"workers_num": 2}),
-        (["--hypothesis-seed=123"], {"seed": 123}),
-        (
-            [
-                "--hypothesis-deadline=1000",
-                "--hypothesis-derandomize",
-                "--hypothesis-max-examples=1000",
-                "--hypothesis-phases=explicit,generate",
-                "--hypothesis-report-multiple-bugs=0",
-                "--hypothesis-suppress-health-check=too_slow,filter_too_much",
-                "--hypothesis-verbosity=normal",
-            ],
-            {
-                "hypothesis_settings": hypothesis.settings(
-                    deadline=1000,
-                    derandomize=True,
-                    max_examples=1000,
-                    phases=[hypothesis.Phase.explicit, hypothesis.Phase.generate],
-                    report_multiple_bugs=False,
-                    suppress_health_check=[hypothesis.HealthCheck.too_slow, hypothesis.HealthCheck.filter_too_much],
-                    verbosity=hypothesis.Verbosity.normal,
-                )
-            },
-        ),
-        (["--hypothesis-deadline=None"], {"hypothesis_settings": hypothesis.settings(deadline=None)}),
-        (
-            ["--hypothesis-no-phases=explicit"],
-            {
-                "hypothesis_settings": hypothesis.settings(
-                    deadline=DEFAULT_DEADLINE,
-                    phases=list(set(hypothesis.Phase) - {hypothesis.Phase.explicit, hypothesis.Phase.explain}),
-                )
-            },
-        ),
-        (["--max-response-time=10"], {"max_response_time": 10}),
-    ],
-)
-def test_from_schema_arguments(cli, mocker, swagger_20, args, expected):
-    mocker.patch("schemathesis.cli.load_schema", return_value=swagger_20)
-    execute = mocker.patch("schemathesis.runner.from_schema", autospec=True)
-
-    cli.run(SCHEMA_URI, *args)
-
-    expected = {
-        "checks": DEFAULT_CHECKS,
-        "checks_config": CheckConfig(),
-        "targets": DEFAULT_TARGETS,
-        "workers_num": 1,
-        "exit_first": False,
-        "max_failures": None,
-        "started_at": ANY,
-        "dry_run": False,
-        "stateful": Stateful.links,
-        "stateful_recursion_limit": 5,
-        "auth": None,
-        "auth_type": "basic",
-        "override": CaseOverride({}, {}, {}, {}),
-        "headers": {},
-        "request_timeout": DEFAULT_RESPONSE_TIMEOUT,
-        "request_tls_verify": True,
-        "request_proxy": None,
-        "request_cert": None,
-        "store_interactions": False,
-        "seed": None,
-        "unique_data": False,
-        "max_response_time": None,
-        "no_failfast": False,
-        "generation_config": GenerationConfig(),
-        "probe_config": ProbeConfig(auth_type="basic", headers={}, request=RequestConfig(timeout=10000)),
-        "service_client": None,
-        **expected,
-    }
-    hypothesis_settings = expected.pop("hypothesis_settings", None)
-    call_kwargs = execute.call_args[1]
-    executed_hypothesis_settings = call_kwargs.pop("hypothesis_settings", None)
-    if hypothesis_settings is not None:
-        # Compare non-default Hypothesis settings as `hypothesis.settings` can't be compared
-        assert executed_hypothesis_settings.show_changed() == hypothesis_settings.show_changed()
-    assert call_kwargs == expected
-
-
-@pytest.mark.parametrize(
-    ("args", "expected"),
-    [
-        (["--auth=test:test"], {"auth": ("test", "test"), "auth_type": "basic"}),
-        (["--auth=test:test", "--auth-type=digest"], {"auth": ("test", "test"), "auth_type": "digest"}),
-        (["--auth=test:test", "--auth-type=DIGEST"], {"auth": ("test", "test"), "auth_type": "digest"}),
-        (["--header=Authorization:Bearer 123"], {"headers": {"Authorization": "Bearer 123"}}),
-        (["--header=Authorization:  Bearer 123 "], {"headers": {"Authorization": "Bearer 123 "}}),
-        (
-            ["--method=POST", "--auth=test:test"],
-            {"auth": ("test", "test"), "auth_type": "basic"},
-        ),
-        (["--base-url=https://example.com/api/v1test"], {"base_url": "https://example.com/api/v1test"}),
-    ],
-)
-def test_load_schema_arguments(cli, mocker, args, expected):
-    mocker.patch("schemathesis.runner.impl.SingleThreadRunner.execute", autospec=True)
-    load_schema = mocker.patch("schemathesis.cli.load_schema", autospec=True)
-
-    cli.run(SCHEMA_URI, *args)
-    expected = LoaderConfig(
-        SCHEMA_URI,
-        **{
-            **{
-                "app": None,
-                "base_url": None,
-                "wait_for_schema": None,
-                "rate_limit": None,
-                "auth": None,
-                "auth_type": "basic",
-                "headers": {},
-                "data_generation_methods": [DataGenerationMethod.default()],
-                "validate_schema": False,
-                "output_config": OutputConfig(),
-                "generation_config": GenerationConfig(),
-                "force_schema_version": None,
-                "request_tls_verify": True,
-                "request_proxy": None,
-                "request_cert": None,
-            },
-            **expected,
-        },
-    )
-
-    assert load_schema.call_args[0][0] == expected
-
-
-def test_load_schema_arguments_headers_to_loader_for_app(ctx, cli, mocker):
-    from_wsgi = mocker.patch("schemathesis.specs.openapi.loaders.from_wsgi", autospec=True)
-
-    module = ctx.write_pymodule(
-        """
-from test.apps.openapi._flask import create_app
-
-app = create_app()
-"""
-    )
-    cli.run("/schema.yaml", "--app", f"{module}:app", "-H", "Authorization: Bearer 123")
-
-    assert from_wsgi.call_args[1]["headers"]["Authorization"] == "Bearer 123"
-
-
-@pytest.mark.parametrize(
-    ("factory", "cls"),
-    [
-        (lambda r: None, DirectoryBasedExampleDatabase),
-        (lambda r: "none", type(None)),
-        (lambda r: ":memory:", InMemoryExampleDatabase),
-        (lambda r: r.getfixturevalue("tmpdir"), DirectoryBasedExampleDatabase),
-    ],
-)
-def test_hypothesis_database_parsing(request, cli, mocker, swagger_20, factory, cls):
-    mocker.patch("schemathesis.cli.load_schema", return_value=swagger_20)
-    execute = mocker.patch("schemathesis.runner.from_schema", autospec=True)
-    database = factory(request)
-    if database:
-        args = (f"--hypothesis-database={database}",)
-    else:
-        args = ()
-    cli.run(SCHEMA_URI, *args)
-    hypothesis_settings = execute.call_args[1]["hypothesis_settings"]
-    assert isinstance(hypothesis_settings.database, cls)
+    assert cli.run(schema_url, "--generation-database=:memory:", "--generation-deterministic") == snapshot_cli
 
 
 @pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("success")
-def test_hypothesis_database_report(cli, schema_url):
-    result = cli.run(schema_url, "--hypothesis-database=:memory:", "-v")
-    assert result.exit_code == ExitCode.OK, result.stdout
-    lines = result.stdout.split("\n")
-    assert lines[3] == "Hypothesis: database=InMemoryExampleDatabase({}), deadline=timedelta(milliseconds=15000)"
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("success")
-def test_metadata(cli, schema_url):
-    # When the verbose mode is enabled
-    result = cli.run(schema_url, "-v")
-    assert result.exit_code == ExitCode.OK, result.stdout
-    lines = result.stdout.split("\n")
-    # Then there should be metadata displayed
-    assert lines[1].startswith("platform")
-    assert lines[2].startswith("rootdir")
-    assert lines[3].startswith("Hypothesis")
-
-
-def test_all_checks(cli, mocker, swagger_20):
-    mocker.patch("schemathesis.cli.load_schema", return_value=swagger_20)
-    execute = mocker.patch("schemathesis.runner.from_schema", autospec=True)
-    cli.run(SCHEMA_URI, "--checks=all")
-    assert execute.call_args[1]["checks"] == ALL_CHECKS
-
-
-def test_comma_separated_checks(cli, mocker, swagger_20):
-    mocker.patch("schemathesis.cli.load_schema", return_value=swagger_20)
-    execute = mocker.patch("schemathesis.runner.from_schema", autospec=True)
-    cli.run(SCHEMA_URI, "--checks=not_a_server_error,status_code_conformance")
-    assert execute.call_args[1]["checks"] == (not_a_server_error, status_code_conformance)
-
-
-def test_comma_separated_exclude_checks(cli, mocker, swagger_20):
-    excluded_checks = "not_a_server_error,status_code_conformance"
-    mocker.patch("schemathesis.cli.load_schema", return_value=swagger_20)
-    execute = mocker.patch("schemathesis.runner.from_schema", autospec=True)
-    cli.run(SCHEMA_URI, "--checks=all", f"--exclude-checks={excluded_checks}")
-    assert execute.call_args[1]["checks"] == tuple(
-        check for check in tuple(ALL_CHECKS) if check.__name__ not in excluded_checks.split(",")
-    )
-
-
 @pytest.mark.operations
 def test_hypothesis_parameters(cli, schema_url):
     # When Hypothesis options are passed via command line
     result = cli.run(
         schema_url,
-        "--hypothesis-deadline=1000",
-        "--hypothesis-derandomize",
-        "--hypothesis-max-examples=1000",
-        "--hypothesis-phases=explicit,generate",
-        "--hypothesis-report-multiple-bugs=0",
-        "--hypothesis-suppress-health-check=all",
-        "--hypothesis-verbosity=normal",
+        "--generation-deterministic",
+        "--max-examples=1000",
+        "--suppress-health-check=all",
     )
     # Then they should be correctly converted into arguments accepted by `hypothesis.settings`
     # Parameters are validated in `hypothesis.settings`
     assert result.exit_code == ExitCode.OK, result.stdout
 
 
-@pytest.mark.operations("success")
-@pytest.mark.parametrize("workers", [1, 2])
-def test_cli_run_output_success(cli, cli_args, workers):
-    result = cli.run(*cli_args, f"--workers={workers}")
-    assert result.exit_code == ExitCode.OK, result.stdout
-    lines = result.stdout.split("\n")
-    assert lines[5] == f"Workers: {workers}"
-    if workers == 1:
-        assert lines[11].startswith("GET /api/success .")
-    else:
-        assert lines[11] == "."
-    assert " HYPOTHESIS OUTPUT " not in result.stdout
-    assert " SUMMARY " in result.stdout
-
-    lines = result.stdout.strip().split("\n")
-    last_line = lines[-1]
-    assert "== 1 passed in " in last_line
-    # And the running time is a small positive number
-    time = float(last_line.split(" ")[-2].replace("s", ""))
-    assert 0 <= time < 5
-
-
 @pytest.mark.operations("failure")
 @pytest.mark.parametrize("workers", [1, 2])
-def test_cli_run_only_failure(cli, cli_args, workers, snapshot_cli):
-    assert cli.run(*cli_args, f"--workers={workers}") == snapshot_cli
+def test_cli_run_only_failure(cli, schema_url, workers, snapshot_cli):
+    assert cli.run(schema_url, f"--workers={workers}", "-c not_a_server_error") == snapshot_cli
 
 
 @pytest.mark.operations("upload_file")
 def test_cli_binary_body(cli, schema_url, hypothesis_max_examples):
     result = cli.run(
         schema_url,
-        "--hypothesis-suppress-health-check=filter_too_much",
-        f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
+        "--suppress-health-check=filter_too_much",
+        "--mode=positive",
+        f"--max-examples={hypothesis_max_examples or 1}",
     )
     assert result.exit_code == ExitCode.OK, result.stdout
     assert " HYPOTHESIS OUTPUT " not in result.stdout
@@ -512,26 +199,22 @@ def test_cli_binary_body(cli, schema_url, hypothesis_max_examples):
 
 @pytest.mark.operations
 @pytest.mark.parametrize("workers", [1, 2])
-def test_cli_run_output_empty(cli, cli_args, workers):
-    result = cli.run(*cli_args, f"--workers={workers}")
+def test_cli_run_output_empty(cli, schema_url, workers):
+    result = cli.run(schema_url, f"--workers={workers}")
     assert result.exit_code == ExitCode.OK, result.stdout
     assert " HYPOTHESIS OUTPUT " not in result.stdout
     assert " SUMMARY " in result.stdout
 
     lines = result.stdout.strip().split("\n")
-    assert "No checks were performed." in lines
     assert "= Empty test suite =" in lines[-1]
 
 
-@pytest.mark.operations
-@pytest.mark.parametrize("workers", [1, 2])
-def test_cli_run_changed_base_url(cli, server, cli_args, workers):
+@pytest.mark.openapi_version("3.0")
+def test_cli_run_changed_base_url(cli, schema_url, server, snapshot_cli):
     # When the CLI receives custom base URL
     base_url = f"http://127.0.0.1:{server['port']}/api"
-    result = cli.run(*cli_args, "--base-url", base_url, f"--workers={workers}")
     # Then the base URL should be correctly displayed in the CLI output
-    lines = result.stdout.strip().split("\n")
-    assert lines[2] == f"Base URL: {base_url}"
+    assert cli.run(schema_url, "--url", base_url, "-c not_a_server_error") == snapshot_cli
 
 
 @pytest.mark.parametrize(
@@ -549,24 +232,13 @@ def test_execute_missing_schema(cli, openapi3_base_url, url, message, workers):
     assert message in result.stdout
 
 
-@flaky(max_runs=3, min_passes=1)
-@pytest.mark.operations("success", "slow")
-@pytest.mark.parametrize("workers", [1, 2])
-@pytest.mark.snapshot(replace_multi_worker_progress="??", replace_statistic=True)
-def test_hypothesis_failed_event(cli, cli_args, workers, snapshot_cli):
-    # When the Hypothesis deadline option is set manually, and it is smaller than the response time
-    # Then the whole Schemathesis run should fail
-    # And the proper error message should be displayed
-    assert cli.run(*cli_args, "--hypothesis-deadline=20", f"--workers={workers}") == snapshot_cli
-
-
 @pytest.mark.operations("success", "slow")
 @pytest.mark.parametrize("workers", [1, 2])
 def test_connection_timeout(cli, schema_url, workers, snapshot_cli):
     # When connection timeout is specified in the CLI and the request fails because of it
     # Then the whole Schemathesis run should fail
     # And the given operation should be displayed as a failure
-    assert cli.run(schema_url, "--request-timeout=80", f"--workers={workers}") == snapshot_cli
+    assert cli.run(schema_url, "--request-timeout=0.08", f"--workers={workers}", "--phases=fuzzing") == snapshot_cli
 
 
 @pytest.mark.operations("success")
@@ -587,117 +259,64 @@ def test_read_content_timeout(cli, mocker, schema_url, snapshot_cli):
     assert cli.run(schema_url) == snapshot_cli
 
 
-@pytest.mark.operations("success", "slow")
-@pytest.mark.parametrize("workers", [1, 2])
-def test_default_hypothesis_settings(cli, cli_args, workers):
-    # When there is a slow operation and if it is faster than 15s
-    result = cli.run(*cli_args, f"--workers={workers}")
-    # Then the tests should pass, because of default 15s deadline
-    assert result.exit_code == ExitCode.OK, result.stdout
-    lines = result.stdout.split("\n")
-    if workers == 1:
-        assert lines[11].startswith("GET /api/slow .")
-        assert lines[12].startswith("GET /api/success .")
-    else:
-        # It could be in any sequence, because of multiple threads
-        assert lines[11] == ".."
-
-
 @pytest.mark.operations("unsatisfiable")
 @pytest.mark.parametrize("workers", [1, 2])
-def test_unsatisfiable(cli, cli_args, workers, snapshot_cli):
+def test_unsatisfiable(cli, schema_url, workers, snapshot_cli):
     # When the app's schema contains parameters that can't be generated
     # For example if it contains contradiction in the parameters' definition - requires to be integer AND string at the
     # same time
     # And more clear error message is displayed instead of Hypothesis one
-    assert cli.run(*cli_args, f"--workers={workers}") == snapshot_cli
-
-
-@pytest.mark.operations("flaky")
-@pytest.mark.parametrize("workers", [1, 2])
-def test_flaky(cli, cli_args, workers):
-    # When the operation fails / succeeds randomly
-    # Derandomize is needed for reproducible test results
-    result = cli.run(*cli_args, "--hypothesis-derandomize", f"--workers={workers}")
-    # Then the whole Schemathesis run should fail
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    # And standard Hypothesis error should not appear in the output
-    assert "Failed to reproduce exception. Expected:" not in result.stdout
-    # And this operation should be marked as failed in the progress line
-    lines = result.stdout.split("\n")
-    if workers == 1:
-        assert lines[10].startswith("GET /api/flaky F")
-    else:
-        assert lines[10] == "F"
-    # And it should be displayed only once in "FAILURES" section
-    assert "= FAILURES =" in result.stdout
-    assert "_ GET /api/flaky _" in result.stdout
-    # And more clear error message is displayed instead of Hypothesis one
-    lines = result.stdout.split("\n")
-    assert FLAKY_FAILURE_MESSAGE in lines
+    assert cli.run(schema_url, "--mode=positive", f"--workers={workers}") == snapshot_cli
 
 
 @pytest.mark.operations("invalid")
 @pytest.mark.parametrize("workers", [1])
-def test_invalid_operation(cli, cli_args, workers):
+def test_invalid_operation(cli, schema_url, workers, snapshot_cli):
     # When the app's schema contains errors
     # For example if its type is "int" but should be "integer"
     # And schema validation is disabled
-    result = cli.run(*cli_args, f"--workers={workers}", "--validate-schema=false")
-    # Then the whole Schemathesis run should fail
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    # And standard Hypothesis error should not appear in the output
-    assert "You can add @seed" not in result.stdout
-    # And this operation should be marked as errored in the progress line
-    lines = result.stdout.split("\n")
-    assert lines[11].startswith("POST /api/invalid E")
-    assert " POST /api/invalid " in lines[14]
-    # There shouldn't be a section end immediately after section start - there should be error text
-    assert (
-        """Invalid definition for element at index 0 in `parameters`
-
-Location:
-    paths -> /invalid -> post -> parameters -> 0
-
-Problematic definition:
-"""
-        in result.stdout
-    )
+    assert cli.run(schema_url, f"--workers={workers}", "--phases=fuzzing", "--mode=positive") == snapshot_cli
 
 
 @pytest.mark.operations("teapot")
 @pytest.mark.parametrize("workers", [1, 2])
-def test_status_code_conformance(cli, cli_args, workers, snapshot_cli):
+def test_status_code_conformance(cli, schema_url, workers, snapshot_cli):
     # When operation returns a status code, that is not listed in "responses"
     # And "status_code_conformance" is specified
     # Then the whole Schemathesis run should fail
     # And this operation should be marked as failed in the progress line
-    assert cli.run(*cli_args, "-c", "status_code_conformance", f"--workers={workers}") == snapshot_cli
+    assert cli.run(schema_url, "-c", "status_code_conformance", f"--workers={workers}") == snapshot_cli
 
 
 @pytest.mark.operations("headers")
-def test_headers_conformance_valid(cli, cli_args):
-    result = cli.run(*cli_args, "-c", "response_headers_conformance", "-H", "X-Custom-Header: 42")
+def test_headers_conformance_valid(cli, schema_url):
+    result = cli.run(schema_url, "-c", "response_headers_conformance", "-H", "X-Custom-Header: 42")
     assert result.exit_code == ExitCode.OK, result.stdout
     lines = result.stdout.split("\n")
     assert "1. Received a response with missing headers: X-Custom-Header" not in lines
 
 
 @pytest.mark.operations("multiple_failures")
-@pytest.mark.snapshot(replace_statistic=True)
 def test_multiple_failures_single_check(cli, schema_url, snapshot_cli):
-    assert cli.run(schema_url, "--hypothesis-seed=1", "--hypothesis-derandomize") == snapshot_cli
+    assert (
+        cli.run(
+            schema_url,
+            "--generation-deterministic",
+            "-c not_a_server_error,positive_data_acceptance",
+            "--mode=positive",
+        )
+        == snapshot_cli
+    )
 
 
 @pytest.mark.operations("multiple_failures")
 @pytest.mark.openapi_version("3.0")
-def test_no_failfast(cli, schema_url):
-    result = cli.run(schema_url, "--experimental-no-failfast")
-    assert "/ 100 passed" in result.stdout
+def test_continue_on_failure(cli, schema_url):
+    result = cli.run(schema_url, "--continue-on-failure")
+    assert "114 generated" in result.stdout
 
 
 @pytest.mark.operations("multiple_failures")
-@pytest.mark.snapshot(replace_statistic=True)
 def test_multiple_failures_different_check(cli, schema_url, snapshot_cli):
     assert (
         cli.run(
@@ -706,8 +325,8 @@ def test_multiple_failures_different_check(cli, schema_url, snapshot_cli):
             "status_code_conformance",
             "-c",
             "not_a_server_error",
-            "--hypothesis-derandomize",
-            "--hypothesis-seed=1",
+            "--mode=positive",
+            "--generation-deterministic",
         )
         == snapshot_cli
     )
@@ -718,7 +337,9 @@ def test_connection_error(cli, schema_url, workers, snapshot_cli):
     # When the given base_url is unreachable
     # Then the whole Schemathesis run should fail
     # And the proper error messages should be displayed for each operation
-    assert cli.run(schema_url, "--base-url=http://127.0.0.1:1/api", f"--workers={workers}") == snapshot_cli
+    assert (
+        cli.run(schema_url, "--url=http://127.0.0.1:1/api", f"--workers={workers}", "--mode=positive") == snapshot_cli
+    )
 
 
 @pytest.mark.openapi_version("3.0")
@@ -734,7 +355,7 @@ def test_chunked_encoding_error(mocker, cli, schema_url, app, snapshot_cli):
             raise urllib3.exceptions.InvalidChunkLength(response, value) from e
 
     mocker.patch("urllib3.response.HTTPResponse._update_chunk_length", _update_chunk_length)
-    assert cli.run(schema_url) == snapshot_cli
+    assert cli.run(schema_url, "--phases=fuzzing") == snapshot_cli
 
 
 @pytest.mark.openapi_version("3.0")
@@ -751,7 +372,7 @@ def test_remote_disconnected_error(mocker, cli, schema_url, snapshot_cli):
 @pytest.mark.operations("success")
 @pytest.mark.skipif(platform.system() == "Windows", reason="Linux specific error")
 def test_proxy_error(cli, schema_url, snapshot_cli):
-    assert cli.run(schema_url, "--request-proxy=http://127.0.0.1") == snapshot_cli
+    assert cli.run(schema_url, "--proxy=http://127.0.0.1") == snapshot_cli
 
 
 @pytest.fixture
@@ -777,205 +398,45 @@ def digits_format(ctx):
     unregister_string_format("digits")
 
 
-@pytest.mark.parametrize(
-    "prepare_args_kwargs",
-    [
-        lambda module: (("--pre-run", module), {}),
-        lambda module: ((), {"hooks": module}),
-    ],
-)
 @pytest.mark.operations("custom_format")
-def test_hooks_valid(cli, schema_url, app, digits_format, prepare_args_kwargs):
+def test_hooks_valid(cli, schema_url, app, digits_format):
     # When a hook is passed to the CLI call
-    args, kwargs = prepare_args_kwargs(digits_format)
-    result = cli.main(*args, "run", "--hypothesis-suppress-health-check=filter_too_much", schema_url, **kwargs)
-
+    result = cli.main(
+        "run",
+        "--suppress-health-check=filter_too_much",
+        "--phases=fuzzing",
+        "--mode=positive",
+        schema_url,
+        hooks=digits_format,
+    )
     # Then CLI should run successfully
     assert result.exit_code == ExitCode.OK, result.stdout
     # And all registered new string format should produce digits as expected
     assert all(request.query["id"].isdigit() for request in app["incoming_requests"])
-    # And the `--pre-run` version raises a deprecation warning
-    if args:
-        assert DEPRECATED_PRE_RUN_OPTION_WARNING in result.stdout
 
 
-def test_conditional_checks(ctx, cli, hypothesis_max_examples, schema_url):
-    module = ctx.write_pymodule(
-        """
+@pytest.fixture
+def conditional_check(ctx):
+    with ctx.check("""
 @schemathesis.check
 def conditional_check(ctx, response, case):
     # skip this check
     return True
-"""
-    )
+""") as module:
+        yield module
 
+
+def test_conditional_checks(cli, hypothesis_max_examples, schema_url, conditional_check):
     result = cli.main(
         "run",
         "-c",
         "conditional_check",
         schema_url,
-        f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-        hooks=module,
+        f"--max-examples={hypothesis_max_examples or 1}",
+        hooks=conditional_check,
     )
 
     assert result.exit_code == ExitCode.OK
-    # One additional case created for two API operations - /api/failure and /api/success.
-    assert "No checks were performed." in result.stdout
-
-
-def test_add_case(ctx, cli, hypothesis_max_examples, schema_url):
-    module = ctx.write_pymodule(
-        """
-import click
-
-@schemathesis.hook
-def add_case(context, case, response):
-    if not case.headers:
-        case.headers = {}
-    case.headers["copy"] = "this is a copied case"
-    return case
-
-@schemathesis.check
-def add_case_check(ctx, response, case):
-    if case.headers and case.headers.get("copy") == "this is a copied case":
-        # we will look for this output
-        click.echo("The case was added!")
-"""
-    )
-
-    result = cli.main(
-        "run",
-        "-c",
-        "add_case_check",
-        schema_url,
-        f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-        hooks=module,
-    )
-
-    assert result.exit_code == ExitCode.OK
-    # One additional case created for two API operations - /api/failure and /api/success.
-    assert result.stdout.count("The case was added!") == 2
-
-
-def test_add_case_returns_none(ctx, cli, hypothesis_max_examples, schema_url):
-    """Tests that no additional test case created when the add_case hook returns None."""
-    module = ctx.write_pymodule(
-        """
-import click
-
-@schemathesis.hook
-def add_case(context, case, response):
-    return None
-
-@schemathesis.check
-def add_case_check(ctx, response, case):
-    click.echo("Validating case.")
-"""
-    )
-
-    result = cli.main(
-        "run",
-        "-c",
-        "add_case_check",
-        schema_url,
-        f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-        hooks=module,
-    )
-
-    assert result.exit_code == ExitCode.OK
-    # with --hypothesis-max-examples=1 and 2 API operations, only two cases should be created and validated.
-    # If the count is greater than 2, additional test cases should not have been created but were created.
-    assert result.stdout.count("Validating case.") == 2
-
-
-def test_multiple_add_case_hooks(ctx, cli, hypothesis_max_examples, schema_url):
-    """add_case hooks that mutate the case in place should not affect other cases."""
-    module = ctx.write_pymodule(
-        """
-import click
-
-@schemathesis.hook("add_case")
-def add_first_header(context, case, response):
-    if not case.headers:
-        case.headers = {}
-    case.headers["first"] = "first header"
-    return case
-
-@schemathesis.hook("add_case")
-def add_second_header(context, case, response):
-    if not case.headers:
-        case.headers = {}
-    case.headers["second"] = "second header"
-    return case
-
-@schemathesis.check
-def add_case_check(ctx, response, case):
-    if case.headers and case.headers.get("first") == "first header":
-        # we will look for this output
-        click.echo("First case added!")
-    if case.headers and case.headers.get("second") == "second header":
-        # we will look for this output
-        click.echo("Second case added!")
-"""
-    )
-
-    result = cli.main(
-        "run",
-        "-c",
-        "add_case_check",
-        schema_url,
-        f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-        hooks=module,
-    )
-
-    assert result.exit_code == ExitCode.OK
-    # Each header should only be duplicated once for each API operation - /api/failure and /api/success.
-    assert result.stdout.count("First case added!") == 2
-    assert result.stdout.count("Second case added!") == 2
-
-
-def test_add_case_output(ctx, cli, hypothesis_max_examples, schema_url, snapshot_cli):
-    module = ctx.write_pymodule(
-        """
-import click
-
-@schemathesis.hook("add_case")
-def add_first_header(context, case, response):
-    if not case.headers:
-        case.headers = {}
-    case.headers["first"] = "first header"
-    return case
-
-@schemathesis.hook("add_case")
-def add_second_header(context, case, response):
-    if not case.headers:
-        case.headers = {}
-    case.headers["second"] = "second header"
-    return case
-
-@schemathesis.check
-def add_case_check(ctx, response, case):
-    if (
-        case.headers and
-        (
-            case.headers.get("second") == "second header"
-        )
-    ):
-        assert False, "failing cases from second add_case hook"
-"""
-    )
-
-    assert (
-        cli.main(
-            "run",
-            "-c",
-            "add_case_check",
-            schema_url,
-            f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-            hooks=module,
-        )
-        == snapshot_cli
-    )
 
 
 @pytest.fixture(
@@ -986,15 +447,14 @@ def add_case_check(ctx, response, case):
 )
 def new_check(ctx, request, cli):
     exception = request.param
-    module = ctx.write_pymodule(
+    with ctx.check(
         f"""
 @schemathesis.check
 def new_check(ctx, response, result):
     raise {exception}
 """
-    )
-    yield module
-    reset_checks()
+    ) as module:
+        yield module
     # To verify that "new_check" is unregistered
     assert "new_check" not in cli.run("--help").stdout
 
@@ -1005,32 +465,15 @@ def test_register_check(new_check, cli, schema_url, snapshot_cli):
     # And it contains registering a new check, which always fails for the testing purposes
     # Then CLI run should fail
     # And a message from the new check should be displayed
-    assert cli.main("run", "-c", "new_check", schema_url, hooks=new_check) == snapshot_cli
-
-
-def assert_threaded_executor_interruption(lines, expected, optional_interrupt=False):
-    # It is possible to have a case when first call without an error will start processing
-    # But after, another thread will have interruption and will push this event before the
-    # first thread will finish. Race condition: "" is for this case and "." for the other
-    # way around
-    # The app under test was killed ungracefully and since we run it in a child or the main thread
-    # its output might occur in the captured stdout.
-    ignored_exception = "Exception ignored in: " in lines[8]
-    assert lines[10] in expected or ignored_exception, lines
-    if not optional_interrupt:
-        assert any("!! KeyboardInterrupt !!" in line for line in lines[10:]), lines
-    assert any("=== SUMMARY ===" in line for line in lines[9:])
+    assert cli.main("run", "-c", "new_check", "--mode=positive", schema_url, hooks=new_check) == snapshot_cli
 
 
 @pytest.mark.parametrize("workers", [1, 2])
 @pytest.mark.filterwarnings("ignore:Exception in thread")
-def test_keyboard_interrupt(cli, cli_args, base_url, mocker, flask_app, swagger_20, workers):
+def test_keyboard_interrupt(cli, schema_url, base_url, mocker, swagger_20, workers, snapshot_cli):
     # When a Schemathesis run in interrupted by keyboard or via SIGINT
     operation = APIOperation("/success", "GET", {}, swagger_20, base_url=base_url)
-    if len(cli_args) == 2:
-        operation.app = flask_app
-        operation.schema.transport = WSGITransport(operation.app)
-    original = Case(operation, generation_time=0.0).call
+    original = operation.Case().call
     counter = 0
 
     def mocked(*args, **kwargs):
@@ -1042,25 +485,19 @@ def test_keyboard_interrupt(cli, cli_args, base_url, mocker, flask_app, swagger_
         return original(*args, **kwargs)
 
     mocker.patch("schemathesis.Case.call", wraps=mocked)
-    result = cli.run(*cli_args, f"--workers={workers}")
-    assert result.exit_code == ExitCode.OK, result.stdout
-    # Then execution stops, and a message about interruption is displayed
-    lines = result.stdout.strip().split("\n")
-    # And summary is still displayed in the end of the output
+    result = cli.run(schema_url, f"--workers={workers}", "--mode=positive")
     if workers == 1:
-        assert lines[11].startswith("GET /api/failure .")
-        assert lines[11].endswith("[ 50%]")
-        assert lines[12] == "GET /api/success "
-        assert "!! KeyboardInterrupt !!" in lines[13]
-        assert "== SUMMARY ==" in lines[15]
+        assert result == snapshot_cli
     else:
-        assert_threaded_executor_interruption(lines, ("", "."))
+        assert "skipped" in result.stdout
 
 
 @pytest.mark.filterwarnings("ignore:Exception in thread")
-def test_keyboard_interrupt_threaded(cli, cli_args, mocker):
+def test_keyboard_interrupt_threaded(cli, schema_url, mocker, snapshot_cli):
     # When a Schemathesis run is interrupted by the keyboard or via SIGINT
-    original = time.sleep
+    from schemathesis.engine.phases.unit import TaskProducer
+
+    original = TaskProducer.next_operation
     counter = 0
 
     def mocked(*args, **kwargs):
@@ -1070,15 +507,13 @@ def test_keyboard_interrupt_threaded(cli, cli_args, mocker):
             raise KeyboardInterrupt
         return original(*args, **kwargs)
 
-    mocker.patch("schemathesis.runner.impl.threadpool.time.sleep", autospec=True, wraps=mocked)
-    result = cli.run(*cli_args, "--workers=2", "--hypothesis-derandomize")
-    # the exit status depends on what thread finished first
-    assert result.exit_code in (ExitCode.OK, ExitCode.TESTS_FAILED), result.stdout
-    # Then execution stops, and a message about interruption is displayed
-    lines = result.stdout.strip().split("\n")
-    # There are many scenarios possible, depends on how many tests will be executed before interruption
-    # and in what order. it could be no tests at all, some of them or all of them.
-    assert_threaded_executor_interruption(lines, ("F", ".", "F.", ".F", ""), True)
+    mocker.patch("schemathesis.engine.phases.unit.TaskProducer.next_operation", wraps=mocked)
+    assert cli.run(schema_url, "--workers=2", "--generation-deterministic") == snapshot_cli
+
+
+def test_keyboard_interrupt_during_schema_loading(cli, openapi3_schema_url, mocker, snapshot_cli):
+    mocker.patch("schemathesis.core.loaders.make_request", side_effect=KeyboardInterrupt)
+    assert cli.run(openapi3_schema_url) == snapshot_cli
 
 
 async def test_multiple_files_schema(ctx, openapi_2_app, cli, hypothesis_max_examples, openapi2_base_url):
@@ -1109,9 +544,10 @@ async def test_multiple_files_schema(ctx, openapi_2_app, cli, hypothesis_max_exa
     # And file path is given to the CLI
     result = cli.run(
         str(schema_path),
-        f"--base-url={openapi2_base_url}",
-        f"--hypothesis-max-examples={hypothesis_max_examples or 5}",
-        "--hypothesis-derandomize",
+        f"--url={openapi2_base_url}",
+        f"--max-examples={hypothesis_max_examples or 5}",
+        "--generation-deterministic",
+        "-c not_a_server_error",
     )
     # Then Schemathesis should resolve it and run successfully
     assert result.exit_code == ExitCode.OK, result.stdout
@@ -1121,28 +557,7 @@ async def test_multiple_files_schema(ctx, openapi_2_app, cli, hypothesis_max_exa
     assert isinstance(payload["photoUrls"], list)
 
 
-def test_wsgi_app(ctx, cli):
-    module = ctx.write_pymodule(
-        """
-from test.apps.openapi._flask import create_app
-
-app = create_app()
-"""
-    )
-    result = cli.run("/schema.yaml", "--app", f"{module}:app")
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    assert "1 passed, 1 failed in" in result.stdout
-
-
-def test_wsgi_app_exception(ctx, cli):
-    module = ctx.write_pymodule("1 / 0")
-    result = cli.run("/schema.yaml", "--app", f"{module}:app", "--show-trace")
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    assert "Traceback (most recent call last):" in result.stdout
-    assert "ZeroDivisionError: division by zero" in result.stdout
-
-
-def test_no_useless_traceback(ctx, cli, snapshot_cli):
+def test_no_useless_traceback(ctx, cli, snapshot_cli, openapi3_base_url):
     schema_path = ctx.openapi.write_schema(
         {
             "/success": {
@@ -1173,14 +588,26 @@ def test_no_useless_traceback(ctx, cli, snapshot_cli):
             }
         }
     )
-    assert cli.run(str(schema_path), "--show-trace", "--dry-run") == snapshot_cli
+    assert cli.run(str(schema_path), f"--url={openapi3_base_url}", "--mode=positive") == snapshot_cli
 
 
-def test_invalid_yaml(testdir, cli, simple_openapi, snapshot_cli):
+def test_invalid_yaml(testdir, cli, simple_openapi, snapshot_cli, openapi3_base_url):
     schema = yaml.dump(simple_openapi)
     schema += "\x00"
     schema_file = testdir.makefile(".yaml", schema=schema)
-    assert cli.run(str(schema_file), "--show-trace", "--dry-run") == snapshot_cli
+    assert cli.run(str(schema_file), f"--url={openapi3_base_url}") == snapshot_cli
+
+
+@pytest.fixture
+def with_error(ctx):
+    with ctx.check(
+        """
+@schemathesis.check
+def with_error(ctx, response, case):
+    1 / 0
+"""
+    ) as module:
+        yield module
 
 
 @pytest.mark.openapi_version("3.0")
@@ -1189,73 +616,8 @@ def test_invalid_yaml(testdir, cli, simple_openapi, snapshot_cli):
     sys.version_info < (3, 11) or sys.version_info >= (3, 13) or platform.system() == "Windows",
     reason="Cover only tracebacks that highlight error positions in every line",
 )
-def test_useful_traceback(ctx, cli, schema_url, snapshot_cli):
-    module = ctx.write_pymodule(
-        """
-@schemathesis.check
-def with_error(ctx, response, case):
-    1 / 0
-"""
-    )
-    assert cli.main("run", schema_url, "-c", "with_error", "--show-trace", hooks=module) == snapshot_cli
-
-
-def test_wsgi_app_missing(ctx, cli):
-    module = ctx.write_pymodule("")
-    result = cli.run("/schema.yaml", "--app", f"{module}:app")
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    lines = result.stdout.strip().split("\n")
-    assert "AttributeError: module 'module' has no attribute 'app'" in lines
-    assert "An error occurred while loading the application from 'module:app'." in lines
-
-
-def test_wsgi_app_internal_exception(ctx, cli):
-    module = ctx.write_pymodule(
-        """
-from test.apps.openapi._flask import create_app
-
-app = create_app()
-app.config["internal_exception"] = True
-"""
-    )
-    result = cli.run("/schema.yaml", "--app", f"{module}:app", "--hypothesis-derandomize")
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    lines = result.stdout.strip().split("\n")
-    assert "== APPLICATION LOGS ==" in lines[48], result.stdout.strip()
-    assert "ERROR in app: Exception on /api/success [GET]" in lines[50]
-    if sys.version_info >= (3, 13):
-        assert lines[63] == "ZeroDivisionError: division by zero"
-    elif sys.version_info >= (3, 11):
-        assert lines[66] == "ZeroDivisionError: division by zero"
-    else:
-        assert lines[61] == '    raise ZeroDivisionError("division by zero")'
-
-
-@pytest.mark.parametrize("args", [(), ("--base-url",)])
-def test_aiohttp_app(request, cli, loadable_aiohttp_app, args):
-    # When a URL is passed together with app
-    if args:
-        args += (request.getfixturevalue("base_url"),)
-    result = cli.run("/schema.yaml", "--app", loadable_aiohttp_app, *args)
-    # Then the schema should be loaded from that URL
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    assert "1 passed, 1 failed in" in result.stdout
-
-
-def test_wsgi_app_remote_schema(cli, schema_url, loadable_flask_app):
-    # When a URL is passed together with app
-    result = cli.run(schema_url, "--app", loadable_flask_app)
-    # Then the schema should be loaded from that URL
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    assert "1 passed, 1 failed in" in result.stdout
-
-
-def test_wsgi_app_path_schema(cli, loadable_flask_app):
-    # When an existing path to schema is passed together with app
-    result = cli.run(SIMPLE_PATH, "--app", loadable_flask_app)
-    # Then the schema should be loaded from that path
-    assert result.exit_code == ExitCode.OK, result.stdout
-    assert "1 passed in" in result.stdout
+def test_useful_traceback(ctx, cli, schema_url, snapshot_cli, with_error):
+    assert cli.main("run", schema_url, "-c", "with_error", hooks=with_error) == snapshot_cli
 
 
 @pytest.mark.parametrize("media_type", ["multipart/form-data", "multipart/mixed", "multipart/*"])
@@ -1275,6 +637,7 @@ def test_multipart_upload(ctx, tmp_path, hypothesis_max_examples, openapi3_base_
                                     "type": "object",
                                     "properties": {"file": {"type": "string", "format": "binary"}},
                                     "required": ["file"],
+                                    "additionalProperties": False,
                                 }
                             }
                         },
@@ -1294,6 +657,7 @@ def test_multipart_upload(ctx, tmp_path, hypothesis_max_examples, openapi3_base_
                                         "files": {"type": "array", "items": {"type": "string", "format": "binary"}}
                                     },
                                     "required": ["files"],
+                                    "additionalProperties": False,
                                 }
                             }
                         },
@@ -1305,18 +669,20 @@ def test_multipart_upload(ctx, tmp_path, hypothesis_max_examples, openapi3_base_
     )
     result = cli.run(
         str(schema_path),
-        f"--base-url={openapi3_base_url}",
-        f"--hypothesis-max-examples={hypothesis_max_examples or 5}",
-        "--show-trace",
-        "--hypothesis-derandomize",
-        f"--cassette-path={cassette_path}",
+        f"--url={openapi3_base_url}",
+        f"--max-examples={hypothesis_max_examples or 5}",
+        "--generation-deterministic",
+        f"--report-vcr-path={cassette_path}",
+        "-c not_a_server_error",
+        "--mode=positive",
     )
     # Then it should be correctly sent to the server
     assert result.exit_code == ExitCode.OK, result.stdout
     assert "= ERRORS =" not in result.stdout
 
-    with cassette_path.open() as fd:
-        cassette = yaml.safe_load(fd)
+    with cassette_path.open(encoding="utf-8") as fd:
+        raw = fd.read()
+        cassette = yaml.safe_load(raw)
 
     def decode(idx):
         request = cassette["http_interactions"][idx]["request"]
@@ -1349,13 +715,7 @@ def test_no_schema_in_media_type(ctx, cli, base_url, snapshot_cli):
         }
     )
     assert (
-        cli.run(
-            str(schema_path),
-            f"--base-url={base_url}",
-            "--hypothesis-max-examples=1",
-            "--show-trace",
-            "--validate-schema=true",
-        )
+        cli.run(str(schema_path), f"--url={base_url}", "--max-examples=1", "--checks=not_a_server_error")
         == snapshot_cli
     )
 
@@ -1384,22 +744,25 @@ def test_nested_binary_in_yaml(ctx, openapi3_base_url, cli, snapshot_cli):
             },
         }
     )
-    assert cli.run(str(schema_path), f"--base-url={openapi3_base_url}", "--hypothesis-max-examples=10") == snapshot_cli
+    assert (
+        cli.run(str(schema_path), f"--url={openapi3_base_url}", "--max-examples=10", "-c not_a_server_error")
+        == snapshot_cli
+    )
 
 
 @pytest.mark.operations("form")
-def test_urlencoded_form(cli, cli_args):
+def test_urlencoded_form(cli, schema_url):
     # When the API operation accepts application/x-www-form-urlencoded
-    result = cli.run(*cli_args)
+    result = cli.run(schema_url, "--mode=positive")
     # Then Schemathesis should generate appropriate payload
     assert result.exit_code == ExitCode.OK, result.stdout
 
 
 @pytest.mark.parametrize("workers", [1, 2])
 @pytest.mark.operations("success")
-def test_targeted(mocker, cli, cli_args, workers):
+def test_targeted(mocker, cli, schema_url, workers):
     target = mocker.spy(hypothesis, "target")
-    result = cli.run(*cli_args, f"--workers={workers}", "--target=response_time")
+    result = cli.run(schema_url, f"--workers={workers}", "--generation-maximize=response_time")
     assert result.exit_code == ExitCode.OK, result.stdout
     target.assert_called_with(mocker.ANY, label="response_time")
 
@@ -1409,11 +772,11 @@ def test_targeted(mocker, cli, cli_args, workers):
     [
         (
             ("--exclude-deprecated",),
-            "Collected API operations: 1",
+            "Selected: 1/2",
         ),
         (
             (),
-            "Collected API operations: 2",
+            "Selected: 2/2",
         ),
     ],
 )
@@ -1433,15 +796,12 @@ def test_exclude_deprecated(ctx, cli, openapi3_base_url, options, expected):
             }
         }
     )
-    result = cli.run(str(schema_path), f"--base-url={openapi3_base_url}", "--hypothesis-max-examples=1", *options)
+    result = cli.run(
+        str(schema_path), f"--url={openapi3_base_url}", "--max-examples=1", "--checks=not_a_server_error", *options
+    )
     assert result.exit_code == ExitCode.OK, result.stdout
     # Then only not deprecated API operations should be selected
-    assert expected in result.stdout.splitlines()
-
-
-@pytest.mark.openapi_version("3.0")
-def test_deprecated_filters(cli, schema_url, snapshot_cli):
-    assert cli.run(schema_url, "--endpoint=success") == snapshot_cli
+    assert expected in result.stdout
 
 
 @pytest.mark.openapi_version("3.0")
@@ -1454,24 +814,17 @@ def test_invalid_filter(cli, schema_url, snapshot_cli):
     assert cli.run(schema_url, "--include-by=fooo") == snapshot_cli
 
 
+@pytest.mark.openapi_version("3.0")
+def test_filter_case_sensitivity(cli, schema_url, snapshot_cli):
+    # Method filter should be case insensitive
+    assert cli.run(schema_url, "--include-method=get", "--checks=not_a_server_error") == snapshot_cli
+
+
 @pytest.mark.parametrize("value", ["--include-by=/x-property == 42", "--exclude-by=/x-property != 42"])
 @pytest.mark.operations("upload_file", "custom_format")
 @pytest.mark.openapi_version("3.0")
 def test_filter_by(cli, schema_url, snapshot_cli, value):
-    assert cli.run(schema_url, "--dry-run", "--hypothesis-max-examples=1", value) == snapshot_cli
-
-
-@pytest.mark.parametrize("fixup", ["all", "fast_api"])
-def test_fast_api_fixup(ctx, cli, base_url, fast_api_schema, hypothesis_max_examples, fixup):
-    # When schema contains Draft 7 definitions as ones from FastAPI may contain
-    schema_path = ctx.makefile(fast_api_schema)
-    result = cli.run(
-        str(schema_path),
-        f"--base-url={base_url}",
-        f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-        f"--fixups={fixup}",
-    )
-    assert result.exit_code == ExitCode.OK, result.stdout
+    assert cli.run(schema_url, "--mode=positive", "--max-examples=1", value) == snapshot_cli
 
 
 @pytest.mark.operations("success")
@@ -1483,391 +836,8 @@ def test_colon_in_headers(cli, schema_url, app):
     assert app["incoming_requests"][0].headers[header] == value
 
 
-@pytest.mark.operations("create_user", "get_user", "update_user")
-@flaky(max_runs=5, min_passes=1)
-@pytest.mark.snapshot(replace_statistic=True)
-def test_openapi_links(cli, cli_args, hypothesis_max_examples, snapshot_cli):
-    # When the schema contains Open API links or Swagger 2 extension for links
-    # And these links are nested - API operations in these links contain links to another operations
-    # Note, it might fail if it uncovers the placed bug, which this version of stateful testing should not uncover
-    # It is pretty rare and requires a high number for the `max_examples` setting. This version is staged for removal
-    # Therefore it won't be fixed
-    # Then these links should be tested
-    # And lines with the results of these tests should be indented
-    # And percentage should be adjusted appropriately
-    assert (
-        cli.run(
-            *cli_args,
-            f"--hypothesis-max-examples={hypothesis_max_examples or 2}",
-            "--hypothesis-suppress-health-check=all",
-            "--hypothesis-seed=1",
-            "--hypothesis-derandomize",
-            "--hypothesis-deadline=None",
-            "--show-trace",
-        )
-        == snapshot_cli
-    )
-
-
 @pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user")
-@pytest.mark.snapshot(replace_statistic=True)
-def test_stateful_explicit_examples_with_filters(cli, schema_url, snapshot_cli):
-    # See GH-2376
-    assert (
-        cli.run(
-            schema_url,
-            "--hypothesis-phases=explicit",
-            # Should include only a single link from `create_user` to `get_user`
-            # And the link from `create_user` to `update_user` should be excluded
-            "--include-name=POST /api/users/",
-            "--include-name=GET /api/users/{user_id}",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user")
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_stateful_progress=True, replace_statistic=True)
-@pytest.mark.parametrize("workers", [1, 2])
-@pytest.mark.skipif(platform.system() == "Windows", reason="Simpler to setup on Linux")
-def test_new_stateful_runner(cli, schema_url, snapshot_cli, workers, tmp_path):
-    debug = tmp_path / "debug.log"
-    report = tmp_path / "file.tar.gz"
-    assert (
-        cli.run(
-            schema_url,
-            "--experimental=stateful-test-runner",
-            f"--debug-output-file={debug}",
-            "--hypothesis-max-examples=80",
-            f"--report={report}",
-            "--exitfirst",
-            f"--workers={workers}",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user")
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_stateful_progress=True, replace_statistic=True)
-def test_new_stateful_runner_sanitization(cli, schema_url, tmp_path):
-    cassette_path = tmp_path / "output.yaml"
-    token = "secret"
-    result = cli.run(
-        schema_url,
-        "--experimental=stateful-test-runner",
-        "--experimental=stateful-only",
-        "--hypothesis-max-examples=80",
-        f"--header=Authorization: Bearer {token}",
-        f"--cassette-path={cassette_path}",
-        "--exitfirst",
-    )
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    assert token not in result.stdout
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("failure", "create_user", "get_user", "update_user")
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_stateful_progress=True, replace_statistic=True)
-def test_new_stateful_runner_max_failures(cli, schema_url, snapshot_cli):
-    assert (
-        cli.run(
-            schema_url,
-            "--experimental=stateful-test-runner",
-            "--hypothesis-max-examples=80",
-            "--max-failures=2",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user")
-def test_new_stateful_runner_with_cassette(tmp_path, cli, schema_url):
-    cassette_path = tmp_path / "output.yaml"
-    report = tmp_path / "file.tar.gz"
-    cli.run(
-        schema_url,
-        "--experimental=stateful-test-runner",
-        "--hypothesis-max-examples=40",
-        f"--report={report}",
-        "--exitfirst",
-        f"--cassette-path={cassette_path}",
-    )
-    assert cassette_path.exists()
-    with cassette_path.open(encoding="utf-8") as fd:
-        cassette = yaml.safe_load(fd)
-    assert len(cassette["http_interactions"]) >= 20
-    for interaction in cassette["http_interactions"]:
-        assert interaction["seed"] not in (None, "None")
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user")
-def test_new_stateful_runner_junit(tmp_path, cli, schema_url):
-    junit_path = tmp_path / "junit.xml"
-    cli.run(
-        schema_url,
-        "--experimental=stateful-test-runner",
-        "--experimental=stateful-only",
-        "--hypothesis-max-examples=80",
-        "--exitfirst",
-        f"--junit-xml={junit_path}",
-    )
-    assert junit_path.exists()
-    tree = ElementTree.parse(junit_path)
-    root = tree.getroot()
-    assert root.tag == "testsuites"
-    assert len(root) == 1
-    assert len(root[0]) == 1
-    assert root[0][0].attrib["name"] == "Stateful tests"
-    assert len(root[0][0]) == 1
-    assert root[0][0][0].tag == "failure"
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user")
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_stateful_progress=True, replace_statistic=True)
-def test_new_stateful_runner_stateful_only(cli, schema_url, snapshot_cli):
-    assert (
-        cli.run(
-            schema_url,
-            "--experimental=stateful-test-runner",
-            "--experimental=stateful-only",
-            "--hypothesis-max-examples=80",
-            "--exitfirst",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user")
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_stateful_progress=True)
-def test_new_stateful_runner_stateful_only_with_error(cli, schema_url, snapshot_cli):
-    assert (
-        cli.run(
-            schema_url,
-            "--base-url=http://127.0.0.1:1/api",
-            "--experimental=stateful-test-runner",
-            "--experimental=stateful-only",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user", "success")
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_stateful_progress=True)
-def test_new_stateful_runner_filtered_out(cli, schema_url, snapshot_cli):
-    assert (
-        cli.run(
-            schema_url,
-            "--experimental=stateful-test-runner",
-            "--hypothesis-max-examples=40",
-            "--include-path=/api/success",
-            "--exitfirst",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user", "success")
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_stateful_progress=True)
-@pytest.mark.skipif(platform.system() == "Windows", reason="Linux specific error")
-def test_new_stateful_runner_proxy_error(cli, schema_url, snapshot_cli):
-    assert (
-        cli.run(
-            schema_url,
-            "--request-proxy=http://127.0.0.1",
-            "--experimental=stateful-test-runner",
-            "--experimental=stateful-only",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("get_user", "create_user", "update_user")
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_stateful_progress=True, replace_statistic=True)
-def test_new_stateful_runner_generation_config(cli, mocker, schema_url, snapshot_cli):
-    from schemathesis.specs.openapi import _hypothesis
-
-    mocked = mocker.spy(_hypothesis, "from_schema")
-    assert (
-        cli.run(
-            schema_url,
-            "--experimental=stateful-test-runner",
-            "--experimental=stateful-only",
-            "--hypothesis-max-examples=1",
-            "--generation-allow-x00=false",
-            "--generation-codec=ascii",
-            "--generation-with-security-parameters=false",
-        )
-        == snapshot_cli
-    )
-    from_schema_kwargs = mocked.call_args_list[0].kwargs
-    assert from_schema_kwargs["allow_x00"] is False
-    assert from_schema_kwargs["codec"] == "ascii"
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user", "update_user", "success")
-@pytest.mark.snapshot(replace_reproduce_with=True, replace_stateful_progress=True)
-def test_new_stateful_runner_keyboard_interrupt(cli, mocker, schema_url, snapshot_cli):
-    def mocked(*args, **kwargs):
-        raise KeyboardInterrupt
-
-    mocker.patch("schemathesis.Case.call", wraps=mocked)
-    assert cli.run(schema_url, "--experimental=stateful-test-runner", "--experimental=stateful-only") == snapshot_cli
-
-
-@pytest.mark.operations("create_user", "get_user", "update_user")
-@pytest.mark.snapshot(replace_statistic=True)
-def test_openapi_links_disabled(cli, schema_url, hypothesis_max_examples, snapshot_cli):
-    # When the user disabled Open API links usage
-    assert (
-        cli.run(
-            schema_url,
-            f"--hypothesis-max-examples={hypothesis_max_examples or 2}",
-            "--hypothesis-seed=1",
-            "--hypothesis-derandomize",
-            "--hypothesis-deadline=None",
-            "--hypothesis-suppress-health-check=all",
-            "--show-trace",
-            "--stateful=none",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("create_user", "get_user")
-def test_unresolvable_links(ctx, cli, snapshot_cli, base_url):
-    schema_path = ctx.openapi.write_schema(
-        {
-            "/users/": {
-                "post": {
-                    "requestBody": {
-                        "required": True,
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "first_name": {"type": "string", "minLength": 3},
-                                        "last_name": {"type": "string", "minLength": 3},
-                                    },
-                                    "required": ["first_name", "last_name"],
-                                    "additionalProperties": False,
-                                }
-                            }
-                        },
-                    },
-                    "responses": {
-                        "201": {
-                            "description": "OK",
-                            "links": {
-                                "next": {
-                                    "operationId": "get_user",
-                                    "parameters": {"user_id": "$response.body#/invalid_value"},
-                                },
-                                "update": {
-                                    "operationId": "update_user",
-                                    "parameters": {"user_id": "$response.body#/id"},
-                                    "requestBody": {"first_name": "foo", "last_name": "bar"},
-                                },
-                            },
-                        }
-                    },
-                },
-            },
-            "/users/{user_id}": {
-                "parameters": [{"in": "path", "name": "user_id", "required": True, "schema": {"type": "string"}}],
-                "get": {
-                    "operationId": "get_user",
-                    "responses": {
-                        "200": {
-                            "description": "OK",
-                        }
-                    },
-                },
-                "patch": {
-                    "operationId": "update_user",
-                    "requestBody": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "first_name": {"type": "string", "minLength": 3},
-                                        "last_name": {"type": "string", "minLength": 3},
-                                    },
-                                    "required": ["first_name", "last_name"],
-                                    "additionalProperties": False,
-                                }
-                            }
-                        },
-                        "required": True,
-                    },
-                    "responses": {"200": {"description": "OK"}, "404": {"description": "Not found"}},
-                },
-            },
-        }
-    )
-    assert (
-        cli.run(
-            str(schema_path),
-            f"--base-url={base_url}",
-            "--hypothesis-max-examples=1",
-            "--show-trace",
-            "--validate-schema=true",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.parametrize("recursion_limit", [1, 5])
-@pytest.mark.operations("create_user", "get_user", "update_user")
-@flaky(max_runs=5, min_passes=1)
-@pytest.mark.snapshot(replace_statistic=True)
-def test_openapi_links_multiple_threads(cli, cli_args, recursion_limit, hypothesis_max_examples, snapshot_cli):
-    # When the schema contains Open API links or Swagger 2 extension for links
-    # And these links are nested - API operations in these links contain links to another operations
-    assert (
-        cli.run(
-            *cli_args,
-            f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-            "--hypothesis-seed=1",
-            "--hypothesis-derandomize",
-            "--hypothesis-deadline=None",
-            "--hypothesis-suppress-health-check=all",
-            "--show-trace",
-            f"--stateful-recursion-limit={recursion_limit}",
-            "--workers=2",
-        )
-        == snapshot_cli
-    )
-
-
-def test_get_request_with_body(ctx, cli, base_url, hypothesis_max_examples, schema_with_get_payload, snapshot_cli):
-    schema_path = ctx.makefile(schema_with_get_payload)
-    assert (
-        cli.run(
-            str(schema_path),
-            f"--base-url={base_url}",
-            f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-            "--validate-schema=true",
-        )
-        == snapshot_cli
-    )
-
-
-@pytest.mark.openapi_version("3.0")
-def test_yaml_parsing_of_floats(cli, testdir, base_url, snapshot_cli):
+def test_yaml_parsing_of_floats(cli, testdir, base_url):
     schema = """info:
   description: Test
   title: Test
@@ -1886,7 +856,10 @@ paths:
         '200':
           description: OK"""
     schema_file = testdir.makefile(".yaml", schema=schema)
-    assert cli.run(str(schema_file), f"--base-url={base_url}", "--dry-run") == snapshot_cli
+    result = cli.run(
+        str(schema_file), f"--url={base_url}", "--phases=fuzzing", "--checks=not_a_server_error", "--mode=positive"
+    )
+    assert "Invalid `pattern` value: expected a string" in result.stdout
 
 
 @pytest.mark.operations("slow")
@@ -1896,7 +869,7 @@ def test_max_response_time_invalid(cli, schema_url, workers, snapshot_cli):
     # Then the whole Schemathesis run should fail
     # And the given operation should be displayed as a failure
     # And the proper error message should be displayed
-    assert cli.run(schema_url, "--max-response-time=50", f"--workers={workers}") == snapshot_cli
+    assert cli.run(schema_url, "--max-response-time=0.05", f"--workers={workers}") == snapshot_cli
 
 
 @pytest.mark.operations("slow")
@@ -1907,41 +880,16 @@ def test_max_response_time_valid(cli, schema_url):
     assert result.exit_code == ExitCode.OK, result.stdout
 
 
-@pytest.mark.parametrize("workers_num", [1, 2])
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("failure", "success")
-def test_exit_first(cli, schema_url, workers_num, mocker):
-    # When the `--exit-first` CLI option is passed
+@pytest.mark.snapshot(remove_last_line=True)
+def test_exit_first(cli, schema_url, snapshot_cli):
+    # When the `--max-failures=1` CLI option is passed
     # And a failure occurs
-    stop_worker = mocker.spy(threadpool, "stop_worker")
-    result = cli.run(schema_url, "--exitfirst", "-w", str(workers_num))
-    # Then tests are failed
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    if workers_num == 1:
-        lines = result.stdout.split("\n")
-        # And the execution should stop on the first failure
-        for idx, line in enumerate(lines):  # noqa: B007
-            if line.startswith("GET /api/failure F"):
-                assert line.endswith("[ 50%]")
-                break
-        else:
-            pytest.fail("Line is not found")
-        # the "FAILURES" sections goes after a new line, rather than continuing to the next operation
-        next_line = lines[idx + 1]
-        assert next_line == ""
-        assert "FAILURES" in lines[idx + 2]
-    else:
-        stop_worker.assert_called()
+    assert cli.run(schema_url, "--max-failures=1", "--phases=fuzzing", "--checks=not_a_server_error") == snapshot_cli
 
 
-@pytest.mark.openapi_version("3.0")
-def test_base_url_not_required_for_dry_run(ctx, cli):
-    schema_path = ctx.openapi.write_schema({})
-    result = cli.run(str(schema_path), "--dry-run")
-    assert result.exit_code == ExitCode.OK, result.stdout
-
-
-def test_long_operation_output(ctx, cli):
+def test_long_operation_output(ctx, cli, openapi3_base_url, snapshot_cli):
     # See GH-990
     # When there is a narrow screen
     # And the API schema contains an operation with a long name
@@ -1959,14 +907,11 @@ def test_long_operation_output(ctx, cli):
             },
         }
     )
-    result = cli.run(str(schema_path), "--dry-run")
     # Then this operation name should be truncated
-    assert result.exit_code == ExitCode.OK
-    assert "GET /aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[...] . [ 50%]" in result.stdout
-    assert "GET /aaaaaaaaaa .                                                         [100%]" in result.stdout
+    assert cli.run(str(schema_path), f"--url={openapi3_base_url}", "-c not_a_server_error") == snapshot_cli
 
 
-def test_reserved_characters_in_operation_name(ctx, cli):
+def test_reserved_characters_in_operation_name(ctx, cli, snapshot_cli, openapi3_base_url):
     # See GH-992
     # When an API operation name contains `:`
     schema_path = ctx.openapi.write_schema(
@@ -1978,13 +923,11 @@ def test_reserved_characters_in_operation_name(ctx, cli):
             },
         }
     )
-    result = cli.run(str(schema_path), "--dry-run")
     # Then this operation name should be displayed with the leading `/`
-    assert result.exit_code == ExitCode.OK
-    assert "GET /foo:bar .                                                            [100%]" in result.stdout
+    assert cli.run(str(schema_path), f"--url={openapi3_base_url}") == snapshot_cli
 
 
-def test_unsupported_regex(ctx, cli, snapshot_cli):
+def test_unsupported_regex(ctx, cli, snapshot_cli, openapi3_base_url):
     def make_definition(min_items):
         return {
             "post": {
@@ -2017,80 +960,66 @@ def test_unsupported_regex(ctx, cli, snapshot_cli):
     )
     # Then if it is possible it should generate at least something
     # And if it is not then there should be an error with a descriptive error message
-    assert cli.run(str(schema_path), "--dry-run", "--hypothesis-max-examples=1") == snapshot_cli
+    assert (
+        cli.run(
+            str(schema_path),
+            "--max-examples=1",
+            f"--url={openapi3_base_url}",
+            "-c not_a_server_error",
+            "--mode=positive",
+        )
+        == snapshot_cli
+    )
 
 
 @pytest.mark.parametrize("extra", ["--auth='test:wrong'", "-H Authorization: Basic J3Rlc3Q6d3Jvbmcn"])
 @pytest.mark.operations("basic")
-@pytest.mark.snapshot(replace_statistic=True)
 def test_auth_override_on_protected_operation(cli, schema_url, extra, snapshot_cli):
     # See GH-792
     # When the tested API operation has basic auth
     # And the auth is overridden (directly or via headers)
     # And there is an error during testing
     # Then the code sample representation in the output should have the overridden value
-    assert cli.run(schema_url, "--checks=all", "--sanitize-output=false", extra) == snapshot_cli
+    assert cli.run(schema_url, "--output-sanitize=false", "--phases=fuzzing", extra) == snapshot_cli
 
 
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("flaky")
-@pytest.mark.snapshot(replace_statistic=True)
 def test_explicit_headers_in_output_on_errors(cli, schema_url, snapshot_cli):
     # When there is a non-fatal error during testing (e.g. flakiness)
     # And custom headers were passed explicitly
     auth = "Basic J3Rlc3Q6d3Jvbmcn"
     # Then the code sample should have the overridden value
-    assert cli.run(schema_url, "--checks=all", "--sanitize-output=false", f"-H Authorization: {auth}") == snapshot_cli
-
-
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("__all__")
-def test_debug_output(tmp_path, cli, schema_url, hypothesis_max_examples):
-    # When the `--debug-output-file` option is passed
-    debug_file = tmp_path / "debug.jsonl"
-    cassette_path = tmp_path / "output.yaml"
-    result = cli.run(
-        schema_url,
-        f"--debug-output-file={debug_file}",
-        "--validate-schema=false",
-        f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-        f"--cassette-path={cassette_path}",
+    assert (
+        cli.run(schema_url, "--output-sanitize=false", f"-H Authorization: {auth}", "--mode=positive") == snapshot_cli
     )
-    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
-    # Then all underlying runner events should be stored as JSONL file
-    assert debug_file.exists()
-    with debug_file.open(encoding="utf-8") as fd:
-        lines = fd.readlines()
-    for line in lines:
-        json.loads(line)
-    # And statuses are encoded as strings
-    assert list(json.loads(lines[-1])["total"]["not_a_server_error"]) == ["success", "total", "failure"]
 
 
 @pytest.mark.operations("cp866")
-def test_response_payload_encoding(cli, cli_args, snapshot_cli):
+def test_response_payload_encoding(cli, schema_url, snapshot_cli):
     # See GH-1073
     # When the "failed" response has non UTF-8 encoding
     # Then it should be displayed according its actual encoding
-    assert cli.run(*cli_args, "--checks=all") == snapshot_cli
+    assert cli.run(schema_url) == snapshot_cli
 
 
 @pytest.mark.operations("conformance")
-def test_response_schema_conformance_deduplication(cli, cli_args, snapshot_cli):
+@pytest.mark.snapshot(replace_test_cases=False)
+def test_response_schema_conformance_deduplication(cli, schema_url, snapshot_cli):
     # See GH-907
     # When the "response_schema_conformance" check is present
     # And the app return different error messages caused by the same validator
     # Then the errors should be deduplicated
-    assert cli.run(*cli_args, "--checks=response_schema_conformance") == snapshot_cli
+    assert cli.run(schema_url, "--checks=response_schema_conformance") == snapshot_cli
 
 
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("malformed_json")
-def test_malformed_json_deduplication(cli, cli_args, snapshot_cli):
+def test_malformed_json_deduplication(cli, schema_url, snapshot_cli):
     # See GH-1518
     # When responses are not JSON as expected and their content differ each time
     # Then the errors should be deduplicated
-    assert cli.run(*cli_args, "--checks=response_schema_conformance") == snapshot_cli
+    assert cli.run(schema_url, "--checks=response_schema_conformance") == snapshot_cli
 
 
 @pytest.mark.parametrize("kind", ["env_var", "arg"])
@@ -2104,7 +1033,7 @@ def test_no_color(monkeypatch, cli, schema_url, kind):
         args += ("--no-color",)
     result = cli.run(*args, color=True)
     assert result.exit_code == ExitCode.OK, result.stdout
-    assert "[1m" not in result.stdout
+    assert "36m" not in result.stdout
 
 
 @pytest.mark.openapi_version("3.0")
@@ -2127,88 +1056,18 @@ def test_force_color(cli, schema_url):
 @pytest.mark.parametrize("graphql_path", ["/graphql", "/foo"])
 def test_graphql_url(cli, graphql_url, graphql_path, args, snapshot_cli):
     # When the target API is GraphQL
-    assert cli.run(graphql_url, "--hypothesis-max-examples=5", "--show-trace", *args) == snapshot_cli
+    assert cli.run(graphql_url, "--max-examples=5", *args) == snapshot_cli
 
 
-def test_graphql_asgi(cli, loadable_graphql_fastapi_app, graphql_path, snapshot_cli):
-    # When the target API is GraphQL
-    assert cli.run(f"--app={loadable_graphql_fastapi_app}", "--hypothesis-max-examples=5", graphql_path) == snapshot_cli
-
-
-def assert_exit_code(event_stream, code):
-    with pytest.raises(SystemExit) as exc:
-        execute(
-            event_stream,
-            ctx=None,
-            hypothesis_settings=hypothesis.settings(),
-            workers_num=1,
-            rate_limit=None,
-            show_trace=False,
-            wait_for_schema=None,
-            validate_schema=False,
-            cassette_path=None,
-            cassette_format=CassetteFormat.VCR,
-            cassette_preserve_exact_body_bytes=False,
-            junit_xml=None,
-            verbosity=0,
-            code_sample_style=CodeSampleStyle.default(),
-            data_generation_methods=[DataGenerationMethod.default()],
-            debug_output_file=None,
-            host_data=None,
-            client=None,
-            api_name=None,
-            location="http://127.0.0.1",
-            base_url=None,
-            started_at=current_datetime(),
-            report=None,
-            telemetry=False,
-            sanitize_output=False,
-            output_config=None,
-        )
-    assert exc.value.code == code
-
-
-def test_cli_execute(swagger_20, capsys):
-    event_stream = from_schema(swagger_20).execute()
-    for _ in event_stream:
-        pass
-    assert_exit_code(event_stream, 1)
-    assert capsys.readouterr().out.strip() == "Unexpected error"
-
-
-def test_get_exit_code(swagger_20):
-    event_stream = from_schema(swagger_20).execute()
-    next(event_stream)
-    event = next(event_stream)
-    assert get_exit_code(event) == 1
-
-
-@pytest.mark.parametrize("base_url", [None, "http://127.0.0.1/apiv2"])
 @pytest.mark.parametrize("location", ["path", "query", "header", "cookie"])
-def test_missing_content_and_schema(ctx, cli, base_url, tmp_path, location, snapshot_cli):
-    debug_file = tmp_path / "debug.jsonl"
+def test_missing_content_and_schema(ctx, cli, location, snapshot_cli, openapi3_base_url):
     # When an Open API 3 parameter is missing `schema` & `content`
     schema_path = ctx.openapi.write_schema(
         {"/foo": {"get": {"parameters": [{"in": location, "name": "X-Foo", "required": True}]}}}
     )
-    args = [
-        str(schema_path),
-        f"--debug-output-file={debug_file}",
-        "--dry-run",
-        "--validate-schema=false",
-        "--hypothesis-max-examples=1",
-    ]
-    if base_url is not None:
-        args.append(f"--base-url={base_url}")
     # Then CLI should show that this API operation errored
     # And show the proper message under its "ERRORS" section
-    assert cli.run(*args) == snapshot_cli
-    # And emitted Before / After event pairs have the same correlation ids
-    with debug_file.open(encoding="utf-8") as fd:
-        events = [json.loads(line) for line in fd]
-    assert events[5]["correlation_id"] == events[6]["correlation_id"]
-    # And they should have the same "verbose_name"
-    assert events[5]["verbose_name"] == events[6]["verbose_name"]
+    assert cli.run(str(schema_path), "--max-examples=1", f"--url={openapi3_base_url}") == snapshot_cli
 
 
 @pytest.mark.openapi_version("3.0")
@@ -2233,31 +1092,27 @@ def test_explicit_query_token_sanitization(ctx, cli, snapshot_cli, base_url):
             }
         },
     )
-    token = "token=secret"
-    result = cli.run(str(schema_path), "--set-query", token, f"--base-url={base_url}")
+    token = "secret"
+    result = cli.run(
+        str(schema_path), f"--url={base_url}", "-c not_a_server_error", config={"parameters": {"token": token}}
+    )
     assert result == snapshot_cli
     assert token not in result.stdout
 
 
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("success")
-def test_skip_not_negated_tests(cli, schema_url):
+def test_skip_not_negated_tests(cli, schema_url, snapshot_cli):
     # See GH-1463
     # When an endpoint has no parameters to negate
-    result = cli.run(schema_url, "-D", "negative")
-    assert result.exit_code == ExitCode.OK, result.stdout
     # Then it should be skipped
-    lines = result.stdout.splitlines()
-    assert "1 skipped in" in lines[-1]
+    assert cli.run(schema_url, "--mode", "negative") == snapshot_cli
 
 
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("success")
-def test_dont_skip_when_generation_is_possible(cli, schema_url):
-    result = cli.run(schema_url, "-D", "all")
-    assert result.exit_code == ExitCode.OK, result.stdout
-    lines = result.stdout.splitlines()
-    assert "1 passed in" in lines[-1]
+def test_dont_skip_when_generation_is_possible(cli, schema_url, snapshot_cli):
+    assert cli.run(schema_url, "--mode", "all") == snapshot_cli
 
 
 @pytest.mark.operations("failure")
@@ -2273,67 +1128,37 @@ def test_explicit_example_failure_output(ctx, cli, openapi3_base_url, snapshot_c
             },
         }
     )
-    assert cli.run(str(schema_path), f"--base-url={openapi3_base_url}", "--sanitize-output=false") == snapshot_cli
+    assert (
+        cli.run(str(schema_path), f"--url={openapi3_base_url}", "--output-sanitize=false", "-c not_a_server_error")
+        == snapshot_cli
+    )
 
 
 @pytest.mark.operations("success")
-def test_skipped_on_no_explicit_examples(cli, openapi3_schema_url):
+def test_skipped_on_no_explicit_examples(cli, openapi3_schema_url, snapshot_cli):
     # See GH-1323
     # When there are no explicit examples
-    result = cli.run(openapi3_schema_url, "--hypothesis-phases=explicit")
     # Then tests should be marked as skipped
-    assert result.exit_code == ExitCode.OK, result.stdout
-    assert "/api/success S" in result.stdout
-    assert "1 skipped in" in result.stdout
+    assert cli.run(openapi3_schema_url, "--phases=examples") == snapshot_cli
 
 
-@pytest.mark.operations("success")
-def test_digest_auth(cli, openapi3_schema_url):
-    # When a digest auth is used
-    result = cli.run(openapi3_schema_url, "--auth='test:test'", "--auth-type=digest")
-    # Then it should not cause any exceptions
-    assert result.exit_code == ExitCode.OK, result.stdout
-
-
-@pytest.mark.operations("basic")
-def test_warning_on_unauthorized(cli, openapi3_schema_url, snapshot_cli):
-    # When endpoint returns only 401
-    result = cli.run(openapi3_schema_url)
-    # Then the output should contain a warning about it
-    assert result.exit_code == ExitCode.OK, result.stdout
-    assert (
-        "WARNING: Most of the responses from `GET /api/basic` have a 401 status code. "
-        "Did you specify proper API credentials?" in strip_style_win32(result.stdout)
-    )
-    assert cli.run(openapi3_schema_url) == snapshot_cli
-
-
-@pytest.mark.operations("always_incorrect")
-def test_warning_on_no_2xx(cli, openapi3_schema_url, snapshot_cli):
-    # When endpoint does not return 2xx at all
-    # Then the output should contain a warning about it
-    assert cli.run(openapi3_schema_url) == snapshot_cli
-
-
-@pytest.mark.operations("always_incorrect")
-def test_warning_on_no_2xx_options_only(cli, openapi3_schema_url, snapshot_cli):
-    assert cli.run(openapi3_schema_url, "--data-generation-method=all", "--experimental=coverage-phase") == snapshot_cli
+@pytest.fixture
+def data_generation_check(ctx):
+    with ctx.check(
+        """
+@schemathesis.check
+def data_generation_check(ctx, response, case):
+    if case.meta.generation.mode:
+        note("MODE: {}".format(case.meta.generation.mode.value))
+"""
+    ) as module:
+        yield module
 
 
 @flaky(max_runs=5, min_passes=1)
 @pytest.mark.operations("payload")
-def test_multiple_data_generation_methods(ctx, cli, openapi3_schema_url):
+def test_multiple_generation_modes(cli, openapi3_schema_url, data_generation_check):
     # When multiple data generation methods are supplied in CLI
-    module = ctx.write_pymodule(
-        """
-note = print
-
-@schemathesis.check
-def data_generation_check(ctx, response, case):
-    if case.data_generation_method:
-        note("METHOD: {}".format(case.data_generation_method.name))
-"""
-    )
     result = cli.main(
         "run",
         "-c",
@@ -2341,28 +1166,16 @@ def data_generation_check(ctx, response, case):
         "-c",
         "not_a_server_error",
         openapi3_schema_url,
-        "--hypothesis-max-examples=25",
-        "--hypothesis-suppress-health-check=all",
-        "-D",
+        "--max-examples=25",
+        "--suppress-health-check=all",
+        "--mode",
         "all",
-        hooks=module,
+        hooks=data_generation_check,
     )
     # Then there should be cases generated from different methods
     assert result.exit_code == ExitCode.OK, result.stdout
-    assert "METHOD: positive" in result.stdout
-    assert "METHOD: negative" in result.stdout
-
-
-@pytest.mark.operations("success", "failure")
-def test_warning_on_all_not_found(cli, openapi3_schema_url, openapi3_base_url):
-    # When all endpoints return 404
-    result = cli.run(openapi3_schema_url, f"--base-url={openapi3_base_url}/v4/")
-    # Then the output should contain a warning about it
-    assert result.exit_code == ExitCode.OK, result.stdout
-    assert (
-        "`GET /api/v4/success` returned only 4xx responses during unit tests. Check base URL or adjust data generation settings"
-        in strip_style_win32(result.stdout)
-    )
+    assert "MODE: positive" in result.stdout
+    assert "MODE: negative" in result.stdout
 
 
 @pytest.mark.parametrize(
@@ -2380,7 +1193,7 @@ def test_warning_on_all_not_found(cli, openapi3_schema_url, openapi3_base_url):
         ]
     ),
 )
-def test_wait_for_schema(cli, schema_path, app_factory):
+def test_wait_for_schema(cli, schema_path, app_factory, app_runner):
     # When Schemathesis is asked to wait for API schema to become available
     app = app_factory()
     original_run = app.run
@@ -2390,15 +1203,14 @@ def test_wait_for_schema(cli, schema_path, app_factory):
         return original_run(*args, **kwargs)
 
     app.run = run_with_delay
-    port = unused_port()
+    port = app_runner.run_flask_app(app)
     schema_url = f"http://127.0.0.1:{port}/{schema_path}"
-    run_server(app, port=port)
-    result = cli.run(schema_url, "--wait-for-schema=1", "--hypothesis-max-examples=1")
+    result = cli.run(schema_url, "--wait-for-schema=1", "--max-examples=1")
     assert result.exit_code == ExitCode.OK, result.stdout
 
 
 @pytest.mark.skipif(platform.system() == "Windows", reason="Fails on Windows")
-def test_wait_for_schema_not_enough(cli, snapshot_cli):
+def test_wait_for_schema_not_enough(cli, snapshot_cli, app_runner):
     app = create_openapi_app(operations=("success",))
     original_run = app.run
 
@@ -2407,41 +1219,39 @@ def test_wait_for_schema_not_enough(cli, snapshot_cli):
         return original_run(*args, **kwargs)
 
     app.run = run_with_delay
-    port = unused_port()
+    port = app_runner.run_flask_app(app)
     schema_url = f"http://127.0.0.1:{port}/schema.yaml"
-    run_server(app, port=port)
 
-    assert cli.run(schema_url, "--wait-for-schema=1", "--hypothesis-max-examples=1") == snapshot_cli
+    assert cli.run(schema_url, "--wait-for-schema=1", "--max-examples=1") == snapshot_cli
 
 
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("success")
 def test_rate_limit(cli, schema_url):
-    result = cli.run(schema_url, "--rate-limit=1/s")
-    lines = result.stdout.splitlines()
-    assert lines[6] == "Rate limit: 1/s"
+    assert cli.run(schema_url, "--rate-limit=1/s").exit_code == ExitCode.OK
 
 
 @pytest.mark.parametrize("version", ["3.0.2", "3.1.0"])
 def test_invalid_schema_with_disabled_validation(
-    ctx, cli, openapi_3_schema_with_invalid_security, version, snapshot_cli
+    ctx, cli, openapi_3_schema_with_invalid_security, version, snapshot_cli, openapi3_base_url
 ):
     # When there is an error in the schema
     openapi_3_schema_with_invalid_security["openapi"] = version
     schema_path = ctx.makefile(openapi_3_schema_with_invalid_security)
     # And the validation is disabled (default)
     # Then we should show an error message derived from JSON Schema
-    assert cli.run(str(schema_path), "--dry-run", "--experimental=openapi-3.1") == snapshot_cli
+    assert cli.run(str(schema_path), f"--url={openapi3_base_url}") == snapshot_cli
 
 
 def test_unresolvable_reference_with_disabled_validation(
-    ctx, cli, open_api_3_schema_with_recoverable_errors, snapshot_cli
+    ctx, cli, open_api_3_schema_with_recoverable_errors, snapshot_cli, openapi3_base_url
 ):
     # When there is an error in the schema
+    del open_api_3_schema_with_recoverable_errors["paths"]["/bar"]["get"]
     schema_path = ctx.makefile(open_api_3_schema_with_recoverable_errors)
     # And the validation is disabled (default)
     # Then we should show an error message derived from JSON Schema
-    assert cli.run(str(schema_path), "--dry-run") == snapshot_cli
+    assert cli.run(str(schema_path), f"--url={openapi3_base_url}") == snapshot_cli
 
 
 @pytest.mark.parametrize("value", ["true", "false"])
@@ -2450,11 +1260,10 @@ def test_output_sanitization(cli, openapi2_schema_url, hypothesis_max_examples, 
     auth = "secret-auth"
     result = cli.run(
         openapi2_schema_url,
-        f"--hypothesis-max-examples={hypothesis_max_examples or 5}",
-        "--hypothesis-seed=1",
-        "--validate-schema=false",
+        f"--max-examples={hypothesis_max_examples or 5}",
+        "--seed=1",
         f"-H Authorization: {auth}",
-        f"--sanitize-output={value}",
+        f"--output-sanitize={value}",
     )
     assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
     if value == "false":
@@ -2483,7 +1292,7 @@ def test_multiple_failures_in_single_check(ctx, mocker, response_factory, cli, o
     )
     response = response_factory.requests(content_type=None, status_code=200)
     mocker.patch("requests.Session.request", return_value=response)
-    assert cli.run(str(schema_path), f"--base-url={openapi3_base_url}", "--checks=all") == snapshot_cli
+    assert cli.run(str(schema_path), f"--url={openapi3_base_url}", "--checks=all", "--mode=positive") == snapshot_cli
 
 
 @flaky(max_runs=5, min_passes=1)
@@ -2502,7 +1311,14 @@ def test_binary_payload(ctx, cli, snapshot_cli, openapi3_base_url):
             },
         }
     )
-    assert cli.run(str(schema_path), f"--base-url={openapi3_base_url}", "--checks=all") == snapshot_cli
+    assert (
+        cli.run(
+            str(schema_path),
+            f"--url={openapi3_base_url}",
+            "--exclude-checks=positive_data_acceptance",
+        )
+        == snapshot_cli
+    )
 
 
 @flaky(max_runs=5, min_passes=1)
@@ -2521,11 +1337,18 @@ def test_long_payload(ctx, cli, snapshot_cli, openapi3_base_url):
             },
         }
     )
-    assert cli.run(str(schema_path), f"--base-url={openapi3_base_url}", "--checks=all") == snapshot_cli
+    assert (
+        cli.run(
+            str(schema_path),
+            f"--url={openapi3_base_url}",
+            "--exclude-checks=positive_data_acceptance",
+        )
+        == snapshot_cli
+    )
 
 
+@pytest.mark.skipif(platform.system() == "Windows", reason="Snapshot is inaccurate on Windows")
 @flaky(max_runs=5, min_passes=1)
-@pytest.mark.skipif(not IS_PYTEST_ABOVE_7, reason="Multiple errors are not caught on older pytest versions")
 def test_multiple_errors(ctx, cli, snapshot_cli):
     schema_path = ctx.openapi.write_schema(
         {
@@ -2557,11 +1380,10 @@ def test_multiple_errors(ctx, cli, snapshot_cli):
             }
         }
     )
-    assert cli.run(str(schema_path), "--base-url=http://127.0.0.1:1") == snapshot_cli
+    assert cli.run(str(schema_path), "--url=http://127.0.0.1:1") == snapshot_cli
 
 
 @flaky(max_runs=5, min_passes=1)
-@pytest.mark.skipif(not IS_PYTEST_ABOVE_7, reason="Multiple errors are not caught on older pytest versions")
 def test_group_errors(ctx, cli, snapshot_cli):
     schema_path = ctx.openapi.write_schema(
         {
@@ -2598,7 +1420,7 @@ def test_group_errors(ctx, cli, snapshot_cli):
             }
         }
     )
-    assert cli.run(str(schema_path), "--base-url=http://127.0.0.1:1") == snapshot_cli
+    assert cli.run(str(schema_path), "--url=http://127.0.0.1:1") == snapshot_cli
 
 
 @flaky(max_runs=5, min_passes=1)
@@ -2652,24 +1474,33 @@ def test_complex_urlencoded_example(ctx, cli, snapshot_cli, openapi3_base_url):
             }
         }
     )
-    assert cli.run(str(schema_path), f"--base-url={openapi3_base_url}", "--hypothesis-phases=explicit") == snapshot_cli
+    assert (
+        cli.run(str(schema_path), f"--url={openapi3_base_url}", "--phases=examples", "--checks=not_a_server_error")
+        == snapshot_cli
+    )
 
 
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("plain_text_body")
-def test_custom_strings(ctx, cli, hypothesis_max_examples, schema_url):
-    module = ctx.write_pymodule(
+@pytest.fixture
+def custom_strings(ctx):
+    with ctx.check(
         """
 @schemathesis.check
 def custom_strings(ctx, response, case):
+    if not isinstance(case.body, str):
+        return
     try:
         case.body.encode("ascii")
     except Exception as exc:
         raise AssertionError(str(exc))
     assert "\\x00" not in case.body
 """
-    )
+    ) as module:
+        yield module
 
+
+@pytest.mark.openapi_version("3.0")
+@pytest.mark.operations("plain_text_body")
+def test_custom_strings(cli, hypothesis_max_examples, schema_url, custom_strings):
     result = cli.main(
         "run",
         "-c",
@@ -2677,16 +1508,15 @@ def custom_strings(ctx, response, case):
         "--generation-allow-x00=false",
         "--generation-codec=ascii",
         schema_url,
-        f"--hypothesis-max-examples={hypothesis_max_examples or 100}",
-        hooks=module,
+        f"--max-examples={hypothesis_max_examples or 100}",
+        hooks=custom_strings,
     )
     assert result.exit_code == ExitCode.OK, result.stdout
 
 
-@pytest.mark.openapi_version("3.0")
-@pytest.mark.operations("path_variable", "custom_format")
-def test_parameter_overrides(ctx, cli, schema_url):
-    module = ctx.write_pymodule(
+@pytest.fixture
+def verify_overrides(ctx):
+    with ctx.check(
         """
 @schemathesis.check
 def verify_overrides(ctx, response, case):
@@ -2697,23 +1527,38 @@ def verify_overrides(ctx, response, case):
         assert case.query["id"] == "bar"
         assert "key" not in (case.path_parameters or {}), "`key` is present"
 """
-    )
+    ) as module:
+        yield module
 
+
+@pytest.mark.openapi_version("3.0")
+@pytest.mark.operations("path_variable", "custom_format")
+def test_parameter_overrides(cli, schema_url, verify_overrides):
     result = cli.main(
         "run",
         "-c",
         "verify_overrides",
-        "--set-path",
-        "key=foo",
-        "--set-query",
-        "id=bar",
+        "--phases=fuzzing",
         schema_url,
-        hooks=module,
+        hooks=verify_overrides,
+        config={"parameters": {"key": "foo", "id": "bar"}},
     )
     assert result.exit_code == ExitCode.OK, result.stdout
 
 
-def test_null_byte_in_header_probe(ctx, cli, snapshot_cli, openapi3_base_url):
+@pytest.fixture
+def no_null_bytes(ctx):
+    with ctx.check(
+        r"""
+@schemathesis.check
+def no_null_bytes(ctx, response, case):
+    assert "\x00" not in case.headers.get("X-KEY", {})
+"""
+    ) as module:
+        yield module
+
+
+def test_null_byte_in_header_probe(ctx, cli, snapshot_cli, openapi3_base_url, no_null_bytes):
     schema_path = ctx.openapi.write_schema(
         {
             "/success": {
@@ -2724,22 +1569,15 @@ def test_null_byte_in_header_probe(ctx, cli, snapshot_cli, openapi3_base_url):
             }
         }
     )
-    module = ctx.write_pymodule(
-        r"""
-@schemathesis.check
-def no_null_bytes(ctx, response, case):
-    assert "\x00" not in case.headers["X-KEY"]
-"""
-    )
     assert (
         cli.main(
             "run",
             str(schema_path),
             "-c",
             "no_null_bytes",
-            f"--base-url={openapi3_base_url}",
-            "--hypothesis-max-examples=1",
-            hooks=module,
+            f"--url={openapi3_base_url}",
+            "--max-examples=1",
+            hooks=no_null_bytes,
         )
         == snapshot_cli
     )
@@ -2748,17 +1586,32 @@ def no_null_bytes(ctx, response, case):
 @pytest.mark.skipif(platform.system() == "Windows", reason="Fails on Windows due to recursion")
 def test_recursive_reference_error_message(ctx, cli, schema_with_recursive_references, openapi3_base_url, snapshot_cli):
     schema_path = ctx.makefile(schema_with_recursive_references)
-    assert cli.run(str(schema_path), f"--base-url={openapi3_base_url}", "--show-trace") == snapshot_cli
+    assert cli.run(str(schema_path), f"--url={openapi3_base_url}", "--mode=positive") == snapshot_cli
 
 
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("payload")
-@pytest.mark.snapshot(replace_statistic=True)
-def test_unknown_schema_error(mocker, schema_url, cli, snapshot_cli):
-    # Some AssertionError may be caused by internal error in dependencies and can not be associated with a specific
-    # schema issue
-    mocker.patch("hypothesis_jsonschema._from_schema.canonicalish", side_effect=AssertionError("Something bad happen"))
-    assert cli.run(schema_url) == snapshot_cli
+@pytest.mark.skipif(sys.version_info >= (3, 13), reason="Traceback is different")
+def test_unknown_schema_error(ctx, schema_url, cli, snapshot_cli):
+    module = ctx.write_pymodule(
+        r"""
+import schemathesis
+
+@schemathesis.metric
+def buggy(ctx):
+    raise AssertionError("Something bad happen")
+"""
+    )
+    assert (
+        cli.main(
+            "run",
+            schema_url,
+            "--generation-maximize=buggy",
+            "-c not_a_server_error",
+            hooks=module,
+        )
+        == snapshot_cli
+    )
 
 
 @pytest.mark.openapi_version("3.0")
@@ -2766,7 +1619,7 @@ def test_unknown_schema_error(mocker, schema_url, cli, snapshot_cli):
 def test_custom_cli_option(ctx, cli, schema_url, snapshot_cli):
     module = ctx.write_pymodule(
         r"""
-from schemathesis import cli, runner
+from schemathesis import cli, engine
 
 
 group = cli.add_group("My custom group")
@@ -2785,16 +1638,14 @@ class EventCounter(cli.EventHandler):
     def __init__(self, *args, **params):
         self.counter = params["custom_counter"] or 0
 
-    def handle_event(self, context, event) -> None:
+    def handle_event(self, ctx, event) -> None:
         self.counter += 1
-        if isinstance(event, runner.events.Initialized):
-            context.add_initialization_line("Counter initialized!")
-            context.add_initialization_line(gen())
-        elif isinstance(event, runner.events.Finished):
-            context.add_summary_line(
-                f"Counter: {self.counter}",
-            )
-            context.add_summary_line(gen())
+        if isinstance(event, engine.events.EngineStarted):
+            ctx.add_initialization_line("Counter initialized!")
+            ctx.add_initialization_line(gen())
+        elif isinstance(event, engine.events.EngineFinished):
+            ctx.add_summary_line(f"Counter: {self.counter}")
+            ctx.add_summary_line(gen())
 """
     )
     assert (
@@ -2802,9 +1653,229 @@ class EventCounter(cli.EventHandler):
             "run",
             schema_url,
             "--custom-counter=42",
-            "--dry-run",
-            "--hypothesis-max-examples=1",
+            "--max-examples=1",
             hooks=module,
+        )
+        == snapshot_cli
+    )
+
+
+@pytest.mark.openapi_version("3.0")
+@pytest.mark.operations("create_user", "get_user", "update_user")
+@pytest.mark.skipif(platform.system() == "Windows", reason="Requires a more complex test setup")
+def test_rediscover_the_same_failure_in_different_phases_and_store_junit(ctx, cli, schema_url, tmp_path, snapshot_cli):
+    # See GH-2814
+    report_dir = tmp_path / "reports"
+    with ctx.check(
+        r"""
+@schemathesis.check
+def always_fails(ctx, response, case):
+    if case.operation.label == "GET /users/{user_id}":
+        raise AssertionError("Failed!")
+"""
+    ) as module:
+        assert (
+            cli.main(
+                "run",
+                schema_url,
+                "-c",
+                "always_fails",
+                "--max-examples=1",
+                f"--report-dir={report_dir}",
+                f"--report-junit-path={report_dir}/junit.xml",
+                "--report=junit",
+                "--mode=positive",
+                hooks=module,
+            )
+            == snapshot_cli
+        )
+
+
+@pytest.mark.skipif(platform.system() == "Windows", reason="Requires extra setup on Windows")
+def test_app_crash(subprocess_runner, cli, snapshot_cli):
+    app = """
+import os
+from flask import Flask, jsonify
+import ctypes
+
+app = Flask(__name__)
+
+raw_schema = {
+    "openapi": "3.0.0",
+    "info": {"title": "Crash Test", "version": "1.0.0"},
+    "paths": {"/crash": {"get": {"responses": {"200": {"description": "Won't return"}}}}},
+}
+
+@app.route("/openapi.json")
+def openapi():
+    return jsonify(raw_schema)
+
+@app.get("/crash")
+def crash():
+    ctypes.string_at(0)  # Segfault
+
+if __name__ == "__main__":
+    port = int(os.environ["PORT"])
+    app.run(host="127.0.0.1", port=port, debug=False)
+"""
+
+    port = subprocess_runner.run_app(app)
+
+    assert cli.main("run", f"http://127.0.0.1:{port}/openapi.json", "--tls-verify=false") == snapshot_cli
+
+
+@pytest.mark.skipif(platform.system() == "Windows", reason="Requires extra setup on Windows")
+def test_partial_response(subprocess_runner, cli, snapshot_cli):
+    app = """
+import os
+import sys
+from flask import Flask, jsonify, Response
+import time
+
+app = Flask(__name__)
+
+raw_schema = {
+    "openapi": "3.0.0",
+    "info": {"title": "Partial Response Test", "version": "1.0.0"},
+    "paths": {"/crash": {"get": {"responses": {"200": {"description": "Won't return"}}}}},
+}
+
+@app.route("/openapi.json")
+def openapi():
+    return jsonify(raw_schema)
+
+@app.get("/crash")
+def crash():
+    def generate():
+        yield '{"partial":'
+        sys.stdout.flush()
+        # Force connection reset while client expects more data
+        os._exit(1)
+
+    return Response(generate(), mimetype='application/json')
+
+if __name__ == "__main__":
+    port = int(os.environ["PORT"])
+    app.run(host="127.0.0.1", port=port, debug=False)
+"""
+
+    port = subprocess_runner.run_app(app)
+
+    assert cli.main("run", f"http://127.0.0.1:{port}/openapi.json", "--tls-verify=false") == snapshot_cli
+
+
+@pytest.mark.skipif(platform.system() == "Windows", reason="Requires extra setup on Windows")
+@pytest.mark.snapshot(replace_phase_statistic=True)
+def test_stateful_crash(subprocess_runner, cli, snapshot_cli):
+    app = """
+import os
+from flask import Flask, jsonify, request
+import ctypes
+
+app = Flask(__name__)
+
+raw_schema = {
+    "openapi": "3.0.0",
+    "info": {"title": "Stateful Crash Test", "version": "1.0.0"},
+    "paths": {
+        "/users": {
+            "post": {
+                "summary": "Create user",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {"name": {"type": "string"}},
+                                "required": ["name"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {"id": {"type": "integer"}},
+                                    "required": ["id"]
+                                }
+                            }
+                        },
+                        "links": {
+                            "GetUserById": {
+                                "operationId": "getUserById",
+                                "parameters": {"id": "$response.body#/id"}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "operationId": "getUserById",
+                "summary": "Get user by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": True,
+                        "schema": {"type": "integer"}
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {"type": "integer"},
+                                        "name": {"type": "string"}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@app.route("/openapi.json")
+def openapi():
+    return jsonify(raw_schema)
+
+@app.route("/users", methods=["POST"])
+def create_user():
+    return jsonify({"id": 123}), 201
+
+@app.route("/users/<int:user_id>", methods=["GET"])
+def get_user(user_id):
+    # Crash during stateful testing when following the link
+    ctypes.string_at(0)  # Segfault
+
+if __name__ == "__main__":
+    port = int(os.environ["PORT"])
+    app.run(host="127.0.0.1", port=port, debug=False)
+"""
+
+    port = subprocess_runner.run_app(app)
+
+    assert (
+        cli.main(
+            "run",
+            f"http://127.0.0.1:{port}/openapi.json",
+            "--phases=stateful",
+            "--tls-verify=false",
+            "-c not_a_server_error",
+            "--max-examples=1",
+            "--mode=positive",
         )
         == snapshot_cli
     )

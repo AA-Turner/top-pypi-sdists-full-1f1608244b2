@@ -1,7 +1,7 @@
 r'''
 # `okta_auth_server_policy_rule`
 
-Refer to the Terraform Registry for docs: [`okta_auth_server_policy_rule`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule).
+Refer to the Terraform Registry for docs: [`okta_auth_server_policy_rule`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AuthServerPolicyRule(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.authServerPolicyRule.AuthServerPolicyRule",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule okta_auth_server_policy_rule}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule okta_auth_server_policy_rule}.'''
 
     def __init__(
         self,
@@ -76,27 +76,27 @@ class AuthServerPolicyRule(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule okta_auth_server_policy_rule} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule okta_auth_server_policy_rule} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param auth_server_id: Auth server ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#auth_server_id AuthServerPolicyRule#auth_server_id}
-        :param grant_type_whitelist: Accepted grant type values, ``authorization_code``, ``implicit``, ``password``, ``client_credentials``, ``urn:ietf:params:oauth:grant-type:saml2-bearer`` (*Early Access Property*), ``urn:ietf:params:oauth:grant-type:token-exchange`` (*Early Access Property*),``urn:ietf:params:oauth:grant-type:device_code`` (*Early Access Property*), ``interaction_code`` (*OIE only*). For ``implicit`` value either ``user_whitelist`` or ``group_whitelist`` should be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#grant_type_whitelist AuthServerPolicyRule#grant_type_whitelist}
-        :param name: Auth server policy rule name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#name AuthServerPolicyRule#name}
-        :param policy_id: Auth server policy ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#policy_id AuthServerPolicyRule#policy_id}
-        :param priority: Priority of the auth server policy rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#priority AuthServerPolicyRule#priority}
-        :param access_token_lifetime_minutes: Lifetime of access token. Can be set to a value between 5 and 1440 minutes. Default is ``60``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#access_token_lifetime_minutes AuthServerPolicyRule#access_token_lifetime_minutes}
-        :param group_blacklist: Specifies a set of Groups whose Users are to be excluded. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#group_blacklist AuthServerPolicyRule#group_blacklist}
-        :param group_whitelist: Specifies a set of Groups whose Users are to be included. Can be set to Group ID or to the following: ``EVERYONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#group_whitelist AuthServerPolicyRule#group_whitelist}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#id AuthServerPolicyRule#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param inline_hook_id: The ID of the inline token to trigger. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#inline_hook_id AuthServerPolicyRule#inline_hook_id}
-        :param refresh_token_lifetime_minutes: Lifetime of refresh token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#refresh_token_lifetime_minutes AuthServerPolicyRule#refresh_token_lifetime_minutes}
-        :param refresh_token_window_minutes: Window in which a refresh token can be used. It can be a value between 5 and 2628000 (5 years) minutes. Default is ``10080`` (7 days).``refresh_token_window_minutes`` must be between ``access_token_lifetime_minutes`` and ``refresh_token_lifetime_minutes``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#refresh_token_window_minutes AuthServerPolicyRule#refresh_token_window_minutes}
-        :param scope_whitelist: Scopes allowed for this policy rule. They can be whitelisted by name or all can be whitelisted with ``*`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#scope_whitelist AuthServerPolicyRule#scope_whitelist}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#status AuthServerPolicyRule#status}
-        :param type: Auth server policy rule type, unlikely this will be anything other then the default. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#type AuthServerPolicyRule#type}
-        :param user_blacklist: Specifies a set of Users to be excluded. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#user_blacklist AuthServerPolicyRule#user_blacklist}
-        :param user_whitelist: Specifies a set of Users to be included. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#user_whitelist AuthServerPolicyRule#user_whitelist}
+        :param auth_server_id: Auth server ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#auth_server_id AuthServerPolicyRule#auth_server_id}
+        :param grant_type_whitelist: Accepted grant type values, ``authorization_code``, ``implicit``, ``password``, ``client_credentials``, ``urn:ietf:params:oauth:grant-type:saml2-bearer`` (*Early Access Property*), ``urn:ietf:params:oauth:grant-type:token-exchange`` (*Early Access Property*),``urn:ietf:params:oauth:grant-type:device_code`` (*Early Access Property*), ``interaction_code`` (*OIE only*). For ``implicit`` value either ``user_whitelist`` or ``group_whitelist`` should be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#grant_type_whitelist AuthServerPolicyRule#grant_type_whitelist}
+        :param name: Auth server policy rule name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#name AuthServerPolicyRule#name}
+        :param policy_id: Auth server policy ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#policy_id AuthServerPolicyRule#policy_id}
+        :param priority: Priority of the auth server policy rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#priority AuthServerPolicyRule#priority}
+        :param access_token_lifetime_minutes: Lifetime of access token. Can be set to a value between 5 and 1440 minutes. Default is ``60``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#access_token_lifetime_minutes AuthServerPolicyRule#access_token_lifetime_minutes}
+        :param group_blacklist: Specifies a set of Groups whose Users are to be excluded. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#group_blacklist AuthServerPolicyRule#group_blacklist}
+        :param group_whitelist: Specifies a set of Groups whose Users are to be included. Can be set to Group ID or to the following: ``EVERYONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#group_whitelist AuthServerPolicyRule#group_whitelist}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#id AuthServerPolicyRule#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param inline_hook_id: The ID of the inline token to trigger. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#inline_hook_id AuthServerPolicyRule#inline_hook_id}
+        :param refresh_token_lifetime_minutes: Lifetime of refresh token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#refresh_token_lifetime_minutes AuthServerPolicyRule#refresh_token_lifetime_minutes}
+        :param refresh_token_window_minutes: Window in which a refresh token can be used. It can be a value between 5 and 2628000 (5 years) minutes. Default is ``10080`` (7 days).``refresh_token_window_minutes`` must be between ``access_token_lifetime_minutes`` and ``refresh_token_lifetime_minutes``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#refresh_token_window_minutes AuthServerPolicyRule#refresh_token_window_minutes}
+        :param scope_whitelist: Scopes allowed for this policy rule. They can be whitelisted by name or all can be whitelisted with ``*`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#scope_whitelist AuthServerPolicyRule#scope_whitelist}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#status AuthServerPolicyRule#status}
+        :param type: Auth server policy rule type, unlikely this will be anything other then the default. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#type AuthServerPolicyRule#type}
+        :param user_blacklist: Specifies a set of Users to be excluded. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#user_blacklist AuthServerPolicyRule#user_blacklist}
+        :param user_whitelist: Specifies a set of Users to be included. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#user_whitelist AuthServerPolicyRule#user_whitelist}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -151,7 +151,7 @@ class AuthServerPolicyRule(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AuthServerPolicyRule to import.
-        :param import_from_id: The id of the existing AuthServerPolicyRule that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AuthServerPolicyRule that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AuthServerPolicyRule to import is found.
         '''
         if __debug__:
@@ -585,23 +585,23 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param auth_server_id: Auth server ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#auth_server_id AuthServerPolicyRule#auth_server_id}
-        :param grant_type_whitelist: Accepted grant type values, ``authorization_code``, ``implicit``, ``password``, ``client_credentials``, ``urn:ietf:params:oauth:grant-type:saml2-bearer`` (*Early Access Property*), ``urn:ietf:params:oauth:grant-type:token-exchange`` (*Early Access Property*),``urn:ietf:params:oauth:grant-type:device_code`` (*Early Access Property*), ``interaction_code`` (*OIE only*). For ``implicit`` value either ``user_whitelist`` or ``group_whitelist`` should be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#grant_type_whitelist AuthServerPolicyRule#grant_type_whitelist}
-        :param name: Auth server policy rule name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#name AuthServerPolicyRule#name}
-        :param policy_id: Auth server policy ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#policy_id AuthServerPolicyRule#policy_id}
-        :param priority: Priority of the auth server policy rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#priority AuthServerPolicyRule#priority}
-        :param access_token_lifetime_minutes: Lifetime of access token. Can be set to a value between 5 and 1440 minutes. Default is ``60``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#access_token_lifetime_minutes AuthServerPolicyRule#access_token_lifetime_minutes}
-        :param group_blacklist: Specifies a set of Groups whose Users are to be excluded. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#group_blacklist AuthServerPolicyRule#group_blacklist}
-        :param group_whitelist: Specifies a set of Groups whose Users are to be included. Can be set to Group ID or to the following: ``EVERYONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#group_whitelist AuthServerPolicyRule#group_whitelist}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#id AuthServerPolicyRule#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param inline_hook_id: The ID of the inline token to trigger. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#inline_hook_id AuthServerPolicyRule#inline_hook_id}
-        :param refresh_token_lifetime_minutes: Lifetime of refresh token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#refresh_token_lifetime_minutes AuthServerPolicyRule#refresh_token_lifetime_minutes}
-        :param refresh_token_window_minutes: Window in which a refresh token can be used. It can be a value between 5 and 2628000 (5 years) minutes. Default is ``10080`` (7 days).``refresh_token_window_minutes`` must be between ``access_token_lifetime_minutes`` and ``refresh_token_lifetime_minutes``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#refresh_token_window_minutes AuthServerPolicyRule#refresh_token_window_minutes}
-        :param scope_whitelist: Scopes allowed for this policy rule. They can be whitelisted by name or all can be whitelisted with ``*`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#scope_whitelist AuthServerPolicyRule#scope_whitelist}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#status AuthServerPolicyRule#status}
-        :param type: Auth server policy rule type, unlikely this will be anything other then the default. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#type AuthServerPolicyRule#type}
-        :param user_blacklist: Specifies a set of Users to be excluded. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#user_blacklist AuthServerPolicyRule#user_blacklist}
-        :param user_whitelist: Specifies a set of Users to be included. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#user_whitelist AuthServerPolicyRule#user_whitelist}
+        :param auth_server_id: Auth server ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#auth_server_id AuthServerPolicyRule#auth_server_id}
+        :param grant_type_whitelist: Accepted grant type values, ``authorization_code``, ``implicit``, ``password``, ``client_credentials``, ``urn:ietf:params:oauth:grant-type:saml2-bearer`` (*Early Access Property*), ``urn:ietf:params:oauth:grant-type:token-exchange`` (*Early Access Property*),``urn:ietf:params:oauth:grant-type:device_code`` (*Early Access Property*), ``interaction_code`` (*OIE only*). For ``implicit`` value either ``user_whitelist`` or ``group_whitelist`` should be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#grant_type_whitelist AuthServerPolicyRule#grant_type_whitelist}
+        :param name: Auth server policy rule name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#name AuthServerPolicyRule#name}
+        :param policy_id: Auth server policy ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#policy_id AuthServerPolicyRule#policy_id}
+        :param priority: Priority of the auth server policy rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#priority AuthServerPolicyRule#priority}
+        :param access_token_lifetime_minutes: Lifetime of access token. Can be set to a value between 5 and 1440 minutes. Default is ``60``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#access_token_lifetime_minutes AuthServerPolicyRule#access_token_lifetime_minutes}
+        :param group_blacklist: Specifies a set of Groups whose Users are to be excluded. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#group_blacklist AuthServerPolicyRule#group_blacklist}
+        :param group_whitelist: Specifies a set of Groups whose Users are to be included. Can be set to Group ID or to the following: ``EVERYONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#group_whitelist AuthServerPolicyRule#group_whitelist}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#id AuthServerPolicyRule#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param inline_hook_id: The ID of the inline token to trigger. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#inline_hook_id AuthServerPolicyRule#inline_hook_id}
+        :param refresh_token_lifetime_minutes: Lifetime of refresh token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#refresh_token_lifetime_minutes AuthServerPolicyRule#refresh_token_lifetime_minutes}
+        :param refresh_token_window_minutes: Window in which a refresh token can be used. It can be a value between 5 and 2628000 (5 years) minutes. Default is ``10080`` (7 days).``refresh_token_window_minutes`` must be between ``access_token_lifetime_minutes`` and ``refresh_token_lifetime_minutes``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#refresh_token_window_minutes AuthServerPolicyRule#refresh_token_window_minutes}
+        :param scope_whitelist: Scopes allowed for this policy rule. They can be whitelisted by name or all can be whitelisted with ``*`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#scope_whitelist AuthServerPolicyRule#scope_whitelist}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#status AuthServerPolicyRule#status}
+        :param type: Auth server policy rule type, unlikely this will be anything other then the default. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#type AuthServerPolicyRule#type}
+        :param user_blacklist: Specifies a set of Users to be excluded. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#user_blacklist AuthServerPolicyRule#user_blacklist}
+        :param user_whitelist: Specifies a set of Users to be included. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#user_whitelist AuthServerPolicyRule#user_whitelist}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -745,7 +745,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auth_server_id(self) -> builtins.str:
         '''Auth server ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#auth_server_id AuthServerPolicyRule#auth_server_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#auth_server_id AuthServerPolicyRule#auth_server_id}
         '''
         result = self._values.get("auth_server_id")
         assert result is not None, "Required property 'auth_server_id' is missing"
@@ -757,7 +757,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For ``implicit`` value either ``user_whitelist`` or ``group_whitelist`` should be set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#grant_type_whitelist AuthServerPolicyRule#grant_type_whitelist}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#grant_type_whitelist AuthServerPolicyRule#grant_type_whitelist}
         '''
         result = self._values.get("grant_type_whitelist")
         assert result is not None, "Required property 'grant_type_whitelist' is missing"
@@ -767,7 +767,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Auth server policy rule name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#name AuthServerPolicyRule#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#name AuthServerPolicyRule#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -777,7 +777,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy_id(self) -> builtins.str:
         '''Auth server policy ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#policy_id AuthServerPolicyRule#policy_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#policy_id AuthServerPolicyRule#policy_id}
         '''
         result = self._values.get("policy_id")
         assert result is not None, "Required property 'policy_id' is missing"
@@ -787,7 +787,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def priority(self) -> jsii.Number:
         '''Priority of the auth server policy rule.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#priority AuthServerPolicyRule#priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#priority AuthServerPolicyRule#priority}
         '''
         result = self._values.get("priority")
         assert result is not None, "Required property 'priority' is missing"
@@ -797,7 +797,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def access_token_lifetime_minutes(self) -> typing.Optional[jsii.Number]:
         '''Lifetime of access token. Can be set to a value between 5 and 1440 minutes. Default is ``60``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#access_token_lifetime_minutes AuthServerPolicyRule#access_token_lifetime_minutes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#access_token_lifetime_minutes AuthServerPolicyRule#access_token_lifetime_minutes}
         '''
         result = self._values.get("access_token_lifetime_minutes")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -806,7 +806,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def group_blacklist(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a set of Groups whose Users are to be excluded.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#group_blacklist AuthServerPolicyRule#group_blacklist}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#group_blacklist AuthServerPolicyRule#group_blacklist}
         '''
         result = self._values.get("group_blacklist")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -817,14 +817,14 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Can be set to Group ID or to the following: ``EVERYONE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#group_whitelist AuthServerPolicyRule#group_whitelist}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#group_whitelist AuthServerPolicyRule#group_whitelist}
         '''
         result = self._values.get("group_whitelist")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#id AuthServerPolicyRule#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#id AuthServerPolicyRule#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -836,7 +836,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def inline_hook_id(self) -> typing.Optional[builtins.str]:
         '''The ID of the inline token to trigger.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#inline_hook_id AuthServerPolicyRule#inline_hook_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#inline_hook_id AuthServerPolicyRule#inline_hook_id}
         '''
         result = self._values.get("inline_hook_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -845,7 +845,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def refresh_token_lifetime_minutes(self) -> typing.Optional[jsii.Number]:
         '''Lifetime of refresh token.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#refresh_token_lifetime_minutes AuthServerPolicyRule#refresh_token_lifetime_minutes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#refresh_token_lifetime_minutes AuthServerPolicyRule#refresh_token_lifetime_minutes}
         '''
         result = self._values.get("refresh_token_lifetime_minutes")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -856,7 +856,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         It can be a value between 5 and 2628000 (5 years) minutes. Default is ``10080`` (7 days).``refresh_token_window_minutes`` must be between ``access_token_lifetime_minutes`` and ``refresh_token_lifetime_minutes``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#refresh_token_window_minutes AuthServerPolicyRule#refresh_token_window_minutes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#refresh_token_window_minutes AuthServerPolicyRule#refresh_token_window_minutes}
         '''
         result = self._values.get("refresh_token_window_minutes")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -867,7 +867,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         They can be whitelisted by name or all can be whitelisted with ``*``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#scope_whitelist AuthServerPolicyRule#scope_whitelist}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#scope_whitelist AuthServerPolicyRule#scope_whitelist}
         '''
         result = self._values.get("scope_whitelist")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -876,7 +876,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Default to ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#status AuthServerPolicyRule#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#status AuthServerPolicyRule#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -885,7 +885,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> typing.Optional[builtins.str]:
         '''Auth server policy rule type, unlikely this will be anything other then the default.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#type AuthServerPolicyRule#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#type AuthServerPolicyRule#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -894,7 +894,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_blacklist(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a set of Users to be excluded.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#user_blacklist AuthServerPolicyRule#user_blacklist}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#user_blacklist AuthServerPolicyRule#user_blacklist}
         '''
         result = self._values.get("user_blacklist")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -903,7 +903,7 @@ class AuthServerPolicyRuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_whitelist(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a set of Users to be included.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy_rule#user_whitelist AuthServerPolicyRule#user_whitelist}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/auth_server_policy_rule#user_whitelist AuthServerPolicyRule#user_whitelist}
         '''
         result = self._values.get("user_whitelist")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)

@@ -5,7 +5,6 @@ import pytest
 from flask import Flask, jsonify
 from hypothesis import HealthCheck, assume, given, settings
 from hypothesis import strategies as st
-from schemathesis.extra._flask import run_server as run_flask_server
 
 from schemathesis.specs.openapi.patterns import update_quantifier
 
@@ -62,6 +61,9 @@ SKIP_BEFORE_PY11 = pytest.mark.skipif(
         ("^[a-z]*$", None, 5, "^([a-z]){0,5}$"),
         ("^[a-z]*$", 3, 5, "^([a-z]){3,5}$"),
         ("^[a-z]+$", 0, 5, "^([a-z]){1,5}$"),
+        ("^.+$", 0, 5, "^(.){1,5}$"),
+        ("^.{0,1}$", 0, 5, "^(.){0,1}$"),
+        ("^.$", 0, 5, "^(.){1}$"),
         ("[a-z]*$", None, 5, "([a-z]){0,5}$"),
         ("[a-z]*$", 3, 5, "([a-z]){3,5}$"),
         ("[a-z]+$", 0, 5, "([a-z]){1,5}$"),
@@ -109,7 +111,21 @@ SKIP_BEFORE_PY11 = pytest.mark.skipif(
         (r"^[\+][\s0-9()-]+$", 1, 20, r"^[\+]([\s0-9()-]){1,19}$"),
         # Multiple fixed parts
         ("^abc[0-9]{1,3}def[a-z]{2,5}ghi$", 12, 12, "^abc([0-9]){1}def([a-z]){2}ghi$"),
+        # Others
         ("^(((?:DB|BR)[-a-zA-Z0-9_]+),?){1,}$", None, 6000, "^(((?:DB|BR)[-a-zA-Z0-9_]+),?){1,6000}$"),
+        (r"^geo:\w*\*?$", 5, 200, r"^geo:(\w){1,196}(\*){0}$"),
+        (r"^[\w\W]$", 1, 3, r"^(.){1}$"),
+        (r"^[\w\W]+$", 1, 3, r"^(.){1,3}$"),
+        (r"^[\w\W]*$", 1, 3, r"^(.){1,3}$"),
+        (r"^[\w\W]?$", 1, 3, r"^(.){1}$"),
+        (r"^[\w\W]{2,}$", 1, 3, r"^(.){2,3}$"),
+        (r"^[\W\w]$", 1, 3, r"^(.){1}$"),
+        (r"^[\W\w]+$", 1, 3, r"^(.){1,3}$"),
+        (r"^[\W\w]*$", 1, 3, r"^(.){1,3}$"),
+        (r"^[\W\w]?$", 1, 3, r"^(.){1}$"),
+        (r"^[\W\w]{2,}$", 1, 3, r"^(.){2,3}$"),
+        (r"^prefix[|]+(?:,prefix[|]+)*$", 4000, 4000, r"^prefix([|]){2}(?:,prefix[|]+){499}$"),
+        (r"^bar\.spam\.[^,]+(?:,bar\.spam\.[^,]+)*$", 10, 10, r"^bar\.spam\.([^,]){1}(?:,bar\.spam\.[^,]+){0}$"),
     ],
 )
 def test_update_quantifier(pattern, min_length, max_length, expected):
@@ -172,7 +188,7 @@ def is_valid_regex(pattern: str) -> bool:
         return False
 
 
-def test_response_schema_is_not_mutated(cli, snapshot_cli):
+def test_response_schema_is_not_mutated(cli, app_runner, snapshot_cli):
     # See GH-2749
     raw_schema = {
         "openapi": "3.0.3",
@@ -235,6 +251,6 @@ def test_response_schema_is_not_mutated(cli, snapshot_cli):
         response_body = {"container_image": example_value}
         return jsonify(response_body), 200
 
-    port = run_flask_server(app)
+    port = app_runner.run_flask_app(app)
 
-    assert cli.run(f"http://127.0.0.1:{port}/openapi.json", "-call", "--hypothesis-max-examples=1") == snapshot_cli
+    assert cli.run(f"http://127.0.0.1:{port}/openapi.json", "-call", "--phases=fuzzing", "-n 1") == snapshot_cli

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 import io
 import logging
 import os
@@ -9,76 +10,66 @@ import shlex
 import warnings
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from importlib import metadata
 from pathlib import Path
 from textwrap import dedent
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any
 
+import click
 import httpx
 import pytest
 import requests
+import tomli_w
 import yaml
 from click.testing import CliRunner, Result
 from hypothesis import settings
-from packaging import version
 from syrupy.extensions.single_file import SingleFileSnapshotExtension, WriteMode
 from urllib3 import HTTPResponse
+from werkzeug import Request
+from werkzeug.datastructures import Headers
+from werkzeug.test import TestResponse
 
 import schemathesis.cli
-from schemathesis.cli import CUSTOM_HANDLERS, reset_checks
-from schemathesis.cli.output.default import TEST_CASE_ID_TITLE
-from schemathesis.constants import HOOKS_MODULE_ENV_VAR
-from schemathesis.experimental import GLOBAL_EXPERIMENTS
-from schemathesis.extra._aiohttp import run_server as run_aiohttp_server
-from schemathesis.extra._flask import run_server as run_flask_server
-from schemathesis.models import Case
-from schemathesis.service import HOSTS_PATH_ENV_VAR
-from schemathesis.specs.openapi import loaders as oas_loaders
+from schemathesis import auths, hooks
+from schemathesis.cli.commands.run.executor import CUSTOM_HANDLERS
+from schemathesis.core.hooks import HOOKS_MODULE_ENV_VAR
+from schemathesis.core.transport import Response
 from schemathesis.specs.openapi import media_types
-from schemathesis.transports.responses import WSGIResponse
 
 from .apps import _graphql as graphql
 from .apps import openapi
 from .apps.openapi.schema import OpenAPIVersion, Operation
-from .utils import get_schema_path, make_schema
+from .utils import make_schema
 
 if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest
     from syrupy.types import PropertyFilter, PropertyMatcher
 
-pytest_plugins = ["pytester", "aiohttp.pytest_plugin", "pytest_mock", "test.fixtures.ctx"]
+pytest_plugins = [
+    "pytester",
+    "aiohttp.pytest_plugin",
+    "pytest_mock",
+    "test.fixtures.ctx",
+    "test.fixtures.app_runner",
+]
 
 logging.getLogger("pyrate_limiter").setLevel(logging.CRITICAL)
 
 # Register Hypothesis profile. Could be used as
 # `pytest test -m hypothesis --hypothesis-profile <profile-name>`
-settings.register_profile("CI", max_examples=1000)
-
-
-@pytest.fixture(autouse=True)
-def setup(tmp_path_factory):
-    # Avoid failing tests if the local schemathesis CLI is already authenticated with SaaS
-    config_dir = tmp_path_factory.mktemp(basename="schemathesis-config")
-    hosts_path = config_dir / "hosts.toml"
-    hosts_path.touch(exist_ok=True)
-    os.environ[HOSTS_PATH_ENV_VAR] = str(hosts_path)
+settings.register_profile("CI", max_examples=2000)
 
 
 @pytest.fixture(autouse=True)
 def reset_hooks():
-    GLOBAL_EXPERIMENTS.disable_all()
     CUSTOM_HANDLERS.clear()
-    schemathesis.hooks.unregister_all()
-    schemathesis.auth.unregister()
-    reset_checks()
+    hooks.unregister_all()
+    auths.unregister()
     media_types.unregister_all()
     yield
-    GLOBAL_EXPERIMENTS.disable_all()
     CUSTOM_HANDLERS.clear()
-    schemathesis.hooks.unregister_all()
-    schemathesis.auth.unregister()
-    reset_checks()
+    hooks.unregister_all()
+    auths.unregister()
     media_types.unregister_all()
 
 
@@ -121,8 +112,6 @@ def pytest_generate_tests(metafunc):
 
 def pytest_configure(config):
     config.addinivalue_line("markers", "operations(*names): Add only specified API operations to the test application.")
-    config.addinivalue_line("markers", "service(**kwargs): Setup mock server for Schemathesis.io.")
-    config.addinivalue_line("markers", "analyze_schema(autouse=True, extensions=()): Configure schema analysis.")
     config.addinivalue_line("markers", "snapshot(**kwargs): Configure snapshot tests.")
     config.addinivalue_line("markers", "hypothesis_nested: Mark tests with nested Hypothesis tests.")
     config.addinivalue_line(
@@ -187,9 +176,9 @@ def openapi_3_app(_app, reset_app):
 
 
 @pytest.fixture(scope="session")
-def server(_app):
+def server(_app, app_runner):
     """Run the app on an unused port."""
-    port = run_aiohttp_server(_app)
+    port = app_runner.run_aiohttp_app(_app)
     return {"port": port}
 
 
@@ -239,7 +228,7 @@ def openapi3_schema_url(server_address, openapi_3_app):
 
 @pytest.fixture
 def openapi3_schema(openapi3_schema_url):
-    return oas_loaders.from_uri(openapi3_schema_url)
+    return schemathesis.openapi.from_url(openapi3_schema_url)
 
 
 @pytest.fixture
@@ -253,8 +242,8 @@ def graphql_app(graphql_path):
 
 
 @pytest.fixture
-def graphql_server(graphql_app):
-    port = run_flask_server(graphql_app)
+def graphql_server(graphql_app, app_runner):
+    port = app_runner.run_flask_app(graphql_app)
     return {"port": port}
 
 
@@ -290,26 +279,24 @@ def keep_cwd():
 FLASK_MARKERS = ("* Serving Flask app", "* Debug mode")
 PACKAGE_ROOT = Path(schemathesis.__file__).parent
 SITE_PACKAGES = requests.__file__.split("requests")[0]
-TRANSITIONS_PATTERN = re.compile(r"(\d+)(?:\s+(\d+)\s+(\d+)\s+(\d+))$")
+IS_WINDOWS = platform.system() == "Windows"
 
 
-@dataclass()
+@dataclass
 class CliSnapshotConfig:
     request: FixtureRequest
     replace_server_host: bool = True
-    replace_service_host: bool = True
-    replace_service_error_report: bool = True
     replace_tmp_dir: bool = True
     replace_duration: bool = True
-    replace_multi_worker_progress: bool | str = True
-    replace_statistic: bool = False
     replace_error_codes: bool = True
     replace_test_case_id: bool = True
     replace_uuid: bool = True
     replace_response_time: bool = True
     replace_seed: bool = True
     replace_reproduce_with: bool = False
-    replace_stateful_progress: bool = True
+    replace_test_cases: bool = True
+    replace_phase_statistic: bool = False
+    remove_last_line: bool = False
 
     @classmethod
     def from_request(cls, request: FixtureRequest) -> CliSnapshotConfig:
@@ -323,20 +310,28 @@ class CliSnapshotConfig:
         return self.request.getfixturevalue("testdir")
 
     def serialize(self, data: str) -> str:
-        lines = data.splitlines()
-        lines = [
-            line
-            for line in lines
-            if not any(marker in line for marker in FLASK_MARKERS)
-            and line not in ("API probing: ...", "Schema analysis: ...")
-        ]
-        data = "\n".join(lines)
-        if self.replace_service_host:
-            try:
-                host = self.request.getfixturevalue("hostname")
-                data = data.replace(host, "127.0.0.1")
-            except LookupError:
-                pass
+        if self.replace_test_cases:
+            data = re.sub(r"Test cases:\n  (\d+) generated, \1 skipped", "Test cases:\n  N generated, N skipped", data)
+            # Cases with failures and skips
+            data = re.sub(
+                r"Test cases:\n  (\d+) generated, (\d+) found (\d+) unique failures, (\d+) skipped",
+                "Test cases:\n  N generated, N found N unique failures, N skipped",
+                data,
+            )
+            # Cases with passed and skips
+            data = re.sub(
+                r"Test cases:\n  (\d+) generated, (\d+) passed, (\d+) skipped",
+                "Test cases:\n  N generated, N passed, N skipped",
+                data,
+            )
+            # Only passed cases
+            data = re.sub(r"Test cases:\n  (\d+) generated, (\d+) passed", "Test cases:\n  N generated, N passed", data)
+            # Cases with failures but no skips
+            data = re.sub(
+                r"Test cases:\n  (\d+) generated, (\d+) found (\d+) unique failures",
+                "Test cases:\n  N generated, N found N unique failures",
+                data,
+            )
         if self.replace_server_host:
             used_fixtures = self.request.fixturenames
             for fixture in ("graphql_server_host", "server_host"):
@@ -348,6 +343,7 @@ class CliSnapshotConfig:
                         pass
             with keep_cwd():
                 data = data.replace(Path(self.testdir.tmpdir).as_uri(), "file:///tmp")
+        data = re.sub(r"http://127\.0\.0\.1:[0-9]{3,}/", "http://127.0.0.1/", data)
         if self.replace_tmp_dir:
             with keep_cwd():
                 data = data.replace(str(self.testdir.tmpdir) + os.path.sep, "/tmp/")
@@ -355,9 +351,23 @@ class CliSnapshotConfig:
         package_root = "/package-root"
         site_packages = "/site-packages/"
         data = data.replace(str(PACKAGE_ROOT), package_root)
+        data = re.sub(
+            "❌  Failed to load configuration file from .*toml$",
+            "❌  Failed to load configuration file from config.toml",
+            data,
+            flags=re.MULTILINE,
+        )
         data = data.replace(str(SITE_PACKAGES), site_packages)
         data = re.sub(", line [0-9]+,", ", line XXX,", data)
-        data = re.sub(r"Compressed report size: \d+ [KMG]B", "Compressed report size: XX KB", data)
+        data = re.sub(r"Scenarios:.*\d+", r"Scenarios:    N", data)
+        if self.replace_phase_statistic:
+            data = re.sub("🚫 [0-9]+ errors", "🚫 1 error", data)
+        if "Stateful" in data:
+            data = re.sub(r"API Links:.*\d+ covered", r"API Links:    N covered", data)
+            before, after = data.split("Stateful", 1)
+            after = re.sub(r"\d+ passed", "N passed", after)
+            data = before + "Stateful" + after
+
         if "Traceback (most recent call last):" in data:
             lines = [line for line in data.splitlines() if set(line) not in ({" ", "^"}, {" ", "^", "~"})]
             comprehension_ids = [idx for idx, line in enumerate(lines) if line.strip().endswith("comp>")]
@@ -370,22 +380,6 @@ class CliSnapshotConfig:
                     if line.strip().startswith("File") and "line" in line:
                         lines[idx] = line.replace("\\", "/")
             data = "\n".join(lines)
-        if self.replace_multi_worker_progress:
-            lines = data.splitlines()
-            for idx, line in enumerate(lines):
-                if re.match(r"^[.FSE]+$", line):
-                    if isinstance(self.replace_multi_worker_progress, str):
-                        lines[idx] = self.replace_multi_worker_progress
-                    else:
-                        lines[idx] = "".join(sorted(line))
-            data = "\n".join(lines) + "\n"
-        if self.replace_stateful_progress:
-            data = re.sub(r"(?<=Stateful tests\n\n)([.FES]+)", "...", data)
-        if self.replace_statistic:
-            data = re.sub("[0-9]+ / [0-9]+ passed", "N / N passed", data)
-            data = re.sub("N / N passed +PASSED", "N / N passed          PASSED", data)
-            data = re.sub("N / N passed +FAILED", "N / N passed          FAILED", data)
-            data = re.sub("([0-9]+ passed,? )|([0-9]+ errored,? )", "", data)
         if self.replace_error_codes:
             data = (
                 data.replace("Errno 111", "Error NUM")
@@ -397,34 +391,31 @@ class CliSnapshotConfig:
                 "No connection could be made because the target machine actively refused it", "Connection refused"
             )
         if self.replace_duration:
-            data = re.sub(r"It took [0-9]+\.[0-9]{2}ms", "It took 500.00ms", data)
+            data = re.sub(r"It took [0-9]+\.[0-9]{2}s", "It took 0.50s", data)
+            data = re.sub(r"\(in [0-9]+\.[0-9]{2}s\)", "(in 0.00s)", data)
+            data = re.sub(r"after [0-9]+\.[0-9]{2}s", "after 0.00s", data).strip()
             lines = data.splitlines()
             lines[-1] = re.sub(r"in [0-9]+\.[0-9]{2}s", "in 1.00s", lines[-1])
             if "in 1.00s" in lines[-1]:
-                lines[-1] = lines[-1].ljust(80, "=")
+                lines[-1] = lines[-1].strip("=").center(80, "=")
             data = "\n".join(lines) + "\n"
+        if self.remove_last_line:
+            lines = data.splitlines()
+            data = "\n".join(lines[:-1])
         if self.replace_test_case_id:
             lines = data.splitlines()
             for idx, line in enumerate(lines):
-                if re.match(rf"\d+\. {TEST_CASE_ID_TITLE}", line):
+                if re.match(r".*\d+\. Test Case ID", line):
                     sequential_id = lines[idx].split(".")[0]
-                    lines[idx] = f"{sequential_id}. {TEST_CASE_ID_TITLE}: <PLACEHOLDER>"
+                    lines[idx] = f"{sequential_id}. Test Case ID: <PLACEHOLDER>"
             data = "\n".join(lines) + "\n"
         if self.replace_uuid:
             data = re.sub(r"\b[0-9a-fA-F]{32}\b", EXAMPLE_UUID, data)
         if self.replace_response_time:
             data = re.sub(r"Actual: \d+\.\d+ms", "Actual: 105.00ms", data)
         if self.replace_seed:
-            data = re.sub(r"--hypothesis-seed=\d+", "--hypothesis-seed=42", data)
-            data = re.sub(r"Random seed: \d+", "Random seed: 42", data)
-        if self.replace_service_error_report:
-            lines = data.splitlines()
-            for idx, line in enumerate(lines):
-                if line.startswith("Headers: "):
-                    lines[idx] = "Headers: {'X-Foo': 'Bar'}"
-                    break
-            lines = [line for line in lines if not (line.startswith("Upload: ") and line.endswith(tuple("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏")))]
-            data = "\n".join(lines) + "\n"
+            data = re.sub(r"--seed=\d+", "--seed=42", data)
+            data = re.sub(r"Seed: \d+", "Seed: 42", data)
         if self.replace_reproduce_with:
             lines = []
             replace_next_non_empty = False
@@ -438,15 +429,100 @@ class CliSnapshotConfig:
                 elif line:
                     replace_next_non_empty = False
             data = "\n".join(lines) + "\n"
-        lines = data.splitlines()
-        output = []
-        if any(line.startswith("Links ") for line in lines):
-            for line in lines:
-                if TRANSITIONS_PATTERN.search(line):
-                    line = TRANSITIONS_PATTERN.sub("", line).rstrip()
-                output.append(line)
-            data = "\n".join(output) + "\n"
-        return data
+        lines = []
+        for line in data.splitlines():
+            line = click.unstyle(line)
+            if line.endswith("Schema Loading Error"):
+                # It is written at the end of the current line and does not properly rewrite the current line
+                # on all terminals
+                lines.append("Schema Loading Error")
+                continue
+            if IS_WINDOWS and ("Loading specification" in line or "Loaded specification" in line):
+                line = line.replace("\\", "/")
+            if any(marker in line for marker in FLASK_MARKERS) or line.lstrip().startswith(
+                (
+                    "🕛 ",
+                    "🕐 ",
+                    "🕑 ",
+                    "🕒 ",
+                    "🕓 ",
+                    "🕔 ",
+                    "🕕 ",
+                    "🕖 ",
+                    "🕗 ",
+                    "🕘 ",
+                    "🕙 ",
+                    "🕚 ",
+                    "⠋",
+                    "⠙",
+                    "⠹",
+                    "⠸",
+                    "⠼",
+                    "⠴",
+                    "⠦",
+                    "⠧",
+                    "⠇",
+                    "⠏",
+                    "0:0",
+                )
+            ):
+                continue
+            lines.append(line.rstrip())
+        lines = clean_unit_tests(lines)
+        lines = clean_stateful_tests(lines)
+        return "\n".join(lines).strip() + "\n"
+
+
+def clean_unit_tests(lines):
+    for idx, line in enumerate(lines):
+        if "API capabilities" in line:
+            probing_idx = idx + 4
+            break
+        if "API probing" in line:
+            probing_idx = idx + 2
+            break
+    else:
+        return lines
+
+    indices = []
+    for idx, line in enumerate(lines[probing_idx:], start=probing_idx):
+        if any(f"{phase} (in" in line for phase in ("Examples", "Coverage", "Fuzzing")):
+            indices.append(idx)
+
+    if not indices:
+        return lines
+
+    output = lines[:probing_idx]
+    for idx in indices[:-1]:
+        output += lines[idx : idx + 4]
+    output += lines[indices[-1] :]
+    return output
+
+
+def clean_stateful_tests(lines):
+    start_idx = None
+    for i, line in enumerate(lines):
+        if "Fuzzing (in" in line:
+            start_idx = i + 3
+            break
+    if start_idx is None:
+        for i, line in enumerate(lines):
+            if "API probing failed" in line:
+                start_idx = i + 1
+                break
+            if "API capabilities" in line:
+                start_idx = i + 3
+                break
+
+    end_idx = None
+    for i, line in enumerate(lines):
+        if "Stateful (in" in line:
+            end_idx = i
+            break
+
+    if start_idx is not None and end_idx is not None:
+        return lines[: start_idx + 1] + lines[end_idx:]
+    return lines
 
 
 EXAMPLE_UUID = "e32ab85ed4634c38a320eb0b22460da9"
@@ -461,17 +537,25 @@ def snapshot_cli(request, snapshot):
 
         def serialize(
             self,
-            data: Result,
+            data: Result | pytest.RunResult,
             *,
             exclude: PropertyFilter | None = None,
             include: PropertyFilter | None = None,
             matcher: PropertyMatcher | None = None,
         ) -> str:
-            serialized = f"Exit code: {data.exit_code}"
-            if data.stdout_bytes:
-                serialized += f"\n---\nStdout:\n{data.stdout}"
-            if data.stderr_bytes:
-                serialized += f"\n---\nStderr:\n{data.stderr}"
+            stdout = ""
+            if isinstance(data, Result):
+                exit_code = data.exit_code
+                if data.stdout_bytes:
+                    stdout = data.stdout
+                if data.stderr_bytes:
+                    stdout += data.stderr
+            else:
+                exit_code = data.ret
+                stdout = data.stdout.str() + data.stderr.str()
+            serialized = f"Exit code: {exit_code}"
+            if stdout:
+                serialized += f"\n---\nStdout:\n{stdout}"
             return config.serialize(serialized).replace("\r\n", "\n").replace("\r", "\n")
 
     class SnapshotAssertion(snapshot.__class__):
@@ -483,7 +567,7 @@ def snapshot_cli(request, snapshot):
 
 
 @pytest.fixture
-def cli():
+def cli(tmp_path):
     """CLI runner helper.
 
     Provides in-process execution via `click.CliRunner`.
@@ -493,31 +577,21 @@ def cli():
     class Runner:
         @staticmethod
         def run(*args, **kwargs):
-            return cli_runner.invoke(schemathesis.cli.run, args, **kwargs)
+            return Runner.main("run", *args, **kwargs)
 
         @staticmethod
-        def replay(*args, **kwargs):
-            return cli_runner.invoke(schemathesis.cli.replay, args, **kwargs)
-
-        @staticmethod
-        def main(*args, hooks=None, **kwargs):
+        def main(*args, config=None, hooks=None, **kwargs):
+            if config is not None:
+                path = tmp_path / "config.toml"
+                path.write_text(tomli_w.dumps(config), encoding="utf-8")
+                args = ["--config-file", str(path), *args]
             if hooks is not None:
                 env = kwargs.setdefault("env", {})
                 env[HOOKS_MODULE_ENV_VAR] = hooks
-            return cli_runner.invoke(schemathesis.cli.schemathesis, args, **kwargs)
-
-        @property
-        def auth(self):
-            return Auth()
-
-    class Auth:
-        @staticmethod
-        def login(*args, **kwargs):
-            return cli_runner.invoke(schemathesis.cli.login, args, **kwargs)
-
-        @staticmethod
-        def logout(*args, **kwargs):
-            return cli_runner.invoke(schemathesis.cli.logout, args, **kwargs)
+            result = cli_runner.invoke(schemathesis.cli.schemathesis, args, **kwargs)
+            if result.exception and not isinstance(result.exception, SystemExit):
+                raise result.exception
+            return result
 
     return Runner()
 
@@ -735,7 +809,7 @@ def openapi_3_schema_with_xml(ctx):
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def simple_openapi():
     return {
         "openapi": "3.0.2",
@@ -748,60 +822,6 @@ def simple_openapi():
                         {"name": "value", "in": "header", "required": True, "schema": {"type": "string"}},
                     ],
                     "responses": {"200": {"description": "OK"}},
-                }
-            }
-        },
-    }
-
-
-@pytest.fixture(scope="session")
-def fast_api_schema():
-    # This schema contains definitions from JSON Schema Draft 7
-    return {
-        "openapi": "3.0.2",
-        "info": {"title": "Test", "description": "Test", "version": "0.1.0"},
-        "paths": {
-            "/query": {
-                "get": {
-                    "parameters": [
-                        {
-                            "name": "value",
-                            "in": "query",
-                            "required": True,
-                            "schema": {"type": "integer", "exclusiveMinimum": 0, "exclusiveMaximum": 10},
-                        },
-                    ],
-                    "responses": {"200": {"description": "OK"}},
-                }
-            }
-        },
-    }
-
-
-@pytest.fixture(scope="session")
-def schema_with_get_payload():
-    return {
-        "openapi": "3.0.2",
-        "info": {"title": "Test", "description": "Test", "version": "0.1.0"},
-        "paths": {
-            "/users": {
-                "get": {
-                    "requestBody": {
-                        "required": True,
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {"key": {"type": "string"}},
-                                    "required": ["key"],
-                                    "example": {"key": "foo"},
-                                }
-                            }
-                        },
-                    },
-                    "responses": {
-                        "200": {"description": "OK", "content": {"application/json": {"schema": {"type": "object"}}}}
-                    },
                 }
             }
         },
@@ -923,20 +943,15 @@ def schema_with_recursive_references():
     }
 
 
-@pytest.fixture(name="get_schema_path")
-def _get_schema_path():
-    return get_schema_path
-
-
 @pytest.fixture
 def swagger_20(simple_schema):
-    return schemathesis.from_dict(simple_schema)
+    return schemathesis.openapi.from_dict(simple_schema)
 
 
 @pytest.fixture
 def openapi_30():
     raw = make_schema("simple_openapi.yaml")
-    return schemathesis.from_dict(raw)
+    return schemathesis.openapi.from_dict(raw)
 
 
 @pytest.fixture
@@ -948,24 +963,26 @@ def app_schema(openapi_version, operations):
 def testdir(testdir):
     def maker(
         content,
-        method=None,
-        path=None,
-        tag=None,
         pytest_plugins=("aiohttp.pytest_plugin",),
-        validate_schema=True,
         sanitize_output=True,
+        generation_modes=None,
         schema=None,
         schema_name="simple_swagger.yaml",
         **kwargs,
     ):
         schema = schema or make_schema(schema_name=schema_name, **kwargs)
+        modes = (
+            "[" + ", ".join([f"GenerationMode.{m.value.upper()}" for m in generation_modes]) + "]"
+            if generation_modes
+            else None
+        )
         preparation = dedent(
             f"""
         import pytest
         import schemathesis
-        from schemathesis.stateful import Stateful
-        from schemathesis.constants import NOT_SET
-        from schemathesis.generation import DataGenerationMethod
+        from schemathesis.core import NOT_SET
+        from schemathesis.config import *
+        from schemathesis.generation import GenerationMode
         from test.utils import *
         from hypothesis import given, settings, HealthCheck, Phase, assume, strategies as st, seed
         raw_schema = {schema}
@@ -976,14 +993,15 @@ def testdir(testdir):
         def simple_schema():
             return schema
 
-        schema = schemathesis.from_dict(
-            raw_schema,
-            method={method!r},
-            endpoint={path!r},
-            tag={tag!r},
-            validate_schema={validate_schema!r},
-            sanitize_output={sanitize_output!r}
+        config = SchemathesisConfig()
+        config.output.sanitization.update(enabled={sanitize_output!r})
+
+        schema = schemathesis.openapi.from_dict(
+            raw_schema, config=config
         )
+
+        if {modes} is not None:
+            schema.config.generation.update(modes={modes})
         """
         )
         module = testdir.makepyfile(preparation, content)
@@ -1044,81 +1062,12 @@ def fastapi_graphql_app(graphql_path):
 
 @pytest.fixture
 def real_app_schema(schema_url):
-    return oas_loaders.from_uri(schema_url)
+    return schemathesis.openapi.from_url(schema_url)
 
 
 @pytest.fixture
 def wsgi_app_schema(flask_app):
-    return oas_loaders.from_wsgi("/schema.yaml", flask_app)
-
-
-@pytest.fixture(params=["real_app_schema", "wsgi_app_schema"])
-def any_app_schema(openapi_version, request):
-    return request.getfixturevalue(request.param)
-
-
-@pytest.fixture
-def loadable_flask_app(ctx, operations):
-    module = ctx.write_pymodule(
-        f"""
-from test.apps.openapi._flask import create_app
-
-app = create_app({operations})
-""",
-        filename="flaskapp",
-    )
-    return f"{module}:app"
-
-
-@pytest.fixture
-def loadable_aiohttp_app(ctx, operations, openapi_version):
-    module = ctx.write_pymodule(
-        f"""
-from test.apps.openapi._aiohttp import create_app
-
-app = create_app({operations})
-"""
-    )
-    return f"{module}:app"
-
-
-@pytest.fixture
-def loadable_graphql_fastapi_app(ctx, graphql_path):
-    module = ctx.write_pymodule(
-        f"""
-from test.apps._graphql._fastapi import create_app
-
-app = create_app('{graphql_path}')
-"""
-    )
-    return f"{module}:app"
-
-
-@pytest.fixture
-def loadable_fastapi_app(ctx):
-    module = ctx.write_pymodule(
-        """
-from test.apps.openapi._fastapi import create_app
-
-app = create_app()
-"""
-    )
-    return f"{module}:app"
-
-
-class SubtestsVersion:
-    """Helper to check the version of pytest-subtests."""
-
-    def __init__(self):
-        self.version = version.parse(metadata.version("pytest_subtests"))
-        self.below_0_6_0 = self.version < version.parse("0.6.0")
-        self.below_0_11_0 = self.version < version.parse("0.11.0")
-
-
-@pytest.fixture(scope="session")
-def is_older_subtests() -> SubtestsVersion:
-    # For compatibility needs
-    return SubtestsVersion()
+    return schemathesis.openapi.from_wsgi("/schema.yaml", flask_app)
 
 
 @pytest.fixture
@@ -1133,12 +1082,14 @@ def response_factory():
         headers = headers or {}
         if content_type:
             headers.setdefault("Content-Type", content_type)
-        return httpx.Response(
+        response = httpx.Response(
             status_code=status_code,
             headers=headers,
             content=content,
             request=httpx.Request(method="POST", url="http://127.0.0.1", headers=headers),
         )
+        response.elapsed = datetime.timedelta(seconds=1)
+        return response
 
     def requests_factory(
         *,
@@ -1160,26 +1111,35 @@ def response_factory():
         response.request.prepare(method="POST", url="http://127.0.0.1", headers=headers)
         return response
 
-    def werkzeug_factory(*, status_code: int = 200, headers: dict[str, Any] | None = None):
-        response = WSGIResponse(response=b'{"some": "value"}', status=status_code)
-        response.request = requests.PreparedRequest()
-        response.request.prepare(
-            method="POST", url="http://example.com", headers={"Content-Type": "application/json", **(headers or {})}
+    def werkzeug_factory(
+        *,
+        content: bytes = b"{}",
+        content_type: str | None = "application/json",
+        status_code: int = 200,
+        headers: dict[str, Any] | None = None,
+    ):
+        headers = headers or {}
+        if content_type:
+            headers.setdefault("Content-Type", content_type)
+        request = Request.from_values(method="POST", base_url="http://127.0.0.1", path="/test", headers=headers)
+        response = TestResponse(
+            response=iter([content]),
+            status=str(status_code),
+            headers=Headers(headers),
+            request=request,
         )
         return response
 
-    return SimpleNamespace(
-        httpx=httpx_factory,
-        requests=requests_factory,
-        werkzeug=werkzeug_factory,
-    )
+    return SimpleNamespace(httpx=httpx_factory, requests=requests_factory, wsgi=werkzeug_factory)
 
 
 @pytest.fixture
 def case_factory(swagger_20):
     def factory(**kwargs):
-        kwargs.setdefault("operation", swagger_20["/users"]["get"])
-        return Case(generation_time=0.0, **kwargs)
+        operation = kwargs.pop("operation", swagger_20["/users"]["get"])
+        kwargs.setdefault("method", "GET")
+        kwargs.setdefault("media_type", "application/json")
+        return operation.Case(**kwargs)
 
     return factory
 
@@ -1201,3 +1161,18 @@ class CurlWrapper:
 @pytest.fixture
 def curl(testdir):
     return CurlWrapper(testdir)
+
+
+RESPONSE = Response(
+    status_code=200,
+    headers={},
+    content=b"",
+    request=requests.Request(method="GET", url="http://127.0.0.1/test").prepare(),
+    elapsed=0.1,
+    verify=False,
+)
+
+
+@pytest.fixture
+def mocked_call(mocker):
+    mocker.patch("schemathesis.Case.call", return_value=RESPONSE)

@@ -10,6 +10,7 @@ from typing import Dict, Optional, List
 import pytz
 import requests
 from dateutil.tz import tz
+
 from seeq import spy, sdk
 from seeq.sdk import *
 from seeq.sdk.configuration import ClientConfiguration
@@ -426,6 +427,7 @@ class Options:
     _DEFAULT_COMPATIBILITY = None
     _DEFAULT_MIN_COMPATIBILITY = 188
     _DEFAULT_INCLUDE_PUSH_METHOD = False
+    _DEFAULT_STATUS_WARNING_LIMIT = 20
 
     def __init__(self, client_configuration: ClientConfiguration):
         self.client_configuration = client_configuration
@@ -440,6 +442,7 @@ class Options:
         self.default_timezone = self._DEFAULT_TIMEZONE
         self._compatibility = self._DEFAULT_COMPATIBILITY
         self.include_push_method = self._DEFAULT_INCLUDE_PUSH_METHOD
+        self.status_warning_limit = self._DEFAULT_STATUS_WARNING_LIMIT
         try:
             self.friendly_exceptions = self._DEFAULT_FRIENDLY_EXCEPTIONS
         except RuntimeError:
@@ -679,6 +682,11 @@ class Options:
                 If True, a Push Method column will be added to the metadata push result DataFrame
                 that indicates whether an item was pushed via the (fast) ``batch`` REST APIs or had
                 to resort to the (slower) ``single`` REST APIs.
+
+            spy.options.status_warning_limit (default: {self._DEFAULT_STATUS_WARNING_LIMIT})
+                The number of warnings to display in the status output before truncating.
+                If the number of warnings exceeds this limit, a message will be displayed
+                indicating how many warnings were truncated.
         """
 
         _common.print_output(textwrap.dedent(help_string))

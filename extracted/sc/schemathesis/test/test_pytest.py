@@ -1,9 +1,10 @@
 import platform
-import sys
 
 import pytest
 
-from schemathesis.constants import DEFAULT_DEADLINE, RECURSIVE_REFERENCE_ERROR_MESSAGE
+from schemathesis.core.errors import RECURSIVE_REFERENCE_ERROR_MESSAGE
+from schemathesis.generation.hypothesis import DEFAULT_DEADLINE
+from schemathesis.generation.modes import GenerationMode
 
 
 def test_pytest_parametrize_fixture(testdir):
@@ -24,7 +25,7 @@ def param(inner):
 @settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
 def test_(request, param, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/users"
+    assert case.operation.path == "/users"
     assert case.method in ("GET", "POST")
 """,
         paths={
@@ -33,6 +34,7 @@ def test_(request, param, case):
                 "post": {"responses": {"200": {"description": "OK"}}},
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # And there are multiple method/path combinations
     result = testdir.runpytest("-v", "-s")
@@ -41,11 +43,11 @@ def test_(request, param, case):
     result.assert_outcomes(passed=4)
     result.stdout.re_match_lines(
         [
-            r"test_pytest_parametrize_fixture.py::test_\[GET /v1/users\]\[A\] PASSED",
-            r"test_pytest_parametrize_fixture.py::test_\[GET /v1/users\]\[B\] PASSED",
-            r"test_pytest_parametrize_fixture.py::test_\[POST /v1/users\]\[A\] PASSED",
-            r"test_pytest_parametrize_fixture.py::test_\[POST /v1/users\]\[B\] PASSED",
-            r"Hypothesis calls: 4",
+            r"test_pytest_parametrize_fixture.py::test_\[GET /users\]\[A\] PASSED",
+            r"test_pytest_parametrize_fixture.py::test_\[GET /users\]\[B\] PASSED",
+            r"test_pytest_parametrize_fixture.py::test_\[POST /users\]\[A\] PASSED",
+            r"test_pytest_parametrize_fixture.py::test_\[POST /users\]\[B\] PASSED",
+            r"Hypothesis calls: 8",
         ]
     )
 
@@ -53,8 +55,7 @@ def test_(request, param, case):
 def test_missing_base_url_error_message(testdir):
     testdir.make_test(
         """
-
-schema = schemathesis.from_dict(raw_schema)
+schema = schemathesis.openapi.from_dict(raw_schema)
 
 @schema.parametrize()
 def test_a(case):
@@ -89,7 +90,7 @@ class TestAPI:
     @settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
     def test_(self, request, param, case):
         request.config.HYPOTHESIS_CASES += 1
-        assert case.full_path == "/v1/users"
+        assert case.operation.path == "/users"
         assert case.method in ("GET", "POST")
 """,
         paths={
@@ -98,6 +99,7 @@ class TestAPI:
                 "post": {"responses": {"200": {"description": "OK"}}},
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # And there are multiple method/path combinations
     result = testdir.runpytest("-v", "-s")
@@ -106,11 +108,11 @@ class TestAPI:
     result.assert_outcomes(passed=4)
     result.stdout.re_match_lines(
         [
-            r"test_pytest_parametrize_class_fixture.py::TestAPI::test_\[GET /v1/users\]\[A\] PASSED",
-            r"test_pytest_parametrize_class_fixture.py::TestAPI::test_\[GET /v1/users\]\[B\] PASSED",
-            r"test_pytest_parametrize_class_fixture.py::TestAPI::test_\[POST /v1/users\]\[A\] PASSED",
-            r"test_pytest_parametrize_class_fixture.py::TestAPI::test_\[POST /v1/users\]\[B\] PASSED",
-            r"Hypothesis calls: 4",
+            r"test_pytest_parametrize_class_fixture.py::TestAPI::test_\[GET /users\]\[A\] PASSED",
+            r"test_pytest_parametrize_class_fixture.py::TestAPI::test_\[GET /users\]\[B\] PASSED",
+            r"test_pytest_parametrize_class_fixture.py::TestAPI::test_\[POST /users\]\[A\] PASSED",
+            r"test_pytest_parametrize_class_fixture.py::TestAPI::test_\[POST /users\]\[B\] PASSED",
+            r"Hypothesis calls: 8",
         ]
     )
 
@@ -228,7 +230,7 @@ def test_given_with_explicit_examples(testdir):
     # When `schema.given` is used for a schema with explicit examples
     testdir.make_test(
         """
-@schema.parametrize(method="get")
+@schema.include(method="GET").parametrize()
 @schema.given(data=st.data())
 def test(case, data):
     pass
@@ -305,36 +307,23 @@ def test(case):
     result.assert_outcomes(failed=1)
 
 
-@pytest.mark.parametrize("style", ["python", "curl"])
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Decorator syntax available from Python 3.9")
-def test_failure_reproduction_message(testdir, openapi3_base_url, style):
+def test_failure_reproduction_message(testdir, openapi3_base_url):
     # When a test fails
     testdir.make_test(
         f"""
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 @schema.include(path_regex="failure").parametrize()
 def test(case):
-    case.call_and_validate(code_sample_style="{style}")
+    case.call_and_validate()
     """,
         paths={"/failure": {"get": {"responses": {"200": {"description": "OK"}}}}},
     )
     # Then there should be a helpful message in the output
     result = testdir.runpytest()
     result.assert_outcomes(failed=1)
-    if style == "python":
-        lines = [
-            r".+Reproduce with:",
-            rf".+requests.get\('{openapi3_base_url}/failure'",
-        ]
-    else:
-        lines = [
-            r".+Reproduce with:",
-            rf".+curl -X GET {openapi3_base_url}/failure",
-        ]
-    result.stdout.re_match_lines(
-        [".+1. Server error", ".+2. Undocumented HTTP status code", ".+Documented: 200", *lines]
-    )
+    assert "Reproduce with" in result.stdout.str()
+    assert "Undocumented HTTP status code" in result.stdout.str()
 
 
 @pytest.mark.skipif(platform.system() == "Windows", reason="Fails on Windows due to recursion")
@@ -346,6 +335,7 @@ def test_skip_operations_with_recursive_references(testdir, schema_with_recursiv
 def test(case):
     pass""",
         schema=schema_with_recursive_references,
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-rs")
     # Then this test should be skipped with a proper error message
@@ -357,9 +347,9 @@ def test_checks_as_a_list(testdir, openapi3_base_url):
     # When the user passes a list of checks instead of a tuple
     testdir.make_test(
         f"""
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
-def my_check(response, case):
+def my_check(ctx, response, case):
     note("CHECKING!")
 
 @schema.parametrize()
@@ -374,19 +364,19 @@ def test(case):
     assert "CHECKING!" in result.stdout.str()
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Decorator syntax available from Python 3.9")
 def test_excluded_checks(testdir, openapi3_base_url):
     # When the user would like to exclude a check
     testdir.make_test(
         f"""
-from schemathesis.checks import status_code_conformance, not_a_server_error
+from schemathesis.checks import not_a_server_error
+from schemathesis.specs.openapi.checks import status_code_conformance, positive_data_acceptance
 
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 @schema.include(path_regex="failure").parametrize()
 def test(case):
     response = case.call()
-    case.validate_response(response, excluded_checks=(status_code_conformance, not_a_server_error))
+    case.validate_response(response, excluded_checks=(status_code_conformance, not_a_server_error, positive_data_acceptance))
 """,
         paths={"/failure": {"get": {"responses": {"200": {"description": "OK"}}}}},
     )
@@ -406,7 +396,7 @@ def test_failing_custom_check(testdir, openapi3_base_url, body, expected):
     # When the user passes a custom check that fails
     testdir.make_test(
         f"""
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 def my_check(ctx, response, case):
     {body}
@@ -432,29 +422,11 @@ def test(case):
 def test_no_collect_warnings(testdir):
     testdir.make_test(
         """
-from schemathesis.models import *
+from schemathesis import *
     """,
     )
     result = testdir.runpytest()
     assert "cannot collect test class" not in result.stdout.str()
-
-
-def test_single_data_generation_method_passed_to_loader(testdir):
-    # See GH-1260
-    # When `data_generation_methods` receives a single `DataGenerationMethod` value
-    testdir.make_test(
-        """
-schema = schemathesis.from_dict(raw_schema, data_generation_methods=DataGenerationMethod.positive)
-
-@schema.parametrize()
-def test(case):
-    pass
-        """,
-    )
-    result = testdir.runpytest()
-    # Then it should not fail
-    # And should generate proper tests
-    result.assert_outcomes(passed=1)
 
 
 def test_skip_negative_without_parameters(testdir):
@@ -462,7 +434,8 @@ def test_skip_negative_without_parameters(testdir):
     # When an endpoint has no parameters to negate
     testdir.make_test(
         """
-schema = schemathesis.from_dict(raw_schema, data_generation_methods=DataGenerationMethod.negative)
+schema = schemathesis.openapi.from_dict(raw_schema)
+schema.config.generation.update(modes=[GenerationMode.NEGATIVE])
 
 @schema.parametrize()
 def test_(case):
@@ -472,7 +445,7 @@ def test_(case):
     # Then it should be skipped
     result = testdir.runpytest("-v", "-rs", "-s")
     result.assert_outcomes(skipped=1)
-    result.stdout.re_match_lines([r".*It is not possible to generate negative test cases for.*"])
+    result.stdout.re_match_lines([r".*Impossible to generate negative test cases.*"])
 
 
 def test_skip_impossible_to_negate(testdir):
@@ -480,11 +453,10 @@ def test_skip_impossible_to_negate(testdir):
     # When endpoint's body schema can't be negated
     testdir.make_test(
         """
-schema = schemathesis.from_dict(
-    raw_schema,
-    method="POST",
-    data_generation_methods=DataGenerationMethod.negative
-)
+schema = schemathesis.openapi.from_dict(
+    raw_schema
+).include(method="POST")
+schema.config.generation.update(modes=[GenerationMode.NEGATIVE])
 
 @schema.parametrize()
 @settings(max_examples=1)
@@ -511,7 +483,7 @@ def test_(case):
     # Then it should be skipped
     result = testdir.runpytest("-v", "-rs", "-s")
     result.assert_outcomes(skipped=1)
-    result.stdout.re_match_lines([r".*It is not possible to generate negative test cases for.*"])
+    result.stdout.re_match_lines([r".*Impossible to generate negative test cases.*"])
 
 
 def test_do_not_skip_partially_negated(testdir):
@@ -519,11 +491,10 @@ def test_do_not_skip_partially_negated(testdir):
     # And there is another parameter that can be negated
     testdir.make_test(
         """
-schema = schemathesis.from_dict(
-    raw_schema,
-    method="POST",
-    data_generation_methods=DataGenerationMethod.negative
-)
+schema = schemathesis.openapi.from_dict(
+    raw_schema
+).include(method="POST")
+schema.config.generation.update(modes=[GenerationMode.NEGATIVE])
 
 @schema.parametrize()
 @settings(max_examples=1)
@@ -559,12 +530,10 @@ def test_path_parameters_allow_partial_negation(testdir, location):
     # If path parameters can not be negated and other parameters can be negated
     testdir.make_test(
         """
-schema = schemathesis.from_dict(
-    raw_schema,
-    method="GET",
-    endpoint="/pets/{key}/",
-    data_generation_methods=DataGenerationMethod.negative
-)
+schema = schemathesis.openapi.from_dict(
+    raw_schema
+).include(method="GET", path_regex="/pets/{key}/")
+schema.config.generation.update(modes=[GenerationMode.NEGATIVE])
 
 @schema.parametrize()
 @settings(max_examples=1)
@@ -595,12 +564,13 @@ def test_many_path_parameters_allow_partial_negation(testdir):
     # If just one path parameter can not be negated and other parameters can be negated
     testdir.make_test(
         """
-schema = schemathesis.from_dict(
-    raw_schema,
+schema = schemathesis.openapi.from_dict(
+    raw_schema
+).include(
     method="GET",
-    endpoint="/pets/{key}/{value}/",
-    data_generation_methods=DataGenerationMethod.negative
+    path_regex="/pets/{key}/{value}/",
 )
+schema.config.generation.update(modes=[GenerationMode.NEGATIVE])
 
 @schema.parametrize()
 @settings(max_examples=1)
@@ -631,7 +601,7 @@ def test_(request, case):
 def test_trimmed_output(testdir, openapi3_base_url):
     testdir.make_test(
         f"""
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 @schema.parametrize()
 def test_a(case):
@@ -646,7 +616,6 @@ def test_b(v):
     stdout = result.stdout.str()
     # Internal Schemathesis' frames should not appear in the output
     assert "def validate_response(" not in stdout
-    assert "in call_and_validate" not in stdout
     # And Hypothesis "Falsifying example" block is not in the output of Schemathesis' tests
     assert "Falsifying example: test_a(" not in stdout
     # And regular Hypothesis tests have it
@@ -668,13 +637,11 @@ def test(value):
 
 
 @pytest.mark.parametrize("value", [True, False])
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Decorator syntax available from Python 3.9")
 def test_output_sanitization(testdir, openapi3_base_url, value):
     auth = "secret-auth"
     testdir.make_test(
         f"""
-
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 @schema.include(path_regex="failure").parametrize()
 def test(case):
@@ -687,17 +654,18 @@ def test(case):
     # We should skip checking for a server error
     result.assert_outcomes(failed=1)
     if value:
-        expected = rf"E           curl -X GET -H 'Authorization: [Filtered]' {openapi3_base_url}/failure"
+        expected = rf"curl -X GET -H 'Authorization: [Filtered]' {openapi3_base_url}/failure"
     else:
-        expected = rf"E           curl -X GET -H 'Authorization: {auth}' {openapi3_base_url}/failure"
-    assert expected in result.stdout.lines
+        expected = rf"curl -X GET -H 'Authorization: {auth}' {openapi3_base_url}/failure"
+    assert expected in result.stdout.str()
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Decorator syntax available from Python 3.9")
 def test_unsatisfiable_example(testdir, openapi3_base_url):
     testdir.make_test(
         f"""
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
+schema.config.phases.coverage.enabled = False
+schema.config.phases.fuzzing.enabled = False
 
 @schema.include(path_regex="success").parametrize()
 @settings(phases=[Phase.explicit])
@@ -743,7 +711,6 @@ def test(case):
     )
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Decorator syntax available from Python 3.9")
 @pytest.mark.parametrize(
     ("phases", "expected"),
     [
@@ -762,8 +729,7 @@ def test(case):
 def test_invalid_regex_example(testdir, openapi3_base_url, phases, expected):
     testdir.make_test(
         f"""
-
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 @schema.include(path_regex="success").parametrize()
 @settings(phases=[{phases}])
@@ -799,13 +765,13 @@ def test(case):
             }
         },
         schema_name="simple_openapi.yaml",
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest()
     result.assert_outcomes(failed=1)
     assert expected in result.stdout.str()
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Decorator syntax available from Python 3.9")
 @pytest.mark.parametrize(
     "phases",
     ["Phase.explicit", "Phase.explicit, Phase.generate"],
@@ -813,7 +779,7 @@ def test(case):
 def test_invalid_header_in_example(testdir, openapi3_base_url, phases):
     testdir.make_test(
         f"""
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 @schema.include(path_regex="success").parametrize()
 @settings(phases=[{phases}])
@@ -843,17 +809,15 @@ def test(case):
     assert "Failed to generate test cases from examples for this API" in result.stdout.str()
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Decorator syntax available from Python 3.9")
 def test_non_serializable_example(testdir, openapi3_base_url):
     testdir.make_test(
         f"""
-
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 @schema.include(path_regex="success").parametrize()
 @settings(phases=[Phase.explicit])
 def test(case):
-    pass
+    case.call()
 """,
         paths={
             "/success": {
@@ -883,38 +847,193 @@ def test(case):
     )
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Decorator syntax available from Python 3.9")
 @pytest.mark.operations("path_variable", "custom_format")
 def test_override(testdir, openapi3_schema_url):
     testdir.make_test(
         f"""
-schema = schemathesis.from_uri('{openapi3_schema_url}')
+schema = schemathesis.openapi.from_url('{openapi3_schema_url}')
+schema.config.update(parameters={{"key": "foo", "id": "bar"}})
 
 @schema.include(path_regex="path_variable|custom_format").parametrize()
-@schema.override(path_parameters={{"key": "foo"}}, query={{"id": "bar"}})
 def test(case):
-    if "key" in case.operation.path_parameters:
-        assert case.path_parameters["key"] == "foo"
-        assert "id" not in (case.query or {{}}), "`id` is present"
-    if "id" in case.operation.query:
-        assert case.query["id"] == "bar"
-        assert "key" not in (case.path_parameters or {{}}), "`key` is present"
+    if not hasattr(case.meta.phase.data, "description"):
+        if "key" in case.operation.path_parameters:
+            assert case.path_parameters["key"] == "foo"
+            assert "id" not in (case.query or {{}}), "`id` is present"
+        if "id" in case.operation.query:
+            assert case.query["id"] == "bar"
+            assert "key" not in (case.path_parameters or {{}}), "`key` is present"
 """
     )
     result = testdir.runpytest()
     result.assert_outcomes(passed=2)
 
 
-def test_override_double(testdir):
+def test_config_using_headers(testdir):
     testdir.make_test(
         """
+raw_schema = {
+    "openapi": "3.1.0",
+    "paths": {
+        "/bookings": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": False,
+                        "schema": {"type": "string"},
+                    }
+                ],
+            }
+        },
+    },
+}
+schema = schemathesis.openapi.from_dict(raw_schema)
+HEADERS = {"Authorization": "Bearer secret-token"}
+schema.config.update(headers=HEADERS)
+
 @schema.parametrize()
-@schema.override(path_parameters={"key": "foo"}, query={"id": "bar"})
-@schema.override(path_parameters={"key": "foo"}, query={"id": "bar"})
 def test(case):
-    pass
+    assert case.headers == HEADERS
 """
     )
     result = testdir.runpytest()
-    result.assert_outcomes(errors=1)
-    assert "`test` has already been decorated with `override`" in result.stdout.str()
+    result.assert_outcomes(passed=1)
+
+
+def test_config_using_auth(testdir):
+    testdir.make_test(
+        """
+raw_schema = {
+    "openapi": "3.1.0",
+    "paths": {
+        "/bookings": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": False,
+                        "schema": {"type": "string"},
+                    }
+                ],
+            }
+        },
+    },
+}
+schema = schemathesis.openapi.from_dict(raw_schema)
+schema.config.update(basic_auth=("test", "test"))
+
+@schema.parametrize()
+def test(case):
+    assert case.headers == {"Authorization": "Basic dGVzdDp0ZXN0"}
+"""
+    )
+    result = testdir.runpytest()
+    result.assert_outcomes(passed=1)
+
+
+def test_config_generation(testdir):
+    MAX_EXAMPLES_A = 14
+    MAX_EXAMPLES_B = 42
+    testdir.make_test(
+        f"""
+raw_schema = {{
+    "openapi": "3.1.0",
+    "paths": {{
+        "/bookings": {{
+            "post": {{
+                "parameters": [
+                    {{
+                        "name": "key",
+                        "in": "query",
+                        "required": False,
+                        "schema": {{"type": "string"}},
+                    }}
+                ]
+            }}
+        }},
+    }},
+}}
+schema = schemathesis.openapi.from_dict(raw_schema)
+schema.config.generation.update(
+    modes=[GenerationMode.POSITIVE],
+    max_examples={MAX_EXAMPLES_A},
+)
+
+@schema.parametrize()
+def test_a(request, case):
+    request.config.HYPOTHESIS_CASES += 1
+
+
+@schema.parametrize()
+@settings(max_examples={MAX_EXAMPLES_B})
+def test_b(request, case):
+    request.config.HYPOTHESIS_CASES += 1
+"""
+    )
+    result = testdir.runpytest()
+    result.assert_outcomes(passed=2)
+    result.stdout.re_match_lines(
+        [
+            rf"Hypothesis calls: {MAX_EXAMPLES_A + MAX_EXAMPLES_B + 2}",
+        ]
+    )
+
+
+def test_csv_response_validation_direct(testdir, openapi3_base_url):
+    testdir.make_test(
+        f"""
+import requests
+from schemathesis.core.transport import Response
+from schemathesis.specs.openapi.checks import response_schema_conformance
+
+schema.config.update(base_url="{openapi3_base_url}")
+schema.config.generation.update(modes=[GenerationMode.POSITIVE])
+
+@schema.include(name="GET /success").parametrize()
+def test_csv_validation(case):
+    request = requests.Request('GET', "http://127.0.0.1/api/success").prepare()
+
+    response = Response(
+        status_code=200,
+        headers={{}},
+        content=b"name,age\\nJohn,25",
+        request=request,
+        elapsed=0.1,
+        verify=False
+    )
+    case.validate_response(response, checks=(response_schema_conformance,))
+""",
+        paths={
+            "/success": {
+                "get": {
+                    "parameters": [
+                        {
+                            "name": "format",
+                            "in": "query",
+                            "schema": {"type": "string", "enum": ["json", "csv"]},
+                            "required": True,
+                        }
+                    ],
+                    "responses": {
+                        "default": {
+                            "description": "Data response",
+                            "content": {"application/json": {"schema": {"type": "object"}}},
+                        }
+                    },
+                }
+            }
+        },
+        schema_name="simple_openapi.yaml",
+    )
+    result = testdir.runpytest("-s")
+    result.assert_outcomes(failed=1)
+    result.stdout.re_match_lines(
+        [
+            r".*/api/success\?format=csv.*",
+        ]
+    )
+    assert "generation/hypothesis/builder.py" not in result.stdout.str()
+    assert "res = hook_impl.function(*args)" not in result.stdout.str()

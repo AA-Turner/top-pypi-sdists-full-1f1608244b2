@@ -356,6 +356,14 @@ class AirflowConfigParser(ConfigParser):
         ("api", "access_logfile"): ("webserver", "access_logfile", "3.0"),
         ("triggerer", "capacity"): ("triggerer", "default_capacity", "3.0"),
         ("api", "expose_config"): ("webserver", "expose_config", "3.0.1"),
+        ("fab", "access_denied_message"): ("webserver", "access_denied_message", "3.0.2"),
+        ("fab", "expose_hostname"): ("webserver", "expose_hostname", "3.0.2"),
+        ("fab", "navbar_color"): ("webserver", "navbar_color", "3.0.2"),
+        ("fab", "navbar_text_color"): ("webserver", "navbar_text_color", "3.0.2"),
+        ("fab", "navbar_hover_color"): ("webserver", "navbar_hover_color", "3.0.2"),
+        ("fab", "navbar_text_hover_color"): ("webserver", "navbar_text_hover_color", "3.0.2"),
+        ("api", "secret_key"): ("webserver", "secret_key", "3.0.2"),
+        ("api", "enable_swagger_ui"): ("webserver", "enable_swagger_ui", "3.0.2"),
     }
 
     # A mapping of new section -> (old section, since_version).

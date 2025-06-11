@@ -2,7 +2,8 @@
 authors = [
     "Christopher Schwan <handgranaten-herbert@posteo.de>",
     "Alessandro Candido <candido.ale@gmail.com>",
-    "Felix Hekhorn <felix.hekhorn@mi.infn.it>"
+    "Felix Hekhorn <felix.hekhorn@mi.infn.it>",
+    "Tanjona R. Rabemananjara <tanjona.hepc@gmail.com>"
 ]
 description = "Python bindings to PineAPPL"
 name = "pineappl_py"
@@ -29,6 +30,6 @@ crate-type = ["cdylib"]
 [dependencies]
 itertools = "0.10.1"
 ndarray = "0.15.4"
-numpy = "0.22.0"
-pineappl = { path = "../pineappl", version = "=0.8.7" }
-pyo3 = { features = ["extension-module", "gil-refs"], version = "0.22.0" }
+numpy = "0.24.0"
+pineappl = { path = "../pineappl", version = "=1.0.0" }
+pyo3 = { features = ["extension-module"], version = "0.24.1" }

@@ -1,7 +1,7 @@
 r'''
 # `google_cloud_run_v2_job`
 
-Refer to the Terraform Registry for docs: [`google_cloud_run_v2_job`](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job).
+Refer to the Terraform Registry for docs: [`google_cloud_run_v2_job`](https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class CloudRunV2Job(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2Job",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job google_cloud_run_v2_job}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job google_cloud_run_v2_job}.'''
 
     def __init__(
         self,
@@ -72,23 +72,23 @@ class CloudRunV2Job(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job google_cloud_run_v2_job} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job google_cloud_run_v2_job} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param location: The location of the cloud run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#location CloudRunV2Job#location}
-        :param name: Name of the Job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
-        :param template: template block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
-        :param annotations: Unstructured key value map that may be set by external tools to store and arbitrary metadata. They are not queryable and should be preserved when modifying objects. Cloud Run API v2 does not support annotations with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected on new resources. All system annotations in v1 now have a corresponding field in v2 Job. This field follows Kubernetes annotations' namespacing, limits, and rules. **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration. Please refer to the field 'effective_annotations' for all of the annotations present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
-        :param binary_authorization: binary_authorization block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#binary_authorization CloudRunV2Job#binary_authorization}
-        :param client: Arbitrary identifier for the API client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#client CloudRunV2Job#client}
-        :param client_version: Arbitrary version identifier for the API client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#client_version CloudRunV2Job#client_version}
-        :param deletion_protection: Whether Terraform will be prevented from destroying the job. Defaults to true. When a'terraform destroy' or 'terraform apply' would delete the job, the command will fail if this field is not set to false in Terraform state. When the field is set to true or unset in Terraform state, a 'terraform apply' or 'terraform destroy' that would delete the job will fail. When the field is set to false, deleting the job is allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#deletion_protection CloudRunV2Job#deletion_protection}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#id CloudRunV2Job#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param labels: Unstructured key value map that can be used to organize and categorize objects. User-provided labels are shared with Google's billing system, so they can be used to filter, or break down billing charges by team, component, environment, state, etc. For more information, visit https://cloud.google.com/resource-manager/docs/creating-managing-labels or https://cloud.google.com/run/docs/configuring/labels. Cloud Run API v2 does not support labels with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system labels in v1 now have a corresponding field in v2 Job. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
-        :param launch_stage: The launch stage as defined by `Google Cloud Platform Launch Stages <https://cloud.google.com/products#product-launch-stages>`_. Cloud Run supports ALPHA, BETA, and GA. If no value is specified, GA is assumed. Set the launch stage to a preview stage on input to allow use of preview features in that stage. On read (or output), describes whether the resource uses preview features. For example, if ALPHA is provided as input, but only BETA and GA-level features are used, this field will be BETA on output. Possible values: ["UNIMPLEMENTED", "PRELAUNCH", "EARLY_ACCESS", "ALPHA", "BETA", "GA", "DEPRECATED"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#launch_stage CloudRunV2Job#launch_stage}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#project CloudRunV2Job#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#timeouts CloudRunV2Job#timeouts}
+        :param location: The location of the cloud run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#location CloudRunV2Job#location}
+        :param name: Name of the Job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        :param template: template block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
+        :param annotations: Unstructured key value map that may be set by external tools to store and arbitrary metadata. They are not queryable and should be preserved when modifying objects. Cloud Run API v2 does not support annotations with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected on new resources. All system annotations in v1 now have a corresponding field in v2 Job. This field follows Kubernetes annotations' namespacing, limits, and rules. **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration. Please refer to the field 'effective_annotations' for all of the annotations present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
+        :param binary_authorization: binary_authorization block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#binary_authorization CloudRunV2Job#binary_authorization}
+        :param client: Arbitrary identifier for the API client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#client CloudRunV2Job#client}
+        :param client_version: Arbitrary version identifier for the API client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#client_version CloudRunV2Job#client_version}
+        :param deletion_protection: Whether Terraform will be prevented from destroying the job. Defaults to true. When a'terraform destroy' or 'terraform apply' would delete the job, the command will fail if this field is not set to false in Terraform state. When the field is set to true or unset in Terraform state, a 'terraform apply' or 'terraform destroy' that would delete the job will fail. When the field is set to false, deleting the job is allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#deletion_protection CloudRunV2Job#deletion_protection}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#id CloudRunV2Job#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param labels: Unstructured key value map that can be used to organize and categorize objects. User-provided labels are shared with Google's billing system, so they can be used to filter, or break down billing charges by team, component, environment, state, etc. For more information, visit https://cloud.google.com/resource-manager/docs/creating-managing-labels or https://cloud.google.com/run/docs/configuring/labels. Cloud Run API v2 does not support labels with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system labels in v1 now have a corresponding field in v2 Job. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
+        :param launch_stage: The launch stage as defined by `Google Cloud Platform Launch Stages <https://cloud.google.com/products#product-launch-stages>`_. Cloud Run supports ALPHA, BETA, and GA. If no value is specified, GA is assumed. Set the launch stage to a preview stage on input to allow use of preview features in that stage. On read (or output), describes whether the resource uses preview features. For example, if ALPHA is provided as input, but only BETA and GA-level features are used, this field will be BETA on output. Possible values: ["UNIMPLEMENTED", "PRELAUNCH", "EARLY_ACCESS", "ALPHA", "BETA", "GA", "DEPRECATED"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#launch_stage CloudRunV2Job#launch_stage}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#project CloudRunV2Job#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#timeouts CloudRunV2Job#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -139,7 +139,7 @@ class CloudRunV2Job(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the CloudRunV2Job to import.
-        :param import_from_id: The id of the existing CloudRunV2Job that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing CloudRunV2Job that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the CloudRunV2Job to import is found.
         '''
         if __debug__:
@@ -159,9 +159,9 @@ class CloudRunV2Job(
         use_default: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param breakglass_justification: If present, indicates to use Breakglass using this justification. If useDefault is False, then it must be empty. For more information on breakglass, see https://cloud.google.com/binary-authorization/docs/using-breakglass Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#breakglass_justification CloudRunV2Job#breakglass_justification}
-        :param policy: The path to a binary authorization policy. Format: projects/{project}/platforms/cloudRun/{policy-name}. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#policy CloudRunV2Job#policy}
-        :param use_default: If True, indicates to use the default project's binary authorization policy. If False, binary authorization will be disabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#use_default CloudRunV2Job#use_default}
+        :param breakglass_justification: If present, indicates to use Breakglass using this justification. If useDefault is False, then it must be empty. For more information on breakglass, see https://cloud.google.com/binary-authorization/docs/using-breakglass Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#breakglass_justification CloudRunV2Job#breakglass_justification}
+        :param policy: The path to a binary authorization policy. Format: projects/{project}/platforms/cloudRun/{policy-name}. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#policy CloudRunV2Job#policy}
+        :param use_default: If True, indicates to use the default project's binary authorization policy. If False, binary authorization will be disabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#use_default CloudRunV2Job#use_default}
         '''
         value = CloudRunV2JobBinaryAuthorization(
             breakglass_justification=breakglass_justification,
@@ -182,11 +182,11 @@ class CloudRunV2Job(
         task_count: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param template: template block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
-        :param annotations: Unstructured key value map that may be set by external tools to store and arbitrary metadata. They are not queryable and should be preserved when modifying objects. Cloud Run API v2 does not support annotations with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system annotations in v1 now have a corresponding field in v2 ExecutionTemplate. This field follows Kubernetes annotations' namespacing, limits, and rules. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
-        :param labels: Unstructured key value map that can be used to organize and categorize objects. User-provided labels are shared with Google's billing system, so they can be used to filter, or break down billing charges by team, component, environment, state, etc. For more information, visit https://cloud.google.com/resource-manager/docs/creating-managing-labels or https://cloud.google.com/run/docs/configuring/labels. Cloud Run API v2 does not support labels with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system labels in v1 now have a corresponding field in v2 ExecutionTemplate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
-        :param parallelism: Specifies the maximum desired number of tasks the execution should run at given time. Must be <= taskCount. When the job is run, if this field is 0 or unset, the maximum possible value will be used for that execution. The actual number of tasks running in steady state will be less than this number when there are fewer tasks waiting to be completed remaining, i.e. when the work left to do is less than max parallelism. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#parallelism CloudRunV2Job#parallelism}
-        :param task_count: Specifies the desired number of tasks the execution should run. Setting to 1 means that parallelism is limited to 1 and the success of that task signals the success of the execution. More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/ Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#task_count CloudRunV2Job#task_count}
+        :param template: template block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
+        :param annotations: Unstructured key value map that may be set by external tools to store and arbitrary metadata. They are not queryable and should be preserved when modifying objects. Cloud Run API v2 does not support annotations with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system annotations in v1 now have a corresponding field in v2 ExecutionTemplate. This field follows Kubernetes annotations' namespacing, limits, and rules. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
+        :param labels: Unstructured key value map that can be used to organize and categorize objects. User-provided labels are shared with Google's billing system, so they can be used to filter, or break down billing charges by team, component, environment, state, etc. For more information, visit https://cloud.google.com/resource-manager/docs/creating-managing-labels or https://cloud.google.com/run/docs/configuring/labels. Cloud Run API v2 does not support labels with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system labels in v1 now have a corresponding field in v2 ExecutionTemplate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
+        :param parallelism: Specifies the maximum desired number of tasks the execution should run at given time. Must be <= taskCount. When the job is run, if this field is 0 or unset, the maximum possible value will be used for that execution. The actual number of tasks running in steady state will be less than this number when there are fewer tasks waiting to be completed remaining, i.e. when the work left to do is less than max parallelism. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#parallelism CloudRunV2Job#parallelism}
+        :param task_count: Specifies the desired number of tasks the execution should run. Setting to 1 means that parallelism is limited to 1 and the success of that task signals the success of the execution. More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/ Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#task_count CloudRunV2Job#task_count}
         '''
         value = CloudRunV2JobTemplate(
             template=template,
@@ -207,9 +207,9 @@ class CloudRunV2Job(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#create CloudRunV2Job#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#delete CloudRunV2Job#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#update CloudRunV2Job#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#create CloudRunV2Job#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#delete CloudRunV2Job#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#update CloudRunV2Job#update}.
         '''
         value = CloudRunV2JobTimeouts(create=create, delete=delete, update=update)
 
@@ -592,9 +592,9 @@ class CloudRunV2JobBinaryAuthorization:
         use_default: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param breakglass_justification: If present, indicates to use Breakglass using this justification. If useDefault is False, then it must be empty. For more information on breakglass, see https://cloud.google.com/binary-authorization/docs/using-breakglass Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#breakglass_justification CloudRunV2Job#breakglass_justification}
-        :param policy: The path to a binary authorization policy. Format: projects/{project}/platforms/cloudRun/{policy-name}. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#policy CloudRunV2Job#policy}
-        :param use_default: If True, indicates to use the default project's binary authorization policy. If False, binary authorization will be disabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#use_default CloudRunV2Job#use_default}
+        :param breakglass_justification: If present, indicates to use Breakglass using this justification. If useDefault is False, then it must be empty. For more information on breakglass, see https://cloud.google.com/binary-authorization/docs/using-breakglass Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#breakglass_justification CloudRunV2Job#breakglass_justification}
+        :param policy: The path to a binary authorization policy. Format: projects/{project}/platforms/cloudRun/{policy-name}. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#policy CloudRunV2Job#policy}
+        :param use_default: If True, indicates to use the default project's binary authorization policy. If False, binary authorization will be disabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#use_default CloudRunV2Job#use_default}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ba391bf182ebfe028ed7b08be2d884aec42484adc436539313494138a65c3e16)
@@ -615,7 +615,7 @@ class CloudRunV2JobBinaryAuthorization:
 
         If useDefault is False, then it must be empty. For more information on breakglass, see https://cloud.google.com/binary-authorization/docs/using-breakglass
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#breakglass_justification CloudRunV2Job#breakglass_justification}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#breakglass_justification CloudRunV2Job#breakglass_justification}
         '''
         result = self._values.get("breakglass_justification")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -624,7 +624,7 @@ class CloudRunV2JobBinaryAuthorization:
     def policy(self) -> typing.Optional[builtins.str]:
         '''The path to a binary authorization policy. Format: projects/{project}/platforms/cloudRun/{policy-name}.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#policy CloudRunV2Job#policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#policy CloudRunV2Job#policy}
         '''
         result = self._values.get("policy")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -635,7 +635,7 @@ class CloudRunV2JobBinaryAuthorization:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''If True, indicates to use the default project's binary authorization policy. If False, binary authorization will be disabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#use_default CloudRunV2Job#use_default}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#use_default CloudRunV2Job#use_default}
         '''
         result = self._values.get("use_default")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -988,19 +988,19 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param location: The location of the cloud run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#location CloudRunV2Job#location}
-        :param name: Name of the Job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
-        :param template: template block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
-        :param annotations: Unstructured key value map that may be set by external tools to store and arbitrary metadata. They are not queryable and should be preserved when modifying objects. Cloud Run API v2 does not support annotations with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected on new resources. All system annotations in v1 now have a corresponding field in v2 Job. This field follows Kubernetes annotations' namespacing, limits, and rules. **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration. Please refer to the field 'effective_annotations' for all of the annotations present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
-        :param binary_authorization: binary_authorization block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#binary_authorization CloudRunV2Job#binary_authorization}
-        :param client: Arbitrary identifier for the API client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#client CloudRunV2Job#client}
-        :param client_version: Arbitrary version identifier for the API client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#client_version CloudRunV2Job#client_version}
-        :param deletion_protection: Whether Terraform will be prevented from destroying the job. Defaults to true. When a'terraform destroy' or 'terraform apply' would delete the job, the command will fail if this field is not set to false in Terraform state. When the field is set to true or unset in Terraform state, a 'terraform apply' or 'terraform destroy' that would delete the job will fail. When the field is set to false, deleting the job is allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#deletion_protection CloudRunV2Job#deletion_protection}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#id CloudRunV2Job#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param labels: Unstructured key value map that can be used to organize and categorize objects. User-provided labels are shared with Google's billing system, so they can be used to filter, or break down billing charges by team, component, environment, state, etc. For more information, visit https://cloud.google.com/resource-manager/docs/creating-managing-labels or https://cloud.google.com/run/docs/configuring/labels. Cloud Run API v2 does not support labels with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system labels in v1 now have a corresponding field in v2 Job. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
-        :param launch_stage: The launch stage as defined by `Google Cloud Platform Launch Stages <https://cloud.google.com/products#product-launch-stages>`_. Cloud Run supports ALPHA, BETA, and GA. If no value is specified, GA is assumed. Set the launch stage to a preview stage on input to allow use of preview features in that stage. On read (or output), describes whether the resource uses preview features. For example, if ALPHA is provided as input, but only BETA and GA-level features are used, this field will be BETA on output. Possible values: ["UNIMPLEMENTED", "PRELAUNCH", "EARLY_ACCESS", "ALPHA", "BETA", "GA", "DEPRECATED"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#launch_stage CloudRunV2Job#launch_stage}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#project CloudRunV2Job#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#timeouts CloudRunV2Job#timeouts}
+        :param location: The location of the cloud run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#location CloudRunV2Job#location}
+        :param name: Name of the Job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        :param template: template block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
+        :param annotations: Unstructured key value map that may be set by external tools to store and arbitrary metadata. They are not queryable and should be preserved when modifying objects. Cloud Run API v2 does not support annotations with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected on new resources. All system annotations in v1 now have a corresponding field in v2 Job. This field follows Kubernetes annotations' namespacing, limits, and rules. **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration. Please refer to the field 'effective_annotations' for all of the annotations present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
+        :param binary_authorization: binary_authorization block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#binary_authorization CloudRunV2Job#binary_authorization}
+        :param client: Arbitrary identifier for the API client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#client CloudRunV2Job#client}
+        :param client_version: Arbitrary version identifier for the API client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#client_version CloudRunV2Job#client_version}
+        :param deletion_protection: Whether Terraform will be prevented from destroying the job. Defaults to true. When a'terraform destroy' or 'terraform apply' would delete the job, the command will fail if this field is not set to false in Terraform state. When the field is set to true or unset in Terraform state, a 'terraform apply' or 'terraform destroy' that would delete the job will fail. When the field is set to false, deleting the job is allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#deletion_protection CloudRunV2Job#deletion_protection}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#id CloudRunV2Job#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param labels: Unstructured key value map that can be used to organize and categorize objects. User-provided labels are shared with Google's billing system, so they can be used to filter, or break down billing charges by team, component, environment, state, etc. For more information, visit https://cloud.google.com/resource-manager/docs/creating-managing-labels or https://cloud.google.com/run/docs/configuring/labels. Cloud Run API v2 does not support labels with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system labels in v1 now have a corresponding field in v2 Job. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
+        :param launch_stage: The launch stage as defined by `Google Cloud Platform Launch Stages <https://cloud.google.com/products#product-launch-stages>`_. Cloud Run supports ALPHA, BETA, and GA. If no value is specified, GA is assumed. Set the launch stage to a preview stage on input to allow use of preview features in that stage. On read (or output), describes whether the resource uses preview features. For example, if ALPHA is provided as input, but only BETA and GA-level features are used, this field will be BETA on output. Possible values: ["UNIMPLEMENTED", "PRELAUNCH", "EARLY_ACCESS", "ALPHA", "BETA", "GA", "DEPRECATED"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#launch_stage CloudRunV2Job#launch_stage}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#project CloudRunV2Job#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#timeouts CloudRunV2Job#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1140,7 +1140,7 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def location(self) -> builtins.str:
         '''The location of the cloud run job.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#location CloudRunV2Job#location}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#location CloudRunV2Job#location}
         '''
         result = self._values.get("location")
         assert result is not None, "Required property 'location' is missing"
@@ -1150,7 +1150,7 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the Job.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1160,7 +1160,7 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def template(self) -> "CloudRunV2JobTemplate":
         '''template block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
         '''
         result = self._values.get("template")
         assert result is not None, "Required property 'template' is missing"
@@ -1182,7 +1182,7 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration.
         Please refer to the field 'effective_annotations' for all of the annotations present on the resource.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
         '''
         result = self._values.get("annotations")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -1191,7 +1191,7 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def binary_authorization(self) -> typing.Optional[CloudRunV2JobBinaryAuthorization]:
         '''binary_authorization block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#binary_authorization CloudRunV2Job#binary_authorization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#binary_authorization CloudRunV2Job#binary_authorization}
         '''
         result = self._values.get("binary_authorization")
         return typing.cast(typing.Optional[CloudRunV2JobBinaryAuthorization], result)
@@ -1200,7 +1200,7 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def client(self) -> typing.Optional[builtins.str]:
         '''Arbitrary identifier for the API client.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#client CloudRunV2Job#client}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#client CloudRunV2Job#client}
         '''
         result = self._values.get("client")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1209,7 +1209,7 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def client_version(self) -> typing.Optional[builtins.str]:
         '''Arbitrary version identifier for the API client.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#client_version CloudRunV2Job#client_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#client_version CloudRunV2Job#client_version}
         '''
         result = self._values.get("client_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1227,14 +1227,14 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         or 'terraform destroy' that would delete the job will fail.
         When the field is set to false, deleting the job is allowed.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#deletion_protection CloudRunV2Job#deletion_protection}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#deletion_protection CloudRunV2Job#deletion_protection}
         '''
         result = self._values.get("deletion_protection")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#id CloudRunV2Job#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#id CloudRunV2Job#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1255,7 +1255,7 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
         Please refer to the field 'effective_labels' for all of the labels present on the resource.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
         '''
         result = self._values.get("labels")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -1266,14 +1266,14 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For example, if ALPHA is provided as input, but only BETA and GA-level features are used, this field will be BETA on output. Possible values: ["UNIMPLEMENTED", "PRELAUNCH", "EARLY_ACCESS", "ALPHA", "BETA", "GA", "DEPRECATED"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#launch_stage CloudRunV2Job#launch_stage}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#launch_stage CloudRunV2Job#launch_stage}
         '''
         result = self._values.get("launch_stage")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#project CloudRunV2Job#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#project CloudRunV2Job#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1281,7 +1281,7 @@ class CloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["CloudRunV2JobTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#timeouts CloudRunV2Job#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#timeouts CloudRunV2Job#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["CloudRunV2JobTimeouts"], result)
@@ -1474,11 +1474,11 @@ class CloudRunV2JobTemplate:
         task_count: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param template: template block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
-        :param annotations: Unstructured key value map that may be set by external tools to store and arbitrary metadata. They are not queryable and should be preserved when modifying objects. Cloud Run API v2 does not support annotations with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system annotations in v1 now have a corresponding field in v2 ExecutionTemplate. This field follows Kubernetes annotations' namespacing, limits, and rules. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
-        :param labels: Unstructured key value map that can be used to organize and categorize objects. User-provided labels are shared with Google's billing system, so they can be used to filter, or break down billing charges by team, component, environment, state, etc. For more information, visit https://cloud.google.com/resource-manager/docs/creating-managing-labels or https://cloud.google.com/run/docs/configuring/labels. Cloud Run API v2 does not support labels with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system labels in v1 now have a corresponding field in v2 ExecutionTemplate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
-        :param parallelism: Specifies the maximum desired number of tasks the execution should run at given time. Must be <= taskCount. When the job is run, if this field is 0 or unset, the maximum possible value will be used for that execution. The actual number of tasks running in steady state will be less than this number when there are fewer tasks waiting to be completed remaining, i.e. when the work left to do is less than max parallelism. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#parallelism CloudRunV2Job#parallelism}
-        :param task_count: Specifies the desired number of tasks the execution should run. Setting to 1 means that parallelism is limited to 1 and the success of that task signals the success of the execution. More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/ Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#task_count CloudRunV2Job#task_count}
+        :param template: template block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
+        :param annotations: Unstructured key value map that may be set by external tools to store and arbitrary metadata. They are not queryable and should be preserved when modifying objects. Cloud Run API v2 does not support annotations with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system annotations in v1 now have a corresponding field in v2 ExecutionTemplate. This field follows Kubernetes annotations' namespacing, limits, and rules. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
+        :param labels: Unstructured key value map that can be used to organize and categorize objects. User-provided labels are shared with Google's billing system, so they can be used to filter, or break down billing charges by team, component, environment, state, etc. For more information, visit https://cloud.google.com/resource-manager/docs/creating-managing-labels or https://cloud.google.com/run/docs/configuring/labels. Cloud Run API v2 does not support labels with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected. All system labels in v1 now have a corresponding field in v2 ExecutionTemplate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
+        :param parallelism: Specifies the maximum desired number of tasks the execution should run at given time. Must be <= taskCount. When the job is run, if this field is 0 or unset, the maximum possible value will be used for that execution. The actual number of tasks running in steady state will be less than this number when there are fewer tasks waiting to be completed remaining, i.e. when the work left to do is less than max parallelism. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#parallelism CloudRunV2Job#parallelism}
+        :param task_count: Specifies the desired number of tasks the execution should run. Setting to 1 means that parallelism is limited to 1 and the success of that task signals the success of the execution. More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/ Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#task_count CloudRunV2Job#task_count}
         '''
         if isinstance(template, dict):
             template = CloudRunV2JobTemplateTemplate(**template)
@@ -1505,7 +1505,7 @@ class CloudRunV2JobTemplate:
     def template(self) -> "CloudRunV2JobTemplateTemplate":
         '''template block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#template CloudRunV2Job#template}
         '''
         result = self._values.get("template")
         assert result is not None, "Required property 'template' is missing"
@@ -1524,7 +1524,7 @@ class CloudRunV2JobTemplate:
 
         This field follows Kubernetes annotations' namespacing, limits, and rules.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#annotations CloudRunV2Job#annotations}
         '''
         result = self._values.get("annotations")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -1540,7 +1540,7 @@ class CloudRunV2JobTemplate:
         Cloud Run API v2 does not support labels with 'run.googleapis.com', 'cloud.googleapis.com', 'serving.knative.dev', or 'autoscaling.knative.dev' namespaces, and they will be rejected.
         All system labels in v1 now have a corresponding field in v2 ExecutionTemplate.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#labels CloudRunV2Job#labels}
         '''
         result = self._values.get("labels")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -1551,7 +1551,7 @@ class CloudRunV2JobTemplate:
 
         Must be <= taskCount. When the job is run, if this field is 0 or unset, the maximum possible value will be used for that execution. The actual number of tasks running in steady state will be less than this number when there are fewer tasks waiting to be completed remaining, i.e. when the work left to do is less than max parallelism.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#parallelism CloudRunV2Job#parallelism}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#parallelism CloudRunV2Job#parallelism}
         '''
         result = self._values.get("parallelism")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1562,7 +1562,7 @@ class CloudRunV2JobTemplate:
 
         Setting to 1 means that parallelism is limited to 1 and the success of that task signals the success of the execution. More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#task_count CloudRunV2Job#task_count}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#task_count CloudRunV2Job#task_count}
         '''
         result = self._values.get("task_count")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1613,14 +1613,14 @@ class CloudRunV2JobTemplateOutputReference(
         vpc_access: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateVpcAccess", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param containers: containers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#containers CloudRunV2Job#containers}
-        :param encryption_key: A reference to a customer managed encryption key (CMEK) to use to encrypt this container image. For more information, go to https://cloud.google.com/run/docs/securing/using-cmek Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#encryption_key CloudRunV2Job#encryption_key}
-        :param execution_environment: The execution environment being used to host this Task. Possible values: ["EXECUTION_ENVIRONMENT_GEN1", "EXECUTION_ENVIRONMENT_GEN2"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#execution_environment CloudRunV2Job#execution_environment}
-        :param max_retries: Number of retries allowed per Task, before marking this Task failed. Defaults to 3. Minimum value is 0. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#max_retries CloudRunV2Job#max_retries}
-        :param service_account: Email address of the IAM service account associated with the Task of a Job. The service account represents the identity of the running task, and determines what permissions the task has. If not provided, the task will use the project's default service account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#service_account CloudRunV2Job#service_account}
-        :param timeout: Max allowed time duration the Task may be active before the system will actively try to mark it failed and kill associated containers. This applies per attempt of a task, meaning each retry can run for the full timeout. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#timeout CloudRunV2Job#timeout}
-        :param volumes: volumes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#volumes CloudRunV2Job#volumes}
-        :param vpc_access: vpc_access block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#vpc_access CloudRunV2Job#vpc_access}
+        :param containers: containers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#containers CloudRunV2Job#containers}
+        :param encryption_key: A reference to a customer managed encryption key (CMEK) to use to encrypt this container image. For more information, go to https://cloud.google.com/run/docs/securing/using-cmek Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#encryption_key CloudRunV2Job#encryption_key}
+        :param execution_environment: The execution environment being used to host this Task. Possible values: ["EXECUTION_ENVIRONMENT_GEN1", "EXECUTION_ENVIRONMENT_GEN2"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#execution_environment CloudRunV2Job#execution_environment}
+        :param max_retries: Number of retries allowed per Task, before marking this Task failed. Defaults to 3. Minimum value is 0. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#max_retries CloudRunV2Job#max_retries}
+        :param service_account: Email address of the IAM service account associated with the Task of a Job. The service account represents the identity of the running task, and determines what permissions the task has. If not provided, the task will use the project's default service account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#service_account CloudRunV2Job#service_account}
+        :param timeout: Max allowed time duration the Task may be active before the system will actively try to mark it failed and kill associated containers. This applies per attempt of a task, meaning each retry can run for the full timeout. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#timeout CloudRunV2Job#timeout}
+        :param volumes: volumes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#volumes CloudRunV2Job#volumes}
+        :param vpc_access: vpc_access block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#vpc_access CloudRunV2Job#vpc_access}
         '''
         value = CloudRunV2JobTemplateTemplate(
             containers=containers,
@@ -1774,14 +1774,14 @@ class CloudRunV2JobTemplateTemplate:
         vpc_access: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateVpcAccess", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param containers: containers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#containers CloudRunV2Job#containers}
-        :param encryption_key: A reference to a customer managed encryption key (CMEK) to use to encrypt this container image. For more information, go to https://cloud.google.com/run/docs/securing/using-cmek Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#encryption_key CloudRunV2Job#encryption_key}
-        :param execution_environment: The execution environment being used to host this Task. Possible values: ["EXECUTION_ENVIRONMENT_GEN1", "EXECUTION_ENVIRONMENT_GEN2"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#execution_environment CloudRunV2Job#execution_environment}
-        :param max_retries: Number of retries allowed per Task, before marking this Task failed. Defaults to 3. Minimum value is 0. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#max_retries CloudRunV2Job#max_retries}
-        :param service_account: Email address of the IAM service account associated with the Task of a Job. The service account represents the identity of the running task, and determines what permissions the task has. If not provided, the task will use the project's default service account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#service_account CloudRunV2Job#service_account}
-        :param timeout: Max allowed time duration the Task may be active before the system will actively try to mark it failed and kill associated containers. This applies per attempt of a task, meaning each retry can run for the full timeout. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#timeout CloudRunV2Job#timeout}
-        :param volumes: volumes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#volumes CloudRunV2Job#volumes}
-        :param vpc_access: vpc_access block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#vpc_access CloudRunV2Job#vpc_access}
+        :param containers: containers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#containers CloudRunV2Job#containers}
+        :param encryption_key: A reference to a customer managed encryption key (CMEK) to use to encrypt this container image. For more information, go to https://cloud.google.com/run/docs/securing/using-cmek Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#encryption_key CloudRunV2Job#encryption_key}
+        :param execution_environment: The execution environment being used to host this Task. Possible values: ["EXECUTION_ENVIRONMENT_GEN1", "EXECUTION_ENVIRONMENT_GEN2"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#execution_environment CloudRunV2Job#execution_environment}
+        :param max_retries: Number of retries allowed per Task, before marking this Task failed. Defaults to 3. Minimum value is 0. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#max_retries CloudRunV2Job#max_retries}
+        :param service_account: Email address of the IAM service account associated with the Task of a Job. The service account represents the identity of the running task, and determines what permissions the task has. If not provided, the task will use the project's default service account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#service_account CloudRunV2Job#service_account}
+        :param timeout: Max allowed time duration the Task may be active before the system will actively try to mark it failed and kill associated containers. This applies per attempt of a task, meaning each retry can run for the full timeout. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#timeout CloudRunV2Job#timeout}
+        :param volumes: volumes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#volumes CloudRunV2Job#volumes}
+        :param vpc_access: vpc_access block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#vpc_access CloudRunV2Job#vpc_access}
         '''
         if isinstance(vpc_access, dict):
             vpc_access = CloudRunV2JobTemplateTemplateVpcAccess(**vpc_access)
@@ -1819,7 +1819,7 @@ class CloudRunV2JobTemplateTemplate:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainers"]]]:
         '''containers block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#containers CloudRunV2Job#containers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#containers CloudRunV2Job#containers}
         '''
         result = self._values.get("containers")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainers"]]], result)
@@ -1830,7 +1830,7 @@ class CloudRunV2JobTemplateTemplate:
 
         For more information, go to https://cloud.google.com/run/docs/securing/using-cmek
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#encryption_key CloudRunV2Job#encryption_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#encryption_key CloudRunV2Job#encryption_key}
         '''
         result = self._values.get("encryption_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1839,7 +1839,7 @@ class CloudRunV2JobTemplateTemplate:
     def execution_environment(self) -> typing.Optional[builtins.str]:
         '''The execution environment being used to host this Task. Possible values: ["EXECUTION_ENVIRONMENT_GEN1", "EXECUTION_ENVIRONMENT_GEN2"].
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#execution_environment CloudRunV2Job#execution_environment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#execution_environment CloudRunV2Job#execution_environment}
         '''
         result = self._values.get("execution_environment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1848,7 +1848,7 @@ class CloudRunV2JobTemplateTemplate:
     def max_retries(self) -> typing.Optional[jsii.Number]:
         '''Number of retries allowed per Task, before marking this Task failed. Defaults to 3. Minimum value is 0.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#max_retries CloudRunV2Job#max_retries}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#max_retries CloudRunV2Job#max_retries}
         '''
         result = self._values.get("max_retries")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1859,7 +1859,7 @@ class CloudRunV2JobTemplateTemplate:
 
         The service account represents the identity of the running task, and determines what permissions the task has. If not provided, the task will use the project's default service account.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#service_account CloudRunV2Job#service_account}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#service_account CloudRunV2Job#service_account}
         '''
         result = self._values.get("service_account")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1872,7 +1872,7 @@ class CloudRunV2JobTemplateTemplate:
 
         A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#timeout CloudRunV2Job#timeout}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#timeout CloudRunV2Job#timeout}
         '''
         result = self._values.get("timeout")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1883,7 +1883,7 @@ class CloudRunV2JobTemplateTemplate:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateVolumes"]]]:
         '''volumes block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#volumes CloudRunV2Job#volumes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#volumes CloudRunV2Job#volumes}
         '''
         result = self._values.get("volumes")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateVolumes"]]], result)
@@ -1892,7 +1892,7 @@ class CloudRunV2JobTemplateTemplate:
     def vpc_access(self) -> typing.Optional["CloudRunV2JobTemplateTemplateVpcAccess"]:
         '''vpc_access block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#vpc_access CloudRunV2Job#vpc_access}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#vpc_access CloudRunV2Job#vpc_access}
         '''
         result = self._values.get("vpc_access")
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateVpcAccess"], result)
@@ -1916,10 +1916,12 @@ class CloudRunV2JobTemplateTemplate:
         "image": "image",
         "args": "args",
         "command": "command",
+        "depends_on": "dependsOn",
         "env": "env",
         "name": "name",
         "ports": "ports",
         "resources": "resources",
+        "startup_probe": "startupProbe",
         "volume_mounts": "volumeMounts",
         "working_dir": "workingDir",
     },
@@ -1931,35 +1933,43 @@ class CloudRunV2JobTemplateTemplateContainers:
         image: builtins.str,
         args: typing.Optional[typing.Sequence[builtins.str]] = None,
         command: typing.Optional[typing.Sequence[builtins.str]] = None,
+        depends_on: typing.Optional[typing.Sequence[builtins.str]] = None,
         env: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudRunV2JobTemplateTemplateContainersEnv", typing.Dict[builtins.str, typing.Any]]]]] = None,
         name: typing.Optional[builtins.str] = None,
         ports: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudRunV2JobTemplateTemplateContainersPorts", typing.Dict[builtins.str, typing.Any]]]]] = None,
         resources: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersResources", typing.Dict[builtins.str, typing.Any]]] = None,
+        startup_probe: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersStartupProbe", typing.Dict[builtins.str, typing.Any]]] = None,
         volume_mounts: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudRunV2JobTemplateTemplateContainersVolumeMounts", typing.Dict[builtins.str, typing.Any]]]]] = None,
         working_dir: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param image: URL of the Container image in Google Container Registry or Google Artifact Registry. More info: https://kubernetes.io/docs/concepts/containers/images. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#image CloudRunV2Job#image}
-        :param args: Arguments to the entrypoint. The docker image's CMD is used if this is not provided. Variable references are not supported in Cloud Run. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#args CloudRunV2Job#args}
-        :param command: Entrypoint array. Not executed within a shell. The docker image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#command CloudRunV2Job#command}
-        :param env: env block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#env CloudRunV2Job#env}
-        :param name: Name of the container specified as a DNS_LABEL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
-        :param ports: ports block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#ports CloudRunV2Job#ports}
-        :param resources: resources block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#resources CloudRunV2Job#resources}
-        :param volume_mounts: volume_mounts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#volume_mounts CloudRunV2Job#volume_mounts}
-        :param working_dir: Container's working directory. If not specified, the container runtime's default will be used, which might be configured in the container image. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#working_dir CloudRunV2Job#working_dir}
+        :param image: URL of the Container image in Google Container Registry or Google Artifact Registry. More info: https://kubernetes.io/docs/concepts/containers/images. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#image CloudRunV2Job#image}
+        :param args: Arguments to the entrypoint. The docker image's CMD is used if this is not provided. Variable references are not supported in Cloud Run. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#args CloudRunV2Job#args}
+        :param command: Entrypoint array. Not executed within a shell. The docker image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#command CloudRunV2Job#command}
+        :param depends_on: Names of the containers that must start before this container. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#depends_on CloudRunV2Job#depends_on}
+        :param env: env block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#env CloudRunV2Job#env}
+        :param name: Name of the container specified as a DNS_LABEL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        :param ports: ports block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#ports CloudRunV2Job#ports}
+        :param resources: resources block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#resources CloudRunV2Job#resources}
+        :param startup_probe: startup_probe block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#startup_probe CloudRunV2Job#startup_probe}
+        :param volume_mounts: volume_mounts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#volume_mounts CloudRunV2Job#volume_mounts}
+        :param working_dir: Container's working directory. If not specified, the container runtime's default will be used, which might be configured in the container image. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#working_dir CloudRunV2Job#working_dir}
         '''
         if isinstance(resources, dict):
             resources = CloudRunV2JobTemplateTemplateContainersResources(**resources)
+        if isinstance(startup_probe, dict):
+            startup_probe = CloudRunV2JobTemplateTemplateContainersStartupProbe(**startup_probe)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__51113b1e358b9d5401a891c8f50df4ef92fa51086ea2f9f46a18089fa21510a1)
             check_type(argname="argument image", value=image, expected_type=type_hints["image"])
             check_type(argname="argument args", value=args, expected_type=type_hints["args"])
             check_type(argname="argument command", value=command, expected_type=type_hints["command"])
+            check_type(argname="argument depends_on", value=depends_on, expected_type=type_hints["depends_on"])
             check_type(argname="argument env", value=env, expected_type=type_hints["env"])
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
             check_type(argname="argument ports", value=ports, expected_type=type_hints["ports"])
             check_type(argname="argument resources", value=resources, expected_type=type_hints["resources"])
+            check_type(argname="argument startup_probe", value=startup_probe, expected_type=type_hints["startup_probe"])
             check_type(argname="argument volume_mounts", value=volume_mounts, expected_type=type_hints["volume_mounts"])
             check_type(argname="argument working_dir", value=working_dir, expected_type=type_hints["working_dir"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
@@ -1969,6 +1979,8 @@ class CloudRunV2JobTemplateTemplateContainers:
             self._values["args"] = args
         if command is not None:
             self._values["command"] = command
+        if depends_on is not None:
+            self._values["depends_on"] = depends_on
         if env is not None:
             self._values["env"] = env
         if name is not None:
@@ -1977,6 +1989,8 @@ class CloudRunV2JobTemplateTemplateContainers:
             self._values["ports"] = ports
         if resources is not None:
             self._values["resources"] = resources
+        if startup_probe is not None:
+            self._values["startup_probe"] = startup_probe
         if volume_mounts is not None:
             self._values["volume_mounts"] = volume_mounts
         if working_dir is not None:
@@ -1986,7 +2000,7 @@ class CloudRunV2JobTemplateTemplateContainers:
     def image(self) -> builtins.str:
         '''URL of the Container image in Google Container Registry or Google Artifact Registry. More info: https://kubernetes.io/docs/concepts/containers/images.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#image CloudRunV2Job#image}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#image CloudRunV2Job#image}
         '''
         result = self._values.get("image")
         assert result is not None, "Required property 'image' is missing"
@@ -1998,7 +2012,7 @@ class CloudRunV2JobTemplateTemplateContainers:
 
         The docker image's CMD is used if this is not provided. Variable references are not supported in Cloud Run.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#args CloudRunV2Job#args}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#args CloudRunV2Job#args}
         '''
         result = self._values.get("args")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2009,9 +2023,18 @@ class CloudRunV2JobTemplateTemplateContainers:
 
         Not executed within a shell. The docker image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#command CloudRunV2Job#command}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#command CloudRunV2Job#command}
         '''
         result = self._values.get("command")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+    @builtins.property
+    def depends_on(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''Names of the containers that must start before this container.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#depends_on CloudRunV2Job#depends_on}
+        '''
+        result = self._values.get("depends_on")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
@@ -2020,7 +2043,7 @@ class CloudRunV2JobTemplateTemplateContainers:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainersEnv"]]]:
         '''env block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#env CloudRunV2Job#env}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#env CloudRunV2Job#env}
         '''
         result = self._values.get("env")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainersEnv"]]], result)
@@ -2029,7 +2052,7 @@ class CloudRunV2JobTemplateTemplateContainers:
     def name(self) -> typing.Optional[builtins.str]:
         '''Name of the container specified as a DNS_LABEL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2040,7 +2063,7 @@ class CloudRunV2JobTemplateTemplateContainers:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainersPorts"]]]:
         '''ports block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#ports CloudRunV2Job#ports}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#ports CloudRunV2Job#ports}
         '''
         result = self._values.get("ports")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainersPorts"]]], result)
@@ -2051,10 +2074,21 @@ class CloudRunV2JobTemplateTemplateContainers:
     ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersResources"]:
         '''resources block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#resources CloudRunV2Job#resources}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#resources CloudRunV2Job#resources}
         '''
         result = self._values.get("resources")
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersResources"], result)
+
+    @builtins.property
+    def startup_probe(
+        self,
+    ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbe"]:
+        '''startup_probe block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#startup_probe CloudRunV2Job#startup_probe}
+        '''
+        result = self._values.get("startup_probe")
+        return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbe"], result)
 
     @builtins.property
     def volume_mounts(
@@ -2062,7 +2096,7 @@ class CloudRunV2JobTemplateTemplateContainers:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainersVolumeMounts"]]]:
         '''volume_mounts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#volume_mounts CloudRunV2Job#volume_mounts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#volume_mounts CloudRunV2Job#volume_mounts}
         '''
         result = self._values.get("volume_mounts")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainersVolumeMounts"]]], result)
@@ -2073,7 +2107,7 @@ class CloudRunV2JobTemplateTemplateContainers:
 
         If not specified, the container runtime's default will be used, which might be configured in the container image.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#working_dir CloudRunV2Job#working_dir}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#working_dir CloudRunV2Job#working_dir}
         '''
         result = self._values.get("working_dir")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2104,9 +2138,9 @@ class CloudRunV2JobTemplateTemplateContainersEnv:
         value_source: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersEnvValueSource", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param name: Name of the environment variable. Must be a C_IDENTIFIER, and mnay not exceed 32768 characters. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
-        :param value: Literal value of the environment variable. Defaults to "" and the maximum allowed length is 32768 characters. Variable references are not supported in Cloud Run. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#value CloudRunV2Job#value}
-        :param value_source: value_source block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#value_source CloudRunV2Job#value_source}
+        :param name: Name of the environment variable. Must be a C_IDENTIFIER, and mnay not exceed 32768 characters. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        :param value: Literal value of the environment variable. Defaults to "" and the maximum allowed length is 32768 characters. Variable references are not supported in Cloud Run. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#value CloudRunV2Job#value}
+        :param value_source: value_source block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#value_source CloudRunV2Job#value_source}
         '''
         if isinstance(value_source, dict):
             value_source = CloudRunV2JobTemplateTemplateContainersEnvValueSource(**value_source)
@@ -2127,7 +2161,7 @@ class CloudRunV2JobTemplateTemplateContainersEnv:
     def name(self) -> builtins.str:
         '''Name of the environment variable. Must be a C_IDENTIFIER, and mnay not exceed 32768 characters.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -2139,7 +2173,7 @@ class CloudRunV2JobTemplateTemplateContainersEnv:
 
         Defaults to "" and the maximum allowed length is 32768 characters. Variable references are not supported in Cloud Run.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#value CloudRunV2Job#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#value CloudRunV2Job#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2150,7 +2184,7 @@ class CloudRunV2JobTemplateTemplateContainersEnv:
     ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersEnvValueSource"]:
         '''value_source block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#value_source CloudRunV2Job#value_source}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#value_source CloudRunV2Job#value_source}
         '''
         result = self._values.get("value_source")
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersEnvValueSource"], result)
@@ -2293,7 +2327,7 @@ class CloudRunV2JobTemplateTemplateContainersEnvOutputReference(
         secret_key_ref: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersEnvValueSourceSecretKeyRef", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param secret_key_ref: secret_key_ref block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret_key_ref CloudRunV2Job#secret_key_ref}
+        :param secret_key_ref: secret_key_ref block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret_key_ref CloudRunV2Job#secret_key_ref}
         '''
         value = CloudRunV2JobTemplateTemplateContainersEnvValueSource(
             secret_key_ref=secret_key_ref
@@ -2387,7 +2421,7 @@ class CloudRunV2JobTemplateTemplateContainersEnvValueSource:
         secret_key_ref: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersEnvValueSourceSecretKeyRef", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param secret_key_ref: secret_key_ref block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret_key_ref CloudRunV2Job#secret_key_ref}
+        :param secret_key_ref: secret_key_ref block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret_key_ref CloudRunV2Job#secret_key_ref}
         '''
         if isinstance(secret_key_ref, dict):
             secret_key_ref = CloudRunV2JobTemplateTemplateContainersEnvValueSourceSecretKeyRef(**secret_key_ref)
@@ -2404,7 +2438,7 @@ class CloudRunV2JobTemplateTemplateContainersEnvValueSource:
     ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersEnvValueSourceSecretKeyRef"]:
         '''secret_key_ref block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret_key_ref CloudRunV2Job#secret_key_ref}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret_key_ref CloudRunV2Job#secret_key_ref}
         '''
         result = self._values.get("secret_key_ref")
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersEnvValueSourceSecretKeyRef"], result)
@@ -2449,8 +2483,8 @@ class CloudRunV2JobTemplateTemplateContainersEnvValueSourceOutputReference(
         version: builtins.str,
     ) -> None:
         '''
-        :param secret: The name of the secret in Cloud Secret Manager. Format: {secretName} if the secret is in the same project. projects/{project}/secrets/{secretName} if the secret is in a different project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
-        :param version: The Cloud Secret Manager secret version. Can be 'latest' for the latest value or an integer for a specific version. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
+        :param secret: The name of the secret in Cloud Secret Manager. Format: {secretName} if the secret is in the same project. projects/{project}/secrets/{secretName} if the secret is in a different project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
+        :param version: The Cloud Secret Manager secret version. Can be 'latest' for the latest value or an integer for a specific version. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
         '''
         value = CloudRunV2JobTemplateTemplateContainersEnvValueSourceSecretKeyRef(
             secret=secret, version=version
@@ -2502,8 +2536,8 @@ class CloudRunV2JobTemplateTemplateContainersEnvValueSourceOutputReference(
 class CloudRunV2JobTemplateTemplateContainersEnvValueSourceSecretKeyRef:
     def __init__(self, *, secret: builtins.str, version: builtins.str) -> None:
         '''
-        :param secret: The name of the secret in Cloud Secret Manager. Format: {secretName} if the secret is in the same project. projects/{project}/secrets/{secretName} if the secret is in a different project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
-        :param version: The Cloud Secret Manager secret version. Can be 'latest' for the latest value or an integer for a specific version. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
+        :param secret: The name of the secret in Cloud Secret Manager. Format: {secretName} if the secret is in the same project. projects/{project}/secrets/{secretName} if the secret is in a different project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
+        :param version: The Cloud Secret Manager secret version. Can be 'latest' for the latest value or an integer for a specific version. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5084de4f0073ddbc77e1d0ee0810b35a23b09ca01ca2fdb255c2388321ec74bb)
@@ -2520,7 +2554,7 @@ class CloudRunV2JobTemplateTemplateContainersEnvValueSourceSecretKeyRef:
 
         Format: {secretName} if the secret is in the same project. projects/{project}/secrets/{secretName} if the secret is in a different project.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
         '''
         result = self._values.get("secret")
         assert result is not None, "Required property 'secret' is missing"
@@ -2532,7 +2566,7 @@ class CloudRunV2JobTemplateTemplateContainersEnvValueSourceSecretKeyRef:
 
         Can be 'latest' for the latest value or an integer for a specific version.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
         '''
         result = self._values.get("version")
         assert result is not None, "Required property 'version' is missing"
@@ -2774,11 +2808,44 @@ class CloudRunV2JobTemplateTemplateContainersOutputReference(
         limits: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     ) -> None:
         '''
-        :param limits: Only memory and CPU are supported. Use key 'cpu' for CPU limit and 'memory' for memory limit. Note: The only supported values for CPU are '1', '2', '4', and '8'. Setting 4 CPU requires at least 2Gi of memory. The values of the map is string form of the 'quantity' k8s type: https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apimachinery/pkg/api/resource/quantity.go Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#limits CloudRunV2Job#limits}
+        :param limits: Only memory and CPU are supported. Use key 'cpu' for CPU limit and 'memory' for memory limit. Note: The only supported values for CPU are '1', '2', '4', and '8'. Setting 4 CPU requires at least 2Gi of memory. The values of the map is string form of the 'quantity' k8s type: https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apimachinery/pkg/api/resource/quantity.go Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#limits CloudRunV2Job#limits}
         '''
         value = CloudRunV2JobTemplateTemplateContainersResources(limits=limits)
 
         return typing.cast(None, jsii.invoke(self, "putResources", [value]))
+
+    @jsii.member(jsii_name="putStartupProbe")
+    def put_startup_probe(
+        self,
+        *,
+        failure_threshold: typing.Optional[jsii.Number] = None,
+        grpc: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc", typing.Dict[builtins.str, typing.Any]]] = None,
+        http_get: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet", typing.Dict[builtins.str, typing.Any]]] = None,
+        initial_delay_seconds: typing.Optional[jsii.Number] = None,
+        period_seconds: typing.Optional[jsii.Number] = None,
+        tcp_socket: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket", typing.Dict[builtins.str, typing.Any]]] = None,
+        timeout_seconds: typing.Optional[jsii.Number] = None,
+    ) -> None:
+        '''
+        :param failure_threshold: Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#failure_threshold CloudRunV2Job#failure_threshold}
+        :param grpc: grpc block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#grpc CloudRunV2Job#grpc}
+        :param http_get: http_get block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#http_get CloudRunV2Job#http_get}
+        :param initial_delay_seconds: Number of seconds after the container has started before the probe is initiated. Defaults to 0 seconds. Minimum value is 0. Maximum value is 240. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#initial_delay_seconds CloudRunV2Job#initial_delay_seconds}
+        :param period_seconds: How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1. Maximum value is 240. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#period_seconds CloudRunV2Job#period_seconds}
+        :param tcp_socket: tcp_socket block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#tcp_socket CloudRunV2Job#tcp_socket}
+        :param timeout_seconds: Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. Maximum value is 3600. Must be smaller than periodSeconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#timeout_seconds CloudRunV2Job#timeout_seconds}
+        '''
+        value = CloudRunV2JobTemplateTemplateContainersStartupProbe(
+            failure_threshold=failure_threshold,
+            grpc=grpc,
+            http_get=http_get,
+            initial_delay_seconds=initial_delay_seconds,
+            period_seconds=period_seconds,
+            tcp_socket=tcp_socket,
+            timeout_seconds=timeout_seconds,
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putStartupProbe", [value]))
 
     @jsii.member(jsii_name="putVolumeMounts")
     def put_volume_mounts(
@@ -2801,6 +2868,10 @@ class CloudRunV2JobTemplateTemplateContainersOutputReference(
     def reset_command(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetCommand", []))
 
+    @jsii.member(jsii_name="resetDependsOn")
+    def reset_depends_on(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDependsOn", []))
+
     @jsii.member(jsii_name="resetEnv")
     def reset_env(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetEnv", []))
@@ -2816,6 +2887,10 @@ class CloudRunV2JobTemplateTemplateContainersOutputReference(
     @jsii.member(jsii_name="resetResources")
     def reset_resources(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetResources", []))
+
+    @jsii.member(jsii_name="resetStartupProbe")
+    def reset_startup_probe(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetStartupProbe", []))
 
     @jsii.member(jsii_name="resetVolumeMounts")
     def reset_volume_mounts(self) -> None:
@@ -2843,6 +2918,13 @@ class CloudRunV2JobTemplateTemplateContainersOutputReference(
         return typing.cast("CloudRunV2JobTemplateTemplateContainersResourcesOutputReference", jsii.get(self, "resources"))
 
     @builtins.property
+    @jsii.member(jsii_name="startupProbe")
+    def startup_probe(
+        self,
+    ) -> "CloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference":
+        return typing.cast("CloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference", jsii.get(self, "startupProbe"))
+
+    @builtins.property
     @jsii.member(jsii_name="volumeMounts")
     def volume_mounts(
         self,
@@ -2858,6 +2940,11 @@ class CloudRunV2JobTemplateTemplateContainersOutputReference(
     @jsii.member(jsii_name="commandInput")
     def command_input(self) -> typing.Optional[typing.List[builtins.str]]:
         return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "commandInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="dependsOnInput")
+    def depends_on_input(self) -> typing.Optional[typing.List[builtins.str]]:
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "dependsOnInput"))
 
     @builtins.property
     @jsii.member(jsii_name="envInput")
@@ -2889,6 +2976,13 @@ class CloudRunV2JobTemplateTemplateContainersOutputReference(
         self,
     ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersResources"]:
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersResources"], jsii.get(self, "resourcesInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="startupProbeInput")
+    def startup_probe_input(
+        self,
+    ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbe"]:
+        return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbe"], jsii.get(self, "startupProbeInput"))
 
     @builtins.property
     @jsii.member(jsii_name="volumeMountsInput")
@@ -2925,6 +3019,18 @@ class CloudRunV2JobTemplateTemplateContainersOutputReference(
             type_hints = typing.get_type_hints(_typecheckingstub__1c0a6476eebd27a35e93b548071b29656d1594b7e5529aa3bbff93fbfd9255be)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "command", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="dependsOn")
+    def depends_on(self) -> typing.List[builtins.str]:
+        return typing.cast(typing.List[builtins.str], jsii.get(self, "dependsOn"))
+
+    @depends_on.setter
+    def depends_on(self, value: typing.List[builtins.str]) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a93dc6858c4369e937dfe46b75fcf876259c549099a27070e81bec12c5101eb9)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "dependsOn", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="image")
@@ -2993,8 +3099,8 @@ class CloudRunV2JobTemplateTemplateContainersPorts:
         name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param container_port: Port number the container listens on. This must be a valid TCP port number, 0 < containerPort < 65536. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#container_port CloudRunV2Job#container_port}
-        :param name: If specified, used to specify which protocol to use. Allowed values are "http1" and "h2c". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        :param container_port: Port number the container listens on. This must be a valid TCP port number, 0 < containerPort < 65536. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#container_port CloudRunV2Job#container_port}
+        :param name: If specified, used to specify which protocol to use. Allowed values are "http1" and "h2c". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__08bb73d3381bd120a9d5c81be1516738a0cd5376201f984b5ff0b0f54c9b7cc5)
@@ -3010,7 +3116,7 @@ class CloudRunV2JobTemplateTemplateContainersPorts:
     def container_port(self) -> typing.Optional[jsii.Number]:
         '''Port number the container listens on. This must be a valid TCP port number, 0 < containerPort < 65536.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#container_port CloudRunV2Job#container_port}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#container_port CloudRunV2Job#container_port}
         '''
         result = self._values.get("container_port")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -3019,7 +3125,7 @@ class CloudRunV2JobTemplateTemplateContainersPorts:
     def name(self) -> typing.Optional[builtins.str]:
         '''If specified, used to specify which protocol to use. Allowed values are "http1" and "h2c".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3227,7 +3333,7 @@ class CloudRunV2JobTemplateTemplateContainersResources:
         limits: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     ) -> None:
         '''
-        :param limits: Only memory and CPU are supported. Use key 'cpu' for CPU limit and 'memory' for memory limit. Note: The only supported values for CPU are '1', '2', '4', and '8'. Setting 4 CPU requires at least 2Gi of memory. The values of the map is string form of the 'quantity' k8s type: https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apimachinery/pkg/api/resource/quantity.go Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#limits CloudRunV2Job#limits}
+        :param limits: Only memory and CPU are supported. Use key 'cpu' for CPU limit and 'memory' for memory limit. Note: The only supported values for CPU are '1', '2', '4', and '8'. Setting 4 CPU requires at least 2Gi of memory. The values of the map is string form of the 'quantity' k8s type: https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apimachinery/pkg/api/resource/quantity.go Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#limits CloudRunV2Job#limits}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a3642cbe6aabdad011daa9c0711bd672f0404a966de18bb6014ee7f5b2ca53b4)
@@ -3242,7 +3348,7 @@ class CloudRunV2JobTemplateTemplateContainersResources:
 
         Use key 'cpu' for CPU limit and 'memory' for memory limit. Note: The only supported values for CPU are '1', '2', '4', and '8'. Setting 4 CPU requires at least 2Gi of memory. The values of the map is string form of the 'quantity' k8s type: https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apimachinery/pkg/api/resource/quantity.go
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#limits CloudRunV2Job#limits}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#limits CloudRunV2Job#limits}
         '''
         result = self._values.get("limits")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -3321,6 +3427,1035 @@ class CloudRunV2JobTemplateTemplateContainersResourcesOutputReference(
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbe",
+    jsii_struct_bases=[],
+    name_mapping={
+        "failure_threshold": "failureThreshold",
+        "grpc": "grpc",
+        "http_get": "httpGet",
+        "initial_delay_seconds": "initialDelaySeconds",
+        "period_seconds": "periodSeconds",
+        "tcp_socket": "tcpSocket",
+        "timeout_seconds": "timeoutSeconds",
+    },
+)
+class CloudRunV2JobTemplateTemplateContainersStartupProbe:
+    def __init__(
+        self,
+        *,
+        failure_threshold: typing.Optional[jsii.Number] = None,
+        grpc: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc", typing.Dict[builtins.str, typing.Any]]] = None,
+        http_get: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet", typing.Dict[builtins.str, typing.Any]]] = None,
+        initial_delay_seconds: typing.Optional[jsii.Number] = None,
+        period_seconds: typing.Optional[jsii.Number] = None,
+        tcp_socket: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket", typing.Dict[builtins.str, typing.Any]]] = None,
+        timeout_seconds: typing.Optional[jsii.Number] = None,
+    ) -> None:
+        '''
+        :param failure_threshold: Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#failure_threshold CloudRunV2Job#failure_threshold}
+        :param grpc: grpc block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#grpc CloudRunV2Job#grpc}
+        :param http_get: http_get block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#http_get CloudRunV2Job#http_get}
+        :param initial_delay_seconds: Number of seconds after the container has started before the probe is initiated. Defaults to 0 seconds. Minimum value is 0. Maximum value is 240. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#initial_delay_seconds CloudRunV2Job#initial_delay_seconds}
+        :param period_seconds: How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1. Maximum value is 240. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#period_seconds CloudRunV2Job#period_seconds}
+        :param tcp_socket: tcp_socket block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#tcp_socket CloudRunV2Job#tcp_socket}
+        :param timeout_seconds: Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. Maximum value is 3600. Must be smaller than periodSeconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#timeout_seconds CloudRunV2Job#timeout_seconds}
+        '''
+        if isinstance(grpc, dict):
+            grpc = CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc(**grpc)
+        if isinstance(http_get, dict):
+            http_get = CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet(**http_get)
+        if isinstance(tcp_socket, dict):
+            tcp_socket = CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket(**tcp_socket)
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7b1192aea2ac00145a2eedde8be1c207800749427dbfb10203a4663f5bb14e63)
+            check_type(argname="argument failure_threshold", value=failure_threshold, expected_type=type_hints["failure_threshold"])
+            check_type(argname="argument grpc", value=grpc, expected_type=type_hints["grpc"])
+            check_type(argname="argument http_get", value=http_get, expected_type=type_hints["http_get"])
+            check_type(argname="argument initial_delay_seconds", value=initial_delay_seconds, expected_type=type_hints["initial_delay_seconds"])
+            check_type(argname="argument period_seconds", value=period_seconds, expected_type=type_hints["period_seconds"])
+            check_type(argname="argument tcp_socket", value=tcp_socket, expected_type=type_hints["tcp_socket"])
+            check_type(argname="argument timeout_seconds", value=timeout_seconds, expected_type=type_hints["timeout_seconds"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if failure_threshold is not None:
+            self._values["failure_threshold"] = failure_threshold
+        if grpc is not None:
+            self._values["grpc"] = grpc
+        if http_get is not None:
+            self._values["http_get"] = http_get
+        if initial_delay_seconds is not None:
+            self._values["initial_delay_seconds"] = initial_delay_seconds
+        if period_seconds is not None:
+            self._values["period_seconds"] = period_seconds
+        if tcp_socket is not None:
+            self._values["tcp_socket"] = tcp_socket
+        if timeout_seconds is not None:
+            self._values["timeout_seconds"] = timeout_seconds
+
+    @builtins.property
+    def failure_threshold(self) -> typing.Optional[jsii.Number]:
+        '''Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#failure_threshold CloudRunV2Job#failure_threshold}
+        '''
+        result = self._values.get("failure_threshold")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    @builtins.property
+    def grpc(
+        self,
+    ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc"]:
+        '''grpc block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#grpc CloudRunV2Job#grpc}
+        '''
+        result = self._values.get("grpc")
+        return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc"], result)
+
+    @builtins.property
+    def http_get(
+        self,
+    ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet"]:
+        '''http_get block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#http_get CloudRunV2Job#http_get}
+        '''
+        result = self._values.get("http_get")
+        return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet"], result)
+
+    @builtins.property
+    def initial_delay_seconds(self) -> typing.Optional[jsii.Number]:
+        '''Number of seconds after the container has started before the probe is initiated.
+
+        Defaults to 0 seconds. Minimum value is 0. Maximum value is 240.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#initial_delay_seconds CloudRunV2Job#initial_delay_seconds}
+        '''
+        result = self._values.get("initial_delay_seconds")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    @builtins.property
+    def period_seconds(self) -> typing.Optional[jsii.Number]:
+        '''How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1. Maximum value is 240.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#period_seconds CloudRunV2Job#period_seconds}
+        '''
+        result = self._values.get("period_seconds")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    @builtins.property
+    def tcp_socket(
+        self,
+    ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket"]:
+        '''tcp_socket block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#tcp_socket CloudRunV2Job#tcp_socket}
+        '''
+        result = self._values.get("tcp_socket")
+        return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket"], result)
+
+    @builtins.property
+    def timeout_seconds(self) -> typing.Optional[jsii.Number]:
+        '''Number of seconds after which the probe times out.
+
+        Defaults to 1 second. Minimum value is 1. Maximum value is 3600.
+        Must be smaller than periodSeconds.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#timeout_seconds CloudRunV2Job#timeout_seconds}
+        '''
+        result = self._values.get("timeout_seconds")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "CloudRunV2JobTemplateTemplateContainersStartupProbe(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc",
+    jsii_struct_bases=[],
+    name_mapping={"port": "port", "service": "service"},
+)
+class CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc:
+    def __init__(
+        self,
+        *,
+        port: typing.Optional[jsii.Number] = None,
+        service: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param port: Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#port CloudRunV2Job#port}
+        :param service: The name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). If this is not specified, the default behavior is defined by gRPC. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#service CloudRunV2Job#service}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2afae6975ae039cbbcc64f04a0a696dd8d5db62c3fe023b485361cfff73e4138)
+            check_type(argname="argument port", value=port, expected_type=type_hints["port"])
+            check_type(argname="argument service", value=service, expected_type=type_hints["service"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if port is not None:
+            self._values["port"] = port
+        if service is not None:
+            self._values["service"] = service
+
+    @builtins.property
+    def port(self) -> typing.Optional[jsii.Number]:
+        '''Port number to access on the container.
+
+        Number must be in the range 1 to 65535.
+        If not specified, defaults to the same value as container.ports[0].containerPort.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#port CloudRunV2Job#port}
+        '''
+        result = self._values.get("port")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    @builtins.property
+    def service(self) -> typing.Optional[builtins.str]:
+        '''The name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). If this is not specified, the default behavior is defined by gRPC.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#service CloudRunV2Job#service}
+        '''
+        result = self._values.get("service")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class CloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__93e4935389b6728e8f45149f6b00b16fd2106ae7131b7ca759fef621931a1331)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetPort")
+    def reset_port(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetPort", []))
+
+    @jsii.member(jsii_name="resetService")
+    def reset_service(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetService", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="portInput")
+    def port_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "portInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="serviceInput")
+    def service_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "serviceInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="port")
+    def port(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "port"))
+
+    @port.setter
+    def port(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9dc6c02b010319033ffb48e8371a953fcd29dd936900dec1f42f436a3505c684)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "port", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="service")
+    def service(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "service"))
+
+    @service.setter
+    def service(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3afefa9b2310f5ee3a6a8d50d145c62c92e52f418442369deadd8d18108d61b4)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "service", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc]:
+        return typing.cast(typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9f07dc3d60bbe4d17289943825f6bf9ad545fa7cd3af742127bf7dd623f76493)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet",
+    jsii_struct_bases=[],
+    name_mapping={"http_headers": "httpHeaders", "path": "path", "port": "port"},
+)
+class CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet:
+    def __init__(
+        self,
+        *,
+        http_headers: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        path: typing.Optional[builtins.str] = None,
+        port: typing.Optional[jsii.Number] = None,
+    ) -> None:
+        '''
+        :param http_headers: http_headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#http_headers CloudRunV2Job#http_headers}
+        :param path: Path to access on the HTTP server. If set, it should not be empty string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
+        :param port: Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#port CloudRunV2Job#port}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__648d2e2699f499f14a4816a067195b5c80fb1fcbdcff30ec051aa4a2dbf3e1e2)
+            check_type(argname="argument http_headers", value=http_headers, expected_type=type_hints["http_headers"])
+            check_type(argname="argument path", value=path, expected_type=type_hints["path"])
+            check_type(argname="argument port", value=port, expected_type=type_hints["port"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if http_headers is not None:
+            self._values["http_headers"] = http_headers
+        if path is not None:
+            self._values["path"] = path
+        if port is not None:
+            self._values["port"] = port
+
+    @builtins.property
+    def http_headers(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders"]]]:
+        '''http_headers block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#http_headers CloudRunV2Job#http_headers}
+        '''
+        result = self._values.get("http_headers")
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders"]]], result)
+
+    @builtins.property
+    def path(self) -> typing.Optional[builtins.str]:
+        '''Path to access on the HTTP server. If set, it should not be empty string.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
+        '''
+        result = self._values.get("path")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def port(self) -> typing.Optional[jsii.Number]:
+        '''Port number to access on the container.
+
+        Number must be in the range 1 to 65535.
+        If not specified, defaults to the same value as container.ports[0].containerPort.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#port CloudRunV2Job#port}
+        '''
+        result = self._values.get("port")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders",
+    jsii_struct_bases=[],
+    name_mapping={"name": "name", "value": "value"},
+)
+class CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders:
+    def __init__(
+        self,
+        *,
+        name: builtins.str,
+        value: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param name: The header field name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        :param value: The header field value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#value CloudRunV2Job#value}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e3e008acfc5bf6b83d78100c84fe48794226a5bb93e677b3a8e4cafd2b27717c)
+            check_type(argname="argument name", value=name, expected_type=type_hints["name"])
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "name": name,
+        }
+        if value is not None:
+            self._values["value"] = value
+
+    @builtins.property
+    def name(self) -> builtins.str:
+        '''The header field name.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        '''
+        result = self._values.get("name")
+        assert result is not None, "Required property 'name' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def value(self) -> typing.Optional[builtins.str]:
+        '''The header field value.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#value CloudRunV2Job#value}
+        '''
+        result = self._values.get("value")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f29e4af90d00f09bb364c74d815ff73119a69a4cce9ce6dda5756e5d4f34704b)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e35332ef6301b6f8589852d38fb90ce0e44cf4dbcc9d7b4c605306f95123ec24)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e96dc57fb29fe0ca592fc856a35f203130e130d7ff02bd9c77d373e60156acb6)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__457a97251358721c323e8420dab941ede1240197331a20eb55cdbd7a4485ae5a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__16198255a9df18315d520352e90dcafa6bce09c35c1ae3d26b63b78bc4e161fb)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__cbd3a1f918f45d47be7a7ce414cfb1cfc0581a92d9219799048998f4d9b34e4b)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0e91ffc046236a93fa7684607d8b3e46ac8edd24d0b5470504f2240aad0877c8)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @jsii.member(jsii_name="resetValue")
+    def reset_value(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetValue", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="nameInput")
+    def name_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "nameInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="valueInput")
+    def value_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "valueInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="name")
+    def name(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "name"))
+
+    @name.setter
+    def name(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fc802291b397cfeac9222d5abc245217ad18b6fab9ea0451c7e15a670dba9afc)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "name", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="value")
+    def value(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "value"))
+
+    @value.setter
+    def value(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__00736a76baef53ec0c693e54b8a7a032455cdcad0a0bce244069817bd02c2279)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "value", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3698ad57bfad1fbbb20d354929b7ea5e52657b36330954403fd6addc33e0deb8)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3251c835b88a0753cbd4a51eee46477dcf2acf4b89a48ce64a51d01c8cc3c444)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="putHttpHeaders")
+    def put_http_headers(
+        self,
+        value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders, typing.Dict[builtins.str, typing.Any]]]],
+    ) -> None:
+        '''
+        :param value: -
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7a43df340d16d1bac577202024191337f84e2f55f3dd19bc873405c468c305d1)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        return typing.cast(None, jsii.invoke(self, "putHttpHeaders", [value]))
+
+    @jsii.member(jsii_name="resetHttpHeaders")
+    def reset_http_headers(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetHttpHeaders", []))
+
+    @jsii.member(jsii_name="resetPath")
+    def reset_path(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetPath", []))
+
+    @jsii.member(jsii_name="resetPort")
+    def reset_port(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetPort", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="httpHeaders")
+    def http_headers(
+        self,
+    ) -> CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList:
+        return typing.cast(CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList, jsii.get(self, "httpHeaders"))
+
+    @builtins.property
+    @jsii.member(jsii_name="httpHeadersInput")
+    def http_headers_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]]], jsii.get(self, "httpHeadersInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="pathInput")
+    def path_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "pathInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="portInput")
+    def port_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "portInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="path")
+    def path(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "path"))
+
+    @path.setter
+    def path(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6d8df33ad7eb4a94e55ecae41cd75b93d64ae34f7404f0cada71dd3abda69302)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "path", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="port")
+    def port(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "port"))
+
+    @port.setter
+    def port(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__af3a8964fbd8fed096bb53ebf162454fbdf5d90775b560d260bd047d79a59424)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "port", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet]:
+        return typing.cast(typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7e077058ed8557628f40289a0968daf86d55687153447551b407330557d6aadb)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class CloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__04423d527afc9391a104f47d239269fbf367d79c29f7bf22083a677fe1414636)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="putGrpc")
+    def put_grpc(
+        self,
+        *,
+        port: typing.Optional[jsii.Number] = None,
+        service: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param port: Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#port CloudRunV2Job#port}
+        :param service: The name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). If this is not specified, the default behavior is defined by gRPC. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#service CloudRunV2Job#service}
+        '''
+        value = CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc(
+            port=port, service=service
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putGrpc", [value]))
+
+    @jsii.member(jsii_name="putHttpGet")
+    def put_http_get(
+        self,
+        *,
+        http_headers: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders, typing.Dict[builtins.str, typing.Any]]]]] = None,
+        path: typing.Optional[builtins.str] = None,
+        port: typing.Optional[jsii.Number] = None,
+    ) -> None:
+        '''
+        :param http_headers: http_headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#http_headers CloudRunV2Job#http_headers}
+        :param path: Path to access on the HTTP server. If set, it should not be empty string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
+        :param port: Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#port CloudRunV2Job#port}
+        '''
+        value = CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet(
+            http_headers=http_headers, path=path, port=port
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putHttpGet", [value]))
+
+    @jsii.member(jsii_name="putTcpSocket")
+    def put_tcp_socket(self, *, port: typing.Optional[jsii.Number] = None) -> None:
+        '''
+        :param port: Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#port CloudRunV2Job#port}
+        '''
+        value = CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket(port=port)
+
+        return typing.cast(None, jsii.invoke(self, "putTcpSocket", [value]))
+
+    @jsii.member(jsii_name="resetFailureThreshold")
+    def reset_failure_threshold(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetFailureThreshold", []))
+
+    @jsii.member(jsii_name="resetGrpc")
+    def reset_grpc(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetGrpc", []))
+
+    @jsii.member(jsii_name="resetHttpGet")
+    def reset_http_get(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetHttpGet", []))
+
+    @jsii.member(jsii_name="resetInitialDelaySeconds")
+    def reset_initial_delay_seconds(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetInitialDelaySeconds", []))
+
+    @jsii.member(jsii_name="resetPeriodSeconds")
+    def reset_period_seconds(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetPeriodSeconds", []))
+
+    @jsii.member(jsii_name="resetTcpSocket")
+    def reset_tcp_socket(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTcpSocket", []))
+
+    @jsii.member(jsii_name="resetTimeoutSeconds")
+    def reset_timeout_seconds(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeoutSeconds", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="grpc")
+    def grpc(
+        self,
+    ) -> CloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference:
+        return typing.cast(CloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference, jsii.get(self, "grpc"))
+
+    @builtins.property
+    @jsii.member(jsii_name="httpGet")
+    def http_get(
+        self,
+    ) -> CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference:
+        return typing.cast(CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference, jsii.get(self, "httpGet"))
+
+    @builtins.property
+    @jsii.member(jsii_name="tcpSocket")
+    def tcp_socket(
+        self,
+    ) -> "CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference":
+        return typing.cast("CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference", jsii.get(self, "tcpSocket"))
+
+    @builtins.property
+    @jsii.member(jsii_name="failureThresholdInput")
+    def failure_threshold_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "failureThresholdInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="grpcInput")
+    def grpc_input(
+        self,
+    ) -> typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc]:
+        return typing.cast(typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc], jsii.get(self, "grpcInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="httpGetInput")
+    def http_get_input(
+        self,
+    ) -> typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet]:
+        return typing.cast(typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet], jsii.get(self, "httpGetInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="initialDelaySecondsInput")
+    def initial_delay_seconds_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "initialDelaySecondsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="periodSecondsInput")
+    def period_seconds_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "periodSecondsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="tcpSocketInput")
+    def tcp_socket_input(
+        self,
+    ) -> typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket"]:
+        return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket"], jsii.get(self, "tcpSocketInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutSecondsInput")
+    def timeout_seconds_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "timeoutSecondsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="failureThreshold")
+    def failure_threshold(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "failureThreshold"))
+
+    @failure_threshold.setter
+    def failure_threshold(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__bd9a754b1bca5b0d2eba0c3e72d60c837962751cab43e5276b5aac767e57eff1)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "failureThreshold", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="initialDelaySeconds")
+    def initial_delay_seconds(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "initialDelaySeconds"))
+
+    @initial_delay_seconds.setter
+    def initial_delay_seconds(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__92fd9c11384173a943635b1aa45676e47504de9cb7c4e38515a9399666d1bf62)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "initialDelaySeconds", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="periodSeconds")
+    def period_seconds(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "periodSeconds"))
+
+    @period_seconds.setter
+    def period_seconds(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1c284b74c7993ab998e43a3ba3725108c39b585b2e429e2ffac510e9beb58b3a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "periodSeconds", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutSeconds")
+    def timeout_seconds(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "timeoutSeconds"))
+
+    @timeout_seconds.setter
+    def timeout_seconds(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__31aabc8c1a87045516352d551f139595a3cfd8389c1119401693758e7f16c51f)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "timeoutSeconds", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbe]:
+        return typing.cast(typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbe], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbe],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__530c4d14c3493071d00a5a546af06fa6347a123b34e9a6cc47ffd0e0fa01458a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket",
+    jsii_struct_bases=[],
+    name_mapping={"port": "port"},
+)
+class CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket:
+    def __init__(self, *, port: typing.Optional[jsii.Number] = None) -> None:
+        '''
+        :param port: Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#port CloudRunV2Job#port}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__549568f1cc4d7e0519d04283b2c8d52ff913df023ba08cf0f598f439f718ee59)
+            check_type(argname="argument port", value=port, expected_type=type_hints["port"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if port is not None:
+            self._values["port"] = port
+
+    @builtins.property
+    def port(self) -> typing.Optional[jsii.Number]:
+        '''Port number to access on the container.
+
+        Number must be in the range 1 to 65535.
+        If not specified, defaults to the same value as container.ports[0].containerPort.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#port CloudRunV2Job#port}
+        '''
+        result = self._values.get("port")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4e5e8fa5936618f80d98178f08146648cb1abcee5cfbb758d10c422ac7690168)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetPort")
+    def reset_port(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetPort", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="portInput")
+    def port_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "portInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="port")
+    def port(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "port"))
+
+    @port.setter
+    def port(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c712f94bfc8649f14a71f336bccb9a79a342a7d9106f3be21817d40d1bcca2f2)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "port", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket]:
+        return typing.cast(typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d28fa174e2ea71a7dd2a354b629a89091d6a9802e1d32c1b254d345cdfcc0000)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-google.cloudRunV2Job.CloudRunV2JobTemplateTemplateContainersVolumeMounts",
     jsii_struct_bases=[],
     name_mapping={"mount_path": "mountPath", "name": "name"},
@@ -3328,8 +4463,8 @@ class CloudRunV2JobTemplateTemplateContainersResourcesOutputReference(
 class CloudRunV2JobTemplateTemplateContainersVolumeMounts:
     def __init__(self, *, mount_path: builtins.str, name: builtins.str) -> None:
         '''
-        :param mount_path: Path within the container at which the volume should be mounted. Must not contain ':'. For Cloud SQL volumes, it can be left empty, or must otherwise be /cloudsql. All instances defined in the Volume will be available as /cloudsql/[instance]. For more information on Cloud SQL volumes, visit https://cloud.google.com/sql/docs/mysql/connect-run Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#mount_path CloudRunV2Job#mount_path}
-        :param name: This must match the Name of a Volume. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        :param mount_path: Path within the container at which the volume should be mounted. Must not contain ':'. For Cloud SQL volumes, it can be left empty, or must otherwise be /cloudsql. All instances defined in the Volume will be available as /cloudsql/[instance]. For more information on Cloud SQL volumes, visit https://cloud.google.com/sql/docs/mysql/connect-run Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#mount_path CloudRunV2Job#mount_path}
+        :param name: This must match the Name of a Volume. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__443c0155fad35f0b43f55ae6f3b55661989c820846fdc4d8c461677d433f38cb)
@@ -3346,7 +4481,7 @@ class CloudRunV2JobTemplateTemplateContainersVolumeMounts:
 
         Must not contain ':'. For Cloud SQL volumes, it can be left empty, or must otherwise be /cloudsql. All instances defined in the Volume will be available as /cloudsql/[instance]. For more information on Cloud SQL volumes, visit https://cloud.google.com/sql/docs/mysql/connect-run
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#mount_path CloudRunV2Job#mount_path}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#mount_path CloudRunV2Job#mount_path}
         '''
         result = self._values.get("mount_path")
         assert result is not None, "Required property 'mount_path' is missing"
@@ -3356,7 +4491,7 @@ class CloudRunV2JobTemplateTemplateContainersVolumeMounts:
     def name(self) -> builtins.str:
         '''This must match the Name of a Volume.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -3600,9 +4735,9 @@ class CloudRunV2JobTemplateTemplateOutputReference(
         network_interfaces: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudRunV2JobTemplateTemplateVpcAccessNetworkInterfaces", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param connector: VPC Access connector name. Format: projects/{project}/locations/{location}/connectors/{connector}, where {project} can be project id or number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#connector CloudRunV2Job#connector}
-        :param egress: Traffic VPC egress settings. Possible values: ["ALL_TRAFFIC", "PRIVATE_RANGES_ONLY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#egress CloudRunV2Job#egress}
-        :param network_interfaces: network_interfaces block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#network_interfaces CloudRunV2Job#network_interfaces}
+        :param connector: VPC Access connector name. Format: projects/{project}/locations/{location}/connectors/{connector}, where {project} can be project id or number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#connector CloudRunV2Job#connector}
+        :param egress: Traffic VPC egress settings. Possible values: ["ALL_TRAFFIC", "PRIVATE_RANGES_ONLY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#egress CloudRunV2Job#egress}
+        :param network_interfaces: network_interfaces block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#network_interfaces CloudRunV2Job#network_interfaces}
         '''
         value = CloudRunV2JobTemplateTemplateVpcAccess(
             connector=connector, egress=egress, network_interfaces=network_interfaces
@@ -3803,12 +4938,12 @@ class CloudRunV2JobTemplateTemplateVolumes:
         secret: typing.Optional[typing.Union["CloudRunV2JobTemplateTemplateVolumesSecret", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param name: Volume's name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
-        :param cloud_sql_instance: cloud_sql_instance block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#cloud_sql_instance CloudRunV2Job#cloud_sql_instance}
-        :param empty_dir: empty_dir block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#empty_dir CloudRunV2Job#empty_dir}
-        :param gcs: gcs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#gcs CloudRunV2Job#gcs}
-        :param nfs: nfs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#nfs CloudRunV2Job#nfs}
-        :param secret: secret block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
+        :param name: Volume's name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        :param cloud_sql_instance: cloud_sql_instance block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#cloud_sql_instance CloudRunV2Job#cloud_sql_instance}
+        :param empty_dir: empty_dir block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#empty_dir CloudRunV2Job#empty_dir}
+        :param gcs: gcs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#gcs CloudRunV2Job#gcs}
+        :param nfs: nfs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#nfs CloudRunV2Job#nfs}
+        :param secret: secret block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
         '''
         if isinstance(cloud_sql_instance, dict):
             cloud_sql_instance = CloudRunV2JobTemplateTemplateVolumesCloudSqlInstance(**cloud_sql_instance)
@@ -3846,7 +4981,7 @@ class CloudRunV2JobTemplateTemplateVolumes:
     def name(self) -> builtins.str:
         '''Volume's name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#name CloudRunV2Job#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -3858,7 +4993,7 @@ class CloudRunV2JobTemplateTemplateVolumes:
     ) -> typing.Optional["CloudRunV2JobTemplateTemplateVolumesCloudSqlInstance"]:
         '''cloud_sql_instance block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#cloud_sql_instance CloudRunV2Job#cloud_sql_instance}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#cloud_sql_instance CloudRunV2Job#cloud_sql_instance}
         '''
         result = self._values.get("cloud_sql_instance")
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateVolumesCloudSqlInstance"], result)
@@ -3869,7 +5004,7 @@ class CloudRunV2JobTemplateTemplateVolumes:
     ) -> typing.Optional["CloudRunV2JobTemplateTemplateVolumesEmptyDir"]:
         '''empty_dir block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#empty_dir CloudRunV2Job#empty_dir}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#empty_dir CloudRunV2Job#empty_dir}
         '''
         result = self._values.get("empty_dir")
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateVolumesEmptyDir"], result)
@@ -3878,7 +5013,7 @@ class CloudRunV2JobTemplateTemplateVolumes:
     def gcs(self) -> typing.Optional["CloudRunV2JobTemplateTemplateVolumesGcs"]:
         '''gcs block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#gcs CloudRunV2Job#gcs}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#gcs CloudRunV2Job#gcs}
         '''
         result = self._values.get("gcs")
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateVolumesGcs"], result)
@@ -3887,7 +5022,7 @@ class CloudRunV2JobTemplateTemplateVolumes:
     def nfs(self) -> typing.Optional["CloudRunV2JobTemplateTemplateVolumesNfs"]:
         '''nfs block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#nfs CloudRunV2Job#nfs}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#nfs CloudRunV2Job#nfs}
         '''
         result = self._values.get("nfs")
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateVolumesNfs"], result)
@@ -3896,7 +5031,7 @@ class CloudRunV2JobTemplateTemplateVolumes:
     def secret(self) -> typing.Optional["CloudRunV2JobTemplateTemplateVolumesSecret"]:
         '''secret block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
         '''
         result = self._values.get("secret")
         return typing.cast(typing.Optional["CloudRunV2JobTemplateTemplateVolumesSecret"], result)
@@ -3925,7 +5060,7 @@ class CloudRunV2JobTemplateTemplateVolumesCloudSqlInstance:
         instances: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param instances: The Cloud SQL instance connection names, as can be found in https://console.cloud.google.com/sql/instances. Visit https://cloud.google.com/sql/docs/mysql/connect-run for more information on how to connect Cloud SQL and Cloud Run. Format: {project}:{location}:{instance}. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#instances CloudRunV2Job#instances}
+        :param instances: The Cloud SQL instance connection names, as can be found in https://console.cloud.google.com/sql/instances. Visit https://cloud.google.com/sql/docs/mysql/connect-run for more information on how to connect Cloud SQL and Cloud Run. Format: {project}:{location}:{instance}. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#instances CloudRunV2Job#instances}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ad511c231ea44cd56ef4e7cf2e4444bc40f314be4f8a84e7cd353b72dc68d6aa)
@@ -3938,7 +5073,7 @@ class CloudRunV2JobTemplateTemplateVolumesCloudSqlInstance:
     def instances(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The Cloud SQL instance connection names, as can be found in https://console.cloud.google.com/sql/instances. Visit https://cloud.google.com/sql/docs/mysql/connect-run for more information on how to connect Cloud SQL and Cloud Run. Format: {project}:{location}:{instance}.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#instances CloudRunV2Job#instances}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#instances CloudRunV2Job#instances}
         '''
         result = self._values.get("instances")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -4027,8 +5162,8 @@ class CloudRunV2JobTemplateTemplateVolumesEmptyDir:
         size_limit: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param medium: The different types of medium supported for EmptyDir. Default value: "MEMORY" Possible values: ["MEMORY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#medium CloudRunV2Job#medium}
-        :param size_limit: Limit on the storage usable by this EmptyDir volume. The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. This field's values are of the 'Quantity' k8s type: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/. The default is nil which means that the limit is undefined. More info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#size_limit CloudRunV2Job#size_limit}
+        :param medium: The different types of medium supported for EmptyDir. Default value: "MEMORY" Possible values: ["MEMORY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#medium CloudRunV2Job#medium}
+        :param size_limit: Limit on the storage usable by this EmptyDir volume. The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. This field's values are of the 'Quantity' k8s type: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/. The default is nil which means that the limit is undefined. More info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#size_limit CloudRunV2Job#size_limit}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__34721777cadf19e2581620ed3dd7908e3d787e5c2728ed8f5eda4d2183f426ad)
@@ -4044,7 +5179,7 @@ class CloudRunV2JobTemplateTemplateVolumesEmptyDir:
     def medium(self) -> typing.Optional[builtins.str]:
         '''The different types of medium supported for EmptyDir. Default value: "MEMORY" Possible values: ["MEMORY"].
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#medium CloudRunV2Job#medium}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#medium CloudRunV2Job#medium}
         '''
         result = self._values.get("medium")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4055,7 +5190,7 @@ class CloudRunV2JobTemplateTemplateVolumesEmptyDir:
 
         The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. This field's values are of the 'Quantity' k8s type: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/. The default is nil which means that the limit is undefined. More info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#size_limit CloudRunV2Job#size_limit}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#size_limit CloudRunV2Job#size_limit}
         '''
         result = self._values.get("size_limit")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4165,8 +5300,8 @@ class CloudRunV2JobTemplateTemplateVolumesGcs:
         read_only: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param bucket: Name of the cloud storage bucket to back the volume. The resource service account must have permission to access the bucket. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#bucket CloudRunV2Job#bucket}
-        :param read_only: If true, mount this volume as read-only in all mounts. If false, mount this volume as read-write. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
+        :param bucket: Name of the cloud storage bucket to back the volume. The resource service account must have permission to access the bucket. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#bucket CloudRunV2Job#bucket}
+        :param read_only: If true, mount this volume as read-only in all mounts. If false, mount this volume as read-write. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__fe360cf2b0afba3e4c0e05837218bacc01a3103050366ca2e13386c066a8e2e9)
@@ -4184,7 +5319,7 @@ class CloudRunV2JobTemplateTemplateVolumesGcs:
 
         The resource service account must have permission to access the bucket.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#bucket CloudRunV2Job#bucket}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#bucket CloudRunV2Job#bucket}
         '''
         result = self._values.get("bucket")
         assert result is not None, "Required property 'bucket' is missing"
@@ -4196,7 +5331,7 @@ class CloudRunV2JobTemplateTemplateVolumesGcs:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''If true, mount this volume as read-only in all mounts. If false, mount this volume as read-write.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
         '''
         result = self._values.get("read_only")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -4401,9 +5536,9 @@ class CloudRunV2JobTemplateTemplateVolumesNfs:
         read_only: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param server: Hostname or IP address of the NFS server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#server CloudRunV2Job#server}
-        :param path: Path that is exported by the NFS server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
-        :param read_only: If true, mount this volume as read-only in all mounts. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
+        :param server: Hostname or IP address of the NFS server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#server CloudRunV2Job#server}
+        :param path: Path that is exported by the NFS server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
+        :param read_only: If true, mount this volume as read-only in all mounts. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__9aab6b8cb71c7e1058c33c4503be13c6a227a8eceedb36f0100c9f826acccb2c)
@@ -4422,7 +5557,7 @@ class CloudRunV2JobTemplateTemplateVolumesNfs:
     def server(self) -> builtins.str:
         '''Hostname or IP address of the NFS server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#server CloudRunV2Job#server}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#server CloudRunV2Job#server}
         '''
         result = self._values.get("server")
         assert result is not None, "Required property 'server' is missing"
@@ -4432,7 +5567,7 @@ class CloudRunV2JobTemplateTemplateVolumesNfs:
     def path(self) -> typing.Optional[builtins.str]:
         '''Path that is exported by the NFS server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
         '''
         result = self._values.get("path")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4443,7 +5578,7 @@ class CloudRunV2JobTemplateTemplateVolumesNfs:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''If true, mount this volume as read-only in all mounts.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
         '''
         result = self._values.get("read_only")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -4595,7 +5730,7 @@ class CloudRunV2JobTemplateTemplateVolumesOutputReference(
         instances: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param instances: The Cloud SQL instance connection names, as can be found in https://console.cloud.google.com/sql/instances. Visit https://cloud.google.com/sql/docs/mysql/connect-run for more information on how to connect Cloud SQL and Cloud Run. Format: {project}:{location}:{instance}. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#instances CloudRunV2Job#instances}
+        :param instances: The Cloud SQL instance connection names, as can be found in https://console.cloud.google.com/sql/instances. Visit https://cloud.google.com/sql/docs/mysql/connect-run for more information on how to connect Cloud SQL and Cloud Run. Format: {project}:{location}:{instance}. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#instances CloudRunV2Job#instances}
         '''
         value = CloudRunV2JobTemplateTemplateVolumesCloudSqlInstance(
             instances=instances
@@ -4611,8 +5746,8 @@ class CloudRunV2JobTemplateTemplateVolumesOutputReference(
         size_limit: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param medium: The different types of medium supported for EmptyDir. Default value: "MEMORY" Possible values: ["MEMORY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#medium CloudRunV2Job#medium}
-        :param size_limit: Limit on the storage usable by this EmptyDir volume. The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. This field's values are of the 'Quantity' k8s type: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/. The default is nil which means that the limit is undefined. More info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#size_limit CloudRunV2Job#size_limit}
+        :param medium: The different types of medium supported for EmptyDir. Default value: "MEMORY" Possible values: ["MEMORY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#medium CloudRunV2Job#medium}
+        :param size_limit: Limit on the storage usable by this EmptyDir volume. The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. This field's values are of the 'Quantity' k8s type: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/. The default is nil which means that the limit is undefined. More info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#size_limit CloudRunV2Job#size_limit}
         '''
         value = CloudRunV2JobTemplateTemplateVolumesEmptyDir(
             medium=medium, size_limit=size_limit
@@ -4628,8 +5763,8 @@ class CloudRunV2JobTemplateTemplateVolumesOutputReference(
         read_only: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param bucket: Name of the cloud storage bucket to back the volume. The resource service account must have permission to access the bucket. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#bucket CloudRunV2Job#bucket}
-        :param read_only: If true, mount this volume as read-only in all mounts. If false, mount this volume as read-write. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
+        :param bucket: Name of the cloud storage bucket to back the volume. The resource service account must have permission to access the bucket. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#bucket CloudRunV2Job#bucket}
+        :param read_only: If true, mount this volume as read-only in all mounts. If false, mount this volume as read-write. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
         '''
         value = CloudRunV2JobTemplateTemplateVolumesGcs(
             bucket=bucket, read_only=read_only
@@ -4646,9 +5781,9 @@ class CloudRunV2JobTemplateTemplateVolumesOutputReference(
         read_only: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param server: Hostname or IP address of the NFS server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#server CloudRunV2Job#server}
-        :param path: Path that is exported by the NFS server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
-        :param read_only: If true, mount this volume as read-only in all mounts. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
+        :param server: Hostname or IP address of the NFS server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#server CloudRunV2Job#server}
+        :param path: Path that is exported by the NFS server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
+        :param read_only: If true, mount this volume as read-only in all mounts. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#read_only CloudRunV2Job#read_only}
         '''
         value = CloudRunV2JobTemplateTemplateVolumesNfs(
             server=server, path=path, read_only=read_only
@@ -4665,9 +5800,9 @@ class CloudRunV2JobTemplateTemplateVolumesOutputReference(
         items: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudRunV2JobTemplateTemplateVolumesSecretItems", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param secret: The name of the secret in Cloud Secret Manager. Format: {secret} if the secret is in the same project. projects/{project}/secrets/{secret} if the secret is in a different project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
-        :param default_mode: Integer representation of mode bits to use on created files by default. Must be a value between 0000 and 0777 (octal), defaulting to 0444. Directories within the path are not affected by this setting. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#default_mode CloudRunV2Job#default_mode}
-        :param items: items block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#items CloudRunV2Job#items}
+        :param secret: The name of the secret in Cloud Secret Manager. Format: {secret} if the secret is in the same project. projects/{project}/secrets/{secret} if the secret is in a different project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
+        :param default_mode: Integer representation of mode bits to use on created files by default. Must be a value between 0000 and 0777 (octal), defaulting to 0444. Directories within the path are not affected by this setting. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#default_mode CloudRunV2Job#default_mode}
+        :param items: items block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#items CloudRunV2Job#items}
         '''
         value = CloudRunV2JobTemplateTemplateVolumesSecret(
             secret=secret, default_mode=default_mode, items=items
@@ -4802,9 +5937,9 @@ class CloudRunV2JobTemplateTemplateVolumesSecret:
         items: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudRunV2JobTemplateTemplateVolumesSecretItems", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param secret: The name of the secret in Cloud Secret Manager. Format: {secret} if the secret is in the same project. projects/{project}/secrets/{secret} if the secret is in a different project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
-        :param default_mode: Integer representation of mode bits to use on created files by default. Must be a value between 0000 and 0777 (octal), defaulting to 0444. Directories within the path are not affected by this setting. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#default_mode CloudRunV2Job#default_mode}
-        :param items: items block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#items CloudRunV2Job#items}
+        :param secret: The name of the secret in Cloud Secret Manager. Format: {secret} if the secret is in the same project. projects/{project}/secrets/{secret} if the secret is in a different project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
+        :param default_mode: Integer representation of mode bits to use on created files by default. Must be a value between 0000 and 0777 (octal), defaulting to 0444. Directories within the path are not affected by this setting. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#default_mode CloudRunV2Job#default_mode}
+        :param items: items block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#items CloudRunV2Job#items}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__94c2ce9892d0eea91e5fe6561e6f5fbe901a79314fa43071d7cc1b0080b30b9f)
@@ -4825,7 +5960,7 @@ class CloudRunV2JobTemplateTemplateVolumesSecret:
 
         Format: {secret} if the secret is in the same project. projects/{project}/secrets/{secret} if the secret is in a different project.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#secret CloudRunV2Job#secret}
         '''
         result = self._values.get("secret")
         assert result is not None, "Required property 'secret' is missing"
@@ -4837,7 +5972,7 @@ class CloudRunV2JobTemplateTemplateVolumesSecret:
 
         Must be a value between 0000 and 0777 (octal), defaulting to 0444. Directories within the path are not affected by this setting.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#default_mode CloudRunV2Job#default_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#default_mode CloudRunV2Job#default_mode}
         '''
         result = self._values.get("default_mode")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -4848,7 +5983,7 @@ class CloudRunV2JobTemplateTemplateVolumesSecret:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateVolumesSecretItems"]]]:
         '''items block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#items CloudRunV2Job#items}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#items CloudRunV2Job#items}
         '''
         result = self._values.get("items")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateVolumesSecretItems"]]], result)
@@ -4879,9 +6014,9 @@ class CloudRunV2JobTemplateTemplateVolumesSecretItems:
         mode: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param path: The relative path of the secret in the container. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
-        :param version: The Cloud Secret Manager secret version. Can be 'latest' for the latest value or an integer for a specific version Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
-        :param mode: Integer octal mode bits to use on this file, must be a value between 01 and 0777 (octal). If 0 or not set, the Volume's default mode will be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#mode CloudRunV2Job#mode}
+        :param path: The relative path of the secret in the container. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
+        :param version: The Cloud Secret Manager secret version. Can be 'latest' for the latest value or an integer for a specific version Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
+        :param mode: Integer octal mode bits to use on this file, must be a value between 01 and 0777 (octal). If 0 or not set, the Volume's default mode will be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#mode CloudRunV2Job#mode}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__4aa214c26301909c0ca01af0b4b5e874d1e1834e941b7f0e090739804d22c2f9)
@@ -4899,7 +6034,7 @@ class CloudRunV2JobTemplateTemplateVolumesSecretItems:
     def path(self) -> builtins.str:
         '''The relative path of the secret in the container.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#path CloudRunV2Job#path}
         '''
         result = self._values.get("path")
         assert result is not None, "Required property 'path' is missing"
@@ -4911,7 +6046,7 @@ class CloudRunV2JobTemplateTemplateVolumesSecretItems:
 
         Can be 'latest' for the latest value or an integer for a specific version
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#version CloudRunV2Job#version}
         '''
         result = self._values.get("version")
         assert result is not None, "Required property 'version' is missing"
@@ -4923,7 +6058,7 @@ class CloudRunV2JobTemplateTemplateVolumesSecretItems:
 
         If 0 or not set, the Volume's default mode will be used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#mode CloudRunV2Job#mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#mode CloudRunV2Job#mode}
         '''
         result = self._values.get("mode")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -5255,9 +6390,9 @@ class CloudRunV2JobTemplateTemplateVpcAccess:
         network_interfaces: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudRunV2JobTemplateTemplateVpcAccessNetworkInterfaces", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param connector: VPC Access connector name. Format: projects/{project}/locations/{location}/connectors/{connector}, where {project} can be project id or number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#connector CloudRunV2Job#connector}
-        :param egress: Traffic VPC egress settings. Possible values: ["ALL_TRAFFIC", "PRIVATE_RANGES_ONLY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#egress CloudRunV2Job#egress}
-        :param network_interfaces: network_interfaces block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#network_interfaces CloudRunV2Job#network_interfaces}
+        :param connector: VPC Access connector name. Format: projects/{project}/locations/{location}/connectors/{connector}, where {project} can be project id or number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#connector CloudRunV2Job#connector}
+        :param egress: Traffic VPC egress settings. Possible values: ["ALL_TRAFFIC", "PRIVATE_RANGES_ONLY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#egress CloudRunV2Job#egress}
+        :param network_interfaces: network_interfaces block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#network_interfaces CloudRunV2Job#network_interfaces}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__6c17a52ee17ee34bdfe8cec8a1ba1cb87a767632018d3cf50aa1cbbf3888820f)
@@ -5276,7 +6411,7 @@ class CloudRunV2JobTemplateTemplateVpcAccess:
     def connector(self) -> typing.Optional[builtins.str]:
         '''VPC Access connector name. Format: projects/{project}/locations/{location}/connectors/{connector}, where {project} can be project id or number.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#connector CloudRunV2Job#connector}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#connector CloudRunV2Job#connector}
         '''
         result = self._values.get("connector")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5285,7 +6420,7 @@ class CloudRunV2JobTemplateTemplateVpcAccess:
     def egress(self) -> typing.Optional[builtins.str]:
         '''Traffic VPC egress settings. Possible values: ["ALL_TRAFFIC", "PRIVATE_RANGES_ONLY"].
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#egress CloudRunV2Job#egress}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#egress CloudRunV2Job#egress}
         '''
         result = self._values.get("egress")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5296,7 +6431,7 @@ class CloudRunV2JobTemplateTemplateVpcAccess:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateVpcAccessNetworkInterfaces"]]]:
         '''network_interfaces block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#network_interfaces CloudRunV2Job#network_interfaces}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#network_interfaces CloudRunV2Job#network_interfaces}
         '''
         result = self._values.get("network_interfaces")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudRunV2JobTemplateTemplateVpcAccessNetworkInterfaces"]]], result)
@@ -5327,9 +6462,9 @@ class CloudRunV2JobTemplateTemplateVpcAccessNetworkInterfaces:
         tags: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param network: The VPC network that the Cloud Run resource will be able to send traffic to. At least one of network or subnetwork must be specified. If both network and subnetwork are specified, the given VPC subnetwork must belong to the given VPC network. If network is not specified, it will be looked up from the subnetwork. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#network CloudRunV2Job#network}
-        :param subnetwork: The VPC subnetwork that the Cloud Run resource will get IPs from. At least one of network or subnetwork must be specified. If both network and subnetwork are specified, the given VPC subnetwork must belong to the given VPC network. If subnetwork is not specified, the subnetwork with the same name with the network will be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#subnetwork CloudRunV2Job#subnetwork}
-        :param tags: Network tags applied to this Cloud Run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#tags CloudRunV2Job#tags}
+        :param network: The VPC network that the Cloud Run resource will be able to send traffic to. At least one of network or subnetwork must be specified. If both network and subnetwork are specified, the given VPC subnetwork must belong to the given VPC network. If network is not specified, it will be looked up from the subnetwork. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#network CloudRunV2Job#network}
+        :param subnetwork: The VPC subnetwork that the Cloud Run resource will get IPs from. At least one of network or subnetwork must be specified. If both network and subnetwork are specified, the given VPC subnetwork must belong to the given VPC network. If subnetwork is not specified, the subnetwork with the same name with the network will be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#subnetwork CloudRunV2Job#subnetwork}
+        :param tags: Network tags applied to this Cloud Run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#tags CloudRunV2Job#tags}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__9ff1bc70e8a62096794ee68bb2d08c55e006cdaae43f01d8e6c486315f9ea362)
@@ -5352,7 +6487,7 @@ class CloudRunV2JobTemplateTemplateVpcAccessNetworkInterfaces:
         network and subnetwork are specified, the given VPC subnetwork must belong to the given VPC network. If network is not specified, it will be
         looked up from the subnetwork.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#network CloudRunV2Job#network}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#network CloudRunV2Job#network}
         '''
         result = self._values.get("network")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5365,7 +6500,7 @@ class CloudRunV2JobTemplateTemplateVpcAccessNetworkInterfaces:
         network and subnetwork are specified, the given VPC subnetwork must belong to the given VPC network. If subnetwork is not specified, the
         subnetwork with the same name with the network will be used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#subnetwork CloudRunV2Job#subnetwork}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#subnetwork CloudRunV2Job#subnetwork}
         '''
         result = self._values.get("subnetwork")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5374,7 +6509,7 @@ class CloudRunV2JobTemplateTemplateVpcAccessNetworkInterfaces:
     def tags(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Network tags applied to this Cloud Run job.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#tags CloudRunV2Job#tags}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#tags CloudRunV2Job#tags}
         '''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -5893,9 +7028,9 @@ class CloudRunV2JobTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#create CloudRunV2Job#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#delete CloudRunV2Job#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#update CloudRunV2Job#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#create CloudRunV2Job#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#delete CloudRunV2Job#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#update CloudRunV2Job#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b161e8bb2506db1821833fd23735cc942b73ffc04cb8be807f7a42b1e501aa69)
@@ -5912,19 +7047,19 @@ class CloudRunV2JobTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#create CloudRunV2Job#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#create CloudRunV2Job#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#delete CloudRunV2Job#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#delete CloudRunV2Job#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/cloud_run_v2_job#update CloudRunV2Job#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/cloud_run_v2_job#update CloudRunV2Job#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -6070,6 +7205,17 @@ __all__ = [
     "CloudRunV2JobTemplateTemplateContainersPortsOutputReference",
     "CloudRunV2JobTemplateTemplateContainersResources",
     "CloudRunV2JobTemplateTemplateContainersResourcesOutputReference",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbe",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket",
+    "CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference",
     "CloudRunV2JobTemplateTemplateContainersVolumeMounts",
     "CloudRunV2JobTemplateTemplateContainersVolumeMountsList",
     "CloudRunV2JobTemplateTemplateContainersVolumeMountsOutputReference",
@@ -6428,10 +7574,12 @@ def _typecheckingstub__51113b1e358b9d5401a891c8f50df4ef92fa51086ea2f9f46a18089fa
     image: builtins.str,
     args: typing.Optional[typing.Sequence[builtins.str]] = None,
     command: typing.Optional[typing.Sequence[builtins.str]] = None,
+    depends_on: typing.Optional[typing.Sequence[builtins.str]] = None,
     env: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[CloudRunV2JobTemplateTemplateContainersEnv, typing.Dict[builtins.str, typing.Any]]]]] = None,
     name: typing.Optional[builtins.str] = None,
     ports: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[CloudRunV2JobTemplateTemplateContainersPorts, typing.Dict[builtins.str, typing.Any]]]]] = None,
     resources: typing.Optional[typing.Union[CloudRunV2JobTemplateTemplateContainersResources, typing.Dict[builtins.str, typing.Any]]] = None,
+    startup_probe: typing.Optional[typing.Union[CloudRunV2JobTemplateTemplateContainersStartupProbe, typing.Dict[builtins.str, typing.Any]]] = None,
     volume_mounts: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[CloudRunV2JobTemplateTemplateContainersVolumeMounts, typing.Dict[builtins.str, typing.Any]]]]] = None,
     working_dir: typing.Optional[builtins.str] = None,
 ) -> None:
@@ -6642,6 +7790,12 @@ def _typecheckingstub__1c0a6476eebd27a35e93b548071b29656d1594b7e5529aa3bbff93fbf
     """Type checking stubs"""
     pass
 
+def _typecheckingstub__a93dc6858c4369e937dfe46b75fcf876259c549099a27070e81bec12c5101eb9(
+    value: typing.List[builtins.str],
+) -> None:
+    """Type checking stubs"""
+    pass
+
 def _typecheckingstub__ac3cf3c9c775b8beb8756b17ad2555dae9c40dc02fba60a17183fc75bd28ae9b(
     value: builtins.str,
 ) -> None:
@@ -6761,6 +7915,228 @@ def _typecheckingstub__42480f3677cf933329dda247ef12c88bd2051c3051036a6b76fb1951a
 
 def _typecheckingstub__676a5d58485494d64ef72970170813d504093a2ff46e217c8681e1acecd92fdc(
     value: typing.Optional[CloudRunV2JobTemplateTemplateContainersResources],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7b1192aea2ac00145a2eedde8be1c207800749427dbfb10203a4663f5bb14e63(
+    *,
+    failure_threshold: typing.Optional[jsii.Number] = None,
+    grpc: typing.Optional[typing.Union[CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc, typing.Dict[builtins.str, typing.Any]]] = None,
+    http_get: typing.Optional[typing.Union[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet, typing.Dict[builtins.str, typing.Any]]] = None,
+    initial_delay_seconds: typing.Optional[jsii.Number] = None,
+    period_seconds: typing.Optional[jsii.Number] = None,
+    tcp_socket: typing.Optional[typing.Union[CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket, typing.Dict[builtins.str, typing.Any]]] = None,
+    timeout_seconds: typing.Optional[jsii.Number] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2afae6975ae039cbbcc64f04a0a696dd8d5db62c3fe023b485361cfff73e4138(
+    *,
+    port: typing.Optional[jsii.Number] = None,
+    service: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__93e4935389b6728e8f45149f6b00b16fd2106ae7131b7ca759fef621931a1331(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9dc6c02b010319033ffb48e8371a953fcd29dd936900dec1f42f436a3505c684(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3afefa9b2310f5ee3a6a8d50d145c62c92e52f418442369deadd8d18108d61b4(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9f07dc3d60bbe4d17289943825f6bf9ad545fa7cd3af742127bf7dd623f76493(
+    value: typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeGrpc],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__648d2e2699f499f14a4816a067195b5c80fb1fcbdcff30ec051aa4a2dbf3e1e2(
+    *,
+    http_headers: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    path: typing.Optional[builtins.str] = None,
+    port: typing.Optional[jsii.Number] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e3e008acfc5bf6b83d78100c84fe48794226a5bb93e677b3a8e4cafd2b27717c(
+    *,
+    name: builtins.str,
+    value: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f29e4af90d00f09bb364c74d815ff73119a69a4cce9ce6dda5756e5d4f34704b(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e35332ef6301b6f8589852d38fb90ce0e44cf4dbcc9d7b4c605306f95123ec24(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e96dc57fb29fe0ca592fc856a35f203130e130d7ff02bd9c77d373e60156acb6(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__457a97251358721c323e8420dab941ede1240197331a20eb55cdbd7a4485ae5a(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__16198255a9df18315d520352e90dcafa6bce09c35c1ae3d26b63b78bc4e161fb(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__cbd3a1f918f45d47be7a7ce414cfb1cfc0581a92d9219799048998f4d9b34e4b(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0e91ffc046236a93fa7684607d8b3e46ac8edd24d0b5470504f2240aad0877c8(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fc802291b397cfeac9222d5abc245217ad18b6fab9ea0451c7e15a670dba9afc(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__00736a76baef53ec0c693e54b8a7a032455cdcad0a0bce244069817bd02c2279(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3698ad57bfad1fbbb20d354929b7ea5e52657b36330954403fd6addc33e0deb8(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3251c835b88a0753cbd4a51eee46477dcf2acf4b89a48ce64a51d01c8cc3c444(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7a43df340d16d1bac577202024191337f84e2f55f3dd19bc873405c468c305d1(
+    value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders, typing.Dict[builtins.str, typing.Any]]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6d8df33ad7eb4a94e55ecae41cd75b93d64ae34f7404f0cada71dd3abda69302(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__af3a8964fbd8fed096bb53ebf162454fbdf5d90775b560d260bd047d79a59424(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7e077058ed8557628f40289a0968daf86d55687153447551b407330557d6aadb(
+    value: typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__04423d527afc9391a104f47d239269fbf367d79c29f7bf22083a677fe1414636(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__bd9a754b1bca5b0d2eba0c3e72d60c837962751cab43e5276b5aac767e57eff1(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__92fd9c11384173a943635b1aa45676e47504de9cb7c4e38515a9399666d1bf62(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1c284b74c7993ab998e43a3ba3725108c39b585b2e429e2ffac510e9beb58b3a(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__31aabc8c1a87045516352d551f139595a3cfd8389c1119401693758e7f16c51f(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__530c4d14c3493071d00a5a546af06fa6347a123b34e9a6cc47ffd0e0fa01458a(
+    value: typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbe],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__549568f1cc4d7e0519d04283b2c8d52ff913df023ba08cf0f598f439f718ee59(
+    *,
+    port: typing.Optional[jsii.Number] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4e5e8fa5936618f80d98178f08146648cb1abcee5cfbb758d10c422ac7690168(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c712f94bfc8649f14a71f336bccb9a79a342a7d9106f3be21817d40d1bcca2f2(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d28fa174e2ea71a7dd2a354b629a89091d6a9802e1d32c1b254d345cdfcc0000(
+    value: typing.Optional[CloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket],
 ) -> None:
     """Type checking stubs"""
     pass

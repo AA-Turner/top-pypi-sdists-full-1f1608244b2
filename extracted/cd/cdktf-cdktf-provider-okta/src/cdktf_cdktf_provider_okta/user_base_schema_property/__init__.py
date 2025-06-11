@@ -1,7 +1,7 @@
 r'''
 # `okta_user_base_schema_property`
 
-Refer to the Terraform Registry for docs: [`okta_user_base_schema_property`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property).
+Refer to the Terraform Registry for docs: [`okta_user_base_schema_property`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class UserBaseSchemaProperty(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.userBaseSchemaProperty.UserBaseSchemaProperty",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property okta_user_base_schema_property}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property okta_user_base_schema_property}.'''
 
     def __init__(
         self,
@@ -68,19 +68,19 @@ class UserBaseSchemaProperty(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property okta_user_base_schema_property} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property okta_user_base_schema_property} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#index UserBaseSchemaProperty#index}
-        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#title UserBaseSchemaProperty#title}
-        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#type UserBaseSchemaProperty#type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#id UserBaseSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param master: Master priority for the user schema property. It can be set to ``PROFILE_MASTER`` or ``OKTA``. Default: ``PROFILE_MASTER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#master UserBaseSchemaProperty#master}
-        :param pattern: The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#pattern UserBaseSchemaProperty#pattern}
-        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#permissions UserBaseSchemaProperty#permissions}
-        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#required UserBaseSchemaProperty#required}
-        :param user_type: User type ID. By default, it is ``default``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#user_type UserBaseSchemaProperty#user_type}
+        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#index UserBaseSchemaProperty#index}
+        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#title UserBaseSchemaProperty#title}
+        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#type UserBaseSchemaProperty#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#id UserBaseSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param master: Master priority for the user schema property. It can be set to ``PROFILE_MASTER`` or ``OKTA``. Default: ``PROFILE_MASTER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#master UserBaseSchemaProperty#master}
+        :param pattern: The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#pattern UserBaseSchemaProperty#pattern}
+        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#permissions UserBaseSchemaProperty#permissions}
+        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#required UserBaseSchemaProperty#required}
+        :param user_type: User type ID. By default, it is ``default``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#user_type UserBaseSchemaProperty#user_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -127,7 +127,7 @@ class UserBaseSchemaProperty(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the UserBaseSchemaProperty to import.
-        :param import_from_id: The id of the existing UserBaseSchemaProperty that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing UserBaseSchemaProperty that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the UserBaseSchemaProperty to import is found.
         '''
         if __debug__:
@@ -385,15 +385,15 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#index UserBaseSchemaProperty#index}
-        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#title UserBaseSchemaProperty#title}
-        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#type UserBaseSchemaProperty#type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#id UserBaseSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param master: Master priority for the user schema property. It can be set to ``PROFILE_MASTER`` or ``OKTA``. Default: ``PROFILE_MASTER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#master UserBaseSchemaProperty#master}
-        :param pattern: The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#pattern UserBaseSchemaProperty#pattern}
-        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#permissions UserBaseSchemaProperty#permissions}
-        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#required UserBaseSchemaProperty#required}
-        :param user_type: User type ID. By default, it is ``default``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#user_type UserBaseSchemaProperty#user_type}
+        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#index UserBaseSchemaProperty#index}
+        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#title UserBaseSchemaProperty#title}
+        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#type UserBaseSchemaProperty#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#id UserBaseSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param master: Master priority for the user schema property. It can be set to ``PROFILE_MASTER`` or ``OKTA``. Default: ``PROFILE_MASTER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#master UserBaseSchemaProperty#master}
+        :param pattern: The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#pattern UserBaseSchemaProperty#pattern}
+        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#permissions UserBaseSchemaProperty#permissions}
+        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#required UserBaseSchemaProperty#required}
+        :param user_type: User type ID. By default, it is ``default``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#user_type UserBaseSchemaProperty#user_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -515,7 +515,7 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def index(self) -> builtins.str:
         '''Subschema unique string identifier.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#index UserBaseSchemaProperty#index}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#index UserBaseSchemaProperty#index}
         '''
         result = self._values.get("index")
         assert result is not None, "Required property 'index' is missing"
@@ -525,7 +525,7 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def title(self) -> builtins.str:
         '''Subschema title (display name).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#title UserBaseSchemaProperty#title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#title UserBaseSchemaProperty#title}
         '''
         result = self._values.get("title")
         assert result is not None, "Required property 'title' is missing"
@@ -535,7 +535,7 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#type UserBaseSchemaProperty#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#type UserBaseSchemaProperty#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -543,7 +543,7 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#id UserBaseSchemaProperty#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#id UserBaseSchemaProperty#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -555,7 +555,7 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def master(self) -> typing.Optional[builtins.str]:
         '''Master priority for the user schema property. It can be set to ``PROFILE_MASTER`` or ``OKTA``. Default: ``PROFILE_MASTER``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#master UserBaseSchemaProperty#master}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#master UserBaseSchemaProperty#master}
         '''
         result = self._values.get("master")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -564,7 +564,7 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def pattern(self) -> typing.Optional[builtins.str]:
         '''The validation pattern to use for the subschema. Must be in form of '.+', or '[]+' if present.'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#pattern UserBaseSchemaProperty#pattern}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#pattern UserBaseSchemaProperty#pattern}
         '''
         result = self._values.get("pattern")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -573,7 +573,7 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def permissions(self) -> typing.Optional[builtins.str]:
         '''Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#permissions UserBaseSchemaProperty#permissions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#permissions UserBaseSchemaProperty#permissions}
         '''
         result = self._values.get("permissions")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -584,7 +584,7 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the subschema is required.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#required UserBaseSchemaProperty#required}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#required UserBaseSchemaProperty#required}
         '''
         result = self._values.get("required")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -593,7 +593,7 @@ class UserBaseSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_type(self) -> typing.Optional[builtins.str]:
         '''User type ID. By default, it is ``default``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_base_schema_property#user_type UserBaseSchemaProperty#user_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/user_base_schema_property#user_type UserBaseSchemaProperty#user_type}
         '''
         result = self._values.get("user_type")
         return typing.cast(typing.Optional[builtins.str], result)

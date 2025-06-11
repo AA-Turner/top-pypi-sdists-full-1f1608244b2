@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: label-studio
-Version: 1.18.0
+Version: 1.19.0
 Summary: Label Studio annotation tool
 License: Apache-2.0
 Author: HumanSignal
@@ -23,7 +23,7 @@ Requires-Dist: colorama (>=0.4.4)
 Requires-Dist: cryptography (>=44.0.1)
 Requires-Dist: defusedxml (>=0.7.1)
 Requires-Dist: django-annoying (==0.10.6)
-Requires-Dist: django-cors-headers (==3.6.0)
+Requires-Dist: django-cors-headers (==4.7.0)
 Requires-Dist: django-csp (==3.7)
 Requires-Dist: django-debug-toolbar (==3.2.1)
 Requires-Dist: django-environ (==0.10.0)
@@ -43,7 +43,7 @@ Requires-Dist: drf-generators (==0.3.0)
 Requires-Dist: google-cloud-logging (>=3.10.0,<4.0.0)
 Requires-Dist: google-cloud-storage (>=2.13.0,<3.0.0)
 Requires-Dist: humansignal-drf-yasg (>=1.21.10.post1)
-Requires-Dist: label-studio-sdk (==1.0.12)
+Requires-Dist: label-studio-sdk (==1.0.16)
 Requires-Dist: launchdarkly-server-sdk (==8.2.1)
 Requires-Dist: lockfile (>=0.12.0)
 Requires-Dist: lxml[html-clean] (>=4.9.4)
@@ -99,7 +99,7 @@ Have a custom dataset? You can customize Label Studio to fit your needs. Read an
 
 ## Try out Label Studio
 
-Install Label Studio locally, or deploy it in a cloud instance. [Or, sign up for a free trial of our Enterprise edition.](https://humansignal.com/free-trial).
+Install Label Studio locally or deploy it in a cloud instance. [Or sign up for a free trial of our Starter Cloud edition!](https://humansignal.com/platform/starter-cloud/) You can learn more about what each edition offers [here](https://labelstud.io/guide/label_studio_compare). 
 
 - [Install locally with Docker](#install-locally-with-docker)
 - [Run with Docker Compose (Label Studio + Nginx + PostgreSQL)](#run-with-docker-compose)

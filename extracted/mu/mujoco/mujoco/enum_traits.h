@@ -107,6 +107,16 @@ struct mjtCamLight {
     std::make_pair("mjCAMLIGHT_TARGETBODYCOM", ::mjtCamLight::mjCAMLIGHT_TARGETBODYCOM)};
 };
 
+struct mjtLightType {
+  static constexpr char name[] = "mjtLightType";
+  using type = ::mjtLightType;
+  static constexpr auto values = std::array{
+    std::make_pair("mjLIGHT_SPOT", ::mjtLightType::mjLIGHT_SPOT),
+    std::make_pair("mjLIGHT_DIRECTIONAL", ::mjtLightType::mjLIGHT_DIRECTIONAL),
+    std::make_pair("mjLIGHT_POINT", ::mjtLightType::mjLIGHT_POINT),
+    std::make_pair("mjLIGHT_IMAGE", ::mjtLightType::mjLIGHT_IMAGE)};
+};
+
 struct mjtTexture {
   static constexpr char name[] = "mjtTexture";
   using type = ::mjtTexture;
@@ -131,6 +141,15 @@ struct mjtTextureRole {
     std::make_pair("mjTEXROLE_RGBA", ::mjtTextureRole::mjTEXROLE_RGBA),
     std::make_pair("mjTEXROLE_ORM", ::mjtTextureRole::mjTEXROLE_ORM),
     std::make_pair("mjNTEXROLE", ::mjtTextureRole::mjNTEXROLE)};
+};
+
+struct mjtColorSpace {
+  static constexpr char name[] = "mjtColorSpace";
+  using type = ::mjtColorSpace;
+  static constexpr auto values = std::array{
+    std::make_pair("mjCOLORSPACE_AUTO", ::mjtColorSpace::mjCOLORSPACE_AUTO),
+    std::make_pair("mjCOLORSPACE_LINEAR", ::mjtColorSpace::mjCOLORSPACE_LINEAR),
+    std::make_pair("mjCOLORSPACE_SRGB", ::mjtColorSpace::mjCOLORSPACE_SRGB)};
 };
 
 struct mjtIntegrator {
@@ -401,6 +420,16 @@ struct mjtFlexSelf {
     std::make_pair("mjFLEXSELF_BVH", ::mjtFlexSelf::mjFLEXSELF_BVH),
     std::make_pair("mjFLEXSELF_SAP", ::mjtFlexSelf::mjFLEXSELF_SAP),
     std::make_pair("mjFLEXSELF_AUTO", ::mjtFlexSelf::mjFLEXSELF_AUTO)};
+};
+
+struct mjtSDFType {
+  static constexpr char name[] = "mjtSDFType";
+  using type = ::mjtSDFType;
+  static constexpr auto values = std::array{
+    std::make_pair("mjSDFTYPE_SINGLE", ::mjtSDFType::mjSDFTYPE_SINGLE),
+    std::make_pair("mjSDFTYPE_INTERSECTION", ::mjtSDFType::mjSDFTYPE_INTERSECTION),
+    std::make_pair("mjSDFTYPE_MIDSURFACE", ::mjtSDFType::mjSDFTYPE_MIDSURFACE),
+    std::make_pair("mjSDFTYPE_COLLISION", ::mjtSDFType::mjSDFTYPE_COLLISION)};
 };
 
 struct mjtTaskStatus {
@@ -818,8 +847,10 @@ static constexpr auto kAllEnums = std::make_tuple(
     mjtJoint{},
     mjtGeom{},
     mjtCamLight{},
+    mjtLightType{},
     mjtTexture{},
     mjtTextureRole{},
+    mjtColorSpace{},
     mjtIntegrator{},
     mjtCone{},
     mjtJacobian{},
@@ -839,6 +870,7 @@ static constexpr auto kAllEnums = std::make_tuple(
     mjtSameFrame{},
     mjtLRMode{},
     mjtFlexSelf{},
+    mjtSDFType{},
     mjtTaskStatus{},
     mjtState{},
     mjtWarning{},

@@ -1,7 +1,7 @@
 r'''
 # `okta_event_hook`
 
-Refer to the Terraform Registry for docs: [`okta_event_hook`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook).
+Refer to the Terraform Registry for docs: [`okta_event_hook`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class EventHook(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.eventHook.EventHook",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook okta_event_hook}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook okta_event_hook}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class EventHook(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook okta_event_hook} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook okta_event_hook} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param channel: Details of the endpoint the event hook will hit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#channel EventHook#channel}
-        :param events: The events that will be delivered to this hook. `See here for a list of supported events <https://developer.okta.com/docs/reference/api/event-types/?q=event-hook-eligible>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#events EventHook#events}
-        :param name: The event hook display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#name EventHook#name}
-        :param auth: Details of the endpoint the event hook will hit. - 'version' - (Required) The version of the channel. The currently-supported version is '1.0.0'. - 'uri' - (Required) The URI the hook will hit. - 'type' - (Optional) The type of hook to trigger. Currently, the only supported type is 'HTTP'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#auth EventHook#auth}
-        :param headers: headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#headers EventHook#headers}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#id EventHook#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#status EventHook#status}
+        :param channel: Details of the endpoint the event hook will hit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#channel EventHook#channel}
+        :param events: The events that will be delivered to this hook. `See here for a list of supported events <https://developer.okta.com/docs/reference/api/event-types/?q=event-hook-eligible>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#events EventHook#events}
+        :param name: The event hook display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#name EventHook#name}
+        :param auth: Details of the endpoint the event hook will hit. - 'version' - (Required) The version of the channel. The currently-supported version is '1.0.0'. - 'uri' - (Required) The URI the hook will hit. - 'type' - (Optional) The type of hook to trigger. Currently, the only supported type is 'HTTP'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#auth EventHook#auth}
+        :param headers: headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#headers EventHook#headers}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#id EventHook#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#status EventHook#status}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class EventHook(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the EventHook to import.
-        :param import_from_id: The id of the existing EventHook that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing EventHook that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the EventHook to import is found.
         '''
         if __debug__:
@@ -338,13 +338,13 @@ class EventHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param channel: Details of the endpoint the event hook will hit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#channel EventHook#channel}
-        :param events: The events that will be delivered to this hook. `See here for a list of supported events <https://developer.okta.com/docs/reference/api/event-types/?q=event-hook-eligible>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#events EventHook#events}
-        :param name: The event hook display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#name EventHook#name}
-        :param auth: Details of the endpoint the event hook will hit. - 'version' - (Required) The version of the channel. The currently-supported version is '1.0.0'. - 'uri' - (Required) The URI the hook will hit. - 'type' - (Optional) The type of hook to trigger. Currently, the only supported type is 'HTTP'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#auth EventHook#auth}
-        :param headers: headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#headers EventHook#headers}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#id EventHook#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#status EventHook#status}
+        :param channel: Details of the endpoint the event hook will hit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#channel EventHook#channel}
+        :param events: The events that will be delivered to this hook. `See here for a list of supported events <https://developer.okta.com/docs/reference/api/event-types/?q=event-hook-eligible>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#events EventHook#events}
+        :param name: The event hook display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#name EventHook#name}
+        :param auth: Details of the endpoint the event hook will hit. - 'version' - (Required) The version of the channel. The currently-supported version is '1.0.0'. - 'uri' - (Required) The URI the hook will hit. - 'type' - (Optional) The type of hook to trigger. Currently, the only supported type is 'HTTP'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#auth EventHook#auth}
+        :param headers: headers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#headers EventHook#headers}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#id EventHook#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#status EventHook#status}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -460,7 +460,7 @@ class EventHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def channel(self) -> typing.Mapping[builtins.str, builtins.str]:
         '''Details of the endpoint the event hook will hit.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#channel EventHook#channel}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#channel EventHook#channel}
         '''
         result = self._values.get("channel")
         assert result is not None, "Required property 'channel' is missing"
@@ -470,7 +470,7 @@ class EventHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def events(self) -> typing.List[builtins.str]:
         '''The events that will be delivered to this hook. `See here for a list of supported events <https://developer.okta.com/docs/reference/api/event-types/?q=event-hook-eligible>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#events EventHook#events}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#events EventHook#events}
         '''
         result = self._values.get("events")
         assert result is not None, "Required property 'events' is missing"
@@ -480,7 +480,7 @@ class EventHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The event hook display name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#name EventHook#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#name EventHook#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -495,7 +495,7 @@ class EventHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
           - 'uri' - (Required) The URI the hook will hit.
           - 'type' - (Optional) The type of hook to trigger. Currently, the only supported type is 'HTTP'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#auth EventHook#auth}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#auth EventHook#auth}
         '''
         result = self._values.get("auth")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -506,14 +506,14 @@ class EventHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["EventHookHeaders"]]]:
         '''headers block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#headers EventHook#headers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#headers EventHook#headers}
         '''
         result = self._values.get("headers")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["EventHookHeaders"]]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#id EventHook#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#id EventHook#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -525,7 +525,7 @@ class EventHookConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Default to ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#status EventHook#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#status EventHook#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -555,8 +555,8 @@ class EventHookHeaders:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#key EventHook#key}.
-        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#value EventHook#value}.
+        :param key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#key EventHook#key}.
+        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#value EventHook#value}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__efa9d479dc1762b391b28a0fa5062cc5886e5b73c17af49736b2bc824876ef10)
@@ -570,13 +570,13 @@ class EventHookHeaders:
 
     @builtins.property
     def key(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#key EventHook#key}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#key EventHook#key}.'''
         result = self._values.get("key")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def value(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/event_hook#value EventHook#value}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/event_hook#value EventHook#value}.'''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
 

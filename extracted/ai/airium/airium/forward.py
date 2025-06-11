@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from types import TracebackType
-from typing import List, Optional, Type
+from typing import TYPE_CHECKING, List, Optional, Type
 
 
 @dataclass
@@ -24,11 +24,11 @@ class Airium:
         self.flush_()
         self.append(text_str)
 
-    def __getattr__(self, tag_name: str) -> Type['Tag']:
+    def __getattr__(self, tag_name: str) -> Type['TagProtocol']:
         self.flush_()
         return self.get_tag_(tag_name)
 
-    def get_tag_(self, tag_name: str) -> Type['Tag']:
+    def get_tag_(self, tag_name: str) -> Type['TagProtocol']:
         doc = self  # avoid local name aliasing
         tag_name = Tag.TAG_NAME_SUBSTITUTES.get(tag_name, tag_name)  # e.g. 'del'
 
@@ -37,7 +37,7 @@ class Airium:
             class SingleTag(Tag):
                 """E.g. '<img src="src.png" alt="alt text" />"""
 
-                def __init__(self, *p: str, _t: str = None, **k: str):
+                def __init__(self, *p: str, _t: Optional[str] = None, **k: str):
                     super().__init__(tag_name, doc)
                     self.root.append(f'<{self.tag_name}{self._make_xml_args(*p, **k)} />{_t or ""}')
 
@@ -52,7 +52,7 @@ class Airium:
                 ) -> None:  # pragma: no cover
                     """Cannot ever run exit since enter raises."""
 
-                def __getattr__(self, tag_name: str) -> Type['Tag']:
+                def __getattr__(self, tag_name: str) -> Type['TagProtocol']:
                     raise AttributeError(f"{self.tag_name!r} is a single tag, creating its children is forbidden.")
 
             SingleTag.__name__ += f'_{tag_name}'  # for debug reasons
@@ -62,7 +62,7 @@ class Airium:
             class PairedTag(Tag):
                 """E.g. '<div klass='panel'>...</div>"""
 
-                def __init__(self, *p: str, _t: str = None, **k: str):
+                def __init__(self, *p: str, _t: Optional[str] = None, **k: str):
                     super().__init__(tag_name, doc)
                     self.root.append(f'<{self.tag_name}{self._make_xml_args(*p, **k)}>{_t or ""}')
                     self.root._most_recent.append(self)
@@ -82,7 +82,7 @@ class Airium:
                     self.finalize()
                     assert self.root._most_recent.pop() is self
 
-                def __getattr__(self, tag_name: str) -> Type['Tag']:
+                def __getattr__(self, tag_name: str) -> Type['TagProtocol']:
                     """Chaining, e.g. ``a.ul().li().strong(_t='foo')``"""
                     return doc.get_tag_(tag_name)
 
@@ -171,6 +171,10 @@ class Tag:
             normalized_key = cls.ATTRIBUTE_NAME_SUBSTITUTES.get(key, key)
             normalized_value = cls.ATTRIBUTE_VALUE_SUBSTITUTES.get(value, value)
             normalized_value = cls.escape_quotes(normalized_value)
+
+            if key == 'title':
+                normalized_value = normalized_value.replace('\n', '&#10;')
+
             ret += ' {}="{}"'.format(normalized_key, normalized_value)
 
         return ret
@@ -222,3 +226,22 @@ class Tag:
         'False': 'false',
         'None': 'null',
     }
+
+
+if TYPE_CHECKING:
+    from typing import Protocol
+
+    class TagProtocol(Protocol):
+        def __init__(self, *p: str, _t: Optional[str] = None, **k: str): ...
+
+        def __enter__(self) -> None: ...
+
+        def __exit__(
+                self,
+                exc_type: Optional[Type[BaseException]],
+                exc_value: Optional[BaseException],
+                traceback: Optional[TracebackType],
+        ) -> None:
+            ...
+
+        def __getattr__(self, tag_name: str) -> Type['TagProtocol']: ...

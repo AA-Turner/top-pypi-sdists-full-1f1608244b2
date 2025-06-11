@@ -1,7 +1,7 @@
 r'''
 # `okta_link_value`
 
-Refer to the Terraform Registry for docs: [`okta_link_value`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value).
+Refer to the Terraform Registry for docs: [`okta_link_value`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class LinkValue(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.linkValue.LinkValue",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value okta_link_value}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value okta_link_value}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class LinkValue(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value okta_link_value} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value okta_link_value} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param primary_name: Name of the ``primary`` relationship being assigned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#primary_name LinkValue#primary_name}
-        :param primary_user_id: User ID to be assigned to ``primary`` for the 'associated' user in the specified relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#primary_user_id LinkValue#primary_user_id}
-        :param associated_user_ids: Set of User IDs or login values of the users to be assigned the ``associated`` relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#associated_user_ids LinkValue#associated_user_ids}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#id LinkValue#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param primary_name: Name of the ``primary`` relationship being assigned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#primary_name LinkValue#primary_name}
+        :param primary_user_id: User ID to be assigned to ``primary`` for the 'associated' user in the specified relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#primary_user_id LinkValue#primary_user_id}
+        :param associated_user_ids: Set of User IDs or login values of the users to be assigned the ``associated`` relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#associated_user_ids LinkValue#associated_user_ids}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#id LinkValue#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class LinkValue(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the LinkValue to import.
-        :param import_from_id: The id of the existing LinkValue that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing LinkValue that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the LinkValue to import is found.
         '''
         if __debug__:
@@ -254,10 +254,10 @@ class LinkValueConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param primary_name: Name of the ``primary`` relationship being assigned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#primary_name LinkValue#primary_name}
-        :param primary_user_id: User ID to be assigned to ``primary`` for the 'associated' user in the specified relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#primary_user_id LinkValue#primary_user_id}
-        :param associated_user_ids: Set of User IDs or login values of the users to be assigned the ``associated`` relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#associated_user_ids LinkValue#associated_user_ids}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#id LinkValue#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param primary_name: Name of the ``primary`` relationship being assigned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#primary_name LinkValue#primary_name}
+        :param primary_user_id: User ID to be assigned to ``primary`` for the 'associated' user in the specified relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#primary_user_id LinkValue#primary_user_id}
+        :param associated_user_ids: Set of User IDs or login values of the users to be assigned the ``associated`` relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#associated_user_ids LinkValue#associated_user_ids}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#id LinkValue#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -365,7 +365,7 @@ class LinkValueConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def primary_name(self) -> builtins.str:
         '''Name of the ``primary`` relationship being assigned.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#primary_name LinkValue#primary_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#primary_name LinkValue#primary_name}
         '''
         result = self._values.get("primary_name")
         assert result is not None, "Required property 'primary_name' is missing"
@@ -375,7 +375,7 @@ class LinkValueConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def primary_user_id(self) -> builtins.str:
         '''User ID to be assigned to ``primary`` for the 'associated' user in the specified relationship.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#primary_user_id LinkValue#primary_user_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#primary_user_id LinkValue#primary_user_id}
         '''
         result = self._values.get("primary_user_id")
         assert result is not None, "Required property 'primary_user_id' is missing"
@@ -385,14 +385,14 @@ class LinkValueConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def associated_user_ids(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Set of User IDs or login values of the users to be assigned the ``associated`` relationship.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#associated_user_ids LinkValue#associated_user_ids}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#associated_user_ids LinkValue#associated_user_ids}
         '''
         result = self._values.get("associated_user_ids")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_value#id LinkValue#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_value#id LinkValue#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

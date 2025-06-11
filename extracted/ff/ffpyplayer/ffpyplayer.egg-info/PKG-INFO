@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: ffpyplayer
-Version: 4.5.2
+Version: 4.5.3
 Summary: A cython implementation of an ffmpeg based player.
 Home-page: https://matham.github.io/ffpyplayer/
 Author: Matthew Einhorn
@@ -24,6 +24,14 @@ Classifier: Operating System :: POSIX :: BSD :: FreeBSD
 Classifier: Operating System :: POSIX :: Linux
 Classifier: Intended Audience :: Developers
 License-File: COPYING
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: summary
 
 FFPyPlayer is a python binding for the FFmpeg library for playing and writing
 media files.

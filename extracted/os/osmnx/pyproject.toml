@@ -1,6 +1,6 @@
 [build-system]
-build-backend = "hatchling.build"
-requires = ["hatchling"]
+build-backend = "uv_build"
+requires = ["uv_build"]
 
 [project]
 authors = [{ name = "Geoff Boeing", email = "boeing@usc.edu" }]
@@ -33,19 +33,35 @@ dependencies = [
   "shapely>=2.0",
 ]
 description = "Download, model, analyze, and visualize street networks and other geospatial features from OpenStreetMap"
-dynamic = ["version"]
 keywords = ["GIS", "Networks", "OpenStreetMap", "Routing"]
-license = { text = "MIT License" }
+license = "MIT"
+license-files = ["LICENSE.txt"]
 maintainers = [{ name = "OSMnx contributors" }]
 name = "osmnx"
 readme = "README.md"
 requires-python = ">=3.9" # match classifiers above and mypy version below
+version = "2.0.4"
 
 [project.optional-dependencies]
-entropy = ["scipy>=1.5"]
-neighbors = ["scikit-learn>=0.23", "scipy>=1.5"]
+entropy = ["scipy>=1.8"]
+neighbors = ["scikit-learn>=1.0", "scipy>=1.8"]
 raster = ["rasterio>=1.3", "rio-vrt>=0.3"]
 visualization = ["matplotlib>=3.5"]
+
+[dependency-groups]
+dev = [
+  "furo",
+  "lxml",
+  "pre-commit",
+  "pytest",
+  "pytest-cov",
+  "pytest-xdist",
+  "sphinx-autodoc-typehints",
+  "sphinx>=7",
+  "twine",
+  "typeguard",
+  "validate-pyproject",
+]
 
 [project.urls]
 Documentation = "https://osmnx.readthedocs.io"
@@ -54,12 +70,6 @@ Documentation = "https://osmnx.readthedocs.io"
 
 [tool.coverage.report]
 exclude_also = ["@overload", "if TYPE_CHECKING:"]
-
-[tool.hatch.build]
-packages = ["osmnx"]
-
-[tool.hatch.version]
-path = "osmnx/_version.py"
 
 [tool.mypy]
 cache_dir = "~/.cache/pre-commit/mypy"
@@ -95,3 +105,9 @@ convention = "numpy"
 
 [tool.ruff.lint.pylint]
 max-args = 8
+
+[tool.uv]
+required-version = "==0.7.12" # match version in environments/docker/install.sh
+
+[tool.uv.build-backend]
+module-root = ""

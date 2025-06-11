@@ -9,7 +9,7 @@ import schemathesis
 
 @pytest.fixture
 def schema(open_api_3_schema_with_recoverable_errors):
-    return schemathesis.from_dict(open_api_3_schema_with_recoverable_errors)
+    return schemathesis.openapi.from_dict(open_api_3_schema_with_recoverable_errors)
 
 
 EXPECTED_OUTPUT_LINES = [
@@ -20,7 +20,7 @@ EXPECTED_OUTPUT_LINES = [
     # Operation-level error
     r".*test_\[POST /bar\] FAILED",
     # The error in both failing cases
-    ".*OperationSchemaError: Unresolvable JSON pointer in the schema.*",
+    ".*InvalidSchema: Unresolvable JSON pointer in the schema.*",
 ]
 
 
@@ -41,10 +41,10 @@ def test_(case):
     result.stdout.re_match_lines(EXPECTED_OUTPUT_LINES)
 
 
-def test_in_pytest_subtests(testdir, is_older_subtests, open_api_3_schema_with_recoverable_errors):
+def test_in_pytest_subtests(testdir, open_api_3_schema_with_recoverable_errors):
     testdir.make_test(
         """
-lazy_schema = schemathesis.from_pytest_fixture("simple_schema")
+lazy_schema = schemathesis.pytest.from_fixture("simple_schema")
 
 @lazy_schema.parametrize()
 @settings(max_examples=1)
@@ -57,38 +57,24 @@ def test_(case):
     # Then valid operation should be tested
     # And errors on the single operation error should be displayed
     result.assert_outcomes(passed=1, failed=2)
-    if is_older_subtests.below_0_6_0:
-        expected = EXPECTED_OUTPUT_LINES
-    elif is_older_subtests.below_0_11_0:
-        expected = [
-            # Path-level error. no method is displayed
-            r".*test_\[/foo\] SUBFAIL",
-            # Valid operation
-            r".*test_\[GET /bar\] SUBPASS",
-            # Operation-level error
-            r".*test_\[POST /bar\] SUBFAIL",
-            # The error in both failing cases
-            ".*Unresolvable JSON pointer in the schema.*",
-        ]
-    else:
-        expected = [
+    result.stdout.re_match_lines(
+        [
             # Path-level error. no method is displayed
             r".*test_\[/foo\] \(path='/foo'\) SUBFAIL",
             # Valid operation
-            r".*test_\[GET /bar\] \(verbose_name='GET /bar'\) SUBPASS",
+            r".*test_\[GET /bar\] \(label='GET /bar'\) SUBPASS",
             # Operation-level error
             r".*test_\[POST /bar\] \(method='POST', path='/bar'\) SUBFAIL",
             # The error in both failing cases
             ".*Unresolvable JSON pointer in the schema.*",
         ]
-
-    result.stdout.re_match_lines(expected)
+    )
 
 
 def test_jsonschema_error(testdir, openapi_3_schema_with_invalid_security):
     testdir.make_test(
         """
-lazy_schema = schemathesis.from_pytest_fixture("simple_schema")
+lazy_schema = schemathesis.pytest.from_fixture("simple_schema")
 
 @lazy_schema.parametrize()
 @settings(max_examples=1)
@@ -96,7 +82,6 @@ def test_(case):
     pass
     """,
         schema=openapi_3_schema_with_invalid_security,
-        validate_schema=False,
     )
     result = testdir.runpytest()
     # Then valid operation should be tested
@@ -104,18 +89,21 @@ def test_(case):
     result.assert_outcomes(passed=1, failed=1)
     result.stdout.re_match_lines(
         [
-            ".*OperationSchemaError: Invalid `bearerAuth` definition.*",
+            ".*InvalidSchema: Invalid `bearerAuth` definition.*",
             ".*Ensure that the definition complies with the OpenAPI specification.*",
         ]
     )
 
 
 @pytest.mark.parametrize("workers", [1, 2])
-def test_in_cli(ctx, cli, open_api_3_schema_with_recoverable_errors, workers, snapshot_cli):
+def test_in_cli(ctx, cli, open_api_3_schema_with_recoverable_errors, workers, openapi3_base_url, snapshot_cli):
     schema_path = ctx.makefile(open_api_3_schema_with_recoverable_errors)
     # Then valid operation should be tested
     # And errors on the single operation error should be displayed
-    assert cli.run(str(schema_path), "--dry-run", f"--workers={workers}") == snapshot_cli
+    assert (
+        cli.run(str(schema_path), f"--workers={workers}", f"--url={openapi3_base_url}", "-c not_a_server_error")
+        == snapshot_cli
+    )
 
 
 def test_direct_access(schema):

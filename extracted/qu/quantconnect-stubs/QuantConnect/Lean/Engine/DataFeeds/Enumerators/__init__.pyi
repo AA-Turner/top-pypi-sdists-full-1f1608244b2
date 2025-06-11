@@ -179,6 +179,15 @@ class FillForwardEnumerator(System.Object, System.Collections.Generic.IEnumerato
     """
 
     @property
+    def use_strict_end_time(self) -> bool:
+        """
+        Whether to use strict daily end times
+        
+        This property is protected.
+        """
+        ...
+
+    @property
     def exchange(self) -> QuantConnect.Securities.SecurityExchange:
         """
         The exchange used to determine when to insert fill forward data

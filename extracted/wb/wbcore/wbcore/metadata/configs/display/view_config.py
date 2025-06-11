@@ -53,13 +53,9 @@ class DisplayViewConfig(WBCoreViewConfig):
         if window := self.get_window():
             display["window"] = window.serialize()
 
-        # We get the path from the header (if it exists, only for nested tables inside forms) and then join it
-        # with the current display identifier. If there is an applied preset for this user - we return it.
-        path = self.request.META.get("HTTP_WB_DISPLAY_IDENTIFIER", None)
-        display_identifier = self.view.display_identifier_config_class(
+        display_identifier_path = self.view.display_identifier_config_class(
             self.view, self.request, self.instance
-        ).get_display_identifier()
-        display_identifier_path = ".".join(filter(lambda element: element is not None, [path, display_identifier]))
+        ).display_identifier_path()
 
         with suppress(AppliedPreset.DoesNotExist):
             display["preset"] = AppliedPreset.objects.get(
@@ -73,11 +69,17 @@ class DisplayIdentifierViewConfig(WBCoreViewConfig):
     metadata_key = "display_identifier"
     config_class_attribute = "display_identifier_config_class"
 
-    def get_display_identifier(self) -> str:
+    def display_identifier_path(self) -> str:
         display = self.view.display_config_class
         slugified_display_module = slugify(display.__module__.replace(".", "-"))
         slugified_display_class = slugify(display.__name__)
-        return f"{slugified_display_module}-{slugified_display_class}"
+        display_identifier_path = f"{slugified_display_module}-{slugified_display_class}"
+
+        # We get the path from the header (if it exists, only for nested tables inside forms) and then join it
+        # with the current display identifier. If there is an applied preset for this user - we return it.
+        if inline_path := self.request.META.get("HTTP_WB_DISPLAY_IDENTIFIER", None):
+            display_identifier_path = f"{inline_path}.{display_identifier_path}"
+        return display_identifier_path
 
     def get_metadata(self):
-        return self.get_display_identifier()
+        return self.display_identifier_path()

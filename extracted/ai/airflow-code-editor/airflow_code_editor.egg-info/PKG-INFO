@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: airflow-code-editor
-Version: 8.0.0
+Version: 8.0.1
 Summary: Apache Airflow code editor and file manager
 Home-page: https://github.com/andreax79/airflow-code-editor
 Author: Andrea Bonomi

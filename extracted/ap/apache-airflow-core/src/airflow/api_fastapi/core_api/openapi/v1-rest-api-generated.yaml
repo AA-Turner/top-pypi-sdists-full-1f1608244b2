@@ -2844,14 +2844,6 @@ paths:
           - type: boolean
           - type: 'null'
           title: Paused
-      - name: last_dag_run_state
-        in: query
-        required: false
-        schema:
-          anyOf:
-          - $ref: '#/components/schemas/DagRunState'
-          - type: 'null'
-          title: Last Dag Run State
       requestBody:
         required: true
         content:
@@ -4484,8 +4476,9 @@ paths:
         in: query
         required: false
         schema:
-          type: integer
-          default: -1
+          anyOf:
+          - type: integer
+          - type: 'null'
           title: Map Index
       - name: update_mask
         in: query
@@ -4509,7 +4502,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TaskInstanceResponse'
+                $ref: '#/components/schemas/TaskInstanceCollectionResponse'
         '401':
           content:
             application/json:
@@ -4780,7 +4773,7 @@ paths:
       - Task Instance
       summary: Get Task Instance Dependencies
       description: Get dependencies blocking task from getting scheduled.
-      operationId: get_task_instance_dependencies
+      operationId: get_task_instance_dependencies_by_map_index
       security:
       - OAuth2PasswordBearer: []
       parameters:
@@ -5105,7 +5098,7 @@ paths:
       - Task Instance
       summary: Patch Task Instance
       description: Update a task instance.
-      operationId: patch_task_instance
+      operationId: patch_task_instance_by_map_index
       security:
       - OAuth2PasswordBearer: []
       parameters:
@@ -5131,7 +5124,9 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
+          anyOf:
+          - type: integer
+          - type: 'null'
           title: Map Index
       - name: update_mask
         in: query
@@ -5155,7 +5150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TaskInstanceResponse'
+                $ref: '#/components/schemas/TaskInstanceCollectionResponse'
         '401':
           content:
             application/json:
@@ -5698,7 +5693,7 @@ paths:
       - Task Instance
       summary: Patch Task Instance Dry Run
       description: Update a task instance dry_run mode.
-      operationId: patch_task_instance_dry_run
+      operationId: patch_task_instance_dry_run_by_map_index
       security:
       - OAuth2PasswordBearer: []
       parameters:
@@ -5724,7 +5719,9 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
+          anyOf:
+          - type: integer
+          - type: 'null'
           title: Map Index
       - name: update_mask
         in: query
@@ -5811,8 +5808,9 @@ paths:
         in: query
         required: false
         schema:
-          type: integer
-          default: -1
+          anyOf:
+          - type: integer
+          - type: 'null'
           title: Map Index
       - name: update_mask
         in: query
@@ -6356,7 +6354,7 @@ paths:
           type: string
           enum:
           - application/json
-          - text/plain
+          - application/x-ndjson
           - '*/*'
           default: '*/*'
           title: Accept
@@ -6367,10 +6365,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TaskInstancesLogResponse'
-            text/plain:
+            application/x-ndjson:
               schema:
                 type: string
-                example: 'content
+                example: '{"content": "content"}
+
+                  {"content": "content"}
 
                   '
         '401':
@@ -7112,14 +7112,6 @@ components:
       - status
       title: BaseInfoResponse
       description: Base info serializer for responses.
-    BulkAction:
-      type: string
-      enum:
-      - create
-      - delete
-      - update
-      title: BulkAction
-      description: Bulk Action to be performed on the used model.
     BulkActionNotOnExistence:
       type: string
       enum:
@@ -7213,7 +7205,9 @@ components:
     BulkCreateAction_ConnectionBody_:
       properties:
         action:
-          $ref: '#/components/schemas/BulkAction'
+          type: string
+          const: create
+          title: Action
           description: The action to be performed on the entities.
         entities:
           items:
@@ -7233,7 +7227,9 @@ components:
     BulkCreateAction_PoolBody_:
       properties:
         action:
-          $ref: '#/components/schemas/BulkAction'
+          type: string
+          const: create
+          title: Action
           description: The action to be performed on the entities.
         entities:
           items:
@@ -7253,7 +7249,9 @@ components:
     BulkCreateAction_VariableBody_:
       properties:
         action:
-          $ref: '#/components/schemas/BulkAction'
+          type: string
+          const: create
+          title: Action
           description: The action to be performed on the entities.
         entities:
           items:
@@ -7273,7 +7271,9 @@ components:
     BulkDeleteAction_ConnectionBody_:
       properties:
         action:
-          $ref: '#/components/schemas/BulkAction'
+          type: string
+          const: delete
+          title: Action
           description: The action to be performed on the entities.
         entities:
           items:
@@ -7293,7 +7293,9 @@ components:
     BulkDeleteAction_PoolBody_:
       properties:
         action:
-          $ref: '#/components/schemas/BulkAction'
+          type: string
+          const: delete
+          title: Action
           description: The action to be performed on the entities.
         entities:
           items:
@@ -7313,7 +7315,9 @@ components:
     BulkDeleteAction_VariableBody_:
       properties:
         action:
-          $ref: '#/components/schemas/BulkAction'
+          type: string
+          const: delete
+          title: Action
           description: The action to be performed on the entities.
         entities:
           items:
@@ -7366,7 +7370,9 @@ components:
     BulkUpdateAction_ConnectionBody_:
       properties:
         action:
-          $ref: '#/components/schemas/BulkAction'
+          type: string
+          const: update
+          title: Action
           description: The action to be performed on the entities.
         entities:
           items:
@@ -7386,7 +7392,9 @@ components:
     BulkUpdateAction_PoolBody_:
       properties:
         action:
-          $ref: '#/components/schemas/BulkAction'
+          type: string
+          const: update
+          title: Action
           description: The action to be performed on the entities.
         entities:
           items:
@@ -7406,7 +7414,9 @@ components:
     BulkUpdateAction_VariableBody_:
       properties:
         action:
-          $ref: '#/components/schemas/BulkAction'
+          type: string
+          const: update
+          title: Action
           description: The action to be performed on the entities.
         entities:
           items:
@@ -7887,6 +7897,13 @@ components:
             format: date-time
           - type: 'null'
           title: Last Parsed
+        owner_links:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Owner Links
         file_token:
           type: string
           title: File Token
@@ -8218,8 +8235,10 @@ components:
           - $ref: '#/components/schemas/DagRunTriggeredByType'
           - type: 'null'
         conf:
-          additionalProperties: true
-          type: object
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
           title: Conf
         note:
           anyOf:

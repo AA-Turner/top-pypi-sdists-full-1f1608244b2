@@ -106,6 +106,8 @@ import type {
   GetDagDetailsResponse,
   GetDagTagsData,
   GetDagTagsResponse,
+  RecentDagRunsData,
+  RecentDagRunsResponse,
   GetEventLogData,
   GetEventLogResponse,
   GetEventLogsData,
@@ -118,18 +120,18 @@ import type {
   PatchTaskInstanceResponse,
   GetMappedTaskInstancesData,
   GetMappedTaskInstancesResponse,
+  GetTaskInstanceDependenciesByMapIndexData,
+  GetTaskInstanceDependenciesByMapIndexResponse,
   GetTaskInstanceDependenciesData,
   GetTaskInstanceDependenciesResponse,
-  GetTaskInstanceDependencies1Data,
-  GetTaskInstanceDependencies1Response,
   GetTaskInstanceTriesData,
   GetTaskInstanceTriesResponse,
   GetMappedTaskInstanceTriesData,
   GetMappedTaskInstanceTriesResponse,
   GetMappedTaskInstanceData,
   GetMappedTaskInstanceResponse,
-  PatchTaskInstance1Data,
-  PatchTaskInstance1Response,
+  PatchTaskInstanceByMapIndexData,
+  PatchTaskInstanceByMapIndexResponse,
   GetTaskInstancesData,
   GetTaskInstancesResponse,
   GetTaskInstancesBatchData,
@@ -140,10 +142,10 @@ import type {
   GetMappedTaskInstanceTryDetailsResponse,
   PostClearTaskInstancesData,
   PostClearTaskInstancesResponse,
+  PatchTaskInstanceDryRunByMapIndexData,
+  PatchTaskInstanceDryRunByMapIndexResponse,
   PatchTaskInstanceDryRunData,
   PatchTaskInstanceDryRunResponse,
-  PatchTaskInstanceDryRun1Data,
-  PatchTaskInstanceDryRun1Response,
   GetLogData,
   GetLogResponse,
   GetImportErrorData,
@@ -205,8 +207,6 @@ import type {
   LogoutData,
   LogoutResponse,
   GetAuthMenusResponse,
-  RecentDagRunsData,
-  RecentDagRunsResponse,
   GetDependenciesData,
   GetDependenciesResponse,
   HistoricalMetricsData,
@@ -1570,7 +1570,6 @@ export class DagService {
    * @param data.dagIdPattern
    * @param data.excludeStale
    * @param data.paused
-   * @param data.lastDagRunState
    * @returns DAGCollectionResponse Successful Response
    * @throws ApiError
    */
@@ -1588,7 +1587,6 @@ export class DagService {
         dag_id_pattern: data.dagIdPattern,
         exclude_stale: data.excludeStale,
         paused: data.paused,
-        last_dag_run_state: data.lastDagRunState,
       },
       body: data.requestBody,
       mediaType: "application/json",
@@ -1733,6 +1731,49 @@ export class DagService {
       errors: {
         401: "Unauthorized",
         403: "Forbidden",
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Recent Dag Runs
+   * Get recent DAG runs.
+   * @param data The data for the request.
+   * @param data.dagRunsLimit
+   * @param data.limit
+   * @param data.offset
+   * @param data.tags
+   * @param data.tagsMatchMode
+   * @param data.owners
+   * @param data.dagIds
+   * @param data.dagIdPattern
+   * @param data.dagDisplayNamePattern
+   * @param data.excludeStale
+   * @param data.paused
+   * @param data.lastDagRunState
+   * @returns DAGWithLatestDagRunsCollectionResponse Successful Response
+   * @throws ApiError
+   */
+  public static recentDagRuns(data: RecentDagRunsData = {}): CancelablePromise<RecentDagRunsResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/ui/dags/recent_dag_runs",
+      query: {
+        dag_runs_limit: data.dagRunsLimit,
+        limit: data.limit,
+        offset: data.offset,
+        tags: data.tags,
+        tags_match_mode: data.tagsMatchMode,
+        owners: data.owners,
+        dag_ids: data.dagIds,
+        dag_id_pattern: data.dagIdPattern,
+        dag_display_name_pattern: data.dagDisplayNamePattern,
+        exclude_stale: data.excludeStale,
+        paused: data.paused,
+        last_dag_run_state: data.lastDagRunState,
+      },
+      errors: {
         422: "Validation Error",
       },
     });
@@ -1918,7 +1959,7 @@ export class TaskInstanceService {
    * @param data.requestBody
    * @param data.mapIndex
    * @param data.updateMask
-   * @returns TaskInstanceResponse Successful Response
+   * @returns TaskInstanceCollectionResponse Successful Response
    * @throws ApiError
    */
   public static patchTaskInstance(data: PatchTaskInstanceData): CancelablePromise<PatchTaskInstanceResponse> {
@@ -2030,9 +2071,9 @@ export class TaskInstanceService {
    * @returns TaskDependencyCollectionResponse Successful Response
    * @throws ApiError
    */
-  public static getTaskInstanceDependencies(
-    data: GetTaskInstanceDependenciesData,
-  ): CancelablePromise<GetTaskInstanceDependenciesResponse> {
+  public static getTaskInstanceDependenciesByMapIndex(
+    data: GetTaskInstanceDependenciesByMapIndexData,
+  ): CancelablePromise<GetTaskInstanceDependenciesByMapIndexResponse> {
     return __request(OpenAPI, {
       method: "GET",
       url: "/api/v2/dags/{dag_id}/dagRuns/{dag_run_id}/taskInstances/{task_id}/{map_index}/dependencies",
@@ -2062,9 +2103,9 @@ export class TaskInstanceService {
    * @returns TaskDependencyCollectionResponse Successful Response
    * @throws ApiError
    */
-  public static getTaskInstanceDependencies1(
-    data: GetTaskInstanceDependencies1Data,
-  ): CancelablePromise<GetTaskInstanceDependencies1Response> {
+  public static getTaskInstanceDependencies(
+    data: GetTaskInstanceDependenciesData,
+  ): CancelablePromise<GetTaskInstanceDependenciesResponse> {
     return __request(OpenAPI, {
       method: "GET",
       url: "/api/v2/dags/{dag_id}/dagRuns/{dag_run_id}/taskInstances/{task_id}/dependencies",
@@ -2192,12 +2233,12 @@ export class TaskInstanceService {
    * @param data.mapIndex
    * @param data.requestBody
    * @param data.updateMask
-   * @returns TaskInstanceResponse Successful Response
+   * @returns TaskInstanceCollectionResponse Successful Response
    * @throws ApiError
    */
-  public static patchTaskInstance1(
-    data: PatchTaskInstance1Data,
-  ): CancelablePromise<PatchTaskInstance1Response> {
+  public static patchTaskInstanceByMapIndex(
+    data: PatchTaskInstanceByMapIndexData,
+  ): CancelablePromise<PatchTaskInstanceByMapIndexResponse> {
     return __request(OpenAPI, {
       method: "PATCH",
       url: "/api/v2/dags/{dag_id}/dagRuns/{dag_run_id}/taskInstances/{task_id}/{map_index}",
@@ -2440,9 +2481,9 @@ export class TaskInstanceService {
    * @returns TaskInstanceCollectionResponse Successful Response
    * @throws ApiError
    */
-  public static patchTaskInstanceDryRun(
-    data: PatchTaskInstanceDryRunData,
-  ): CancelablePromise<PatchTaskInstanceDryRunResponse> {
+  public static patchTaskInstanceDryRunByMapIndex(
+    data: PatchTaskInstanceDryRunByMapIndexData,
+  ): CancelablePromise<PatchTaskInstanceDryRunByMapIndexResponse> {
     return __request(OpenAPI, {
       method: "PATCH",
       url: "/api/v2/dags/{dag_id}/dagRuns/{dag_run_id}/taskInstances/{task_id}/{map_index}/dry_run",
@@ -2480,9 +2521,9 @@ export class TaskInstanceService {
    * @returns TaskInstanceCollectionResponse Successful Response
    * @throws ApiError
    */
-  public static patchTaskInstanceDryRun1(
-    data: PatchTaskInstanceDryRun1Data,
-  ): CancelablePromise<PatchTaskInstanceDryRun1Response> {
+  public static patchTaskInstanceDryRun(
+    data: PatchTaskInstanceDryRunData,
+  ): CancelablePromise<PatchTaskInstanceDryRunResponse> {
     return __request(OpenAPI, {
       method: "PATCH",
       url: "/api/v2/dags/{dag_id}/dagRuns/{dag_run_id}/taskInstances/{task_id}/dry_run",
@@ -3403,51 +3444,6 @@ export class AuthLinksService {
     return __request(OpenAPI, {
       method: "GET",
       url: "/ui/auth/menus",
-    });
-  }
-}
-
-export class DagsService {
-  /**
-   * Recent Dag Runs
-   * Get recent DAG runs.
-   * @param data The data for the request.
-   * @param data.dagRunsLimit
-   * @param data.limit
-   * @param data.offset
-   * @param data.tags
-   * @param data.tagsMatchMode
-   * @param data.owners
-   * @param data.dagIds
-   * @param data.dagIdPattern
-   * @param data.dagDisplayNamePattern
-   * @param data.excludeStale
-   * @param data.paused
-   * @param data.lastDagRunState
-   * @returns DAGWithLatestDagRunsCollectionResponse Successful Response
-   * @throws ApiError
-   */
-  public static recentDagRuns(data: RecentDagRunsData = {}): CancelablePromise<RecentDagRunsResponse> {
-    return __request(OpenAPI, {
-      method: "GET",
-      url: "/ui/dags/recent_dag_runs",
-      query: {
-        dag_runs_limit: data.dagRunsLimit,
-        limit: data.limit,
-        offset: data.offset,
-        tags: data.tags,
-        tags_match_mode: data.tagsMatchMode,
-        owners: data.owners,
-        dag_ids: data.dagIds,
-        dag_id_pattern: data.dagIdPattern,
-        dag_display_name_pattern: data.dagDisplayNamePattern,
-        exclude_stale: data.excludeStale,
-        paused: data.paused,
-        last_dag_run_state: data.lastDagRunState,
-      },
-      errors: {
-        422: "Validation Error",
-      },
     });
   }
 }

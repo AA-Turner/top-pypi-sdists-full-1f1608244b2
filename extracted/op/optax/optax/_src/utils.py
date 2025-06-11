@@ -15,23 +15,20 @@
 """Utility functions for testing."""
 
 from collections.abc import Callable
+import contextlib
 import functools
 import inspect
 import operator
 from typing import Any, Optional, Sequence, Union
 
 import chex
-from etils import epy
 import jax
 import jax.numpy as jnp
-from optax import tree_utils as otu
+import jax.scipy.stats.norm as multivariate_normal
 from optax._src import base
 from optax._src import linear_algebra
 from optax._src import numerics
-
-
-with epy.lazy_imports():
-  import jax.scipy.stats.norm as multivariate_normal  # pylint: disable=g-import-not-at-top,ungrouped-imports
+import optax.tree
 
 
 def tile_second_to_last_dim(a: chex.Array) -> chex.Array:
@@ -49,13 +46,22 @@ def canonicalize_dtype(
   return dtype
 
 
+def canonicalize_key(key_or_seed: jax.Array | int) -> jax.Array:
+  """Canonicalize a random key or an int representing a seed to a random key."""
+  if (isinstance(key_or_seed, jax.Array) and jnp.issubdtype(
+      key_or_seed.dtype, jax.dtypes.prng_key
+  )):
+    return key_or_seed
+  return jax.random.key(key_or_seed)
+
+
 @functools.partial(
-    chex.warn_deprecated_function, replacement='optax.tree_utils.tree_cast'
+    chex.warn_deprecated_function, replacement='optax.tree.cast'
 )
 def cast_tree(
     tree: chex.ArrayTree, dtype: Optional[chex.ArrayDType]
 ) -> chex.ArrayTree:
-  return otu.tree_cast(tree, dtype)
+  return optax.tree.cast(tree, dtype)
 
 
 def set_diags(a: jax.Array, new_diags: chex.Array) -> chex.Array:
@@ -109,10 +115,10 @@ class MultiNormalDiagFromLogScale:
         self._mean.shape, self._scale.shape
     )
 
-  def sample(self, shape: Sequence[int], seed: chex.PRNGKey) -> chex.Array:
+  def sample(self, shape: Sequence[int], key: chex.PRNGKey) -> chex.Array:
     sample_shape = tuple(shape) + self._param_shape
     return (
-        jax.random.normal(seed, shape=sample_shape) * self._scale + self._mean
+        jax.random.normal(key, shape=sample_shape) * self._scale + self._mean
     )
 
   def log_prob(self, x: chex.Array) -> chex.Array:
@@ -171,10 +177,37 @@ def scale_gradient(inputs: chex.ArrayTree, scale: float) -> chex.ArrayTree:
   # Special case scales of 1. and 0. for more efficiency.
   if scale == 1.0:
     return inputs
-  elif scale == 0.0:
+  if scale == 0.0:
     return jax.lax.stop_gradient(inputs)
-  else:
-    return _scale_gradient(inputs, scale)
+  return _scale_gradient(inputs, scale)
+
+
+@contextlib.contextmanager
+def x64_precision(enable_x64_precision: bool = True):
+  """Context manager to temporarily enable x64 precision.
+
+  Args:
+    enable_x64_precision: Whether to enable or disable x64 precision within the
+      context.
+
+  Yields:
+    None
+
+  Examples:
+    >>> from optax._src.utils import x64_precision
+    >>> with x64_precision(enable_x64_precision=True):
+    ...   print(jnp.float64(1.0).dtype.name)
+    float64
+    >>> with x64_precision(enable_x64_precision=False):
+    ...   print(jnp.float64(1.0).dtype.name)
+    float32
+  """
+  old_config = jax.config.jax_enable_x64
+  try:
+    jax.config.update('jax_enable_x64', enable_x64_precision)
+    yield
+  finally:
+    jax.config.update('jax_enable_x64', old_config)
 
 
 def _extract_fns_kwargs(
@@ -288,8 +321,8 @@ def value_and_grad_from_state(
       state: base.OptState,
       **fn_kwargs: dict[str, Any],
   ):
-    value = otu.tree_get(state, 'value')
-    grad = otu.tree_get(state, 'grad')
+    value = optax.tree.get(state, 'value')
+    grad = optax.tree.get(state, 'grad')
     if (value is None) or (grad is None):
       raise ValueError(
           'Value or gradient not found in the state. '

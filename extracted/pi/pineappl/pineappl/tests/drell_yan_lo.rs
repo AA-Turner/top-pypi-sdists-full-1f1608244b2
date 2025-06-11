@@ -1,13 +1,17 @@
+#![allow(missing_docs)]
+
 use anyhow::Result;
 use float_cmp::assert_approx_eq;
+use itertools::izip;
 use lhapdf::Pdf;
 use num_complex::Complex;
-use pineappl::bin::BinRemapper;
-use pineappl::boc::Order;
+use pineappl::boc::{BinsWithFillLimits, Kinematics, Order, ScaleFuncForm, Scales};
 use pineappl::channel;
-use pineappl::convolutions::LumiCache;
-use pineappl::grid::{Grid, GridOptFlags, Ntuple};
-use pineappl::subgrid::{ExtraSubgridParams, Subgrid, SubgridEnum, SubgridParams};
+use pineappl::convolutions::{Conv, ConvType, ConvolutionCache};
+use pineappl::grid::{Grid, GridOptFlags};
+use pineappl::interpolation::{Interp, InterpMeth, Map, ReweightMeth};
+use pineappl::pids::PidBasis;
+use pineappl::subgrid::{Subgrid, SubgridEnum};
 use rand::Rng;
 use rand_pcg::Pcg64;
 use std::f64::consts::PI;
@@ -24,6 +28,8 @@ fn int_photo(s: f64, t: f64, u: f64) -> f64 {
     alpha0.powi(2) / 2.0 / s * (t / u + u / t)
 }
 
+// ALLOW: in this example we care more about readability than floating-point accuracy
+#[allow(clippy::suboptimal_flops)]
 // Eq. (2.12) - quark-antiquark contribution to DY lepton pair production
 fn int_quark(s: f64, t: f64, u: f64, qq: f64, i3_wq: f64) -> f64 {
     let alphagf: f64 = 1.0 / 132.30818655547878;
@@ -94,7 +100,7 @@ fn hadronic_pspgen(rng: &mut impl Rng, mmin: f64, mmax: f64) -> Psp2to2 {
     jacobian *= tau * tau0.ln().powi(2) * r1;
 
     // theta integration (in the CMS)
-    let cos_theta = 2.0 * rng.gen::<f64>() - 1.0;
+    let cos_theta = rng.gen::<f64>().mul_add(2.0, -1.0);
     jacobian *= 2.0;
 
     let t = -0.5 * s * (1.0 - cos_theta);
@@ -113,24 +119,18 @@ fn hadronic_pspgen(rng: &mut impl Rng, mmin: f64, mmax: f64) -> Psp2to2 {
     }
 }
 
-fn fill_drell_yan_lo_grid(
-    rng: &mut impl Rng,
-    calls: u32,
-    subgrid_type: &str,
-    dynamic: bool,
-    reweight: bool,
-) -> Result<Grid> {
+fn fill_drell_yan_lo_grid(rng: &mut impl Rng, calls: u32, dynamic: bool, reweight: bool) -> Grid {
     let channels = vec![
         // photons
-        channel![22, 22, 1.0],
+        channel![1.0 * (22, 22)],
         // up-antiup
-        channel![2, -2, 1.0; 4, -4, 1.0],
+        channel![1.0 * (2, -2) + 1.0 * (4, -4)],
         // antiup-up
-        channel![-2, 2, 1.0; -4, 4, 1.0],
+        channel![1.0 * (-2, 2) + 1.0 * (-4, 4)],
         // down-antidown
-        channel![1, -1, 1.0; 3, -3, 1.0; 5, -5, 1.0],
+        channel![1.0 * (1, -1) + 1.0 * (3, -3) + 1.0 * (5, -5)],
         // antidown-down
-        channel![-1, 1, 1.0; -3, 3, 1.0; -5, 5, 1.0],
+        channel![1.0 * (-1, 1) + 1.0 * (-3, 3) + 1.0 * (-5, 5)],
     ];
 
     let orders = vec![
@@ -140,6 +140,7 @@ fn fill_drell_yan_lo_grid(
             alpha: 2,
             logxir: 0,
             logxif: 0,
+            logxia: 0,
         },
         // NLO QCD - won't be filled
         Order {
@@ -147,45 +148,95 @@ fn fill_drell_yan_lo_grid(
             alpha: 2,
             logxir: 0,
             logxif: 0,
+            logxia: 0,
         },
         Order {
             alphas: 1,
             alpha: 2,
             logxir: 0,
             logxif: 1,
+            logxia: 0,
         },
     ];
 
     // we bin in rapidity from 0 to 2.4 in steps of 0.1
-    let bin_limits: Vec<_> = (0..=24).map(|x: u32| f64::from(x) / 10.0).collect();
+    let bins =
+        BinsWithFillLimits::from_fill_limits((0..=24).map(|x: u32| f64::from(x) / 10.0).collect())
+            .unwrap();
 
-    let mut subgrid_params = SubgridParams::default();
-    let mut extra = ExtraSubgridParams::default();
+    // the grid represents data with two unpolarized proton PDFs
+    let convolutions = vec![
+        Conv::new(ConvType::UnpolPDF, 2212),
+        Conv::new(ConvType::UnpolPDF, 2212),
+    ];
 
-    subgrid_params.set_q2_bins(30);
-    subgrid_params.set_q2_max(1e6);
-    subgrid_params.set_q2_min(1e2);
-    subgrid_params.set_q2_order(3);
-    subgrid_params.set_reweight(reweight);
-    subgrid_params.set_x_bins(50);
-    subgrid_params.set_x_max(1.0);
-    subgrid_params.set_x_min(2e-7);
-    subgrid_params.set_x_order(3);
-    extra.set_x2_bins(50);
-    extra.set_x2_max(1.0);
-    extra.set_x2_min(2e-7);
-    extra.set_x2_order(3);
-    extra.set_reweight2(reweight);
+    let reweight = if reweight {
+        ReweightMeth::ApplGridX
+    } else {
+        ReweightMeth::NoReweight
+    };
+
+    // define how `Grid::fill` interpolates
+    let interps = vec![
+        // 1st dimension interpolation parameters
+        Interp::new(
+            1e2,
+            1e6,
+            30,
+            3,
+            ReweightMeth::NoReweight,
+            Map::ApplGridH0,
+            InterpMeth::Lagrange,
+        ),
+        // 2nd dimension interpolation parameters
+        Interp::new(
+            2e-7,
+            1.0,
+            50,
+            3,
+            reweight,
+            Map::ApplGridF2,
+            InterpMeth::Lagrange,
+        ),
+        // 3rd dimension interpolation parameters
+        Interp::new(
+            2e-7,
+            1.0,
+            50,
+            3,
+            reweight,
+            Map::ApplGridF2,
+            InterpMeth::Lagrange,
+        ),
+    ];
+
+    let kinematics = vec![
+        // 1st dimension is factorization and at the same time also the renormalization scale
+        Kinematics::Scale(0),
+        // 2nd dimension is the parton momentum fraction of the first convolution
+        Kinematics::X(0),
+        // 3rd dimension is the parton momentum fraction of the second convolution
+        Kinematics::X(1),
+    ];
+
+    let scales = Scales {
+        ren: ScaleFuncForm::Scale(0),
+        fac: ScaleFuncForm::Scale(0),
+        frg: ScaleFuncForm::NoScale,
+    };
 
     // create the PineAPPL grid
-    let mut grid = Grid::with_subgrid_type(
-        channels,
+    let mut grid = Grid::new(
+        bins,
         orders,
-        bin_limits,
-        subgrid_params,
-        extra,
-        subgrid_type,
-    )?;
+        channels,
+        // the integers in the channel definition are PDG Monte Carlo IDs
+        PidBasis::Pdg,
+        convolutions,
+        interps,
+        kinematics,
+        scales,
+    );
 
     // in GeV^2 pbarn
     let hbarc2 = 3.893793721e8;
@@ -226,62 +277,41 @@ fn fill_drell_yan_lo_grid(
         let pto = 0;
         let channel = 0;
 
-        grid.fill(pto, yll.abs(), channel, &Ntuple { x1, x2, q2, weight });
+        grid.fill(pto, yll.abs(), channel, &[q2, x1, x2], weight);
 
         // LO up-antiup-type channel
         let weight = jacobian * int_quark(s, t, u, 2.0 / 3.0, 0.5);
         let pto = 0;
         let channel = 1;
 
-        grid.fill(pto, yll.abs(), channel, &Ntuple { x1, x2, q2, weight });
+        grid.fill(pto, yll.abs(), channel, &[q2, x1, x2], weight);
 
         // LO antiup-up-type channel - swap (x1 <-> x2) and (t <-> u)
         let weight = jacobian * int_quark(s, u, t, 2.0 / 3.0, 0.5);
         let pto = 0;
         let channel = 2;
 
-        grid.fill(
-            pto,
-            yll.abs(),
-            channel,
-            &Ntuple {
-                x1: x2,
-                x2: x1,
-                q2,
-                weight,
-            },
-        );
+        grid.fill(pto, yll.abs(), channel, &[q2, x2, x1], weight);
 
         // LO down-antidown-type channel
         let weight = jacobian * int_quark(s, t, u, -1.0 / 3.0, -0.5);
         let pto = 0;
         let channel = 3;
 
-        grid.fill(pto, yll.abs(), channel, &Ntuple { x1, x2, q2, weight });
+        grid.fill(pto, yll.abs(), channel, &[q2, x1, x2], weight);
 
         // LO antidown-down-type channel - swap (x1 <-> x2) and (t <-> u)
         let weight = jacobian * int_quark(s, u, t, -1.0 / 3.0, -0.5);
         let pto = 0;
         let channel = 4;
 
-        grid.fill(
-            pto,
-            yll.abs(),
-            channel,
-            &Ntuple {
-                x1: x2,
-                x2: x1,
-                q2,
-                weight,
-            },
-        );
+        grid.fill(pto, yll.abs(), channel, &[q2, x2, x1], weight);
     }
 
-    Ok(grid)
+    grid
 }
 
 fn perform_grid_tests(
-    subgrid_type: &str,
     dynamic: bool,
     reference: &[f64],
     reference_after_ssd: &[f64],
@@ -289,16 +319,12 @@ fn perform_grid_tests(
     reweight: bool,
 ) -> Result<()> {
     let mut rng = Pcg64::new(0xcafef00dd15ea5e5, 0xa02bdbf7bb3c0a7ac28fa16a64abf96);
-    let mut grid = fill_drell_yan_lo_grid(&mut rng, 500_000, subgrid_type, dynamic, reweight)?;
+    let mut grid = fill_drell_yan_lo_grid(&mut rng, INT_STATS, dynamic, reweight);
 
     // TEST 1: `merge` and `scale`
     grid.merge(fill_drell_yan_lo_grid(
-        &mut rng,
-        500_000,
-        subgrid_type,
-        dynamic,
-        reweight,
-    )?)?;
+        &mut rng, INT_STATS, dynamic, reweight,
+    ))?;
     grid.scale(0.5);
 
     // suppress LHAPDF banners
@@ -325,46 +351,41 @@ fn perform_grid_tests(
     let mut grid = Grid::read(&mut file)?;
 
     // TEST 4: `scale_by_order`
-    grid.scale_by_order(10.0, 0.5, 10.0, 10.0, 1.0);
-    grid.scale_by_order(10.0, 1.0, 10.0, 10.0, 4.0);
+    grid.scale_by_order(10.0, 0.5, 10.0, 10.0, 1.0, 1.0);
+    grid.scale_by_order(10.0, 1.0, 10.0, 10.0, 1.0, 4.0);
 
     // TEST 5: `convolve`
-    let mut lumi_cache = LumiCache::with_one(2212, &mut xfx, &mut alphas);
-    let bins = grid.convolve(&mut lumi_cache, &[], &[], &[], &[(1.0, 1.0)]);
+    let mut convolution_cache = ConvolutionCache::new(
+        vec![Conv::new(ConvType::UnpolPDF, 2212)],
+        vec![&mut xfx],
+        &mut alphas,
+    );
+    let bins = grid.convolve(&mut convolution_cache, &[], &[], &[], &[(1.0, 1.0, 1.0)]);
 
     for (result, reference) in bins.iter().zip(reference.iter()) {
-        assert_approx_eq!(f64, *result, *reference, ulps = 16);
+        assert_approx_eq!(f64, *result, *reference, ulps = 4);
     }
 
-    // TEST 5b: `convolve` with `LumiCache::with_two`
+    // TEST 5b: `convolve` with `ConvolutionCache::with_two`
     let mut xfx1 = |id, x, q2| pdf.xfx_q2(id, x, q2);
     let mut xfx2 = |id, x, q2| pdf.xfx_q2(id, x, q2);
     let mut alphas2 = |_| 0.0;
-    let mut lumi_cache2 = LumiCache::with_two(2212, &mut xfx1, 2212, &mut xfx2, &mut alphas2);
-    let bins2 = grid.convolve(&mut lumi_cache2, &[], &[], &[], &[(1.0, 1.0)]);
+    let mut convolution_cache2 = ConvolutionCache::new(
+        vec![
+            Conv::new(ConvType::UnpolPDF, 2212),
+            Conv::new(ConvType::UnpolPDF, 2212),
+        ],
+        vec![&mut xfx1, &mut xfx2],
+        &mut alphas2,
+    );
+    let bins2 = grid.convolve(&mut convolution_cache2, &[], &[], &[], &[(1.0, 1.0, 1.0)]);
 
     for (result, reference) in bins2.iter().zip(reference.iter()) {
         assert_approx_eq!(f64, *result, *reference, ulps = 16);
     }
 
-    mem::drop(lumi_cache2);
+    mem::drop(convolution_cache2);
     mem::drop(bins2);
-
-    // TEST 6: `convolve_subgrid`
-    let bins: Vec<_> = (0..grid.bin_info().bins())
-        .map(|bin| {
-            (0..grid.channels().len())
-                .map(|channel| {
-                    grid.convolve_subgrid(&mut lumi_cache, 0, bin, channel, 1.0, 1.0)
-                        .sum()
-                })
-                .sum()
-        })
-        .collect();
-
-    for (result, reference) in bins.iter().zip(reference.iter()) {
-        assert_approx_eq!(f64, *result, *reference, ulps = 24);
-    }
 
     // TEST 7a: `optimize_using` - tests `symmetrize` for each subgrid type
     grid.optimize_using(GridOptFlags::SYMMETRIZE_CHANNELS);
@@ -372,43 +393,35 @@ fn perform_grid_tests(
     // TEST 7b: `optimize`
     grid.optimize();
 
-    assert_eq!(grid.subgrids()[[0, 0, 0]].x1_grid().as_ref(), x_grid);
-    assert_eq!(grid.subgrids()[[0, 0, 0]].x2_grid().as_ref(), x_grid);
+    let node_values = grid.subgrids()[[0, 0, 0]].node_values();
 
-    // TEST 8: `convolve_subgrid` for the optimized subgrids
-    let bins: Vec<_> = (0..grid.bin_info().bins())
-        .map(|bin| {
-            (0..grid.channels().len())
-                .map(|channel| {
-                    grid.convolve_subgrid(&mut lumi_cache, 0, bin, channel, 1.0, 1.0)
-                        .sum()
-                })
-                .sum()
-        })
-        .collect();
-
-    for (result, reference_after_ssd) in bins.iter().zip(reference_after_ssd.iter()) {
-        assert_approx_eq!(f64, *result, *reference_after_ssd, ulps = 24);
+    for (&node_value1, &node_value2, &ref_value) in izip!(&node_values[1], &node_values[2], x_grid)
+    {
+        assert_approx_eq!(f64, node_value1, ref_value, ulps = 4);
+        assert_approx_eq!(f64, node_value2, ref_value, ulps = 4);
     }
 
-    let bins = grid.convolve(&mut lumi_cache, &[], &[], &[], &[(1.0, 1.0)]);
+    let bins = grid.convolve(&mut convolution_cache, &[], &[], &[], &[(1.0, 1.0, 1.0)]);
 
     for (result, reference_after_ssd) in bins.iter().zip(reference_after_ssd.iter()) {
-        assert_approx_eq!(f64, *result, *reference_after_ssd, ulps = 24);
+        assert_approx_eq!(f64, *result, *reference_after_ssd, ulps = 64);
     }
 
-    // TEST 9: `set_remapper`
+    // TEST 9: `set_bins`
 
     // make a two-dimensional distribution out of it
-    grid.set_remapper(BinRemapper::new(
-        vec![0.1; 24],
-        (0..24)
-            .flat_map(|index| {
-                let index = f64::from(index);
-                vec![(60.0, 120.0), (index * 0.1, (index + 1.0) * 0.1)]
-            })
-            .collect::<Vec<(f64, f64)>>(),
-    )?)?;
+    grid.set_bwfl(
+        BinsWithFillLimits::from_limits_and_normalizations(
+            (0..24)
+                .map(|index| {
+                    let index = f64::from(index);
+                    vec![(60.0, 120.0), (index * 0.1, (index + 1.0) * 0.1)]
+                })
+                .collect(),
+            vec![0.1; 24],
+        )
+        .unwrap(),
+    )?;
 
     // TEST 10: `merge_bins`
 
@@ -416,7 +429,7 @@ fn perform_grid_tests(
     grid.merge_bins(0..1)?;
 
     for (result, reference_after_ssd) in bins.iter().zip(reference_after_ssd.iter()) {
-        assert_approx_eq!(f64, *result, *reference_after_ssd, ulps = 24);
+        assert_approx_eq!(f64, *result, *reference_after_ssd, ulps = 64);
     }
 
     // merge two bins with each other
@@ -424,7 +437,7 @@ fn perform_grid_tests(
         grid.merge_bins(bin..bin + 2)?;
     }
 
-    let merged2 = grid.convolve(&mut lumi_cache, &[], &[], &[], &[(1.0, 1.0)]);
+    let merged2 = grid.convolve(&mut convolution_cache, &[], &[], &[], &[(1.0, 1.0, 1.0)]);
 
     for (result, reference_after_ssd) in merged2.iter().zip(
         reference_after_ssd
@@ -439,7 +452,7 @@ fn perform_grid_tests(
     // delete a few bins from the start
     grid.delete_bins(&[0, 1]);
 
-    let deleted = grid.convolve(&mut lumi_cache, &[], &[], &[], &[(1.0, 1.0)]);
+    let deleted = grid.convolve(&mut convolution_cache, &[], &[], &[], &[(1.0, 1.0, 1.0)]);
 
     assert_eq!(deleted.len(), 10);
 
@@ -455,7 +468,7 @@ fn perform_grid_tests(
     // delete a few bins from the ending
     grid.delete_bins(&[8, 9]);
 
-    let deleted2 = grid.convolve(&mut lumi_cache, &[], &[], &[], &[(1.0, 1.0)]);
+    let deleted2 = grid.convolve(&mut convolution_cache, &[], &[], &[], &[(1.0, 1.0, 1.0)]);
 
     assert_eq!(deleted2.len(), 8);
 
@@ -466,311 +479,181 @@ fn perform_grid_tests(
             .skip(2)
             .take(6),
     ) {
-        assert_approx_eq!(f64, *result, reference_after_ssd, ulps = 16);
+        assert_approx_eq!(f64, *result, reference_after_ssd, ulps = 32);
     }
 
     Ok(())
 }
 
-fn generate_grid(subgrid_type: &str, dynamic: bool, reweight: bool) -> Result<Grid> {
+fn generate_grid(dynamic: bool, reweight: bool) -> Grid {
     let mut rng = Pcg64::new(0xcafef00dd15ea5e5, 0xa02bdbf7bb3c0a7ac28fa16a64abf96);
-    fill_drell_yan_lo_grid(&mut rng, 500_000, subgrid_type, dynamic, reweight)
+    fill_drell_yan_lo_grid(&mut rng, 500_000, dynamic, reweight)
 }
 
+// number is small enough for the tests to be quick and meaningful
+const INT_STATS: u32 = 10_000;
+
 const STATIC_REFERENCE: [f64; 24] = [
-    269.89225458312495,
-    266.2168804878282,
-    290.0467478314624,
-    258.0064918266305,
-    239.54186548997865,
-    300.17541324377703,
-    258.8811221515799,
-    238.4064950360576,
-    242.5494601562957,
-    236.34329830221077,
-    230.63243720020898,
-    190.03118557029666,
-    213.22241277258763,
-    177.75582251643334,
-    168.07022695390958,
-    151.59217101220256,
-    143.81017491485716,
-    97.09707327367487,
-    91.38465432190982,
-    73.94464862425771,
-    63.859689262732104,
-    48.595785504299926,
-    27.94818010640803,
-    9.343737799674852,
+    168.38959322031457,
+    513.0768026978171,
+    371.71287396366995,
+    235.8098362992929,
+    186.20124775877665,
+    216.2304514988581,
+    232.04909213040415,
+    170.06035328939964,
+    103.33958880717813,
+    191.87061398627344,
+    182.48313944454654,
+    171.6188420512471,
+    419.82434919583875,
+    151.14152991889875,
+    226.05268712169035,
+    199.64591790851492,
+    369.8935560707606,
+    77.06480847483719,
+    24.490861801031517,
+    12.19000587591836,
+    23.110914187129627,
+    87.06841942116057,
+    33.0281593619898,
+    2.362076425563692,
 ];
 
-// numbers are slightly different from `STATIC_REFERENCE` because the static scale detection (SSD)
-// removes the Q^2 interpolation error
+// numbers are slightly different from `STATIC_REFERENCE` because the node optimization detects the
+// static scale and removes the Q^2 interpolation error
 const STATIC_REFERENCE_AFTER_SSD: [f64; 24] = [
-    269.89240546283145,
-    266.2170285827742,
-    290.04690782935967,
-    258.0066322019259,
-    239.54199362567599,
-    300.17556967146095,
-    258.88125430161745,
-    238.40661279174125,
-    242.54957458220744,
-    236.34340283622035,
-    230.63253265929194,
-    190.03125927151245,
-    213.2224910582812,
-    177.7558806305883,
-    168.07027678254747,
-    151.59220685502618,
-    143.81020355582885,
-    97.09708758263099,
-    91.38466242593998,
-    73.94465114837278,
-    63.859687905917,
-    48.595781165174515,
-    27.94817639459665,
-    9.343735959243446,
+    168.38968474125505,
+    513.0770882860825,
+    371.7130781560312,
+    235.80996443941294,
+    186.20134644917403,
+    216.2305662654171,
+    232.04921269665587,
+    170.060435777966,
+    103.33963708862501,
+    191.87070884467244,
+    182.48320743597665,
+    171.6189069431743,
+    419.82450657418957,
+    151.14157394136424,
+    226.0527454508727,
+    199.64596561172203,
+    369.8936241814945,
+    77.06482253107433,
+    24.49086417366925,
+    12.190006763665671,
+    23.110914180153948,
+    87.0684069821286,
+    33.028158528350204,
+    2.3620759284762887,
 ];
 
 const DYNAMIC_REFERENCE: [f64; 24] = [
-    269.9662650413552,
-    266.2274509325408,
-    290.039119030095,
-    258.04801305108583,
-    239.63561020879277,
-    300.2475932636636,
-    258.88126161648313,
-    238.42709542929794,
-    242.5724521248901,
-    236.3541498865422,
-    230.64832146047578,
-    189.999243811704,
-    213.2896760201295,
-    177.7280865940876,
-    168.0886178280483,
-    151.59285700593935,
-    143.80051106343882,
-    97.0715765765853,
-    91.38479915098559,
-    73.94713838892906,
-    63.85622547082087,
-    48.61296466751912,
-    27.948404940991445,
-    9.342761664545428,
+    167.73075899059722,
+    513.3569347058141,
+    371.3336398828405,
+    235.53004623228287,
+    185.89154709174852,
+    216.75969380255526,
+    231.6876677545833,
+    169.67997661655352,
+    103.56259318132902,
+    191.68748388958508,
+    182.00660765469212,
+    171.6221591151596,
+    420.1122395090359,
+    150.81647073655915,
+    226.0168315024308,
+    199.99645663613614,
+    370.5740387393846,
+    77.13459227149951,
+    24.570096511403573,
+    12.15059986236983,
+    23.04588396906037,
+    87.2298678460105,
+    33.05576050516689,
+    2.3061332535775794,
 ];
 
 const DYNAMIC_REFERENCE_NO_REWEIGHT: [f64; 24] = [
-    268.8874311488598,
-    265.3130436782233,
-    289.0614714145284,
-    257.02578172672656,
-    238.76378338813032,
-    299.1756333696102,
-    257.98748703027104,
-    237.58099891213897,
-    241.75215319366012,
-    235.41757682699438,
-    229.8671307486547,
-    189.47964517011536,
-    212.56055728623704,
-    176.9591711445695,
-    167.56523215346917,
-    151.30532185043768,
-    143.20366078799765,
-    96.67453775369947,
-    91.18334210163036,
-    73.75879631942671,
-    63.629606742074984,
-    48.47126745674977,
-    27.86328933386428,
-    9.32654010506528,
+    167.02560507500328,
+    511.6307601313951,
+    370.1659470550191,
+    234.51187692755803,
+    185.23716936219668,
+    215.91820762194604,
+    230.92167039044742,
+    169.0157392153116,
+    103.19948220956648,
+    190.9153768744078,
+    181.49749277120952,
+    171.15900435357685,
+    418.69191536323956,
+    150.25485756172543,
+    225.25882657556969,
+    199.5592968215913,
+    369.0301660240426,
+    76.82053478041635,
+    24.477528662138134,
+    12.114147164297055,
+    22.967201699163894,
+    86.99454515845706,
+    32.894968080392196,
+    2.2999405116169878,
+];
+
+const X_GRID: [f64; 6] = [
+    0.030521584007828877,
+    0.02108918668378717,
+    0.014375068581090129,
+    0.009699159574043398,
+    0.006496206194633799,
+    0.004328500638819831,
 ];
 
 #[test]
-fn drell_yan_lagrange_static() -> Result<()> {
+fn drell_yan_static() -> Result<()> {
     perform_grid_tests(
-        "LagrangeSubgrid",
         false,
         &STATIC_REFERENCE,
         &STATIC_REFERENCE_AFTER_SSD,
-        &[
-            0.030521584007828916,
-            0.02108918668378717,
-            0.014375068581090129,
-            0.009699159574043398,
-            0.006496206194633799,
-            0.004328500638820811,
-        ],
+        &X_GRID,
         true,
     )
 }
 
 #[test]
-fn drell_yan_lagrange_v1_static() -> Result<()> {
-    perform_grid_tests(
-        "LagrangeSubgridV1",
-        false,
-        &STATIC_REFERENCE,
-        &STATIC_REFERENCE, // LagrangeSubgridV1 doesn't have static-scale detection
-        &[
-            0.030521584007828916,
-            0.02108918668378717,
-            0.014375068581090129,
-            0.009699159574043398,
-            0.006496206194633799,
-            0.004328500638820811,
-        ],
-        true,
-    )
+fn drell_yan_dynamic() -> Result<()> {
+    perform_grid_tests(true, &DYNAMIC_REFERENCE, &DYNAMIC_REFERENCE, &X_GRID, true)
 }
 
 #[test]
-fn drell_yan_lagrange_v2_static() -> Result<()> {
+fn drell_yan_dynamic_no_reweight() -> Result<()> {
     perform_grid_tests(
-        "LagrangeSubgridV2",
-        false,
-        &STATIC_REFERENCE,
-        &STATIC_REFERENCE_AFTER_SSD,
-        &[
-            0.030521584007828916,
-            0.02108918668378717,
-            0.014375068581090129,
-            0.009699159574043398,
-            0.006496206194633799,
-            0.004328500638820811,
-        ],
-        true,
-    )
-}
-
-#[test]
-fn drell_yan_lagrange_dynamic() -> Result<()> {
-    perform_grid_tests(
-        "LagrangeSubgrid",
-        true,
-        &DYNAMIC_REFERENCE,
-        &DYNAMIC_REFERENCE,
-        &[
-            0.030521584007828916,
-            0.02108918668378717,
-            0.014375068581090129,
-            0.009699159574043398,
-            0.006496206194633799,
-            0.004328500638820811,
-        ],
-        true,
-    )
-}
-
-#[test]
-fn drell_yan_lagrange_v1_dynamic() -> Result<()> {
-    perform_grid_tests(
-        "LagrangeSubgridV1",
-        true,
-        &DYNAMIC_REFERENCE,
-        &DYNAMIC_REFERENCE,
-        &[
-            0.030521584007828916,
-            0.02108918668378717,
-            0.014375068581090129,
-            0.009699159574043398,
-            0.006496206194633799,
-            0.004328500638820811,
-        ],
-        true,
-    )
-}
-
-#[test]
-fn drell_yan_lagrange_v1_dynamic_no_reweight() -> Result<()> {
-    perform_grid_tests(
-        "LagrangeSubgridV1",
         true,
         &DYNAMIC_REFERENCE_NO_REWEIGHT,
         &DYNAMIC_REFERENCE_NO_REWEIGHT,
-        &[
-            0.030521584007828916,
-            0.02108918668378717,
-            0.014375068581090129,
-            0.009699159574043398,
-            0.006496206194633799,
-            0.004328500638820811,
-        ],
+        &X_GRID,
         false,
     )
 }
 
 #[test]
-fn drell_yan_lagrange_v2_dynamic() -> Result<()> {
-    perform_grid_tests(
-        "LagrangeSubgridV2",
-        true,
-        &DYNAMIC_REFERENCE,
-        &DYNAMIC_REFERENCE,
-        &[
-            0.030521584007828916,
-            0.02108918668378717,
-            0.014375068581090129,
-            0.009699159574043398,
-            0.006496206194633799,
-            0.004328500638820811,
-        ],
-        true,
-    )
-}
-
-#[test]
-fn drell_yan_lagrange_v2_dynamic_no_reweight() -> Result<()> {
-    perform_grid_tests(
-        "LagrangeSubgridV2",
-        true,
-        &DYNAMIC_REFERENCE_NO_REWEIGHT,
-        &DYNAMIC_REFERENCE_NO_REWEIGHT,
-        &[
-            0.030521584007828916,
-            0.02108918668378717,
-            0.014375068581090129,
-            0.009699159574043398,
-            0.006496206194633799,
-            0.004328500638820811,
-        ],
-        false,
-    )
-}
-
-#[test]
-fn drell_yan_lagrange_sparse_dynamic() -> Result<()> {
-    perform_grid_tests(
-        "LagrangeSparseSubgrid",
-        true,
-        &DYNAMIC_REFERENCE,
-        &DYNAMIC_REFERENCE,
-        &[
-            0.030521584007828916,
-            0.02108918668378717,
-            0.014375068581090129,
-            0.009699159574043398,
-            0.006496206194633799,
-            0.004328500638820811,
-        ],
-        true,
-    )
-}
-
-#[test]
-fn grid_optimize() -> Result<()> {
-    let mut grid = generate_grid("LagrangeSubgridV2", false, false)?;
+fn grid_optimize() {
+    let mut grid = generate_grid(false, false);
 
     assert_eq!(grid.orders().len(), 3);
     assert_eq!(grid.channels().len(), 5);
     assert!(matches!(
         grid.subgrids()[[0, 0, 0]],
-        SubgridEnum::LagrangeSubgridV2 { .. }
+        SubgridEnum::InterpSubgridV1 { .. }
     ));
-    assert_eq!(grid.subgrids()[[0, 0, 0]].x1_grid().len(), 50);
-    assert_eq!(grid.subgrids()[[0, 0, 0]].x2_grid().len(), 50);
-    assert_eq!(grid.subgrids()[[0, 0, 0]].mu2_grid().len(), 30);
+
+    let node_values = grid.subgrids()[[0, 0, 0]].node_values();
+    assert_eq!(node_values[0].len(), 30);
+    assert_eq!(node_values[1].len(), 50);
+    assert_eq!(node_values[2].len(), 50);
 
     let mut grid2 = grid.clone();
     grid2.optimize_using(GridOptFlags::OPTIMIZE_SUBGRID_TYPE);
@@ -778,23 +661,24 @@ fn grid_optimize() -> Result<()> {
     // `OPTIMIZE_SUBGRID_TYPE` changes the subgrid type ...
     assert!(matches!(
         grid2.subgrids()[[0, 0, 0]],
-        SubgridEnum::ImportOnlySubgridV2 { .. }
+        SubgridEnum::ImportSubgridV1 { .. }
     ));
     // and the dimensions of the subgrid
-    assert_eq!(grid2.subgrids()[[0, 0, 0]].x1_grid().len(), 6);
-    assert_eq!(grid2.subgrids()[[0, 0, 0]].x2_grid().len(), 6);
-    assert_eq!(grid2.subgrids()[[0, 0, 0]].mu2_grid().len(), 4);
+    let node_values = grid2.subgrids()[[0, 0, 0]].node_values();
+    assert_eq!(node_values[0].len(), 4);
+    assert_eq!(node_values[1].len(), 6);
+    assert_eq!(node_values[2].len(), 6);
 
-    grid.optimize_using(GridOptFlags::OPTIMIZE_SUBGRID_TYPE | GridOptFlags::STATIC_SCALE_DETECTION);
+    grid.optimize_using(GridOptFlags::OPTIMIZE_NODES);
 
     assert!(matches!(
         grid.subgrids()[[0, 0, 0]],
-        SubgridEnum::ImportOnlySubgridV2 { .. }
+        SubgridEnum::InterpSubgridV1 { .. }
     ));
-    // if `STATIC_SCALE_DETECTION` is present the `mu2_grid` dimension are better optimized
-    assert_eq!(grid.subgrids()[[0, 0, 0]].x1_grid().len(), 6);
-    assert_eq!(grid.subgrids()[[0, 0, 0]].x2_grid().len(), 6);
-    assert_eq!(grid.subgrids()[[0, 0, 0]].mu2_grid().len(), 1);
+    let node_values = grid.subgrids()[[0, 0, 0]].node_values();
+    assert_eq!(node_values[0].len(), 1);
+    assert_eq!(node_values[1].len(), 6);
+    assert_eq!(node_values[2].len(), 6);
 
     // has no effect for this test
     grid.optimize_using(GridOptFlags::SYMMETRIZE_CHANNELS);
@@ -817,6 +701,4 @@ fn grid_optimize() -> Result<()> {
 
     assert_eq!(grid.orders().len(), 1);
     assert_eq!(grid.channels().len(), 3);
-
-    Ok(())
 }

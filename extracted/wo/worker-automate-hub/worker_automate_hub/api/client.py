@@ -615,6 +615,9 @@ async def send_file(
         elif file_extension == "001":
             filename = desArquivo
             content_type = "text/plain"
+        elif file_extension =="xls":
+            filename = "file.xls"
+            content_type = "application/vnd.ms-excel"
 
         # Criação do corpo da requisição multipart
         body = aiohttp.FormData()

@@ -24,7 +24,7 @@ import jax.numpy as jnp
 from optax._src import base
 from optax._src import numerics
 from optax._src import utils
-import optax.tree_utils as otu
+import optax.tree
 
 
 class BacktrackingLinesearchInfo(NamedTuple):
@@ -37,7 +37,7 @@ class BacktrackingLinesearchInfo(NamedTuple):
       the linesearch failed to find a stepsize that ensures a sufficient
       decrease. A null value indicates it succeeded in finding such a stepsize.
   """
-  num_linesearch_steps: int
+  num_linesearch_steps: Union[int, chex.Numeric]
   decrease_error: Union[float, chex.Numeric]
 
 
@@ -99,8 +99,8 @@ def scale_by_backtracking_linesearch(
     :math:`\eta` is the learning rate to find,
     :math:`u` is the update direction,
     :math:`c` is a coefficient (``slope_rtol``) measuring the relative decrease
-      of the function in terms of the slope (scalar product between the gradient
-      and the updates),
+    of the function in terms of the slope (scalar product between the gradient
+    and the updates),
     :math:`\delta` is a relative tolerance (``rtol``),
     :math:`\epsilon` is an absolute tolerance (``atol``).
 
@@ -240,6 +240,8 @@ def scale_by_backtracking_linesearch(
     after the backtracking line-search doesn't necessarily need to satisfy the
     descent direction property (one could for example use momentum).
 
+  .. note:: The algorithm can support complex inputs.
+
   .. seealso:: :func:`optax.value_and_grad_from_state` to make this method
     more efficient for non-stochastic objectives.
 
@@ -248,16 +250,18 @@ def scale_by_backtracking_linesearch(
 
   def init_fn(params: base.Params) -> ScaleByBacktrackingLinesearchState:
     if store_grad:
-      grad = otu.tree_zeros_like(params)
+      grad = optax.tree.zeros_like(params)
     else:
       grad = None
+    # base output type on params type, except only real part if complex
+    val_dtype = jnp.real(jax.tree.leaves(params)[0]).dtype
     return ScaleByBacktrackingLinesearchState(
-        learning_rate=jnp.array(1.0),
-        value=jnp.array(jnp.inf),
+        learning_rate=jnp.array(1.0, dtype=val_dtype),
+        value=jnp.array(jnp.inf, dtype=val_dtype),
         grad=grad,
         info=BacktrackingLinesearchInfo(
-            num_linesearch_steps=0,
-            decrease_error=jnp.array(jnp.inf),
+            num_linesearch_steps=jnp.asarray(0),
+            decrease_error=jnp.array(jnp.inf, dtype=val_dtype),
         ),
     )
 
@@ -319,7 +323,7 @@ def scale_by_backtracking_linesearch(
     # Slope of lr -> value_fn(params + lr * updates) at lr = 0
     # Should be negative to ensure that there exists a lr (potentially
     # infinitesimal) that satisfies the criterion.
-    slope = otu.tree_vdot(updates, grad)
+    slope = optax.tree.real(optax.tree.vdot(updates, optax.tree.conj(grad)))
 
     def cond_fn(
         search_state: BacktrackingLineSearchState,
@@ -341,7 +345,7 @@ def scale_by_backtracking_linesearch(
       learning_rate = jnp.where(
           iter_num > 0, decrease_factor * learning_rate, learning_rate
       )
-      new_params = otu.tree_add_scalar_mul(params, learning_rate, updates)
+      new_params = optax.tree.add_scale(params, learning_rate, updates)
 
       value_fn_ = functools.partial(value_fn, **fn_kwargs)
       if store_grad:
@@ -366,14 +370,14 @@ def scale_by_backtracking_linesearch(
         decrease_error = _compute_decrease_error(
             learning_rate, slope, value, new_value
         )
-      search_state = BacktrackingLineSearchState(
+      new_search_state = BacktrackingLineSearchState(
           learning_rate=learning_rate,
           new_value=new_value,
           new_grad=new_grad,
           decrease_error=decrease_error,
           iter_num=iter_num + 1,
       )
-      return search_state
+      return optax.tree.cast_like(new_search_state, other_tree=search_state)
 
     # We start with a guess candidate learning rate that may be larger than
     # the current one but no larger than the maximum one.
@@ -383,14 +387,14 @@ def scale_by_backtracking_linesearch(
     search_state = BacktrackingLineSearchState(
         learning_rate=learning_rate,
         new_value=value,
-        new_grad=otu.tree_zeros_like(params),
+        new_grad=optax.tree.zeros_like(params),
         decrease_error=jnp.array(jnp.inf),
         iter_num=0,
     )
     search_state = jax.lax.while_loop(cond_fn, body_fn, search_state)
 
     # If store_grad is False we simply return None (to not mix up with
-    # otu.tree_zeros_like(params))
+    # optax.tree.zeros_like(params))
     new_grad = search_state.new_grad if store_grad else None
     new_value = search_state.new_value
     # If the decrease error is infinite, we avoid making any step (which would
@@ -420,7 +424,7 @@ def scale_by_backtracking_linesearch(
           "Using a stepsize of 0 to avoid infinite or nan values.",
       )
     # At the end, we just scale the updates with the learning rate found.
-    new_updates = otu.tree_scalar_mul(new_learning_rate, updates)
+    new_updates = optax.tree.scale(new_learning_rate, updates)
     info = BacktrackingLinesearchInfo(
         num_linesearch_steps=search_state.iter_num,
         decrease_error=search_state.decrease_error,
@@ -431,7 +435,8 @@ def scale_by_backtracking_linesearch(
         grad=new_grad,
         info=info
     )
-    return new_updates, new_state
+
+    return new_updates, optax.tree.cast_like(new_state, other_tree=state)
 
   return base.GradientTransformationExtraArgs(init_fn, update_fn)
 
@@ -696,9 +701,10 @@ def zoom_linesearch(
         * ``slope_step`` is the derivative of the function in terms of the
           stepsize at the step.
     """
-    step = otu.tree_add_scalar_mul(params, stepsize, updates)
+    step = optax.tree.add_scale(params, stepsize, updates)
     value_step, grad_step = value_and_grad_fn(step, **fn_kwargs)
-    slope_step = otu.tree_vdot(grad_step, updates)
+    slope_step = optax.tree.real(optax.tree.vdot(optax.tree.conj(grad_step),
+                                                 updates))
     return step, value_step, grad_step, slope_step
 
   def _compute_decrease_error(
@@ -764,7 +770,7 @@ def zoom_linesearch(
   ) -> ZoomLinesearchState:
     """Try making a step with stepsize ensuring at least sufficient decrease."""
     outside_domain = jnp.isinf(state.decrease_error)
-    final_stepsize, final_value, final_grad = otu.tree_where(
+    final_stepsize, final_value, final_grad = optax.tree.where(
         (state.safe_stepsize > 0.0) | outside_domain,
         [state.safe_stepsize, state.safe_value, state.safe_grad],
         [state.stepsize, state.value, state.grad],
@@ -804,7 +810,7 @@ def zoom_linesearch(
     final_state = state._replace(
         stepsize=final_stepsize, grad=final_grad, value=final_value
     )
-    return final_state
+    return optax.tree.cast_like(final_state, other_tree=state)
 
   def _search_interval(
       state: ZoomLinesearchState,
@@ -853,7 +859,7 @@ def zoom_linesearch(
     # If the new point satisfies at least the decrease error we keep it
     # in case the curvature error cannot be satisfied.
     safe_decrease = decrease_error <= tol
-    new_safe_stepsize, new_safe_value, new_safe_grad = otu.tree_where(
+    new_safe_stepsize, new_safe_value, new_safe_grad = optax.tree.where(
         safe_decrease,
         [new_stepsize, new_value_step, new_grad_step],
         [safe_stepsize, safe_value, safe_grad],
@@ -887,8 +893,8 @@ def zoom_linesearch(
         prev_value_step,
         prev_slope_step,
     ]
-    [low, value_low, slope_low, high, value_high, slope_high] = otu.tree_where(
-        set_low_to_new, candidate, default
+    [low, value_low, slope_low, high, value_high, slope_high] = (
+        optax.tree.where(set_low_to_new, candidate, default)
     )
 
     # If high or low have been set or the point is good, the interval has been
@@ -960,7 +966,7 @@ def zoom_linesearch(
         safe_value=new_safe_value,
         safe_grad=new_safe_grad,
     )
-    return new_state
+    return optax.tree.cast_like(new_state, other_tree=state)
 
   def _zoom_into_interval(
       state: ZoomLinesearchState,
@@ -1039,7 +1045,7 @@ def zoom_linesearch(
     # We take the one with the smallest value.
     safe_decrease = decrease_error <= tol
     update_safe_stepsize = safe_decrease & (value_middle < safe_value)
-    new_safe_stepsize, new_safe_value, new_safe_grad = otu.tree_where(
+    new_safe_stepsize, new_safe_value, new_safe_grad = optax.tree.where(
         update_safe_stepsize,
         [middle, value_middle, grad_middle],
         [safe_stepsize, safe_value, safe_grad],
@@ -1059,19 +1065,19 @@ def zoom_linesearch(
     # Set high to middle, or low, or keep as it is
     default = [high, value_high, slope_high]
     candidate = [middle, value_middle, slope_middle]
-    [new_high_, new_value_high_, new_slope_high_] = otu.tree_where(
+    [new_high_, new_value_high_, new_slope_high_] = optax.tree.where(
         set_high_to_middle, candidate, default
     )
     default = [new_high_, new_value_high_, new_slope_high_]
     candidate = [low, value_low, slope_low]
-    [new_high, new_value_high, new_slope_high] = otu.tree_where(
+    [new_high, new_value_high, new_slope_high] = optax.tree.where(
         set_high_to_low, candidate, default
     )
 
     # Set low to middle or keep as it is
     default = [low, value_low, slope_low]
     candidate = [middle, value_middle, slope_middle]
-    [new_low, new_value_low, new_slope_low] = otu.tree_where(
+    [new_low, new_value_low, new_slope_low] = optax.tree.where(
         set_low_to_middle, candidate, default
     )
 
@@ -1079,7 +1085,7 @@ def zoom_linesearch(
     # If high changed then it can be used as the new ref point.
     # Otherwise, low has been updated and not kept as high
     # so it can be used as the new ref point.
-    [new_cubic_ref, new_value_cubic_ref] = otu.tree_where(
+    [new_cubic_ref, new_value_cubic_ref] = optax.tree.where(
         set_high_to_middle | set_high_to_low,
         [high, value_high],
         [low, value_low],
@@ -1130,7 +1136,7 @@ def zoom_linesearch(
         safe_value=new_safe_value,
         safe_grad=new_safe_grad,
     )
-    return new_state
+    return optax.tree.cast_like(new_state, other_tree=state)
 
   def _failure_diagnostic(state: ZoomLinesearchState) -> None:
     """Prints failure diagnostics."""
@@ -1204,17 +1210,17 @@ def zoom_linesearch(
       raise ValueError(
           f"Unknown initial guess strategy: {initial_guess_strategy}"
       )
-
-    slope = otu.tree_vdot(updates, grad)
+    val_dtype = jnp.real(jax.tree.leaves(params)[0]).dtype
+    slope = optax.tree.real(optax.tree.vdot(updates, grad))
     return ZoomLinesearchState(
-        count=jnp.asarray(0, dtype=jnp.int32),
+        count=jnp.asarray(0),
         #
         params=params,
         updates=updates,
         stepsize_guess=stepsize_guess,
         #
-        stepsize=jnp.asarray(0.0),
-        value=value,
+        stepsize=jnp.asarray(0.0, dtype=val_dtype),
+        value=jnp.array(value, dtype=val_dtype),
         grad=grad,
         slope=slope,
         #
@@ -1267,7 +1273,7 @@ def zoom_linesearch(
     new_state = jax.lax.cond(
         new_state.failed, _try_safe_step, lambda x: x, new_state
     )
-    return new_state
+    return optax.tree.cast_like(new_state, other_tree=state)
 
   def step_cond_fn(state: ZoomLinesearchState) -> Union[bool, chex.Numeric]:
     """Continuing criterion for the while loop of the linesearch."""
@@ -1506,10 +1512,12 @@ def scale_by_zoom_linesearch(
   .. note::
     The curvature criterion can be avoided by setting by setting
     ``curv_rtol=jnp.inf``. The resulting algorithm will amount to a
-    backtracking linesearch where a point satisfying sufficient decrease is 
+    backtracking linesearch where a point satisfying sufficient decrease is
     searched by minimizing a quadratic or cubic approximation of the objective.
-    This can be sufficient in practice and avoids having the linesearch spend 
+    This can be sufficient in practice and avoids having the linesearch spend
     many iterations trying to satisfy the small curvature criterion.
+
+  .. note:: The algorithm can support complex inputs.
 
   .. seealso:: :func:`optax.value_and_grad_from_state` to make this method
     more efficient for non-stochastic objectives.
@@ -1530,10 +1538,11 @@ def scale_by_zoom_linesearch(
 
   def init_fn(params: base.Params) -> ScaleByZoomLinesearchState:
     """Initializes state of scale_by_zoom_linesearch."""
+    val_dtype = jnp.real(jax.tree.leaves(params)[0]).dtype
     return ScaleByZoomLinesearchState(
-        learning_rate=jnp.asarray(1.0),
-        value=jnp.asarray(jnp.inf),
-        grad=otu.tree_zeros_like(params),
+        learning_rate=jnp.asarray(1.0, dtype=val_dtype),
+        value=jnp.asarray(jnp.inf, dtype=val_dtype),
+        grad=optax.tree.zeros_like(params),
         info=ZoomLinesearchInfo(
             num_linesearch_steps=jnp.asarray(0),
             decrease_error=jnp.asarray(jnp.inf),
@@ -1599,18 +1608,19 @@ def scale_by_zoom_linesearch(
         init_state,
     )
     learning_rate = final_state.stepsize
-    scaled_updates = otu.tree_scalar_mul(learning_rate, updates)
+    scaled_updates = optax.tree.scale(learning_rate, updates)
     info_step = ZoomLinesearchInfo(
         num_linesearch_steps=final_state.count,
         decrease_error=final_state.decrease_error,
         curvature_error=final_state.curvature_error,
     )
-    return scaled_updates, ScaleByZoomLinesearchState(
+    new_state = ScaleByZoomLinesearchState(
         learning_rate=learning_rate,
         value=final_state.value,
         grad=final_state.grad,
         info=info_step,
     )
+    return scaled_updates, optax.tree.cast_like(new_state, other_tree=state)
 
   return base.GradientTransformationExtraArgs(init_fn, update_fn)
 

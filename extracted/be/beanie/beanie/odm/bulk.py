@@ -19,10 +19,10 @@ if TYPE_CHECKING:
     from beanie.odm.union_doc import UnionDoc
 
 _WriteOp = Union[
-    InsertOne[Mapping[str, Any]],
+    InsertOne[Mapping[Any, Any]],
     DeleteOne,
     DeleteMany,
-    ReplaceOne[Mapping[str, Any]],
+    ReplaceOne[Mapping[Any, Any]],
     UpdateOne,
     UpdateMany,
 ]
@@ -84,7 +84,9 @@ class BulkWriter:
         self.object_class = object_class
         self.bypass_document_validation = bypass_document_validation
         self.comment = comment
-        self._collection_name: str
+        self._collection_name: Optional[str] = (
+            object_class.get_collection_name() if object_class else None
+        )
 
     async def __aenter__(self) -> "BulkWriter":
         return self

@@ -369,48 +369,101 @@ COMPUTE_CAPABILITIES = (
     (9, 0),
     (10, 0),
     (10, 1),
+    (10, 3),
     (12, 0),
+    (12, 1),
 )
 
 
-# Maps CTK version -> (min supported cc, max supported cc) inclusive
+# Maps CTK version -> (min supported cc, max supported cc) ranges, bounds inclusive
 _CUDA_CC_MIN_MAX_SUPPORT = {
-    (11, 1): ((3, 5), (8, 0)),
-    (11, 2): ((3, 5), (8, 6)),
-    (11, 3): ((3, 5), (8, 6)),
-    (11, 4): ((3, 5), (8, 7)),
-    (11, 5): ((3, 5), (8, 7)),
-    (11, 6): ((3, 5), (8, 7)),
-    (11, 7): ((3, 5), (8, 7)),
-    (11, 8): ((3, 5), (9, 0)),
-    (12, 0): ((5, 0), (9, 0)),
-    (12, 1): ((5, 0), (9, 0)),
-    (12, 2): ((5, 0), (9, 0)),
-    (12, 3): ((5, 0), (9, 0)),
-    (12, 4): ((5, 0), (9, 0)),
-    (12, 5): ((5, 0), (9, 0)),
-    (12, 6): ((5, 0), (9, 0)),
-    (12, 8): ((5, 0), (12, 0)),
+    (11, 2): [
+        ((3, 5), (8, 6)),
+    ],
+    (11, 3): [
+        ((3, 5), (8, 6)),
+    ],
+    (11, 4): [
+        ((3, 5), (8, 7)),
+    ],
+    (11, 5): [
+        ((3, 5), (8, 7)),
+    ],
+    (11, 6): [
+        ((3, 5), (8, 7)),
+    ],
+    (11, 7): [
+        ((3, 5), (8, 7)),
+    ],
+    (11, 8): [
+        ((3, 5), (9, 0)),
+    ],
+    (12, 0): [
+        ((5, 0), (9, 0)),
+    ],
+    (12, 1): [
+        ((5, 0), (9, 0)),
+    ],
+    (12, 2): [
+        ((5, 0), (9, 0)),
+    ],
+    (12, 3): [
+        ((5, 0), (9, 0)),
+    ],
+    (12, 4): [
+        ((5, 0), (9, 0)),
+    ],
+    (12, 5): [
+        ((5, 0), (9, 0)),
+    ],
+    (12, 6): [
+        ((5, 0), (9, 0)),
+    ],
+    (12, 8): [
+        ((5, 0), (10, 1)),
+        ((12, 0), (12, 0)),
+    ],
+    (12, 9): [
+        ((5, 0), (12, 1)),
+    ],
 }
+
+# From CUDA 12.9 Release notes, Section 1.5.4, "Deprecated Architectures"
+# https://docs.nvidia.com/cuda/archive/12.9.0/cuda-toolkit-release-notes/index.html#deprecated-architectures
+#
+#   "Maxwell, Pascal, and Volta architectures are now feature-complete with no
+#   further enhancements planned. While CUDA Toolkit 12.x series will continue
+#   to support building applications for these architectures, offline
+#   compilation and library support will be removed in the next major CUDA
+#   Toolkit version release. Users should plan migration to newer
+#   architectures, as future toolkits will be unable to target Maxwell, Pascal,
+#   and Volta GPUs."
+#
+# In order to maintain compatibility with future toolkits, we use Turing (7.5)
+# as the default CC if it is not otherwise specified.
+LOWEST_CURRENT_CC = (7, 5)
 
 
 def ccs_supported_by_ctk(ctk_version):
     try:
         # For supported versions, we look up the range of supported CCs
-        min_cc, max_cc = _CUDA_CC_MIN_MAX_SUPPORT[ctk_version]
         return tuple(
-            [cc for cc in COMPUTE_CAPABILITIES if min_cc <= cc <= max_cc]
+            [
+                cc
+                for min_cc, max_cc in _CUDA_CC_MIN_MAX_SUPPORT[ctk_version]
+                for cc in COMPUTE_CAPABILITIES
+                if min_cc <= cc <= max_cc
+            ]
         )
     except KeyError:
         # For unsupported CUDA toolkit versions, all we can do is assume all
         # non-deprecated versions we are aware of are supported.
-        return tuple(
-            [
-                cc
-                for cc in COMPUTE_CAPABILITIES
-                if cc >= config.CUDA_DEFAULT_PTX_CC
-            ]
-        )
+        #
+        # If the user has specified a non-default CC that is greater than the
+        # lowest non-deprecated one, then we should assume that instead.
+        MIN_CC = max(config.CUDA_DEFAULT_PTX_CC, LOWEST_CURRENT_CC)
+
+        return tuple([cc for cc in COMPUTE_CAPABILITIES if cc >= MIN_CC])
 
 
 def get_supported_ccs():
@@ -855,6 +908,54 @@ def set_cuda_kernel(function):
 
     # Remove 'noinline' if it is present.
     function.attributes.discard("noinline")
+
+
+def set_launch_bounds(kernel, launch_bounds):
+    # Based on: CUDA C / C++ Programming Guide 12.9, Section 8.38:
+    # https://docs.nvidia.com/cuda/archive/12.9.0/cuda-c-programming-guide/index.html#launch-bounds
+    # PTX ISA Specification Version 8.7, Section 11.4:
+    # https://docs.nvidia.com/cuda/archive/12.8.1/parallel-thread-execution/index.html#performance-tuning-directives
+    # NVVM IR Specification 12.9, Section 13:
+    # https://docs.nvidia.com/cuda/archive/12.9.0/nvvm-ir-spec/index.html#global-property-annotation
+
+    if launch_bounds is None:
+        return
+
+    if isinstance(launch_bounds, int):
+        launch_bounds = (launch_bounds,)
+
+    if (n := len(launch_bounds)) > 3:
+        raise ValueError(
+            f"Got {n} launch bounds: {launch_bounds}. A maximum of three are supported: "
+            "(max_threads_per_block, min_blocks_per_sm, max_blocks_per_cluster)"
+        )
+
+    module = kernel.module
+    nvvm_annotations = cgutils.get_or_insert_named_metadata(
+        module, "nvvm.annotations"
+    )
+
+    # Note that only maxntidx is used even though NVVM IR and PTX allow
+    # maxntidy and maxntidz. This is because the thread block size limit
+    # pertains only to the total number of threads, and therefore bounds on
+    # individual dimensions may be exceeded anyway. To prevent an unsurprising
+    # interface, it is cleaner to only allow setting total size via maxntidx
+    # and assuming y and z to be 1 (as is the case in CUDA C/C++).
+
+    properties = (
+        # Max threads per block
+        "maxntidx",
+        # Min blocks per multiprocessor
+        "minctasm",
+        # Max blocks per cluster
+        "cluster_max_blocks",
+    )
+
+    for prop, bound in zip(properties, launch_bounds):
+        mdstr = ir.MetaDataString(module, prop)
+        mdvalue = ir.Constant(ir.IntType(32), bound)
+        md = module.add_metadata((kernel, mdstr, mdvalue))
+        nvvm_annotations.add(md)
 
 
 def add_ir_version(mod):

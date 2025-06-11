@@ -1,7 +1,7 @@
 r'''
 # `okta_org_configuration`
 
-Refer to the Terraform Registry for docs: [`okta_org_configuration`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration).
+Refer to the Terraform Registry for docs: [`okta_org_configuration`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OrgConfiguration(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.orgConfiguration.OrgConfiguration",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration okta_org_configuration}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration okta_org_configuration}.'''
 
     def __init__(
         self,
@@ -75,26 +75,26 @@ class OrgConfiguration(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration okta_org_configuration} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration okta_org_configuration} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param company_name: Name of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#company_name OrgConfiguration#company_name}
-        :param address1: Primary address of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#address_1 OrgConfiguration#address_1}
-        :param address2: Secondary address of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#address_2 OrgConfiguration#address_2}
-        :param billing_contact_user: User ID representing the billing contact. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#billing_contact_user OrgConfiguration#billing_contact_user}
-        :param city: City of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#city OrgConfiguration#city}
-        :param country: Country of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#country OrgConfiguration#country}
-        :param end_user_support_help_url: Support link of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#end_user_support_help_url OrgConfiguration#end_user_support_help_url}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#id OrgConfiguration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Logo of org. The file must be in PNG, JPG, or GIF format and less than 1 MB in size. For best results use landscape orientation, a transparent background, and a minimum size of 420px by 120px to prevent upscaling. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#logo OrgConfiguration#logo}
-        :param opt_out_communication_emails: Indicates whether the org's users receive Okta Communication emails. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#opt_out_communication_emails OrgConfiguration#opt_out_communication_emails}
-        :param phone_number: Support help phone of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#phone_number OrgConfiguration#phone_number}
-        :param postal_code: Postal code of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#postal_code OrgConfiguration#postal_code}
-        :param state: State of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#state OrgConfiguration#state}
-        :param support_phone_number: Support help phone of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#support_phone_number OrgConfiguration#support_phone_number}
-        :param technical_contact_user: User ID representing the technical contact. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#technical_contact_user OrgConfiguration#technical_contact_user}
-        :param website: The org's website. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#website OrgConfiguration#website}
+        :param company_name: Name of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#company_name OrgConfiguration#company_name}
+        :param address1: Primary address of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#address_1 OrgConfiguration#address_1}
+        :param address2: Secondary address of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#address_2 OrgConfiguration#address_2}
+        :param billing_contact_user: User ID representing the billing contact. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#billing_contact_user OrgConfiguration#billing_contact_user}
+        :param city: City of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#city OrgConfiguration#city}
+        :param country: Country of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#country OrgConfiguration#country}
+        :param end_user_support_help_url: Support link of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#end_user_support_help_url OrgConfiguration#end_user_support_help_url}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#id OrgConfiguration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Logo of org. The file must be in PNG, JPG, or GIF format and less than 1 MB in size. For best results use landscape orientation, a transparent background, and a minimum size of 420px by 120px to prevent upscaling. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#logo OrgConfiguration#logo}
+        :param opt_out_communication_emails: Indicates whether the org's users receive Okta Communication emails. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#opt_out_communication_emails OrgConfiguration#opt_out_communication_emails}
+        :param phone_number: Support help phone of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#phone_number OrgConfiguration#phone_number}
+        :param postal_code: Postal code of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#postal_code OrgConfiguration#postal_code}
+        :param state: State of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#state OrgConfiguration#state}
+        :param support_phone_number: Support help phone of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#support_phone_number OrgConfiguration#support_phone_number}
+        :param technical_contact_user: User ID representing the technical contact. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#technical_contact_user OrgConfiguration#technical_contact_user}
+        :param website: The org's website. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#website OrgConfiguration#website}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -148,7 +148,7 @@ class OrgConfiguration(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OrgConfiguration to import.
-        :param import_from_id: The id of the existing OrgConfiguration that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OrgConfiguration that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OrgConfiguration to import is found.
         '''
         if __debug__:
@@ -587,22 +587,22 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param company_name: Name of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#company_name OrgConfiguration#company_name}
-        :param address1: Primary address of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#address_1 OrgConfiguration#address_1}
-        :param address2: Secondary address of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#address_2 OrgConfiguration#address_2}
-        :param billing_contact_user: User ID representing the billing contact. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#billing_contact_user OrgConfiguration#billing_contact_user}
-        :param city: City of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#city OrgConfiguration#city}
-        :param country: Country of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#country OrgConfiguration#country}
-        :param end_user_support_help_url: Support link of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#end_user_support_help_url OrgConfiguration#end_user_support_help_url}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#id OrgConfiguration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Logo of org. The file must be in PNG, JPG, or GIF format and less than 1 MB in size. For best results use landscape orientation, a transparent background, and a minimum size of 420px by 120px to prevent upscaling. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#logo OrgConfiguration#logo}
-        :param opt_out_communication_emails: Indicates whether the org's users receive Okta Communication emails. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#opt_out_communication_emails OrgConfiguration#opt_out_communication_emails}
-        :param phone_number: Support help phone of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#phone_number OrgConfiguration#phone_number}
-        :param postal_code: Postal code of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#postal_code OrgConfiguration#postal_code}
-        :param state: State of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#state OrgConfiguration#state}
-        :param support_phone_number: Support help phone of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#support_phone_number OrgConfiguration#support_phone_number}
-        :param technical_contact_user: User ID representing the technical contact. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#technical_contact_user OrgConfiguration#technical_contact_user}
-        :param website: The org's website. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#website OrgConfiguration#website}
+        :param company_name: Name of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#company_name OrgConfiguration#company_name}
+        :param address1: Primary address of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#address_1 OrgConfiguration#address_1}
+        :param address2: Secondary address of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#address_2 OrgConfiguration#address_2}
+        :param billing_contact_user: User ID representing the billing contact. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#billing_contact_user OrgConfiguration#billing_contact_user}
+        :param city: City of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#city OrgConfiguration#city}
+        :param country: Country of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#country OrgConfiguration#country}
+        :param end_user_support_help_url: Support link of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#end_user_support_help_url OrgConfiguration#end_user_support_help_url}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#id OrgConfiguration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Logo of org. The file must be in PNG, JPG, or GIF format and less than 1 MB in size. For best results use landscape orientation, a transparent background, and a minimum size of 420px by 120px to prevent upscaling. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#logo OrgConfiguration#logo}
+        :param opt_out_communication_emails: Indicates whether the org's users receive Okta Communication emails. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#opt_out_communication_emails OrgConfiguration#opt_out_communication_emails}
+        :param phone_number: Support help phone of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#phone_number OrgConfiguration#phone_number}
+        :param postal_code: Postal code of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#postal_code OrgConfiguration#postal_code}
+        :param state: State of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#state OrgConfiguration#state}
+        :param support_phone_number: Support help phone of org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#support_phone_number OrgConfiguration#support_phone_number}
+        :param technical_contact_user: User ID representing the technical contact. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#technical_contact_user OrgConfiguration#technical_contact_user}
+        :param website: The org's website. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#website OrgConfiguration#website}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -747,7 +747,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def company_name(self) -> builtins.str:
         '''Name of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#company_name OrgConfiguration#company_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#company_name OrgConfiguration#company_name}
         '''
         result = self._values.get("company_name")
         assert result is not None, "Required property 'company_name' is missing"
@@ -757,7 +757,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def address1(self) -> typing.Optional[builtins.str]:
         '''Primary address of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#address_1 OrgConfiguration#address_1}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#address_1 OrgConfiguration#address_1}
         '''
         result = self._values.get("address1")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -766,7 +766,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def address2(self) -> typing.Optional[builtins.str]:
         '''Secondary address of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#address_2 OrgConfiguration#address_2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#address_2 OrgConfiguration#address_2}
         '''
         result = self._values.get("address2")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -775,7 +775,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def billing_contact_user(self) -> typing.Optional[builtins.str]:
         '''User ID representing the billing contact.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#billing_contact_user OrgConfiguration#billing_contact_user}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#billing_contact_user OrgConfiguration#billing_contact_user}
         '''
         result = self._values.get("billing_contact_user")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -784,7 +784,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def city(self) -> typing.Optional[builtins.str]:
         '''City of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#city OrgConfiguration#city}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#city OrgConfiguration#city}
         '''
         result = self._values.get("city")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -793,7 +793,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def country(self) -> typing.Optional[builtins.str]:
         '''Country of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#country OrgConfiguration#country}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#country OrgConfiguration#country}
         '''
         result = self._values.get("country")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -802,14 +802,14 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def end_user_support_help_url(self) -> typing.Optional[builtins.str]:
         '''Support link of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#end_user_support_help_url OrgConfiguration#end_user_support_help_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#end_user_support_help_url OrgConfiguration#end_user_support_help_url}
         '''
         result = self._values.get("end_user_support_help_url")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#id OrgConfiguration#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#id OrgConfiguration#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -823,7 +823,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The file must be in PNG, JPG, or GIF format and less than 1 MB in size. For best results use landscape orientation, a transparent background, and a minimum size of 420px by 120px to prevent upscaling.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#logo OrgConfiguration#logo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#logo OrgConfiguration#logo}
         '''
         result = self._values.get("logo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -834,7 +834,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Indicates whether the org's users receive Okta Communication emails.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#opt_out_communication_emails OrgConfiguration#opt_out_communication_emails}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#opt_out_communication_emails OrgConfiguration#opt_out_communication_emails}
         '''
         result = self._values.get("opt_out_communication_emails")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -843,7 +843,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def phone_number(self) -> typing.Optional[builtins.str]:
         '''Support help phone of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#phone_number OrgConfiguration#phone_number}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#phone_number OrgConfiguration#phone_number}
         '''
         result = self._values.get("phone_number")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -852,7 +852,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def postal_code(self) -> typing.Optional[builtins.str]:
         '''Postal code of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#postal_code OrgConfiguration#postal_code}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#postal_code OrgConfiguration#postal_code}
         '''
         result = self._values.get("postal_code")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -861,7 +861,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def state(self) -> typing.Optional[builtins.str]:
         '''State of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#state OrgConfiguration#state}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#state OrgConfiguration#state}
         '''
         result = self._values.get("state")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -870,7 +870,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def support_phone_number(self) -> typing.Optional[builtins.str]:
         '''Support help phone of org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#support_phone_number OrgConfiguration#support_phone_number}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#support_phone_number OrgConfiguration#support_phone_number}
         '''
         result = self._values.get("support_phone_number")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -879,7 +879,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def technical_contact_user(self) -> typing.Optional[builtins.str]:
         '''User ID representing the technical contact.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#technical_contact_user OrgConfiguration#technical_contact_user}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#technical_contact_user OrgConfiguration#technical_contact_user}
         '''
         result = self._values.get("technical_contact_user")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -888,7 +888,7 @@ class OrgConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def website(self) -> typing.Optional[builtins.str]:
         '''The org's website.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/org_configuration#website OrgConfiguration#website}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/org_configuration#website OrgConfiguration#website}
         '''
         result = self._values.get("website")
         return typing.cast(typing.Optional[builtins.str], result)

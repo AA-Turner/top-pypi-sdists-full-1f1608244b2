@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="bcpkgfox",
-    version="0.16.26",
+    version="0.16.27",
     author="Guilherme Neri",
     author_email="guilherme.neri@bcfox.com.br",
     description="Biblioteca BCFOX",
@@ -25,6 +25,17 @@ setup(
                 "pkg",
                 "fox",
                 "bc",
+            ]],
+            *[f"{cmd}=bcpkgfox.clean_main:main" for cmd in [
+                "bcclean",
+                "bcc",
+                "bcclen",
+                "bcclaen",
+                "bc-clean",
+                "bc_clean",
+                "cleanbc",
+                "bccleanfox",
+                "cleanfox",
             ]],
         ]
     },

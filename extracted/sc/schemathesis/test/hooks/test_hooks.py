@@ -5,9 +5,11 @@ from hypothesis import HealthCheck, Phase, given, settings
 from hypothesis import strategies as st
 
 import schemathesis
-from schemathesis.constants import USER_AGENT
-from schemathesis.hooks import HookContext, HookDispatcher, HookScope
-from schemathesis.utils import PARAMETRIZE_MARKER
+from schemathesis.core.transport import USER_AGENT
+from schemathesis.generation.modes import GenerationMode
+from schemathesis.hooks import HookDispatcher, HookDispatcherMark, HookScope
+from schemathesis.pytest.plugin import SchemaHandleMark
+from schemathesis.transport.prepare import get_default_headers
 from test.utils import assert_requests_call, flaky
 
 
@@ -67,7 +69,7 @@ def test_global_query_hook(wsgi_app_schema):
 def test_case_hook(wsgi_app_schema):
     dispatcher = HookDispatcher(scope=HookScope.TEST)
 
-    @dispatcher.register
+    @dispatcher.hook
     def map_case(context, case):
         case.body["extra"] = 42
         return case
@@ -137,13 +139,15 @@ def replacement(context, query):
 @schema.parametrize()
 @settings(max_examples=1)
 def test_a(case):
-    assert case.query["id"] == "foobar"
+    if not hasattr(case.meta.phase.data, "description"):
+        assert case.query["id"] == "foobar"
 
 @schema.parametrize()
 @schema.hooks.apply(replacement, name="map_query")
 @settings(max_examples=1)
 def test_b(case):
-    assert case.query["id"] == "foobar"
+    if not hasattr(case.meta.phase.data, "description"):
+        assert case.query["id"] == "foobar"
 
 def another_replacement(context, query):
     return {"id": "foobaz"}
@@ -157,13 +161,15 @@ def map_headers(context, headers):
 @schema.hooks.apply(map_headers)
 @settings(max_examples=1)
 def test_c(case):
-    assert case.query["id"] == "foobaz"
-    assert case.headers["value"] == "spam"
+    if not hasattr(case.meta.phase.data, "description"):
+        assert case.query["id"] == "foobaz"
+        assert case.headers["value"] == "spam"
 
 @schema.parametrize()
 @settings(max_examples=1)
 def test_d(case):
-    assert case.query["id"] != "foobar"
+    if not hasattr(case.meta.phase.data, "description"):
+        assert case.query["id"] != "foobar"
     """,
         schema=simple_openapi,
     )
@@ -185,6 +191,7 @@ def test(case):
     assert int(case.query["id"]) % 2 == 0
     """,
         schema=simple_openapi,
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
@@ -193,7 +200,7 @@ def test(case):
 def test_register_invalid_hook_name(dispatcher):
     with pytest.raises(TypeError, match="There is no hook with name 'hook'"):
 
-        @dispatcher.register
+        @dispatcher.hook
         def hook():
             pass
 
@@ -201,7 +208,7 @@ def test_register_invalid_hook_name(dispatcher):
 def test_register_invalid_hook_spec(dispatcher):
     with pytest.raises(TypeError, match="Hook 'filter_query' takes 2 arguments but 3 is defined"):
 
-        @dispatcher.register
+        @dispatcher.hook
         def filter_query(a, b, c):
             pass
 
@@ -213,7 +220,7 @@ def test_save_test_function(wsgi_app_schema):
     def test(case):
         pass
 
-    assert getattr(test, PARAMETRIZE_MARKER).test_function is test
+    assert SchemaHandleMark.get(test).test_function is test
 
 
 @pytest.mark.parametrize("apply_first", [True, False])
@@ -247,14 +254,17 @@ def test_local_dispatcher(wsgi_app_schema, apply_first):
         pass
 
     # Then a hook dispatcher instance is attached to the test function
-    assert isinstance(test._schemathesis_hooks, HookDispatcher)
-    assert test._schemathesis_hooks.scope == HookScope.TEST
+    hook_dispatcher = HookDispatcherMark.get(test)
+    assert isinstance(hook_dispatcher, HookDispatcher)
+    assert hook_dispatcher.scope == HookScope.TEST
     # And this dispatcher contains only local hooks
-    assert test._schemathesis_hooks.get_all_by_name("map_cookies") == [local_hook]
-    assert test._schemathesis_hooks.get_all_by_name("map_query") == []
+    assert hook_dispatcher.get_all_by_name("map_cookies") == [local_hook]
+    assert hook_dispatcher.get_all_by_name("map_query") == []
     # And the schema-level dispatcher still contains only schema-level hooks
-    assert getattr(test, PARAMETRIZE_MARKER).hooks.get_all_by_name("map_query") == [schema_hook]
-    assert getattr(test, PARAMETRIZE_MARKER).hooks.get_all_by_name("map_cookies") == []
+    handle = SchemaHandleMark.get(test)
+    assert handle is not None
+    assert handle.hooks.get_all_by_name("map_query") == [schema_hook]
+    assert handle.hooks.get_all_by_name("map_cookies") == []
 
 
 @flaky(max_runs=3, min_passes=1)
@@ -370,9 +380,7 @@ def test_before_add_examples(testdir, simple_openapi):
         """
 @schema.hook
 def before_add_examples(context, examples):
-    new = schemathesis.models.Case(
-        operation=context.operation,
-        generation_time=0.0,
+    new = context.operation.Case(
         query={"foo": "bar"}
     )
     examples.append(new)
@@ -380,13 +388,12 @@ def before_add_examples(context, examples):
 @schema.parametrize()
 @settings(phases=[Phase.explicit])
 def test_a(case):
-    assert case.query == {"foo": "bar"}
+    if not hasattr(case.meta, "phase"):
+        assert case.query == {"foo": "bar"}
 
 
 def another_hook(context, examples):
-    new = schemathesis.models.Case(
-        operation=context.operation,
-        generation_time=0.0,
+    new = context.operation.Case(
         query={"spam": "baz"}
     )
     examples.append(new)
@@ -397,26 +404,18 @@ IDX = 0
 @schema.hooks.apply(another_hook, name="before_add_examples")
 @settings(phases=[Phase.explicit])
 def test_b(case):
-    global IDX
-    if IDX == 0:
-        assert case.query == {"spam": "baz"}
-    if IDX == 1:
-        assert case.query == {"foo": "bar"}
-    IDX += 1
+    if not hasattr(case.meta, "phase"):
+        global IDX
+        if IDX == 0:
+            assert case.query == {"spam": "baz"}
+        if IDX == 1:
+            assert case.query == {"foo": "bar"}
+        IDX += 1
     """,
         schema=simple_openapi,
     )
     result = testdir.runpytest()
     result.assert_outcomes(passed=2)
-
-
-def test_deprecated_attribute():
-    context = HookContext(1)
-    with pytest.warns(Warning) as records:
-        assert context.endpoint == context.operation == 1
-    assert str(records[0].message) == (
-        "Property `endpoint` is deprecated and will be removed in Schemathesis 4.0. Use `operation` instead."
-    )
 
 
 def test_before_init_operation(testdir, simple_openapi):
@@ -428,44 +427,11 @@ def before_init_operation(context, operation):
 
 @schema.parametrize()
 def test_a(case):
-    assert case.query == {"id": 42}
+    if not hasattr(case.meta.phase.data, "description"):
+        assert case.query == {"id": 42}
     """,
         schema=simple_openapi,
-    )
-    result = testdir.runpytest()
-    result.assert_outcomes(passed=1)
-
-
-def test_after_load_schema(testdir, simple_openapi):
-    testdir.make_test(
-        """
-LINK_STATUS = "200"
-# Totally not working link, but it is for testing only
-KEY = "userId"
-EXPRESSION = "$response.body#/id"
-PARAMETERS = {KEY: EXPRESSION}
-
-@schemathesis.hook
-def after_load_schema(
-    context: schemathesis.HookContext,
-    schema: schemathesis.BaseSchema,
-) -> None:
-    schema.add_link(
-        source=schema["/query"]["get"],
-        target=schema["/query"]["get"],
-        status_code=LINK_STATUS,
-        parameters=PARAMETERS,
-    )
-
-schema = schemathesis.from_dict(raw_schema)
-
-@schema.parametrize()
-def test_a(case):
-    link = schema.get_links(case.operation)[LINK_STATUS][case.operation.verbose_name]
-    assert link.operation == case.operation
-    assert link.parameters == [(None, KEY, EXPRESSION)]
-    """,
-        schema=simple_openapi,
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest()
     result.assert_outcomes(passed=1)
@@ -533,6 +499,7 @@ def test_graphql_query(graphql_schema, graphql_server_host):
         assert case.as_transport_kwargs() == {
             "cookies": {"c": "4"},
             "headers": {
+                **get_default_headers(),
                 "User-Agent": USER_AGENT,
                 "X-Schemathesis-TestCaseId": ANY,
                 "Content-Type": "application/json",

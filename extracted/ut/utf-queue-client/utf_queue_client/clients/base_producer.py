@@ -9,7 +9,6 @@ import msgpack
 import pika
 from opentelemetry import trace
 from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
-from otel_extensions import instrumented
 from pika.adapters.utils.connection_workflow import AMQPConnectorException
 from pika.exceptions import AMQPConnectionError
 from pika.spec import PERSISTENT_DELIVERY_MODE, TRANSIENT_DELIVERY_MODE, BasicProperties
@@ -86,7 +85,6 @@ class BaseProducer(ABC, Loggable):
     def channel(self) -> PikaChannel:
         pass
 
-    @instrumented
     def queue_declare(
         self,
         queue,

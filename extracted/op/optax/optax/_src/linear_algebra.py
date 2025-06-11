@@ -22,14 +22,14 @@ import chex
 import jax
 from jax import lax
 import jax.numpy as jnp
-from optax import tree_utils as otu
 from optax._src import base
 from optax._src import numerics
+import optax.tree
 
 
 def _normalize_tree(x):
   # divide by the L2 norm of the tree weights.
-  return otu.tree_scalar_mul(1.0 / otu.tree_l2_norm(x), x)
+  return optax.tree.scale(1.0 / optax.tree.norm(x), x)
 
 
 def global_norm(updates: base.PyTree) -> chex.Array:
@@ -41,10 +41,10 @@ def global_norm(updates: base.PyTree) -> chex.Array:
 
 def _power_iteration_cond_fun(error_tolerance, num_iters, loop_vars):
   normalized_eigvec, unnormalized_eigvec, eig, iter_num = loop_vars
-  residual = otu.tree_sub(
-      unnormalized_eigvec, otu.tree_scalar_mul(eig, normalized_eigvec)
+  residual = optax.tree.sub(
+      unnormalized_eigvec, optax.tree.scale(eig, normalized_eigvec)
   )
-  residual_norm = otu.tree_l2_norm(residual)
+  residual_norm = optax.tree.norm(residual)
   converged = jnp.abs(residual_norm / eig) < error_tolerance
   return ~converged & (iter_num < num_iters)
 
@@ -60,9 +60,9 @@ def power_iteration(
 ) -> tuple[chex.Numeric, chex.ArrayTree]:
   r"""Power iteration algorithm.
 
-  This algorithm computes the dominant eigenvalue and its associated eigenvector
-  of a diagonalizable matrix. This matrix can be given as an array or as a
-  callable implementing a matrix-vector product.
+  This algorithm computes the dominant eigenvalue (i.e. the spectral radius) and
+  its associated eigenvector of a diagonalizable matrix. This matrix can be
+  given as an array or as a callable implementing a matrix-vector product.
 
   Args:
     matrix: a square matrix, either as an array or a callable implementing a
@@ -91,6 +91,10 @@ def power_iteration(
   References:
     Wikipedia contributors. `Power iteration
     <https://en.wikipedia.org/w/index.php?tit0le=Power_iteration>`_.
+
+  .. note::
+    If the matrix is not diagonalizable or the dominant eigenvalue is not
+    unique, the algorithm may not converge.
 
   .. versionchanged:: 0.2.2
     ``matrix`` can be a callable. Reversed the order of the return parameters,
@@ -127,7 +131,7 @@ def power_iteration(
     _, z, _, iter_num = loop_vars
     eigvec = _normalize_tree(z)
     z = mvp(eigvec)
-    eig = otu.tree_vdot(eigvec, z)
+    eig = optax.tree.vdot(eigvec, z)
     return eigvec, z, eig, iter_num + 1
 
   init_vars = (v0, mvp(v0), jnp.asarray(0.0), jnp.asarray(0))
@@ -265,3 +269,83 @@ def matrix_inverse_pth_root(
     resultant_mat_h = is_converged * mat_h + (1 - is_converged) * old_mat_h
     resultant_mat_h = jnp.asarray(resultant_mat_h, matrix.dtype)
   return resultant_mat_h, error
+
+
+def get_spectral_radius_upper_bound(matrix):
+  # Get an upper bound on the spectral radius of a matrix.
+  a = jnp.linalg.matrix_norm(matrix, ord='fro')
+  # TODO(rdyro): https://github.com/jax-ml/jax/issues/26555
+  b = jnp.linalg.matrix_norm(matrix, ord=1) if matrix.size != 0 else 0
+  return jnp.minimum(a, b)
+
+
+# pylint: disable=invalid-name
+def nnls(
+    A: jax.Array,
+    b: jax.Array,
+    iters: int,
+    unroll: Union[int, bool] = 1,
+    L: Union[jax.Array, float, None] = None,
+) -> jax.Array:
+  r"""Solves the non-negative least squares problem.
+
+  Minimizes :math:`\|A x - b\|_2` subject to :math:`x \geq 0`.
+
+  Uses the fast projected gradient (FPG) algorithm of Polyak 2015.
+
+  Args:
+    A: Input matrix of shape `(M, N)`.
+    b: Input vector of shape `(M,)` or matrix of shape `(M, K)`.
+    iters: Number of iterations to run the algorithm for.
+    unroll: Unroll parameter passed to `lax.scan`.
+    L: An upper bound on the spectral radius of `A.mT @ A` (optional).
+
+  Returns:
+    A solution vector of shape `(N,)` or matrix of shape `(N, K)`.
+
+  Examples:
+    >>> from jax import numpy as jnp
+    >>> import optax
+    >>> A = jnp.array([[1., 2.], [3., 4.]])
+    >>> b = jnp.array([5., 6.])
+    >>> x = optax.nnls(A, b, 10**3)
+    >>> print(f"{x[0]:.2f}")
+    0.00
+    >>> print(f"{x[1]:.2f}")
+    1.70
+
+  References:
+    Roman A. Polyak, `Projected gradient method for non-negative least square
+    <http://www.ams.org/books/conm/636/>`_, 2015
+  """
+  assert A.ndim == 2
+  assert b.ndim in (1, 2)
+  assert b.shape[0] == A.shape[0]
+
+  Q = A.mT @ A
+  q = A.mT @ b
+
+  if L is None:
+    L = get_spectral_radius_upper_bound(Q)
+
+  L = jnp.where(L == 0, 1, L)  # avoid division by zero below
+
+  def f(x_p_c, _):
+    x, p, c = x_p_c
+
+    cn = (1 + jnp.sqrt(1 + 4 * c ** 2)) / 2
+    s = (c - 1) / cn
+
+    xn = (p - (Q @ p - q) / L).clip(0)
+    pn = xn + s * (xn - x)
+
+    return (xn, pn, cn), None
+
+  x = jnp.zeros_like(b, shape=A.shape[-1:] + b.shape[1:])
+  p = x
+  c = 0.
+
+  (x, _, _), _ = lax.scan(f, (x, p, c), length=iters, unroll=unroll)
+
+  return x
+# pylint: enable=invalid-name

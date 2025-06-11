@@ -142,11 +142,6 @@ export type BaseInfoResponse = {
 };
 
 /**
- * Bulk Action to be performed on the used model.
- */
-export type BulkAction = "create" | "delete" | "update";
-
-/**
  * Bulk Action to be taken if the entity does not exist.
  */
 export type BulkActionNotOnExistence = "fail" | "skip";
@@ -196,7 +191,7 @@ export type BulkCreateAction_ConnectionBody_ = {
   /**
    * The action to be performed on the entities.
    */
-  action: BulkAction;
+  action: "create";
   /**
    * A list of entities to be created.
    */
@@ -208,7 +203,7 @@ export type BulkCreateAction_PoolBody_ = {
   /**
    * The action to be performed on the entities.
    */
-  action: BulkAction;
+  action: "create";
   /**
    * A list of entities to be created.
    */
@@ -220,7 +215,7 @@ export type BulkCreateAction_VariableBody_ = {
   /**
    * The action to be performed on the entities.
    */
-  action: BulkAction;
+  action: "create";
   /**
    * A list of entities to be created.
    */
@@ -232,7 +227,7 @@ export type BulkDeleteAction_ConnectionBody_ = {
   /**
    * The action to be performed on the entities.
    */
-  action: BulkAction;
+  action: "delete";
   /**
    * A list of entity id/key to be deleted.
    */
@@ -244,7 +239,7 @@ export type BulkDeleteAction_PoolBody_ = {
   /**
    * The action to be performed on the entities.
    */
-  action: BulkAction;
+  action: "delete";
   /**
    * A list of entity id/key to be deleted.
    */
@@ -256,7 +251,7 @@ export type BulkDeleteAction_VariableBody_ = {
   /**
    * The action to be performed on the entities.
    */
-  action: BulkAction;
+  action: "delete";
   /**
    * A list of entity id/key to be deleted.
    */
@@ -290,7 +285,7 @@ export type BulkUpdateAction_ConnectionBody_ = {
   /**
    * The action to be performed on the entities.
    */
-  action: BulkAction;
+  action: "update";
   /**
    * A list of entities to be updated.
    */
@@ -302,7 +297,7 @@ export type BulkUpdateAction_PoolBody_ = {
   /**
    * The action to be performed on the entities.
    */
-  action: BulkAction;
+  action: "update";
   /**
    * A list of entities to be updated.
    */
@@ -314,7 +309,7 @@ export type BulkUpdateAction_VariableBody_ = {
   /**
    * The action to be performed on the entities.
    */
-  action: BulkAction;
+  action: "update";
   /**
    * A list of entities to be updated.
    */
@@ -471,6 +466,9 @@ export type DAGDetailsResponse = {
   template_search_path: Array<string> | null;
   timezone: string | null;
   last_parsed: string | null;
+  owner_links?: {
+    [key: string]: string;
+  } | null;
   /**
    * Return file token.
    */
@@ -574,7 +572,7 @@ export type DAGRunResponse = {
   triggered_by: DagRunTriggeredByType | null;
   conf: {
     [key: string]: unknown;
-  };
+  } | null;
   note: string | null;
   dag_versions: Array<DagVersionResponse>;
   bundle_version: string | null;
@@ -1446,10 +1444,6 @@ export type type =
  * configuration serializer.
  */
 export type ConfigResponse = {
-  navbar_color: string;
-  navbar_text_color: string;
-  navbar_hover_color: string;
-  navbar_text_hover_color: string;
   page_size: number;
   auto_refresh_interval: number;
   hide_paused_dags_by_default: boolean;
@@ -2104,7 +2098,6 @@ export type GetDagsResponse = DAGCollectionResponse;
 export type PatchDagsData = {
   dagIdPattern?: string | null;
   excludeStale?: boolean;
-  lastDagRunState?: DagRunState | null;
   limit?: number;
   offset?: number;
   owners?: Array<string>;
@@ -2152,6 +2145,23 @@ export type GetDagTagsData = {
 
 export type GetDagTagsResponse = DAGTagCollectionResponse;
 
+export type RecentDagRunsData = {
+  dagDisplayNamePattern?: string | null;
+  dagIdPattern?: string | null;
+  dagIds?: Array<string> | null;
+  dagRunsLimit?: number;
+  excludeStale?: boolean;
+  lastDagRunState?: DagRunState | null;
+  limit?: number;
+  offset?: number;
+  owners?: Array<string>;
+  paused?: boolean | null;
+  tags?: Array<string>;
+  tagsMatchMode?: "any" | "all" | null;
+};
+
+export type RecentDagRunsResponse = DAGWithLatestDagRunsCollectionResponse;
+
 export type GetEventLogData = {
   eventLogId: number;
 };
@@ -2197,13 +2207,13 @@ export type GetTaskInstanceResponse = TaskInstanceResponse;
 export type PatchTaskInstanceData = {
   dagId: string;
   dagRunId: string;
-  mapIndex?: number;
+  mapIndex?: number | null;
   requestBody: PatchTaskInstanceBody;
   taskId: string;
   updateMask?: Array<string> | null;
 };
 
-export type PatchTaskInstanceResponse = TaskInstanceResponse;
+export type PatchTaskInstanceResponse = TaskInstanceCollectionResponse;
 
 export type GetMappedTaskInstancesData = {
   dagId: string;
@@ -2233,23 +2243,23 @@ export type GetMappedTaskInstancesData = {
 
 export type GetMappedTaskInstancesResponse = TaskInstanceCollectionResponse;
 
-export type GetTaskInstanceDependenciesData = {
+export type GetTaskInstanceDependenciesByMapIndexData = {
   dagId: string;
   dagRunId: string;
   mapIndex: number;
   taskId: string;
 };
 
-export type GetTaskInstanceDependenciesResponse = TaskDependencyCollectionResponse;
+export type GetTaskInstanceDependenciesByMapIndexResponse = TaskDependencyCollectionResponse;
 
-export type GetTaskInstanceDependencies1Data = {
+export type GetTaskInstanceDependenciesData = {
   dagId: string;
   dagRunId: string;
   mapIndex?: number;
   taskId: string;
 };
 
-export type GetTaskInstanceDependencies1Response = TaskDependencyCollectionResponse;
+export type GetTaskInstanceDependenciesResponse = TaskDependencyCollectionResponse;
 
 export type GetTaskInstanceTriesData = {
   dagId: string;
@@ -2278,16 +2288,16 @@ export type GetMappedTaskInstanceData = {
 
 export type GetMappedTaskInstanceResponse = TaskInstanceResponse;
 
-export type PatchTaskInstance1Data = {
+export type PatchTaskInstanceByMapIndexData = {
   dagId: string;
   dagRunId: string;
-  mapIndex: number;
+  mapIndex: number | null;
   requestBody: PatchTaskInstanceBody;
   taskId: string;
   updateMask?: Array<string> | null;
 };
 
-export type PatchTaskInstance1Response = TaskInstanceResponse;
+export type PatchTaskInstanceByMapIndexResponse = TaskInstanceCollectionResponse;
 
 export type GetTaskInstancesData = {
   dagId: string;
@@ -2353,10 +2363,21 @@ export type PostClearTaskInstancesData = {
 
 export type PostClearTaskInstancesResponse = TaskInstanceCollectionResponse;
 
+export type PatchTaskInstanceDryRunByMapIndexData = {
+  dagId: string;
+  dagRunId: string;
+  mapIndex: number | null;
+  requestBody: PatchTaskInstanceBody;
+  taskId: string;
+  updateMask?: Array<string> | null;
+};
+
+export type PatchTaskInstanceDryRunByMapIndexResponse = TaskInstanceCollectionResponse;
+
 export type PatchTaskInstanceDryRunData = {
   dagId: string;
   dagRunId: string;
-  mapIndex: number;
+  mapIndex?: number | null;
   requestBody: PatchTaskInstanceBody;
   taskId: string;
   updateMask?: Array<string> | null;
@@ -2364,19 +2385,8 @@ export type PatchTaskInstanceDryRunData = {
 
 export type PatchTaskInstanceDryRunResponse = TaskInstanceCollectionResponse;
 
-export type PatchTaskInstanceDryRun1Data = {
-  dagId: string;
-  dagRunId: string;
-  mapIndex?: number;
-  requestBody: PatchTaskInstanceBody;
-  taskId: string;
-  updateMask?: Array<string> | null;
-};
-
-export type PatchTaskInstanceDryRun1Response = TaskInstanceCollectionResponse;
-
 export type GetLogData = {
-  accept?: "application/json" | "text/plain" | "*/*";
+  accept?: "application/json" | "application/x-ndjson" | "*/*";
   dagId: string;
   dagRunId: string;
   fullContent?: boolean;
@@ -2614,23 +2624,6 @@ export type LogoutData = {
 export type LogoutResponse = unknown;
 
 export type GetAuthMenusResponse = MenuItemCollectionResponse;
-
-export type RecentDagRunsData = {
-  dagDisplayNamePattern?: string | null;
-  dagIdPattern?: string | null;
-  dagIds?: Array<string> | null;
-  dagRunsLimit?: number;
-  excludeStale?: boolean;
-  lastDagRunState?: DagRunState | null;
-  limit?: number;
-  offset?: number;
-  owners?: Array<string>;
-  paused?: boolean | null;
-  tags?: Array<string>;
-  tagsMatchMode?: "any" | "all" | null;
-};
-
-export type RecentDagRunsResponse = DAGWithLatestDagRunsCollectionResponse;
 
 export type GetDependenciesData = {
   nodeId?: string | null;
@@ -4089,6 +4082,21 @@ export type $OpenApiTs = {
       };
     };
   };
+  "/ui/dags/recent_dag_runs": {
+    get: {
+      req: RecentDagRunsData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: DAGWithLatestDagRunsCollectionResponse;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
   "/api/v2/eventLogs/{event_log_id}": {
     get: {
       req: GetEventLogData;
@@ -4198,7 +4206,7 @@ export type $OpenApiTs = {
         /**
          * Successful Response
          */
-        200: TaskInstanceResponse;
+        200: TaskInstanceCollectionResponse;
         /**
          * Bad Request
          */
@@ -4255,7 +4263,7 @@ export type $OpenApiTs = {
   };
   "/api/v2/dags/{dag_id}/dagRuns/{dag_run_id}/taskInstances/{task_id}/{map_index}/dependencies": {
     get: {
-      req: GetTaskInstanceDependenciesData;
+      req: GetTaskInstanceDependenciesByMapIndexData;
       res: {
         /**
          * Successful Response
@@ -4282,7 +4290,7 @@ export type $OpenApiTs = {
   };
   "/api/v2/dags/{dag_id}/dagRuns/{dag_run_id}/taskInstances/{task_id}/dependencies": {
     get: {
-      req: GetTaskInstanceDependencies1Data;
+      req: GetTaskInstanceDependenciesData;
       res: {
         /**
          * Successful Response
@@ -4388,12 +4396,12 @@ export type $OpenApiTs = {
       };
     };
     patch: {
-      req: PatchTaskInstance1Data;
+      req: PatchTaskInstanceByMapIndexData;
       res: {
         /**
          * Successful Response
          */
-        200: TaskInstanceResponse;
+        200: TaskInstanceCollectionResponse;
         /**
          * Bad Request
          */
@@ -4558,7 +4566,7 @@ export type $OpenApiTs = {
   };
   "/api/v2/dags/{dag_id}/dagRuns/{dag_run_id}/taskInstances/{task_id}/{map_index}/dry_run": {
     patch: {
-      req: PatchTaskInstanceDryRunData;
+      req: PatchTaskInstanceDryRunByMapIndexData;
       res: {
         /**
          * Successful Response
@@ -4589,7 +4597,7 @@ export type $OpenApiTs = {
   };
   "/api/v2/dags/{dag_id}/dagRuns/{dag_run_id}/taskInstances/{task_id}/dry_run": {
     patch: {
-      req: PatchTaskInstanceDryRun1Data;
+      req: PatchTaskInstanceDryRunData;
       res: {
         /**
          * Successful Response
@@ -5404,21 +5412,6 @@ export type $OpenApiTs = {
          * Successful Response
          */
         200: MenuItemCollectionResponse;
-      };
-    };
-  };
-  "/ui/dags/recent_dag_runs": {
-    get: {
-      req: RecentDagRunsData;
-      res: {
-        /**
-         * Successful Response
-         */
-        200: DAGWithLatestDagRunsCollectionResponse;
-        /**
-         * Validation Error
-         */
-        422: HTTPValidationError;
       };
     };
   };

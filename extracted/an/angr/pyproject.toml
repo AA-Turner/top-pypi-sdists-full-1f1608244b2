@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.2", "setuptools-rust", "pyvex==9.2.159"]
+requires = ["setuptools>=61.2", "setuptools-rust", "pyvex==9.2.160"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +7,6 @@ name = "angr"
 description = "A multi-architecture binary analysis toolkit, with the ability to perform dynamic symbolic execution and various static analyses on binaries"
 license = { text = "BSD-2-Clause" }
 classifiers = [
-    "License :: OSI Approved :: BSD License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10",
@@ -19,12 +18,12 @@ requires-python = ">=3.10"
 dependencies = [
     "cxxheaderparser",
     "GitPython",
-    "archinfo==9.2.159",
+    "archinfo==9.2.160",
     "cachetools",
     "capstone==5.0.3",
     "cffi>=1.14.0",
-    "claripy==9.2.159",
-    "cle==9.2.159",
+    "claripy==9.2.160",
+    "cle==9.2.160",
     "mulpyplexer",
     "networkx!=2.8.1,>=2.0",
     "protobuf>=5.28.2",
@@ -33,7 +32,7 @@ dependencies = [
     "pydemumble",
     "pyformlang",
     "pypcode>=3.2.1,<4.0",
-    "pyvex==9.2.159",
+    "pyvex==9.2.160",
     "rich>=13.1.0",
     "sortedcontainers",
     "sympy",
@@ -83,14 +82,14 @@ exclude = ["tests*"]
 namespaces = false
 
 [tool.setuptools.package-data]
-angr = ["py.typed", "lib/*", "rustylib.*"]
+angr = ["py.typed", "unicornlib.*", "rustylib.*"]
 
 [tool.setuptools.dynamic]
 version = { attr = "angr.__version__" }
 
 [[tool.setuptools-rust.ext-modules]]
 target = "angr.rustylib"
-path = "crates/angr/Cargo.toml"
+path = "native/angr/Cargo.toml"
 debug = false
 
 [tool.uv]

@@ -9,21 +9,22 @@ from typing import TYPE_CHECKING, Any, Generator, Iterator, Union, cast
 import requests
 from hypothesis_jsonschema import from_schema
 
+from schemathesis.config import GenerationConfig
+from schemathesis.core.transforms import deepclone
+from schemathesis.core.transport import DEFAULT_RESPONSE_TIMEOUT
+from schemathesis.generation.case import Case
+from schemathesis.generation.hypothesis import examples
+from schemathesis.generation.meta import TestPhase
+from schemathesis.schemas import APIOperation
 from schemathesis.specs.openapi.serialization import get_serializers_for_operation
 
-from ...constants import DEFAULT_RESPONSE_TIMEOUT
-from ...generation import get_single_example
-from ...internal.copy import fast_deepcopy
-from ...models import APIOperation, Case, TestPhase
-from ._hypothesis import get_case_strategy, get_default_format_strategies
+from ._hypothesis import get_default_format_strategies, openapi_cases
 from .constants import LOCATION_TO_CONTAINER
 from .formats import STRING_FORMATS
 from .parameters import OpenAPIBody, OpenAPIParameter
 
 if TYPE_CHECKING:
     from hypothesis.strategies import SearchStrategy
-
-    from ...generation import GenerationConfig
 
 
 @dataclass
@@ -47,7 +48,7 @@ Example = Union[ParameterExample, BodyExample]
 
 
 def get_strategies_from_examples(
-    operation: APIOperation[OpenAPIParameter, Case], as_strategy_kwargs: dict[str, Any] | None = None
+    operation: APIOperation[OpenAPIParameter], **kwargs: Any
 ) -> list[SearchStrategy[Case]]:
     """Build a set of strategies that generate test cases based on explicit examples in the schema."""
     maps = get_serializers_for_operation(operation)
@@ -66,15 +67,15 @@ def get_strategies_from_examples(
     examples = list(extract_top_level(operation))
     # Add examples from parameter's schemas
     examples.extend(extract_from_schemas(operation))
-    as_strategy_kwargs = as_strategy_kwargs or {}
-    as_strategy_kwargs["phase"] = TestPhase.EXPLICIT
     return [
-        get_case_strategy(operation=operation, **{**parameters, **(as_strategy_kwargs or {})}).map(serialize_components)
+        openapi_cases(operation=operation, **{**parameters, **kwargs, "phase": TestPhase.EXAMPLES}).map(
+            serialize_components
+        )
         for parameters in produce_combinations(examples)
     ]
 
 
-def extract_top_level(operation: APIOperation[OpenAPIParameter, Case]) -> Generator[Example, None, None]:
+def extract_top_level(operation: APIOperation[OpenAPIParameter]) -> Generator[Example, None, None]:
     """Extract top-level parameter examples from `examples` & `example` fields."""
     responses = find_in_responses(operation)
     for parameter in operation.iter_parameters():
@@ -142,7 +143,7 @@ def _expand_subschemas(schema: dict[str, Any] | bool) -> Generator[dict[str, Any
                 for subschema in schema[key]:
                     yield subschema
         if "allOf" in schema:
-            subschema = fast_deepcopy(schema["allOf"][0])
+            subschema = deepclone(schema["allOf"][0])
             for sub in schema["allOf"][1:]:
                 if isinstance(sub, dict):
                     for key, value in sub.items():
@@ -160,7 +161,7 @@ def _expand_subschemas(schema: dict[str, Any] | bool) -> Generator[dict[str, Any
 
 
 def _find_parameter_examples_definition(
-    operation: APIOperation[OpenAPIParameter, Case], parameter_name: str, field_name: str
+    operation: APIOperation[OpenAPIParameter], parameter_name: str, field_name: str
 ) -> dict[str, Any]:
     """Find the original, unresolved `examples` definition of a parameter."""
     from .schemas import BaseOpenAPISchema
@@ -178,13 +179,13 @@ def _find_parameter_examples_definition(
 
 
 def _find_request_body_examples_definition(
-    operation: APIOperation[OpenAPIParameter, Case], alternative: OpenAPIBody
+    operation: APIOperation[OpenAPIParameter], alternative: OpenAPIBody
 ) -> dict[str, Any]:
     """Find the original, unresolved `examples` definition of a request body variant."""
     from .schemas import BaseOpenAPISchema
 
     schema = cast(BaseOpenAPISchema, operation.schema)
-    if schema.spec_version == "2.0":
+    if schema.specification.version == "2.0":
         raw_schema = schema.raw_schema
         path_data = raw_schema["paths"][operation.path]
         parameters = chain(path_data[operation.method].get("parameters", []), path_data.get("parameters", []))
@@ -220,12 +221,12 @@ def extract_inner_examples(
 @lru_cache
 def load_external_example(url: str) -> bytes:
     """Load examples the `externalValue` keyword."""
-    response = requests.get(url, timeout=DEFAULT_RESPONSE_TIMEOUT / 1000)
+    response = requests.get(url, timeout=DEFAULT_RESPONSE_TIMEOUT)
     response.raise_for_status()
     return response.content
 
 
-def extract_from_schemas(operation: APIOperation[OpenAPIParameter, Case]) -> Generator[Example, None, None]:
+def extract_from_schemas(operation: APIOperation[OpenAPIParameter]) -> Generator[Example, None, None]:
     """Extract examples from parameters' schema definitions."""
     for parameter in operation.iter_parameters():
         schema = parameter.as_json_schema(operation)
@@ -242,7 +243,7 @@ def extract_from_schemas(operation: APIOperation[OpenAPIParameter, Case]) -> Gen
 
 
 def extract_from_schema(
-    operation: APIOperation[OpenAPIParameter, Case],
+    operation: APIOperation[OpenAPIParameter],
     schema: dict[str, Any],
     example_field_name: str,
     examples_field_name: str,
@@ -273,12 +274,13 @@ def extract_from_schema(
                     continue
                 variants[name] = values
         if variants:
+            config = operation.schema.config.generation_for(operation=operation, phase="examples")
             for name, subschema in to_generate.items():
                 if name in variants:
                     # Generated by one of `anyOf` or similar sub-schemas
                     continue
                 subschema = operation.schema.prepare_schema(subschema)
-                generated = _generate_single_example(subschema, operation.schema.generation_config)
+                generated = _generate_single_example(subschema, config)
                 variants[name] = [generated]
             # Calculate the maximum number of examples any property has
             total_combos = max(len(examples) for examples in variants.values())
@@ -304,7 +306,7 @@ def _generate_single_example(
         allow_x00=generation_config.allow_x00,
         codec=generation_config.codec,
     )
-    return get_single_example(strategy)
+    return examples.generate_one(strategy)
 
 
 def produce_combinations(examples: list[Example]) -> Generator[dict[str, Any], None, None]:

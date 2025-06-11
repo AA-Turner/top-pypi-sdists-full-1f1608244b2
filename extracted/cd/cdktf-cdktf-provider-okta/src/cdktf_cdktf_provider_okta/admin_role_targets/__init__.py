@@ -1,7 +1,7 @@
 r'''
 # `okta_admin_role_targets`
 
-Refer to the Terraform Registry for docs: [`okta_admin_role_targets`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets).
+Refer to the Terraform Registry for docs: [`okta_admin_role_targets`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AdminRoleTargets(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.adminRoleTargets.AdminRoleTargets",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets okta_admin_role_targets}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets okta_admin_role_targets}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class AdminRoleTargets(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets okta_admin_role_targets} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets okta_admin_role_targets} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param role_type: Type of the role that is assigned to the user and supports optional targets. See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#role_type AdminRoleTargets#role_type}
-        :param user_id: User associated with the role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#user_id AdminRoleTargets#user_id}
-        :param apps: List of app names (name represents set of app instances) or a combination of app name and app instance ID (like 'salesforce' or 'facebook.0oapsqQ6dv19pqyEo0g3'). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#apps AdminRoleTargets#apps}
-        :param groups: List of group IDs. Conflicts with apps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#groups AdminRoleTargets#groups}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#id AdminRoleTargets#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param role_type: Type of the role that is assigned to the user and supports optional targets. See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#role_type AdminRoleTargets#role_type}
+        :param user_id: User associated with the role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#user_id AdminRoleTargets#user_id}
+        :param apps: List of app names (name represents set of app instances) or a combination of app name and app instance ID (like 'salesforce' or 'facebook.0oapsqQ6dv19pqyEo0g3'). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#apps AdminRoleTargets#apps}
+        :param groups: List of group IDs. Conflicts with apps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#groups AdminRoleTargets#groups}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#id AdminRoleTargets#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class AdminRoleTargets(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AdminRoleTargets to import.
-        :param import_from_id: The id of the existing AdminRoleTargets that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AdminRoleTargets that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AdminRoleTargets to import is found.
         '''
         if __debug__:
@@ -285,11 +285,11 @@ class AdminRoleTargetsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param role_type: Type of the role that is assigned to the user and supports optional targets. See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#role_type AdminRoleTargets#role_type}
-        :param user_id: User associated with the role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#user_id AdminRoleTargets#user_id}
-        :param apps: List of app names (name represents set of app instances) or a combination of app name and app instance ID (like 'salesforce' or 'facebook.0oapsqQ6dv19pqyEo0g3'). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#apps AdminRoleTargets#apps}
-        :param groups: List of group IDs. Conflicts with apps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#groups AdminRoleTargets#groups}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#id AdminRoleTargets#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param role_type: Type of the role that is assigned to the user and supports optional targets. See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#role_type AdminRoleTargets#role_type}
+        :param user_id: User associated with the role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#user_id AdminRoleTargets#user_id}
+        :param apps: List of app names (name represents set of app instances) or a combination of app name and app instance ID (like 'salesforce' or 'facebook.0oapsqQ6dv19pqyEo0g3'). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#apps AdminRoleTargets#apps}
+        :param groups: List of group IDs. Conflicts with apps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#groups AdminRoleTargets#groups}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#id AdminRoleTargets#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -400,7 +400,7 @@ class AdminRoleTargetsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def role_type(self) -> builtins.str:
         '''Type of the role that is assigned to the user and supports optional targets. See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#role_type AdminRoleTargets#role_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#role_type AdminRoleTargets#role_type}
         '''
         result = self._values.get("role_type")
         assert result is not None, "Required property 'role_type' is missing"
@@ -410,7 +410,7 @@ class AdminRoleTargetsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_id(self) -> builtins.str:
         '''User associated with the role.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#user_id AdminRoleTargets#user_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#user_id AdminRoleTargets#user_id}
         '''
         result = self._values.get("user_id")
         assert result is not None, "Required property 'user_id' is missing"
@@ -420,7 +420,7 @@ class AdminRoleTargetsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def apps(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of app names (name represents set of app instances) or a combination of app name and app instance ID (like 'salesforce' or 'facebook.0oapsqQ6dv19pqyEo0g3').
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#apps AdminRoleTargets#apps}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#apps AdminRoleTargets#apps}
         '''
         result = self._values.get("apps")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -429,14 +429,14 @@ class AdminRoleTargetsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def groups(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of group IDs. Conflicts with apps.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#groups AdminRoleTargets#groups}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#groups AdminRoleTargets#groups}
         '''
         result = self._values.get("groups")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/admin_role_targets#id AdminRoleTargets#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/admin_role_targets#id AdminRoleTargets#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

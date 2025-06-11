@@ -1,9 +1,10 @@
 import json
-import sys
 
 import boto3
 import pytest
 from django.test import TestCase
+from io_storages.models import S3ImportStorage
+from io_storages.s3.models import S3ImportStorageLink
 from io_storages.tests.factories import (
     AzureBlobImportStorageFactory,
     GCSImportStorageFactory,
@@ -13,14 +14,10 @@ from io_storages.tests.factories import (
 from moto import mock_s3
 from projects.tests.factories import ProjectFactory
 from rest_framework.test import APIClient
-from tests.utils import azure_client_mock, gcs_client_mock, redis_client_mock
-
-# Skip on Windows before any forking is attempted
-if sys.platform == 'win32':
-    pytest.skip('forked tests not supported on Windows', allow_module_level=True)
+from tests.utils import azure_client_mock, gcs_client_mock, mock_feature_flag, redis_client_mock
 
 
-@pytest.mark.forked
+@pytest.mark.skip(reason='FF mocking is broken here, letting these tests run in LSE instead')
 class TestMultiTaskImport(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -33,6 +30,7 @@ class TestMultiTaskImport(TestCase):
             {'data': {'image_url': 'http://ggg.com/image2.jpg', 'text': 'Task 2 text'}},
         ]
 
+    @mock_feature_flag('fflag_feat_dia_2092_multitasks_per_storage_link', True)
     def _test_storage_import(self, storage_class, task_data, **storage_kwargs):
         """Helper to test import for a specific storage type"""
 
@@ -41,7 +39,6 @@ class TestMultiTaskImport(TestCase):
         client.force_authenticate(user=self.project.created_by)
 
         # Setup storage with required credentials
-
         storage = storage_class(project=self.project, **storage_kwargs)
 
         # Validate connection before sync
@@ -85,14 +82,13 @@ class TestMultiTaskImport(TestCase):
 
     def test_import_multiple_tasks_gcs(self):
         # initialize mock with sample data
-        with gcs_client_mock(sample_json_contents=self.common_task_data, sample_blob_names=['test.json']):
+        with gcs_client_mock():
 
             self._test_storage_import(
                 GCSImportStorageFactory,
                 self.common_task_data,
-                # bucket name just has to end in "_JSON" for the mock to work
-                # and to not collide with other tests
-                bucket='unique-bucket-name_JSON',
+                # magic bucket name to set correct data in gcs_client_mock
+                bucket='multitask_JSON',
                 use_blob_urls=False,
             )
 
@@ -117,3 +113,32 @@ class TestMultiTaskImport(TestCase):
                 path='',
                 use_blob_urls=False,
             )
+
+    def test_storagelink_fields(self):
+        # use an actual storage and storagelink to test this, since factories aren't connected properly
+        with mock_s3():
+            # Setup S3 bucket and test data
+            s3 = boto3.client('s3', region_name='us-east-1')
+            bucket_name = 'pytest-s3-jsons'
+            s3.create_bucket(Bucket=bucket_name)
+
+            # Put test data into S3
+            s3.put_object(Bucket=bucket_name, Key='test.json', Body=json.dumps(self.common_task_data))
+
+            # create a real storage and sync it
+            storage = S3ImportStorage(
+                project=self.project,
+                bucket=bucket_name,
+                aws_access_key_id='example',
+                aws_secret_access_key='example',
+                use_blob_urls=False,
+            )
+            storage.save()
+            storage.sync()
+
+            # check that the storage link fields are set correctly
+            storage_links = S3ImportStorageLink.objects.filter(storage=storage).order_by('task_id')
+            self.assertEqual(storage_links[0].row_index, 0)
+            self.assertEqual(storage_links[0].row_group, None)
+            self.assertEqual(storage_links[1].row_index, 1)
+            self.assertEqual(storage_links[1].row_group, None)

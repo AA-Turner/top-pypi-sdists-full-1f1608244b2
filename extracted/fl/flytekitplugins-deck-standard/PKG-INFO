@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: flytekitplugins-deck-standard
-Version: 1.16.0
+Version: 1.16.1
 Summary: This Plugin provides more renderers to improve task visibility
 Home-page: https://github.com/flyteorg/flytekit/tree/master/plugins/flytekit-data-fsspec
 Author: flyteorg

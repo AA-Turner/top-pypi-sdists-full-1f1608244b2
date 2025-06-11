@@ -6,7 +6,8 @@ import pytest
 from hypothesis import given, settings
 
 import schemathesis
-from schemathesis.constants import SCHEMATHESIS_TEST_CASE_HEADER
+from schemathesis.core import SCHEMATHESIS_TEST_CASE_HEADER
+from schemathesis.generation.modes import GenerationMode
 from schemathesis.specs.openapi.serialization import (
     comma_delimited_object,
     conversion,
@@ -21,6 +22,7 @@ from schemathesis.specs.openapi.serialization import (
     matrix_object,
     matrix_primitive,
 )
+from schemathesis.transport.prepare import get_default_headers
 from test.utils import assert_requests_call
 
 PRIMITIVE_SCHEMA = {"type": "integer", "enum": [1]}
@@ -31,9 +33,9 @@ OBJECT_SCHEMA = {
     "additionalProperties": False,
     "type": "object",
     "properties": {
-        "r": {"type": "integer", "enum": [100], "example": 100},  # "const" is not supported by Open API
-        "g": {"type": "integer", "enum": [200], "example": 200},
-        "b": {"type": "integer", "enum": [150], "example": 150},
+        "r": {"type": "string", "enum": ["100"], "example": "100"},  # "const" is not supported by Open API
+        "g": {"type": "string", "enum": ["200"], "example": "200"},
+        "b": {"type": "string", "enum": ["150"], "example": "150"},
     },
     "required": ["r", "g", "b"],
 }
@@ -41,9 +43,9 @@ NULLABLE_OBJECT_SCHEMA = {
     "additionalProperties": False,
     "type": "object",
     "properties": {
-        "r": {"type": "integer", "enum": [100]},  # "const" is not supported by Open API
-        "g": {"type": "integer", "enum": [200]},
-        "b": {"type": "integer", "enum": [150]},
+        "r": {"type": "string", "enum": ["100"]},  # "const" is not supported by Open API
+        "g": {"type": "string", "enum": ["200"]},
+        "b": {"type": "string", "enum": ["150"]},
     },
     "required": ["r", "g", "b"],
     "nullable": True,
@@ -115,7 +117,7 @@ def make_openapi_schema(*parameters):
 
 
 def assert_generates(testdir, raw_schema, expected, parameter):
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
 
     attribute = "path_parameters" if parameter == "path" else parameter
 
@@ -179,6 +181,7 @@ def test_(request, case):
     assert case.{attribute} in {expected!r}
     """,
         schema=raw_schema,
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v")
     result.assert_outcomes(passed=1)
@@ -189,8 +192,8 @@ def test_(request, case):
     ("schema", "explode", "style", "expected"),
     [
         # Based on examples from https://swagger.io/docs/specification/serialization/
-        (OBJECT_SCHEMA, True, "deepObject", {"color[r]": 100, "color[g]": 200, "color[b]": 150}),
-        (OBJECT_SCHEMA, True, "form", {"r": 100, "g": 200, "b": 150}),
+        (OBJECT_SCHEMA, True, "deepObject", {"color[r]": "100", "color[g]": "200", "color[b]": "150"}),
+        (OBJECT_SCHEMA, True, "form", {"r": "100", "g": "200", "b": "150"}),
         (OBJECT_SCHEMA, False, "form", {"color": CommaDelimitedObject("r,100,g,200,b,150")}),
         (ARRAY_SCHEMA, False, "pipeDelimited", {"color": "blue|black|brown"}),
         (ARRAY_SCHEMA, True, "pipeDelimited", {"color": ["blue", "black", "brown"]}),
@@ -312,7 +315,7 @@ def test_path_serialization_styles_openapi3(schema, style, explode, expected):
             }
         },
     }
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
 
     @given(case=schema["/teapot/{color}"]["GET"].as_strategy())
     def test(case):
@@ -409,7 +412,7 @@ def test_content_serialization(testdir):
     raw_schema = make_openapi_schema(
         {"in": "query", "name": "filter", "required": True, "content": {"application/json": {"schema": OBJECT_SCHEMA}}}
     )
-    assert_generates(testdir, raw_schema, ({"filter": JSONString('{"r":100, "g": 200, "b": 150}')},), "query")
+    assert_generates(testdir, raw_schema, ({"filter": JSONString('{"r": "100", "g": "200", "b": "150"}')},), "query")
 
 
 def make_array_schema(location, style):
@@ -553,7 +556,7 @@ def test_unusual_form_schema(ctx, type_name):
             }
         }
     )
-    schema = schemathesis.from_dict(schema, validate_schema=False)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(case=schema["/multipart"]["POST"].as_strategy())
     @settings(max_examples=5, deadline=None)
@@ -581,6 +584,6 @@ def test_unusual_form_schema(ctx, type_name):
         # And it should be case-insensitive
         headers = case.as_transport_kwargs(headers={"content-type": "text/plain"})["headers"]
         assert headers["content-type"] == "text/plain"
-        assert list(headers) == ["content-type", "User-Agent", SCHEMATHESIS_TEST_CASE_HEADER]
+        assert list(headers) == [*list(get_default_headers()), SCHEMATHESIS_TEST_CASE_HEADER, "content-type"]
 
     test()

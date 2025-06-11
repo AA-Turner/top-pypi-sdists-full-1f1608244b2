@@ -5,8 +5,8 @@ from hypothesis import HealthCheck, assume, find, given, settings
 from hypothesis.errors import NoSuchExample
 
 import schemathesis
-from schemathesis.exceptions import OperationSchemaError
-from schemathesis.internal.copy import fast_deepcopy
+from schemathesis.core.errors import InvalidSchema
+from schemathesis.generation.modes import GenerationMode
 from schemathesis.specs.openapi._hypothesis import get_default_format_strategies, is_valid_header
 
 from .utils import as_param
@@ -30,6 +30,7 @@ def test_(case):
         """,
         schema_name=schema_name,
         **as_param({"name": "X-Header", "in": "header", "required": True, **kwargs}),
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated test case should contain it in its `headers` attribute
     testdir.run_and_assert(passed=1)
@@ -48,6 +49,7 @@ def test_(case):
         """,
         schema_name="simple_openapi.yaml",
         **as_param({"name": "token", "in": "cookie", "required": True, "schema": {"type": type_}}),
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated test case should contain it in its `cookies` attribute
     testdir.run_and_assert(passed=1)
@@ -57,7 +59,7 @@ def test_body(testdir):
     # When parameter is specified for "body"
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=3, deadline=None)
 def test_(case):
     assert_int(case.body)
@@ -71,6 +73,7 @@ def test_(case):
                 }
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated test case should contain it in its `body` attribute
     testdir.run_and_assert(passed=1)
@@ -80,10 +83,11 @@ def test_path(testdir):
     # When parameter is specified for "path"
     testdir.make_test(
         """
-@schema.parametrize(endpoint="/users/{user_id}")
+@schema.include(path_regex="/users/{user_id}").parametrize()
 @settings(max_examples=3, deadline=None)
 def test_(case):
-    assert_int(case.path_parameters["user_id"])
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.path_parameters["user_id"])
     assert_requests_call(case)
         """,
         paths={
@@ -94,6 +98,7 @@ def test_(case):
                 }
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated test case should contain it its `path_parameters` attribute
     testdir.run_and_assert(passed=1)
@@ -103,11 +108,12 @@ def test_multiple_path_variables(testdir):
     # When there are multiple parameters for "path"
     testdir.make_test(
         """
-@schema.parametrize(endpoint="/users/{user_id}/{event_id}")
+@schema.include(path_regex="/users/{user_id}/{event_id}").parametrize()
 @settings(max_examples=3, deadline=None)
 def test_(case):
-    assert_int(case.path_parameters["user_id"])
-    assert_int(case.path_parameters["event_id"])
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.path_parameters["user_id"])
+        assert_int(case.path_parameters["event_id"])
     assert_requests_call(case)
         """,
         paths={
@@ -121,6 +127,7 @@ def test_(case):
                 }
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated test case should contain them its `path_parameters` attribute
     testdir.run_and_assert(passed=1)
@@ -130,7 +137,7 @@ def test_form_data(testdir):
     # When parameter is specified for "formData"
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1, deadline=None)
 def test_(case):
     assert_str(case.body["status"])
@@ -144,6 +151,7 @@ def test_(case):
                 }
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated test case should contain it in its `body` attribute
     testdir.run_and_assert(passed=1)
@@ -157,9 +165,9 @@ def schema_spec(request):
 @pytest.fixture
 def base_schema(request, schema_spec):
     if schema_spec == "swagger":
-        return fast_deepcopy(request.getfixturevalue("simple_schema"))
+        return request.getfixturevalue("simple_schema")
     if schema_spec == "openapi":
-        return fast_deepcopy(request.getfixturevalue("simple_openapi"))
+        return request.getfixturevalue("simple_openapi")
 
 
 @pytest.fixture(params=["header", "query"])
@@ -194,6 +202,7 @@ def test_(case):
     assert_requests_call(case)
         """,
         schema=schema,
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated test case should contain API key in a proper place
     testdir.run_and_assert(passed=1)
@@ -201,11 +210,10 @@ def test_(case):
 
 @pytest.fixture
 def cookie_schema(simple_openapi):
-    schema = fast_deepcopy(simple_openapi)
-    components = schema.setdefault("components", {})
+    components = simple_openapi.setdefault("components", {})
     components["securitySchemes"] = {"api_key": {"type": "apiKey", "name": "api_key", "in": "cookie"}}
-    schema["security"] = [{"api_key": []}]
-    return schema
+    simple_openapi["security"] = [{"api_key": []}]
+    return simple_openapi
 
 
 def test_security_definitions_api_key_cookie(testdir, cookie_schema):
@@ -220,6 +228,7 @@ def test_(case):
     assert_requests_call(case)
         """,
         schema=cookie_schema,
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated test case should contain API key in a proper place
     testdir.run_and_assert(passed=1)
@@ -227,7 +236,7 @@ def test_(case):
 
 def _assert_parameter(schema, schema_spec, location, expected=None):
     # When security definition is defined as "apiKey"
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
     if schema_spec == "swagger":
         operation = schema["/users"]["get"]
         expected = (
@@ -314,6 +323,7 @@ def test_(case):
     assert_requests_call(case)
         """,
         schema=basic_auth_schema,
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated data should contain a valid "Authorization" header
     testdir.run_and_assert(passed=1)
@@ -321,10 +331,9 @@ def test_(case):
 
 def test_security_definitions_bearer_auth(testdir, simple_openapi):
     # When schema is using HTTP Bearer Auth scheme
-    schema = fast_deepcopy(simple_openapi)
-    components = schema.setdefault("components", {})
+    components = simple_openapi.setdefault("components", {})
     components["securitySchemes"] = {"bearer_auth": {"type": "http", "scheme": "bearer"}}
-    schema["security"] = [{"bearer_auth": []}]
+    simple_openapi["security"] = [{"bearer_auth": []}]
     testdir.make_test(
         """
 @schema.parametrize()
@@ -335,7 +344,8 @@ def test_(case):
     assert auth.startswith("Bearer ")
     assert_requests_call(case)
         """,
-        schema=schema,
+        schema=simple_openapi,
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the generated test case should contain a valid "Authorization" header
     testdir.run_and_assert("-s", passed=1)
@@ -361,7 +371,6 @@ def test_(case):
     pass
         """,
         **as_param({"name": "status", "in": "unknown", "required": True, "type": "string"}),
-        validate_schema=False,
     )
     # Then the generated test ignores this parameter
     testdir.run_and_assert(passed=1)
@@ -397,7 +406,7 @@ def test_date_deserializing(ctx):
     )
     # Then yaml loader should ignore it
     # And data generation should work without errors
-    schema = schemathesis.from_path(str(schema_path))
+    schema = schemathesis.openapi.from_path(str(schema_path))
 
     @given(case=schema["/teapot"]["GET"].as_strategy())
     @settings(suppress_health_check=[HealthCheck.filter_too_much])
@@ -405,22 +414,6 @@ def test_date_deserializing(ctx):
         assert isinstance(case.query["key"], str)
 
     test()
-
-
-def test_get_request_with_body(testdir, schema_with_get_payload):
-    # When schema defines a payload for GET request
-    # And schema validation is turned on
-    testdir.make_test(
-        """
-@schema.parametrize()
-def test_(case):
-    pass
-        """,
-        schema=schema_with_get_payload,
-    )
-    # Then an error should be propagated with a relevant error message
-    result = testdir.run_and_assert(failed=1)
-    result.stdout.re_match_lines([r"E +BodyInGetRequestError: GET requests should not contain body parameters."])
 
 
 def test_json_media_type(testdir):
@@ -462,6 +455,7 @@ def test_(case):
                 }
             },
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then the payload should be serialized as json
     testdir.run_and_assert(passed=1)
@@ -489,7 +483,7 @@ def test_nullable_body_behind_a_reference(ctx):
         },
     )
     # Then it should be properly collected
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     operation = schema["/payload"]["POST"]
     # And its definition is not transformed to JSON Schema
     assert operation.body[0].definition == {
@@ -536,11 +530,14 @@ def api_schema(ctx, request, openapi_version):
                 }
             }
         )
+    schema = schemathesis.openapi.from_dict(schema)
     if request.param == "aiohttp":
         base_url = request.getfixturevalue("base_url")
-        return schemathesis.from_dict(schema, base_url=base_url)
-    app = request.getfixturevalue("flask_app")
-    return schemathesis.from_dict(schema, app=app, base_url="/api")
+        schema.config.update(base_url=base_url)
+        return schema
+    schema.app = request.getfixturevalue("flask_app")
+    schema.config.update(base_url="http://127.0.0.1/api")
+    return schema
 
 
 @pytest.mark.hypothesis_nested
@@ -554,12 +551,8 @@ def test_null_body(api_schema):
         assume(case.body is None)
         # Then it should be possible to send `null`
         response = case.call_and_validate()
-        if case.app is None:
-            data = response.content
-        else:
-            data = response.data.strip()
         # And the application should return what was sent (`/payload` behaves this way)
-        assert data == b"null"
+        assert response.content.strip() == b"null"
 
     test()
 
@@ -567,7 +560,7 @@ def test_null_body(api_schema):
 @pytest.mark.operations("read_only")
 def test_read_only(schema_url):
     # When API operation has `readOnly` properties
-    schema = schemathesis.from_uri(schema_url)
+    schema = schemathesis.openapi.from_url(schema_url)
 
     @given(case=schema["/read_only"]["GET"].as_strategy())
     @settings(max_examples=1, deadline=None)
@@ -582,7 +575,7 @@ def test_read_only(schema_url):
 @pytest.mark.operations("write_only")
 def test_write_only(schema_url):
     # When API operation has `writeOnly` properties
-    schema = schemathesis.from_uri(schema_url)
+    schema = schemathesis.openapi.from_url(schema_url)
 
     @given(case=schema["/write_only"]["POST"].as_strategy())
     @settings(max_examples=1)
@@ -603,7 +596,7 @@ def test_missing_content_and_schema(ctx, location):
     schema = ctx.openapi.build_schema(
         {"/foo": {"get": {"parameters": [{"in": location, "name": "X-Foo", "required": True}]}}}
     )
-    schema = schemathesis.from_dict(schema, validate_schema=False)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(schema["/foo"]["GET"].as_strategy())
     @settings(max_examples=1)
@@ -612,7 +605,7 @@ def test_missing_content_and_schema(ctx, location):
 
     # Then the proper error should be shown
     with pytest.raises(
-        OperationSchemaError,
+        InvalidSchema,
         match=f'Can not generate data for {location} parameter "X-Foo"! '
         "It should have either `schema` or `content` keywords defined",
     ):

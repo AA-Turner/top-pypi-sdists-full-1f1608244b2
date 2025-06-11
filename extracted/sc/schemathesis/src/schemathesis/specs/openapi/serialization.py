@@ -6,8 +6,6 @@ from typing import Any, Callable, Dict, Generator, List
 from schemathesis.schemas import APIOperation
 from schemathesis.specs.openapi.constants import LOCATION_TO_CONTAINER
 
-from ...utils import compose
-
 Generated = Dict[str, Any]
 Definition = Dict[str, Any]
 DefinitionList = List[Definition]
@@ -29,10 +27,18 @@ def make_serializer(
     """A maker function to avoid code duplication."""
 
     def _wrapper(definitions: DefinitionList) -> Callable | None:
-        conversions = list(func(definitions))
-        if conversions:
-            return compose(*[conv for conv in conversions if conv is not None])
-        return None
+        functions = list(func(definitions))
+        if not functions:
+            return None
+
+        def composed(x: Any) -> Any:
+            result = x
+            for func in reversed(functions):
+                if func is not None:
+                    result = func(result)
+            return result
+
+        return composed
 
     return _wrapper
 

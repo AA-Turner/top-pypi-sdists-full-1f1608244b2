@@ -1,15 +1,18 @@
 import json
+from unittest.mock import Mock
 
 import pytest
 import requests
-from hypothesis import given, settings
+from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
-from schemathesis.models import APIOperation, Case, OperationDefinition
+from schemathesis.core.transforms import UNRESOLVABLE, resolve_pointer
+from schemathesis.core.transport import Response
+from schemathesis.generation.stateful.state_machine import StepOutput
+from schemathesis.schemas import APIOperation, OperationDefinition
 from schemathesis.specs.openapi import expressions
 from schemathesis.specs.openapi.expressions.errors import RuntimeExpressionError
 from schemathesis.specs.openapi.expressions.lexer import Token
-from schemathesis.specs.openapi.references import UNRESOLVABLE, resolve_pointer
 
 DOCUMENT = {
     "foo": ["bar", "baz"],
@@ -37,21 +40,26 @@ def operation(openapi_30):
             "",
         ),
         openapi_30,
-        verbose_name="PUT /users/{user_id}",
+        label="PUT /users/{user_id}",
         base_url="http://127.0.0.1:8080/api",
     )
 
 
 @pytest.fixture
 def case(operation):
-    return Case(
-        operation,
-        generation_time=0.0,
+    return operation.Case(
         path_parameters={"user_id": 5},
         query={"username": "foo"},
         headers={"X-Token": "secret"},
         body={"a": 1},
     )
+
+
+class Headers(dict):
+    def getlist(self, key):
+        v = self.get(key)
+        if v is not None:
+            return [v]
 
 
 @pytest.fixture(scope="module")
@@ -61,12 +69,13 @@ def response():
     response.status_code = 200
     response.headers["Content-Type"] = "application/json"
     response.headers["X-Response"] = "Y"
-    return response
+    response.raw = Mock(headers=Headers({"Content-Type": "application/json", "X-Response": "Y"}))
+    return Response.from_requests(response, True)
 
 
 @pytest.fixture
-def context(case, response):
-    return expressions.ExpressionContext(response=response, case=case)
+def output(case, response):
+    return StepOutput(response=response, case=case)
 
 
 @pytest.mark.parametrize(
@@ -80,16 +89,16 @@ def context(case, response):
         ("ID_{$method}", "ID_PUT"),
         ("$request.query.username", "foo"),
         ("spam_{$request.query.username}_baz_{$request.query.username}", "spam_foo_baz_foo"),
-        ("spam_{$request.query.unknown}", "spam_"),
+        ("spam_{$request.query.unknown}", UNRESOLVABLE),
         ("spam_{$request.path.user_id}", "spam_5"),
-        ("spam_{$request.path.unknown}", "spam_"),
+        ("spam_{$request.path.unknown}", UNRESOLVABLE),
         ("spam_{$request.header.X-Token}", "spam_secret"),
         ("spam_{$request.header.x-token}", "spam_secret"),
-        ("spam_{$request.header.x-unknown}", "spam_"),
+        ("spam_{$request.header.x-unknown}", UNRESOLVABLE),
         ("$request.path.user_id", 5),
         ("$request.body", {"a": 1}),
         ("$request.body#/a", 1),
-        ("$request.body#/unknown", None),
+        ("$request.body#/unknown", UNRESOLVABLE),
         ("spam_{$response.header.X-Response}", "spam_Y"),
         ("spam_{$response.header.x-response}", "spam_Y"),
         ("$response.body#/foo/0", "bar"),
@@ -99,17 +108,17 @@ def context(case, response):
         ("ID_{$response.body#/g|h}", "ID_4"),
         ("ID_{$response.body#/g|h}_{$response.body#/a~1b}", "ID_4_1"),
         ("eq.{$response.body#/g|h}", "eq.4"),
-        ("eq.{$response.body#/unknown}", "eq."),
+        ("eq.{$response.body#/unknown}", UNRESOLVABLE),
         ("eq.{$response.header.Content-Type#regex:/(.+)}", "eq.json"),
-        ("eq.{$response.header.Content-Type#regex:qwe(.+)}", "eq."),
-        ("eq.{$response.header.Unknown}", "eq."),
+        ("eq.{$response.header.Content-Type#regex:qwe(.+)}", UNRESOLVABLE),
+        ("eq.{$response.header.Unknown}", UNRESOLVABLE),
         ("eq.{$request.query.username#regex:f(.+)}", "eq.oo"),
-        ("eq.{$request.query.username#regex:t(.+)}", "eq."),
-        ("eq.{$request.query.unknown}", "eq."),
+        ("eq.{$request.query.username#regex:t(.+)}", UNRESOLVABLE),
+        ("eq.{$request.query.unknown}", UNRESOLVABLE),
     ],
 )
-def test_evaluate(context, expr, expected):
-    assert expressions.evaluate(expr, context) == expected
+def test_evaluate(output, expr, expected):
+    assert expressions.evaluate(expr, output) == expected
 
 
 @pytest.mark.parametrize(
@@ -118,18 +127,20 @@ def test_evaluate(context, expr, expected):
         ({"key": "value"}, {"key": "value"}),
         ({"key": "$response.body#/a~1b"}, {"key": 1}),
         ({"$response.body#/": "value"}, {"0": "value"}),
-        ({"$response.body#/unknown": "value"}, {"null": "value"}),
+        ({"$response.body#/unknown": "value"}, UNRESOLVABLE),
         ({"$response.body#/foo": "value"}, {'["bar", "baz"]': "value"}),
+        ({"$response.body#/foo/unknown": "value"}, UNRESOLVABLE),
         ({"$response.body#/a~1b": "value"}, {"1": "value"}),
         ({"$response.body#/bool-value": "value"}, {"true": "value"}),
+        (["$response.body#/foo/unknown"], UNRESOLVABLE),
         (
             {"key": "$response.body#/foo/0", "items": ["$response.body#/foo/1", "literal", 42]},
             {"items": ["baz", "literal", 42], "key": "bar"},
         ),
     ],
 )
-def test_dynamic_body(context, expr, expected):
-    assert expressions.evaluate(expr, context, evaluate_nested=True) == expected
+def test_dynamic_body(output, expr, expected):
+    assert expressions.evaluate(expr, output, evaluate_nested=True) == expected
 
 
 @pytest.mark.parametrize(
@@ -153,16 +164,16 @@ def test_dynamic_body(context, expr, expected):
         "$response}",
     ],
 )
-def test_invalid_expression(context, expr):
+def test_invalid_expression(output, expr):
     with pytest.raises(RuntimeExpressionError):
-        expressions.evaluate(expr, context)
+        expressions.evaluate(expr, output)
 
 
 @given(expr=(st.text() | (st.lists(st.sampled_from([".", "}", "{", "$"]) | st.text()).map("".join))))
-@settings(deadline=None)
-def test_random_expression(expr):
+@settings(deadline=None, suppress_health_check=[HealthCheck.function_scoped_fixture])
+def test_random_expression(expr, output):
     try:
-        expressions.evaluate(expr, context)
+        expressions.evaluate(expr, output)
     except RuntimeExpressionError:
         pass
 

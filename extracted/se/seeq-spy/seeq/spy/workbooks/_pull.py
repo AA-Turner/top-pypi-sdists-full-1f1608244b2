@@ -127,8 +127,6 @@ def pull(workbooks_df: Union[pd.DataFrame, str], *, include_referenced_workbooks
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     workbooks = WorkbookList(do_pull(workbooks_df, status=status, session=session,

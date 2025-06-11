@@ -6,11 +6,12 @@ from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 from hypothesis_jsonschema import from_schema
 from hypothesis_jsonschema._canonicalise import FALSEY, canonicalish
-from jsonschema import Draft4Validator
+from jsonschema import Draft4Validator, Draft202012Validator
 
 import schemathesis
-from schemathesis.generation import DataGenerationMethod, GenerationConfig
-from schemathesis.internal.copy import fast_deepcopy
+from schemathesis.config import GenerationConfig
+from schemathesis.core.transforms import deepclone
+from schemathesis.generation import GenerationMode
 from schemathesis.specs.openapi._hypothesis import get_default_format_strategies, is_valid_header
 from schemathesis.specs.openapi.constants import LOCATION_TO_CONTAINER
 from schemathesis.specs.openapi.negative import mutated, negative_schema
@@ -75,7 +76,7 @@ def test_top_level_strategy(data, location, schema):
         schema["additionalProperties"] = False
     validate_schema(schema)
     validator = Draft4Validator(schema)
-    schema = fast_deepcopy(schema)
+    schema = deepclone(schema)
     instance = data.draw(
         negative_schema(
             schema,
@@ -84,6 +85,7 @@ def test_top_level_strategy(data, location, schema):
             media_type="application/json",
             custom_formats=get_default_format_strategies(),
             generation_config=GenerationConfig(),
+            validator_cls=Draft4Validator,
         )
     )
     assert not validator.is_valid(instance)
@@ -127,7 +129,7 @@ def test_top_level_strategy(data, location, schema):
 def test_failing_mutations(data, mutation, schema, location, validate):
     if validate:
         validate_schema(schema)
-    original_schema = fast_deepcopy(schema)
+    original_schema = deepclone(schema)
     # When mutation can't be applied
     # Then it returns "failure"
     assert (
@@ -142,7 +144,7 @@ def test_failing_mutations(data, mutation, schema, location, validate):
 def test_change_type_urlencoded(data):
     # When `application/x-www-form-urlencoded` media type is passed to `change_type`
     schema = {"type": "object"}
-    original_schema = fast_deepcopy(schema)
+    original_schema = deepclone(schema)
     context = MutationContext(schema, {}, "body", "application/x-www-form-urlencoded")
     # Then it should not be mutated
     assert change_type(context, data.draw, schema) == MutationResult.FAILURE
@@ -187,7 +189,7 @@ def test_change_type_urlencoded(data):
 def test_successful_mutations(data, mutation, schema):
     validate_schema(schema)
     validator = Draft4Validator(schema)
-    schema = fast_deepcopy(schema)
+    schema = deepclone(schema)
     # When mutation can be applied
     # Then it returns "success"
     assert (
@@ -229,7 +231,7 @@ def test_successful_mutations(data, mutation, schema):
 @settings(deadline=None, suppress_health_check=SUPPRESSED_HEALTH_CHECKS, max_examples=MAX_EXAMPLES)
 def test_path_parameters_are_string(data, schema):
     validator = Draft4Validator(schema)
-    new_schema = fast_deepcopy(schema)
+    new_schema = deepclone(schema)
     # When path parameters are mutated
     new_schema = data.draw(mutated(new_schema, {}, "path", None))
     assert new_schema["type"] == "object"
@@ -275,21 +277,22 @@ def test_mutation_result_success(left, right, expected):
 
 
 @pytest.mark.parametrize(
-    "schema",
+    "schema, validator_cls",
     [
-        {"minimum": 5, "exclusiveMinimum": True},
-        {"maximum": 5, "exclusiveMaximum": True},
-        {"maximum": 5, "exclusiveMaximum": True, "minimum": 1, "exclusiveMinimum": True},
+        ({"minimum": 5, "exclusiveMinimum": True}, Draft4Validator),
+        ({"maximum": 5, "exclusiveMaximum": True}, Draft4Validator),
+        ({"maximum": 5, "exclusiveMaximum": True, "minimum": 1, "exclusiveMinimum": True}, Draft4Validator),
+        ({"type": "integer", "maximum": 365.0, "exclusiveMinimum": 0.0, "title": "Nights"}, Draft202012Validator),
     ],
 )
 @given(data=st.data())
 @settings(deadline=None, suppress_health_check=SUPPRESSED_HEALTH_CHECKS, max_examples=MAX_EXAMPLES)
-def test_negate_constraints_keep_dependencies(data, schema):
+def test_negate_constraints_keep_dependencies(data, schema, validator_cls):
     # When `negate_constraints` is used
-    schema = fast_deepcopy(schema)
+    schema = deepclone(schema)
     negate_constraints(MutationContext(schema, {}, "body", "application/json"), data.draw, schema)
     # Then it should always produce valid schemas
-    validate_schema(schema)
+    validator_cls.check_schema(schema)
     # E.g. `exclusiveMaximum` / `exclusiveMinimum` only work when `maximum` / `minimum` are present in the same schema
 
 
@@ -317,9 +320,9 @@ def test_optional_query_param_negation(ctx):
         }
     )
 
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
-    @given(case=schema["/bug"]["get"].as_strategy(data_generation_method=DataGenerationMethod.negative))
+    @given(case=schema["/bug"]["get"].as_strategy(generation_mode=GenerationMode.NEGATIVE))
     @settings(deadline=None, max_examples=10, suppress_health_check=SUPPRESSED_HEALTH_CHECKS)
     def test(case):
         request = requests.PreparedRequest()
@@ -388,9 +391,9 @@ def test_non_default_styles(ctx, location, schema, style, explode):
         }
     )
 
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
-    @given(case=schema["/bug"]["get"].as_strategy(data_generation_method=DataGenerationMethod.negative))
+    @given(case=schema["/bug"]["get"].as_strategy(generation_mode=GenerationMode.NEGATIVE))
     @settings(deadline=None, max_examples=10, suppress_health_check=SUPPRESSED_HEALTH_CHECKS)
     def test(case):
         assert_requests_call(case)

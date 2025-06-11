@@ -1,4 +1,5 @@
 import schemathesis
+from schemathesis.generation.modes import GenerationMode
 
 from .utils import integer
 
@@ -11,10 +12,10 @@ def test_common_parameters(testdir):
 @settings(max_examples=1)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/users"
     assert case.method in ["GET", "POST"]
-    assert_int(case.query["common_id"])
-    assert_int(case.query["not_common_id"])
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.query["common_id"])
+        assert_int(case.query["not_common_id"])
 """,
         paths={
             "/users": {
@@ -29,11 +30,12 @@ def test_(request, case):
                 },
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v", "-s")
     # Then this parameter should be used for all specified methods
     result.assert_outcomes(passed=2)
-    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 4$"])
 
 
 def test_common_parameters_with_references(testdir):
@@ -44,19 +46,19 @@ def test_common_parameters_with_references(testdir):
         """
 def impl(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/foo"
     assert case.method in ["PUT", "POST"]
     if case.method == "POST":
         assert_int(case.body)
-    assert_int(case.query["not_common_id"])
-    assert_int(case.query["key"])
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.query["not_common_id"])
+        assert_int(case.query["key"])
 
-@schema.parametrize(endpoint="/foo")
+@schema.include(path_regex="/foo").parametrize()
 @settings(max_examples=1)
 def test_a(request, case):
     impl(request, case)
 
-@schema.parametrize(endpoint="/foo")
+@schema.include(path_regex="/foo").parametrize()
 @settings(max_examples=1)
 def test_b(request, case):
     impl(request, case)
@@ -79,11 +81,12 @@ def test_b(request, case):
         },
         definitions={"SimpleIntRef": {"type": "integer"}},
         parameters={"Param": {"in": "query", "name": "key", "required": True, "type": "integer"}},
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v", "-s")
     # Then this parameter should be used in all generated tests
     result.assert_outcomes(passed=4)
-    result.stdout.re_match_lines([r"Hypothesis calls: 4$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 8$"])
 
 
 def test_common_parameters_with_references_stateful(ctx):
@@ -123,11 +126,11 @@ def test_common_parameters_with_references_stateful(ctx):
         basePath="/v1",
         version="2.0",
     )
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
     # Then state machine should be successfully generated
     state_machine = schema.as_state_machine()
     assert len(state_machine.bundles) == 1
-    assert "POST /v1/bar -> 200" in state_machine.bundles
+    assert "POST /bar -> 200" in state_machine.bundles
     # 1 operation that creates data for other operations + 2 links
     assert len(state_machine.rules()) == 3
 
@@ -139,9 +142,9 @@ def test_common_parameters_multiple_tests(testdir):
         """
 def impl(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/users"
     assert case.method in ["GET", "POST"]
-    assert_int(case.query["common_id"])
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.query["common_id"])
 
 @schema.parametrize()
 @settings(max_examples=1)
@@ -159,9 +162,10 @@ def test_b(request, case):
                 "post": {"responses": {"200": {"description": "OK"}}},
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v", "-s")
     # Then this parameter should be used in all test functions
     result.assert_outcomes(passed=4)
-    result.stdout.re_match_lines([r"Hypothesis calls: 4$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 8$"])
     # NOTE: current implementation requires a deepcopy of the whole schema

@@ -16,7 +16,7 @@ extras = {
     "all": ["pandas", "pillow", "ydata-profiling", "markdown", "plotly", "pygments"],
 }
 
-__version__ = "v1.16.0"
+__version__ = "1.16.1"
 
 setup(
     title="Deck",

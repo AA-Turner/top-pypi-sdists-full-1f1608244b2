@@ -1,14 +1,19 @@
 from __future__ import annotations
 
+import threading
 import time
 from dataclasses import dataclass
+from typing import Literal
 
 import hypothesis
 import pytest
 from flask import Flask, abort, jsonify, request
 
 import schemathesis
-from schemathesis.stateful.runner import StatefulTestRunnerConfig
+from schemathesis.config import SchemathesisConfig
+from schemathesis.engine.context import EngineContext
+from schemathesis.engine.phases import Phase, PhaseName, stateful
+from schemathesis.generation.modes import GenerationMode
 
 
 @dataclass
@@ -25,6 +30,16 @@ class AppConfig:
     auth_token: str | None = None
     ignored_auth: bool = False
     slowdown: float | int | None = None
+    multiple_incoming_links_with_same_status: bool = False
+    duplicate_operation_links: bool = False
+    circular_links: bool = False
+    invalid_parameter: bool = False
+    list_users_as_root: bool = False
+    no_reliable_transitions: bool = False
+    # For non-JSON response test
+    return_plain_text: Literal[False] | str | bytes = False
+    # For missing body parameter test
+    omit_required_field: bool = False
 
 
 @pytest.fixture
@@ -50,7 +65,13 @@ def app_factory(ctx):
     get_links = {
         "DeleteUser": {
             "operationId": "deleteUser",
-            "parameters": {"userId": "$request.path.userId"},
+            "parameters": {"userId": "$response.body#/id"},
+        },
+    }
+    get_collection_links = {
+        "GetUser": {
+            "operationId": "getUser",
+            "parameters": {"userId": "$response.body#/users/0/id"},
         },
     }
     delete_links = {
@@ -68,6 +89,24 @@ def app_factory(ctx):
     schema = ctx.openapi.build_schema(
         {
             "/users": {
+                "get": {
+                    "operationId": "getUsers",
+                    "responses": {
+                        "200": {
+                            "description": "List of users",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "users": {"type": "array", "items": {"$ref": "#/components/schemas/User"}}
+                                        },
+                                    }
+                                }
+                            },
+                        }
+                    },
+                },
                 "post": {
                     "operationId": "createUser",
                     "requestBody": {
@@ -176,10 +215,11 @@ def app_factory(ctx):
 
     app = Flask(__name__)
     config = AppConfig()
+    app.config["schema"] = schema
 
-    users = {}
     next_user_id = 1
     last_modified = "2021-01-01T00:00:00Z"
+    users = {0: {"id": 0, "name": "John Doe", "last_modified": last_modified}}
 
     @app.route("/openapi.json", methods=["GET"])
     def get_spec():
@@ -191,8 +231,17 @@ def app_factory(ctx):
             time.sleep(config.slowdown)
         user = users.get(user_id)
         if user:
+            if config.return_plain_text is not False:
+                return config.return_plain_text, 200, {"Content-Type": "text/plain"}
+            if config.omit_required_field:
+                # Return response without required 'id' field
+                return jsonify({"name": user["name"], "last_modified": user["last_modified"]})
             return jsonify(user)
         return jsonify({"error": "User not found"}), 404
+
+    @app.route("/users", methods=["GET"])
+    def list_users():
+        return jsonify(users)
 
     def expect_custom_headers():
         if config.custom_headers:
@@ -217,17 +266,24 @@ def app_factory(ctx):
             return response, 201
 
         if config.failure_behind_failure:
-            if len(name) % 10 == 7:
+            if len(name) % 10 < 7:
                 return jsonify({"invalid": "user structure"}), 201
             return jsonify({"error": "Error - rare"}), 500
 
         nonlocal next_user_id
         new_user = {"id": next_user_id, "name": name, "last_modified": last_modified}
+        if config.duplicate_operation_links:
+            new_user["manager_id"] = 0
+        if config.return_plain_text is not False:
+            new_user["id"] = next_user_id = 192
         if not config.ensure_resource_availability:
             # Do not always save the user
             users[next_user_id] = new_user
         next_user_id += 1
 
+        if config.omit_required_field:
+            # Return response without required 'id' field
+            return jsonify({"name": new_user["name"], "last_modified": new_user["last_modified"]}), 201
         return jsonify(new_user), 201
 
     @app.route("/users/<int:user_id>", methods=["PATCH"])
@@ -239,7 +295,6 @@ def app_factory(ctx):
             return jsonify({"error": "Something went wrong - PATCH"}), 500
         if user:
             data = request.get_json()
-            assert data["last_modified"] == user["last_modified"]
             if not config.merge_body:
                 assert len(data) == 1
             else:
@@ -311,11 +366,32 @@ def app_factory(ctx):
         auth_token=None,
         ignored_auth=False,
         slowdown=None,
+        multiple_incoming_links_with_same_status=False,
+        circular_links: bool = False,
+        duplicate_operation_links: bool = False,
+        invalid_parameter: bool = False,
+        list_users_as_root: bool = False,
+        no_reliable_transitions: bool = False,
+        return_plain_text: Literal[False] | str | bytes = False,
+        omit_required_field: bool = False,
     ):
         config.use_after_free = use_after_free
         config.ensure_resource_availability = ensure_resource_availability
         config.auth_token = auth_token
         config.ignored_auth = ignored_auth
+        config.return_plain_text = return_plain_text
+        if return_plain_text is not False or omit_required_field is not False:
+            # To simplify snapshots
+            schema["components"]["schemas"]["NewUser"]["properties"]["name"] = {"enum": ["fixed-name"]}
+        if omit_required_field:
+            link = post_links["DeleteUser"]
+            post_links.clear()
+            post_links["DeleteUser"] = link
+            get_links.clear()
+            delete_links.clear()
+            order_links.clear()
+
+        config.omit_required_field = omit_required_field
         if ignored_auth:
             schema["components"]["securitySchemes"] = {
                 "bearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}
@@ -353,19 +429,109 @@ def app_factory(ctx):
             order_links.clear()
         if slowdown:
             config.slowdown = slowdown
+        if multiple_incoming_links_with_same_status:
+            schema["paths"]["/users/{userId}"]["patch"]["responses"]["200"]["links"] = {
+                "GetUser": {
+                    "operationId": "getUser",
+                    "parameters": {"userId": "$request.path.userId"},
+                }
+            }
+        if circular_links:
+            # Add link from DELETE back to POST
+            delete_links["CreateNewUser"] = {
+                "operationId": "createUser",
+                "requestBody": {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/NewUser"}}}},
+            }
+        if duplicate_operation_links:
+            # Add manager ID to User schema
+            schema["components"]["schemas"]["User"]["properties"]["manager_id"] = {"type": "integer"}
+            # Add second link to the same operation
+            post_links["GetManager"] = {
+                "operationId": "getUser",
+                "parameters": {"userId": "$response.body#/manager_id"},
+                "description": "Get user's manager",
+            }
+        if invalid_parameter:
+            # Add a link with reference to non-existent parameter
+            for name in ("InvalidUser", "InvalidUser-2"):
+                schema["paths"]["/users"]["post"]["responses"]["201"]["links"][name] = {
+                    "operationId": "getUser",
+                    "parameters": {
+                        "unknown": "$response.body#/id",  # `unknown` parameter doesn't exist in GET /users/{userId}
+                        "userId": "$request.query.wrong",  # `wrong` parameter doesn't exist in POST /users
+                    },
+                }
+            schema["paths"]["/users/{userId}"]["patch"]["responses"]["200"]["links"] = {
+                "GetUser": {
+                    "operationId": "getUser",
+                    "parameters": {
+                        "userId": "$request.path.whatever",
+                        "something": "$req.[",
+                    },
+                }
+            }
+        if list_users_as_root:
+            schema["paths"]["/users"]["get"]["responses"]["200"]["links"] = get_collection_links
+            post_links.clear()
+        if no_reliable_transitions:
+            # Remove POST endpoint completely
+            del schema["paths"]["/users"]["post"]
         return app
 
     return _factory
 
 
 @pytest.fixture
-def runner_factory(app_factory):
-    def _runner_factory(*, app_kwargs=None, config_kwargs=None, loader_kwargs=None):
-        app = app_factory(**(app_kwargs or {}))
-        schema = schemathesis.from_wsgi("/openapi.json", app=app, **(loader_kwargs or {}))
-        state_machine = schema.as_state_machine()
-        config_kwargs = config_kwargs or {}
-        config_kwargs.setdefault("hypothesis_settings", hypothesis.settings(max_examples=55, database=None))
-        return state_machine.runner(config=StatefulTestRunnerConfig(**config_kwargs))
+def stop_event():
+    return threading.Event()
 
-    return _runner_factory
+
+@pytest.fixture
+def engine_factory(app_factory, app_runner, stop_event):
+    def _engine_factory(
+        *,
+        app_kwargs=None,
+        hypothesis_settings=None,
+        max_examples=None,
+        max_steps=None,
+        maximize=None,
+        checks=None,
+        max_failures=None,
+        unique_inputs=False,
+        generation_modes=None,
+        include=None,
+        headers=None,
+        max_response_time=None,
+    ):
+        app = app_factory(**(app_kwargs or {}))
+        port = app_runner.run_flask_app(app)
+        config = SchemathesisConfig()
+        config.update(max_failures=max_failures)
+        config.projects.override.checks.update(
+            included_check_names=[func.__name__ for func in checks] if isinstance(checks, list) else None,
+            max_response_time=max_response_time,
+        )
+        if max_steps is not None:
+            config.projects.override.phases.stateful.max_steps = max_steps
+        config.projects.override.generation.update(
+            modes=generation_modes or [GenerationMode.POSITIVE],
+            unique_inputs=unique_inputs,
+            max_examples=max_examples,
+            maximize=maximize,
+        )
+        config.projects.override.update(headers=headers)
+        schema = schemathesis.openapi.from_url(f"http://127.0.0.1:{port}/openapi.json", config=config)
+
+        if hypothesis_settings is not None:
+            current = schema.config.get_hypothesis_settings()
+            new = hypothesis.settings(current, **hypothesis_settings)
+            schema.config.get_hypothesis_settings = lambda *_, **__: new
+
+        if include is not None:
+            schema = schema.include(**include)
+        return stateful.execute(
+            engine=EngineContext(schema=schema, stop_event=stop_event),
+            phase=Phase(name=PhaseName.STATEFUL_TESTING, is_supported=True, is_enabled=True),
+        )
+
+    return _engine_factory

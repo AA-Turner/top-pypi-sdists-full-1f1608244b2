@@ -3,7 +3,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
-from ...exceptions import UsageError
+from schemathesis.core.errors import IncorrectUsage
 
 if TYPE_CHECKING:
     import graphql
@@ -13,17 +13,53 @@ CUSTOM_SCALARS: dict[str, st.SearchStrategy[graphql.ValueNode]] = {}
 
 
 def scalar(name: str, strategy: st.SearchStrategy[graphql.ValueNode]) -> None:
-    """Register a new strategy for generating custom scalars.
+    r"""Register a custom Hypothesis strategy for generating GraphQL scalar values.
 
-    :param str name: Scalar name. It should correspond the one used in the schema.
-    :param strategy: Hypothesis strategy you'd like to use to generate values for this scalar.
+    Args:
+        name: Scalar name that matches your GraphQL schema scalar definition
+        strategy: Hypothesis strategy that generates GraphQL AST ValueNode objects
+
+    Example:
+        ```python
+        import schemathesis
+        from hypothesis import strategies as st
+        from schemathesis.graphql import nodes
+
+        # Register email scalar
+        schemathesis.graphql.scalar("Email", st.emails().map(nodes.String))
+
+        # Register positive integer scalar
+        schemathesis.graphql.scalar(
+            "PositiveInt",
+            st.integers(min_value=1).map(nodes.Int)
+        )
+
+        # Register phone number scalar
+        schemathesis.graphql.scalar(
+            "Phone",
+            st.from_regex(r"\+1-\d{3}-\d{3}-\d{4}").map(nodes.String)
+        )
+        ```
+
+    Schema usage:
+        ```graphql
+        scalar Email
+        scalar PositiveInt
+
+        type Query {
+          getUser(email: Email!, rating: PositiveInt!): User
+        }
+        ```
+
     """
     from hypothesis.strategies import SearchStrategy
 
     if not isinstance(name, str):
-        raise UsageError(f"Scalar name {name!r} must be a string")
+        raise IncorrectUsage(f"Scalar name {name!r} must be a string")
     if not isinstance(strategy, SearchStrategy):
-        raise UsageError(f"{strategy!r} must be a Hypothesis strategy which generates AST nodes matching this scalar")
+        raise IncorrectUsage(
+            f"{strategy!r} must be a Hypothesis strategy which generates AST nodes matching this scalar"
+        )
     CUSTOM_SCALARS[name] = strategy
 
 

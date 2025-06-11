@@ -1,7 +1,7 @@
 r'''
 # `okta_log_stream`
 
-Refer to the Terraform Registry for docs: [`okta_log_stream`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream).
+Refer to the Terraform Registry for docs: [`okta_log_stream`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class LogStream(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.logStream.LogStream",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream okta_log_stream}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream okta_log_stream}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class LogStream(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream okta_log_stream} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream okta_log_stream} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Unique name for the Log Stream object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#name LogStream#name}
-        :param type: Streaming provider used - 'aws_eventbridge' or 'splunk_cloud_logstreaming'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#type LogStream#type}
-        :param settings: settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#settings LogStream#settings}
-        :param status: Stream status. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#status LogStream#status}
+        :param name: Unique name for the Log Stream object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#name LogStream#name}
+        :param type: Streaming provider used - 'aws_eventbridge' or 'splunk_cloud_logstreaming'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#type LogStream#type}
+        :param settings: settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#settings LogStream#settings}
+        :param status: Stream status. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#status LogStream#status}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class LogStream(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the LogStream to import.
-        :param import_from_id: The id of the existing LogStream that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing LogStream that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the LogStream to import is found.
         '''
         if __debug__:
@@ -135,12 +135,12 @@ class LogStream(
         token: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param account_id: AWS account ID. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#account_id LogStream#account_id}
-        :param edition: Edition of the Splunk Cloud instance. Could be one of: 'aws', 'aws_govcloud', 'gcp'. Required only for 'splunk_cloud_logstreaming' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#edition LogStream#edition}
-        :param event_source_name: An alphanumeric name (no spaces) to identify this event source in AWS EventBridge. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#event_source_name LogStream#event_source_name}
-        :param host: The domain name for Splunk Cloud instance. Don't include http or https in the string. For example: 'acme.splunkcloud.com'. Required only for 'splunk_cloud_logstreaming' type Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#host LogStream#host}
-        :param region: The destination AWS region where event source is located. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#region LogStream#region}
-        :param token: The HEC token for your Splunk Cloud HTTP Event Collector. Required only for 'splunk_cloud_logstreaming' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#token LogStream#token}
+        :param account_id: AWS account ID. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#account_id LogStream#account_id}
+        :param edition: Edition of the Splunk Cloud instance. Could be one of: 'aws', 'aws_govcloud', 'gcp'. Required only for 'splunk_cloud_logstreaming' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#edition LogStream#edition}
+        :param event_source_name: An alphanumeric name (no spaces) to identify this event source in AWS EventBridge. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#event_source_name LogStream#event_source_name}
+        :param host: The domain name for Splunk Cloud instance. Don't include http or https in the string. For example: 'acme.splunkcloud.com'. Required only for 'splunk_cloud_logstreaming' type Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#host LogStream#host}
+        :param region: The destination AWS region where event source is located. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#region LogStream#region}
+        :param token: The HEC token for your Splunk Cloud HTTP Event Collector. Required only for 'splunk_cloud_logstreaming' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#token LogStream#token}
         '''
         value = LogStreamSettings(
             account_id=account_id,
@@ -284,10 +284,10 @@ class LogStreamConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Unique name for the Log Stream object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#name LogStream#name}
-        :param type: Streaming provider used - 'aws_eventbridge' or 'splunk_cloud_logstreaming'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#type LogStream#type}
-        :param settings: settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#settings LogStream#settings}
-        :param status: Stream status. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#status LogStream#status}
+        :param name: Unique name for the Log Stream object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#name LogStream#name}
+        :param type: Streaming provider used - 'aws_eventbridge' or 'splunk_cloud_logstreaming'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#type LogStream#type}
+        :param settings: settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#settings LogStream#settings}
+        :param status: Stream status. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#status LogStream#status}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -397,7 +397,7 @@ class LogStreamConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Unique name for the Log Stream object.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#name LogStream#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#name LogStream#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -407,7 +407,7 @@ class LogStreamConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''Streaming provider used - 'aws_eventbridge' or 'splunk_cloud_logstreaming'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#type LogStream#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#type LogStream#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -417,7 +417,7 @@ class LogStreamConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def settings(self) -> typing.Optional["LogStreamSettings"]:
         '''settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#settings LogStream#settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#settings LogStream#settings}
         '''
         result = self._values.get("settings")
         return typing.cast(typing.Optional["LogStreamSettings"], result)
@@ -426,7 +426,7 @@ class LogStreamConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Stream status.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#status LogStream#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#status LogStream#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -467,12 +467,12 @@ class LogStreamSettings:
         token: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param account_id: AWS account ID. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#account_id LogStream#account_id}
-        :param edition: Edition of the Splunk Cloud instance. Could be one of: 'aws', 'aws_govcloud', 'gcp'. Required only for 'splunk_cloud_logstreaming' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#edition LogStream#edition}
-        :param event_source_name: An alphanumeric name (no spaces) to identify this event source in AWS EventBridge. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#event_source_name LogStream#event_source_name}
-        :param host: The domain name for Splunk Cloud instance. Don't include http or https in the string. For example: 'acme.splunkcloud.com'. Required only for 'splunk_cloud_logstreaming' type Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#host LogStream#host}
-        :param region: The destination AWS region where event source is located. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#region LogStream#region}
-        :param token: The HEC token for your Splunk Cloud HTTP Event Collector. Required only for 'splunk_cloud_logstreaming' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#token LogStream#token}
+        :param account_id: AWS account ID. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#account_id LogStream#account_id}
+        :param edition: Edition of the Splunk Cloud instance. Could be one of: 'aws', 'aws_govcloud', 'gcp'. Required only for 'splunk_cloud_logstreaming' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#edition LogStream#edition}
+        :param event_source_name: An alphanumeric name (no spaces) to identify this event source in AWS EventBridge. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#event_source_name LogStream#event_source_name}
+        :param host: The domain name for Splunk Cloud instance. Don't include http or https in the string. For example: 'acme.splunkcloud.com'. Required only for 'splunk_cloud_logstreaming' type Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#host LogStream#host}
+        :param region: The destination AWS region where event source is located. Required only for 'aws_eventbridge' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#region LogStream#region}
+        :param token: The HEC token for your Splunk Cloud HTTP Event Collector. Required only for 'splunk_cloud_logstreaming' type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#token LogStream#token}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__3e1299d769d2a71b072688db517504184b4c78069b0446d63cfd4e4b51683e20)
@@ -500,7 +500,7 @@ class LogStreamSettings:
     def account_id(self) -> typing.Optional[builtins.str]:
         '''AWS account ID. Required only for 'aws_eventbridge' type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#account_id LogStream#account_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#account_id LogStream#account_id}
         '''
         result = self._values.get("account_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -509,7 +509,7 @@ class LogStreamSettings:
     def edition(self) -> typing.Optional[builtins.str]:
         '''Edition of the Splunk Cloud instance. Could be one of: 'aws', 'aws_govcloud', 'gcp'. Required only for 'splunk_cloud_logstreaming' type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#edition LogStream#edition}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#edition LogStream#edition}
         '''
         result = self._values.get("edition")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -518,7 +518,7 @@ class LogStreamSettings:
     def event_source_name(self) -> typing.Optional[builtins.str]:
         '''An alphanumeric name (no spaces) to identify this event source in AWS EventBridge. Required only for 'aws_eventbridge' type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#event_source_name LogStream#event_source_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#event_source_name LogStream#event_source_name}
         '''
         result = self._values.get("event_source_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -529,7 +529,7 @@ class LogStreamSettings:
 
         Don't include http or https in the string. For example: 'acme.splunkcloud.com'. Required only for 'splunk_cloud_logstreaming' type
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#host LogStream#host}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#host LogStream#host}
         '''
         result = self._values.get("host")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -538,7 +538,7 @@ class LogStreamSettings:
     def region(self) -> typing.Optional[builtins.str]:
         '''The destination AWS region where event source is located. Required only for 'aws_eventbridge' type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#region LogStream#region}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#region LogStream#region}
         '''
         result = self._values.get("region")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -547,7 +547,7 @@ class LogStreamSettings:
     def token(self) -> typing.Optional[builtins.str]:
         '''The HEC token for your Splunk Cloud HTTP Event Collector. Required only for 'splunk_cloud_logstreaming' type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/log_stream#token LogStream#token}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/log_stream#token LogStream#token}
         '''
         result = self._values.get("token")
         return typing.cast(typing.Optional[builtins.str], result)

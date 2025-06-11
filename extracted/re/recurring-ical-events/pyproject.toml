@@ -47,6 +47,7 @@ dependencies = [
     'x-wr-timezone == 0.*; python_version <= "3.8"',
     'backports.zoneinfo; python_version == "3.7" or python_version == "3.8"',
     'tzdata',
+    'typing_extensions; python_version <= "3.9"',
 ]
 
 [project.optional-dependencies]
@@ -60,7 +61,7 @@ test = [
 
 [tool.hatch.metadata.hooks.vcs.urls]
 #[project.urls]
-Homepage = "https://github.com/niccokunzmann/python-recurring-ical-events"
+Homepage = "https://recurring-ical-events.readthedocs.io/"
 Repository = "https://github.com/niccokunzmann/python-recurring-ical-events"
 "Source Archive" = "https://github.com/niccokunzmann/python-recurring-ical-events/archive/{commit_hash}.zip"
 Issues = "https://github.com/niccokunzmann/python-recurring-ical-events/issues"
@@ -127,6 +128,7 @@ extend-safe-fixes = [
     "PT012",  # pytest.raises() block should contain a single simple statement
     "PT015",  # Assertion always fails, replace with pytest.fail()
     "T201",   # print found
+    "N803",   # ZoneInfo should be lowercase
 ]
 "example.py" = [
     "T201", # print found

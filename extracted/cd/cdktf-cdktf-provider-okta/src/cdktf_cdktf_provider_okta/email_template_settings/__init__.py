@@ -1,7 +1,7 @@
 r'''
 # `okta_email_template_settings`
 
-Refer to the Terraform Registry for docs: [`okta_email_template_settings`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings).
+Refer to the Terraform Registry for docs: [`okta_email_template_settings`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class EmailTemplateSettings(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.emailTemplateSettings.EmailTemplateSettings",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings okta_email_template_settings}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings okta_email_template_settings}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class EmailTemplateSettings(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings okta_email_template_settings} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings okta_email_template_settings} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param brand_id: The ID of the brand. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#brand_id EmailTemplateSettings#brand_id}
-        :param recipients: The recipients the emails of this template will be sent to - Valid values: ``ALL_USERS``, ``ADMINS_ONLY``, ``NO_USERS``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#recipients EmailTemplateSettings#recipients}
-        :param template_name: Email template name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#template_name EmailTemplateSettings#template_name}
+        :param brand_id: The ID of the brand. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#brand_id EmailTemplateSettings#brand_id}
+        :param recipients: The recipients the emails of this template will be sent to - Valid values: ``ALL_USERS``, ``ADMINS_ONLY``, ``NO_USERS``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#recipients EmailTemplateSettings#recipients}
+        :param template_name: Email template name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#template_name EmailTemplateSettings#template_name}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class EmailTemplateSettings(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the EmailTemplateSettings to import.
-        :param import_from_id: The id of the existing EmailTemplateSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing EmailTemplateSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the EmailTemplateSettings to import is found.
         '''
         if __debug__:
@@ -229,9 +229,9 @@ class EmailTemplateSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param brand_id: The ID of the brand. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#brand_id EmailTemplateSettings#brand_id}
-        :param recipients: The recipients the emails of this template will be sent to - Valid values: ``ALL_USERS``, ``ADMINS_ONLY``, ``NO_USERS``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#recipients EmailTemplateSettings#recipients}
-        :param template_name: Email template name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#template_name EmailTemplateSettings#template_name}
+        :param brand_id: The ID of the brand. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#brand_id EmailTemplateSettings#brand_id}
+        :param recipients: The recipients the emails of this template will be sent to - Valid values: ``ALL_USERS``, ``ADMINS_ONLY``, ``NO_USERS``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#recipients EmailTemplateSettings#recipients}
+        :param template_name: Email template name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#template_name EmailTemplateSettings#template_name}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -335,7 +335,7 @@ class EmailTemplateSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def brand_id(self) -> builtins.str:
         '''The ID of the brand.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#brand_id EmailTemplateSettings#brand_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#brand_id EmailTemplateSettings#brand_id}
         '''
         result = self._values.get("brand_id")
         assert result is not None, "Required property 'brand_id' is missing"
@@ -345,7 +345,7 @@ class EmailTemplateSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def recipients(self) -> builtins.str:
         '''The recipients the emails of this template will be sent to - Valid values: ``ALL_USERS``, ``ADMINS_ONLY``, ``NO_USERS``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#recipients EmailTemplateSettings#recipients}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#recipients EmailTemplateSettings#recipients}
         '''
         result = self._values.get("recipients")
         assert result is not None, "Required property 'recipients' is missing"
@@ -355,7 +355,7 @@ class EmailTemplateSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def template_name(self) -> builtins.str:
         '''Email template name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_template_settings#template_name EmailTemplateSettings#template_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_template_settings#template_name EmailTemplateSettings#template_name}
         '''
         result = self._values.get("template_name")
         assert result is not None, "Required property 'template_name' is missing"

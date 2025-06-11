@@ -286,8 +286,6 @@ def push(data=None, *, metadata=None, replace=None, workbook=_common.DEFAULT_WOR
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     if type_mismatches not in ['drop', 'raise', 'invalid']:

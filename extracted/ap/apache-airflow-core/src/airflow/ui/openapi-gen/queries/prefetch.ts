@@ -14,7 +14,6 @@ import {
   DagStatsService,
   DagVersionService,
   DagWarningService,
-  DagsService,
   DashboardService,
   DependenciesService,
   EventLogService,
@@ -925,6 +924,86 @@ export const prefetchUseDagServiceGetDagTags = (
     queryFn: () => DagService.getDagTags({ limit, offset, orderBy, tagNamePattern }),
   });
 /**
+ * Recent Dag Runs
+ * Get recent DAG runs.
+ * @param data The data for the request.
+ * @param data.dagRunsLimit
+ * @param data.limit
+ * @param data.offset
+ * @param data.tags
+ * @param data.tagsMatchMode
+ * @param data.owners
+ * @param data.dagIds
+ * @param data.dagIdPattern
+ * @param data.dagDisplayNamePattern
+ * @param data.excludeStale
+ * @param data.paused
+ * @param data.lastDagRunState
+ * @returns DAGWithLatestDagRunsCollectionResponse Successful Response
+ * @throws ApiError
+ */
+export const prefetchUseDagServiceRecentDagRuns = (
+  queryClient: QueryClient,
+  {
+    dagDisplayNamePattern,
+    dagIdPattern,
+    dagIds,
+    dagRunsLimit,
+    excludeStale,
+    lastDagRunState,
+    limit,
+    offset,
+    owners,
+    paused,
+    tags,
+    tagsMatchMode,
+  }: {
+    dagDisplayNamePattern?: string;
+    dagIdPattern?: string;
+    dagIds?: string[];
+    dagRunsLimit?: number;
+    excludeStale?: boolean;
+    lastDagRunState?: DagRunState;
+    limit?: number;
+    offset?: number;
+    owners?: string[];
+    paused?: boolean;
+    tags?: string[];
+    tagsMatchMode?: "any" | "all";
+  } = {},
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseDagServiceRecentDagRunsKeyFn({
+      dagDisplayNamePattern,
+      dagIdPattern,
+      dagIds,
+      dagRunsLimit,
+      excludeStale,
+      lastDagRunState,
+      limit,
+      offset,
+      owners,
+      paused,
+      tags,
+      tagsMatchMode,
+    }),
+    queryFn: () =>
+      DagService.recentDagRuns({
+        dagDisplayNamePattern,
+        dagIdPattern,
+        dagIds,
+        dagRunsLimit,
+        excludeStale,
+        lastDagRunState,
+        limit,
+        offset,
+        owners,
+        paused,
+        tags,
+        tagsMatchMode,
+      }),
+  });
+/**
  * Get Event Log
  * @param data The data for the request.
  * @param data.eventLogId
@@ -1263,7 +1342,7 @@ export const prefetchUseTaskInstanceServiceGetMappedTaskInstances = (
  * @returns TaskDependencyCollectionResponse Successful Response
  * @throws ApiError
  */
-export const prefetchUseTaskInstanceServiceGetTaskInstanceDependencies = (
+export const prefetchUseTaskInstanceServiceGetTaskInstanceDependenciesByMapIndex = (
   queryClient: QueryClient,
   {
     dagId,
@@ -1278,13 +1357,14 @@ export const prefetchUseTaskInstanceServiceGetTaskInstanceDependencies = (
   },
 ) =>
   queryClient.prefetchQuery({
-    queryKey: Common.UseTaskInstanceServiceGetTaskInstanceDependenciesKeyFn({
+    queryKey: Common.UseTaskInstanceServiceGetTaskInstanceDependenciesByMapIndexKeyFn({
       dagId,
       dagRunId,
       mapIndex,
       taskId,
     }),
-    queryFn: () => TaskInstanceService.getTaskInstanceDependencies({ dagId, dagRunId, mapIndex, taskId }),
+    queryFn: () =>
+      TaskInstanceService.getTaskInstanceDependenciesByMapIndex({ dagId, dagRunId, mapIndex, taskId }),
   });
 /**
  * Get Task Instance Dependencies
@@ -1297,7 +1377,7 @@ export const prefetchUseTaskInstanceServiceGetTaskInstanceDependencies = (
  * @returns TaskDependencyCollectionResponse Successful Response
  * @throws ApiError
  */
-export const prefetchUseTaskInstanceServiceGetTaskInstanceDependencies1 = (
+export const prefetchUseTaskInstanceServiceGetTaskInstanceDependencies = (
   queryClient: QueryClient,
   {
     dagId,
@@ -1312,13 +1392,13 @@ export const prefetchUseTaskInstanceServiceGetTaskInstanceDependencies1 = (
   },
 ) =>
   queryClient.prefetchQuery({
-    queryKey: Common.UseTaskInstanceServiceGetTaskInstanceDependencies1KeyFn({
+    queryKey: Common.UseTaskInstanceServiceGetTaskInstanceDependenciesKeyFn({
       dagId,
       dagRunId,
       mapIndex,
       taskId,
     }),
-    queryFn: () => TaskInstanceService.getTaskInstanceDependencies1({ dagId, dagRunId, mapIndex, taskId }),
+    queryFn: () => TaskInstanceService.getTaskInstanceDependencies({ dagId, dagRunId, mapIndex, taskId }),
   });
 /**
  * Get Task Instance Tries
@@ -1664,7 +1744,7 @@ export const prefetchUseTaskInstanceServiceGetLog = (
     token,
     tryNumber,
   }: {
-    accept?: "application/json" | "text/plain" | "*/*";
+    accept?: "application/json" | "*/*" | "application/x-ndjson";
     dagId: string;
     dagRunId: string;
     fullContent?: boolean;
@@ -2257,86 +2337,6 @@ export const prefetchUseAuthLinksServiceGetAuthMenus = (queryClient: QueryClient
   queryClient.prefetchQuery({
     queryKey: Common.UseAuthLinksServiceGetAuthMenusKeyFn(),
     queryFn: () => AuthLinksService.getAuthMenus(),
-  });
-/**
- * Recent Dag Runs
- * Get recent DAG runs.
- * @param data The data for the request.
- * @param data.dagRunsLimit
- * @param data.limit
- * @param data.offset
- * @param data.tags
- * @param data.tagsMatchMode
- * @param data.owners
- * @param data.dagIds
- * @param data.dagIdPattern
- * @param data.dagDisplayNamePattern
- * @param data.excludeStale
- * @param data.paused
- * @param data.lastDagRunState
- * @returns DAGWithLatestDagRunsCollectionResponse Successful Response
- * @throws ApiError
- */
-export const prefetchUseDagsServiceRecentDagRuns = (
-  queryClient: QueryClient,
-  {
-    dagDisplayNamePattern,
-    dagIdPattern,
-    dagIds,
-    dagRunsLimit,
-    excludeStale,
-    lastDagRunState,
-    limit,
-    offset,
-    owners,
-    paused,
-    tags,
-    tagsMatchMode,
-  }: {
-    dagDisplayNamePattern?: string;
-    dagIdPattern?: string;
-    dagIds?: string[];
-    dagRunsLimit?: number;
-    excludeStale?: boolean;
-    lastDagRunState?: DagRunState;
-    limit?: number;
-    offset?: number;
-    owners?: string[];
-    paused?: boolean;
-    tags?: string[];
-    tagsMatchMode?: "any" | "all";
-  } = {},
-) =>
-  queryClient.prefetchQuery({
-    queryKey: Common.UseDagsServiceRecentDagRunsKeyFn({
-      dagDisplayNamePattern,
-      dagIdPattern,
-      dagIds,
-      dagRunsLimit,
-      excludeStale,
-      lastDagRunState,
-      limit,
-      offset,
-      owners,
-      paused,
-      tags,
-      tagsMatchMode,
-    }),
-    queryFn: () =>
-      DagsService.recentDagRuns({
-        dagDisplayNamePattern,
-        dagIdPattern,
-        dagIds,
-        dagRunsLimit,
-        excludeStale,
-        lastDagRunState,
-        limit,
-        offset,
-        owners,
-        paused,
-        tags,
-        tagsMatchMode,
-      }),
   });
 /**
  * Get Dependencies

@@ -41,7 +41,6 @@ from wbcore.utils.importlib import import_from_dotted_path
 from wbcore.utils.models import ComplexToStringMixin
 
 from .enums import ExportFormat, get_django_import_export_format
-from .exceptions import ImportError
 from .signals import post_import
 
 logger = logging.getLogger("io")
@@ -640,15 +639,9 @@ def process_import_sources_as_task(import_source_ids: list[int]):
     """
     Call the `import_source` as a celery task
     """
-    errors = []
     for import_source_id in import_source_ids:
         import_source = ImportSource.objects.get(id=import_source_id)
-        try:
-            import_source.import_data(force_reimport=True)
-        except ImportError:
-            errors.append(import_source_id)
-    if len(errors) > 0:
-        raise ImportError(f"Error while processing import source {errors}")
+        import_source.import_data(force_reimport=True)
 
 
 class ImportExportSource(models.Model):
@@ -797,6 +790,7 @@ class ExportSource(ImportExportSource):
                 self.log = f"{ex_type}: {ex_value}\n"
                 self.log += traceback.format_exc()
                 self.save()
+                logger.error(f"Export source {self.id} error: {e}")
 
 
 class ImportSource(ImportExportSource):
@@ -898,8 +892,8 @@ class ImportSource(ImportExportSource):
             self.save()
             if debug:
                 raise e
-            elif not self.creator:  # if a creator is set in this import source, they will receive a proper notification with feedback. No need then to polute the logger
-                raise ImportError(f"Could not import file {self.file.name}  (parser/handler: {self.parser_handler})")
+            elif not self.creator:  # if a creator is set in this import source, they will receive a proper notification with feedback. No need then to pollute the logger
+                logger.error(f"Could not import file {self.file.name}  (parser/handler: {self.parser_handler})")
         self.notify()
 
     def notify(self):

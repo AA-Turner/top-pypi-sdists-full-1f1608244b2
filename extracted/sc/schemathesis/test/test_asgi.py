@@ -1,5 +1,5 @@
-import sys
 from contextlib import asynccontextmanager
+from typing import Annotated
 
 import pytest
 from fastapi import Cookie, FastAPI, Header
@@ -7,24 +7,15 @@ from hypothesis import HealthCheck, Phase, given, settings
 from pydantic import BaseModel
 
 import schemathesis
-from schemathesis.generation import GenerationConfig
-from schemathesis.models import Case
-from schemathesis.specs.openapi.loaders import from_asgi
 
 
-@pytest.fixture
-def schema(fastapi_app):
-    return from_asgi("/openapi.json", fastapi_app, force_schema_version="30")
-
-
-@pytest.mark.parametrize("method", ["call", "call_asgi"])
 @pytest.mark.hypothesis_nested
-def test_cookies(fastapi_app, method):
+def test_cookies(fastapi_app):
     @fastapi_app.get("/cookies")
     def cookies(token: str = Cookie(None)):
         return {"token": token}
 
-    schema = schemathesis.from_dict(
+    schema = schemathesis.openapi.from_dict(
         {
             "openapi": "3.0.2",
             "info": {"title": "Test", "description": "Test", "version": "0.1.0"},
@@ -44,7 +35,6 @@ def test_cookies(fastapi_app, method):
                 }
             },
         },
-        app=fastapi_app,
     )
 
     strategy = schema["/cookies"]["GET"].as_strategy()
@@ -52,7 +42,7 @@ def test_cookies(fastapi_app, method):
     @given(case=strategy)
     @settings(max_examples=3, suppress_health_check=[HealthCheck.filter_too_much], deadline=None)
     def test(case):
-        response = getattr(case, method)()
+        response = case.call(app=fastapi_app)
         assert response.status_code == 200
         assert response.json() == {"token": "test"}
 
@@ -61,8 +51,6 @@ def test_cookies(fastapi_app, method):
 
 @pytest.mark.hypothesis_nested
 def test_null_byte(fastapi_app):
-    schemathesis.experimental.OPEN_API_3_1.enable()
-
     class Payload(BaseModel):
         name: str
 
@@ -72,9 +60,8 @@ def test_null_byte(fastapi_app):
         assert "\x00" not in payload["name"]
         return {"success": True}
 
-    schema = schemathesis.from_asgi(
-        "/openapi.json", app=fastapi_app, generation_config=GenerationConfig(allow_x00=False)
-    )
+    schema = schemathesis.openapi.from_asgi("/openapi.json", app=fastapi_app)
+    schema.config.generation.update(allow_x00=False)
 
     strategy = schema["/data"]["POST"].as_strategy()
 
@@ -90,22 +77,16 @@ def test_null_byte(fastapi_app):
     test()
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="typing.Annotated is not available in Python 3.8")
 @pytest.mark.hypothesis_nested
 def test_null_byte_in_headers(fastapi_app):
-    from typing import Annotated
-
-    schemathesis.experimental.OPEN_API_3_1.enable()
-
     @fastapi_app.post("/data")
     def operation(x_header: Annotated[str, Header()], x_cookie: Annotated[str, Cookie()]):
         assert "\x00" not in x_header
         assert "\x00" not in x_cookie
         return {"success": True}
 
-    schema = schemathesis.from_asgi(
-        "/openapi.json", app=fastapi_app, generation_config=GenerationConfig(allow_x00=False)
-    )
+    schema = schemathesis.openapi.from_asgi("/openapi.json", app=fastapi_app)
+    schema.config.generation.update(allow_x00=False)
 
     strategy = schema["/data"]["POST"].as_strategy()
 
@@ -119,17 +100,6 @@ def test_null_byte_in_headers(fastapi_app):
         assert response.json() == {"success": True}
 
     test()
-
-
-def test_not_app_with_asgi(schema):
-    case = Case(schema["/users"]["GET"], generation_time=0.0)
-    case.operation.app = None
-    with pytest.raises(
-        RuntimeError,
-        match="ASGI application instance is required. "
-        "Please, set `app` argument in the schema constructor or pass it to `call_asgi`",
-    ):
-        case.call_asgi()
 
 
 def test_base_url():
@@ -149,59 +119,17 @@ def test_base_url():
     def read_root():
         return {"Hello": "World"}
 
-    schema = schemathesis.from_dict(raw_schema, app=app)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     strategy = schema["/foo"]["GET"].as_strategy()
 
     @given(case=strategy)
     @settings(max_examples=1, suppress_health_check=[HealthCheck.filter_too_much], deadline=None)
     def test(case):
-        response = case.call()
+        response = case.call(app=app)
         # Then the base path should be respected and calls should not lead to 404
         assert response.status_code == 200
 
     test()
-
-
-class FastAPIExtended(FastAPI):
-    pass
-
-
-@pytest.mark.parametrize("app_factory", [FastAPI, FastAPIExtended])
-@pytest.mark.parametrize("with_existing_fixup", [True, False])
-def test_automatic_fixup(ctx, with_existing_fixup, app_factory):
-    if with_existing_fixup:
-        # Install everything
-        schemathesis.fixups.install()
-    else:
-        assert not schemathesis.fixups.is_installed("fast_api")
-    # When it is possible to detect Fast API
-    schema = ctx.openapi.build_schema(
-        {
-            "/foo": {
-                "get": {
-                    "parameters": [
-                        {
-                            "name": "data",
-                            "in": "body",
-                            "required": True,
-                            "schema": {"type": "integer", "exclusiveMaximum": 5},
-                        }
-                    ],
-                    "responses": {"200": {"description": "OK"}},
-                }
-            }
-        }
-    )
-
-    app = app_factory()
-
-    schema = schemathesis.from_dict(schema, app=app)
-    # Then its respective fixup is loaded automatically
-    assert schema.raw_schema["paths"]["/foo"]["get"]["parameters"][0]["schema"] == {
-        "type": "integer",
-        "exclusiveMaximum": True,
-        "maximum": 5,
-    }
 
 
 def with_lifespan(data: dict):
@@ -242,7 +170,7 @@ def test_events(setup):
     async def find_secret():
         return {"status": "OK"}
 
-    schema = schemathesis.from_asgi("/openapi.json", app, force_schema_version="30")
+    schema = schemathesis.openapi.from_asgi("/openapi.json", app)
 
     @given(case=schema["/health"]["GET"].as_strategy())
     @settings(max_examples=3, deadline=None)

@@ -36,12 +36,12 @@ class CodeContextResult(PydanticBaseModel):
     output_files: List[CodeContextFile]
     std_out: str
     std_err: str
-    code_runtime: int
+    code_runtime: Optional[int] = None
 
 
 class CodeContextData(PydanticBaseModel):
     code: str
-    result: Optional[CodeContextResult] = None
+    results: Optional[CodeContextResult] = None
 
 
 class WebPage(PydanticBaseModel):
@@ -90,7 +90,7 @@ class OnlineContext(PydanticBaseModel):
 
 class Intent(PydanticBaseModel):
     type: str
-    query: str
+    query: Optional[str] = None
     memory_type: Optional[str] = Field(alias="memory-type", default=None)
     inferred_queries: Optional[List[str]] = Field(default=None, alias="inferred-queries")
 

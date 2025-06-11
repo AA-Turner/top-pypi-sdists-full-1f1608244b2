@@ -205,17 +205,30 @@ def linear_schedule(
 def piecewise_constant_schedule(
     init_value: float, boundaries_and_scales: Optional[dict[int, float]] = None
 ) -> base.Schedule:
-  """Returns a function which implements a piecewise constant schedule.
+  """Piecewise constant schedule with scaled jumps at specific boundaries.
+
+  At each step `t`, this schedule returns `init_value` scaled by the product
+  of all factors `f_i` such that `t >= b_i`, where `(b_i, f_i)` are the
+  entries in `boundaries_and_scales`.
 
   Args:
-    init_value: An initial value ``init_v``.
-    boundaries_and_scales: A map from boundaries ``b_i`` to non-negative scaling
-      factors ``f_i``. For any step count `s`, the schedule returns ``init_v``
-      scaled by the product of all factors ``f_i`` such that ``b_i < s``.
+    init_value: The starting value of the schedule.
+    boundaries_and_scales: Dictionary of `{step: scale}` where `scale` is
+      multiplied into the schedule value at the given `step`. All `scale` values
+      must be non-negative.
 
   Returns:
-    schedule
-      A function that maps step counts to values.
+    A function that maps step index to schedule value.
+
+  Example:
+    >>> sched = optax.piecewise_constant_schedule(
+    ...     init_value=1.0, boundaries_and_scales={100: 0.1, 200: 0.01})
+    >>> print(sched(50))   # before first boundary
+    1.0
+    >>> print(sched(150))  # after first boundary
+    0.1
+    >>> print(sched(250))  # after second boundary
+    0.001
   """
   if boundaries_and_scales is not None:
     all_positive = all(scale >= 0.0 for scale in boundaries_and_scales.values())
@@ -330,9 +343,8 @@ def cosine_decay_schedule(
 
   .. math::
     \begin{cases}
-      \frac{I (1 - \alpha)}{2}(1+\cos(\pi\,\frac{t}{T})^p) + I \alpha\, 
-      & \text{if } t \leq T \\
-      I \alpha, & \text{if } t > T 
+      \alpha I + (1 - \alpha) I  \left[ \frac{1}{2} \left( 1+ \cos \left( \pi\,\frac{t}{T} \right) \right) \right] ^p  & \text{, if } t \leq T \\
+      \alpha I  & \text{, if } t > T
     \end{cases}
 
   where :math:`T` is the number of decay steps (``decay_steps``), :math:`p` is
@@ -344,7 +356,7 @@ def cosine_decay_schedule(
       the decay for.
     alpha: The minimum value of the multiplier used to adjust the
       learning rate. Defaults to 0.0.
-    exponent:  The default decay is ``0.5 * (1 + cos(pi * t/T))``, where 
+    exponent:  The default decay is ``0.5 * (1 + cos(pi * t/T))``, where
       ``t`` is the current timestep and ``T`` is the ``decay_steps``. The
       exponent modifies this to be ``(0.5 * (1 + cos(pi * t/T))) ** exponent``.
       Defaults to 1.0.
@@ -379,10 +391,12 @@ def cosine_decay_schedule(
 
 
 def _linear_interpolate(start: float, end: float, pct: float):
+  """Linearly interpolate between two values."""
   return (end - start) * pct + start
 
 
 def _cosine_interpolate(start: float, end: float, pct: float):
+  """Cosine interpolate between two values (smoother transitions)."""
   return end + (start - end) / 2.0 * (jnp.cos(jnp.pi * pct) + 1)
 
 
@@ -391,27 +405,54 @@ def piecewise_interpolate_schedule(
     init_value: float,
     boundaries_and_scales: Optional[dict[int, float]] = None,
 ) -> base.Schedule:
-  """Returns a function which implements a piecewise interpolated schedule.
+  """Piecewise interpolated schedule with linear or cosine transitions.
+
+  This schedule interpolates smoothly between values scaled at specified
+  step boundaries. The interpolation occurs **between the accumulated scaled
+  values**, not the raw multiplicative scales themselves.
+
+  At each boundary, the scaling factor is multiplied into the current value.
+  Between these boundaries, the schedule applies either linear or cosine
+  interpolation.
 
   Args:
-    interpolate_type: 'linear' or 'cosine', specifying the interpolation
-      strategy.
-    init_value: An initial value ``init_v``.
-    boundaries_and_scales: A map from boundaries ``b_i`` to non-negative scaling
-      factors ``f_i``. At boundary step ``b_i``, the schedule returns ``init_v``
-      scaled by the product of all factors ``f_j`` such that ``b_j <= b_i``. The
-      values in between each boundary will be interpolated as per ``type``.
+    interpolate_type: Either `'linear'` or `'cosine'`, specifying the
+      interpolation method used between boundary segments.
+    init_value: Starting value for the schedule.
+    boundaries_and_scales: A dictionary `{step: scale}` that defines the
+      boundaries and their corresponding multiplicative scaling factors.
 
   Returns:
-    schedule
-      A function that maps step counts to values.
+    A function that maps step counts to interpolated values.
+
+  Example:
+    >>> sched = optax.piecewise_interpolate_schedule(
+    ...     interpolate_type='linear',
+    ...     init_value=1.0,
+    ...     boundaries_and_scales={4: 0.1, 8: 0.01}
+    ... )
+    >>> for step in range(0, 11, 2):
+    ...     print(f"Step {step}: {sched(step):.6f}")
+    Step 0: 1.000000
+    Step 2: 0.550000
+    Step 4: 0.100000
+    Step 6: 0.050500
+    Step 8: 0.001000
+    Step 10: 0.001000
+
+    .. note::
+      This schedule accumulates scaling factors and then interpolates between
+      those accumulated values. It does *not* interpolate directly between the
+      provided scales. This behavior can appear counterintuitive but allows
+      for smooth and controlled transitions in learning rates.
   """
+
   if interpolate_type == 'linear':
     interpolate_fn = _linear_interpolate
   elif interpolate_type == 'cosine':
     interpolate_fn = _cosine_interpolate
   else:
-    raise ValueError("`interpolate_type` must be either 'cos' or 'linear'")
+    raise ValueError("`interpolate_type` must be either 'cosine' or 'linear'")
 
   if boundaries_and_scales:
     boundaries, scales = zip(*sorted(boundaries_and_scales.items()))
@@ -503,7 +544,7 @@ def cosine_onecycle_schedule(
 ) -> base.Schedule:
   """Returns a function which implements the onecycle learning rate schedule.
 
-  This learning rate increases the learning rate and then decreases it in a
+  This schedule increases the learning rate and then decreases it in a
   cosine-like manner. The number of steps over which the learning rate increases
   is determined by the ``pct_start`` argument. The maximum value of the learning
   rate is determined by the ``peak_value`` argument, the initial value of the

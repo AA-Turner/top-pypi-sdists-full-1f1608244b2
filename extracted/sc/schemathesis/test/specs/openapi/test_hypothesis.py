@@ -3,11 +3,13 @@ import json
 import pytest
 from hypothesis import Phase, assume, given, settings
 from hypothesis import strategies as st
+from jsonschema import Draft4Validator
 
 import schemathesis
-from schemathesis.generation import GenerationConfig, HeaderConfig
+from schemathesis.config import GenerationConfig
+from schemathesis.openapi.generation.filters import is_valid_header
 from schemathesis.specs.openapi import _hypothesis, formats
-from schemathesis.specs.openapi._hypothesis import get_case_strategy, is_valid_header, make_positive_strategy
+from schemathesis.specs.openapi._hypothesis import make_positive_strategy
 from schemathesis.specs.openapi.references import load_file
 from test.utils import assert_requests_call
 
@@ -26,7 +28,7 @@ def operation(make_openapi_3_schema):
             {"in": "query", "name": "q1", "required": True, "schema": {"type": "string", "enum": ["FOO"]}},
         ],
     )
-    return schemathesis.from_dict(schema)["/users"]["POST"]
+    return schemathesis.openapi.from_dict(schema)["/users"]["POST"]
 
 
 @pytest.mark.parametrize(
@@ -47,7 +49,7 @@ def operation(make_openapi_3_schema):
 )
 def test_explicit_attributes(operation, values, expected):
     # When some Case's attribute is passed explicitly to the case strategy
-    strategy = get_case_strategy(operation=operation, **values)
+    strategy = operation.as_strategy(**values)
 
     @given(strategy)
     @settings(max_examples=1)
@@ -103,7 +105,7 @@ def deeply_nested_schema(ctx):
 def test_missed_ref(deeply_nested_schema):
     # See GH-1167
     # When not resolved references are present in the schema during constructing a strategy
-    schema = schemathesis.from_dict(deeply_nested_schema)
+    schema = schemathesis.openapi.from_dict(deeply_nested_schema)
 
     @given(schema["/data"]["GET"].as_strategy())
     @settings(max_examples=10)
@@ -120,7 +122,7 @@ def test_inlined_definitions(deeply_nested_schema):
     # And the referenced schema contains Open API specific keywords
     deeply_nested_schema["components"]["schemas"]["bar"]["nullable"] = True
 
-    schema = schemathesis.from_dict(deeply_nested_schema)
+    schema = schemathesis.openapi.from_dict(deeply_nested_schema)
 
     @given(schema["/data"]["GET"].as_strategy())
     @settings(max_examples=1)
@@ -147,6 +149,7 @@ def test_valid_headers(keywords):
         "header",
         None,
         GenerationConfig(),
+        Draft4Validator,
     )
 
     @given(strategy)
@@ -168,9 +171,8 @@ def test_configure_headers():
         "GET /users/",
         "header",
         None,
-        GenerationConfig(
-            headers=HeaderConfig(strategy=st.text(alphabet=st.characters(min_codepoint=65, max_codepoint=67)))
-        ),
+        GenerationConfig(exclude_header_characters="".join({chr(i) for i in range(256)} - {"A", "B", "C"})),
+        Draft4Validator,
     )
 
     @given(strategy)
@@ -197,6 +199,7 @@ def test_no_much_filtering_in_headers():
         "header",
         None,
         GenerationConfig(),
+        Draft4Validator,
     )
 
     @given(strategy)
@@ -277,7 +280,7 @@ def test_inline_remote_refs(testdir, deeply_nested_schema, setup, check):
     deeply_nested_schema["components"]["schemas"]["foo9"] = {"$ref": "bar.json#/bar"}
 
     original = json.dumps(deeply_nested_schema, sort_keys=True, ensure_ascii=True)
-    schema = schemathesis.from_dict(deeply_nested_schema)
+    schema = schemathesis.openapi.from_dict(deeply_nested_schema)
 
     @given(schema["/data"]["GET"].as_strategy())
     @settings(max_examples=1)
@@ -316,7 +319,7 @@ def test_header_filtration_not_needed(ctx, mocker):
     schema = ctx.openapi.build_schema({})
     make_header_param(schema)
 
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(schema["/data"]["GET"].as_strategy())
     def test(case):
@@ -334,7 +337,7 @@ def test_header_filtration_needed(ctx, mocker):
     schema = ctx.openapi.build_schema({})
     make_header_param(schema, format="date")
 
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(schema["/data"]["GET"].as_strategy())
     @settings(max_examples=1)
@@ -376,7 +379,7 @@ def test_missing_header_filter(ctx, mocker):
         }
     )
 
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(schema["/data"]["GET"].as_strategy())
     def test(case):
@@ -404,7 +407,7 @@ def test_serializing_shared_header_parameters():
         },
     }
 
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
 
     @given(schema["/data"]["GET"].as_strategy())
     def test(case):
@@ -448,7 +451,7 @@ def test_filter_urlencoded(ctx):
             }
         }
     )
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(schema["/test"]["POST"].as_strategy())
     @settings(phases=[Phase.generate], max_examples=15, deadline=None)

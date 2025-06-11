@@ -1,7 +1,7 @@
 r'''
 # `okta_app_oauth`
 
-Refer to the Terraform Registry for docs: [`okta_app_oauth`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth).
+Refer to the Terraform Registry for docs: [`okta_app_oauth`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppOauth(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appOauth.AppOauth",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth okta_app_oauth}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth okta_app_oauth}.'''
 
     def __init__(
         self,
@@ -107,58 +107,58 @@ class AppOauth(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth okta_app_oauth} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth okta_app_oauth} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#label AppOauth#label}
-        :param type: The type of client application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#type AppOauth#type}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#accessibility_error_redirect_url AppOauth#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#accessibility_login_redirect_url AppOauth#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#accessibility_self_service AppOauth#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#admin_note AppOauth#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#app_links_json AppOauth#app_links_json}
-        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#app_settings_json AppOauth#app_settings_json}
-        :param authentication_policy: The ID of the associated app_signon_policy. If this property is removed from the application the default sign-on-policy will be associated with this application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#authentication_policy AppOauth#authentication_policy}
-        :param auto_key_rotation: Requested key rotation mode. If auto_key_rotation isn't specified, the client automatically opts in for Okta's key rotation. You can update this property via the API or via the administrator UI. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object" Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#auto_key_rotation AppOauth#auto_key_rotation}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#auto_submit_toolbar AppOauth#auto_submit_toolbar}
-        :param client_basic_secret: The user provided OAuth client secret key value, this can be set when token_endpoint_auth_method is client_secret_basic. This does nothing when `omit_secret is set to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#client_basic_secret AppOauth#client_basic_secret}
-        :param client_id: OAuth client ID. If set during creation, app is created with this id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#client_id AppOauth#client_id}
-        :param client_uri: URI to a web page providing information about the client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#client_uri AppOauth#client_uri}
-        :param consent_method: *Early Access Property*. Indicates whether user consent is required or implicit. Valid values: REQUIRED, TRUSTED. Default value is TRUSTED. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#consent_method AppOauth#consent_method}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#enduser_note AppOauth#enduser_note}
-        :param grant_types: List of OAuth 2.0 grant types. Conditional validation params found here https://developer.okta.com/docs/api/resources/apps#credentials-settings-details. Defaults to minimum requirements per app type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#grant_types AppOauth#grant_types}
-        :param groups_claim: groups_claim block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#groups_claim AppOauth#groups_claim}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#hide_ios AppOauth#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#hide_web AppOauth#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#id AppOauth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param implicit_assignment: *Early Access Property*. Enable Federation Broker Mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#implicit_assignment AppOauth#implicit_assignment}
-        :param issuer_mode: *Early Access Property*. Indicates whether the Okta Authorization Server uses the original Okta org domain URL or a custom domain URL as the issuer of ID token for this client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#issuer_mode AppOauth#issuer_mode}
-        :param jwks: jwks block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#jwks AppOauth#jwks}
-        :param jwks_uri: URL reference to JWKS. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#jwks_uri AppOauth#jwks_uri}
-        :param login_mode: The type of Idp-Initiated login that the client supports, if any. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#login_mode AppOauth#login_mode}
-        :param login_scopes: List of scopes to use for the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#login_scopes AppOauth#login_scopes}
-        :param login_uri: URI that initiates login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#login_uri AppOauth#login_uri}
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#logo AppOauth#logo}
-        :param logo_uri: URI that references a logo for the client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#logo_uri AppOauth#logo_uri}
-        :param omit_secret: This tells the provider not manage the client_secret value in state. When this is false (the default), it will cause the auto-generated client_secret to be persisted in the client_secret attribute in state. This also means that every time an update to this app is run, this value is also set on the API. If this changes from false => true, the ``client_secret`` is dropped from state and the secret at the time of the apply is what remains. If this is ever changes from true => false your app will be recreated, due to the need to regenerate a secret we can store in state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#omit_secret AppOauth#omit_secret}
-        :param pkce_required: Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#pkce_required AppOauth#pkce_required}
-        :param policy_uri: URI to web page providing client policy document. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#policy_uri AppOauth#policy_uri}
-        :param post_logout_redirect_uris: List of URIs for redirection after logout. Note: see okta_app_oauth_post_logout_redirect_uri for appending to this list in a decentralized way. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#post_logout_redirect_uris AppOauth#post_logout_redirect_uris}
-        :param profile: Custom JSON that represents an OAuth application's profile. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#profile AppOauth#profile}
-        :param redirect_uris: List of URIs for use in the redirect-based flow. This is required for all application types except service. Note: see okta_app_oauth_redirect_uri for appending to this list in a decentralized way. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#redirect_uris AppOauth#redirect_uris}
-        :param refresh_token_leeway: *Early Access Property* Grace period for token rotation, required with grant types refresh_token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#refresh_token_leeway AppOauth#refresh_token_leeway}
-        :param refresh_token_rotation: *Early Access Property* Refresh token rotation behavior, required with grant types refresh_token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#refresh_token_rotation AppOauth#refresh_token_rotation}
-        :param response_types: List of OAuth 2.0 response type strings. Valid values are any combination of: ``code``, ``token``, and ``id_token``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#response_types AppOauth#response_types}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#status AppOauth#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#timeouts AppOauth#timeouts}
-        :param token_endpoint_auth_method: Requested authentication method for the token endpoint, valid values include: 'client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none', etc. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#token_endpoint_auth_method AppOauth#token_endpoint_auth_method}
-        :param tos_uri: URI to web page providing client tos (terms of service). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#tos_uri AppOauth#tos_uri}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template AppOauth#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template_push_status AppOauth#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template_suffix AppOauth#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template_type AppOauth#user_name_template_type}
-        :param wildcard_redirect: *Early Access Property*. Indicates if the client is allowed to use wildcard matching of redirect_uris. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#wildcard_redirect AppOauth#wildcard_redirect}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#label AppOauth#label}
+        :param type: The type of client application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#type AppOauth#type}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#accessibility_error_redirect_url AppOauth#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#accessibility_login_redirect_url AppOauth#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#accessibility_self_service AppOauth#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#admin_note AppOauth#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#app_links_json AppOauth#app_links_json}
+        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#app_settings_json AppOauth#app_settings_json}
+        :param authentication_policy: The ID of the associated app_signon_policy. If this property is removed from the application the default sign-on-policy will be associated with this application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#authentication_policy AppOauth#authentication_policy}
+        :param auto_key_rotation: Requested key rotation mode. If auto_key_rotation isn't specified, the client automatically opts in for Okta's key rotation. You can update this property via the API or via the administrator UI. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object" Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#auto_key_rotation AppOauth#auto_key_rotation}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#auto_submit_toolbar AppOauth#auto_submit_toolbar}
+        :param client_basic_secret: The user provided OAuth client secret key value, this can be set when token_endpoint_auth_method is client_secret_basic. This does nothing when `omit_secret is set to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#client_basic_secret AppOauth#client_basic_secret}
+        :param client_id: OAuth client ID. If set during creation, app is created with this id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#client_id AppOauth#client_id}
+        :param client_uri: URI to a web page providing information about the client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#client_uri AppOauth#client_uri}
+        :param consent_method: *Early Access Property*. Indicates whether user consent is required or implicit. Valid values: REQUIRED, TRUSTED. Default value is TRUSTED. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#consent_method AppOauth#consent_method}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#enduser_note AppOauth#enduser_note}
+        :param grant_types: List of OAuth 2.0 grant types. Conditional validation params found here https://developer.okta.com/docs/api/resources/apps#credentials-settings-details. Defaults to minimum requirements per app type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#grant_types AppOauth#grant_types}
+        :param groups_claim: groups_claim block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#groups_claim AppOauth#groups_claim}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#hide_ios AppOauth#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#hide_web AppOauth#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#id AppOauth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param implicit_assignment: *Early Access Property*. Enable Federation Broker Mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#implicit_assignment AppOauth#implicit_assignment}
+        :param issuer_mode: *Early Access Property*. Indicates whether the Okta Authorization Server uses the original Okta org domain URL or a custom domain URL as the issuer of ID token for this client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#issuer_mode AppOauth#issuer_mode}
+        :param jwks: jwks block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#jwks AppOauth#jwks}
+        :param jwks_uri: URL reference to JWKS. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#jwks_uri AppOauth#jwks_uri}
+        :param login_mode: The type of Idp-Initiated login that the client supports, if any. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#login_mode AppOauth#login_mode}
+        :param login_scopes: List of scopes to use for the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#login_scopes AppOauth#login_scopes}
+        :param login_uri: URI that initiates login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#login_uri AppOauth#login_uri}
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#logo AppOauth#logo}
+        :param logo_uri: URI that references a logo for the client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#logo_uri AppOauth#logo_uri}
+        :param omit_secret: This tells the provider not manage the client_secret value in state. When this is false (the default), it will cause the auto-generated client_secret to be persisted in the client_secret attribute in state. This also means that every time an update to this app is run, this value is also set on the API. If this changes from false => true, the ``client_secret`` is dropped from state and the secret at the time of the apply is what remains. If this is ever changes from true => false your app will be recreated, due to the need to regenerate a secret we can store in state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#omit_secret AppOauth#omit_secret}
+        :param pkce_required: Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#pkce_required AppOauth#pkce_required}
+        :param policy_uri: URI to web page providing client policy document. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#policy_uri AppOauth#policy_uri}
+        :param post_logout_redirect_uris: List of URIs for redirection after logout. Note: see okta_app_oauth_post_logout_redirect_uri for appending to this list in a decentralized way. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#post_logout_redirect_uris AppOauth#post_logout_redirect_uris}
+        :param profile: Custom JSON that represents an OAuth application's profile. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#profile AppOauth#profile}
+        :param redirect_uris: List of URIs for use in the redirect-based flow. This is required for all application types except service. Note: see okta_app_oauth_redirect_uri for appending to this list in a decentralized way. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#redirect_uris AppOauth#redirect_uris}
+        :param refresh_token_leeway: *Early Access Property* Grace period for token rotation, required with grant types refresh_token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#refresh_token_leeway AppOauth#refresh_token_leeway}
+        :param refresh_token_rotation: *Early Access Property* Refresh token rotation behavior, required with grant types refresh_token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#refresh_token_rotation AppOauth#refresh_token_rotation}
+        :param response_types: List of OAuth 2.0 response type strings. Valid values are any combination of: ``code``, ``token``, and ``id_token``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#response_types AppOauth#response_types}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#status AppOauth#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#timeouts AppOauth#timeouts}
+        :param token_endpoint_auth_method: Requested authentication method for the token endpoint, valid values include: 'client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none', etc. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#token_endpoint_auth_method AppOauth#token_endpoint_auth_method}
+        :param tos_uri: URI to web page providing client tos (terms of service). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#tos_uri AppOauth#tos_uri}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template AppOauth#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template_push_status AppOauth#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template_suffix AppOauth#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template_type AppOauth#user_name_template_type}
+        :param wildcard_redirect: *Early Access Property*. Indicates if the client is allowed to use wildcard matching of redirect_uris. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#wildcard_redirect AppOauth#wildcard_redirect}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -244,7 +244,7 @@ class AppOauth(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppOauth to import.
-        :param import_from_id: The id of the existing AppOauth that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppOauth that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppOauth to import is found.
         '''
         if __debug__:
@@ -265,10 +265,10 @@ class AppOauth(
         filter_type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: Name of the claim that will be used in the token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#name AppOauth#name}
-        :param type: Groups claim type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#type AppOauth#type}
-        :param value: Value of the claim. Can be an Okta Expression Language statement that evaluates at the time the token is minted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#value AppOauth#value}
-        :param filter_type: Groups claim filter. Can only be set if type is FILTER. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#filter_type AppOauth#filter_type}
+        :param name: Name of the claim that will be used in the token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#name AppOauth#name}
+        :param type: Groups claim type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#type AppOauth#type}
+        :param value: Value of the claim. Can be an Okta Expression Language statement that evaluates at the time the token is minted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#value AppOauth#value}
+        :param filter_type: Groups claim filter. Can only be set if type is FILTER. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#filter_type AppOauth#filter_type}
         '''
         value_ = AppOauthGroupsClaim(
             name=name, type=type, value=value, filter_type=filter_type
@@ -298,9 +298,9 @@ class AppOauth(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#create AppOauth#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#read AppOauth#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#update AppOauth#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#create AppOauth#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#read AppOauth#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#update AppOauth#update}.
         '''
         value = AppOauthTimeouts(create=create, read=read, update=update)
 
@@ -1502,54 +1502,54 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#label AppOauth#label}
-        :param type: The type of client application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#type AppOauth#type}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#accessibility_error_redirect_url AppOauth#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#accessibility_login_redirect_url AppOauth#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#accessibility_self_service AppOauth#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#admin_note AppOauth#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#app_links_json AppOauth#app_links_json}
-        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#app_settings_json AppOauth#app_settings_json}
-        :param authentication_policy: The ID of the associated app_signon_policy. If this property is removed from the application the default sign-on-policy will be associated with this application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#authentication_policy AppOauth#authentication_policy}
-        :param auto_key_rotation: Requested key rotation mode. If auto_key_rotation isn't specified, the client automatically opts in for Okta's key rotation. You can update this property via the API or via the administrator UI. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object" Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#auto_key_rotation AppOauth#auto_key_rotation}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#auto_submit_toolbar AppOauth#auto_submit_toolbar}
-        :param client_basic_secret: The user provided OAuth client secret key value, this can be set when token_endpoint_auth_method is client_secret_basic. This does nothing when `omit_secret is set to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#client_basic_secret AppOauth#client_basic_secret}
-        :param client_id: OAuth client ID. If set during creation, app is created with this id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#client_id AppOauth#client_id}
-        :param client_uri: URI to a web page providing information about the client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#client_uri AppOauth#client_uri}
-        :param consent_method: *Early Access Property*. Indicates whether user consent is required or implicit. Valid values: REQUIRED, TRUSTED. Default value is TRUSTED. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#consent_method AppOauth#consent_method}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#enduser_note AppOauth#enduser_note}
-        :param grant_types: List of OAuth 2.0 grant types. Conditional validation params found here https://developer.okta.com/docs/api/resources/apps#credentials-settings-details. Defaults to minimum requirements per app type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#grant_types AppOauth#grant_types}
-        :param groups_claim: groups_claim block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#groups_claim AppOauth#groups_claim}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#hide_ios AppOauth#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#hide_web AppOauth#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#id AppOauth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param implicit_assignment: *Early Access Property*. Enable Federation Broker Mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#implicit_assignment AppOauth#implicit_assignment}
-        :param issuer_mode: *Early Access Property*. Indicates whether the Okta Authorization Server uses the original Okta org domain URL or a custom domain URL as the issuer of ID token for this client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#issuer_mode AppOauth#issuer_mode}
-        :param jwks: jwks block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#jwks AppOauth#jwks}
-        :param jwks_uri: URL reference to JWKS. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#jwks_uri AppOauth#jwks_uri}
-        :param login_mode: The type of Idp-Initiated login that the client supports, if any. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#login_mode AppOauth#login_mode}
-        :param login_scopes: List of scopes to use for the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#login_scopes AppOauth#login_scopes}
-        :param login_uri: URI that initiates login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#login_uri AppOauth#login_uri}
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#logo AppOauth#logo}
-        :param logo_uri: URI that references a logo for the client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#logo_uri AppOauth#logo_uri}
-        :param omit_secret: This tells the provider not manage the client_secret value in state. When this is false (the default), it will cause the auto-generated client_secret to be persisted in the client_secret attribute in state. This also means that every time an update to this app is run, this value is also set on the API. If this changes from false => true, the ``client_secret`` is dropped from state and the secret at the time of the apply is what remains. If this is ever changes from true => false your app will be recreated, due to the need to regenerate a secret we can store in state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#omit_secret AppOauth#omit_secret}
-        :param pkce_required: Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#pkce_required AppOauth#pkce_required}
-        :param policy_uri: URI to web page providing client policy document. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#policy_uri AppOauth#policy_uri}
-        :param post_logout_redirect_uris: List of URIs for redirection after logout. Note: see okta_app_oauth_post_logout_redirect_uri for appending to this list in a decentralized way. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#post_logout_redirect_uris AppOauth#post_logout_redirect_uris}
-        :param profile: Custom JSON that represents an OAuth application's profile. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#profile AppOauth#profile}
-        :param redirect_uris: List of URIs for use in the redirect-based flow. This is required for all application types except service. Note: see okta_app_oauth_redirect_uri for appending to this list in a decentralized way. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#redirect_uris AppOauth#redirect_uris}
-        :param refresh_token_leeway: *Early Access Property* Grace period for token rotation, required with grant types refresh_token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#refresh_token_leeway AppOauth#refresh_token_leeway}
-        :param refresh_token_rotation: *Early Access Property* Refresh token rotation behavior, required with grant types refresh_token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#refresh_token_rotation AppOauth#refresh_token_rotation}
-        :param response_types: List of OAuth 2.0 response type strings. Valid values are any combination of: ``code``, ``token``, and ``id_token``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#response_types AppOauth#response_types}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#status AppOauth#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#timeouts AppOauth#timeouts}
-        :param token_endpoint_auth_method: Requested authentication method for the token endpoint, valid values include: 'client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none', etc. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#token_endpoint_auth_method AppOauth#token_endpoint_auth_method}
-        :param tos_uri: URI to web page providing client tos (terms of service). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#tos_uri AppOauth#tos_uri}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template AppOauth#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template_push_status AppOauth#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template_suffix AppOauth#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template_type AppOauth#user_name_template_type}
-        :param wildcard_redirect: *Early Access Property*. Indicates if the client is allowed to use wildcard matching of redirect_uris. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#wildcard_redirect AppOauth#wildcard_redirect}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#label AppOauth#label}
+        :param type: The type of client application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#type AppOauth#type}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#accessibility_error_redirect_url AppOauth#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#accessibility_login_redirect_url AppOauth#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#accessibility_self_service AppOauth#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#admin_note AppOauth#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#app_links_json AppOauth#app_links_json}
+        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#app_settings_json AppOauth#app_settings_json}
+        :param authentication_policy: The ID of the associated app_signon_policy. If this property is removed from the application the default sign-on-policy will be associated with this application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#authentication_policy AppOauth#authentication_policy}
+        :param auto_key_rotation: Requested key rotation mode. If auto_key_rotation isn't specified, the client automatically opts in for Okta's key rotation. You can update this property via the API or via the administrator UI. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object" Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#auto_key_rotation AppOauth#auto_key_rotation}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#auto_submit_toolbar AppOauth#auto_submit_toolbar}
+        :param client_basic_secret: The user provided OAuth client secret key value, this can be set when token_endpoint_auth_method is client_secret_basic. This does nothing when `omit_secret is set to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#client_basic_secret AppOauth#client_basic_secret}
+        :param client_id: OAuth client ID. If set during creation, app is created with this id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#client_id AppOauth#client_id}
+        :param client_uri: URI to a web page providing information about the client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#client_uri AppOauth#client_uri}
+        :param consent_method: *Early Access Property*. Indicates whether user consent is required or implicit. Valid values: REQUIRED, TRUSTED. Default value is TRUSTED. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#consent_method AppOauth#consent_method}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#enduser_note AppOauth#enduser_note}
+        :param grant_types: List of OAuth 2.0 grant types. Conditional validation params found here https://developer.okta.com/docs/api/resources/apps#credentials-settings-details. Defaults to minimum requirements per app type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#grant_types AppOauth#grant_types}
+        :param groups_claim: groups_claim block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#groups_claim AppOauth#groups_claim}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#hide_ios AppOauth#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#hide_web AppOauth#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#id AppOauth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param implicit_assignment: *Early Access Property*. Enable Federation Broker Mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#implicit_assignment AppOauth#implicit_assignment}
+        :param issuer_mode: *Early Access Property*. Indicates whether the Okta Authorization Server uses the original Okta org domain URL or a custom domain URL as the issuer of ID token for this client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#issuer_mode AppOauth#issuer_mode}
+        :param jwks: jwks block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#jwks AppOauth#jwks}
+        :param jwks_uri: URL reference to JWKS. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#jwks_uri AppOauth#jwks_uri}
+        :param login_mode: The type of Idp-Initiated login that the client supports, if any. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#login_mode AppOauth#login_mode}
+        :param login_scopes: List of scopes to use for the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#login_scopes AppOauth#login_scopes}
+        :param login_uri: URI that initiates login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#login_uri AppOauth#login_uri}
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#logo AppOauth#logo}
+        :param logo_uri: URI that references a logo for the client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#logo_uri AppOauth#logo_uri}
+        :param omit_secret: This tells the provider not manage the client_secret value in state. When this is false (the default), it will cause the auto-generated client_secret to be persisted in the client_secret attribute in state. This also means that every time an update to this app is run, this value is also set on the API. If this changes from false => true, the ``client_secret`` is dropped from state and the secret at the time of the apply is what remains. If this is ever changes from true => false your app will be recreated, due to the need to regenerate a secret we can store in state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#omit_secret AppOauth#omit_secret}
+        :param pkce_required: Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#pkce_required AppOauth#pkce_required}
+        :param policy_uri: URI to web page providing client policy document. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#policy_uri AppOauth#policy_uri}
+        :param post_logout_redirect_uris: List of URIs for redirection after logout. Note: see okta_app_oauth_post_logout_redirect_uri for appending to this list in a decentralized way. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#post_logout_redirect_uris AppOauth#post_logout_redirect_uris}
+        :param profile: Custom JSON that represents an OAuth application's profile. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#profile AppOauth#profile}
+        :param redirect_uris: List of URIs for use in the redirect-based flow. This is required for all application types except service. Note: see okta_app_oauth_redirect_uri for appending to this list in a decentralized way. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#redirect_uris AppOauth#redirect_uris}
+        :param refresh_token_leeway: *Early Access Property* Grace period for token rotation, required with grant types refresh_token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#refresh_token_leeway AppOauth#refresh_token_leeway}
+        :param refresh_token_rotation: *Early Access Property* Refresh token rotation behavior, required with grant types refresh_token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#refresh_token_rotation AppOauth#refresh_token_rotation}
+        :param response_types: List of OAuth 2.0 response type strings. Valid values are any combination of: ``code``, ``token``, and ``id_token``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#response_types AppOauth#response_types}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#status AppOauth#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#timeouts AppOauth#timeouts}
+        :param token_endpoint_auth_method: Requested authentication method for the token endpoint, valid values include: 'client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none', etc. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#token_endpoint_auth_method AppOauth#token_endpoint_auth_method}
+        :param tos_uri: URI to web page providing client tos (terms of service). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#tos_uri AppOauth#tos_uri}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template AppOauth#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template_push_status AppOauth#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template_suffix AppOauth#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template_type AppOauth#user_name_template_type}
+        :param wildcard_redirect: *Early Access Property*. Indicates if the client is allowed to use wildcard matching of redirect_uris. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#wildcard_redirect AppOauth#wildcard_redirect}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1793,7 +1793,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def label(self) -> builtins.str:
         '''The Application's display name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#label AppOauth#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#label AppOauth#label}
         '''
         result = self._values.get("label")
         assert result is not None, "Required property 'label' is missing"
@@ -1803,7 +1803,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''The type of client application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#type AppOauth#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#type AppOauth#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -1813,7 +1813,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_error_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom error page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#accessibility_error_redirect_url AppOauth#accessibility_error_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#accessibility_error_redirect_url AppOauth#accessibility_error_redirect_url}
         '''
         result = self._values.get("accessibility_error_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1822,7 +1822,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_login_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom login page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#accessibility_login_redirect_url AppOauth#accessibility_login_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#accessibility_login_redirect_url AppOauth#accessibility_login_redirect_url}
         '''
         result = self._values.get("accessibility_login_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1833,7 +1833,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Enable self service. Default is ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#accessibility_self_service AppOauth#accessibility_self_service}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#accessibility_self_service AppOauth#accessibility_self_service}
         '''
         result = self._values.get("accessibility_self_service")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1842,7 +1842,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def admin_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for admins.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#admin_note AppOauth#admin_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#admin_note AppOauth#admin_note}
         '''
         result = self._values.get("admin_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1851,7 +1851,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_links_json(self) -> typing.Optional[builtins.str]:
         '''Displays specific appLinks for the app. The value for each application link should be boolean.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#app_links_json AppOauth#app_links_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#app_links_json AppOauth#app_links_json}
         '''
         result = self._values.get("app_links_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1860,7 +1860,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_settings_json(self) -> typing.Optional[builtins.str]:
         '''Application settings in JSON format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#app_settings_json AppOauth#app_settings_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#app_settings_json AppOauth#app_settings_json}
         '''
         result = self._values.get("app_settings_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1871,7 +1871,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         If this property is removed from the application the default sign-on-policy will be associated with this application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#authentication_policy AppOauth#authentication_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#authentication_policy AppOauth#authentication_policy}
         '''
         result = self._values.get("authentication_policy")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1888,7 +1888,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         UI.
         See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object"
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#auto_key_rotation AppOauth#auto_key_rotation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#auto_key_rotation AppOauth#auto_key_rotation}
         '''
         result = self._values.get("auto_key_rotation")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1899,7 +1899,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Display auto submit toolbar.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#auto_submit_toolbar AppOauth#auto_submit_toolbar}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#auto_submit_toolbar AppOauth#auto_submit_toolbar}
         '''
         result = self._values.get("auto_submit_toolbar")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1910,7 +1910,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This does nothing when `omit_secret is set to true.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#client_basic_secret AppOauth#client_basic_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#client_basic_secret AppOauth#client_basic_secret}
         '''
         result = self._values.get("client_basic_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1919,7 +1919,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def client_id(self) -> typing.Optional[builtins.str]:
         '''OAuth client ID. If set during creation, app is created with this id.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#client_id AppOauth#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#client_id AppOauth#client_id}
         '''
         result = self._values.get("client_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1928,7 +1928,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def client_uri(self) -> typing.Optional[builtins.str]:
         '''URI to a web page providing information about the client.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#client_uri AppOauth#client_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#client_uri AppOauth#client_uri}
         '''
         result = self._values.get("client_uri")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1937,7 +1937,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def consent_method(self) -> typing.Optional[builtins.str]:
         '''*Early Access Property*. Indicates whether user consent is required or implicit. Valid values: REQUIRED, TRUSTED. Default value is TRUSTED.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#consent_method AppOauth#consent_method}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#consent_method AppOauth#consent_method}
         '''
         result = self._values.get("consent_method")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1946,7 +1946,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enduser_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for end users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#enduser_note AppOauth#enduser_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#enduser_note AppOauth#enduser_note}
         '''
         result = self._values.get("enduser_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1955,7 +1955,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def grant_types(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of OAuth 2.0 grant types. Conditional validation params found here https://developer.okta.com/docs/api/resources/apps#credentials-settings-details. Defaults to minimum requirements per app type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#grant_types AppOauth#grant_types}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#grant_types AppOauth#grant_types}
         '''
         result = self._values.get("grant_types")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1964,7 +1964,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def groups_claim(self) -> typing.Optional["AppOauthGroupsClaim"]:
         '''groups_claim block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#groups_claim AppOauth#groups_claim}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#groups_claim AppOauth#groups_claim}
         '''
         result = self._values.get("groups_claim")
         return typing.cast(typing.Optional["AppOauthGroupsClaim"], result)
@@ -1975,7 +1975,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon on mobile app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#hide_ios AppOauth#hide_ios}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#hide_ios AppOauth#hide_ios}
         '''
         result = self._values.get("hide_ios")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1986,14 +1986,14 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon to users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#hide_web AppOauth#hide_web}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#hide_web AppOauth#hide_web}
         '''
         result = self._values.get("hide_web")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#id AppOauth#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#id AppOauth#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -2007,7 +2007,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''*Early Access Property*. Enable Federation Broker Mode.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#implicit_assignment AppOauth#implicit_assignment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#implicit_assignment AppOauth#implicit_assignment}
         '''
         result = self._values.get("implicit_assignment")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2018,7 +2018,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Indicates whether the Okta Authorization Server uses the original Okta org domain URL or a custom domain URL as the issuer of ID token for this client.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#issuer_mode AppOauth#issuer_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#issuer_mode AppOauth#issuer_mode}
         '''
         result = self._values.get("issuer_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2029,7 +2029,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["AppOauthJwks"]]]:
         '''jwks block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#jwks AppOauth#jwks}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#jwks AppOauth#jwks}
         '''
         result = self._values.get("jwks")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["AppOauthJwks"]]], result)
@@ -2038,7 +2038,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def jwks_uri(self) -> typing.Optional[builtins.str]:
         '''URL reference to JWKS.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#jwks_uri AppOauth#jwks_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#jwks_uri AppOauth#jwks_uri}
         '''
         result = self._values.get("jwks_uri")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2047,7 +2047,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def login_mode(self) -> typing.Optional[builtins.str]:
         '''The type of Idp-Initiated login that the client supports, if any.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#login_mode AppOauth#login_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#login_mode AppOauth#login_mode}
         '''
         result = self._values.get("login_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2056,7 +2056,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def login_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of scopes to use for the request.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#login_scopes AppOauth#login_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#login_scopes AppOauth#login_scopes}
         '''
         result = self._values.get("login_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2065,7 +2065,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def login_uri(self) -> typing.Optional[builtins.str]:
         '''URI that initiates login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#login_uri AppOauth#login_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#login_uri AppOauth#login_uri}
         '''
         result = self._values.get("login_uri")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2076,7 +2076,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The file must be in PNG, JPG, or GIF format, and less than 1 MB in size.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#logo AppOauth#logo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#logo AppOauth#logo}
         '''
         result = self._values.get("logo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2085,7 +2085,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def logo_uri(self) -> typing.Optional[builtins.str]:
         '''URI that references a logo for the client.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#logo_uri AppOauth#logo_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#logo_uri AppOauth#logo_uri}
         '''
         result = self._values.get("logo_uri")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2098,7 +2098,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         When this is false (the default), it will cause the auto-generated client_secret to be persisted in the client_secret attribute in state. This also means that every time an update to this app is run, this value is also set on the API. If this changes from false => true, the ``client_secret`` is dropped from state and the secret at the time of the apply is what remains. If this is ever changes from true => false your app will be recreated, due to the need to regenerate a secret we can store in state.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#omit_secret AppOauth#omit_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#omit_secret AppOauth#omit_secret}
         '''
         result = self._values.get("omit_secret")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2109,7 +2109,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Require Proof Key for Code Exchange (PKCE) for additional verification key rotation mode. See: https://developer.okta.com/docs/reference/api/apps/#oauth-credential-object.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#pkce_required AppOauth#pkce_required}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#pkce_required AppOauth#pkce_required}
         '''
         result = self._values.get("pkce_required")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2118,7 +2118,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy_uri(self) -> typing.Optional[builtins.str]:
         '''URI to web page providing client policy document.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#policy_uri AppOauth#policy_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#policy_uri AppOauth#policy_uri}
         '''
         result = self._values.get("policy_uri")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2127,7 +2127,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def post_logout_redirect_uris(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of URIs for redirection after logout. Note: see okta_app_oauth_post_logout_redirect_uri for appending to this list in a decentralized way.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#post_logout_redirect_uris AppOauth#post_logout_redirect_uris}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#post_logout_redirect_uris AppOauth#post_logout_redirect_uris}
         '''
         result = self._values.get("post_logout_redirect_uris")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2136,7 +2136,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def profile(self) -> typing.Optional[builtins.str]:
         '''Custom JSON that represents an OAuth application's profile.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#profile AppOauth#profile}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#profile AppOauth#profile}
         '''
         result = self._values.get("profile")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2147,7 +2147,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This is required for all application types except service. Note: see okta_app_oauth_redirect_uri for appending to this list in a decentralized way.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#redirect_uris AppOauth#redirect_uris}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#redirect_uris AppOauth#redirect_uris}
         '''
         result = self._values.get("redirect_uris")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2156,7 +2156,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def refresh_token_leeway(self) -> typing.Optional[jsii.Number]:
         '''*Early Access Property* Grace period for token rotation, required with grant types refresh_token.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#refresh_token_leeway AppOauth#refresh_token_leeway}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#refresh_token_leeway AppOauth#refresh_token_leeway}
         '''
         result = self._values.get("refresh_token_leeway")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -2165,7 +2165,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def refresh_token_rotation(self) -> typing.Optional[builtins.str]:
         '''*Early Access Property* Refresh token rotation behavior, required with grant types refresh_token.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#refresh_token_rotation AppOauth#refresh_token_rotation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#refresh_token_rotation AppOauth#refresh_token_rotation}
         '''
         result = self._values.get("refresh_token_rotation")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2174,7 +2174,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def response_types(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of OAuth 2.0 response type strings. Valid values are any combination of: ``code``, ``token``, and ``id_token``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#response_types AppOauth#response_types}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#response_types AppOauth#response_types}
         '''
         result = self._values.get("response_types")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2183,7 +2183,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Status of application. By default, it is ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#status AppOauth#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#status AppOauth#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2192,7 +2192,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["AppOauthTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#timeouts AppOauth#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#timeouts AppOauth#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["AppOauthTimeouts"], result)
@@ -2201,7 +2201,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def token_endpoint_auth_method(self) -> typing.Optional[builtins.str]:
         '''Requested authentication method for the token endpoint, valid values include:  'client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none', etc.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#token_endpoint_auth_method AppOauth#token_endpoint_auth_method}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#token_endpoint_auth_method AppOauth#token_endpoint_auth_method}
         '''
         result = self._values.get("token_endpoint_auth_method")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2210,7 +2210,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def tos_uri(self) -> typing.Optional[builtins.str]:
         '''URI to web page providing client tos (terms of service).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#tos_uri AppOauth#tos_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#tos_uri AppOauth#tos_uri}
         '''
         result = self._values.get("tos_uri")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2219,7 +2219,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template(self) -> typing.Optional[builtins.str]:
         '''Username template. Default: ``${source.login}``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template AppOauth#user_name_template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template AppOauth#user_name_template}
         '''
         result = self._values.get("user_name_template")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2228,7 +2228,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_push_status(self) -> typing.Optional[builtins.str]:
         '''Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template_push_status AppOauth#user_name_template_push_status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template_push_status AppOauth#user_name_template_push_status}
         '''
         result = self._values.get("user_name_template_push_status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2237,7 +2237,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_suffix(self) -> typing.Optional[builtins.str]:
         '''Username template suffix.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template_suffix AppOauth#user_name_template_suffix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template_suffix AppOauth#user_name_template_suffix}
         '''
         result = self._values.get("user_name_template_suffix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2246,7 +2246,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_type(self) -> typing.Optional[builtins.str]:
         '''Username template type. Default: ``BUILT_IN``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#user_name_template_type AppOauth#user_name_template_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#user_name_template_type AppOauth#user_name_template_type}
         '''
         result = self._values.get("user_name_template_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2255,7 +2255,7 @@ class AppOauthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def wildcard_redirect(self) -> typing.Optional[builtins.str]:
         '''*Early Access Property*. Indicates if the client is allowed to use wildcard matching of redirect_uris.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#wildcard_redirect AppOauth#wildcard_redirect}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#wildcard_redirect AppOauth#wildcard_redirect}
         '''
         result = self._values.get("wildcard_redirect")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2292,10 +2292,10 @@ class AppOauthGroupsClaim:
         filter_type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: Name of the claim that will be used in the token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#name AppOauth#name}
-        :param type: Groups claim type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#type AppOauth#type}
-        :param value: Value of the claim. Can be an Okta Expression Language statement that evaluates at the time the token is minted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#value AppOauth#value}
-        :param filter_type: Groups claim filter. Can only be set if type is FILTER. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#filter_type AppOauth#filter_type}
+        :param name: Name of the claim that will be used in the token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#name AppOauth#name}
+        :param type: Groups claim type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#type AppOauth#type}
+        :param value: Value of the claim. Can be an Okta Expression Language statement that evaluates at the time the token is minted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#value AppOauth#value}
+        :param filter_type: Groups claim filter. Can only be set if type is FILTER. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#filter_type AppOauth#filter_type}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__cb4869669d83d3c76a28bea2a2bc2077291d8bd5935cb9caef0ebc517e0e9053)
@@ -2315,7 +2315,7 @@ class AppOauthGroupsClaim:
     def name(self) -> builtins.str:
         '''Name of the claim that will be used in the token.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#name AppOauth#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#name AppOauth#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -2325,7 +2325,7 @@ class AppOauthGroupsClaim:
     def type(self) -> builtins.str:
         '''Groups claim type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#type AppOauth#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#type AppOauth#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -2337,7 +2337,7 @@ class AppOauthGroupsClaim:
 
         Can be an Okta Expression Language statement that evaluates at the time the token is minted.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#value AppOauth#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#value AppOauth#value}
         '''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
@@ -2347,7 +2347,7 @@ class AppOauthGroupsClaim:
     def filter_type(self) -> typing.Optional[builtins.str]:
         '''Groups claim filter. Can only be set if type is FILTER.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#filter_type AppOauth#filter_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#filter_type AppOauth#filter_type}
         '''
         result = self._values.get("filter_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2491,12 +2491,12 @@ class AppOauthJwks:
         y: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param kid: Key ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#kid AppOauth#kid}
-        :param kty: Key type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#kty AppOauth#kty}
-        :param e: RSA Exponent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#e AppOauth#e}
-        :param n: RSA Modulus. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#n AppOauth#n}
-        :param x: X coordinate of the elliptic curve point. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#x AppOauth#x}
-        :param y: Y coordinate of the elliptic curve point. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#y AppOauth#y}
+        :param kid: Key ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#kid AppOauth#kid}
+        :param kty: Key type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#kty AppOauth#kty}
+        :param e: RSA Exponent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#e AppOauth#e}
+        :param n: RSA Modulus. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#n AppOauth#n}
+        :param x: X coordinate of the elliptic curve point. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#x AppOauth#x}
+        :param y: Y coordinate of the elliptic curve point. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#y AppOauth#y}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5742606248534cdfcfe4b5e83784c85dbc079eaeacdfd1f4827311350b266a0c)
@@ -2523,7 +2523,7 @@ class AppOauthJwks:
     def kid(self) -> builtins.str:
         '''Key ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#kid AppOauth#kid}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#kid AppOauth#kid}
         '''
         result = self._values.get("kid")
         assert result is not None, "Required property 'kid' is missing"
@@ -2533,7 +2533,7 @@ class AppOauthJwks:
     def kty(self) -> builtins.str:
         '''Key type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#kty AppOauth#kty}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#kty AppOauth#kty}
         '''
         result = self._values.get("kty")
         assert result is not None, "Required property 'kty' is missing"
@@ -2543,7 +2543,7 @@ class AppOauthJwks:
     def e(self) -> typing.Optional[builtins.str]:
         '''RSA Exponent.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#e AppOauth#e}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#e AppOauth#e}
         '''
         result = self._values.get("e")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2552,7 +2552,7 @@ class AppOauthJwks:
     def n(self) -> typing.Optional[builtins.str]:
         '''RSA Modulus.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#n AppOauth#n}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#n AppOauth#n}
         '''
         result = self._values.get("n")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2561,7 +2561,7 @@ class AppOauthJwks:
     def x(self) -> typing.Optional[builtins.str]:
         '''X coordinate of the elliptic curve point.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#x AppOauth#x}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#x AppOauth#x}
         '''
         result = self._values.get("x")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2570,7 +2570,7 @@ class AppOauthJwks:
     def y(self) -> typing.Optional[builtins.str]:
         '''Y coordinate of the elliptic curve point.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#y AppOauth#y}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#y AppOauth#y}
         '''
         result = self._values.get("y")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2853,9 +2853,9 @@ class AppOauthTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#create AppOauth#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#read AppOauth#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#update AppOauth#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#create AppOauth#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#read AppOauth#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#update AppOauth#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5f094e477c81be4db862d68715e9f5ebc779499bde559b8205df272d188206aa)
@@ -2872,19 +2872,19 @@ class AppOauthTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#create AppOauth#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#create AppOauth#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#read AppOauth#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#read AppOauth#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth#update AppOauth#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth#update AppOauth#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 

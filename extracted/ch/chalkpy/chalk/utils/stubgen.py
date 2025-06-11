@@ -137,6 +137,8 @@ class StubGenerator:
                     include_in_protocol_cls=True,
                     protocol_annotation="DataFrame",
                 )
+            elif isinstance(f.typ._underlying, Feature):  # pyright: ignore[reportPrivateUsage]
+                continue
             else:
                 # Make a best-effort to figure out imports.
                 proto_annotation, init_annotation = self._register_imports_for_annotation(f.typ.parsed_annotation)

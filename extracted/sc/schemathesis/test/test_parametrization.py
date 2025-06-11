@@ -1,11 +1,9 @@
-import sys
-
 import pytest
 from hypothesis import HealthCheck, Phase, assume, given, settings
-from packaging import version
 
 import schemathesis
-from schemathesis.parameters import PayloadAlternatives
+from schemathesis.generation.modes import GenerationMode
+from schemathesis.schemas import PayloadAlternatives
 
 from .utils import assert_requests_call, integer
 
@@ -17,9 +15,10 @@ def test_parametrization(testdir):
 @schema.parametrize()
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/users"
+    assert case.operation.path == "/users"
     assert case.method == "GET"
-"""
+""",
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # And schema doesn't contain any parameters
     # And schema contains only 1 API operation
@@ -27,7 +26,7 @@ def test_(request, case):
     result.assert_outcomes(passed=1)
     # Then test name should contain method:path
     # And there should be only 1 hypothesis call
-    result.stdout.re_match_lines([r"test_parametrization.py::test_\[GET /v1/users\] PASSED", r"Hypothesis calls: 1"])
+    result.stdout.re_match_lines([r"test_parametrization.py::test_\[GET /users\] PASSED", r"Hypothesis calls: 2"])
 
 
 def test_pytest_parametrize(testdir):
@@ -38,7 +37,7 @@ def test_pytest_parametrize(testdir):
 @schema.parametrize()
 def test_(request, param, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/users"
+    assert case.operation.path == "/users"
     assert case.method in ("GET", "POST")
 """,
         paths={
@@ -47,6 +46,7 @@ def test_(request, param, case):
                 "post": {"responses": {"200": {"description": "OK"}}},
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # And there are multiple method/path combinations
     result = testdir.runpytest("-v", "-s")
@@ -55,9 +55,9 @@ def test_(request, param, case):
     result.assert_outcomes(passed=4)
     result.stdout.re_match_lines(
         [
-            r"test_pytest_parametrize.py::test_\[GET /v1/users\]\[A\] PASSED",
-            r"test_pytest_parametrize.py::test_\[GET /v1/users\]\[B\] PASSED",
-            r"Hypothesis calls: 4",
+            r"test_pytest_parametrize.py::test_\[GET /users\]\[A\] PASSED",
+            r"test_pytest_parametrize.py::test_\[GET /users\]\[B\] PASSED",
+            r"Hypothesis calls: 8",
         ]
     )
 
@@ -70,7 +70,7 @@ class TestAPI:
     @schema.parametrize()
     def test_(self, request, case):
         request.config.HYPOTHESIS_CASES += 1
-        assert case.full_path == "/v1/users"
+        assert case.operation.path == "/users"
         assert case.method in ("GET", "POST")
 """,
         paths={
@@ -79,15 +79,16 @@ class TestAPI:
                 "post": {"responses": {"200": {"description": "OK"}}},
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then they should work as regular tests
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=2)
     result.stdout.re_match_lines(
         [
-            r"test_method.py::TestAPI::test_\[GET /v1/users\] PASSED",
-            r"test_method.py::TestAPI::test_\[POST /v1/users\] PASSED",
-            r"Hypothesis calls: 2",
+            r"test_method.py::TestAPI::test_\[GET /users\] PASSED",
+            r"test_method.py::TestAPI::test_\[POST /users\] PASSED",
+            r"Hypothesis calls: 4",
         ]
     )
 
@@ -101,26 +102,27 @@ def test_max_examples(testdir):
 @settings(max_examples=5)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/users"
+    assert case.operation.path == "/users"
     assert case.method in ("GET", "POST")
 """,
         paths={"/users": {"get": parameters, "post": parameters}},
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=2)
     # Then total number of Hypothesis calls should be `max_examples` per pytest test
-    result.stdout.re_match_lines([r"Hypothesis calls: 10$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 12$"])
 
 
 def test_direct_schema(testdir):
     # When body has schema specified directly, not via $ref
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/users"
+    assert case.operation.path == "/users"
     assert case.method == "POST"
     assert_list(case.body)
     assert_str(case.body[0])
@@ -140,11 +142,12 @@ def test_(request, case):
                 }
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly used in the generated case
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 3$"])
 
 
 def test_specified_example_body(testdir):
@@ -153,7 +156,7 @@ def test_specified_example_body(testdir):
         """
 from hypothesis import Phase
 
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1, phases=[Phase.explicit])
 def test(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -183,11 +186,12 @@ def test(request, case):
                 "example": {"name": "John"},
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v", "-s")
     # Then this example should be used in tests
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 @pytest.mark.parametrize(
@@ -244,12 +248,13 @@ def test(request, case):
     assert case.query == {"id": "test"}
 """,
         schema=schema,
+        generation_modes=[GenerationMode.POSITIVE],
     )
 
     result = testdir.runpytest("-v", "-s")
     # Then this example should be used in tests
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 def test_specified_example_parameter_override(testdir):
@@ -284,12 +289,13 @@ def test(request, case):
                 }
             },
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
 
     result = testdir.runpytest("-v", "-s")
     # Then this example should be used in tests
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 4$"])
 
 
 def test_specified_example_body_media_type_override(testdir):
@@ -328,12 +334,13 @@ def test(request, case):
                 }
             },
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
 
     result = testdir.runpytest("-v", "-s")
     # Then this example should be used in tests, not the example from the schema
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 3$"])
 
 
 def test_multiple_examples_different_locations(testdir):
@@ -346,8 +353,9 @@ from hypothesis import Phase
 @settings(max_examples=1, phases=[Phase.explicit])
 def test(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.body in ({"name": "John1"}, {"name": "John2"})
-    assert case.query == {"age": 35}
+    if not hasattr(case.meta.phase.data, "description"):
+        assert case.body in ({"name": "John1"}, {"name": "John2"})
+        assert case.query == {"age": 35}
 """,
         schema={
             "openapi": "3.0.2",
@@ -374,12 +382,13 @@ def test(request, case):
                 }
             },
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
 
     result = testdir.runpytest("-v", "-s")
     # Then these examples should be used in tests as a part of a single request, i.e. combined
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 3$"])
 
 
 def test_multiple_examples_same_location(testdir):
@@ -388,11 +397,12 @@ def test_multiple_examples_same_location(testdir):
         """
 from hypothesis import Phase
 
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1, phases=[Phase.explicit])
 def test(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.formatted_path in ("/users/1/2", "/users/42/43")
+    if not hasattr(case.meta.phase.data, "description"):
+        assert case.path_parameters in ({"a": 1, "b": 2}, {"a": 42, "b": 43})
 """,
         schema_name="simple_openapi.yaml",
         paths={
@@ -418,14 +428,14 @@ def test(request, case):
                 }
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v", "-s")
     # Then these examples should be used combined in tests
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 5$"])
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Decorator syntax available from Python 3.9")
 def test_deselecting(testdir):
     # When pytest selecting is applied via "-k" option
     testdir.make_test(
@@ -446,52 +456,7 @@ def test_b(request, case):
     # Then only relevant tests should be selected for running
     result.assert_outcomes(passed=2)
     # "/users" path is excluded in the first test function
-    result.stdout.re_match_lines([".* 1 deselected / 2 selected", r".*\[POST /v1/pets\]", r"Hypothesis calls: 2"])
-
-
-def test_skip_deprecated_operations(testdir):
-    # When the schema is loaded with `skip_deprecated_operations=True`
-    testdir.make_test(
-        """
-schema = schemathesis.from_dict(raw_schema, skip_deprecated_operations=True)
-
-@schema.parametrize()
-@settings(max_examples=1)
-def test_a(request, case):
-    request.config.HYPOTHESIS_CASES += 1
-
-@schema.parametrize(skip_deprecated_operations=False)
-@settings(max_examples=1)
-def test_b(request, case):
-    request.config.HYPOTHESIS_CASES += 1
-    """,
-        paths={
-            "/users": {
-                "post": {
-                    "deprecated": True,
-                    "responses": {"200": {"description": "OK"}},
-                },
-                "patch": {
-                    "deprecated": False,
-                    "responses": {"200": {"description": "OK"}},
-                },
-            }
-        },
-    )
-    result = testdir.runpytest("-v", "-s")
-    # Then only not deprecated API operations should be tested
-    result.assert_outcomes(passed=5)
-    result.stdout.re_match_lines(
-        [
-            r".*test_a\[PATCH /v1/users\]",
-            r".*test_a\[GET /v1/users\]",
-            # Here POST is not skipped due to using skip_deprecated_operations=False in the `parametrize` call
-            r".*test_b\[POST /v1/users\]",
-            r".*test_b\[PATCH /v1/users\]",
-            r".*test_b\[GET /v1/users\]",
-            r"Hypothesis calls: 5",
-        ]
-    )
+    result.stdout.re_match_lines([".* 1 deselected / 2 selected", r".*\[POST /pets\]", r"Hypothesis calls: 16"])
 
 
 @pytest.mark.parametrize(
@@ -516,7 +481,7 @@ def test_(request, case):
     result = testdir.runpytest("-s")
     # Then it should be correctly processed
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 8"])
 
 
 def test_invalid_schema(testdir):
@@ -525,35 +490,27 @@ def test_invalid_schema(testdir):
         """
 import schemathesis
 
-schema = schemathesis.from_dict({"swagger": "2.0", "paths": 1}, validate_schema=False)
+schema = schemathesis.openapi.from_dict({"swagger": "2.0", "paths": 1})
 
 @schema.parametrize()
 def test_(request, case):
     pass
 """,
-        validate_schema=False,
     )
     result = testdir.runpytest()
     # Then collection phase should fail with error
-    if version.parse(pytest.__version__) >= version.parse("6.0.0"):
-        kwargs = {"errors": 1}
-    else:
-        kwargs = {"error": 1}
-    result.assert_outcomes(**kwargs)
+    result.assert_outcomes(errors=1)
     result.stdout.re_match_lines([r".*Error during collection$"])
 
 
-@pytest.mark.parametrize("as_kwarg", [True, False])
-def test_invalid_schema_with_parametrize(testdir, as_kwarg):
-    # When the given schema is not valid but validation is disabled via validate_schema=False argument
+def test_invalid_schema_with_parametrize(testdir):
     testdir.make_test(
         """
-@schema.parametrize({})
+@schema.parametrize()
 @settings(max_examples=1)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-""".format("" if not as_kwarg else "validate_schema=False"),
-        validate_schema=False,
+""",
         schema_name="simple_openapi.yaml",
         paths={
             "/users": {
@@ -572,7 +529,7 @@ def test_(request, case):
     result = testdir.runpytest()
     # Then test should be executed
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 20$"])
 
 
 def test_exception_during_test(testdir):
@@ -603,12 +560,11 @@ def test_(request, case):
     result = testdir.runpytest("-v", "-rf")
     # Then the tests should fail with the relevant error message
     result.assert_outcomes(failed=1)
-    result.stdout.re_match_lines([r".*OperationSchemaError: Cannot have max_size=6 < min_size=10"])
+    result.stdout.re_match_lines([r".*InvalidSchema: Cannot have max_size=6 < min_size=10"])
 
 
 def test_invalid_operation(testdir):
     # When the given schema is invalid
-    # And schema validation is disabled
     testdir.make_test(
         """
 @schema.parametrize()
@@ -619,12 +575,11 @@ def test_(request, case):
             "/valid": {"get": {"parameters": [{"type": "integer", "name": "id", "in": "query", "required": True}]}},
             "/invalid": {"get": {"parameters": [{"type": "int", "name": "id", "in": "query", "required": True}]}},
         },
-        validate_schema=False,
     )
     result = testdir.runpytest("-v", "-rf")
     # Then the tests should fail with the relevant error message
     result.assert_outcomes(failed=1, passed=2)
-    result.stdout.re_match_lines([r".*test_invalid_operation.py::test_\[GET /v1/invalid\] FAILED"])
+    result.stdout.re_match_lines([r".*test_invalid_operation.py::test_\[GET /invalid\] FAILED"])
 
 
 def test_no_base_path(testdir):
@@ -644,26 +599,6 @@ def test_(request, case):
     result.stdout.re_match_lines([r".*\[GET /users\]"])
 
 
-def test_base_url_from_uri(testdir, openapi_3_app, openapi3_base_url, openapi3_schema_url):
-    # When the schema is created out of URI
-    testdir.make_test(
-        f"""
-schema = schemathesis.from_uri("{openapi3_schema_url}")
-
-@schema.parametrize()
-def test_(request, case):
-    assert case._get_base_url(None) == "{openapi3_base_url}"
-    case.call()
-"""
-    )
-    result = testdir.runpytest("-v")
-    # Then base URL can be discovered automatically
-    # And can be omitted in `call`
-    result.assert_outcomes(passed=2)
-    result.stdout.re_match_lines([r".*\[GET /api/failure\]", r".*\[GET /api/success\]"])
-    assert len(openapi_3_app["incoming_requests"]) == 2
-
-
 def test_empty_content():
     # When the "content" value is empty in "requestBody"
     raw_schema = {
@@ -671,7 +606,7 @@ def test_empty_content():
         "info": {"title": "Test", "description": "Test", "version": "0.1.0"},
         "paths": {"/body": {"post": {"requestBody": {"content": {}}, "responses": {"200": {"description": "OK"}}}}},
     }
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     # Then the body processing should be no-op
     operation = schema["/body"]["POST"]
     assert operation.body == PayloadAlternatives([])
@@ -695,7 +630,7 @@ def test_loose_multipart_definition():
             }
         },
     }
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     # Then non-object data should be excluded during generation
 
     @given(case=schema["/body"]["POST"].as_strategy())
@@ -732,7 +667,7 @@ def test_multipart_behind_a_reference():
             }
         },
     }
-    schema = schemathesis.from_dict(raw_schema, validate_schema=True)
+    schema = schemathesis.openapi.from_dict(raw_schema)
     # Then it should be correctly resolved
 
     @given(case=schema["/body"]["POST"].as_strategy())
@@ -752,7 +687,7 @@ def test_multipart_behind_a_reference():
 @pytest.mark.operations("multipart")
 def test_optional_form_parameters(schema_url):
     # When form parameters are optional
-    schema = schemathesis.from_uri(schema_url)
+    schema = schemathesis.openapi.from_url(schema_url)
     strategy = schema["/multipart"]["POST"].as_strategy()
 
     @given(case=strategy)
@@ -792,7 +727,7 @@ def test_ref_field():
             }
         },
     }
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
 
     @given(case=schema["/body"]["POST"].as_strategy())
     @settings(max_examples=5)
@@ -824,16 +759,15 @@ def test_(request, case):
     result = testdir.runpytest("-v")
     # Then it should not be propagated & collection should be continued
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r".*\[GET /v1/users\]"])
+    result.stdout.re_match_lines([r".*\[GET /users\]"])
 
 
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("slow")
 def test_long_response(testdir, app_schema, openapi3_base_url):
-    # When response takes too long
     testdir.make_test(
         f"""
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 @schema.parametrize()
 @settings(max_examples=1)
@@ -843,6 +777,4 @@ def test_(case):
         schema=app_schema,
     )
     result = testdir.runpytest()
-    # Then it should be reported as any other test failure
-    assert "E           1. Response timeout" in result.outlines
-    assert "E           The server failed to respond within the specified limit of 1.00ms" in result.outlines
+    assert "timed out" in result.stdout.str()

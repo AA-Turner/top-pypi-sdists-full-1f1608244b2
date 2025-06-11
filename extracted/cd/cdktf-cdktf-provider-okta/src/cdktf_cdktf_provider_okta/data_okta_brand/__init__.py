@@ -1,7 +1,7 @@
 r'''
 # `data_okta_brand`
 
-Refer to the Terraform Registry for docs: [`data_okta_brand`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/brand).
+Refer to the Terraform Registry for docs: [`data_okta_brand`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/brand).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaBrand(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaBrand.DataOktaBrand",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/brand okta_brand}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/brand okta_brand}.'''
 
     def __init__(
         self,
@@ -60,11 +60,11 @@ class DataOktaBrand(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/brand okta_brand} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/brand okta_brand} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param brand_id: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/brand#brand_id DataOktaBrand#brand_id}
+        :param brand_id: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/brand#brand_id DataOktaBrand#brand_id}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -103,7 +103,7 @@ class DataOktaBrand(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaBrand to import.
-        :param import_from_id: The id of the existing DataOktaBrand that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/brand#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaBrand that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/brand#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaBrand to import is found.
         '''
         if __debug__:
@@ -205,7 +205,7 @@ class DataOktaBrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param brand_id: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/brand#brand_id DataOktaBrand#brand_id}
+        :param brand_id: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/brand#brand_id DataOktaBrand#brand_id}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -305,7 +305,7 @@ class DataOktaBrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def brand_id(self) -> builtins.str:
         '''Brand ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/brand#brand_id DataOktaBrand#brand_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/brand#brand_id DataOktaBrand#brand_id}
         '''
         result = self._values.get("brand_id")
         assert result is not None, "Required property 'brand_id' is missing"

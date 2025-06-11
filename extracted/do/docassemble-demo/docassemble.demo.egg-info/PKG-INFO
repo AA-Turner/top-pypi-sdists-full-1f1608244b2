@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: docassemble.demo
-Version: 1.7.6
+Version: 1.7.7
 Summary: A demonstration package for docassemble.
 Author-email: Jonathan Pyle <jhpyle@gmail.com>
 License-Expression: MIT
@@ -12,7 +12,7 @@ Project-URL: Changelog, https://github.com/jhpyle/docassemble/blob/master/CHANGE
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
-Requires-Dist: docassemble.base==1.7.6
+Requires-Dist: docassemble.base==1.7.7
 Requires-Dist: googledrivedownloader
 Requires-Dist: ics
 Requires-Dist: matplotlib

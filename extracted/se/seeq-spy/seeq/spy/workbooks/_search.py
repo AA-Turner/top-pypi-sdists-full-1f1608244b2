@@ -34,7 +34,6 @@ class WorkbookSearchContext:
     total_processed_queue: queue.Queue = field(default_factory=queue.Queue)
     results_queue: queue.Queue = field(default_factory=queue.Queue)
     results: Dict[str, dict] = field(default_factory=dict)
-    update_timer: timedelta = field(default_factory=lambda: _common.timer_start())
 
     def add_future(self, future):
         self.futures_queue.put(future)
@@ -56,10 +55,7 @@ class WorkbookSearchContext:
             self.results_queue.task_done()
 
         self.status.df.at[0, 'Time'] = self.status.get_timer()
-
-        if _common.timer_elapsed(self.update_timer) > timedelta(seconds=5):
-            self.post_message()
-            self.update_timer = _common.timer_start()
+        self.post_message()
 
     def post_message(self):
         self.status.update('Searching' + (' and retrieving all properties' if self.all_properties else ''),
@@ -160,8 +156,6 @@ def search(query: dict, *, content_filter: str = 'owner', all_properties: bool =
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     status.reset_timer()
@@ -192,12 +186,8 @@ def search(query: dict, *, content_filter: str = 'owner', all_properties: bool =
             _search(context, query, content_filter.upper())
 
             while not context.futures_queue.empty():
-                try:
-                    # Call Future.result() so that we can catch any exceptions that may have occurred
-                    context.futures_queue.get().result(timeout=0.5)
-                except TimeoutError:
-                    pass
-
+                # Call Future.result() so that we wait for the thread and raise any exceptions that may have occurred
+                context.futures_queue.get().result()
                 context.drain_queues()
 
     except KeyboardInterrupt:

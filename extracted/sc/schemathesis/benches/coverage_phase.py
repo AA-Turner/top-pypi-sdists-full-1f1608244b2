@@ -2,10 +2,10 @@
 
 import pytest
 
-from schemathesis.generation.coverage import cover_schema_iter, CoverageContext
+from schemathesis.generation.coverage import CoverageContext, cover_schema_iter
 
 CONTEXTS = [CoverageContext(location="body").with_positive(), CoverageContext(location="body").with_negative()]
-CONTEXT_NAMES = [",".join([m.value for m in ctx.data_generation_methods]) for ctx in CONTEXTS]
+CONTEXT_NAMES = [",".join([m.value for m in ctx.generation_modes]) for ctx in CONTEXTS]
 
 BASIC_TYPES = [
     {"type": "string"},

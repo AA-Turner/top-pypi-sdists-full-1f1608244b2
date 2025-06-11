@@ -1,7 +1,7 @@
 r'''
 # `okta_policy_rule_idp_discovery`
 
-Refer to the Terraform Registry for docs: [`okta_policy_rule_idp_discovery`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery).
+Refer to the Terraform Registry for docs: [`okta_policy_rule_idp_discovery`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PolicyRuleIdpDiscovery(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.policyRuleIdpDiscovery.PolicyRuleIdpDiscovery",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery okta_policy_rule_idp_discovery}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery okta_policy_rule_idp_discovery}.'''
 
     def __init__(
         self,
@@ -74,25 +74,25 @@ class PolicyRuleIdpDiscovery(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery okta_policy_rule_idp_discovery} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery okta_policy_rule_idp_discovery} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Policy Rule Name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}
-        :param app_exclude: app_exclude block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#app_exclude PolicyRuleIdpDiscovery#app_exclude}
-        :param app_include: app_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#app_include PolicyRuleIdpDiscovery#app_include}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param idp_providers: idp_providers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#idp_providers PolicyRuleIdpDiscovery#idp_providers}
-        :param network_connection: Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#network_connection PolicyRuleIdpDiscovery#network_connection}
-        :param network_excludes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#network_excludes PolicyRuleIdpDiscovery#network_excludes}
-        :param network_includes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#network_includes PolicyRuleIdpDiscovery#network_includes}
-        :param platform_include: platform_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#platform_include PolicyRuleIdpDiscovery#platform_include}
-        :param policy_id: Policy ID of the Rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#policy_id PolicyRuleIdpDiscovery#policy_id}
-        :param priority: Rule priority. This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#priority PolicyRuleIdpDiscovery#priority}
-        :param status: Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#status PolicyRuleIdpDiscovery#status}
-        :param user_identifier_attribute: Profile attribute matching can only have a single value that describes the type indicated in ``user_identifier_type``. This is the attribute or identifier that the ``user_identifier_patterns`` are checked against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#user_identifier_attribute PolicyRuleIdpDiscovery#user_identifier_attribute}
-        :param user_identifier_patterns: user_identifier_patterns block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#user_identifier_patterns PolicyRuleIdpDiscovery#user_identifier_patterns}
-        :param user_identifier_type: One of: ``IDENTIFIER``, ``ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#user_identifier_type PolicyRuleIdpDiscovery#user_identifier_type}
+        :param name: Policy Rule Name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}
+        :param app_exclude: app_exclude block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#app_exclude PolicyRuleIdpDiscovery#app_exclude}
+        :param app_include: app_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#app_include PolicyRuleIdpDiscovery#app_include}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param idp_providers: idp_providers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#idp_providers PolicyRuleIdpDiscovery#idp_providers}
+        :param network_connection: Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#network_connection PolicyRuleIdpDiscovery#network_connection}
+        :param network_excludes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#network_excludes PolicyRuleIdpDiscovery#network_excludes}
+        :param network_includes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#network_includes PolicyRuleIdpDiscovery#network_includes}
+        :param platform_include: platform_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#platform_include PolicyRuleIdpDiscovery#platform_include}
+        :param policy_id: Policy ID of the Rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#policy_id PolicyRuleIdpDiscovery#policy_id}
+        :param priority: Rule priority. This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#priority PolicyRuleIdpDiscovery#priority}
+        :param status: Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#status PolicyRuleIdpDiscovery#status}
+        :param user_identifier_attribute: Profile attribute matching can only have a single value that describes the type indicated in ``user_identifier_type``. This is the attribute or identifier that the ``user_identifier_patterns`` are checked against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#user_identifier_attribute PolicyRuleIdpDiscovery#user_identifier_attribute}
+        :param user_identifier_patterns: user_identifier_patterns block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#user_identifier_patterns PolicyRuleIdpDiscovery#user_identifier_patterns}
+        :param user_identifier_type: One of: ``IDENTIFIER``, ``ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#user_identifier_type PolicyRuleIdpDiscovery#user_identifier_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -145,7 +145,7 @@ class PolicyRuleIdpDiscovery(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PolicyRuleIdpDiscovery to import.
-        :param import_from_id: The id of the existing PolicyRuleIdpDiscovery that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PolicyRuleIdpDiscovery that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PolicyRuleIdpDiscovery to import is found.
         '''
         if __debug__:
@@ -537,9 +537,9 @@ class PolicyRuleIdpDiscoveryAppExclude:
         name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}.
+        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__7f08462840f5816346b3e8c8cd934067622f69d5496723a162e324e244439eb2)
@@ -556,14 +556,14 @@ class PolicyRuleIdpDiscoveryAppExclude:
 
     @builtins.property
     def type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.'''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -573,7 +573,7 @@ class PolicyRuleIdpDiscoveryAppExclude:
 
     @builtins.property
     def name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}.'''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -799,9 +799,9 @@ class PolicyRuleIdpDiscoveryAppInclude:
         name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}.
+        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8b1bd5b4e003ce87c7dd39ef8f5263395d181d7b9a327873273266290ccd3d53)
@@ -818,14 +818,14 @@ class PolicyRuleIdpDiscoveryAppInclude:
 
     @builtins.property
     def type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.'''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -835,7 +835,7 @@ class PolicyRuleIdpDiscoveryAppInclude:
 
     @builtins.property
     def name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}.'''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1110,21 +1110,21 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Policy Rule Name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}
-        :param app_exclude: app_exclude block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#app_exclude PolicyRuleIdpDiscovery#app_exclude}
-        :param app_include: app_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#app_include PolicyRuleIdpDiscovery#app_include}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param idp_providers: idp_providers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#idp_providers PolicyRuleIdpDiscovery#idp_providers}
-        :param network_connection: Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#network_connection PolicyRuleIdpDiscovery#network_connection}
-        :param network_excludes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#network_excludes PolicyRuleIdpDiscovery#network_excludes}
-        :param network_includes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#network_includes PolicyRuleIdpDiscovery#network_includes}
-        :param platform_include: platform_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#platform_include PolicyRuleIdpDiscovery#platform_include}
-        :param policy_id: Policy ID of the Rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#policy_id PolicyRuleIdpDiscovery#policy_id}
-        :param priority: Rule priority. This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#priority PolicyRuleIdpDiscovery#priority}
-        :param status: Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#status PolicyRuleIdpDiscovery#status}
-        :param user_identifier_attribute: Profile attribute matching can only have a single value that describes the type indicated in ``user_identifier_type``. This is the attribute or identifier that the ``user_identifier_patterns`` are checked against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#user_identifier_attribute PolicyRuleIdpDiscovery#user_identifier_attribute}
-        :param user_identifier_patterns: user_identifier_patterns block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#user_identifier_patterns PolicyRuleIdpDiscovery#user_identifier_patterns}
-        :param user_identifier_type: One of: ``IDENTIFIER``, ``ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#user_identifier_type PolicyRuleIdpDiscovery#user_identifier_type}
+        :param name: Policy Rule Name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}
+        :param app_exclude: app_exclude block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#app_exclude PolicyRuleIdpDiscovery#app_exclude}
+        :param app_include: app_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#app_include PolicyRuleIdpDiscovery#app_include}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param idp_providers: idp_providers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#idp_providers PolicyRuleIdpDiscovery#idp_providers}
+        :param network_connection: Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#network_connection PolicyRuleIdpDiscovery#network_connection}
+        :param network_excludes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#network_excludes PolicyRuleIdpDiscovery#network_excludes}
+        :param network_includes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#network_includes PolicyRuleIdpDiscovery#network_includes}
+        :param platform_include: platform_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#platform_include PolicyRuleIdpDiscovery#platform_include}
+        :param policy_id: Policy ID of the Rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#policy_id PolicyRuleIdpDiscovery#policy_id}
+        :param priority: Rule priority. This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#priority PolicyRuleIdpDiscovery#priority}
+        :param status: Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#status PolicyRuleIdpDiscovery#status}
+        :param user_identifier_attribute: Profile attribute matching can only have a single value that describes the type indicated in ``user_identifier_type``. This is the attribute or identifier that the ``user_identifier_patterns`` are checked against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#user_identifier_attribute PolicyRuleIdpDiscovery#user_identifier_attribute}
+        :param user_identifier_patterns: user_identifier_patterns block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#user_identifier_patterns PolicyRuleIdpDiscovery#user_identifier_patterns}
+        :param user_identifier_type: One of: ``IDENTIFIER``, ``ATTRIBUTE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#user_identifier_type PolicyRuleIdpDiscovery#user_identifier_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1266,7 +1266,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Policy Rule Name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#name PolicyRuleIdpDiscovery#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1278,7 +1278,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PolicyRuleIdpDiscoveryAppExclude]]]:
         '''app_exclude block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#app_exclude PolicyRuleIdpDiscovery#app_exclude}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#app_exclude PolicyRuleIdpDiscovery#app_exclude}
         '''
         result = self._values.get("app_exclude")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PolicyRuleIdpDiscoveryAppExclude]]], result)
@@ -1289,14 +1289,14 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PolicyRuleIdpDiscoveryAppInclude]]]:
         '''app_include block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#app_include PolicyRuleIdpDiscovery#app_include}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#app_include PolicyRuleIdpDiscovery#app_include}
         '''
         result = self._values.get("app_include")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PolicyRuleIdpDiscoveryAppInclude]]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1310,7 +1310,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PolicyRuleIdpDiscoveryIdpProviders"]]]:
         '''idp_providers block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#idp_providers PolicyRuleIdpDiscovery#idp_providers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#idp_providers PolicyRuleIdpDiscovery#idp_providers}
         '''
         result = self._values.get("idp_providers")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PolicyRuleIdpDiscoveryIdpProviders"]]], result)
@@ -1319,7 +1319,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def network_connection(self) -> typing.Optional[builtins.str]:
         '''Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#network_connection PolicyRuleIdpDiscovery#network_connection}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#network_connection PolicyRuleIdpDiscovery#network_connection}
         '''
         result = self._values.get("network_connection")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1328,7 +1328,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def network_excludes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#network_excludes PolicyRuleIdpDiscovery#network_excludes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#network_excludes PolicyRuleIdpDiscovery#network_excludes}
         '''
         result = self._values.get("network_excludes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1337,7 +1337,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def network_includes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#network_includes PolicyRuleIdpDiscovery#network_includes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#network_includes PolicyRuleIdpDiscovery#network_includes}
         '''
         result = self._values.get("network_includes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1348,7 +1348,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PolicyRuleIdpDiscoveryPlatformInclude"]]]:
         '''platform_include block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#platform_include PolicyRuleIdpDiscovery#platform_include}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#platform_include PolicyRuleIdpDiscovery#platform_include}
         '''
         result = self._values.get("platform_include")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PolicyRuleIdpDiscoveryPlatformInclude"]]], result)
@@ -1357,7 +1357,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy_id(self) -> typing.Optional[builtins.str]:
         '''Policy ID of the Rule.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#policy_id PolicyRuleIdpDiscovery#policy_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#policy_id PolicyRuleIdpDiscovery#policy_id}
         '''
         result = self._values.get("policy_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1368,7 +1368,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#priority PolicyRuleIdpDiscovery#priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#priority PolicyRuleIdpDiscovery#priority}
         '''
         result = self._values.get("priority")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1377,7 +1377,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#status PolicyRuleIdpDiscovery#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#status PolicyRuleIdpDiscovery#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1388,7 +1388,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This is the attribute or identifier that the ``user_identifier_patterns`` are checked against.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#user_identifier_attribute PolicyRuleIdpDiscovery#user_identifier_attribute}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#user_identifier_attribute PolicyRuleIdpDiscovery#user_identifier_attribute}
         '''
         result = self._values.get("user_identifier_attribute")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1399,7 +1399,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PolicyRuleIdpDiscoveryUserIdentifierPatterns"]]]:
         '''user_identifier_patterns block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#user_identifier_patterns PolicyRuleIdpDiscovery#user_identifier_patterns}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#user_identifier_patterns PolicyRuleIdpDiscovery#user_identifier_patterns}
         '''
         result = self._values.get("user_identifier_patterns")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PolicyRuleIdpDiscoveryUserIdentifierPatterns"]]], result)
@@ -1408,7 +1408,7 @@ class PolicyRuleIdpDiscoveryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_identifier_type(self) -> typing.Optional[builtins.str]:
         '''One of: ``IDENTIFIER``, ``ATTRIBUTE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#user_identifier_type PolicyRuleIdpDiscovery#user_identifier_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#user_identifier_type PolicyRuleIdpDiscovery#user_identifier_type}
         '''
         result = self._values.get("user_identifier_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1438,8 +1438,8 @@ class PolicyRuleIdpDiscoveryIdpProviders:
         type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param id: The identifier for the Idp the rule should route to if all conditions are met. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param type: Type of IdP. One of: ``AMAZON``, ``APPLE``, ``DISCORD``, ``FACEBOOK``, ``GITHUB``, ``GITLAB``, ``GOOGLE``, ``IDV_CLEAR``, ``IDV_INCODE``, ``IDV_PERSONA``, ``LINKEDIN``, ``LOGINGOV``, ``LOGINGOV_SANDBOX``, ``MICROSOFT``, ``OIDC``, ``PAYPAL``, ``PAYPAL_SANDBOX``, ``SALESFORCE``, ``SAML2``, ``SPOTIFY``, ``X509``, ``XERO``, ``YAHOO``, ``YAHOOJP``, Default: ``OKTA`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}
+        :param id: The identifier for the Idp the rule should route to if all conditions are met. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param type: Type of IdP. One of: ``AMAZON``, ``APPLE``, ``DISCORD``, ``FACEBOOK``, ``GITHUB``, ``GITLAB``, ``GOOGLE``, ``IDV_CLEAR``, ``IDV_INCODE``, ``IDV_PERSONA``, ``LINKEDIN``, ``LOGINGOV``, ``LOGINGOV_SANDBOX``, ``MICROSOFT``, ``OIDC``, ``PAYPAL``, ``PAYPAL_SANDBOX``, ``SALESFORCE``, ``SAML2``, ``SPOTIFY``, ``X509``, ``XERO``, ``YAHOO``, ``YAHOOJP``, Default: ``OKTA`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__360e17bea3fecc525758d4df660cd4efb2e0dd24384b24e531f6acef39310cb6)
@@ -1455,7 +1455,7 @@ class PolicyRuleIdpDiscoveryIdpProviders:
     def id(self) -> typing.Optional[builtins.str]:
         '''The identifier for the Idp the rule should route to if all conditions are met.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#id PolicyRuleIdpDiscovery#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1469,7 +1469,7 @@ class PolicyRuleIdpDiscoveryIdpProviders:
 
         One of: ``AMAZON``, ``APPLE``, ``DISCORD``, ``FACEBOOK``, ``GITHUB``, ``GITLAB``, ``GOOGLE``, ``IDV_CLEAR``, ``IDV_INCODE``, ``IDV_PERSONA``, ``LINKEDIN``, ``LOGINGOV``, ``LOGINGOV_SANDBOX``, ``MICROSOFT``, ``OIDC``, ``PAYPAL``, ``PAYPAL_SANDBOX``, ``SALESFORCE``, ``SAML2``, ``SPOTIFY``, ``X509``, ``XERO``, ``YAHOO``, ``YAHOOJP``, Default: ``OKTA``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1683,9 +1683,9 @@ class PolicyRuleIdpDiscoveryPlatformInclude:
         type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param os_expression: Only available with OTHER OS type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#os_expression PolicyRuleIdpDiscovery#os_expression}
-        :param os_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#os_type PolicyRuleIdpDiscovery#os_type}.
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.
+        :param os_expression: Only available with OTHER OS type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#os_expression PolicyRuleIdpDiscovery#os_expression}
+        :param os_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#os_type PolicyRuleIdpDiscovery#os_type}.
+        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__7940b3c32cc76941a4dcaa9b9eadc06d285b143b846911a09d69f2505e7a4076)
@@ -1704,20 +1704,20 @@ class PolicyRuleIdpDiscoveryPlatformInclude:
     def os_expression(self) -> typing.Optional[builtins.str]:
         '''Only available with OTHER OS type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#os_expression PolicyRuleIdpDiscovery#os_expression}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#os_expression PolicyRuleIdpDiscovery#os_expression}
         '''
         result = self._values.get("os_expression")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def os_type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#os_type PolicyRuleIdpDiscovery#os_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#os_type PolicyRuleIdpDiscovery#os_type}.'''
         result = self._values.get("os_type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#type PolicyRuleIdpDiscovery#type}.'''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1946,8 +1946,8 @@ class PolicyRuleIdpDiscoveryUserIdentifierPatterns:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param match_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#match_type PolicyRuleIdpDiscovery#match_type}.
-        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#value PolicyRuleIdpDiscovery#value}.
+        :param match_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#match_type PolicyRuleIdpDiscovery#match_type}.
+        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#value PolicyRuleIdpDiscovery#value}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__bae9f353d116fa796d4bb200c764bbf9c1881eb2cd0674db2911dfc9239cb09c)
@@ -1961,13 +1961,13 @@ class PolicyRuleIdpDiscoveryUserIdentifierPatterns:
 
     @builtins.property
     def match_type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#match_type PolicyRuleIdpDiscovery#match_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#match_type PolicyRuleIdpDiscovery#match_type}.'''
         result = self._values.get("match_type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def value(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_idp_discovery#value PolicyRuleIdpDiscovery#value}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_idp_discovery#value PolicyRuleIdpDiscovery#value}.'''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
 

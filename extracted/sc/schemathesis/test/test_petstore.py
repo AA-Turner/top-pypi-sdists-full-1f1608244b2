@@ -1,16 +1,19 @@
 import pytest
 from hypothesis import settings
 
+from schemathesis.generation.modes import GenerationMode
+
 
 @pytest.fixture(params=["petstore_v2.yaml", "petstore_v3.yaml"])
 def testdir(request, testdir):
     def make_petstore_test(*args, **kwargs):
         kwargs["schema_name"] = request.param
+        kwargs["generation_modes"] = [GenerationMode.POSITIVE]
         testdir.make_test(*args, **kwargs)
 
     testdir.make_petstore_test = make_petstore_test
 
-    def assert_petstore(passed=1, tests_num=5, skipped=0):
+    def assert_petstore(passed=1, tests_num=6, skipped=0):
         result = testdir.runpytest("-v", "-s")
         result.assert_outcomes(passed=passed, skipped=skipped)
         result.stdout.re_match_lines([rf"Hypothesis calls: {tests_num}"])
@@ -32,7 +35,7 @@ def reload_profile():
 def test_pet(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(endpoint="/pet$")
+@schema.include(path_regex="/pet$").parametrize()
 @settings(max_examples=5, deadline=None, suppress_health_check=list(HealthCheck))
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -48,7 +51,7 @@ def test_(request, case):
 def test_find_by_status(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(endpoint="/pet/findByStatus$")
+@schema.include(path_regex="/pet/findByStatus$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -58,13 +61,13 @@ def test_(request, case):
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore()
+    testdir.assert_petstore(tests_num=9)
 
 
 def test_find_by_tag(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(endpoint="/pet/findByTags$")
+@schema.include(path_regex="/pet/findByTags$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -72,17 +75,18 @@ def test_(request, case):
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore()
+    testdir.assert_petstore(tests_num=7)
 
 
 def test_get_pet(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(method="GET", endpoint="/pet/{petId}$")
+@schema.include(method="GET", path_regex="/pet/{petId}$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert_int(case.path_parameters["petId"])
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.path_parameters["petId"])
     assert_requests_call(case)
 """
     )
@@ -92,16 +96,17 @@ def test_(request, case):
 def test_update_pet(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(method="POST", endpoint="/pet/{petId}$")
+@schema.include(method="POST", path_regex="/pet/{petId}$").parametrize()
 @settings(max_examples=5, deadline=None, suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow])
 def test_(request, case):
     assume(case.body is not NOT_SET)
     assume("name" in case.body)
     assume("status" in case.body)
     request.config.HYPOTHESIS_CASES += 1
-    assert_int(case.path_parameters["petId"])
-    assert_str(case.body["name"])
-    assert_str(case.body["status"])
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.path_parameters["petId"])
+        assert_str(case.body["name"])
+        assert_str(case.body["status"])
     assert_requests_call(case)
 """
     )
@@ -111,31 +116,16 @@ def test_(request, case):
 def test_delete_pet(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(method="DELETE", endpoint="/pet/{petId}$")
+schema.config.generation.update(modes=[GenerationMode.POSITIVE])
+
+@schema.include(method="DELETE", path_regex="/pet/{petId}$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert_int(case.path_parameters["petId"])
-    assert_str(case.headers["api_key"])
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.path_parameters["petId"])
+        assert_str(case.headers["api_key"])
     assert_requests_call(case)
-"""
-    )
-    testdir.assert_petstore()
-
-
-def test_upload_image(testdir):
-    testdir.make_petstore_test(
-        """
-@schema.parametrize(endpoint="/pet/{petId}/uploadImage$")
-@settings(max_examples=5, deadline=None)
-def test_(request, case):
-    assume(case.body is not NOT_SET)
-    assert_int(case.path_parameters["petId"])
-    if case.operation.schema.spec_version == "2.0":
-        assume("additionalMetadata" in case.body)
-        assert_str(case.body["additionalMetadata"])
-    assert_requests_call(case)
-    request.config.HYPOTHESIS_CASES += 1
 """
     )
     testdir.assert_petstore()
@@ -144,7 +134,9 @@ def test_(request, case):
 def test_get_inventory(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(endpoint="/store/inventory$")
+schema.config.generation.update(modes=[GenerationMode.POSITIVE])
+
+@schema.include(path_regex="/store/inventory$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -154,56 +146,58 @@ def test_(request, case):
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore(tests_num=5)
+    testdir.assert_petstore(tests_num=6)
 
 
 def test_create_order(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(endpoint="/store/order$")
+@schema.include(path_regex="/store/order$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore()
+    testdir.assert_petstore(tests_num=20)
 
 
 def test_get_order(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(method="GET", endpoint="/store/order/{orderId}$")
+@schema.include(method="GET", path_regex="/store/order/{orderId}$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert_int(case.path_parameters["orderId"])
-    assert case.path_parameters["orderId"] in range(1, 11)
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.path_parameters["orderId"])
+        assert case.path_parameters["orderId"] in range(1, 11)
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore()
+    testdir.assert_petstore(tests_num=9)
 
 
 def test_delete_order(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(method="DELETE", endpoint="/store/order/{orderId}$")
+@schema.include(method="DELETE", path_regex="/store/order/{orderId}$").parametrize()
 @settings(max_examples=5, suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow], deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert_int(case.path_parameters["orderId"])
-    assert case.path_parameters["orderId"] >= 1
+    if not hasattr(case.meta.phase.data, "description"):
+        assert_int(case.path_parameters["orderId"])
+        assert case.path_parameters["orderId"] >= 1
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore()
+    testdir.assert_petstore(tests_num=7)
 
 
 def test_create_user(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(endpoint="/user$")
+@schema.include(path_regex="/user$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -211,13 +205,13 @@ def test_(request, case):
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore()
+    testdir.assert_petstore(tests_num=21)
 
 
 def test_create_multiple_users(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(endpoint="/user/createWith")
+@schema.include(path_regex="/user/createWith").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -225,13 +219,13 @@ def test_(request, case):
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore(2, 10)
+    testdir.assert_petstore(2, 44)
 
 
 def test_login(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(endpoint="/user/login")
+@schema.include(path_regex="/user/login").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -246,7 +240,7 @@ def test_(request, case):
 def test_logout(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(endpoint="/user/logout")
+@schema.include(path_regex="/user/logout").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -256,13 +250,13 @@ def test_(request, case):
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore(tests_num=1)
+    testdir.assert_petstore(tests_num=2)
 
 
 def test_get_user(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(method="GET", endpoint="/user/{username}$")
+@schema.include(method="GET", path_regex="/user/{username}$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -276,7 +270,7 @@ def test_(request, case):
 def test_update_user(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(method="PUT", endpoint="/user/{username}$")
+@schema.include(method="PUT", path_regex="/user/{username}$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -285,13 +279,13 @@ def test_(request, case):
     assert_requests_call(case)
 """
     )
-    testdir.assert_petstore()
+    testdir.assert_petstore(tests_num=21)
 
 
 def test_delete_user(testdir):
     testdir.make_petstore_test(
         """
-@schema.parametrize(method="DELETE", endpoint="/user/{username}$")
+@schema.include(method="DELETE", path_regex="/user/{username}$").parametrize()
 @settings(max_examples=5, deadline=None)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1

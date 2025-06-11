@@ -20030,15 +20030,17 @@ class scout_catalog_AddFileToDataset(ConjureBeanType):
         return {
             'handle': ConjureFieldDefinition('handle', scout_catalog_Handle),
             'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', OptionalTypeWrapper[scout_catalog_TimestampMetadata]),
-            'origin_file_handles': ConjureFieldDefinition('originFileHandles', OptionalTypeWrapper[List[scout_catalog_S3Handle]])
+            'origin_file_handles': ConjureFieldDefinition('originFileHandles', OptionalTypeWrapper[List[scout_catalog_S3Handle]]),
+            'ingest_job_rid': ConjureFieldDefinition('ingestJobRid', OptionalTypeWrapper[ingest_api_IngestJobRid])
         }
 
-    __slots__: List[str] = ['_handle', '_timestamp_metadata', '_origin_file_handles']
+    __slots__: List[str] = ['_handle', '_timestamp_metadata', '_origin_file_handles', '_ingest_job_rid']
 
-    def __init__(self, handle: "scout_catalog_Handle", origin_file_handles: Optional[List["scout_catalog_S3Handle"]] = None, timestamp_metadata: Optional["scout_catalog_TimestampMetadata"] = None) -> None:
+    def __init__(self, handle: "scout_catalog_Handle", ingest_job_rid: Optional[str] = None, origin_file_handles: Optional[List["scout_catalog_S3Handle"]] = None, timestamp_metadata: Optional["scout_catalog_TimestampMetadata"] = None) -> None:
         self._handle = handle
         self._timestamp_metadata = timestamp_metadata
         self._origin_file_handles = origin_file_handles
+        self._ingest_job_rid = ingest_job_rid
 
     @builtins.property
     def handle(self) -> "scout_catalog_Handle":
@@ -20051,6 +20053,10 @@ class scout_catalog_AddFileToDataset(ConjureBeanType):
     @builtins.property
     def origin_file_handles(self) -> Optional[List["scout_catalog_S3Handle"]]:
         return self._origin_file_handles
+
+    @builtins.property
+    def ingest_job_rid(self) -> Optional[str]:
+        return self._ingest_job_rid
 
 
 scout_catalog_AddFileToDataset.__name__ = "AddFileToDataset"
@@ -20278,6 +20284,37 @@ a file, primarily CSV.
 
         _decoder = ConjureDecoder()
         return _decoder.decode(_response.json(), scout_catalog_DatasetFile, self._return_none_for_unknown_union_types)
+
+    def get_dataset_files_for_job(self, auth_header: str, ingest_job_rid: str, next_page_token: Optional[str] = None) -> "scout_catalog_DatasetFilesPage":
+        _conjure_encoder = ConjureEncoder()
+
+        _headers: Dict[str, Any] = {
+            'Accept': 'application/json',
+            'Authorization': auth_header,
+        }
+
+        _params: Dict[str, Any] = {
+            'nextPageToken': _conjure_encoder.default(next_page_token),
+        }
+
+        _path_params: Dict[str, str] = {
+            'ingestJobRid': quote(str(_conjure_encoder.default(ingest_job_rid)), safe=''),
+        }
+
+        _json: Any = None
+
+        _path = '/catalog/v1/ingest-job/{ingestJobRid}/files'
+        _path = _path.format(**_path_params)
+
+        _response: Response = self._request(
+            'GET',
+            self._uri + _path,
+            params=_params,
+            headers=_headers,
+            json=_json)
+
+        _decoder = ConjureDecoder()
+        return _decoder.decode(_response.json(), scout_catalog_DatasetFilesPage, self._return_none_for_unknown_union_types)
 
     def search_datasets_by_text(self, auth_header: str, request: "scout_catalog_SearchDatasetsByTextRequest") -> "scout_catalog_SearchDatasetsByTextResponse":
         _conjure_encoder = ConjureEncoder()
@@ -21213,12 +21250,13 @@ class scout_catalog_DatasetFile(ConjureBeanType):
             'ingested_at': ConjureFieldDefinition('ingestedAt', OptionalTypeWrapper[str]),
             'ingest_status': ConjureFieldDefinition('ingestStatus', api_IngestStatusV2),
             'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', OptionalTypeWrapper[scout_catalog_TimestampMetadata]),
-            'origin_file_paths': ConjureFieldDefinition('originFilePaths', OptionalTypeWrapper[List[str]])
+            'origin_file_paths': ConjureFieldDefinition('originFilePaths', OptionalTypeWrapper[List[str]]),
+            'ingest_job_rid': ConjureFieldDefinition('ingestJobRid', OptionalTypeWrapper[ingest_api_IngestJobRid])
         }
 
-    __slots__: List[str] = ['_id', '_dataset_rid', '_name', '_handle', '_bounds', '_uploaded_at', '_ingested_at', '_ingest_status', '_timestamp_metadata', '_origin_file_paths']
+    __slots__: List[str] = ['_id', '_dataset_rid', '_name', '_handle', '_bounds', '_uploaded_at', '_ingested_at', '_ingest_status', '_timestamp_metadata', '_origin_file_paths', '_ingest_job_rid']
 
-    def __init__(self, dataset_rid: str, handle: "scout_catalog_Handle", id: str, ingest_status: "api_IngestStatusV2", name: str, uploaded_at: str, bounds: Optional["scout_catalog_Bounds"] = None, ingested_at: Optional[str] = None, origin_file_paths: Optional[List[str]] = None, timestamp_metadata: Optional["scout_catalog_TimestampMetadata"] = None) -> None:
+    def __init__(self, dataset_rid: str, handle: "scout_catalog_Handle", id: str, ingest_status: "api_IngestStatusV2", name: str, uploaded_at: str, bounds: Optional["scout_catalog_Bounds"] = None, ingest_job_rid: Optional[str] = None, ingested_at: Optional[str] = None, origin_file_paths: Optional[List[str]] = None, timestamp_metadata: Optional["scout_catalog_TimestampMetadata"] = None) -> None:
         self._id = id
         self._dataset_rid = dataset_rid
         self._name = name
@@ -21229,6 +21267,7 @@ class scout_catalog_DatasetFile(ConjureBeanType):
         self._ingest_status = ingest_status
         self._timestamp_metadata = timestamp_metadata
         self._origin_file_paths = origin_file_paths
+        self._ingest_job_rid = ingest_job_rid
 
     @builtins.property
     def id(self) -> str:
@@ -21274,6 +21313,10 @@ ingested for any reason or is still being processed, then this value will be emp
     @builtins.property
     def origin_file_paths(self) -> Optional[List[str]]:
         return self._origin_file_paths
+
+    @builtins.property
+    def ingest_job_rid(self) -> Optional[str]:
+        return self._ingest_job_rid
 
 
 scout_catalog_DatasetFile.__name__ = "DatasetFile"
@@ -38847,6 +38890,83 @@ scout_compute_api_DurationFilterRanges.__qualname__ = "DurationFilterRanges"
 scout_compute_api_DurationFilterRanges.__module__ = "nominal_api.scout_compute_api"
 
 
+class scout_compute_api_Enum1dArraySeries(ConjureUnionType):
+    _channel: Optional["scout_compute_api_ChannelSeries"] = None
+    _raw: Optional["scout_compute_api_Reference"] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'channel': ConjureFieldDefinition('channel', scout_compute_api_ChannelSeries),
+            'raw': ConjureFieldDefinition('raw', scout_compute_api_Reference)
+        }
+
+    def __init__(
+            self,
+            channel: Optional["scout_compute_api_ChannelSeries"] = None,
+            raw: Optional["scout_compute_api_Reference"] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (channel is not None) + (raw is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if channel is not None:
+                self._channel = channel
+                self._type = 'channel'
+            if raw is not None:
+                self._raw = raw
+                self._type = 'raw'
+
+        elif type_of_union == 'channel':
+            if channel is None:
+                raise ValueError('a union value must not be None')
+            self._channel = channel
+            self._type = 'channel'
+        elif type_of_union == 'raw':
+            if raw is None:
+                raise ValueError('a union value must not be None')
+            self._raw = raw
+            self._type = 'raw'
+
+    @builtins.property
+    def channel(self) -> Optional["scout_compute_api_ChannelSeries"]:
+        return self._channel
+
+    @builtins.property
+    def raw(self) -> Optional["scout_compute_api_Reference"]:
+        return self._raw
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, scout_compute_api_Enum1dArraySeriesVisitor):
+            raise ValueError('{} is not an instance of scout_compute_api_Enum1dArraySeriesVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'channel' and self.channel is not None:
+            return visitor._channel(self.channel)
+        if self._type == 'raw' and self.raw is not None:
+            return visitor._raw(self.raw)
+
+
+scout_compute_api_Enum1dArraySeries.__name__ = "Enum1dArraySeries"
+scout_compute_api_Enum1dArraySeries.__qualname__ = "Enum1dArraySeries"
+scout_compute_api_Enum1dArraySeries.__module__ = "nominal_api.scout_compute_api"
+
+
+class scout_compute_api_Enum1dArraySeriesVisitor:
+
+    @abstractmethod
+    def _channel(self, channel: "scout_compute_api_ChannelSeries") -> Any:
+        pass
+
+    @abstractmethod
+    def _raw(self, raw: "scout_compute_api_Reference") -> Any:
+        pass
+
+
+scout_compute_api_Enum1dArraySeriesVisitor.__name__ = "Enum1dArraySeriesVisitor"
+scout_compute_api_Enum1dArraySeriesVisitor.__qualname__ = "Enum1dArraySeriesVisitor"
+scout_compute_api_Enum1dArraySeriesVisitor.__module__ = "nominal_api.scout_compute_api"
+
+
 class scout_compute_api_EnumAggregationFunction(ConjureEnumType):
 
     MIN = 'MIN'
@@ -39211,6 +39331,7 @@ class scout_compute_api_EnumSeries(ConjureUnionType):
     _union: Optional["scout_compute_api_EnumUnionSeries"] = None
     _filter_transformation: Optional["scout_compute_api_EnumFilterTransformationSeries"] = None
     _value_map: Optional["scout_compute_api_ValueMapSeries"] = None
+    _select1d_array_index: Optional["scout_compute_api_SelectIndexFrom1dEnumArraySeries"] = None
 
     @builtins.classmethod
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
@@ -39224,7 +39345,8 @@ class scout_compute_api_EnumSeries(ConjureUnionType):
             'time_shift': ConjureFieldDefinition('timeShift', scout_compute_api_EnumTimeShiftSeries),
             'union': ConjureFieldDefinition('union', scout_compute_api_EnumUnionSeries),
             'filter_transformation': ConjureFieldDefinition('filterTransformation', scout_compute_api_EnumFilterTransformationSeries),
-            'value_map': ConjureFieldDefinition('valueMap', scout_compute_api_ValueMapSeries)
+            'value_map': ConjureFieldDefinition('valueMap', scout_compute_api_ValueMapSeries),
+            'select1d_array_index': ConjureFieldDefinition('select1dArrayIndex', scout_compute_api_SelectIndexFrom1dEnumArraySeries)
         }
 
     def __init__(
@@ -39239,10 +39361,11 @@ class scout_compute_api_EnumSeries(ConjureUnionType):
             union: Optional["scout_compute_api_EnumUnionSeries"] = None,
             filter_transformation: Optional["scout_compute_api_EnumFilterTransformationSeries"] = None,
             value_map: Optional["scout_compute_api_ValueMapSeries"] = None,
+            select1d_array_index: Optional["scout_compute_api_SelectIndexFrom1dEnumArraySeries"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (aggregate is not None) + (function is not None) + (raw is not None) + (channel is not None) + (resample is not None) + (time_range_filter is not None) + (time_shift is not None) + (union is not None) + (filter_transformation is not None) + (value_map is not None) != 1:
+            if (aggregate is not None) + (function is not None) + (raw is not None) + (channel is not None) + (resample is not None) + (time_range_filter is not None) + (time_shift is not None) + (union is not None) + (filter_transformation is not None) + (value_map is not None) + (select1d_array_index is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if aggregate is not None:
@@ -39275,6 +39398,9 @@ class scout_compute_api_EnumSeries(ConjureUnionType):
             if value_map is not None:
                 self._value_map = value_map
                 self._type = 'valueMap'
+            if select1d_array_index is not None:
+                self._select1d_array_index = select1d_array_index
+                self._type = 'select1dArrayIndex'
 
         elif type_of_union == 'aggregate':
             if aggregate is None:
@@ -39326,6 +39452,11 @@ class scout_compute_api_EnumSeries(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._value_map = value_map
             self._type = 'valueMap'
+        elif type_of_union == 'select1dArrayIndex':
+            if select1d_array_index is None:
+                raise ValueError('a union value must not be None')
+            self._select1d_array_index = select1d_array_index
+            self._type = 'select1dArrayIndex'
 
     @builtins.property
     def aggregate(self) -> Optional["scout_compute_api_AggregateEnumSeries"]:
@@ -39367,6 +39498,10 @@ class scout_compute_api_EnumSeries(ConjureUnionType):
     def value_map(self) -> Optional["scout_compute_api_ValueMapSeries"]:
         return self._value_map
 
+    @builtins.property
+    def select1d_array_index(self) -> Optional["scout_compute_api_SelectIndexFrom1dEnumArraySeries"]:
+        return self._select1d_array_index
+
     def accept(self, visitor) -> Any:
         if not isinstance(visitor, scout_compute_api_EnumSeriesVisitor):
             raise ValueError('{} is not an instance of scout_compute_api_EnumSeriesVisitor'.format(visitor.__class__.__name__))
@@ -39390,6 +39525,8 @@ class scout_compute_api_EnumSeries(ConjureUnionType):
             return visitor._filter_transformation(self.filter_transformation)
         if self._type == 'valueMap' and self.value_map is not None:
             return visitor._value_map(self.value_map)
+        if self._type == 'select1dArrayIndex' and self.select1d_array_index is not None:
+            return visitor._select1d_array_index(self.select1d_array_index)
 
 
 scout_compute_api_EnumSeries.__name__ = "EnumSeries"
@@ -39437,6 +39574,10 @@ class scout_compute_api_EnumSeriesVisitor:
 
     @abstractmethod
     def _value_map(self, value_map: "scout_compute_api_ValueMapSeries") -> Any:
+        pass
+
+    @abstractmethod
+    def _select1d_array_index(self, select1d_array_index: "scout_compute_api_SelectIndexFrom1dEnumArraySeries") -> Any:
         pass
 
 
@@ -41768,6 +41909,83 @@ scout_compute_api_NotRanges.__qualname__ = "NotRanges"
 scout_compute_api_NotRanges.__module__ = "nominal_api.scout_compute_api"
 
 
+class scout_compute_api_Numeric1dArraySeries(ConjureUnionType):
+    _channel: Optional["scout_compute_api_ChannelSeries"] = None
+    _raw: Optional["scout_compute_api_Reference"] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'channel': ConjureFieldDefinition('channel', scout_compute_api_ChannelSeries),
+            'raw': ConjureFieldDefinition('raw', scout_compute_api_Reference)
+        }
+
+    def __init__(
+            self,
+            channel: Optional["scout_compute_api_ChannelSeries"] = None,
+            raw: Optional["scout_compute_api_Reference"] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (channel is not None) + (raw is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if channel is not None:
+                self._channel = channel
+                self._type = 'channel'
+            if raw is not None:
+                self._raw = raw
+                self._type = 'raw'
+
+        elif type_of_union == 'channel':
+            if channel is None:
+                raise ValueError('a union value must not be None')
+            self._channel = channel
+            self._type = 'channel'
+        elif type_of_union == 'raw':
+            if raw is None:
+                raise ValueError('a union value must not be None')
+            self._raw = raw
+            self._type = 'raw'
+
+    @builtins.property
+    def channel(self) -> Optional["scout_compute_api_ChannelSeries"]:
+        return self._channel
+
+    @builtins.property
+    def raw(self) -> Optional["scout_compute_api_Reference"]:
+        return self._raw
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, scout_compute_api_Numeric1dArraySeriesVisitor):
+            raise ValueError('{} is not an instance of scout_compute_api_Numeric1dArraySeriesVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'channel' and self.channel is not None:
+            return visitor._channel(self.channel)
+        if self._type == 'raw' and self.raw is not None:
+            return visitor._raw(self.raw)
+
+
+scout_compute_api_Numeric1dArraySeries.__name__ = "Numeric1dArraySeries"
+scout_compute_api_Numeric1dArraySeries.__qualname__ = "Numeric1dArraySeries"
+scout_compute_api_Numeric1dArraySeries.__module__ = "nominal_api.scout_compute_api"
+
+
+class scout_compute_api_Numeric1dArraySeriesVisitor:
+
+    @abstractmethod
+    def _channel(self, channel: "scout_compute_api_ChannelSeries") -> Any:
+        pass
+
+    @abstractmethod
+    def _raw(self, raw: "scout_compute_api_Reference") -> Any:
+        pass
+
+
+scout_compute_api_Numeric1dArraySeriesVisitor.__name__ = "Numeric1dArraySeriesVisitor"
+scout_compute_api_Numeric1dArraySeriesVisitor.__qualname__ = "Numeric1dArraySeriesVisitor"
+scout_compute_api_Numeric1dArraySeriesVisitor.__module__ = "nominal_api.scout_compute_api"
+
+
 class scout_compute_api_NumericAggregationFunction(ConjureEnumType):
 
     SUM = 'SUM'
@@ -42270,6 +42488,7 @@ class scout_compute_api_NumericSeries(ConjureUnionType):
     _filter_transformation: Optional["scout_compute_api_NumericFilterTransformationSeries"] = None
     _threshold_filter: Optional["scout_compute_api_NumericThresholdFilterSeries"] = None
     _approximate_filter: Optional["scout_compute_api_NumericApproximateFilterSeries"] = None
+    _select1d_array_index: Optional["scout_compute_api_SelectIndexFrom1dNumericArraySeries"] = None
 
     @builtins.classmethod
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
@@ -42304,7 +42523,8 @@ class scout_compute_api_NumericSeries(ConjureUnionType):
             'value_difference': ConjureFieldDefinition('valueDifference', scout_compute_api_ValueDifferenceSeries),
             'filter_transformation': ConjureFieldDefinition('filterTransformation', scout_compute_api_NumericFilterTransformationSeries),
             'threshold_filter': ConjureFieldDefinition('thresholdFilter', scout_compute_api_NumericThresholdFilterSeries),
-            'approximate_filter': ConjureFieldDefinition('approximateFilter', scout_compute_api_NumericApproximateFilterSeries)
+            'approximate_filter': ConjureFieldDefinition('approximateFilter', scout_compute_api_NumericApproximateFilterSeries),
+            'select1d_array_index': ConjureFieldDefinition('select1dArrayIndex', scout_compute_api_SelectIndexFrom1dNumericArraySeries)
         }
 
     def __init__(
@@ -42340,10 +42560,11 @@ class scout_compute_api_NumericSeries(ConjureUnionType):
             filter_transformation: Optional["scout_compute_api_NumericFilterTransformationSeries"] = None,
             threshold_filter: Optional["scout_compute_api_NumericThresholdFilterSeries"] = None,
             approximate_filter: Optional["scout_compute_api_NumericApproximateFilterSeries"] = None,
+            select1d_array_index: Optional["scout_compute_api_SelectIndexFrom1dNumericArraySeries"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (aggregate is not None) + (arithmetic is not None) + (bit_operation is not None) + (count_duplicate is not None) + (cumulative_sum is not None) + (derivative is not None) + (function is not None) + (integral is not None) + (max is not None) + (mean is not None) + (min is not None) + (offset is not None) + (product is not None) + (raw is not None) + (channel is not None) + (resample is not None) + (rolling_operation is not None) + (signal_filter is not None) + (sum is not None) + (scale is not None) + (time_difference is not None) + (time_range_filter is not None) + (time_shift is not None) + (unary_arithmetic is not None) + (binary_arithmetic is not None) + (union is not None) + (unit_conversion is not None) + (value_difference is not None) + (filter_transformation is not None) + (threshold_filter is not None) + (approximate_filter is not None) != 1:
+            if (aggregate is not None) + (arithmetic is not None) + (bit_operation is not None) + (count_duplicate is not None) + (cumulative_sum is not None) + (derivative is not None) + (function is not None) + (integral is not None) + (max is not None) + (mean is not None) + (min is not None) + (offset is not None) + (product is not None) + (raw is not None) + (channel is not None) + (resample is not None) + (rolling_operation is not None) + (signal_filter is not None) + (sum is not None) + (scale is not None) + (time_difference is not None) + (time_range_filter is not None) + (time_shift is not None) + (unary_arithmetic is not None) + (binary_arithmetic is not None) + (union is not None) + (unit_conversion is not None) + (value_difference is not None) + (filter_transformation is not None) + (threshold_filter is not None) + (approximate_filter is not None) + (select1d_array_index is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if aggregate is not None:
@@ -42439,6 +42660,9 @@ class scout_compute_api_NumericSeries(ConjureUnionType):
             if approximate_filter is not None:
                 self._approximate_filter = approximate_filter
                 self._type = 'approximateFilter'
+            if select1d_array_index is not None:
+                self._select1d_array_index = select1d_array_index
+                self._type = 'select1dArrayIndex'
 
         elif type_of_union == 'aggregate':
             if aggregate is None:
@@ -42595,6 +42819,11 @@ class scout_compute_api_NumericSeries(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._approximate_filter = approximate_filter
             self._type = 'approximateFilter'
+        elif type_of_union == 'select1dArrayIndex':
+            if select1d_array_index is None:
+                raise ValueError('a union value must not be None')
+            self._select1d_array_index = select1d_array_index
+            self._type = 'select1dArrayIndex'
 
     @builtins.property
     def aggregate(self) -> Optional["scout_compute_api_AggregateNumericSeries"]:
@@ -42720,6 +42949,10 @@ class scout_compute_api_NumericSeries(ConjureUnionType):
     def approximate_filter(self) -> Optional["scout_compute_api_NumericApproximateFilterSeries"]:
         return self._approximate_filter
 
+    @builtins.property
+    def select1d_array_index(self) -> Optional["scout_compute_api_SelectIndexFrom1dNumericArraySeries"]:
+        return self._select1d_array_index
+
     def accept(self, visitor) -> Any:
         if not isinstance(visitor, scout_compute_api_NumericSeriesVisitor):
             raise ValueError('{} is not an instance of scout_compute_api_NumericSeriesVisitor'.format(visitor.__class__.__name__))
@@ -42785,6 +43018,8 @@ class scout_compute_api_NumericSeries(ConjureUnionType):
             return visitor._threshold_filter(self.threshold_filter)
         if self._type == 'approximateFilter' and self.approximate_filter is not None:
             return visitor._approximate_filter(self.approximate_filter)
+        if self._type == 'select1dArrayIndex' and self.select1d_array_index is not None:
+            return visitor._select1d_array_index(self.select1d_array_index)
 
 
 scout_compute_api_NumericSeries.__name__ = "NumericSeries"
@@ -42916,6 +43151,10 @@ class scout_compute_api_NumericSeriesVisitor:
 
     @abstractmethod
     def _approximate_filter(self, approximate_filter: "scout_compute_api_NumericApproximateFilterSeries") -> Any:
+        pass
+
+    @abstractmethod
+    def _select1d_array_index(self, select1d_array_index: "scout_compute_api_SelectIndexFrom1dNumericArraySeries") -> Any:
         pass
 
 
@@ -45463,6 +45702,70 @@ class scout_compute_api_ScatterSummarizationStrategyVisitor:
 scout_compute_api_ScatterSummarizationStrategyVisitor.__name__ = "ScatterSummarizationStrategyVisitor"
 scout_compute_api_ScatterSummarizationStrategyVisitor.__qualname__ = "ScatterSummarizationStrategyVisitor"
 scout_compute_api_ScatterSummarizationStrategyVisitor.__module__ = "nominal_api.scout_compute_api"
+
+
+class scout_compute_api_SelectIndexFrom1dEnumArraySeries(ConjureBeanType):
+    """For each timestamp, selects a single enum value from the 1D enum array at the specified index. If the index
+is out of bounds for an array at a given timestamp, it is omitted.
+    """
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'input': ConjureFieldDefinition('input', scout_compute_api_Enum1dArraySeries),
+            'index': ConjureFieldDefinition('index', scout_compute_api_IntegerConstant)
+        }
+
+    __slots__: List[str] = ['_input', '_index']
+
+    def __init__(self, index: "scout_compute_api_IntegerConstant", input: "scout_compute_api_Enum1dArraySeries") -> None:
+        self._input = input
+        self._index = index
+
+    @builtins.property
+    def input(self) -> "scout_compute_api_Enum1dArraySeries":
+        return self._input
+
+    @builtins.property
+    def index(self) -> "scout_compute_api_IntegerConstant":
+        return self._index
+
+
+scout_compute_api_SelectIndexFrom1dEnumArraySeries.__name__ = "SelectIndexFrom1dEnumArraySeries"
+scout_compute_api_SelectIndexFrom1dEnumArraySeries.__qualname__ = "SelectIndexFrom1dEnumArraySeries"
+scout_compute_api_SelectIndexFrom1dEnumArraySeries.__module__ = "nominal_api.scout_compute_api"
+
+
+class scout_compute_api_SelectIndexFrom1dNumericArraySeries(ConjureBeanType):
+    """For each timestamp, selects a single numeric value from the 1D numeric array at the specified index. If the 
+index is out of bounds for an array at a given timestamp, it is omitted.
+    """
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'input': ConjureFieldDefinition('input', scout_compute_api_Numeric1dArraySeries),
+            'index': ConjureFieldDefinition('index', scout_compute_api_IntegerConstant)
+        }
+
+    __slots__: List[str] = ['_input', '_index']
+
+    def __init__(self, index: "scout_compute_api_IntegerConstant", input: "scout_compute_api_Numeric1dArraySeries") -> None:
+        self._input = input
+        self._index = index
+
+    @builtins.property
+    def input(self) -> "scout_compute_api_Numeric1dArraySeries":
+        return self._input
+
+    @builtins.property
+    def index(self) -> "scout_compute_api_IntegerConstant":
+        return self._index
+
+
+scout_compute_api_SelectIndexFrom1dNumericArraySeries.__name__ = "SelectIndexFrom1dNumericArraySeries"
+scout_compute_api_SelectIndexFrom1dNumericArraySeries.__qualname__ = "SelectIndexFrom1dNumericArraySeries"
+scout_compute_api_SelectIndexFrom1dNumericArraySeries.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_SelectValue(ConjureUnionType):
@@ -50718,6 +51021,62 @@ scout_compute_resolved_api_DurationFilterRangesNode.__qualname__ = "DurationFilt
 scout_compute_resolved_api_DurationFilterRangesNode.__module__ = "nominal_api.scout_compute_resolved_api"
 
 
+class scout_compute_resolved_api_EnumArraySeriesNode(ConjureUnionType):
+    _raw: Optional["scout_compute_resolved_api_ResolvedSeries"] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'raw': ConjureFieldDefinition('raw', scout_compute_resolved_api_ResolvedSeries)
+        }
+
+    def __init__(
+            self,
+            raw: Optional["scout_compute_resolved_api_ResolvedSeries"] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (raw is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if raw is not None:
+                self._raw = raw
+                self._type = 'raw'
+
+        elif type_of_union == 'raw':
+            if raw is None:
+                raise ValueError('a union value must not be None')
+            self._raw = raw
+            self._type = 'raw'
+
+    @builtins.property
+    def raw(self) -> Optional["scout_compute_resolved_api_ResolvedSeries"]:
+        return self._raw
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, scout_compute_resolved_api_EnumArraySeriesNodeVisitor):
+            raise ValueError('{} is not an instance of scout_compute_resolved_api_EnumArraySeriesNodeVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'raw' and self.raw is not None:
+            return visitor._raw(self.raw)
+
+
+scout_compute_resolved_api_EnumArraySeriesNode.__name__ = "EnumArraySeriesNode"
+scout_compute_resolved_api_EnumArraySeriesNode.__qualname__ = "EnumArraySeriesNode"
+scout_compute_resolved_api_EnumArraySeriesNode.__module__ = "nominal_api.scout_compute_resolved_api"
+
+
+class scout_compute_resolved_api_EnumArraySeriesNodeVisitor:
+
+    @abstractmethod
+    def _raw(self, raw: "scout_compute_resolved_api_ResolvedSeries") -> Any:
+        pass
+
+
+scout_compute_resolved_api_EnumArraySeriesNodeVisitor.__name__ = "EnumArraySeriesNodeVisitor"
+scout_compute_resolved_api_EnumArraySeriesNodeVisitor.__qualname__ = "EnumArraySeriesNodeVisitor"
+scout_compute_resolved_api_EnumArraySeriesNodeVisitor.__module__ = "nominal_api.scout_compute_resolved_api"
+
+
 class scout_compute_resolved_api_EnumCountDuplicateSeriesNode(ConjureBeanType):
 
     @builtins.classmethod
@@ -50915,6 +51274,7 @@ class scout_compute_resolved_api_EnumSeriesNode(ConjureUnionType):
     _aggregate: Optional["scout_compute_resolved_api_AggregateEnumSeriesNode"] = None
     _filter_transformation: Optional["scout_compute_resolved_api_EnumFilterTransformationSeriesNode"] = None
     _value_map: Optional["scout_compute_resolved_api_ValueMapSeriesNode"] = None
+    _array_select: Optional["scout_compute_resolved_api_SelectIndexFromEnumArraySeriesNode"] = None
 
     @builtins.classmethod
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
@@ -50926,7 +51286,8 @@ class scout_compute_resolved_api_EnumSeriesNode(ConjureUnionType):
             'union': ConjureFieldDefinition('union', scout_compute_resolved_api_EnumUnionSeriesNode),
             'aggregate': ConjureFieldDefinition('aggregate', scout_compute_resolved_api_AggregateEnumSeriesNode),
             'filter_transformation': ConjureFieldDefinition('filterTransformation', scout_compute_resolved_api_EnumFilterTransformationSeriesNode),
-            'value_map': ConjureFieldDefinition('valueMap', scout_compute_resolved_api_ValueMapSeriesNode)
+            'value_map': ConjureFieldDefinition('valueMap', scout_compute_resolved_api_ValueMapSeriesNode),
+            'array_select': ConjureFieldDefinition('arraySelect', scout_compute_resolved_api_SelectIndexFromEnumArraySeriesNode)
         }
 
     def __init__(
@@ -50939,10 +51300,11 @@ class scout_compute_resolved_api_EnumSeriesNode(ConjureUnionType):
             aggregate: Optional["scout_compute_resolved_api_AggregateEnumSeriesNode"] = None,
             filter_transformation: Optional["scout_compute_resolved_api_EnumFilterTransformationSeriesNode"] = None,
             value_map: Optional["scout_compute_resolved_api_ValueMapSeriesNode"] = None,
+            array_select: Optional["scout_compute_resolved_api_SelectIndexFromEnumArraySeriesNode"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (raw is not None) + (resample is not None) + (time_range_filter is not None) + (time_shift is not None) + (union is not None) + (aggregate is not None) + (filter_transformation is not None) + (value_map is not None) != 1:
+            if (raw is not None) + (resample is not None) + (time_range_filter is not None) + (time_shift is not None) + (union is not None) + (aggregate is not None) + (filter_transformation is not None) + (value_map is not None) + (array_select is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if raw is not None:
@@ -50969,6 +51331,9 @@ class scout_compute_resolved_api_EnumSeriesNode(ConjureUnionType):
             if value_map is not None:
                 self._value_map = value_map
                 self._type = 'valueMap'
+            if array_select is not None:
+                self._array_select = array_select
+                self._type = 'arraySelect'
 
         elif type_of_union == 'raw':
             if raw is None:
@@ -51010,6 +51375,11 @@ class scout_compute_resolved_api_EnumSeriesNode(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._value_map = value_map
             self._type = 'valueMap'
+        elif type_of_union == 'arraySelect':
+            if array_select is None:
+                raise ValueError('a union value must not be None')
+            self._array_select = array_select
+            self._type = 'arraySelect'
 
     @builtins.property
     def raw(self) -> Optional["scout_compute_resolved_api_RawEnumSeriesNode"]:
@@ -51043,6 +51413,10 @@ class scout_compute_resolved_api_EnumSeriesNode(ConjureUnionType):
     def value_map(self) -> Optional["scout_compute_resolved_api_ValueMapSeriesNode"]:
         return self._value_map
 
+    @builtins.property
+    def array_select(self) -> Optional["scout_compute_resolved_api_SelectIndexFromEnumArraySeriesNode"]:
+        return self._array_select
+
     def accept(self, visitor) -> Any:
         if not isinstance(visitor, scout_compute_resolved_api_EnumSeriesNodeVisitor):
             raise ValueError('{} is not an instance of scout_compute_resolved_api_EnumSeriesNodeVisitor'.format(visitor.__class__.__name__))
@@ -51062,6 +51436,8 @@ class scout_compute_resolved_api_EnumSeriesNode(ConjureUnionType):
             return visitor._filter_transformation(self.filter_transformation)
         if self._type == 'valueMap' and self.value_map is not None:
             return visitor._value_map(self.value_map)
+        if self._type == 'arraySelect' and self.array_select is not None:
+            return visitor._array_select(self.array_select)
 
 
 scout_compute_resolved_api_EnumSeriesNode.__name__ = "EnumSeriesNode"
@@ -51101,6 +51477,10 @@ class scout_compute_resolved_api_EnumSeriesNodeVisitor:
 
     @abstractmethod
     def _value_map(self, value_map: "scout_compute_resolved_api_ValueMapSeriesNode") -> Any:
+        pass
+
+    @abstractmethod
+    def _array_select(self, array_select: "scout_compute_resolved_api_SelectIndexFromEnumArraySeriesNode") -> Any:
         pass
 
 
@@ -52285,6 +52665,62 @@ scout_compute_resolved_api_NotRangesNode.__qualname__ = "NotRangesNode"
 scout_compute_resolved_api_NotRangesNode.__module__ = "nominal_api.scout_compute_resolved_api"
 
 
+class scout_compute_resolved_api_NumericArraySeriesNode(ConjureUnionType):
+    _raw: Optional["scout_compute_resolved_api_ResolvedSeries"] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'raw': ConjureFieldDefinition('raw', scout_compute_resolved_api_ResolvedSeries)
+        }
+
+    def __init__(
+            self,
+            raw: Optional["scout_compute_resolved_api_ResolvedSeries"] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (raw is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if raw is not None:
+                self._raw = raw
+                self._type = 'raw'
+
+        elif type_of_union == 'raw':
+            if raw is None:
+                raise ValueError('a union value must not be None')
+            self._raw = raw
+            self._type = 'raw'
+
+    @builtins.property
+    def raw(self) -> Optional["scout_compute_resolved_api_ResolvedSeries"]:
+        return self._raw
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, scout_compute_resolved_api_NumericArraySeriesNodeVisitor):
+            raise ValueError('{} is not an instance of scout_compute_resolved_api_NumericArraySeriesNodeVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'raw' and self.raw is not None:
+            return visitor._raw(self.raw)
+
+
+scout_compute_resolved_api_NumericArraySeriesNode.__name__ = "NumericArraySeriesNode"
+scout_compute_resolved_api_NumericArraySeriesNode.__qualname__ = "NumericArraySeriesNode"
+scout_compute_resolved_api_NumericArraySeriesNode.__module__ = "nominal_api.scout_compute_resolved_api"
+
+
+class scout_compute_resolved_api_NumericArraySeriesNodeVisitor:
+
+    @abstractmethod
+    def _raw(self, raw: "scout_compute_resolved_api_ResolvedSeries") -> Any:
+        pass
+
+
+scout_compute_resolved_api_NumericArraySeriesNodeVisitor.__name__ = "NumericArraySeriesNodeVisitor"
+scout_compute_resolved_api_NumericArraySeriesNodeVisitor.__qualname__ = "NumericArraySeriesNodeVisitor"
+scout_compute_resolved_api_NumericArraySeriesNodeVisitor.__module__ = "nominal_api.scout_compute_resolved_api"
+
+
 class scout_compute_resolved_api_NumericFilterTransformationSeriesNode(ConjureBeanType):
     """Outputs the values of the numeric plot value within the ranges specified by a ranges node
     """
@@ -52508,6 +52944,7 @@ class scout_compute_resolved_api_NumericSeriesNode(ConjureUnionType):
     _unit_conversion: Optional["scout_compute_resolved_api_UnitConversionSeriesNode"] = None
     _value_difference: Optional["scout_compute_resolved_api_ValueDifferenceSeriesNode"] = None
     _filter_transformation: Optional["scout_compute_resolved_api_NumericFilterTransformationSeriesNode"] = None
+    _array_select: Optional["scout_compute_resolved_api_SelectIndexFromNumericArraySeriesNode"] = None
 
     @builtins.classmethod
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
@@ -52538,7 +52975,8 @@ class scout_compute_resolved_api_NumericSeriesNode(ConjureUnionType):
             'union': ConjureFieldDefinition('union', scout_compute_resolved_api_NumericUnionSeriesNode),
             'unit_conversion': ConjureFieldDefinition('unitConversion', scout_compute_resolved_api_UnitConversionSeriesNode),
             'value_difference': ConjureFieldDefinition('valueDifference', scout_compute_resolved_api_ValueDifferenceSeriesNode),
-            'filter_transformation': ConjureFieldDefinition('filterTransformation', scout_compute_resolved_api_NumericFilterTransformationSeriesNode)
+            'filter_transformation': ConjureFieldDefinition('filterTransformation', scout_compute_resolved_api_NumericFilterTransformationSeriesNode),
+            'array_select': ConjureFieldDefinition('arraySelect', scout_compute_resolved_api_SelectIndexFromNumericArraySeriesNode)
         }
 
     def __init__(
@@ -52570,10 +53008,11 @@ class scout_compute_resolved_api_NumericSeriesNode(ConjureUnionType):
             unit_conversion: Optional["scout_compute_resolved_api_UnitConversionSeriesNode"] = None,
             value_difference: Optional["scout_compute_resolved_api_ValueDifferenceSeriesNode"] = None,
             filter_transformation: Optional["scout_compute_resolved_api_NumericFilterTransformationSeriesNode"] = None,
+            array_select: Optional["scout_compute_resolved_api_SelectIndexFromNumericArraySeriesNode"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (arithmetic is not None) + (bit_operation is not None) + (count_duplicate is not None) + (cumulative_sum is not None) + (derivative is not None) + (integral is not None) + (max is not None) + (mean is not None) + (min is not None) + (offset is not None) + (product is not None) + (raw is not None) + (resample is not None) + (rolling_operation is not None) + (aggregate is not None) + (signal_filter is not None) + (sum is not None) + (scale is not None) + (time_difference is not None) + (time_range_filter is not None) + (time_shift is not None) + (unary_arithmetic is not None) + (binary_arithmetic is not None) + (union is not None) + (unit_conversion is not None) + (value_difference is not None) + (filter_transformation is not None) != 1:
+            if (arithmetic is not None) + (bit_operation is not None) + (count_duplicate is not None) + (cumulative_sum is not None) + (derivative is not None) + (integral is not None) + (max is not None) + (mean is not None) + (min is not None) + (offset is not None) + (product is not None) + (raw is not None) + (resample is not None) + (rolling_operation is not None) + (aggregate is not None) + (signal_filter is not None) + (sum is not None) + (scale is not None) + (time_difference is not None) + (time_range_filter is not None) + (time_shift is not None) + (unary_arithmetic is not None) + (binary_arithmetic is not None) + (union is not None) + (unit_conversion is not None) + (value_difference is not None) + (filter_transformation is not None) + (array_select is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if arithmetic is not None:
@@ -52657,6 +53096,9 @@ class scout_compute_resolved_api_NumericSeriesNode(ConjureUnionType):
             if filter_transformation is not None:
                 self._filter_transformation = filter_transformation
                 self._type = 'filterTransformation'
+            if array_select is not None:
+                self._array_select = array_select
+                self._type = 'arraySelect'
 
         elif type_of_union == 'arithmetic':
             if arithmetic is None:
@@ -52793,6 +53235,11 @@ class scout_compute_resolved_api_NumericSeriesNode(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._filter_transformation = filter_transformation
             self._type = 'filterTransformation'
+        elif type_of_union == 'arraySelect':
+            if array_select is None:
+                raise ValueError('a union value must not be None')
+            self._array_select = array_select
+            self._type = 'arraySelect'
 
     @builtins.property
     def arithmetic(self) -> Optional["scout_compute_resolved_api_ArithmeticSeriesNode"]:
@@ -52902,6 +53349,10 @@ class scout_compute_resolved_api_NumericSeriesNode(ConjureUnionType):
     def filter_transformation(self) -> Optional["scout_compute_resolved_api_NumericFilterTransformationSeriesNode"]:
         return self._filter_transformation
 
+    @builtins.property
+    def array_select(self) -> Optional["scout_compute_resolved_api_SelectIndexFromNumericArraySeriesNode"]:
+        return self._array_select
+
     def accept(self, visitor) -> Any:
         if not isinstance(visitor, scout_compute_resolved_api_NumericSeriesNodeVisitor):
             raise ValueError('{} is not an instance of scout_compute_resolved_api_NumericSeriesNodeVisitor'.format(visitor.__class__.__name__))
@@ -52959,6 +53410,8 @@ class scout_compute_resolved_api_NumericSeriesNode(ConjureUnionType):
             return visitor._value_difference(self.value_difference)
         if self._type == 'filterTransformation' and self.filter_transformation is not None:
             return visitor._filter_transformation(self.filter_transformation)
+        if self._type == 'arraySelect' and self.array_select is not None:
+            return visitor._array_select(self.array_select)
 
 
 scout_compute_resolved_api_NumericSeriesNode.__name__ = "NumericSeriesNode"
@@ -53074,6 +53527,10 @@ class scout_compute_resolved_api_NumericSeriesNodeVisitor:
 
     @abstractmethod
     def _filter_transformation(self, filter_transformation: "scout_compute_resolved_api_NumericFilterTransformationSeriesNode") -> Any:
+        pass
+
+    @abstractmethod
+    def _array_select(self, array_select: "scout_compute_resolved_api_SelectIndexFromNumericArraySeriesNode") -> Any:
         pass
 
 
@@ -54429,6 +54886,64 @@ class scout_compute_resolved_api_ScatterNode(ConjureBeanType):
 scout_compute_resolved_api_ScatterNode.__name__ = "ScatterNode"
 scout_compute_resolved_api_ScatterNode.__qualname__ = "ScatterNode"
 scout_compute_resolved_api_ScatterNode.__module__ = "nominal_api.scout_compute_resolved_api"
+
+
+class scout_compute_resolved_api_SelectIndexFromEnumArraySeriesNode(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'input': ConjureFieldDefinition('input', scout_compute_resolved_api_EnumArraySeriesNode),
+            'index': ConjureFieldDefinition('index', int)
+        }
+
+    __slots__: List[str] = ['_input', '_index']
+
+    def __init__(self, index: int, input: "scout_compute_resolved_api_EnumArraySeriesNode") -> None:
+        self._input = input
+        self._index = index
+
+    @builtins.property
+    def input(self) -> "scout_compute_resolved_api_EnumArraySeriesNode":
+        return self._input
+
+    @builtins.property
+    def index(self) -> int:
+        return self._index
+
+
+scout_compute_resolved_api_SelectIndexFromEnumArraySeriesNode.__name__ = "SelectIndexFromEnumArraySeriesNode"
+scout_compute_resolved_api_SelectIndexFromEnumArraySeriesNode.__qualname__ = "SelectIndexFromEnumArraySeriesNode"
+scout_compute_resolved_api_SelectIndexFromEnumArraySeriesNode.__module__ = "nominal_api.scout_compute_resolved_api"
+
+
+class scout_compute_resolved_api_SelectIndexFromNumericArraySeriesNode(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'input': ConjureFieldDefinition('input', scout_compute_resolved_api_NumericArraySeriesNode),
+            'index': ConjureFieldDefinition('index', int)
+        }
+
+    __slots__: List[str] = ['_input', '_index']
+
+    def __init__(self, index: int, input: "scout_compute_resolved_api_NumericArraySeriesNode") -> None:
+        self._input = input
+        self._index = index
+
+    @builtins.property
+    def input(self) -> "scout_compute_resolved_api_NumericArraySeriesNode":
+        return self._input
+
+    @builtins.property
+    def index(self) -> int:
+        return self._index
+
+
+scout_compute_resolved_api_SelectIndexFromNumericArraySeriesNode.__name__ = "SelectIndexFromNumericArraySeriesNode"
+scout_compute_resolved_api_SelectIndexFromNumericArraySeriesNode.__qualname__ = "SelectIndexFromNumericArraySeriesNode"
+scout_compute_resolved_api_SelectIndexFromNumericArraySeriesNode.__module__ = "nominal_api.scout_compute_resolved_api"
 
 
 class scout_compute_resolved_api_SelectValueNode(ConjureUnionType):

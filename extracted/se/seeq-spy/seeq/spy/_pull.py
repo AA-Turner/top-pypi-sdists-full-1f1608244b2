@@ -314,8 +314,6 @@ def pull(items, *, start=None, end=None, grid='15min', header='__auto__', group_
         (enums_as, 'enums_as', str)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     _common.validate_timezone_arg(tz_convert)

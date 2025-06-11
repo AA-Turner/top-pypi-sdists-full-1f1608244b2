@@ -14,8 +14,9 @@ from seeq.spy.workbooks._template import package_as_templates
 from seeq.spy.workbooks._workbook import Workbook, WorkbookList
 
 
+@Status.handle_keyboard_interrupt(no_session=True)
 def load(folder_or_zipfile, *, as_template_with_label: str = None, errors: Optional[str] = None,
-         quiet: Optional[bool] = None, status: Optional[Status] = None) -> WorkbookList:
+         quiet: Optional[bool] = None, status: Optional[Status] = None) -> Optional[WorkbookList]:
     """
     Loads a list of workbooks from a folder on disk into Workbook objects in
     memory.
@@ -58,8 +59,6 @@ def load(folder_or_zipfile, *, as_template_with_label: str = None, errors: Optio
         (status, 'status', Status)
     ])
 
-    status = Status.validate(status, None, quiet, errors)
-
     folder_or_zipfile = os.path.normpath(folder_or_zipfile)
 
     try:
@@ -86,6 +85,7 @@ def load(folder_or_zipfile, *, as_template_with_label: str = None, errors: Optio
 
     except KeyboardInterrupt:
         status.update('Load canceled', Status.CANCELED)
+        return None
 
 
 def _load_from_folder(folder):

@@ -1,10 +1,10 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: beanie
-Version: 1.29.0
+Version: 1.30.0
 Summary: Asynchronous Python ODM for MongoDB
 Keywords: mongodb,odm,orm,pydantic,mongo,async,python
 Author-email: Roman Right <roman-right@protonmail.com>
-Requires-Python: >=3.8,<4.0
+Requires-Python: >=3.9,<4.0
 Description-Content-Type: text/markdown
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Development Status :: 5 - Production/Stable
@@ -13,14 +13,16 @@ Classifier: Operating System :: OS Independent
 Classifier: Topic :: Database
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Typing :: Typed
+License-File: LICENSE
 Requires-Dist: pydantic>=1.10.18,<3.0
 Requires-Dist: motor>=2.5.0,<4.0.0
 Requires-Dist: click>=7
-Requires-Dist: toml
+Requires-Dist: tomli>=2.2.1,<3.0.0; python_version < '3.11'
 Requires-Dist: lazy-model==0.2.0
 Requires-Dist: typing-extensions>=4.7
 Requires-Dist: motor[aws]>=2.5.0,<4.0.0 ; extra == "aws"
-Requires-Dist: toml ; extra == "ci"
+Requires-Dist: tomli>=2.2.1,<3.0.0 ; extra == "ci" and ( python_version < '3.11')
+Requires-Dist: tomli-w>=1.0.0,<2.0.0 ; extra == "ci"
 Requires-Dist: requests ; extra == "ci"
 Requires-Dist: types-requests ; extra == "ci"
 Requires-Dist: Pygments>=2.8.0 ; extra == "doc"
@@ -64,6 +66,9 @@ Provides-Extra: zstd
 
 [![shields badge](https://shields.io/badge/-docs-blue)](https://beanie-odm.dev)
 [![pypi](https://img.shields.io/pypi/v/beanie.svg)](https://pypi.python.org/pypi/beanie)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/BeanieODM/beanie/main.svg)](https://results.pre-commit.ci/latest/github/BeanieODM/beanie/main)
+
+
 
 ## 📢 Important Update 📢
 

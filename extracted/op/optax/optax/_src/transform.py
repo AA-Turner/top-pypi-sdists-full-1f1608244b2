@@ -19,13 +19,14 @@ from typing import NamedTuple, Optional, Union
 
 import chex
 import jax
+from jax import nn
 import jax.numpy as jnp
-from optax import tree_utils as otu
 from optax._src import base
 from optax._src import numerics
 from optax._src import utils
 from optax.transforms import _accumulation
 from optax.transforms import _adding
+import optax.tree
 
 
 abs_sq = numerics.abs_sq
@@ -59,7 +60,7 @@ def scale_by_rss(
 
   def init_fn(params):
     return ScaleByRssState(
-        sum_of_squares=otu.tree_full_like(params, initial_accumulator_value)
+        sum_of_squares=optax.tree.full_like(params, initial_accumulator_value)
     )
 
   def update_fn(updates, state, params=None):
@@ -70,7 +71,7 @@ def scale_by_rss(
     inv_sqrt_g_square = jax.tree.map(
         lambda t: jnp.where(t > 0, jax.lax.rsqrt(t + eps), 0.0), sum_of_squares
     )
-    updates = otu.tree_mul(inv_sqrt_g_square, updates)
+    updates = optax.tree.mul(inv_sqrt_g_square, updates)
     return updates, ScaleByRssState(sum_of_squares=sum_of_squares)
 
   return base.GradientTransformation(init_fn, update_fn)
@@ -121,18 +122,17 @@ def scale_by_rms(
   """
 
   def init_fn(params):
-    nu = otu.tree_full_like(params, initial_scale)  # second moment
+    nu = optax.tree.full_like(params, initial_scale)  # second moment
     if bias_correction:
       return ScaleByRmsWithCountState(count=jnp.zeros([], jnp.int32), nu=nu)
-    else:
-      return ScaleByRmsState(nu=nu)
+    return ScaleByRmsState(nu=nu)
 
   def update_fn(updates, state, params=None):
     del params
-    nu = otu.tree_update_moment_per_elem_norm(updates, state.nu, decay, 2)
+    nu = optax.tree.update_moment_per_elem_norm(updates, state.nu, decay, 2)
     if bias_correction:
       count_inc = numerics.safe_increment(state.count)
-      nu_hat = otu.tree_bias_correction(nu, decay, count_inc)
+      nu_hat = optax.tree.bias_correction(nu, decay, count_inc)
     else:
       count_inc = jnp.asarray(0)
       nu_hat = nu
@@ -192,23 +192,22 @@ def scale_by_stddev(
   """
 
   def init_fn(params):
-    mu = otu.tree_zeros_like(params)  # First moment
-    nu = otu.tree_full_like(params, initial_scale)  # second moment
+    mu = optax.tree.zeros_like(params)  # First moment
+    nu = optax.tree.full_like(params, initial_scale)  # second moment
     if bias_correction:
       return ScaleByRStdDevWithCountState(
           count=jnp.zeros([], jnp.int32), mu=mu, nu=nu
       )
-    else:
-      return ScaleByRStdDevState(mu=mu, nu=nu)
+    return ScaleByRStdDevState(mu=mu, nu=nu)
 
   def update_fn(updates, state, params=None):
     del params
-    mu = otu.tree_update_moment(updates, state.mu, decay, 1)
-    nu = otu.tree_update_moment_per_elem_norm(updates, state.nu, decay, 2)
+    mu = optax.tree.update_moment(updates, state.mu, decay, 1)
+    nu = optax.tree.update_moment_per_elem_norm(updates, state.nu, decay, 2)
     if bias_correction:
       count_inc = numerics.safe_increment(state.count)
-      mu_hat = otu.tree_bias_correction(mu, decay, count_inc)
-      nu_hat = otu.tree_bias_correction(nu, decay, count_inc)
+      mu_hat = optax.tree.bias_correction(mu, decay, count_inc)
+      nu_hat = optax.tree.bias_correction(nu, decay, count_inc)
     else:
       count_inc = jnp.asarray(0)
       mu_hat = mu
@@ -275,34 +274,35 @@ def scale_by_adam(
   mu_dtype = utils.canonicalize_dtype(mu_dtype)
 
   def init_fn(params):
-    mu = otu.tree_zeros_like(params, dtype=mu_dtype)  # First moment
-    nu = otu.tree_zeros_like(params)  # Second moment
+    mu = optax.tree.zeros_like(params, dtype=mu_dtype)  # First moment
+    nu = optax.tree.zeros_like(params)  # Second moment
     return ScaleByAdamState(count=jnp.zeros([], jnp.int32), mu=mu, nu=nu)
 
   def update_fn(updates, state, params=None):
     del params
-    mu = otu.tree_update_moment(updates, state.mu, b1, 1)
-    nu = otu.tree_update_moment_per_elem_norm(updates, state.nu, b2, 2)
+    mu = optax.tree.update_moment(updates, state.mu, b1, 1)
+    nu = optax.tree.update_moment_per_elem_norm(updates, state.nu, b2, 2)
     count_inc = numerics.safe_increment(state.count)
     if nesterov:
       mu_hat = jax.tree.map(
           lambda m, g: b1 * m + (1 - b1) * g,
-          otu.tree_bias_correction(mu, b1, numerics.safe_increment(count_inc)),
-          otu.tree_bias_correction(updates, b1, count_inc),
+          optax.tree.bias_correction(mu, b1,
+                                     numerics.safe_increment(count_inc)),
+          optax.tree.bias_correction(updates, b1, count_inc),
       )
     else:
-      mu_hat = otu.tree_bias_correction(mu, b1, count_inc)
+      mu_hat = optax.tree.bias_correction(mu, b1, count_inc)
     # Dozat 2016 https://openreview.net/pdf?id=OM0jvwB8jIp57ZJjtNEZ
     # Algorithm 2 further multiplies Adam's standard nu_hat by b2. It is
     # unclear why. Other Nadam implementations also omit the extra b2 factor.
-    nu_hat = otu.tree_bias_correction(nu, b2, count_inc)
+    nu_hat = optax.tree.bias_correction(nu, b2, count_inc)
     updates = jax.tree.map(
         lambda m, v: None if m is None else m / (jnp.sqrt(v + eps_root) + eps),
         mu_hat,
         nu_hat,
         is_leaf=lambda x: x is None,
     )
-    mu = otu.tree_cast(mu, mu_dtype)
+    mu = optax.tree.cast(mu, mu_dtype)
     return updates, ScaleByAdamState(count=count_inc, mu=mu, nu=nu)
 
   return base.GradientTransformation(init_fn, update_fn)
@@ -344,20 +344,20 @@ def scale_by_amsgrad(
   mu_dtype = utils.canonicalize_dtype(mu_dtype)
 
   def init_fn(params):
-    mu = otu.tree_zeros_like(params, dtype=mu_dtype)  # First moment
-    nu = otu.tree_zeros_like(params)  # Second moment
-    nu_max = otu.tree_zeros_like(params)
+    mu = optax.tree.zeros_like(params, dtype=mu_dtype)  # First moment
+    nu = optax.tree.zeros_like(params)  # Second moment
+    nu_max = optax.tree.zeros_like(params)
     return ScaleByAmsgradState(
         count=jnp.zeros([], jnp.int32), mu=mu, nu=nu, nu_max=nu_max
     )
 
   def update_fn(updates, state, params=None):
     del params
-    mu = otu.tree_update_moment(updates, state.mu, b1, 1)
-    nu = otu.tree_update_moment_per_elem_norm(updates, state.nu, b2, 2)
+    mu = optax.tree.update_moment(updates, state.mu, b1, 1)
+    nu = optax.tree.update_moment_per_elem_norm(updates, state.nu, b2, 2)
     count_inc = numerics.safe_increment(state.count)
-    mu_hat = otu.tree_bias_correction(mu, b1, count_inc)
-    nu_hat = otu.tree_bias_correction(nu, b2, count_inc)
+    mu_hat = optax.tree.bias_correction(mu, b1, count_inc)
+    nu_hat = optax.tree.bias_correction(nu, b2, count_inc)
     nu_max = jax.tree.map(jnp.maximum, state.nu_max, nu_hat)
     updates = jax.tree.map(
         lambda m, v: None if m is None else m / (jnp.sqrt(v + eps_root) + eps),
@@ -365,7 +365,7 @@ def scale_by_amsgrad(
         nu_max,
         is_leaf=lambda x: x is None,
     )
-    mu = otu.tree_cast(mu, mu_dtype)
+    mu = optax.tree.cast(mu, mu_dtype)
     return updates, ScaleByAmsgradState(
         count=count_inc, mu=mu, nu=nu, nu_max=nu_max
     )
@@ -390,17 +390,17 @@ def scale_by_adamax(
   """
 
   def init_fn(params):
-    mu = otu.tree_zeros_like(params)  # First moment
-    nu = otu.tree_zeros_like(params)  # Infinite moment
+    mu = optax.tree.zeros_like(params)  # First moment
+    nu = optax.tree.zeros_like(params)  # Infinite moment
     return ScaleByAdamState(count=jnp.zeros([], jnp.int32), mu=mu, nu=nu)
 
   def update_fn(updates, state, params=None):
     del params
     count_inc = numerics.safe_increment(state.count)
-    mu = otu.tree_update_moment(updates, state.mu, b1, 1)
-    nu = otu.tree_update_infinity_moment(updates, state.nu, b2, eps)
+    mu = optax.tree.update_moment(updates, state.mu, b1, 1)
+    nu = optax.tree.update_infinity_moment(updates, state.nu, b2, eps)
     # Bias correction for mean. No bias correction needed for infinity moment.
-    mu_hat = otu.tree_bias_correction(mu, b1, count_inc)
+    mu_hat = optax.tree.bias_correction(mu, b1, count_inc)
     updates = jax.tree.map(lambda m, v: m / v, mu_hat, nu)
     return updates, ScaleByAdamState(count=count_inc, mu=mu, nu=nu)
 
@@ -436,7 +436,7 @@ def scale_by_lion(
   mu_dtype = utils.canonicalize_dtype(mu_dtype)
 
   def init_fn(params):
-    mu = otu.tree_zeros_like(params, dtype=mu_dtype)  # moment
+    mu = optax.tree.zeros_like(params, dtype=mu_dtype)  # moment
     return ScaleByLionState(count=jnp.zeros([], jnp.int32), mu=mu)
 
   def update_fn(updates, state, params=None):
@@ -444,8 +444,8 @@ def scale_by_lion(
     updates_new = jax.tree.map(
         lambda g, m: jnp.sign((1.0 - b1) * g + b1 * m), updates, state.mu
     )
-    mu = otu.tree_update_moment(updates, state.mu, b2, 1)
-    mu = otu.tree_cast(mu, mu_dtype)
+    mu = optax.tree.update_moment(updates, state.mu, b2, 1)
+    mu = optax.tree.cast(mu, mu_dtype)
     count_inc = numerics.safe_increment(state.count)
     return updates_new, ScaleByLionState(count=count_inc, mu=mu)
 
@@ -548,13 +548,13 @@ def scale_by_adadelta(
   """
 
   def init_fn(params):
-    e_g = otu.tree_zeros_like(params)  # E[squared gradient]
-    e_x = otu.tree_zeros_like(params)  # E[squared update]
+    e_g = optax.tree.zeros_like(params)  # E[squared gradient]
+    e_x = optax.tree.zeros_like(params)  # E[squared update]
     return ScaleByAdaDeltaState(e_g=e_g, e_x=e_x)
 
   def update_fn(updates, state, params=None):
     del params
-    e_g = otu.tree_update_moment(updates, state.e_g, rho, 2)
+    e_g = optax.tree.update_moment(updates, state.e_g, rho, 2)
     updates = jax.tree.map(
         lambda g, cur_e_g, prev_e_x: (
             jnp.sqrt(prev_e_x + eps) / jnp.sqrt(cur_e_g + eps)
@@ -564,7 +564,7 @@ def scale_by_adadelta(
         e_g,
         state.e_x,
     )
-    e_x = otu.tree_update_moment(updates, state.e_x, rho, 2)
+    e_x = optax.tree.update_moment(updates, state.e_x, rho, 2)
     return updates, ScaleByAdaDeltaState(e_g=e_g, e_x=e_x)
 
   return base.GradientTransformation(init_fn, update_fn)
@@ -603,10 +603,10 @@ def scale_by_adan(
 
   def init_fn(params):
     return ScaleByAdanState(
-        m=otu.tree_zeros_like(params),
-        v=otu.tree_zeros_like(params),
-        n=otu.tree_zeros_like(params),
-        g=otu.tree_zeros_like(params),
+        m=optax.tree.zeros_like(params),
+        v=optax.tree.zeros_like(params),
+        n=optax.tree.zeros_like(params),
+        g=optax.tree.zeros_like(params),
         t=jnp.zeros([], jnp.int32),
     )
 
@@ -615,25 +615,25 @@ def scale_by_adan(
     del params
     g = updates
 
-    diff = otu.tree_where(
+    diff = optax.tree.where(
         state.t == 0,
-        otu.tree_zeros_like(g),
-        otu.tree_sub(g, state.g),
+        optax.tree.zeros_like(g),
+        optax.tree.sub(g, state.g),
     )
-    m = otu.tree_update_moment(g, state.m, b1, 1)
-    v = otu.tree_update_moment(diff, state.v, b2, 1)
+    m = optax.tree.update_moment(g, state.m, b1, 1)
+    v = optax.tree.update_moment(diff, state.v, b2, 1)
 
-    sq = otu.tree_add_scalar_mul(g, 1 - b2, diff)
-    n = otu.tree_update_moment_per_elem_norm(sq, state.n, b3, 2)
+    sq = optax.tree.add_scale(g, 1 - b2, diff)
+    n = optax.tree.update_moment_per_elem_norm(sq, state.n, b3, 2)
 
     t = numerics.safe_increment(state.t)
-    m_hat = otu.tree_bias_correction(m, b1, t)
-    v_hat = otu.tree_bias_correction(v, b2, t)
-    n_hat = otu.tree_bias_correction(n, b3, t)
+    m_hat = optax.tree.bias_correction(m, b1, t)
+    v_hat = optax.tree.bias_correction(v, b2, t)
+    n_hat = optax.tree.bias_correction(n, b3, t)
 
-    u = otu.tree_add_scalar_mul(m_hat, 1 - b2, v_hat)
+    u = optax.tree.add_scale(m_hat, 1 - b2, v_hat)
     denom = jax.tree.map(lambda n_hat: jnp.sqrt(n_hat + eps_root) + eps, n_hat)
-    u = otu.tree_div(u, denom)
+    u = optax.tree.div(u, denom)
 
     new_state = ScaleByAdanState(
         m=m,
@@ -682,26 +682,27 @@ def scale_by_belief(
   """
 
   def init_fn(params):
-    mu = otu.tree_zeros_like(params)  # First moment
-    s = otu.tree_zeros_like(params)  # Second Central moment
+    mu = optax.tree.zeros_like(params)  # First moment
+    s = optax.tree.zeros_like(params)  # Second Central moment
     return ScaleByBeliefState(count=jnp.zeros([], jnp.int32), mu=mu, nu=s)
 
   def update_fn(updates, state, params=None):
     del params
-    mu = otu.tree_update_moment(updates, state.mu, b1, 1)
-    prediction_error = otu.tree_sub(updates, mu)
-    nu = otu.tree_update_moment_per_elem_norm(prediction_error, state.nu, b2, 2)
+    mu = optax.tree.update_moment(updates, state.mu, b1, 1)
+    prediction_error = optax.tree.sub(updates, mu)
+    nu = optax.tree.update_moment_per_elem_norm(prediction_error, state.nu, b2,
+                                                2)
     nu = jax.tree.map(lambda v: v + eps_root, nu)
     count_inc = numerics.safe_increment(state.count)
     if nesterov:
       mu_hat = jax.tree.map(
           lambda m, g: b1 * m + (1 - b1) * g,
-          otu.tree_bias_correction(
+          optax.tree.bias_correction(
               mu, b1, numerics.safe_increment(count_inc)),
-          otu.tree_bias_correction(updates, b1, count_inc))
+          optax.tree.bias_correction(updates, b1, count_inc))
     else:
-      mu_hat = otu.tree_bias_correction(mu, b1, count_inc)
-    nu_hat = otu.tree_bias_correction(nu, b2, count_inc)
+      mu_hat = optax.tree.bias_correction(mu, b1, count_inc)
+    nu_hat = optax.tree.bias_correction(nu, b2, count_inc)
     updates = jax.tree.map(
         lambda m, v: None if m is None else m / (jnp.sqrt(v) + eps),
         mu_hat,
@@ -741,21 +742,23 @@ def scale_by_yogi(
   """
 
   def init_fn(params):
-    mu = otu.tree_full_like(params, initial_accumulator_value)  # First moment
-    nu = otu.tree_full_like(params, initial_accumulator_value)  # Second moment
+    # First moment
+    mu = optax.tree.full_like(params, initial_accumulator_value)
+    # Second moment
+    nu = optax.tree.full_like(params, initial_accumulator_value)
     return ScaleByAdamState(count=jnp.zeros([], jnp.int32), mu=mu, nu=nu)
 
   def update_fn(updates, state, params=None):
     del params
-    mu = otu.tree_update_moment(updates, state.mu, b1, 1)
+    mu = optax.tree.update_moment(updates, state.mu, b1, 1)
     nu = jax.tree.map(
         lambda g, v: v - (1 - b2) * jnp.sign(v - abs_sq(g)) * abs_sq(g),
         updates,
         state.nu,
     )
     count_inc = numerics.safe_increment(state.count)
-    mu_hat = otu.tree_bias_correction(mu, b1, count_inc)
-    nu_hat = otu.tree_bias_correction(nu, b2, count_inc)
+    mu_hat = optax.tree.bias_correction(mu, b1, count_inc)
+    nu_hat = optax.tree.bias_correction(nu, b2, count_inc)
     updates = jax.tree.map(
         lambda m, v: None if m is None else m / (jnp.sqrt(v + eps_root) + eps),
         mu_hat,
@@ -810,26 +813,27 @@ def scale_by_radam(
     return updates
 
   def init_fn(params):
-    mu = otu.tree_zeros_like(params)  # First moment
-    nu = otu.tree_zeros_like(params)  # Second moment
+    mu = optax.tree.zeros_like(params)  # First moment
+    nu = optax.tree.zeros_like(params)  # Second moment
     return ScaleByAdamState(count=jnp.zeros([], jnp.int32), mu=mu, nu=nu)
 
   def update_fn(updates, state, params=None):
     del params
-    mu = otu.tree_update_moment(updates, state.mu, b1, 1)
-    nu = otu.tree_update_moment_per_elem_norm(updates, state.nu, b2, 2)
+    mu = optax.tree.update_moment(updates, state.mu, b1, 1)
+    nu = optax.tree.update_moment_per_elem_norm(updates, state.nu, b2, 2)
     count_inc = numerics.safe_increment(state.count)
     b2t = b2**count_inc
     ro = ro_inf - 2 * count_inc * b2t / (1 - b2t)
     if nesterov:
       mu_hat = jax.tree.map(
           lambda m, g: b1 * m + (1 - b1) * g,
-          otu.tree_bias_correction(mu, b1, numerics.safe_increment(count_inc)),
-          otu.tree_bias_correction(updates, b1, count_inc),
+          optax.tree.bias_correction(mu, b1,
+                                     numerics.safe_increment(count_inc)),
+          optax.tree.bias_correction(updates, b1, count_inc),
       )
     else:
-      mu_hat = otu.tree_bias_correction(mu, b1, count_inc)
-    nu_hat = otu.tree_bias_correction(nu, b2, count_inc)
+      mu_hat = optax.tree.bias_correction(mu, b1, count_inc)
+    nu_hat = optax.tree.bias_correction(nu, b2, count_inc)
     updates = jax.tree.map(
         lambda t, f: jnp.where(ro >= threshold, t, f),
         _radam_update(ro, mu_hat, nu_hat),
@@ -872,8 +876,8 @@ def scale_by_rprop(
   """
 
   def init_fn(params):
-    step_sizes = otu.tree_full_like(params, learning_rate)
-    prev_updates = otu.tree_zeros_like(params)
+    step_sizes = optax.tree.full_like(params, learning_rate)
+    prev_updates = optax.tree.zeros_like(params)
     return ScaleByRpropState(step_sizes, prev_updates)
 
   def update_fn(updates, state, params=None):
@@ -936,7 +940,7 @@ class ScaleByScheduleState(NamedTuple):
 
 
 def scale_by_learning_rate(
-    learning_rate: base.ScalarOrSchedule,
+    learning_rate: Optional[base.ScalarOrSchedule] = None,
     *,
     flip_sign: bool = True,
 ) -> base.GradientTransformation:
@@ -944,7 +948,7 @@ def scale_by_learning_rate(
 
   Args:
     learning_rate: Can either be a scalar or a schedule (i.e. a callable that
-      maps an (int) step to a float).
+      maps an (int) step to a float). None means no scaling.
     flip_sign: When set to True (the default) this corresponds to scaling by the
       negative learning rate.
 
@@ -953,6 +957,8 @@ def scale_by_learning_rate(
     with `-learning_rate` (if flip_sign is True) or with `learning_rate` (if
     flip_sign is False).
   """
+  if learning_rate is None:
+    return base.identity()
   m = -1 if flip_sign else 1
   if callable(learning_rate):
     return scale_by_schedule(lambda count: m * learning_rate(count))
@@ -1057,7 +1063,7 @@ def apply_every(k: int = 1) -> base.GradientTransformation:
   """
 
   def init_fn(params):
-    grad_acc = otu.tree_zeros_like(params)
+    grad_acc = optax.tree.zeros_like(params)
     return ApplyEvery(count=jnp.zeros([], jnp.int32), grad_acc=grad_acc)
 
   def update_fn(updates, state, params=None):
@@ -1080,30 +1086,36 @@ def _subtract_mean(g):
     return g
 
 
-CentralState = base.EmptyState
-
-
 def centralize() -> base.GradientTransformation:
-  """Centralize gradients.
+  """Centralizes gradients by subtracting their mean along leading dimension.
 
   Returns:
     A :class:`optax.GradientTransformation` object.
+
+  Example:
+    >>> import jax.numpy as jnp
+    >>> import optax
+    >>> grad = jnp.array([[1, 2, 3], [4, 5, 6]])
+    >>> opt = optax.centralize()
+    >>> state = opt.init(grad)
+    >>> updates, state = opt.update(grad, state)
+    >>> print(updates)
+    [[-1.  0.  1.]
+     [-1.  0.  1.]]
+    >>> print(state)
+    EmptyState()
 
   References:
     Yong et al, `Gradient Centralization: A New Optimization Technique for Deep
     Neural Networks <https://arxiv.org/abs/2004.01461>`_, 2020.
   """
 
-  def init_fn(params):
-    del params
-    return CentralState()
-
   def update_fn(updates, state, params=None):
     del params
     updates = jax.tree.map(_subtract_mean, updates)
     return updates, state
 
-  return base.GradientTransformation(init_fn, update_fn)
+  return base.GradientTransformation(base.init_empty_state, update_fn)
 
 
 class ScaleBySM3State(NamedTuple):
@@ -1135,7 +1147,7 @@ def scale_by_sm3(
   def init_fn(params):
     _reject_complex(params)
     mu = jax.tree.map(zeros_for_dim, params)
-    nu = otu.tree_zeros_like(params)
+    nu = optax.tree.zeros_like(params)
     return ScaleBySM3State(mu, nu)
 
   def _expanded_shape(shape, axis):
@@ -1162,20 +1174,19 @@ def scale_by_sm3(
 
   def update_fn(updates, state, params=None):
     del params
-    mu = jax.tree.map(
-        lambda g, v: [  # pylint:disable=g-long-lambda
-            jnp.reshape(v[i], _expanded_shape(g.shape, i))
-            for i in range(g.ndim)
-        ],
-        updates,
-        state.mu,
-    )
+
+    def f(g, v):
+      return [
+          jnp.reshape(v[i], _expanded_shape(g.shape, i)) for i in range(g.ndim)
+      ]
+
+    mu = jax.tree.map(f, updates, state.mu)
     accum = jax.tree.map(_new_accum, updates, mu)
     accum_inv_sqrt = jax.tree.map(
         lambda t: jnp.where(t > 0, jax.lax.rsqrt(t + eps), 0.0), accum
     )
     up = jax.tree.map(lambda g, a: g * a, updates, accum_inv_sqrt)
-    nu = otu.tree_update_moment(up, state.nu, b1, 1)
+    nu = optax.tree.update_moment(up, state.nu, b1, 1)
     mu = jax.tree.map(lambda g: [_new_mu(g, i) for i in range(g.ndim)], accum)
 
     return nu, ScaleBySM3State(mu=mu, nu=nu)
@@ -1220,7 +1231,7 @@ def scale_by_novograd(
   mu_dtype = utils.canonicalize_dtype(mu_dtype)
 
   def init_fn(params):
-    mu = otu.tree_zeros_like(params, dtype=mu_dtype)
+    mu = optax.tree.zeros_like(params, dtype=mu_dtype)
     nu = jax.tree.map(lambda p: jnp.asarray(0.0, dtype=p.dtype), params)
     return ScaleByNovogradState(count=jnp.zeros([], jnp.int32), mu=mu, nu=nu)
 
@@ -1235,7 +1246,7 @@ def scale_by_novograd(
 
   def update_nu(grads, nu):
     updates = jax.tree.map(nu_addition, grads)
-    return otu.tree_update_moment(updates, nu, b2, 1)
+    return optax.tree.update_moment(updates, nu, b2, 1)
 
   def init_mu(grads, params, mu, nu):
     del mu
@@ -1258,7 +1269,7 @@ def scale_by_novograd(
         count_inc == 1, init_mu, update_mu, updates, params, state.mu, nu
     )
 
-    mu = otu.tree_cast(mu, mu_dtype)
+    mu = optax.tree.cast(mu, mu_dtype)
     updates = mu
     return updates, ScaleByNovogradState(count=count_inc, mu=mu, nu=nu)
 
@@ -1289,7 +1300,7 @@ def scale_by_optimistic_gradient(
   def init_fn(params):
     return ScaleByOptimisticGradientState(
         is_initial_step=jnp.array(True),
-        previous_gradient=otu.tree_zeros_like(params),
+        previous_gradient=optax.tree.zeros_like(params),
     )
 
   def update_fn(updates, state, params=None):
@@ -1358,7 +1369,7 @@ def scale_by_distance_over_gradients(
         # Initial gradient sum-of-squares.
         jax.tree.map(lambda x: jnp.zeros(1), params),
         # Initial params, cast to preferred precision.
-        otu.tree_cast(params, param_dtype),
+        optax.tree.cast(params, param_dtype),
     )
 
   def update_fn(updates, state: ScaleByDistanceOverGradientsState, params):
@@ -1396,6 +1407,7 @@ def scale_by_polyak(
     f_min: float = 0.0,
     max_learning_rate: float = 1.0,
     eps: float = 0.0,
+    variant: str = 'sps',
 ) -> base.GradientTransformationExtraArgs:
   r"""Scales the update by Polyak's step-size.
 
@@ -1406,6 +1418,7 @@ def scale_by_polyak(
       to :math:`f^\star` in the formula above.
     max_learning_rate: a maximum step size to use (defaults to 1).
     eps: a value to add in the denominator of the update (defaults to 0).
+    variant: either ``'sps'`` or ``'sps+'`` (defaults to ``'sps'``).
 
   Returns:
     A :class:`optax.GradientTransformationExtraArgs`, where the ``update``
@@ -1428,21 +1441,29 @@ def scale_by_polyak(
       state: the state of the transformation.
       params: the parameters of the model.
       value: the value of the loss function.
-      **extra_args: additional keyword arguments. They are ignored by this
-        transformation.
+      **extra_args: unused,complying with GradientTransformationExtraArgs.
 
     Returns:
       The scaled updates and the state of the transformation.
     """
-    del params, extra_args
-    grad_sq_norm = otu.tree_l2_norm(updates, squared=True)
+    del params
+    del extra_args  # complies with signature of GradientTransformationExtraArgs
+                    # but ignores the extra_args
+    grad_sq_norm = optax.tree.norm(updates, squared=True)
+    gap = jnp.array(value - f_min).astype(grad_sq_norm.dtype)
+    if variant == 'sps':
+      pass
+    elif variant == 'sps+':
+      gap = nn.relu(gap)
+    else:
+      raise ValueError(f'Invalid argument value for Polyak SGD: {variant=}')
     # avoid division by zero
     step = jnp.where(
         grad_sq_norm + eps <= jnp.finfo(float).eps,
         jnp.array(0.0),
-        jnp.minimum((value - f_min) / (grad_sq_norm + eps), max_learning_rate),
+        jnp.minimum(gap / (grad_sq_norm + eps), max_learning_rate),
     )
-    updates = otu.tree_scalar_mul(step, updates)
+    updates = optax.tree.scale(step, updates)
     return updates, state
 
   return base.GradientTransformationExtraArgs(base.init_empty_state, update_fn)
@@ -1521,23 +1542,23 @@ def _precondition_by_lbfgs(
     dwi, dui = jax.tree.map(
         lambda x: x[idx], (diff_params_memory, diff_updates_memory)
     )
-    alpha = rhos[idx] * otu.tree_vdot(dwi, vec)
-    vec = otu.tree_add_scalar_mul(vec, -alpha, dui)
+    alpha = rhos[idx] * optax.tree.real(optax.tree.vdot(dwi, vec))
+    vec = optax.tree.add_scale(vec, -alpha, dui)
     return vec, alpha
 
   precond_updates, alphas = jax.lax.scan(
       right_product, updates, indices, reverse=True
   )
 
-  precond_updates = otu.tree_scalar_mul(identity_scale, precond_updates)
+  precond_updates = optax.tree.scale(identity_scale, precond_updates)
 
   def left_product(vec, idx_alpha):
     idx, alpha = idx_alpha
     dwi, dui = jax.tree.map(
         lambda x: x[idx], (diff_params_memory, diff_updates_memory)
     )
-    beta = rhos[idx] * otu.tree_vdot(dui, vec)
-    vec = otu.tree_add_scalar_mul(vec, alpha - beta, dwi)
+    beta = rhos[idx] * optax.tree.real(optax.tree.vdot(dui, vec))
+    vec = optax.tree.add_scale(vec, alpha - beta, dwi)
     return vec, beta
 
   precond_updates, _ = jax.lax.scan(
@@ -1590,7 +1611,7 @@ def scale_by_lbfgs(
 
   The formula for updating :math:`P_k` is obtained by computing the optimal
   preconditioning matrix subject to some secant condition, see references
-  for more details. Computing :math:`P_k u_k` can be done by a sequence of 
+  for more details. Computing :math:`P_k u_k` can be done by a sequence of
   vector operations using past differences of parameters and gradients stored in
   a memory bufffer.
 
@@ -1643,8 +1664,8 @@ def scale_by_lbfgs(
     )
     return ScaleByLBFGSState(
         count=jnp.asarray(0, dtype=jnp.int32),
-        params=otu.tree_zeros_like(params),
-        updates=otu.tree_zeros_like(params),
+        params=optax.tree.zeros_like(params),
+        updates=optax.tree.zeros_like(params),
         diff_params_memory=stacked_zero_params,
         diff_updates_memory=stacked_zero_params,
         weights_memory=jnp.zeros(memory_size),
@@ -1664,9 +1685,11 @@ def scale_by_lbfgs(
     # and the step has been done.
 
     # 1. Updates the memory buffers given fresh params and gradients/updates
-    diff_params = otu.tree_sub(params, state.params)
-    diff_updates = otu.tree_sub(updates, state.updates)
-    vdot_diff_params_updates = otu.tree_vdot(diff_updates, diff_params)
+    diff_params = optax.tree.sub(params, state.params)
+    diff_updates = optax.tree.sub(updates, state.updates)
+    vdot_diff_params_updates = optax.tree.real(
+        optax.tree.vdot(diff_updates, diff_params)
+    )
     weight = jnp.where(
         vdot_diff_params_updates == 0.0, 0.0, 1.0 / vdot_diff_params_updates
     )
@@ -1691,14 +1714,15 @@ def scale_by_lbfgs(
     # used to initialize the approximation of the inverse through the memory
     # buffer.
     if scale_init_precond:
-      numerator = otu.tree_vdot(diff_updates, diff_params)
-      denominator = otu.tree_l2_norm(diff_updates, squared=True)
+      numerator = optax.tree.real(optax.tree.vdot(diff_updates, diff_params))
+      denominator = optax.tree.norm(diff_updates, squared=True)
       identity_scale = jnp.where(
           denominator > 0.0, numerator / denominator, 1.0
       )
       # For the very first step of the algorithm, we consider scaling by a
       # capped reciprocal of the gradient norm, see note in the docstring.
-      capped_inv_norm = jnp.minimum(1.0, 1.0/otu.tree_l2_norm(updates))
+      update_norm = optax.tree.norm(jax.lax.stop_gradient(updates))
+      capped_inv_norm = jnp.minimum(1.0, 1.0 / update_norm)
       identity_scale = jnp.where(
           state.count > 0, identity_scale, capped_inv_norm
       )
@@ -1767,7 +1791,7 @@ def normalize_by_update_norm(
       params: Optional[base.Params] = None,
   ) -> tuple[base.Updates, base.EmptyState]:
     del params
-    g_norm = (otu.tree_l2_norm(updates) + eps) / scale_factor
+    g_norm = (optax.tree.norm(updates) + eps) / scale_factor
     updates = jax.tree.map(lambda g: g / g_norm, updates)
     return updates, state
 
@@ -1778,12 +1802,12 @@ def normalize_by_update_norm(
 
 
 @functools.partial(
-    chex.warn_deprecated_function, replacement='optax.tree_utils.tree_cast'
+    chex.warn_deprecated_function, replacement='optax.tree.cast'
 )
 def cast_tree(
     tree: chex.ArrayTree, dtype: Optional[chex.ArrayDType]
 ) -> chex.ArrayTree:
-  return otu.tree_cast(tree, dtype)
+  return optax.tree.cast(tree, dtype)
 
 
 trace = _accumulation.trace

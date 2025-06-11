@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import inspect
 import threading
 import time
-import warnings
 from dataclasses import dataclass, field
 from typing import (
     TYPE_CHECKING,
@@ -19,30 +17,51 @@ from typing import (
     runtime_checkable,
 )
 
-from .exceptions import UsageError
-from .filters import FilterSet, FilterValue, MatcherFunc, attach_filter_chain
+from schemathesis.core.errors import IncorrectUsage
+from schemathesis.core.marks import Mark
+from schemathesis.filters import FilterSet, FilterValue, MatcherFunc, attach_filter_chain
+from schemathesis.generation.case import Case
 
 if TYPE_CHECKING:
     import requests.auth
 
-    from .models import APIOperation, Case
-    from .types import GenericTest
+    from schemathesis.schemas import APIOperation
 
 DEFAULT_REFRESH_INTERVAL = 300
-AUTH_STORAGE_ATTRIBUTE_NAME = "_schemathesis_auth"
+AuthStorageMark = Mark["AuthStorage"](attr_name="auth_storage")
 Auth = TypeVar("Auth")
 
 
 @dataclass
 class AuthContext:
-    """Holds state relevant for the authentication process.
+    """Runtime context passed to authentication providers during token generation.
 
-    :ivar APIOperation operation: API operation that is currently being processed.
-    :ivar app: Optional Python application if the WSGI / ASGI integration is used.
+    Provides access to the current API operation and application instance when
+    auth providers need operation-specific tokens or application state.
+
+    Example:
+        ```python
+        @schemathesis.auth()
+        class ContextAwareAuth:
+            def get(self, case, context):
+                # Access operation details
+                if "/admin/" in context.operation.path:
+                    return self.get_admin_token()
+                else:
+                    return self.get_user_token()
+
+            def set(self, case, data, context):
+                case.headers = {"Authorization": f"Bearer {data}"}
+        ```
+
     """
 
     operation: APIOperation
+    """API operation currently being processed for authentication."""
     app: Any | None
+    """Python application instance (ASGI/WSGI app) when using app integration, `None` otherwise."""
+
+    __slots__ = ("operation", "app")
 
 
 CacheKeyFunction = Callable[["Case", "AuthContext"], Union[str, int]]
@@ -50,22 +69,28 @@ CacheKeyFunction = Callable[["Case", "AuthContext"], Union[str, int]]
 
 @runtime_checkable
 class AuthProvider(Generic[Auth], Protocol):
-    """Get authentication data for an API and set it on the generated test cases."""
+    """Protocol for implementing custom authentication in API tests."""
 
-    def get(self, case: Case, context: AuthContext) -> Auth | None:
-        """Get the authentication data.
+    def get(self, case: Case, ctx: AuthContext) -> Auth | None:
+        """Obtain authentication data for the test case.
 
-        :param Case case: Generated test case.
-        :param AuthContext context: Holds state relevant for the authentication process.
-        :return: Any authentication data you find useful for your use case. For example, it could be an access token.
+        Args:
+            case: Generated test case requiring authentication.
+            ctx: Authentication state and configuration.
+
+        Returns:
+            Authentication data (e.g., token, credentials) or `None`.
+
         """
 
-    def set(self, case: Case, data: Auth, context: AuthContext) -> None:
-        """Set authentication data on a generated test case.
+    def set(self, case: Case, data: Auth, ctx: AuthContext) -> None:
+        """Apply authentication data to the test case.
 
-        :param Optional[Auth] data: Authentication data you got from the ``get`` method.
-        :param Case case: Generated test case.
-        :param AuthContext context: Holds state relevant for the authentication process.
+        Args:
+            case: Test case to modify.
+            data: Authentication data from the `get` method.
+            ctx: Authentication state and configuration.
+
         """
 
 
@@ -111,7 +136,7 @@ class CachingAuthProvider(Generic[Auth]):
                     # Another thread updated the cache
                     return cache_entry.data
                 # We know that optional auth is possible only inside a higher-level wrapper
-                data: Auth = _provider_get(self.provider, case, context)  # type: ignore[assignment]
+                data: Auth = self.provider.get(case, context)  # type: ignore[assignment]
                 self._set_cache_entry(data, case, context)
                 return data
         return cache_entry.data
@@ -152,8 +177,7 @@ class KeyedCachingAuthProvider(CachingAuthProvider[Auth]):
 class FilterableRegisterAuth(Protocol):
     """Protocol that adds filters to the return value of `register`."""
 
-    def __call__(self, provider_class: type[AuthProvider]) -> type[AuthProvider]:
-        pass
+    def __call__(self, provider_class: type[AuthProvider]) -> type[AuthProvider]: ...
 
     def apply_to(
         self,
@@ -165,8 +189,7 @@ class FilterableRegisterAuth(Protocol):
         method_regex: str | None = None,
         path: FilterValue | None = None,
         path_regex: str | None = None,
-    ) -> FilterableRegisterAuth:
-        pass
+    ) -> FilterableRegisterAuth: ...
 
     def skip_for(
         self,
@@ -178,15 +201,13 @@ class FilterableRegisterAuth(Protocol):
         method_regex: str | None = None,
         path: FilterValue | None = None,
         path_regex: str | None = None,
-    ) -> FilterableRegisterAuth:
-        pass
+    ) -> FilterableRegisterAuth: ...
 
 
 class FilterableApplyAuth(Protocol):
     """Protocol that adds filters to the return value of `apply`."""
 
-    def __call__(self, test: GenericTest) -> GenericTest:
-        pass
+    def __call__(self, test: Callable) -> Callable: ...
 
     def apply_to(
         self,
@@ -198,8 +219,7 @@ class FilterableApplyAuth(Protocol):
         method_regex: str | None = None,
         path: FilterValue | None = None,
         path_regex: str | None = None,
-    ) -> FilterableApplyAuth:
-        pass
+    ) -> FilterableApplyAuth: ...
 
     def skip_for(
         self,
@@ -211,8 +231,7 @@ class FilterableApplyAuth(Protocol):
         method_regex: str | None = None,
         path: FilterValue | None = None,
         path_regex: str | None = None,
-    ) -> FilterableApplyAuth:
-        pass
+    ) -> FilterableApplyAuth: ...
 
 
 class FilterableRequestsAuth(Protocol):
@@ -228,8 +247,7 @@ class FilterableRequestsAuth(Protocol):
         method_regex: str | None = None,
         path: FilterValue | None = None,
         path_regex: str | None = None,
-    ) -> FilterableRequestsAuth:
-        pass
+    ) -> FilterableRequestsAuth: ...
 
     def skip_for(
         self,
@@ -241,8 +259,7 @@ class FilterableRequestsAuth(Protocol):
         method_regex: str | None = None,
         path: FilterValue | None = None,
         path_regex: str | None = None,
-    ) -> FilterableRequestsAuth:
-        pass
+    ) -> FilterableRequestsAuth: ...
 
 
 @dataclass
@@ -254,7 +271,7 @@ class SelectiveAuthProvider(Generic[Auth]):
 
     def get(self, case: Case, context: AuthContext) -> Auth | None:
         if self.filter_set.match(context):
-            return _provider_get(self.provider, case, context)
+            return self.provider.get(case, context)
         return None
 
     def set(self, case: Case, data: Auth, context: AuthContext) -> None:
@@ -278,8 +295,7 @@ class AuthStorage(Generic[Auth]):
         *,
         refresh_interval: int | None = DEFAULT_REFRESH_INTERVAL,
         cache_by_key: CacheKeyFunction | None = None,
-    ) -> FilterableRegisterAuth:
-        pass
+    ) -> FilterableRegisterAuth: ...
 
     @overload
     def __call__(
@@ -288,8 +304,7 @@ class AuthStorage(Generic[Auth]):
         *,
         refresh_interval: int | None = DEFAULT_REFRESH_INTERVAL,
         cache_by_key: CacheKeyFunction | None = None,
-    ) -> FilterableApplyAuth:
-        pass
+    ) -> FilterableApplyAuth: ...
 
     def __call__(
         self,
@@ -300,15 +315,14 @@ class AuthStorage(Generic[Auth]):
     ) -> FilterableRegisterAuth | FilterableApplyAuth:
         if provider_class is not None:
             return self.apply(provider_class, refresh_interval=refresh_interval, cache_by_key=cache_by_key)
-        return self.register(refresh_interval=refresh_interval, cache_by_key=cache_by_key)
+        return self.auth(refresh_interval=refresh_interval, cache_by_key=cache_by_key)
 
     def set_from_requests(self, auth: requests.auth.AuthBase) -> FilterableRequestsAuth:
         """Use `requests` auth instance as an auth provider."""
         filter_set = FilterSet()
         self.providers.append(SelectiveAuthProvider(provider=RequestsAuth(auth), filter_set=filter_set))
 
-        class _FilterableRequestsAuth:
-            pass
+        class _FilterableRequestsAuth: ...
 
         attach_filter_chain(_FilterableRequestsAuth, "apply_to", filter_set.include)
         attach_filter_chain(_FilterableRequestsAuth, "skip_for", filter_set.exclude)
@@ -325,8 +339,9 @@ class AuthStorage(Generic[Auth]):
     ) -> None:
         if not issubclass(provider_class, AuthProvider):
             raise TypeError(
-                f"`{provider_class.__name__}` is not a valid auth provider. "
-                f"Check `schemathesis.auths.AuthProvider` documentation for examples."
+                f"`{provider_class.__name__}` does not implement the `AuthProvider` protocol. "
+                f"Auth providers must have `get` and `set` methods. "
+                f"See `schemathesis.AuthProvider` documentation for examples."
             )
         provider: AuthProvider
         # Apply caching if desired
@@ -345,30 +360,12 @@ class AuthStorage(Generic[Auth]):
             provider = SelectiveAuthProvider(provider, filter_set)
         self.providers.append(provider)
 
-    def register(
+    def auth(
         self,
         *,
         refresh_interval: int | None = DEFAULT_REFRESH_INTERVAL,
         cache_by_key: CacheKeyFunction | None = None,
     ) -> FilterableRegisterAuth:
-        """Register a new auth provider.
-
-        .. code-block:: python
-
-            @schemathesis.auth()
-            class TokenAuth:
-                def get(self, context):
-                    response = requests.post(
-                        "https://example.schemathesis.io/api/token/",
-                        json={"username": "demo", "password": "test"},
-                    )
-                    data = response.json()
-                    return data["access_token"]
-
-                def set(self, case, data, context):
-                    # Modify `case` the way you need
-                    case.headers = {"Authorization": f"Bearer {data}"}
-        """
         filter_set = FilterSet()
 
         def wrapper(provider_class: type[AuthProvider]) -> type[AuthProvider]:
@@ -399,27 +396,13 @@ class AuthStorage(Generic[Auth]):
         refresh_interval: int | None = DEFAULT_REFRESH_INTERVAL,
         cache_by_key: CacheKeyFunction | None = None,
     ) -> FilterableApplyAuth:
-        """Register auth provider only on one test function.
-
-        :param Type[AuthProvider] provider_class: Authentication provider class.
-        :param Optional[int] refresh_interval: Cache duration in seconds.
-
-        .. code-block:: python
-
-            class Auth:
-                ...
-
-
-            @schema.auth(Auth)
-            @schema.parametrize()
-            def test_api(case):
-                ...
-
-        """
         filter_set = FilterSet()
 
-        def wrapper(test: GenericTest) -> GenericTest:
-            auth_storage = self.add_auth_storage(test)
+        def wrapper(test: Callable) -> Callable:
+            if AuthStorageMark.is_set(test):
+                raise IncorrectUsage(f"`{test.__name__}` has already been decorated with `apply`.")
+            auth_storage = self.__class__()
+            AuthStorageMark.set(test, auth_storage)
             auth_storage._set_provider(
                 provider_class=provider_class,
                 refresh_interval=refresh_interval,
@@ -433,44 +416,16 @@ class AuthStorage(Generic[Auth]):
 
         return wrapper  # type: ignore[return-value]
 
-    @classmethod
-    def add_auth_storage(cls, test: GenericTest) -> AuthStorage:
-        """Attach a new auth storage instance to the test if it is not already present."""
-        if not hasattr(test, AUTH_STORAGE_ATTRIBUTE_NAME):
-            setattr(test, AUTH_STORAGE_ATTRIBUTE_NAME, cls())
-        else:
-            raise UsageError(f"`{test.__name__}` has already been decorated with `apply`.")
-        return getattr(test, AUTH_STORAGE_ATTRIBUTE_NAME)
-
     def set(self, case: Case, context: AuthContext) -> None:
         """Set authentication data on a generated test case."""
         if not self.is_defined:
-            raise UsageError("No auth provider is defined.")
+            raise IncorrectUsage("No auth provider is defined.")
         for provider in self.providers:
-            data: Auth | None = _provider_get(provider, case, context)
+            data: Auth | None = provider.get(case, context)
             if data is not None:
                 provider.set(case, data, context)
                 case._has_explicit_auth = True
                 break
-
-
-def _provider_get(auth_provider: AuthProvider, case: Case, context: AuthContext) -> Auth | None:
-    # A shim to provide a compatibility layer between previously used convention for `AuthProvider.get`
-    # where it used to accept a single `context` argument
-    method = auth_provider.get
-    parameters = inspect.signature(method).parameters
-    if len(parameters) == 1:
-        # Old calling convention
-        warnings.warn(
-            "The method 'get' of your AuthProvider is using the old calling convention, "
-            "which is deprecated and will be removed in Schemathesis 4.0. "
-            "Please update it to accept both 'case' and 'context' as arguments.",
-            DeprecationWarning,
-            stacklevel=1,
-        )
-        return method(context)  # type: ignore
-    # New calling convention
-    return method(case, context)
 
 
 def set_on_case(case: Case, context: AuthContext, auth_storage: AuthStorage | None) -> None:
@@ -486,12 +441,46 @@ def set_on_case(case: Case, context: AuthContext, auth_storage: AuthStorage | No
         GLOBAL_AUTH_STORAGE.set(case, context)
 
 
-def get_auth_storage_from_test(test: GenericTest) -> AuthStorage | None:
-    """Extract the currently attached auth storage from a test function."""
-    return getattr(test, AUTH_STORAGE_ATTRIBUTE_NAME, None)
-
-
 # Global auth API
 GLOBAL_AUTH_STORAGE: AuthStorage = AuthStorage()
-register = GLOBAL_AUTH_STORAGE.register
 unregister = GLOBAL_AUTH_STORAGE.unregister
+
+
+def auth(
+    *,
+    refresh_interval: int | None = DEFAULT_REFRESH_INTERVAL,
+    cache_by_key: CacheKeyFunction | None = None,
+) -> FilterableRegisterAuth:
+    """Register a dynamic authentication provider for APIs with expiring tokens.
+
+    Args:
+        refresh_interval: Seconds between token refreshes. Default is `300`. Use `None` to disable caching
+        cache_by_key: Function to generate cache keys for different auth contexts (e.g., OAuth scopes)
+
+    Example:
+        ```python
+        import schemathesis
+        import requests
+
+        @schemathesis.auth()
+        class TokenAuth:
+            def get(self, case, context):
+                \"\"\"Fetch fresh authentication token\"\"\"
+                response = requests.post(
+                    "http://localhost:8000/auth/token",
+                    json={"username": "demo", "password": "test"}
+                )
+                return response.json()["access_token"]
+
+            def set(self, case, data, context):
+                \"\"\"Apply token to test case headers\"\"\"
+                case.headers = case.headers or {}
+                case.headers["Authorization"] = f"Bearer {data}"
+        ```
+
+    """
+    return GLOBAL_AUTH_STORAGE.auth(refresh_interval=refresh_interval, cache_by_key=cache_by_key)
+
+
+auth.__dict__ = GLOBAL_AUTH_STORAGE.auth.__dict__
+auth.set_from_requests = GLOBAL_AUTH_STORAGE.set_from_requests  # type: ignore[attr-defined]

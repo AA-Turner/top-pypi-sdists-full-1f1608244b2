@@ -45,6 +45,7 @@ class CreateMobileScanAPIRequest(request.APIRequest):
         scan_profile: str,
         application: BinaryIO,
         test_credential_ids: Optional[List[int]] = None,
+        scope_urls_regexes: Optional[List[str]] = None,
         sboms: list[io.FileIO] = None,
         scan_source: Optional[ScanSource] = None,
     ):
@@ -53,6 +54,7 @@ class CreateMobileScanAPIRequest(request.APIRequest):
         self._scan_profile = scan_profile
         self._application = application
         self._test_credential_ids = test_credential_ids
+        self._scope_urls_regexes = scope_urls_regexes
         self._sboms = sboms
         self._scan_source = scan_source
 
@@ -65,8 +67,8 @@ class CreateMobileScanAPIRequest(request.APIRequest):
         """
 
         return """
-mutation MobileScan($title: String!, $assetType: String!, $application: Upload!, $sboms: [Upload!], $scanProfile: String!, $credentialIds: [Int], $scanSource: ScanSourceInputType) {
-  createMobileScan(title: $title, assetType: $assetType, application: $application, sboms: $sboms, scanProfile: $scanProfile, credentialIds: $credentialIds, scanSource: $scanSource) {
+mutation MobileScan($title: String!, $assetType: String!, $application: Upload!, $sboms: [Upload!], $scanProfile: String!, $credentialIds: [Int], $scanSource: ScanSourceInputType, $scopeUrlsRegexes: [String]) {
+  createMobileScan(title: $title, assetType: $assetType, application: $application, sboms: $sboms, scanProfile: $scanProfile, credentialIds: $credentialIds, scanSource: $scanSource, scopeUrlsRegexes: $scopeUrlsRegexes) {
     scan {
       id
     }
@@ -105,6 +107,7 @@ mutation MobileScan($title: String!, $assetType: String!, $application: Upload!,
                         }
                         if self._scan_source is not None
                         else None,
+                        "scopeUrlsRegexes": self._scope_urls_regexes,
                     },
                 }
             ),

@@ -167,9 +167,6 @@ def login(username=None, password=None, *, access_key=None, url=None, directory=
         (request_origin_url, 'request_origin_url', str),
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet)
-
     if private_url is not None and url is None:
         raise SPyValueError('private_url argument cannot be specified without also specifying url argument')
 
@@ -426,7 +423,6 @@ def logout(quiet=None, status=None, session: Session = None):
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
     _clear_login_state(quiet, status, session, call_logout=True)
 
 

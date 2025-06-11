@@ -1,7 +1,7 @@
 r'''
 # `okta_app_shared_credentials`
 
-Refer to the Terraform Registry for docs: [`okta_app_shared_credentials`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials).
+Refer to the Terraform Registry for docs: [`okta_app_shared_credentials`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppSharedCredentials(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appSharedCredentials.AppSharedCredentials",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials okta_app_shared_credentials}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials okta_app_shared_credentials}.'''
 
     def __init__(
         self,
@@ -87,38 +87,38 @@ class AppSharedCredentials(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials okta_app_shared_credentials} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials okta_app_shared_credentials} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#label AppSharedCredentials#label}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#accessibility_error_redirect_url AppSharedCredentials#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#accessibility_login_redirect_url AppSharedCredentials#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#accessibility_self_service AppSharedCredentials#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#admin_note AppSharedCredentials#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#app_links_json AppSharedCredentials#app_links_json}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#auto_submit_toolbar AppSharedCredentials#auto_submit_toolbar}
-        :param button_field: Login button field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#button_field AppSharedCredentials#button_field}
-        :param checkbox: CSS selector for the checkbox. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#checkbox AppSharedCredentials#checkbox}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#enduser_note AppSharedCredentials#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#hide_ios AppSharedCredentials#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#hide_web AppSharedCredentials#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#id AppSharedCredentials#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#logo AppSharedCredentials#logo}
-        :param password_field: Login password field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#password_field AppSharedCredentials#password_field}
-        :param preconfigured_app: Name of application from the Okta Integration Network, if not included a custom app will be created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#preconfigured_app AppSharedCredentials#preconfigured_app}
-        :param redirect_url: Secondary URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#redirect_url AppSharedCredentials#redirect_url}
-        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#shared_password AppSharedCredentials#shared_password}
-        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#shared_username AppSharedCredentials#shared_username}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#status AppSharedCredentials#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#timeouts AppSharedCredentials#timeouts}
-        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#url AppSharedCredentials#url}
-        :param url_regex: A regular expression that further restricts url to the specified regular expression. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#url_regex AppSharedCredentials#url_regex}
-        :param username_field: Login username field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#username_field AppSharedCredentials#username_field}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template AppSharedCredentials#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template_push_status AppSharedCredentials#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template_suffix AppSharedCredentials#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template_type AppSharedCredentials#user_name_template_type}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#label AppSharedCredentials#label}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#accessibility_error_redirect_url AppSharedCredentials#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#accessibility_login_redirect_url AppSharedCredentials#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#accessibility_self_service AppSharedCredentials#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#admin_note AppSharedCredentials#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#app_links_json AppSharedCredentials#app_links_json}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#auto_submit_toolbar AppSharedCredentials#auto_submit_toolbar}
+        :param button_field: Login button field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#button_field AppSharedCredentials#button_field}
+        :param checkbox: CSS selector for the checkbox. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#checkbox AppSharedCredentials#checkbox}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#enduser_note AppSharedCredentials#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#hide_ios AppSharedCredentials#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#hide_web AppSharedCredentials#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#id AppSharedCredentials#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#logo AppSharedCredentials#logo}
+        :param password_field: Login password field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#password_field AppSharedCredentials#password_field}
+        :param preconfigured_app: Name of application from the Okta Integration Network, if not included a custom app will be created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#preconfigured_app AppSharedCredentials#preconfigured_app}
+        :param redirect_url: Secondary URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#redirect_url AppSharedCredentials#redirect_url}
+        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#shared_password AppSharedCredentials#shared_password}
+        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#shared_username AppSharedCredentials#shared_username}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#status AppSharedCredentials#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#timeouts AppSharedCredentials#timeouts}
+        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#url AppSharedCredentials#url}
+        :param url_regex: A regular expression that further restricts url to the specified regular expression. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#url_regex AppSharedCredentials#url_regex}
+        :param username_field: Login username field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#username_field AppSharedCredentials#username_field}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template AppSharedCredentials#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template_push_status AppSharedCredentials#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template_suffix AppSharedCredentials#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template_type AppSharedCredentials#user_name_template_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -184,7 +184,7 @@ class AppSharedCredentials(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppSharedCredentials to import.
-        :param import_from_id: The id of the existing AppSharedCredentials that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppSharedCredentials that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppSharedCredentials to import is found.
         '''
         if __debug__:
@@ -204,9 +204,9 @@ class AppSharedCredentials(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#create AppSharedCredentials#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#read AppSharedCredentials#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#update AppSharedCredentials#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#create AppSharedCredentials#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#read AppSharedCredentials#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#update AppSharedCredentials#update}.
         '''
         value = AppSharedCredentialsTimeouts(create=create, read=read, update=update)
 
@@ -933,34 +933,34 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#label AppSharedCredentials#label}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#accessibility_error_redirect_url AppSharedCredentials#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#accessibility_login_redirect_url AppSharedCredentials#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#accessibility_self_service AppSharedCredentials#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#admin_note AppSharedCredentials#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#app_links_json AppSharedCredentials#app_links_json}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#auto_submit_toolbar AppSharedCredentials#auto_submit_toolbar}
-        :param button_field: Login button field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#button_field AppSharedCredentials#button_field}
-        :param checkbox: CSS selector for the checkbox. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#checkbox AppSharedCredentials#checkbox}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#enduser_note AppSharedCredentials#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#hide_ios AppSharedCredentials#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#hide_web AppSharedCredentials#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#id AppSharedCredentials#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#logo AppSharedCredentials#logo}
-        :param password_field: Login password field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#password_field AppSharedCredentials#password_field}
-        :param preconfigured_app: Name of application from the Okta Integration Network, if not included a custom app will be created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#preconfigured_app AppSharedCredentials#preconfigured_app}
-        :param redirect_url: Secondary URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#redirect_url AppSharedCredentials#redirect_url}
-        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#shared_password AppSharedCredentials#shared_password}
-        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#shared_username AppSharedCredentials#shared_username}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#status AppSharedCredentials#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#timeouts AppSharedCredentials#timeouts}
-        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#url AppSharedCredentials#url}
-        :param url_regex: A regular expression that further restricts url to the specified regular expression. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#url_regex AppSharedCredentials#url_regex}
-        :param username_field: Login username field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#username_field AppSharedCredentials#username_field}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template AppSharedCredentials#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template_push_status AppSharedCredentials#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template_suffix AppSharedCredentials#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template_type AppSharedCredentials#user_name_template_type}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#label AppSharedCredentials#label}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#accessibility_error_redirect_url AppSharedCredentials#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#accessibility_login_redirect_url AppSharedCredentials#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#accessibility_self_service AppSharedCredentials#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#admin_note AppSharedCredentials#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#app_links_json AppSharedCredentials#app_links_json}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#auto_submit_toolbar AppSharedCredentials#auto_submit_toolbar}
+        :param button_field: Login button field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#button_field AppSharedCredentials#button_field}
+        :param checkbox: CSS selector for the checkbox. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#checkbox AppSharedCredentials#checkbox}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#enduser_note AppSharedCredentials#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#hide_ios AppSharedCredentials#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#hide_web AppSharedCredentials#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#id AppSharedCredentials#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#logo AppSharedCredentials#logo}
+        :param password_field: Login password field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#password_field AppSharedCredentials#password_field}
+        :param preconfigured_app: Name of application from the Okta Integration Network, if not included a custom app will be created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#preconfigured_app AppSharedCredentials#preconfigured_app}
+        :param redirect_url: Secondary URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#redirect_url AppSharedCredentials#redirect_url}
+        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#shared_password AppSharedCredentials#shared_password}
+        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#shared_username AppSharedCredentials#shared_username}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#status AppSharedCredentials#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#timeouts AppSharedCredentials#timeouts}
+        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#url AppSharedCredentials#url}
+        :param url_regex: A regular expression that further restricts url to the specified regular expression. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#url_regex AppSharedCredentials#url_regex}
+        :param username_field: Login username field. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#username_field AppSharedCredentials#username_field}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template AppSharedCredentials#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template_push_status AppSharedCredentials#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template_suffix AppSharedCredentials#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template_type AppSharedCredentials#user_name_template_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1143,7 +1143,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def label(self) -> builtins.str:
         '''The Application's display name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#label AppSharedCredentials#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#label AppSharedCredentials#label}
         '''
         result = self._values.get("label")
         assert result is not None, "Required property 'label' is missing"
@@ -1153,7 +1153,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_error_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom error page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#accessibility_error_redirect_url AppSharedCredentials#accessibility_error_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#accessibility_error_redirect_url AppSharedCredentials#accessibility_error_redirect_url}
         '''
         result = self._values.get("accessibility_error_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1162,7 +1162,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_login_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom login page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#accessibility_login_redirect_url AppSharedCredentials#accessibility_login_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#accessibility_login_redirect_url AppSharedCredentials#accessibility_login_redirect_url}
         '''
         result = self._values.get("accessibility_login_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1173,7 +1173,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Enable self service. Default is ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#accessibility_self_service AppSharedCredentials#accessibility_self_service}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#accessibility_self_service AppSharedCredentials#accessibility_self_service}
         '''
         result = self._values.get("accessibility_self_service")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1182,7 +1182,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def admin_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for admins.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#admin_note AppSharedCredentials#admin_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#admin_note AppSharedCredentials#admin_note}
         '''
         result = self._values.get("admin_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1191,7 +1191,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_links_json(self) -> typing.Optional[builtins.str]:
         '''Displays specific appLinks for the app. The value for each application link should be boolean.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#app_links_json AppSharedCredentials#app_links_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#app_links_json AppSharedCredentials#app_links_json}
         '''
         result = self._values.get("app_links_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1202,7 +1202,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Display auto submit toolbar.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#auto_submit_toolbar AppSharedCredentials#auto_submit_toolbar}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#auto_submit_toolbar AppSharedCredentials#auto_submit_toolbar}
         '''
         result = self._values.get("auto_submit_toolbar")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1211,7 +1211,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def button_field(self) -> typing.Optional[builtins.str]:
         '''Login button field.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#button_field AppSharedCredentials#button_field}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#button_field AppSharedCredentials#button_field}
         '''
         result = self._values.get("button_field")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1220,7 +1220,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def checkbox(self) -> typing.Optional[builtins.str]:
         '''CSS selector for the checkbox.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#checkbox AppSharedCredentials#checkbox}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#checkbox AppSharedCredentials#checkbox}
         '''
         result = self._values.get("checkbox")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1229,7 +1229,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enduser_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for end users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#enduser_note AppSharedCredentials#enduser_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#enduser_note AppSharedCredentials#enduser_note}
         '''
         result = self._values.get("enduser_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1240,7 +1240,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon on mobile app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#hide_ios AppSharedCredentials#hide_ios}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#hide_ios AppSharedCredentials#hide_ios}
         '''
         result = self._values.get("hide_ios")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1251,14 +1251,14 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon to users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#hide_web AppSharedCredentials#hide_web}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#hide_web AppSharedCredentials#hide_web}
         '''
         result = self._values.get("hide_web")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#id AppSharedCredentials#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#id AppSharedCredentials#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1272,7 +1272,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The file must be in PNG, JPG, or GIF format, and less than 1 MB in size.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#logo AppSharedCredentials#logo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#logo AppSharedCredentials#logo}
         '''
         result = self._values.get("logo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1281,7 +1281,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def password_field(self) -> typing.Optional[builtins.str]:
         '''Login password field.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#password_field AppSharedCredentials#password_field}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#password_field AppSharedCredentials#password_field}
         '''
         result = self._values.get("password_field")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1290,7 +1290,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def preconfigured_app(self) -> typing.Optional[builtins.str]:
         '''Name of application from the Okta Integration Network, if not included a custom app will be created.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#preconfigured_app AppSharedCredentials#preconfigured_app}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#preconfigured_app AppSharedCredentials#preconfigured_app}
         '''
         result = self._values.get("preconfigured_app")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1299,7 +1299,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def redirect_url(self) -> typing.Optional[builtins.str]:
         '''Secondary URL of the sign-in page for this app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#redirect_url AppSharedCredentials#redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#redirect_url AppSharedCredentials#redirect_url}
         '''
         result = self._values.get("redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1308,7 +1308,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def shared_password(self) -> typing.Optional[builtins.str]:
         '''Shared password, required for certain schemes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#shared_password AppSharedCredentials#shared_password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#shared_password AppSharedCredentials#shared_password}
         '''
         result = self._values.get("shared_password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1317,7 +1317,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def shared_username(self) -> typing.Optional[builtins.str]:
         '''Shared username, required for certain schemes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#shared_username AppSharedCredentials#shared_username}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#shared_username AppSharedCredentials#shared_username}
         '''
         result = self._values.get("shared_username")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1326,7 +1326,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Status of application. By default, it is ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#status AppSharedCredentials#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#status AppSharedCredentials#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1335,7 +1335,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["AppSharedCredentialsTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#timeouts AppSharedCredentials#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#timeouts AppSharedCredentials#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["AppSharedCredentialsTimeouts"], result)
@@ -1344,7 +1344,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def url(self) -> typing.Optional[builtins.str]:
         '''The URL of the sign-in page for this app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#url AppSharedCredentials#url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#url AppSharedCredentials#url}
         '''
         result = self._values.get("url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1353,7 +1353,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def url_regex(self) -> typing.Optional[builtins.str]:
         '''A regular expression that further restricts url to the specified regular expression.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#url_regex AppSharedCredentials#url_regex}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#url_regex AppSharedCredentials#url_regex}
         '''
         result = self._values.get("url_regex")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1362,7 +1362,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def username_field(self) -> typing.Optional[builtins.str]:
         '''Login username field.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#username_field AppSharedCredentials#username_field}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#username_field AppSharedCredentials#username_field}
         '''
         result = self._values.get("username_field")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1371,7 +1371,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template(self) -> typing.Optional[builtins.str]:
         '''Username template. Default: ``${source.login}``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template AppSharedCredentials#user_name_template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template AppSharedCredentials#user_name_template}
         '''
         result = self._values.get("user_name_template")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1380,7 +1380,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_push_status(self) -> typing.Optional[builtins.str]:
         '''Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template_push_status AppSharedCredentials#user_name_template_push_status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template_push_status AppSharedCredentials#user_name_template_push_status}
         '''
         result = self._values.get("user_name_template_push_status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1389,7 +1389,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_suffix(self) -> typing.Optional[builtins.str]:
         '''Username template suffix.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template_suffix AppSharedCredentials#user_name_template_suffix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template_suffix AppSharedCredentials#user_name_template_suffix}
         '''
         result = self._values.get("user_name_template_suffix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1398,7 +1398,7 @@ class AppSharedCredentialsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_type(self) -> typing.Optional[builtins.str]:
         '''Username template type. Default: ``BUILT_IN``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#user_name_template_type AppSharedCredentials#user_name_template_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#user_name_template_type AppSharedCredentials#user_name_template_type}
         '''
         result = self._values.get("user_name_template_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1429,9 +1429,9 @@ class AppSharedCredentialsTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#create AppSharedCredentials#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#read AppSharedCredentials#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#update AppSharedCredentials#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#create AppSharedCredentials#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#read AppSharedCredentials#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#update AppSharedCredentials#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e3cc001eca7a2ffa352ffa327f26638d0ddb947ec52bda1d593385dab678642e)
@@ -1448,19 +1448,19 @@ class AppSharedCredentialsTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#create AppSharedCredentials#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#create AppSharedCredentials#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#read AppSharedCredentials#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#read AppSharedCredentials#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_shared_credentials#update AppSharedCredentials#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_shared_credentials#update AppSharedCredentials#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 

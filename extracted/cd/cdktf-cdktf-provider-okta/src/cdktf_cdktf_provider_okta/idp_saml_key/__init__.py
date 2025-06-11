@@ -1,7 +1,7 @@
 r'''
 # `okta_idp_saml_key`
 
-Refer to the Terraform Registry for docs: [`okta_idp_saml_key`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key).
+Refer to the Terraform Registry for docs: [`okta_idp_saml_key`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class IdpSamlKey(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.idpSamlKey.IdpSamlKey",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key okta_idp_saml_key}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key okta_idp_saml_key}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class IdpSamlKey(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key okta_idp_saml_key} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key okta_idp_saml_key} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param x5_c: base64-encoded X.509 certificate chain with DER encoding. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key#x5c IdpSamlKey#x5c}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key#id IdpSamlKey#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param x5_c: base64-encoded X.509 certificate chain with DER encoding. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key#x5c IdpSamlKey#x5c}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key#id IdpSamlKey#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class IdpSamlKey(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the IdpSamlKey to import.
-        :param import_from_id: The id of the existing IdpSamlKey that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing IdpSamlKey that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the IdpSamlKey to import is found.
         '''
         if __debug__:
@@ -236,8 +236,8 @@ class IdpSamlKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param x5_c: base64-encoded X.509 certificate chain with DER encoding. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key#x5c IdpSamlKey#x5c}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key#id IdpSamlKey#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param x5_c: base64-encoded X.509 certificate chain with DER encoding. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key#x5c IdpSamlKey#x5c}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key#id IdpSamlKey#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -340,7 +340,7 @@ class IdpSamlKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def x5_c(self) -> typing.List[builtins.str]:
         '''base64-encoded X.509 certificate chain with DER encoding.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key#x5c IdpSamlKey#x5c}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key#x5c IdpSamlKey#x5c}
         '''
         result = self._values.get("x5_c")
         assert result is not None, "Required property 'x5_c' is missing"
@@ -348,7 +348,7 @@ class IdpSamlKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/idp_saml_key#id IdpSamlKey#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/idp_saml_key#id IdpSamlKey#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

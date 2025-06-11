@@ -1,7 +1,7 @@
 r'''
 # `okta_rate_limiting`
 
-Refer to the Terraform Registry for docs: [`okta_rate_limiting`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting).
+Refer to the Terraform Registry for docs: [`okta_rate_limiting`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class RateLimiting(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.rateLimiting.RateLimiting",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting okta_rate_limiting}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting okta_rate_limiting}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class RateLimiting(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting okta_rate_limiting} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting okta_rate_limiting} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param authorize: Called during authentication. Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#authorize RateLimiting#authorize}
-        :param login: Called when accessing the Okta hosted login page. Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#login RateLimiting#login}
-        :param communications_enabled: Enable or disable rate limiting communications. By default, it is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#communications_enabled RateLimiting#communications_enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#id RateLimiting#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param authorize: Called during authentication. Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#authorize RateLimiting#authorize}
+        :param login: Called when accessing the Okta hosted login page. Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#login RateLimiting#login}
+        :param communications_enabled: Enable or disable rate limiting communications. By default, it is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#communications_enabled RateLimiting#communications_enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#id RateLimiting#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class RateLimiting(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the RateLimiting to import.
-        :param import_from_id: The id of the existing RateLimiting that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing RateLimiting that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the RateLimiting to import is found.
         '''
         if __debug__:
@@ -261,10 +261,10 @@ class RateLimitingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param authorize: Called during authentication. Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#authorize RateLimiting#authorize}
-        :param login: Called when accessing the Okta hosted login page. Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#login RateLimiting#login}
-        :param communications_enabled: Enable or disable rate limiting communications. By default, it is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#communications_enabled RateLimiting#communications_enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#id RateLimiting#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param authorize: Called during authentication. Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#authorize RateLimiting#authorize}
+        :param login: Called when accessing the Okta hosted login page. Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#login RateLimiting#login}
+        :param communications_enabled: Enable or disable rate limiting communications. By default, it is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#communications_enabled RateLimiting#communications_enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#id RateLimiting#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -374,7 +374,7 @@ class RateLimitingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#authorize RateLimiting#authorize}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#authorize RateLimiting#authorize}
         '''
         result = self._values.get("authorize")
         assert result is not None, "Required property 'authorize' is missing"
@@ -386,7 +386,7 @@ class RateLimitingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Valid values: ``ENFORCE`` *(Enforce limit and log per client (recommended))*, ``DISABLE`` *(Do nothing (not recommended))*, ``PREVIEW`` *(Log per client)*.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#login RateLimiting#login}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#login RateLimiting#login}
         '''
         result = self._values.get("login")
         assert result is not None, "Required property 'login' is missing"
@@ -398,14 +398,14 @@ class RateLimitingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Enable or disable rate limiting communications. By default, it is ``true``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#communications_enabled RateLimiting#communications_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#communications_enabled RateLimiting#communications_enabled}
         '''
         result = self._values.get("communications_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/rate_limiting#id RateLimiting#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/rate_limiting#id RateLimiting#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

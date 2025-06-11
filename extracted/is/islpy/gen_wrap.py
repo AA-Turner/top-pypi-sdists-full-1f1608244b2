@@ -252,7 +252,7 @@ CLASS_MAP = {
         "options": "ctx",
         }
 
-AUTO_UPCASTS: Mapping[str, tuple[str, ...]] = {
+AUTO_DOWNCASTS: Mapping[str, tuple[str, ...]] = {
     "pw_aff": ("aff", ),
     "union_pw_aff": ("aff", "pw_aff", ),
     "local_space": ("space", ),
@@ -1140,7 +1140,7 @@ def write_wrapper(outf: TextIO, meth: Method):
             else:
                 acceptable_arg_classes = (
                     arg_cls,
-                    *AUTO_UPCASTS.get(arg_cls, ()))
+                    *AUTO_DOWNCASTS.get(arg_cls, ()))
                 arg_annotation = " | ".join(
                     to_py_class(ac) for ac in acceptable_arg_classes)
                 arg_types.append(f"{arg.name}: {arg_annotation}")
@@ -1313,7 +1313,7 @@ def write_wrapper(outf: TextIO, meth: Method):
             body.append(f"arg_{meth.args[0].name}.take_possession_of(result);")
             body.append(f"return py_{meth.args[0].name};")
 
-            ret_type = to_py_class(ret_cls)
+            ret_type = "Self"
             docs.append("..note::\n  Returns *self*.\n\n")
         else:
             processed_return_type = "py::object"
@@ -1481,8 +1481,9 @@ def write_exposer(
             f'       isl::handle_isl_error(ctx, "isl_{meth.cls}_read_from_str");'
             '}, py::arg("s"), py::arg("context").none(true)=py::none());\n')
 
+    # Handle auto-self-downcasts. These are deprecated.
     if not meth.is_static:
-        for basic_cls in AUTO_UPCASTS.get(meth.cls, []):
+        for basic_cls in AUTO_DOWNCASTS.get(meth.cls, []):
             basic_overloads = meth_to_overloads.setdefault((basic_cls, meth.name), [])
             if any(basic_meth
                    for basic_meth in basic_overloads
@@ -1491,13 +1492,22 @@ def write_exposer(
                    ):
                 continue
 
+            # These are high-traffic APIs that are manually implemented
+            # and not subject to deprecation.
+            if basic_cls == "basic_set":
+                if meth.name in ["is_params", "get_hash"]:
+                    continue
+            elif basic_cls == "basic_map":
+                if meth.name in ["get_hash"]:
+                    continue
+
             basic_overloads.append(meth)
 
-            upcast_doc_str = (f"{doc_str}\n\nUpcast from "
+            downcast_doc_str = (f"{doc_str}\n\nDowncast from "
                 f":class:`{to_py_class(basic_cls)}` to "
                 f":class:`{to_py_class(meth.cls)}`.")
-            escaped_doc_str = upcast_doc_str.replace(newline, escaped_newline)
-            outf.write(f"// automatic upcast to {meth.cls}\n")
+            escaped_doc_str = downcast_doc_str.replace(newline, escaped_newline)
+            outf.write(f"// automatic downcast to {meth.cls}\n")
             outf.write(f'wrap_{basic_cls}.def('
                        # Do not be tempted to pass 'arg_str' here, it will
                        # prevent implicit conversion.

@@ -89,8 +89,6 @@ def uninstall(items: Union[pd.DataFrame, pd.Series], *, errors: Optional[str] = 
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
     system_api = SystemApi(session.client)
 

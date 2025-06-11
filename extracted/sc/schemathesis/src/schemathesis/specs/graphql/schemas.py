@@ -14,44 +14,49 @@ from typing import (
     Iterator,
     Mapping,
     NoReturn,
-    Sequence,
-    TypeVar,
+    Union,
     cast,
 )
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit
 
 import graphql
 from hypothesis import strategies as st
 from hypothesis_graphql import strategies as gql_st
 from requests.structures import CaseInsensitiveDict
 
-from ... import auths
-from ...checks import not_a_server_error
-from ...constants import NOT_SET, SCHEMATHESIS_TEST_CASE_HEADER
-from ...exceptions import OperationNotFound, OperationSchemaError
-from ...generation import DataGenerationMethod, GenerationConfig
-from ...hooks import (
-    GLOBAL_HOOK_DISPATCHER,
-    HookContext,
-    HookDispatcher,
-    apply_to_all_dispatchers,
-    should_skip_operation,
+from schemathesis import auths
+from schemathesis.core import NOT_SET, NotSet, Specification
+from schemathesis.core.errors import InvalidSchema, OperationNotFound
+from schemathesis.core.result import Ok, Result
+from schemathesis.generation import GenerationMode
+from schemathesis.generation.case import Case
+from schemathesis.generation.meta import (
+    CaseMetadata,
+    ComponentInfo,
+    ComponentKind,
+    ExplicitPhaseData,
+    GeneratePhaseData,
+    GenerationInfo,
+    PhaseInfo,
+    TestPhase,
 )
-from ...internal.result import Ok, Result
-from ...models import APIOperation, Case, OperationDefinition
-from ...schemas import APIOperationMap, BaseSchema
-from ...types import Body, Cookies, Headers, NotSet, PathParameters, Query
-from ..openapi.constants import LOCATION_TO_CONTAINER
+from schemathesis.hooks import HookContext, HookDispatcher, apply_to_all_dispatchers
+from schemathesis.schemas import (
+    APIOperation,
+    APIOperationMap,
+    ApiStatistic,
+    BaseSchema,
+    OperationDefinition,
+)
+from schemathesis.specs.openapi.constants import LOCATION_TO_CONTAINER
+
 from ._cache import OperationCache
 from .scalars import CUSTOM_SCALARS, get_extra_scalar_strategies
 
 if TYPE_CHECKING:
     from hypothesis.strategies import SearchStrategy
 
-    from ...auths import AuthStorage
-    from ...internal.checks import CheckFunction
-    from ...stateful import Stateful, StatefulTest
-    from ...transports.responses import GenericResponse
+    from schemathesis.auths import AuthStorage
 
 
 @unique
@@ -61,46 +66,12 @@ class RootType(enum.Enum):
 
 
 @dataclass(repr=False)
-class GraphQLCase(Case):
-    def __hash__(self) -> int:
-        return hash(self.as_curl_command({SCHEMATHESIS_TEST_CASE_HEADER: "0"}))
-
-    def _get_url(self, base_url: str | None) -> str:
-        base_url = self._get_base_url(base_url)
-        # Replace the path, in case if the user provided any path parameters via hooks
-        parts = list(urlsplit(base_url))
-        parts[2] = self.formatted_path
-        return urlunsplit(parts)
-
-    def _get_body(self) -> Body | NotSet:
-        return self.body if isinstance(self.body, (NotSet, bytes)) else {"query": self.body}
-
-    def validate_response(
-        self,
-        response: GenericResponse,
-        checks: tuple[CheckFunction, ...] = (),
-        additional_checks: tuple[CheckFunction, ...] = (),
-        excluded_checks: tuple[CheckFunction, ...] = (),
-        code_sample_style: str | None = None,
-        headers: dict[str, Any] | None = None,
-        transport_kwargs: dict[str, Any] | None = None,
-    ) -> None:
-        checks = checks or (not_a_server_error,)
-        checks += additional_checks
-        checks = tuple(check for check in checks if check not in excluded_checks)
-        return super().validate_response(
-            response, checks, code_sample_style=code_sample_style, headers=headers, transport_kwargs=transport_kwargs
-        )
-
-
-C = TypeVar("C", bound=Case)
-
-
-@dataclass
 class GraphQLOperationDefinition(OperationDefinition):
     field_name: str
     type_: graphql.GraphQLType
     root_type: RootType
+
+    def _repr_pretty_(self, *args: Any, **kwargs: Any) -> None: ...
 
     @property
     def is_query(self) -> bool:
@@ -144,6 +115,15 @@ class GraphQLSchema(BaseSchema):
                 return map
         raise KeyError(key)
 
+    def find_operation_by_label(self, label: str) -> APIOperation | None:
+        if label.startswith(("Query.", "Mutation.")):
+            ty, field = label.split(".", maxsplit=1)
+            try:
+                return self[ty][field]
+            except KeyError:
+                return None
+        return None
+
     def on_missing_operation(self, item: str, exc: KeyError) -> NoReturn:
         raw_schema = self.raw_schema["__schema"]
         type_names = [type_def["name"] for type_def in raw_schema.get("types", [])]
@@ -157,8 +137,8 @@ class GraphQLSchema(BaseSchema):
         return self.base_path
 
     @property
-    def verbose_name(self) -> str:
-        return "GraphQL"
+    def specification(self) -> Specification:
+        return Specification.graphql(version="")
 
     @property
     def client_schema(self) -> graphql.GraphQLSchema:
@@ -168,34 +148,39 @@ class GraphQLSchema(BaseSchema):
 
     @property
     def base_path(self) -> str:
-        if self.base_url:
-            return urlsplit(self.base_url).path
+        if self.config.base_url:
+            return urlsplit(self.config.base_url).path
         return self._get_base_path()
 
     def _get_base_path(self) -> str:
         return cast(str, urlsplit(self.location).path)
 
-    @property
-    def operations_count(self) -> int:
+    def _measure_statistic(self) -> ApiStatistic:
+        statistic = ApiStatistic()
         raw_schema = self.raw_schema["__schema"]
-        total = 0
+        dummy_operation = APIOperation(
+            base_url=self.get_base_url(),
+            path=self.base_path,
+            label="",
+            method="POST",
+            schema=self,
+            definition=None,  # type: ignore
+        )
+
         for type_name in ("queryType", "mutationType"):
             type_def = raw_schema.get(type_name)
             if type_def is not None:
                 query_type_name = type_def["name"]
                 for type_def in raw_schema.get("types", []):
                     if type_def["name"] == query_type_name:
-                        total += len(type_def["fields"])
-        return total
+                        for field in type_def["fields"]:
+                            statistic.operations.total += 1
+                            dummy_operation.label = f"{query_type_name}.{field['name']}"
+                            if not self._should_skip(dummy_operation):
+                                statistic.operations.selected += 1
+        return statistic
 
-    @property
-    def links_count(self) -> int:
-        # Links are not supported for GraphQL
-        return 0
-
-    def get_all_operations(
-        self, hooks: HookDispatcher | None = None, generation_config: GenerationConfig | None = None
-    ) -> Generator[Result[APIOperation, OperationSchemaError], None, None]:
+    def get_all_operations(self) -> Generator[Result[APIOperation, InvalidSchema], None, None]:
         schema = self.client_schema
         for root_type, operation_type in (
             (RootType.QUERY, schema.query_type),
@@ -206,13 +191,6 @@ class GraphQLSchema(BaseSchema):
             for field_name, field_ in operation_type.fields.items():
                 operation = self._build_operation(root_type, operation_type, field_name, field_)
                 if self._should_skip(operation):
-                    continue
-                context = HookContext(operation=operation)
-                if (
-                    should_skip_operation(GLOBAL_HOOK_DISPATCHER, context)
-                    or should_skip_operation(self.hooks, context)
-                    or (hooks and should_skip_operation(hooks, context))
-                ):
                     continue
                 yield Ok(operation)
 
@@ -234,7 +212,7 @@ class GraphQLSchema(BaseSchema):
         return APIOperation(
             base_url=self.get_base_url(),
             path=self.base_path,
-            verbose_name=f"{operation_type.name}.{field_name}",
+            label=f"{operation_type.name}.{field_name}",
             method="POST",
             app=self.app,
             schema=self,
@@ -247,7 +225,6 @@ class GraphQLSchema(BaseSchema):
                 field_name=field_name,
                 root_type=root_type,
             ),
-            case_cls=GraphQLCase,
         )
 
     def get_case_strategy(
@@ -255,51 +232,45 @@ class GraphQLSchema(BaseSchema):
         operation: APIOperation,
         hooks: HookDispatcher | None = None,
         auth_storage: AuthStorage | None = None,
-        data_generation_method: DataGenerationMethod = DataGenerationMethod.default(),
-        generation_config: GenerationConfig | None = None,
+        generation_mode: GenerationMode = GenerationMode.POSITIVE,
         **kwargs: Any,
     ) -> SearchStrategy:
-        return get_case_strategy(
+        return graphql_cases(
             operation=operation,
-            client_schema=self.client_schema,
             hooks=hooks,
             auth_storage=auth_storage,
-            data_generation_method=data_generation_method,
-            generation_config=generation_config or self.generation_config,
+            generation_mode=generation_mode,
             **kwargs,
         )
 
-    def get_strategies_from_examples(
-        self, operation: APIOperation, as_strategy_kwargs: dict[str, Any] | None = None
-    ) -> list[SearchStrategy[Case]]:
-        return []
-
-    def get_stateful_tests(
-        self, response: GenericResponse, operation: APIOperation, stateful: Stateful | None
-    ) -> Sequence[StatefulTest]:
+    def get_strategies_from_examples(self, operation: APIOperation, **kwargs: Any) -> list[SearchStrategy[Case]]:
         return []
 
     def make_case(
         self,
         *,
-        case_cls: type[C],
         operation: APIOperation,
-        path_parameters: PathParameters | None = None,
-        headers: Headers | None = None,
-        cookies: Cookies | None = None,
-        query: Query | None = None,
-        body: Body | NotSet = NOT_SET,
+        method: str | None = None,
+        path: str | None = None,
+        path_parameters: dict[str, Any] | None = None,
+        headers: dict[str, Any] | CaseInsensitiveDict | None = None,
+        cookies: dict[str, Any] | None = None,
+        query: dict[str, Any] | None = None,
+        body: list | dict[str, Any] | str | int | float | bool | bytes | NotSet = NOT_SET,
         media_type: str | None = None,
-    ) -> C:
-        return case_cls(
+        meta: CaseMetadata | None = None,
+    ) -> Case:
+        return Case(
             operation=operation,
-            path_parameters=path_parameters,
-            headers=CaseInsensitiveDict(headers) if headers is not None else headers,
-            cookies=cookies,
-            query=query,
+            method=method or operation.method.upper(),
+            path=path or operation.path,
+            path_parameters=path_parameters or {},
+            headers=CaseInsensitiveDict() if headers is None else CaseInsensitiveDict(headers),
+            cookies=cookies or {},
+            query=query or {},
             body=body,
             media_type=media_type or "application/json",
-            generation_time=0.0,
+            meta=meta,
         )
 
     def get_tags(self, operation: APIOperation) -> list[str] | None:
@@ -353,15 +324,20 @@ class FieldMap(Mapping):
 
 
 @st.composite  # type: ignore
-def get_case_strategy(
+def graphql_cases(
     draw: Callable,
+    *,
     operation: APIOperation,
-    client_schema: graphql.GraphQLSchema,
     hooks: HookDispatcher | None = None,
-    auth_storage: AuthStorage | None = None,
-    data_generation_method: DataGenerationMethod = DataGenerationMethod.default(),
-    generation_config: GenerationConfig | None = None,
-    **kwargs: Any,
+    auth_storage: auths.AuthStorage | None = None,
+    generation_mode: GenerationMode = GenerationMode.POSITIVE,
+    path_parameters: NotSet | dict[str, Any] = NOT_SET,
+    headers: NotSet | dict[str, Any] = NOT_SET,
+    cookies: NotSet | dict[str, Any] = NOT_SET,
+    query: NotSet | dict[str, Any] = NOT_SET,
+    body: Any = NOT_SET,
+    media_type: str | None = None,
+    phase: TestPhase = TestPhase.FUZZING,
 ) -> Any:
     start = time.monotonic()
     definition = cast(GraphQLOperationDefinition, operation.definition)
@@ -369,36 +345,56 @@ def get_case_strategy(
         RootType.QUERY: gql_st.queries,
         RootType.MUTATION: gql_st.mutations,
     }[definition.root_type]
-    hook_context = HookContext(operation)
-    generation_config = generation_config or GenerationConfig()
+    hook_context = HookContext(operation=operation)
     custom_scalars = {**get_extra_scalar_strategies(), **CUSTOM_SCALARS}
+    generation = operation.schema.config.generation_for(operation=operation, phase="fuzzing")
     strategy = strategy_factory(
-        client_schema,
+        operation.schema.client_schema,  # type: ignore[attr-defined]
         fields=[definition.field_name],
         custom_scalars=custom_scalars,
         print_ast=_noop,  # type: ignore
-        allow_x00=generation_config.allow_x00,
-        allow_null=generation_config.graphql_allow_null,
-        codec=generation_config.codec,
+        allow_x00=generation.allow_x00,
+        allow_null=generation.graphql_allow_null,
+        codec=generation.codec,
     )
     strategy = apply_to_all_dispatchers(operation, hook_context, hooks, strategy, "body").map(graphql.print_ast)
     body = draw(strategy)
 
-    path_parameters_ = _generate_parameter("path", draw, operation, hook_context, hooks)
-    headers_ = _generate_parameter("header", draw, operation, hook_context, hooks)
-    cookies_ = _generate_parameter("cookie", draw, operation, hook_context, hooks)
-    query_ = _generate_parameter("query", draw, operation, hook_context, hooks)
+    path_parameters_ = _generate_parameter("path", path_parameters, draw, operation, hook_context, hooks)
+    headers_ = _generate_parameter("header", headers, draw, operation, hook_context, hooks)
+    cookies_ = _generate_parameter("cookie", cookies, draw, operation, hook_context, hooks)
+    query_ = _generate_parameter("query", query, draw, operation, hook_context, hooks)
 
-    instance = GraphQLCase(
+    _phase_data = {
+        TestPhase.EXAMPLES: ExplicitPhaseData(),
+        TestPhase.FUZZING: GeneratePhaseData(),
+    }[phase]
+    phase_data = cast(Union[ExplicitPhaseData, GeneratePhaseData], _phase_data)
+    instance = operation.Case(
         path_parameters=path_parameters_,
         headers=headers_,
         cookies=cookies_,
         query=query_,
         body=body,
-        operation=operation,
-        data_generation_method=data_generation_method,
-        generation_time=time.monotonic() - start,
-        media_type="application/json",
+        _meta=CaseMetadata(
+            generation=GenerationInfo(
+                time=time.monotonic() - start,
+                mode=generation_mode,
+            ),
+            phase=PhaseInfo(name=phase, data=phase_data),
+            components={
+                kind: ComponentInfo(mode=generation_mode)
+                for kind, value in [
+                    (ComponentKind.QUERY, query_),
+                    (ComponentKind.PATH_PARAMETERS, path_parameters_),
+                    (ComponentKind.HEADERS, headers_),
+                    (ComponentKind.COOKIES, cookies_),
+                    (ComponentKind.BODY, body),
+                ]
+                if value is not NOT_SET
+            },
+        ),
+        media_type=media_type or "application/json",
     )  # type: ignore
     context = auths.AuthContext(
         operation=operation,
@@ -409,11 +405,19 @@ def get_case_strategy(
 
 
 def _generate_parameter(
-    location: str, draw: Callable, operation: APIOperation, context: HookContext, hooks: HookDispatcher | None
+    location: str,
+    explicit: NotSet | dict[str, Any],
+    draw: Callable,
+    operation: APIOperation,
+    context: HookContext,
+    hooks: HookDispatcher | None,
 ) -> Any:
     # Schemathesis does not generate anything but `body` for GraphQL, hence use `None`
     container = LOCATION_TO_CONTAINER[location]
-    strategy = apply_to_all_dispatchers(operation, context, hooks, st.none(), container)
+    if isinstance(explicit, NotSet):
+        strategy = apply_to_all_dispatchers(operation, context, hooks, st.none(), container)
+    else:
+        strategy = apply_to_all_dispatchers(operation, context, hooks, st.just(explicit), container)
     return draw(strategy)
 
 

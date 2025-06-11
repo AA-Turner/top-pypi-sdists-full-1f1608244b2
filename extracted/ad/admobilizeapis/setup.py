@@ -12,7 +12,7 @@ extras_require = {"grpc": ["grpcio>=1.2.0"]}
 
 setup(
     name="admobilizeapis",
-    version='2025.05.07r1',
+    version='2025.06.10r1',
     author="AdMobilize Team",
     author_email="devel@admobilize.com",
     classifiers=[

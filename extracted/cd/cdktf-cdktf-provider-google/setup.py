@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-google",
-    "version": "16.0.0",
+    "version": "16.1.0",
     "description": "Prebuilt google Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-google.git",
@@ -81,6 +81,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.apigee_sync_authorization",
         "cdktf_cdktf_provider_google.apigee_target_server",
         "cdktf_cdktf_provider_google.apihub_api_hub_instance",
+        "cdktf_cdktf_provider_google.apihub_curation",
         "cdktf_cdktf_provider_google.apihub_host_project_registration",
         "cdktf_cdktf_provider_google.apikeys_key",
         "cdktf_cdktf_provider_google.app_engine_application",
@@ -316,6 +317,8 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.compute_instant_snapshot_iam_policy",
         "cdktf_cdktf_provider_google.compute_interconnect",
         "cdktf_cdktf_provider_google.compute_interconnect_attachment",
+        "cdktf_cdktf_provider_google.compute_interconnect_attachment_group",
+        "cdktf_cdktf_provider_google.compute_interconnect_group",
         "cdktf_cdktf_provider_google.compute_managed_ssl_certificate",
         "cdktf_cdktf_provider_google.compute_network",
         "cdktf_cdktf_provider_google.compute_network_attachment",
@@ -384,6 +387,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.compute_snapshot_iam_binding",
         "cdktf_cdktf_provider_google.compute_snapshot_iam_member",
         "cdktf_cdktf_provider_google.compute_snapshot_iam_policy",
+        "cdktf_cdktf_provider_google.compute_snapshot_settings",
         "cdktf_cdktf_provider_google.compute_ssl_certificate",
         "cdktf_cdktf_provider_google.compute_ssl_policy",
         "cdktf_cdktf_provider_google.compute_storage_pool",
@@ -1444,7 +1448,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_google._jsii": [
-            "provider-google@16.0.0.jsii.tgz"
+            "provider-google@16.1.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_google": [
             "py.typed"
@@ -1454,7 +1458,7 @@ kwargs = json.loads(
     "install_requires": [
         "cdktf>=0.21.0, <0.22.0",
         "constructs>=10.4.2, <11.0.0",
-        "jsii>=1.111.0, <2.0.0",
+        "jsii>=1.112.0, <2.0.0",
         "publication>=0.0.3",
         "typeguard>=2.13.3,<4.3.0"
     ],

@@ -20,6 +20,15 @@ class OpenAIModelClass(ModelClass):
             model = "gpt-4"
     """
 
+    # API Endpoints
+    ENDPOINT_CHAT_COMPLETIONS = "/chat/completions"
+    ENDPOINT_IMAGES_GENERATE = "/images/generations"
+    ENDPOINT_EMBEDDINGS = "/embeddings"
+    ENDPOINT_RESPONSES = "/responses"
+
+    # Default endpoint
+    DEFAULT_ENDPOINT = ENDPOINT_CHAT_COMPLETIONS
+
     # These should be overridden in subclasses
     client = None
     model = None
@@ -35,141 +44,100 @@ class OpenAIModelClass(ModelClass):
                     "Subclasses must set the 'model' class attribute or ensure the client can list models"
                 ) from e
 
-    def _extract_request_params(self, request_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Extract and validate common openai arguments parameters from the request data.
-
-        Args:
-            request_data: The parsed JSON request data
-
-        Returns:
-            Dict containing the extracted parameters
-        """
-        return {
-            "messages": request_data.get("messages", []),
-            "temperature": request_data.get("temperature", 1.0),
-            "max_tokens": request_data.get("max_tokens"),
-            "max_completion_tokens": request_data.get("max_completion_tokens"),
-            "n": request_data.get("n", 1),
-            "frequency_penalty": request_data.get("frequency_penalty"),
-            "presence_penalty": request_data.get("presence_penalty"),
-            "top_p": request_data.get("top_p", 1.0),
-            "reasoning_effort": request_data.get("reasoning_effort"),
-            "response_format": request_data.get("response_format"),
-            "stop": request_data.get("stop"),
-            "tools": request_data.get("tools"),
-            "tool_choice": request_data.get("tool_choice"),
-            "tool_resources": request_data.get("tool_resources"),
-            "modalities": request_data.get("modalities"),
-            "stream_options": request_data.get("stream_options", {"include_usage": True}),
-        }
-
-    def _create_completion_args(
-        self, params: Dict[str, Any], stream: bool = False
-    ) -> Dict[str, Any]:
+    def _create_completion_args(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Create the completion arguments dictionary from parameters.
 
         Args:
             params: Dictionary of parameters extracted from request
-            stream: Whether this is a streaming request
 
         Returns:
             Dict containing the completion arguments
         """
-        completion_args = {
-            "model": self.model,
-            "messages": params["messages"],
-            "temperature": params["temperature"],
-        }
-
+        completion_args = {**params}
+        completion_args.update({"model": self.model})
+        stream = completion_args.pop("stream", False)
         if stream:
-            completion_args["stream"] = True
-            if params.get("stream_options"):
-                completion_args["stream_options"] = params["stream_options"]
-
-        # Add optional parameters if they exist
-        optional_params = [
-            "max_tokens",
-            "max_completion_tokens",
-            "n",
-            "frequency_penalty",
-            "presence_penalty",
-            "top_p",
-            "reasoning_effort",
-            "response_format",
-            "stop",
-            "tools",
-            "tool_choice",
-            "tool_resources",
-            "modalities",
-        ]
-
-        for param in optional_params:
-            if params.get(param) is not None:
-                completion_args[param] = params[param]
+            # Force to use usage
+            stream_options = params.pop("stream_options", {})
+            stream_options.update({"include_usage": True})
+            completion_args["stream_options"] = stream_options
+        completion_args["stream"] = stream
 
         return completion_args
 
-    def _format_error_response(self, error: Exception) -> str:
-        """Format an error response in OpenAI-compatible format.
+    def _set_usage(self, resp):
+        if resp.usage and resp.usage.prompt_tokens and resp.usage.completion_tokens:
+            self.set_output_context(
+                prompt_tokens=resp.usage.prompt_tokens,
+                completion_tokens=resp.usage.completion_tokens,
+            )
 
-        Args:
-            error: The exception that occurred
+    def _handle_chat_completions(self, request_data: Dict[str, Any]):
+        """Handle chat completion requests."""
+        completion_args = self._create_completion_args(request_data)
+        completion = self.client.chat.completions.create(**completion_args)
+        self._set_usage(completion)
+        return completion
 
-        Returns:
-            JSON string containing the error response
-        """
-        error_response = {
-            "error": {
-                "message": str(error),
-                "type": "InvalidRequestError",
-                "code": "invalid_request_error",
-            }
+    def _handle_images_generate(self, request_data: Dict[str, Any]):
+        """Handle image generation requests."""
+        image_args = {**request_data}
+        image_args.update({"model": self.model})
+        response = self.client.images.generate(**image_args)
+        return response
+
+    def _handle_embeddings(self, request_data: Dict[str, Any]):
+        """Handle embedding requests."""
+        embedding_args = {**request_data}
+        embedding_args.update({"model": self.model})
+        response = self.client.embeddings.create(**embedding_args)
+        return response
+
+    def _handle_responses(self, request_data: Dict[str, Any]):
+        """Handle response requests."""
+        response_args = {**request_data}
+        response_args.update({"model": self.model})
+        response = self.client.responses.create(**response_args)
+        return response
+
+    def _route_request(self, endpoint: str, request_data: Dict[str, Any]):
+        """Route the request to appropriate handler based on endpoint."""
+        handlers = {
+            self.ENDPOINT_CHAT_COMPLETIONS: self._handle_chat_completions,
+            self.ENDPOINT_IMAGES_GENERATE: self._handle_images_generate,
+            self.ENDPOINT_EMBEDDINGS: self._handle_embeddings,
+            self.ENDPOINT_RESPONSES: self._handle_responses,
         }
-        return json.dumps(error_response)
+
+        handler = handlers.get(endpoint)
+        if not handler:
+            raise ValueError(f"Unsupported endpoint: {endpoint}")
+
+        return handler(request_data)
 
     @ModelClass.method
     def openai_transport(self, msg: str) -> str:
-        """The single model method to get the OpenAI-compatible request and send it to the OpenAI server
-        then return its response.
+        """Process an OpenAI-compatible request and send it to the appropriate OpenAI endpoint.
 
         Args:
-            msg: JSON string containing the request parameters
+            msg: JSON string containing the request parameters including 'openai_endpoint'
 
         Returns:
             JSON string containing the response or error
         """
         try:
             request_data = json.loads(msg)
-            params = self._extract_request_params(request_data)
-            stream = request_data.get("stream", False)
-
-            if stream:
-                chunks = self._process_streaming_request(**params)
-                response_list = []
-                for chunk in chunks:
-                    response_list.append(chunk)
-                return json.dumps(response_list)
-            else:
-                completion = self._process_request(**params)
-                if completion.get('usage'):
-                    if completion['usage'].get('prompt_tokens') and completion['usage'].get(
-                        'completion_tokens'
-                    ):
-                        self.set_output_context(
-                            prompt_tokens=completion['usage']['prompt_tokens'],
-                            completion_tokens=completion['usage']['completion_tokens'],
-                        )
-
-                return json.dumps(completion)
-
+            endpoint = request_data.pop("openai_endpoint", self.DEFAULT_ENDPOINT)
+            response = self._route_request(endpoint, request_data)
+            return json.dumps(response.model_dump())
         except Exception as e:
-            return self._format_error_response(e)
+            return f"Error: {e}"
 
     @ModelClass.method
     def openai_stream_transport(self, msg: str) -> Iterator[str]:
         """Process an OpenAI-compatible request and return a streaming response iterator.
         This method is used when stream=True and returns an iterator of strings directly,
-        without converting to a list or JSON serializing.
+        without converting to a list or JSON serializing. Supports chat completions and responses endpoints.
 
         Args:
             msg: The request as a JSON string.
@@ -179,43 +147,21 @@ class OpenAIModelClass(ModelClass):
         """
         try:
             request_data = json.loads(msg)
-            params = self._extract_request_params(request_data)
-            for chunk in self._process_streaming_request(**params):
-                if chunk.get('usage'):
-                    if chunk['usage'].get('prompt_tokens') and chunk['usage'].get(
-                        'completion_tokens'
-                    ):
-                        self.set_output_context(
-                            prompt_tokens=chunk['usage']['prompt_tokens'],
-                            completion_tokens=chunk['usage']['completion_tokens'],
-                        )
-                yield json.dumps(chunk)
+            endpoint = request_data.pop("openai_endpoint", self.DEFAULT_ENDPOINT)
+            if endpoint not in [self.ENDPOINT_CHAT_COMPLETIONS, self.ENDPOINT_RESPONSES]:
+                raise ValueError("Streaming is only supported for chat completions and responses.")
+
+            if endpoint == self.ENDPOINT_RESPONSES:
+                # Handle responses endpoint
+                stream_response = self._route_request(endpoint, request_data)
+                for chunk in stream_response:
+                    yield json.dumps(chunk.model_dump())
+            else:
+                completion_args = self._create_completion_args(request_data)
+                stream_completion = self.client.chat.completions.create(**completion_args)
+                for chunk in stream_completion:
+                    self._set_usage(chunk)
+                    yield json.dumps(chunk.model_dump())
+
         except Exception as e:
-            yield f"Error: {str(e)}"
-
-    def _process_request(self, **kwargs) -> Any:
-        """Process a standard (non-streaming) request using the OpenAI client.
-
-        Args:
-            **kwargs: Request parameters
-
-        Returns:
-            The completion response from the OpenAI client
-        """
-        completion_args = self._create_completion_args(kwargs)
-        return self.client.chat.completions.create(**completion_args).to_dict()
-
-    def _process_streaming_request(self, **kwargs) -> Iterator[str]:
-        """Process a streaming request using the OpenAI client.
-
-        Args:
-            **kwargs: Request parameters
-
-        Returns:
-            Iterator yielding response chunks
-        """
-        completion_args = self._create_completion_args(kwargs, stream=True)
-        completion_stream = self.client.chat.completions.create(**completion_args)
-
-        for chunk in completion_stream:
-            yield chunk.to_dict()
+            yield f"Error: {e}"

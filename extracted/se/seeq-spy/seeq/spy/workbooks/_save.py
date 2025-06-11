@@ -12,6 +12,7 @@ from seeq.spy._status import Status
 from seeq.spy.workbooks._workbook import Workbook
 
 
+@Status.handle_keyboard_interrupt(no_session=True)
 def save(workbooks, folder_or_zipfile: Optional[str] = None, *, datasource_map_folder: Optional[str] = None,
          include_rendered_content: bool = False, pretty_print_html=False, overwrite: bool = False,
          errors: Optional[str] = None, quiet: Optional[bool] = None, status: Optional[Status] = None):
@@ -81,8 +82,6 @@ def save(workbooks, folder_or_zipfile: Optional[str] = None, *, datasource_map_f
         (status, 'status', Status)
     ])
 
-    status = Status.validate(status, None, quiet, errors)
-
     if not folder_or_zipfile:
         folder_or_zipfile = os.getcwd()
 
@@ -120,7 +119,7 @@ def save(workbooks, folder_or_zipfile: Optional[str] = None, *, datasource_map_f
 
                 workbook_folder_name = '%s (%s)' % (workbook.name, workbook.id)
                 workbook_folder = os.path.join(save_folder, util.cleanse_filename(workbook_folder_name))
-                workbook_folder = _common.sanitize_path(workbook_folder)
+                workbook_folder = util.cleanse_path(workbook_folder)
 
                 if datasource_maps is not None:
                     workbook.datasource_maps = datasource_maps

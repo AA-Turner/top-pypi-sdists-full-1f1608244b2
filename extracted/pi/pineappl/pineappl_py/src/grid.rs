@@ -1,221 +1,130 @@
-use ndarray::CowArray;
-use pineappl::boc::Order;
-use pineappl::convolutions::LumiCache;
-use pineappl::evolution::{AlphasTable, OperatorInfo, OperatorSliceInfo};
-use pineappl::grid::{Grid, Ntuple};
-use pineappl::pids::PidBasis;
+//! Grid interface.
 
-use super::bin::PyBinRemapper;
-use super::evolution::PyEvolveInfo;
+use super::boc::{PyBin, PyBinsWithFillLimits, PyChannel, PyKinematics, PyOrder, PyScales};
+use super::convolutions::PyConv;
+use super::evolution::{PyEvolveInfo, PyOperatorSliceInfo};
 use super::fk_table::PyFkTable;
-use super::lumi::PyLumiEntry;
-use super::subgrid::{PySubgridEnum, PySubgridParams};
-
+use super::interpolation::PyInterp;
+use super::pids::PyPidBasis;
+use super::subgrid::PySubgridEnum;
 use itertools::izip;
-use numpy::{
-    IntoPyArray, PyArray1, PyArrayMethods, PyReadonlyArray1, PyReadonlyArray4, PyReadonlyArray5,
-};
-
-use std::collections::HashMap;
+use ndarray::CowArray;
+use numpy::{IntoPyArray, PyArray1, PyReadonlyArray4};
+use pineappl::boc::Kinematics;
+use pineappl::convolutions::ConvolutionCache;
+use pineappl::evolution::AlphasTable;
+use pineappl::grid::Grid;
+use pineappl::pids::PidBasis;
+use pyo3::exceptions::PyValueError;
+use pyo3::prelude::*;
+use pyo3::types::PyTuple;
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::PathBuf;
 
-use pyo3::exceptions::PyValueError;
-use pyo3::prelude::*;
-use pyo3::types::PyIterator;
-
-/// PyO3 wrapper to :rustdoc:`pineappl::grid::Order <grid/struct.Order.html>`
-///
-/// **Usage**: `yadism`
-#[pyclass]
-#[repr(transparent)]
-pub struct PyOrder {
-    pub(crate) order: Order,
-}
-
-// TODO: should probably be in a different module
-// TODO: rename to `PidBasis`
-#[pyclass]
-#[derive(Clone)]
-pub enum PyPidBasis {
-    Pdg,
-    Evol,
-}
-
-impl From<PyPidBasis> for PidBasis {
-    fn from(basis: PyPidBasis) -> Self {
-        match basis {
-            PyPidBasis::Pdg => Self::Pdg,
-            PyPidBasis::Evol => Self::Evol,
-        }
-    }
-}
-
-// TODO: should probably be in a different module
-// TODO: rename to `OperatorSliceInfo`
-#[pyclass]
-#[derive(Clone)]
-pub struct PyOperatorSliceInfo {
-    info: OperatorSliceInfo,
-}
-
-#[pymethods]
-impl PyOperatorSliceInfo {
-    #[new]
-    pub fn new(
-        fac0: f64,
-        pids0: Vec<i32>,
-        x0: Vec<f64>,
-        fac1: f64,
-        pids1: Vec<i32>,
-        x1: Vec<f64>,
-        pid_basis: PyPidBasis,
-    ) -> Self {
-        Self {
-            info: OperatorSliceInfo {
-                fac0,
-                pids0,
-                x0,
-                fac1,
-                pids1,
-                x1,
-                pid_basis: pid_basis.into(),
-            },
-        }
-    }
-}
-
-impl PyOrder {
-    pub(crate) fn new(order: Order) -> Self {
-        Self { order }
-    }
-}
-
-#[pymethods]
-impl PyOrder {
-    #[new]
-    pub fn new_order(alphas: u32, alpha: u32, logxir: u32, logxif: u32) -> Self {
-        Self::new(Order::new(alphas, alpha, logxir, logxif))
-    }
-
-    /// Tuple representation.
-    ///
-    /// Returns
-    /// -------
-    ///     alphas : int
-    ///         power of :math:`\alpha_s`
-    ///     alpha : int
-    ///         power of :math:`\alpha`
-    ///     logxir : int
-    ///         power of :math:` \ln(\xi_r)`
-    ///     logxif : int
-    ///         power of :math:` \ln(\xi_f)`
-    pub fn as_tuple(&self) -> (u32, u32, u32, u32) {
-        (
-            self.order.alphas,
-            self.order.alpha,
-            self.order.logxir,
-            self.order.logxif,
-        )
-    }
-    /// Return a mask suitable to pass as the `order_mask` parameter of [`Grid::convolve`]. The
-    /// selection of `orders` is controlled using the `max_as` and `max_al` parameters, for
-    /// instance setting `max_as = 1` and `max_al = 0` selects the LO QCD only, `max_as = 2` and
-    /// `max_al = 0` the NLO QCD; setting `max_as = 3` and `max_al = 2` would select all NLOs, and
-    /// the NNLO QCD.
-    ///
-    /// See `pineappl` crate docs for relevant examples
-    ///
-    /// Returns
-    /// -------
-    /// numpy.ndarray(bool)
-    ///     boolean array, to be used as orders' mask
-    #[staticmethod]
-    pub fn create_mask<'py>(
-        orders: Vec<PyRef<Self>>,
-        max_as: u32,
-        max_al: u32,
-        logs: bool,
-        py: Python<'py>,
-    ) -> Bound<'py, PyArray1<bool>> {
-        Order::create_mask(
-            &orders.iter().map(|o| o.order.clone()).collect::<Vec<_>>(),
-            max_as,
-            max_al,
-            logs,
-        )
-        .into_pyarray_bound(py)
-    }
-}
-
-/// PyO3 wrapper to :rustdoc:`pineappl::grid::Grid <grid/struct.Grid.html>`
-///
-/// **Usage**: `yadism`, `pineko`, FKTable interface
-#[pyclass]
+/// PyO3 wrapper to :rustdoc:`pineappl::grid::Grid <grid/struct.Grid.html>`.
+#[pyclass(name = "Grid", subclass)]
 #[repr(transparent)]
 #[derive(Clone)]
 pub struct PyGrid {
     pub(crate) grid: Grid,
 }
 
-impl PyGrid {
-    pub(crate) fn new(grid: Grid) -> Self {
-        Self { grid }
-    }
-}
-
 #[pymethods]
 impl PyGrid {
+    /// Constructor to instantiate a new PineAPPL Grid.
+    ///
+    /// # Panics
+    ///
+    /// Panics when the number of PIDs in `channels` is not equal to `convolutions.len()`, or
+    /// `interps` and `kinematics` have different lengths or if `kinematics` are not compatible
+    /// with `scales`.
+    ///
+    /// Parameters
+    /// ----------
+    /// pid_basis : PidBasis
+    ///     choice of basis which can be `Evol` or `Pdg`
+    /// channels : list(PyChannel)
+    ///     channels
+    /// orders : list(PyOrder)
+    ///     orders
+    /// bins : PyBinsWithFillLimits
+    ///     bin configurations
+    /// convolutions : list(PyConv)
+    ///     contains the types of convolution
+    /// interpolations : list(PyInterp)
+    ///     types of interpolations required by each kinematic
+    /// kinematics : list(PyKinematics)
+    ///     list of kinematics
+    /// scale_funcs : PyScales
+    ///     `Scales` object
     #[new]
+    #[must_use]
     pub fn new_grid(
-        lumi: Vec<PyRef<PyLumiEntry>>,
+        pid_basis: PyPidBasis,
+        channels: Vec<PyRef<PyChannel>>,
         orders: Vec<PyRef<PyOrder>>,
-        bin_limits: PyReadonlyArray1<f64>,
-        subgrid_params: PySubgridParams,
+        bins: PyRef<PyBinsWithFillLimits>,
+        convolutions: Vec<PyRef<PyConv>>,
+        interpolations: Vec<PyRef<PyInterp>>,
+        kinematics: Vec<PyRef<PyKinematics>>,
+        scale_funcs: PyRef<PyScales>,
     ) -> Self {
-        Self::new(Grid::new(
-            lumi.iter().map(|pyl| pyl.lumi_entry.clone()).collect(),
-            orders.iter().map(|pyo| pyo.order.clone()).collect(),
-            bin_limits.to_vec().unwrap(),
-            subgrid_params.subgrid_params,
-        ))
+        Self {
+            grid: Grid::new(
+                bins.bins_fill_limits.clone(),
+                orders.into_iter().map(|pyo| pyo.order.clone()).collect(),
+                channels.into_iter().map(|pyc| pyc.entry.clone()).collect(),
+                pid_basis.into(),
+                convolutions
+                    .into_iter()
+                    .map(|pyx| pyx.conv.clone())
+                    .collect(),
+                interpolations
+                    .into_iter()
+                    .map(|pyi| pyi.interp.clone())
+                    .collect(),
+                kinematics
+                    .into_iter()
+                    .map(|pyk| pyk.clone().into())
+                    .collect(),
+                scale_funcs.scales.clone(),
+            ),
+        }
     }
 
     /// Add a point to the grid.
     ///
     /// Parameters
     /// ----------
-    ///     x1 : float
-    ///         first momentum fraction
-    ///     x2 : float
-    ///         second momentum fraction
-    ///     q2 : float
-    ///         process scale
-    ///     order : int
-    ///         order index
-    ///     observable : float
-    ///         reference point (to be binned)
-    ///     lumi : int
-    ///         luminosity index
-    ///     weight : float
-    ///         cross section weight
+    /// order : int
+    ///     order index
+    /// observable : float
+    ///     reference point (to be binned)
+    /// channel : int
+    ///     channel index
+    /// ntuple: list(float)
+    ///     list containing information on kinematics
+    /// weight : float
+    ///     cross section weight
     pub fn fill(
         &mut self,
-        x1: f64,
-        x2: f64,
-        q2: f64,
         order: usize,
         observable: f64,
-        lumi: usize,
+        channel: usize,
+        ntuple: Vec<f64>,
         weight: f64,
     ) {
-        self.grid.fill(
-            order,
-            observable,
-            lumi,
-            &Ntuple::<f64> { x1, x2, q2, weight },
-        );
+        self.grid.fill(order, observable, channel, &ntuple, weight);
+    }
+
+    /// Retrieve a subgrid.
+    #[must_use]
+    pub fn subgrid(&self, order: usize, bin: usize, channel: usize) -> PySubgridEnum {
+        PySubgridEnum {
+            subgrid_enum: self.grid.subgrids()[[order, bin, channel]].clone(),
+        }
     }
 
     /// Add an array to the grid.
@@ -224,76 +133,210 @@ impl PyGrid {
     ///
     /// Parameters
     /// ----------
-    ///     ntuples : np.array(float)
-    ///         2 dimensional (4, N) array, made of `(x1, x2, q2, weight)` "ntuples"
-    ///     order : int
-    ///         order index
-    ///     observable : float
-    ///         reference point (to be binned)
-    ///     lumi : int
-    ///         luminosity index
+    /// order : int
+    ///     order index
+    /// observables : list(float)
+    ///     list of reference point (to be binned)
+    /// channel : int
+    ///     channel index
+    /// ntuples: list(list(float))
+    ///     list of `ntuple` kinematics
+    /// weights : np.array(float)
+    ///     cross section weight for all events
     pub fn fill_array(
         &mut self,
-        x1s: PyReadonlyArray1<f64>,
-        x2s: PyReadonlyArray1<f64>,
-        q2s: PyReadonlyArray1<f64>,
         order: usize,
-        observables: PyReadonlyArray1<f64>,
-        lumi: usize,
-        weights: PyReadonlyArray1<f64>,
+        observables: Vec<f64>,
+        channel: usize,
+        ntuples: Vec<Vec<f64>>,
+        weights: Vec<f64>,
     ) {
-        for (&x1, &x2, &q2, &observable, &weight) in izip!(
-            x1s.as_array().iter(),
-            x2s.as_array().iter(),
-            q2s.as_array().iter(),
-            observables.as_array().iter(),
-            weights.as_array().iter(),
-        ) {
-            self.grid.fill(
-                order,
-                observable,
-                lumi,
-                &Ntuple::<f64> { x1, x2, q2, weight },
-            );
+        for (ntuple, &observable, &weight) in
+            izip!(ntuples.iter(), observables.iter(), weights.iter())
+        {
+            self.grid.fill(order, observable, channel, ntuple, weight);
         }
     }
 
-    /// Add a point to the grid for all lumis.
+    /// Add a point to the grid for all channels.
     ///
     /// Parameters
     /// ----------
-    ///     x1 : float
-    ///         first momentum fraction
-    ///     x2 : float
-    ///         second momentum fraction
-    ///     q2 : float
-    ///         process scale
-    ///     order : int
-    ///         order index
-    ///     observable : float
-    ///         reference point (to be binned)
-    ///     weights : np.array(float)
-    ///         cross section weights, one for each lumi
-    pub fn fill_all(
+    /// order : int
+    ///     order index
+    /// observable : float
+    ///     reference point (to be binned)
+    /// ntuple: list(float)
+    ///     list containing information on kinematics
+    /// weights : np.array(float)
+    ///     cross section weights, one for each channels
+    pub fn fill_all_channels(
         &mut self,
-        x1: f64,
-        x2: f64,
-        q2: f64,
         order: usize,
         observable: f64,
-        weights: PyReadonlyArray1<f64>,
+        ntuple: Vec<f64>,
+        weights: Vec<f64>,
     ) {
-        self.grid.fill_all(
-            order,
-            observable,
-            &Ntuple::<()> {
-                x1,
-                x2,
-                q2,
-                weight: (),
-            },
-            &weights.to_vec().unwrap(),
-        );
+        for (channel, &weight) in weights.iter().enumerate() {
+            self.grid.fill(order, observable, channel, &ntuple, weight);
+        }
+    }
+
+    /// Set a subgrid.
+    ///
+    /// Parameters
+    /// ----------
+    /// order : int
+    ///     order index
+    /// bin : int
+    ///     bin index
+    /// channel : int
+    ///     channel index
+    /// subgrid : PySubgridEnum
+    ///     subgrid object
+    pub fn set_subgrid(
+        &mut self,
+        order: usize,
+        bin: usize,
+        channel: usize,
+        subgrid: PySubgridEnum,
+    ) {
+        self.grid.subgrids_mut()[[order, bin, channel]] = subgrid.subgrid_enum;
+    }
+
+    /// Get the bin specifications for this grid.
+    ///
+    /// Returns
+    /// -------
+    /// PyBinsWithFillLimits:
+    ///     a `PyBinsWithFillLimits` object with containing the bin specifications
+    #[must_use]
+    pub fn bwfl(&self) -> PyBinsWithFillLimits {
+        PyBinsWithFillLimits {
+            bins_fill_limits: self.grid.bwfl().clone(),
+        }
+    }
+
+    /// Set the bin specifications for this grid.
+    ///
+    /// # Errors
+    /// TODO
+    ///
+    /// Parameters
+    /// ----------
+    /// specs: PyBinsWithFillLimits
+    ///     the object to define the bin specs
+    pub fn set_bwfl(&mut self, specs: PyBinsWithFillLimits) -> PyResult<()> {
+        match self.grid.set_bwfl(specs.bins_fill_limits) {
+            Ok(()) => Ok(()),
+            Err(msg) => Err(PyValueError::new_err(format!("{msg:?}"))),
+        }
+    }
+
+    /// Return the number of bins.
+    ///
+    /// Returns
+    /// -------
+    /// int :
+    ///     Number of bins
+    #[must_use]
+    pub fn bins(&self) -> usize {
+        self.grid.bwfl().len()
+    }
+
+    /// Get the length/size of the bins.
+    ///
+    /// Returns
+    /// -------
+    /// int:
+    ///     the size/length of the bins
+    pub fn len(&mut self) -> usize {
+        self.grid.bwfl().len()
+    }
+
+    /// Get the dimension of the bins that define the observable.
+    ///
+    /// Returns
+    /// -------
+    /// int:
+    ///     the dimention of the bins
+    pub fn bin_dimensions(&mut self) -> usize {
+        self.grid.bwfl().dimensions()
+    }
+
+    /// Get the limits/edges of all the bins.
+    ///
+    /// Returns
+    /// -------
+    /// list(list(float)):
+    ///     limits/edges of the bins with shape (n_bins, n_dimension, 2)
+    #[must_use]
+    pub fn bin_limits(&self) -> Vec<Vec<(f64, f64)>> {
+        self.grid
+            .bwfl()
+            .bins()
+            .iter()
+            .map(|b| b.limits().to_vec())
+            .collect()
+    }
+
+    /// Extract the normalizations for each bin.
+    ///
+    /// Returns
+    /// -------
+    /// numpy.ndarray
+    ///     bin normalizations
+    #[must_use]
+    pub fn bin_normalizations<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray1<f64>> {
+        self.grid.bwfl().normalizations().into_pyarray(py)
+    }
+
+    /// Get the bin slices for this grid.
+    ///
+    /// Returns
+    /// -------
+    /// list(list(int)):
+    ///     a list of indices representing the slices
+    pub fn bin_slices(&mut self) -> Vec<Vec<usize>> {
+        self.grid
+            .bwfl()
+            .slices()
+            .iter()
+            .map(|slice| slice.clone().collect())
+            .collect()
+    }
+
+    /// Get the removed bin using the index for this grid.
+    ///
+    /// Parameters
+    /// ----------
+    /// index: int
+    ///     index of the bin to be removed
+    /// Returns
+    /// -------
+    /// Bin:
+    ///     a `Bin` object from the removed index
+    pub fn removed_bin(&mut self, index: usize) -> PyBin {
+        PyBin {
+            bin: self.grid.bwfl().clone().remove(index),
+        }
+    }
+
+    /// Set a metadata key-value pair in the grid.
+    ///
+    /// # Panics
+    /// TODO
+    ///
+    /// Parameters
+    /// ----------
+    /// key : str
+    ///     key
+    /// value : str
+    ///     value
+    pub fn set_metadata(&mut self, key: &str, value: &str) {
+        self.grid
+            .metadata_mut()
+            .insert(key.to_owned(), value.to_owned());
     }
 
     /// Get metadata values stored in the grid.
@@ -301,258 +344,100 @@ impl PyGrid {
     ///
     /// Returns
     /// -------
-    ///     dict :
-    ///         key, value map
-    pub fn key_values(&self) -> HashMap<String, String> {
-        self.grid.key_values().unwrap().clone()
+    /// dict :
+    ///     key, value map
+    #[getter]
+    #[must_use]
+    pub fn metadata(&self) -> BTreeMap<String, String> {
+        self.grid.metadata().clone()
     }
 
-    /// Set a metadata key-value pair in the grid.
+    /// Convolve the grid with as many distributions.
     ///
-    /// **Usage:** `yadism`
+    /// # Panics
+    /// TODO
     ///
     /// Parameters
     /// ----------
-    ///     key : str
-    ///         key
-    ///     value : str
-    ///         value
-    pub fn set_key_value(&mut self, key: &str, value: &str) {
-        self.grid.set_key_value(key, value);
-    }
-
-    /// Retrieve a subgrid.
-    ///
-    /// **Usage:** `yadism`
-    pub fn subgrid(&self, order: usize, bin: usize, lumi: usize) -> PySubgridEnum {
-        PySubgridEnum {
-            subgrid_enum: self.grid.subgrids()[[order, bin, lumi]].clone(),
-        }
-    }
-
-    /// Set a subgrid.
-    ///
-    /// **Usage:** `yadism`
-    pub fn set_subgrid(&mut self, order: usize, bin: usize, lumi: usize, subgrid: PySubgridEnum) {
-        self.grid.subgrids_mut()[[order, bin, lumi]] = subgrid.subgrid_enum;
-    }
-
-    /// Set the normalizations.
-    ///
-    /// **Usage:** `yadism`
-    ///
-    /// Parameters
-    /// ----------
-    ///     remapper: BinRemapper
-    ///         Remapper object
-    pub fn set_remapper(&mut self, remapper: PyBinRemapper) {
-        self.grid.set_remapper(remapper.bin_remapper).unwrap();
-    }
-
-    /// Convolute grid with pdf.
-    ///
-    /// **Usage:** `pineko`
-    ///
-    /// Parameters
-    /// ----------
-    ///     pdg_id : int
-    ///         PDG Monte Carlo ID of the hadronic particle `xfx` is the PDF for
-    ///     xfx : callable
-    ///         lhapdf like callable with arguments `pid, x, Q2` returning x*pdf for :math:`x`-grid
-    ///     alphas : callable
-    ///         lhapdf like callable with arguments `Q2` returning :math:`\alpha_s`
-    ///     order_mask : numpy.ndarray(bool)
-    ///         Mask for selecting specific orders. The value `True` means the corresponding order
-    ///         is included. An empty list corresponds to all orders being enabled.
-    ///     bin_indices : numpy.ndarray(int)
-    ///         A list with the indices of the corresponding bins that should be calculated. An
-    ///         empty list means that all orders should be calculated.
-    ///     lumi_mask : numpy.ndarray(bool)
-    ///         Mask for selecting specific luminosity channels. The value `True` means the
-    ///         corresponding channel is included. An empty list corresponds to all channels being
-    ///         enabled.
-    ///     xi : list((float, float))
-    ///         A list with the scale variation factors that should be used to calculate
-    ///         scale-varied results. The first entry of a tuple corresponds to the variation of
-    ///         the renormalization scale, the second entry to the variation of the factorization
-    ///         scale. If only results for the central scale are need the list should contain
-    ///         `(1.0, 1.0)`.
-    ///
-    /// Returns
-    /// -------
-    ///     numpy.ndarray(float) :
-    ///         cross sections for all bins, for each scale-variation tuple (first all bins, then
-    ///         the scale variation)
-    pub fn convolve_with_one<'py>(
-        &self,
-        pdg_id: i32,
-        xfx: &Bound<'py, PyAny>,
-        alphas: &Bound<'py, PyAny>,
-        order_mask: PyReadonlyArray1<bool>,
-        bin_indices: PyReadonlyArray1<usize>,
-        lumi_mask: PyReadonlyArray1<bool>,
-        xi: Vec<(f64, f64)>,
-        py: Python<'py>,
-    ) -> Bound<'py, PyArray1<f64>> {
-        let mut xfx = |id, x, q2| xfx.call1((id, x, q2)).unwrap().extract().unwrap();
-        // `(q2, )` must have the comma to make it a Rust tuple
-        let mut alphas = |q2| alphas.call1((q2,)).unwrap().extract().unwrap();
-        let mut lumi_cache = LumiCache::with_one(pdg_id, &mut xfx, &mut alphas);
-        self.grid
-            .convolve(
-                &mut lumi_cache,
-                &order_mask.to_vec().unwrap(),
-                &bin_indices.to_vec().unwrap(),
-                &lumi_mask.to_vec().unwrap(),
-                &xi,
-            )
-            .into_pyarray_bound(py)
-    }
-
-    /// Convolute grid with two pdfs.
-    ///
-    /// **Usage:** `pineko`
-    ///
-    /// Parameters
-    /// ----------
-    ///     pdg_id1 : int
-    ///         PDG Monte Carlo ID of the hadronic particle `xfx1` is the PDF for
-    ///     xfx1 : callable
-    ///         lhapdf like callable with arguments `pid, x, Q2` returning x*pdf for :math:`x`-grid
-    ///     pdg_id2 : int
-    ///         PDG Monte Carlo ID of the hadronic particle `xfx2` is the PDF for
-    ///     xfx2 : callable
-    ///         lhapdf like callable with arguments `pid, x, Q2` returning x*pdf for :math:`x`-grid
-    ///     alphas : callable
-    ///         lhapdf like callable with arguments `Q2` returning :math:`\alpha_s`
-    ///     order_mask : numpy.ndarray(bool)
-    ///         Mask for selecting specific orders. The value `True` means the corresponding order
-    ///         is included. An empty list corresponds to all orders being enabled.
-    ///     bin_indices : numpy.ndarray(int)
-    ///         A list with the indices of the corresponding bins that should be calculated. An
-    ///         empty list means that all orders should be calculated.
-    ///     lumi_mask : numpy.ndarray(bool)
-    ///         Mask for selecting specific luminosity channels. The value `True` means the
-    ///         corresponding channel is included. An empty list corresponds to all channels being
-    ///         enabled.
-    ///     xi : list((float, float))
-    ///         A list with the scale variation factors that should be used to calculate
-    ///         scale-varied results. The first entry of a tuple corresponds to the variation of
-    ///         the renormalization scale, the second entry to the variation of the factorization
-    ///         scale. If only results for the central scale are need the list should contain
-    ///         `(1.0, 1.0)`.
-    ///
-    /// Returns
-    /// -------
-    ///     numpy.ndarray(float) :
-    ///         cross sections for all bins, for each scale-variation tuple (first all bins, then
-    ///         the scale variation)
-    pub fn convolve_with_two<'py>(
-        &self,
-        pdg_id1: i32,
-        xfx1: &Bound<'py, PyAny>,
-        pdg_id2: i32,
-        xfx2: &Bound<'py, PyAny>,
-        alphas: &Bound<'py, PyAny>,
-        order_mask: PyReadonlyArray1<bool>,
-        bin_indices: PyReadonlyArray1<usize>,
-        lumi_mask: PyReadonlyArray1<bool>,
-        xi: Vec<(f64, f64)>,
-        py: Python<'py>,
-    ) -> Bound<'py, PyArray1<f64>> {
-        let mut xfx1 = |id, x, q2| xfx1.call1((id, x, q2)).unwrap().extract().unwrap();
-        let mut xfx2 = |id, x, q2| xfx2.call1((id, x, q2)).unwrap().extract().unwrap();
-        // `(q2, )` must have the comma to make it a Rust tuple
-        let mut alphas = |q2| alphas.call1((q2,)).unwrap().extract().unwrap();
-        let mut lumi_cache =
-            LumiCache::with_two(pdg_id1, &mut xfx1, pdg_id2, &mut xfx2, &mut alphas);
-        self.grid
-            .convolve(
-                &mut lumi_cache,
-                &order_mask.to_vec().unwrap(),
-                &bin_indices.to_vec().unwrap(),
-                &lumi_mask.to_vec().unwrap(),
-                &xi,
-            )
-            .into_pyarray_bound(py)
-    }
-
-    /// Convolute with grid with an evolution operator.
-    ///
-    /// Parameters
-    /// ----------
-    /// operator : numpy.ndarray(int, rank=5)
-    ///     evolution tensor
-    /// fac0 : float
-    ///     reference scale
-    /// pids0 : numpy.ndarray(int)
-    ///     sorting of the particles in the tensor for final FkTable
-    /// x0 : numpy.ndarray(float)
-    ///     final FKTable interpolation grid
-    /// fac1 : numpy.ndarray(float)
-    ///     list of factorization scales
-    /// pids1 : numpy.ndarray(int)
-    ///     sorting of the particles in the grid
-    /// x1 : numpy.ndarray(float)
-    ///     interpolation grid at process level
-    /// ren1 : numpy.ndarray(float)
-    ///     list of renormalization scales
-    /// alphas : numpy.ndarray(float)
-    ///     list with :math:`\alpha_s(Q2)` for the process scales
-    /// xi : (float, float)
-    ///     factorization and renormalization variation
-    /// lumi_id_types : str
-    ///     type of luminosity identifier
+    /// pdg_convs : list(PyConv)
+    ///     list containing the types of convolutions and PID
+    /// xfxs : list(callable)
+    ///     list of lhapdf-like callable with arguments `pid, x, Q2` returning x*pdf
+    /// alphas : callable
+    ///     lhapdf like callable with arguments `Q2` returning :math:`\alpha_s`
     /// order_mask : numpy.ndarray(bool)
-    ///     boolean mask to activate orders
+    ///     Mask for selecting specific orders. The value `True` means the corresponding order
+    ///     is included. An empty list corresponds to all orders being enabled.
+    /// bin_indices : numpy.ndarray(int)
+    ///     A list with the indices of the corresponding bins that should be calculated. An
+    ///     empty list means that all bins should be calculated.
+    /// channel_mask : numpy.ndarray(bool)
+    ///     Mask for selecting specific channels. The value `True` means the
+    ///     corresponding channel is included. An empty list corresponds to all channels being
+    ///     enabled.
+    /// xi : list((float, float))
+    ///     A list with the scale variation factors that should be used to calculate
+    ///     scale-varied results. The first entry of a tuple corresponds to the variation of
+    ///     the renormalization scale, the second entry to the variation of the factorization
+    ///     scale. If only results for the central scale are need the list should contain
+    ///     `(1.0, 1.0)`.
     ///
     /// Returns
     /// -------
-    /// PyFkTable :
-    ///     produced FK table
-    pub fn evolve(
+    /// numpy.ndarray(float) :
+    ///     cross sections for all bins, for each scale-variation tuple (first all bins, then
+    ///     the scale variation)
+    #[must_use]
+    #[pyo3(signature = (pdg_convs, xfxs, alphas, order_mask = None, bin_indices = None, channel_mask = None, xi = None))]
+    pub fn convolve<'py>(
         &self,
-        operator: PyReadonlyArray5<f64>,
-        fac0: f64,
-        pids0: PyReadonlyArray1<i32>,
-        x0: PyReadonlyArray1<f64>,
-        fac1: PyReadonlyArray1<f64>,
-        pids1: PyReadonlyArray1<i32>,
-        x1: PyReadonlyArray1<f64>,
-        ren1: PyReadonlyArray1<f64>,
-        alphas: PyReadonlyArray1<f64>,
-        xi: (f64, f64),
-        lumi_id_types: String,
-        order_mask: PyReadonlyArray1<bool>,
-    ) -> PyFkTable {
-        let op_info = OperatorInfo {
-            fac0: fac0,
-            pids0: pids0.to_vec().unwrap(),
-            x0: x0.to_vec().unwrap(),
-            fac1: fac1.to_vec().unwrap(),
-            pids1: pids1.to_vec().unwrap(),
-            x1: x1.to_vec().unwrap(),
-            ren1: ren1.to_vec().unwrap(),
-            alphas: alphas.to_vec().unwrap(),
-            xir: xi.0,
-            xif: xi.1,
-            pid_basis: lumi_id_types.parse().unwrap(),
+        pdg_convs: Vec<PyRef<PyConv>>,
+        xfxs: Vec<PyObject>,
+        alphas: PyObject,
+        order_mask: Option<Vec<bool>>,
+        bin_indices: Option<Vec<usize>>,
+        channel_mask: Option<Vec<bool>>,
+        xi: Option<Vec<(f64, f64, f64)>>,
+        py: Python<'py>,
+    ) -> Bound<'py, PyArray1<f64>> {
+        let mut alphas = |q2: f64| {
+            let result: f64 = alphas.call1(py, (q2,)).unwrap().extract(py).unwrap();
+            result
         };
 
-        let evolved_grid = self
-            .grid
-            .evolve(
-                operator.as_array(),
-                &op_info,
-                order_mask.as_slice().unwrap(),
+        let mut xfx_funcs: Vec<_> = xfxs
+            .iter()
+            .map(|xfx| {
+                move |id: i32, x: f64, q2: f64| {
+                    xfx.call1(py, (id, x, q2)).unwrap().extract(py).unwrap()
+                }
+            })
+            .collect();
+
+        let mut convolution_cache = ConvolutionCache::new(
+            pdg_convs.into_iter().map(|pdg| pdg.conv.clone()).collect(),
+            xfx_funcs
+                .iter_mut()
+                .map(|fx| fx as &mut dyn FnMut(i32, f64, f64) -> f64)
+                .collect(),
+            &mut alphas,
+        );
+
+        self.grid
+            .convolve(
+                &mut convolution_cache,
+                &order_mask.unwrap_or_default(),
+                &bin_indices.unwrap_or_default(),
+                &channel_mask.unwrap_or_default(),
+                &xi.unwrap_or_else(|| vec![(1.0, 1.0, 1.0)]),
             )
-            .expect("Nothing returned from evolution.");
-        PyFkTable {
-            fk_table: evolved_grid,
-        }
+            .into_pyarray(py)
     }
 
-    /// Convolute with grid with an evolution operator.
+    /// Collect information for convolution with an evolution operator.
+    ///
+    /// # Panics
+    /// TODO
     ///
     /// Parameters
     /// ----------
@@ -562,254 +447,193 @@ impl PyGrid {
     /// Returns
     /// -------
     /// PyEvolveInfo :
-    ///     produced FK table
-    pub fn evolve_info(&self, order_mask: PyReadonlyArray1<bool>) -> PyEvolveInfo {
+    ///     evolution informations
+    #[must_use]
+    pub fn evolve_info(&self, order_mask: Vec<bool>) -> PyEvolveInfo {
         PyEvolveInfo {
-            evolve_info: self.grid.evolve_info(order_mask.as_slice().unwrap()),
+            evolve_info: self.grid.evolve_info(order_mask.as_slice()),
         }
     }
 
-    /// TODO
+    /// Evolve the grid with as many EKOs as Convolutions.
+    ///
+    /// # Panics
+    ///
+    /// Panics when the operators returned by either slice have different dimensions than promised
+    /// by the corresponding [`OperatorSliceInfo`].
+    ///
+    /// # Errors
+    ///
+    /// Raises error if either the `operator` or its `info` is incompatible with the Grid.
+    /// Another error is raised if the iterator from `slices` themselves return an error.
     ///
     /// Parameters
     /// ----------
-    /// slices : TODO
-    /// order_mask : TODO
+    /// slices : list(Generator(tuple(PyOperatorSliceInfo, PyReadOnlyArray4)))
+    ///     list of EKOs where each element is in turn a list of (PyOperatorSliceInfo, 4D array)
+    /// order_mask : numpy.ndarray(bool)
+    ///     boolean mask to activate orders
+    /// xi : (float, float)
+    ///     factorization and renormalization variation
+    /// ren1 : numpy.ndarray(float)
+    ///     list of renormalization scales
+    /// alphas : numpy.ndarray(float)
+    ///     list with :math:`\alpha_s(Q2)` for the process scales
     ///
     /// Returns
     /// -------
-    /// TODO
-    pub fn evolve_with_slice_iter<'py>(
+    /// PyFkTable :
+    ///     produced FK table
+    pub fn evolve(
         &self,
-        slices: &Bound<'py, PyIterator>,
-        order_mask: PyReadonlyArray1<bool>,
-        xi: (f64, f64),
+        slices: Vec<Bound<PyAny>>,
+        order_mask: Vec<bool>,
+        xi: (f64, f64, f64),
         ren1: Vec<f64>,
         alphas: Vec<f64>,
     ) -> PyResult<PyFkTable> {
         Ok(self
             .grid
-            .evolve_with_slice_iter(
-                slices.into_iter().map(|slice| {
-                    let (info, op) = slice
-                        .unwrap()
-                        .extract::<(PyOperatorSliceInfo, PyReadonlyArray4<f64>)>()
-                        .unwrap();
-                    Ok::<_, std::io::Error>((
-                        info.info,
-                        // TODO: avoid copying
-                        CowArray::from(op.as_array().to_owned()),
-                    ))
-                }),
-                // TODO: make `order_mask` a `Vec<f64>`
-                &order_mask.to_vec().unwrap(),
+            .evolve(
+                slices
+                    .into_iter()
+                    .map(|subslice| {
+                        // create lazy iterators from Python object
+                        subslice.try_iter().unwrap().map(|item| {
+                            let item = item.unwrap();
+                            let op_tuple = item.downcast::<PyTuple>().unwrap();
+                            let info: PyOperatorSliceInfo =
+                                op_tuple.get_item(0).unwrap().extract().unwrap();
+                            let op: PyReadonlyArray4<f64> =
+                                op_tuple.get_item(1).unwrap().extract().unwrap();
+
+                            Ok::<_, std::io::Error>((
+                                info.info,
+                                CowArray::from(op.as_array().to_owned()),
+                            ))
+                        })
+                    })
+                    .collect(),
+                &order_mask,
                 xi,
                 &AlphasTable { ren1, alphas },
             )
             .map(|fk_table| PyFkTable { fk_table })
-            // TODO: avoid unwrap and convert `Result` into `PyResult`
             .unwrap())
     }
 
-    /// TODO
+    /// Load from file.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the grid specified by the path is non-existent.
     ///
     /// Parameters
     /// ----------
-    /// slices : TODO
-    /// order_mask : TODO
+    /// path : str
+    ///     file path
     ///
     /// Returns
     /// -------
-    /// TODO
-    pub fn evolve_with_slice_iter2<'py>(
-        &self,
-        slices_a: &Bound<'py, PyIterator>,
-        slices_b: &Bound<'py, PyIterator>,
-        order_mask: PyReadonlyArray1<bool>,
-        xi: (f64, f64),
-        ren1: Vec<f64>,
-        alphas: Vec<f64>,
-    ) -> PyResult<PyFkTable> {
-        Ok(self
-            .grid
-            .evolve_with_slice_iter2(
-                slices_a.into_iter().map(|slice| {
-                    let (info, op) = slice
-                        .unwrap()
-                        .extract::<(PyOperatorSliceInfo, PyReadonlyArray4<f64>)>()
-                        .unwrap();
-                    Ok::<_, std::io::Error>((
-                        info.info,
-                        // TODO: avoid copying
-                        CowArray::from(op.as_array().to_owned()),
-                    ))
-                }),
-                slices_b.into_iter().map(|slice| {
-                    let (info, op) = slice
-                        .unwrap()
-                        .extract::<(PyOperatorSliceInfo, PyReadonlyArray4<f64>)>()
-                        .unwrap();
-                    Ok::<_, std::io::Error>((
-                        info.info,
-                        // TODO: avoid copying
-                        CowArray::from(op.as_array().to_owned()),
-                    ))
-                }),
-                // TODO: make `order_mask` a `Vec<f64>`
-                &order_mask.to_vec().unwrap(),
-                xi,
-                &AlphasTable { ren1, alphas },
-            )
-            .map(|fk_table| PyFkTable { fk_table })
-            // TODO: avoid unwrap and convert `Result` into `PyResult`
-            .unwrap())
-    }
-
-    /// Load grid from file.
-    ///
-    /// **Usage:** `pineko`, FKTable generation
-    ///
-    /// Parameters
-    /// ----------
-    ///     path : str
-    ///         file path
-    ///
-    /// Returns
-    /// -------
-    ///     PyGrid :
-    ///         grid
+    /// PyGrid :
+    ///     grid
+    #[must_use]
     #[staticmethod]
     pub fn read(path: PathBuf) -> Self {
-        Self::new(Grid::read(BufReader::new(File::open(path).unwrap())).unwrap())
+        Self {
+            grid: Grid::read(BufReader::new(File::open(path).unwrap())).unwrap(),
+        }
     }
 
-    /// Write grid to file.
+    /// Write to file.
     ///
-    /// **Usage:** `yadism`
+    /// # Panics
+    ///
+    /// Panics if the specified path to write the grid is non-existent or requires permission.
     ///
     /// Parameters
     /// ----------
-    ///     path : str
-    ///         file path
+    /// path : str
+    ///     file path
     pub fn write(&self, path: PathBuf) {
         self.grid.write(File::create(path).unwrap()).unwrap();
     }
 
-    /// Write grid to compressed file.
+    /// Write to compressed file.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the specified path to write the grid is non-existent or requires permission.
     ///
     /// Parameters
     /// ----------
-    ///     path : str
-    ///         file path
+    /// path : str
+    ///     file path
     pub fn write_lz4(&self, path: PathBuf) {
         self.grid.write_lz4(File::create(path).unwrap()).unwrap();
     }
 
-    /// Optimize grid content.
-    ///
-    /// **Usage:** `yadism`
+    /// Return the convention by which the channels' PIDS are encoded.
+    #[getter]
+    #[must_use]
+    pub const fn pid_basis(&self) -> PyPidBasis {
+        match self.grid.pid_basis() {
+            PidBasis::Pdg => PyPidBasis::Pdg,
+            PidBasis::Evol => PyPidBasis::Evol,
+        }
+    }
+
+    /// Return the convention by which the Kinematics are encoded.
+    #[getter]
+    #[must_use]
+    pub fn kinematics(&self) -> Vec<PyKinematics> {
+        self.grid
+            .kinematics()
+            .iter()
+            .map(|&kin| match kin {
+                Kinematics::X(v) => PyKinematics::X(v),
+                Kinematics::Scale(v) => PyKinematics::Scale(v),
+            })
+            .collect()
+    }
+
+    /// Return the convention by which the Scales are encoded.
+    #[getter]
+    #[must_use]
+    pub fn scales(&self) -> PyScales {
+        PyScales {
+            scales: self.grid.scales().clone(),
+        }
+    }
+
+    /// Optimize the contents of the Grid.
     pub fn optimize(&mut self) {
         self.grid.optimize();
     }
 
-    /// Merge grid with another one
+    /// Merge with another grid.
+    ///
+    /// # Panics
+    /// TODO
+    ///
+    /// # Errors
+    ///
+    /// If the bin limits of `self` and `other` are different and if the bin limits of `other` can
+    /// not be merged with `self` an error is returned.
     pub fn merge(&mut self, other: Self) -> PyResult<()> {
         match self.grid.merge(other.grid) {
             Ok(()) => Ok(()),
-            Err(x) => Err(PyValueError::new_err(format!("{:?}", x))),
+            Err(msg) => Err(PyValueError::new_err(format!("{msg:?}"))),
         }
-    }
-
-    /// Merge grid with another one, loaded from file
-    ///
-    /// Note
-    /// ----
-    /// For a current limitation with the implementation of the bound object `Grid` is not possible
-    /// to operate with two `Grid`s in memory, since is not possible to pass a `Grid` by argument
-    #[deprecated = "Deprecated in favor of PyGrid::merge"]
-    pub fn merge_from_file(&mut self, path: PathBuf) -> PyResult<()> {
-        match self.grid.merge(Self::read(path).grid) {
-            Ok(()) => Ok(()),
-            Err(x) => Err(PyValueError::new_err(format!("{:?}", x))),
-        }
-    }
-
-    /// Extract the number of dimensions for bins.
-    ///
-    /// **Usage:** `pineko`
-    ///
-    /// E.g.: two differential cross-sections will return 2.
-    ///
-    /// Returns
-    /// -------
-    ///     int :
-    ///         bin dimension
-    pub fn bin_dimensions(&self) -> usize {
-        self.grid.bin_info().dimensions()
-    }
-
-    /// Extract the normalizations for each bin.
-    ///
-    /// **Usage:** `runcards`
-    ///
-    /// Returns
-    /// -------
-    ///     np.ndarray
-    ///         bin normalizations
-    pub fn bin_normalizations<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray1<f64>> {
-        self.grid.bin_info().normalizations().into_pyarray_bound(py)
-    }
-
-    /// Extract the left edges of a specific bin dimension.
-    ///
-    /// **Usage:** `pineko`
-    ///
-    /// Parameters
-    /// ----------
-    ///     dimension : int
-    ///         bin dimension
-    ///
-    /// Returns
-    /// -------
-    ///     numpy.ndarray(float) :
-    ///         left edges of bins
-    pub fn bin_left<'py>(&self, dimension: usize, py: Python<'py>) -> Bound<'py, PyArray1<f64>> {
-        self.grid.bin_info().left(dimension).into_pyarray_bound(py)
-    }
-
-    /// Extract the right edges of a specific bin dimension.
-    ///
-    /// **Usage:** `pineko`
-    ///
-    /// Parameters
-    /// ----------
-    ///     dimension : int
-    ///         bin dimension
-    ///
-    /// Returns
-    /// -------
-    ///     numpy.ndarray(float) :
-    ///         right edges of bins
-    pub fn bin_right<'py>(&self, dimension: usize, py: Python<'py>) -> Bound<'py, PyArray1<f64>> {
-        self.grid.bin_info().right(dimension).into_pyarray_bound(py)
-    }
-
-    /// Return the number of bins.
-    ///
-    /// Returns
-    /// -------
-    ///     int :
-    ///         Number of bins
-    pub fn bins(&self) -> usize {
-        self.grid.bin_info().bins()
     }
 
     /// Extract the available perturbative orders and scale variations.
     ///
     /// Returns
     /// -------
-    ///     list(PyOrder) :
-    ///         list with perturbative orders and scale variations
+    /// list(PyOrder) :
+    ///     list with perturbative orders and scale variations
+    #[must_use]
     pub fn orders(&self) -> Vec<PyOrder> {
         self.grid
             .orders()
@@ -820,14 +644,47 @@ impl PyGrid {
             .collect()
     }
 
-    /// Get luminsosity functions.
+    /// Get the type(s) of convolution(s) for the current Grid.
+    ///
+    /// Returns
+    /// list(PyConv):
+    ///     list of convolution type with the corresponding PIDs
+    #[getter]
+    #[must_use]
+    pub fn convolutions(&self) -> Vec<PyConv> {
+        self.grid
+            .convolutions()
+            .iter()
+            .map(|conv| PyConv { conv: conv.clone() })
+            .collect()
+    }
+
+    /// Get the interpolation specifications for the current grid.
+    ///
+    /// Returns
+    /// list(PyInterp):
+    ///     list of interpolation specifications
+    #[getter]
+    #[must_use]
+    pub fn interpolations(&mut self) -> Vec<PyInterp> {
+        self.grid
+            .interpolations()
+            .iter()
+            .map(|interp| PyInterp {
+                interp: interp.clone(),
+            })
+            .collect()
+    }
+
+    /// Extract channels.
     ///
     /// Returns
     /// -------
-    ///     list(list(tuple(float,float))) :
-    ///         luminosity functions as pid tuples (multiple tuples can bee associated to the same
-    ///         contribution)
-    pub fn channels(&self) -> Vec<Vec<(i32, i32, f64)>> {
+    /// list(list(tuple(list[float],int))) :
+    ///     channels as tuples (List of PIDs, factor) (multiple tuples can be associated
+    ///     to the same contribution)
+    #[must_use]
+    pub fn channels(&self) -> Vec<Vec<(Vec<i32>, f64)>> {
         self.grid
             .channels()
             .iter()
@@ -835,35 +692,135 @@ impl PyGrid {
             .collect()
     }
 
+    /// Deduplicate channels
+    ///
+    /// Parameters
+    /// ----------
+    /// ulps: i64
+    ///    value of the tolerance to be used
+    pub fn dedup_channels(&mut self, ulps: i64) {
+        self.grid.dedup_channels(ulps);
+    }
+
+    /// Rotate the Grid into the specified basis.
+    ///
+    /// Parameters
+    /// ----------
+    /// pid_basis: PyPidBasis
+    ///     PID basis of the resulting Grid
+    pub fn rotate_pid_basis(&mut self, pid_basis: PyPidBasis) {
+        self.grid.rotate_pid_basis(pid_basis.into());
+    }
+
     /// Scale all subgrids.
     ///
     /// Parameters
     /// ----------
     /// factor : float
-    ///     scalar factor by which scaling
+    ///     scalar factor by which to scale
     pub fn scale(&mut self, factor: f64) {
         self.grid.scale(factor);
     }
 
     /// Scale subgrids bin by bin.
     ///
+    /// # Panics
+    /// TODO
+    ///
     /// Parameters
     /// ----------
-    /// factors : numpy.ndarray[float]
-    ///     bin-dependent factors by which scaling
-    pub fn scale_by_bin(&mut self, factors: PyReadonlyArray1<f64>) {
-        self.grid.scale_by_bin(&factors.to_vec().unwrap());
+    /// factors : list[float]
+    ///     bin-dependent factors by which to scale
+    pub fn scale_by_bin(&mut self, factors: Vec<f64>) {
+        self.grid.scale_by_bin(&factors);
+    }
+
+    /// Scale subgrids by order.
+    ///
+    /// # Panics
+    /// TODO
+    ///
+    /// Parameters
+    /// ----------
+    /// alphas : float
+    ///     value of the strong coupling constant
+    /// alpha : float
+    ///     value of the electroweak constant
+    /// logxir : float
+    ///     value of the renormalization scale
+    /// logxif : float
+    ///     value of the factorization scale
+    /// logxia : float
+    ///     value of the fragmentation scale
+    pub fn scale_by_order(
+        &mut self,
+        alphas: f64,
+        alpha: f64,
+        logxir: f64,
+        logxif: f64,
+        logxia: f64,
+        global_factor: f64,
+    ) {
+        self.grid
+            .scale_by_order(alphas, alpha, logxir, logxif, logxia, global_factor);
+    }
+
+    /// Delete orders with the corresponding `order_indices`. Repeated indices and indices larger
+    /// or equal than the number of orders are ignored.
+    ///
+    /// Parameters
+    /// ----------
+    /// order_indices : list[int]
+    ///     list of indices of orders to be removed
+    pub fn delete_orders(&mut self, order_indices: Vec<usize>) {
+        self.grid.delete_orders(&order_indices);
     }
 
     /// Delete bins.
     ///
-    /// Repeated bins and those exceeding length are ignored.
+    /// # Panics
+    /// TODO
+    ///
+    /// Repeated bins and those exceeding the length are ignored.
     ///
     /// Parameters
     /// ----------
-    /// bin_indices : numpy.ndarray[int]
-    ///     list of indices of bins to removed
-    pub fn delete_bins(&mut self, bin_indices: PyReadonlyArray1<usize>) {
-        self.grid.delete_bins(&bin_indices.to_vec().unwrap())
+    /// bin_indices : list[int]
+    ///     list of indices of bins to be removed
+    pub fn delete_bins(&mut self, bin_indices: Vec<usize>) {
+        self.grid.delete_bins(&bin_indices);
     }
+
+    /// Deletes channels with the corresponding `channel_indices`. Repeated indices and indices
+    /// larger or equal than the number of channels are ignored.
+    ///
+    /// Parameters
+    /// ----------
+    /// bin_indices : list[int]
+    ///     list of indices of bins to be removed
+    pub fn delete_channels(&mut self, channel_indices: Vec<usize>) {
+        self.grid.delete_channels(&channel_indices);
+    }
+
+    /// Splits the grid such that each channel contains only a single tuple of PIDs.
+    pub fn split_channels(&mut self) {
+        self.grid.split_channels();
+    }
+}
+
+/// Register submodule in parent.
+///
+/// # Errors
+///
+/// Raises an error if (sub)module is not found.
+pub fn register(parent_module: &Bound<'_, PyModule>) -> PyResult<()> {
+    let m = PyModule::new(parent_module.py(), "grid")?;
+    m.setattr(pyo3::intern!(m.py(), "__doc__"), "Grid interface.")?;
+    pyo3::py_run!(
+        parent_module.py(),
+        m,
+        "import sys; sys.modules['pineappl.grid'] = m"
+    );
+    m.add_class::<PyGrid>()?;
+    parent_module.add_submodule(&m)
 }

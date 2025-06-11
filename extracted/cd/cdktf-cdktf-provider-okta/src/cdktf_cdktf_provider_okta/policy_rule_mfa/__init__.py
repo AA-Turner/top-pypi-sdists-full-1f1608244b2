@@ -1,7 +1,7 @@
 r'''
 # `okta_policy_rule_mfa`
 
-Refer to the Terraform Registry for docs: [`okta_policy_rule_mfa`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa).
+Refer to the Terraform Registry for docs: [`okta_policy_rule_mfa`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PolicyRuleMfa(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.policyRuleMfa.PolicyRuleMfa",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa okta_policy_rule_mfa}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa okta_policy_rule_mfa}.'''
 
     def __init__(
         self,
@@ -71,22 +71,22 @@ class PolicyRuleMfa(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa okta_policy_rule_mfa} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa okta_policy_rule_mfa} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Policy Rule Name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}
-        :param app_exclude: app_exclude block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#app_exclude PolicyRuleMfa#app_exclude}
-        :param app_include: app_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#app_include PolicyRuleMfa#app_include}
-        :param enroll: When a user should be prompted for MFA. It can be ``CHALLENGE``, ``LOGIN``, or ``NEVER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#enroll PolicyRuleMfa#enroll}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param network_connection: Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#network_connection PolicyRuleMfa#network_connection}
-        :param network_excludes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#network_excludes PolicyRuleMfa#network_excludes}
-        :param network_includes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#network_includes PolicyRuleMfa#network_includes}
-        :param policy_id: Policy ID of the Rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#policy_id PolicyRuleMfa#policy_id}
-        :param priority: Rule priority. This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#priority PolicyRuleMfa#priority}
-        :param status: Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#status PolicyRuleMfa#status}
-        :param users_excluded: Set of User IDs to Exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#users_excluded PolicyRuleMfa#users_excluded}
+        :param name: Policy Rule Name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}
+        :param app_exclude: app_exclude block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#app_exclude PolicyRuleMfa#app_exclude}
+        :param app_include: app_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#app_include PolicyRuleMfa#app_include}
+        :param enroll: When a user should be prompted for MFA. It can be ``CHALLENGE``, ``LOGIN``, or ``NEVER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#enroll PolicyRuleMfa#enroll}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param network_connection: Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#network_connection PolicyRuleMfa#network_connection}
+        :param network_excludes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#network_excludes PolicyRuleMfa#network_excludes}
+        :param network_includes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#network_includes PolicyRuleMfa#network_includes}
+        :param policy_id: Policy ID of the Rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#policy_id PolicyRuleMfa#policy_id}
+        :param priority: Rule priority. This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#priority PolicyRuleMfa#priority}
+        :param status: Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#status PolicyRuleMfa#status}
+        :param users_excluded: Set of User IDs to Exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#users_excluded PolicyRuleMfa#users_excluded}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -136,7 +136,7 @@ class PolicyRuleMfa(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PolicyRuleMfa to import.
-        :param import_from_id: The id of the existing PolicyRuleMfa that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PolicyRuleMfa that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PolicyRuleMfa to import is found.
         '''
         if __debug__:
@@ -439,9 +439,9 @@ class PolicyRuleMfaAppExclude:
         name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#type PolicyRuleMfa#type}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}.
+        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#type PolicyRuleMfa#type}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__08aac4277c0ba9c15944b37f94ad24d26c9275302df9bcf7c0fed4a633016280)
@@ -458,14 +458,14 @@ class PolicyRuleMfaAppExclude:
 
     @builtins.property
     def type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#type PolicyRuleMfa#type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#type PolicyRuleMfa#type}.'''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -475,7 +475,7 @@ class PolicyRuleMfaAppExclude:
 
     @builtins.property
     def name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}.'''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -698,9 +698,9 @@ class PolicyRuleMfaAppInclude:
         name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#type PolicyRuleMfa#type}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}.
+        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#type PolicyRuleMfa#type}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e4645c411916f6d56291ef2c1171a5bbf12607eb6fad385652cff561a61ef1c2)
@@ -717,14 +717,14 @@ class PolicyRuleMfaAppInclude:
 
     @builtins.property
     def type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#type PolicyRuleMfa#type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#type PolicyRuleMfa#type}.'''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -734,7 +734,7 @@ class PolicyRuleMfaAppInclude:
 
     @builtins.property
     def name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}.'''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1000,18 +1000,18 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Policy Rule Name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}
-        :param app_exclude: app_exclude block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#app_exclude PolicyRuleMfa#app_exclude}
-        :param app_include: app_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#app_include PolicyRuleMfa#app_include}
-        :param enroll: When a user should be prompted for MFA. It can be ``CHALLENGE``, ``LOGIN``, or ``NEVER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#enroll PolicyRuleMfa#enroll}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param network_connection: Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#network_connection PolicyRuleMfa#network_connection}
-        :param network_excludes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#network_excludes PolicyRuleMfa#network_excludes}
-        :param network_includes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#network_includes PolicyRuleMfa#network_includes}
-        :param policy_id: Policy ID of the Rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#policy_id PolicyRuleMfa#policy_id}
-        :param priority: Rule priority. This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#priority PolicyRuleMfa#priority}
-        :param status: Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#status PolicyRuleMfa#status}
-        :param users_excluded: Set of User IDs to Exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#users_excluded PolicyRuleMfa#users_excluded}
+        :param name: Policy Rule Name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}
+        :param app_exclude: app_exclude block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#app_exclude PolicyRuleMfa#app_exclude}
+        :param app_include: app_include block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#app_include PolicyRuleMfa#app_include}
+        :param enroll: When a user should be prompted for MFA. It can be ``CHALLENGE``, ``LOGIN``, or ``NEVER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#enroll PolicyRuleMfa#enroll}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param network_connection: Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#network_connection PolicyRuleMfa#network_connection}
+        :param network_excludes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#network_excludes PolicyRuleMfa#network_excludes}
+        :param network_includes: Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#network_includes PolicyRuleMfa#network_includes}
+        :param policy_id: Policy ID of the Rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#policy_id PolicyRuleMfa#policy_id}
+        :param priority: Rule priority. This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#priority PolicyRuleMfa#priority}
+        :param status: Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#status PolicyRuleMfa#status}
+        :param users_excluded: Set of User IDs to Exclude. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#users_excluded PolicyRuleMfa#users_excluded}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1144,7 +1144,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Policy Rule Name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#name PolicyRuleMfa#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1156,7 +1156,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PolicyRuleMfaAppExclude]]]:
         '''app_exclude block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#app_exclude PolicyRuleMfa#app_exclude}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#app_exclude PolicyRuleMfa#app_exclude}
         '''
         result = self._values.get("app_exclude")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PolicyRuleMfaAppExclude]]], result)
@@ -1167,7 +1167,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PolicyRuleMfaAppInclude]]]:
         '''app_include block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#app_include PolicyRuleMfa#app_include}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#app_include PolicyRuleMfa#app_include}
         '''
         result = self._values.get("app_include")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PolicyRuleMfaAppInclude]]], result)
@@ -1176,14 +1176,14 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enroll(self) -> typing.Optional[builtins.str]:
         '''When a user should be prompted for MFA. It can be ``CHALLENGE``, ``LOGIN``, or ``NEVER``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#enroll PolicyRuleMfa#enroll}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#enroll PolicyRuleMfa#enroll}
         '''
         result = self._values.get("enroll")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#id PolicyRuleMfa#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1195,7 +1195,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def network_connection(self) -> typing.Optional[builtins.str]:
         '''Network selection mode: ``ANYWHERE``, ``ZONE``, ``ON_NETWORK``, or ``OFF_NETWORK``. Default: ``ANYWHERE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#network_connection PolicyRuleMfa#network_connection}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#network_connection PolicyRuleMfa#network_connection}
         '''
         result = self._values.get("network_connection")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1204,7 +1204,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def network_excludes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Required if ``network_connection`` = ``ZONE``. Indicates the network zones to exclude.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#network_excludes PolicyRuleMfa#network_excludes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#network_excludes PolicyRuleMfa#network_excludes}
         '''
         result = self._values.get("network_excludes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1213,7 +1213,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def network_includes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Required if ``network_connection`` = ``ZONE``. Indicates the network zones to include.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#network_includes PolicyRuleMfa#network_includes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#network_includes PolicyRuleMfa#network_includes}
         '''
         result = self._values.get("network_includes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1222,7 +1222,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy_id(self) -> typing.Optional[builtins.str]:
         '''Policy ID of the Rule.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#policy_id PolicyRuleMfa#policy_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#policy_id PolicyRuleMfa#policy_id}
         '''
         result = self._values.get("policy_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1233,7 +1233,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This attribute can be set to a valid priority. To avoid an endless diff situation an error is thrown if an invalid property is provided. The Okta API defaults to the last (lowest) if not provided.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#priority PolicyRuleMfa#priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#priority PolicyRuleMfa#priority}
         '''
         result = self._values.get("priority")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1242,7 +1242,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Policy Rule Status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#status PolicyRuleMfa#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#status PolicyRuleMfa#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1251,7 +1251,7 @@ class PolicyRuleMfaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def users_excluded(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Set of User IDs to Exclude.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_rule_mfa#users_excluded PolicyRuleMfa#users_excluded}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_rule_mfa#users_excluded PolicyRuleMfa#users_excluded}
         '''
         result = self._values.get("users_excluded")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)

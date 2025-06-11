@@ -174,7 +174,7 @@ class cli:
             or self.args.exe:
                 self.find_imports.verify_imports()
             else:
-                print(f"{self.visuals.bold}{self.visuals.RD} > Error: You need to use one function that installs imports before verifying them.{self.visuals.RESET}")
+                print(f"{self.visuals.bold}{self.visuals.RD} > Error: You need to use one function that installs imports before verifying them{self.visuals.RESET}")
                 print("\033[J", end='', flush=True)
 
         self.clean_terminal()

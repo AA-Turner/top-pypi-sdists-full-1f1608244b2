@@ -1,7 +1,7 @@
 r'''
 # `okta_app_oauth_role_assignment`
 
-Refer to the Terraform Registry for docs: [`okta_app_oauth_role_assignment`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment).
+Refer to the Terraform Registry for docs: [`okta_app_oauth_role_assignment`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppOauthRoleAssignment(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appOauthRoleAssignment.AppOauthRoleAssignment",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment okta_app_oauth_role_assignment}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment okta_app_oauth_role_assignment}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class AppOauthRoleAssignment(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment okta_app_oauth_role_assignment} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment okta_app_oauth_role_assignment} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param client_id: Client ID for the role to be assigned to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#client_id AppOauthRoleAssignment#client_id}
-        :param type: Role type to assign. This can be one of the standard Okta roles, such as ``HELP_DESK_ADMIN``, or ``CUSTOM``. Using custom requires the ``resource_set`` and ``role`` attributes to be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#type AppOauthRoleAssignment#type}
-        :param resource_set: Resource set for the custom role to assign, must be the ID of the created resource set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#resource_set AppOauthRoleAssignment#resource_set}
-        :param role: Custom Role ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#role AppOauthRoleAssignment#role}
+        :param client_id: Client ID for the role to be assigned to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#client_id AppOauthRoleAssignment#client_id}
+        :param type: Role type to assign. This can be one of the standard Okta roles, such as ``HELP_DESK_ADMIN``, or ``CUSTOM``. Using custom requires the ``resource_set`` and ``role`` attributes to be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#type AppOauthRoleAssignment#type}
+        :param resource_set: Resource set for the custom role to assign, must be the ID of the created resource set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#resource_set AppOauthRoleAssignment#resource_set}
+        :param role: Custom Role ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#role AppOauthRoleAssignment#role}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class AppOauthRoleAssignment(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppOauthRoleAssignment to import.
-        :param import_from_id: The id of the existing AppOauthRoleAssignment that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppOauthRoleAssignment that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppOauthRoleAssignment to import is found.
         '''
         if __debug__:
@@ -269,10 +269,10 @@ class AppOauthRoleAssignmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param client_id: Client ID for the role to be assigned to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#client_id AppOauthRoleAssignment#client_id}
-        :param type: Role type to assign. This can be one of the standard Okta roles, such as ``HELP_DESK_ADMIN``, or ``CUSTOM``. Using custom requires the ``resource_set`` and ``role`` attributes to be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#type AppOauthRoleAssignment#type}
-        :param resource_set: Resource set for the custom role to assign, must be the ID of the created resource set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#resource_set AppOauthRoleAssignment#resource_set}
-        :param role: Custom Role ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#role AppOauthRoleAssignment#role}
+        :param client_id: Client ID for the role to be assigned to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#client_id AppOauthRoleAssignment#client_id}
+        :param type: Role type to assign. This can be one of the standard Okta roles, such as ``HELP_DESK_ADMIN``, or ``CUSTOM``. Using custom requires the ``resource_set`` and ``role`` attributes to be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#type AppOauthRoleAssignment#type}
+        :param resource_set: Resource set for the custom role to assign, must be the ID of the created resource set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#resource_set AppOauthRoleAssignment#resource_set}
+        :param role: Custom Role ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#role AppOauthRoleAssignment#role}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -380,7 +380,7 @@ class AppOauthRoleAssignmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def client_id(self) -> builtins.str:
         '''Client ID for the role to be assigned to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#client_id AppOauthRoleAssignment#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#client_id AppOauthRoleAssignment#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -392,7 +392,7 @@ class AppOauthRoleAssignmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This can be one of the standard Okta roles, such as ``HELP_DESK_ADMIN``, or ``CUSTOM``. Using custom requires the ``resource_set`` and ``role`` attributes to be set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#type AppOauthRoleAssignment#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#type AppOauthRoleAssignment#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -402,7 +402,7 @@ class AppOauthRoleAssignmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def resource_set(self) -> typing.Optional[builtins.str]:
         '''Resource set for the custom role to assign, must be the ID of the created resource set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#resource_set AppOauthRoleAssignment#resource_set}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#resource_set AppOauthRoleAssignment#resource_set}
         '''
         result = self._values.get("resource_set")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -411,7 +411,7 @@ class AppOauthRoleAssignmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def role(self) -> typing.Optional[builtins.str]:
         '''Custom Role ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_role_assignment#role AppOauthRoleAssignment#role}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_role_assignment#role AppOauthRoleAssignment#role}
         '''
         result = self._values.get("role")
         return typing.cast(typing.Optional[builtins.str], result)

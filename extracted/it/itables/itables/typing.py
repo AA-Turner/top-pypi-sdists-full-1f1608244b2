@@ -1,10 +1,16 @@
+import re
 import warnings
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from typing import Any, Literal, Mapping, TypedDict, Union
+from typing import Any, Literal, Mapping, Sequence, TypedDict, Union
 
 from packaging.version import Version
-from typing_extensions import NotRequired
+from typing_extensions import NotRequired, TypeAlias
+
+"""
+A Pandas or Polars DataFrame or Series, a numpy array, or a Pandas Style object.
+"""
+DataFrameOrSeries: TypeAlias = Any
 
 
 class JavascriptFunction(str):
@@ -16,10 +22,10 @@ class JavascriptFunction(str):
     Please use this only for code that you trust.
     """
 
-    def __init__(self, value):
-        assert value.lstrip().startswith(
-            "function"
-        ), "A Javascript function is expected to start with 'function'"
+    def __init__(self, value: str):
+        assert re.compile(r"^\s*function\s*\(").match(
+            value
+        ), "A Javascript function is expected to start with 'function('"
 
 
 class JavascriptCode(str):
@@ -42,15 +48,17 @@ class DataTableOptions(TypedDict):
     """
 
     # DataTable options
-    caption: NotRequired[str]
     lengthMenu: NotRequired[
-        Union[list[Union[int, str, Mapping[str, Any]]], list[list[Union[int, str]]]]
+        Union[
+            Sequence[Union[int, str, Mapping[str, Any]]],
+            Sequence[Sequence[Union[int, str]]],
+        ]
     ]
     order: NotRequired[
-        Union[list[list[Union[int, str]]], Mapping[str, Union[int, str]]]
+        Union[Sequence[Sequence[Union[int, str]]], Mapping[str, Union[int, str]]]
     ]
     layout: NotRequired[Mapping[str, Union[None, str, Mapping[str, Any]]]]
-    columnDefs: NotRequired[list[Mapping[str, Any]]]
+    columnDefs: NotRequired[Sequence[Mapping[str, Any]]]
     paging: NotRequired[bool]
     autoWidth: NotRequired[bool]
     scrollX: NotRequired[bool]
@@ -58,14 +66,15 @@ class DataTableOptions(TypedDict):
     scrollCollapse: NotRequired[bool]
     language: NotRequired[Mapping[str, str]]
     search: NotRequired[Mapping[str, Any]]
-    searchCols: NotRequired[list[Any]]
+    searchCols: NotRequired[Sequence[Any]]
     initComplete: NotRequired[JavascriptFunction]
     fnInfoCallback: NotRequired[JavascriptFunction]
+    drawCallback: NotRequired[JavascriptFunction]
     stateSave: NotRequired[bool]
     stateDuration: NotRequired[int]
 
     # DataTable options provided by its extensions
-    buttons: NotRequired[list[Union[str, Mapping[str, Any]]]]
+    buttons: NotRequired[Sequence[Union[str, Mapping[str, Any]]]]
     fixedColumns: NotRequired[Mapping[Literal["left", "right", "start", "end"], int]]
     searchPanes: NotRequired[Mapping[str, Any]]
     searchBuilder: NotRequired[Mapping[str, Any]]
@@ -80,9 +89,9 @@ class ITableOptions(DataTableOptions):
     to the show function and to the ITable Python classes.
     """
 
-    classes: NotRequired[Union[str, list[str]]]
+    classes: NotRequired[Union[str, Sequence[str]]]
     style: NotRequired[Union[str, dict[str, str]]]
-    selected_rows: NotRequired[list[int]]
+    selected_rows: NotRequired[Sequence[int]]
 
     showIndex: NotRequired[Union[bool, str]]
 
@@ -103,6 +112,7 @@ class ITableOptions(DataTableOptions):
     warn_on_unexpected_types: NotRequired[bool]
     warn_on_selected_rows_not_rendered: NotRequired[bool]
     warn_on_undocumented_option: NotRequired[bool]
+    warn_on_unexpected_option_type: NotRequired[bool]
     text_in_header_can_be_selected: NotRequired[bool]
 
     column_filters: NotRequired[Literal[False, "header", "footer"]]
@@ -116,21 +126,22 @@ class DTForITablesOptions(DataTableOptions):
     in the dt_for_itables package.
     """
 
-    classes: NotRequired[Union[str, list[str]]]
+    caption: NotRequired[str]
+    classes: NotRequired[Union[str, Sequence[str]]]
     style: NotRequired[Union[str, dict[str, str]]]
 
     data_json: NotRequired[str]
     table_html: NotRequired[str]
     table_style: NotRequired[str]
 
-    selected_rows: NotRequired[list[int]]
+    selected_rows: NotRequired[Sequence[int]]
     filtered_row_count: NotRequired[int]
 
     downsampling_warning: NotRequired[str]
     text_in_header_can_be_selected: NotRequired[bool]
 
     column_filters: NotRequired[Literal[False, "header", "footer"]]
-    keys_to_be_evaluated: NotRequired[list[list[Union[int, str]]]]
+    keys_to_be_evaluated: NotRequired[Sequence[Sequence[Union[int, str]]]]
 
     # These options are used in the HTML template
     # and don't reach the ITable JavaScript class
@@ -153,47 +164,71 @@ def check_itable_arguments(kwargs: dict[str, Any], typed_dict: type) -> None:
     """
     Check the arguments passed to the ITable constructor
     """
-
     warn_on_undocumented_option = (
         kwargs.get if typed_dict is ITableOptions else kwargs.pop
     )("warn_on_undocumented_option", False)
-    if not warn_on_undocumented_option:
-        return
 
-    silence_msg = (
+    warn_on_unexpected_option_type = (
+        kwargs.get if typed_dict is ITableOptions else kwargs.pop
+    )("warn_on_unexpected_option_type", False)
+
+    if warn_on_undocumented_option:
+        check_itable_argument_names(set(kwargs), typed_dict)
+
+    if warn_on_unexpected_option_type:
+        check_itable_argument_types(kwargs, typed_dict)
+
+
+def get_silence_msg(option_name: str) -> str:
+    return (
         "You can silence this warning by setting "
-        "`itables.options.warn_on_undocumented_option=False`. If you believe ITableOptions "
+        f"`itables.options.{option_name}=False`. If you believe ITableOptions "
         "should be updated, please make a PR or open an issue at https://github.com/mwouts/itables"
     )
 
+
+def check_itable_argument_names(names: set[str], typed_dict: type) -> None:
+    """
+    Check that the arguments passed to the ITable constructor
+    are documented in the given TypedDict.
+    """
     documented_options = set(typed_dict.__required_keys__).union(
         typed_dict.__optional_keys__
     )
-    undocumented_options = set(kwargs.keys()) - documented_options
+    undocumented_options = names - documented_options
     if undocumented_options:
         warnings.warn(
             f"These arguments are not documented in {typed_dict.__name__}: {undocumented_options}. "
-            + silence_msg,
+            + get_silence_msg("warn_on_undocumented_option"),
             category=SyntaxWarning,
         )
 
+
+def check_itable_argument_types(kwargs: dict[str, Any], typed_dict: type) -> None:
+    """
+    Check that the argments passed to the ITable constructor
+    match the types defined in the given TypedDict.
+    """
     try:
         from typeguard import TypeCheckError, check_type
     except ImportError as e:
         raise ImportError(
-            "The `warn_on_undocumented_option` option requires the 'typeguard' package. "
+            "The `warn_on_unexpected_option_type` option requires the 'typeguard' package. "
             "Please install it using 'pip install typeguard', "
-            "or deactivate the check by setting `itables.options.warn_on_undocumented_option=False`."
+            "or deactivate the check by setting `itables.options.warn_on_unexpected_option_type=False`."
         ) from e
 
     for key, value in kwargs.items():
-        if key in undocumented_options:
+        # Undocumented options are addressed through warn_on_undocumented_option
+        if key not in typed_dict.__annotations__:
             continue
+
         try:
             check_type({key: value}, typed_dict)
         except TypeCheckError as e:
             type_repr = str(typed_dict.__annotations__[key]).replace("typing.", "")
             warnings.warn(
-                f"{key}={value} does not match {type_repr}: {e}. " + silence_msg,
+                f"{key}={value} does not match {type_repr}: {e}. "
+                + get_silence_msg("warn_on_unexpected_option_type"),
                 category=SyntaxWarning,
             )

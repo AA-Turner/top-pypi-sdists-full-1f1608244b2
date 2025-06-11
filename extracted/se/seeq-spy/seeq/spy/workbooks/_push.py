@@ -291,8 +291,6 @@ def push(workbooks, *, path: Optional[str] = None, owner: Optional[str] = None,
         (item_map, 'item_map', (dict, ItemMap))
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     if path == _folder.ORIGINAL_FOLDER and not use_full_path:

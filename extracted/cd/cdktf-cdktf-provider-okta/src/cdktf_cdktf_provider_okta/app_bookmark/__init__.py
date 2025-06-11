@@ -1,7 +1,7 @@
 r'''
 # `okta_app_bookmark`
 
-Refer to the Terraform Registry for docs: [`okta_app_bookmark`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark).
+Refer to the Terraform Registry for docs: [`okta_app_bookmark`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppBookmark(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appBookmark.AppBookmark",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark okta_app_bookmark}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark okta_app_bookmark}.'''
 
     def __init__(
         self,
@@ -76,27 +76,27 @@ class AppBookmark(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark okta_app_bookmark} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark okta_app_bookmark} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#label AppBookmark#label}
-        :param url: The URL of the bookmark. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#url AppBookmark#url}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#accessibility_error_redirect_url AppBookmark#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#accessibility_login_redirect_url AppBookmark#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#accessibility_self_service AppBookmark#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#admin_note AppBookmark#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#app_links_json AppBookmark#app_links_json}
-        :param authentication_policy: The ID of the associated app_signon_policy. If this property is removed from the application the default sign-on-policy will be associated with this application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#authentication_policy AppBookmark#authentication_policy}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#auto_submit_toolbar AppBookmark#auto_submit_toolbar}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#enduser_note AppBookmark#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#hide_ios AppBookmark#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#hide_web AppBookmark#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#id AppBookmark#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#logo AppBookmark#logo}
-        :param request_integration: Would you like Okta to add an integration for this app? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#request_integration AppBookmark#request_integration}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#status AppBookmark#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#timeouts AppBookmark#timeouts}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#label AppBookmark#label}
+        :param url: The URL of the bookmark. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#url AppBookmark#url}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#accessibility_error_redirect_url AppBookmark#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#accessibility_login_redirect_url AppBookmark#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#accessibility_self_service AppBookmark#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#admin_note AppBookmark#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#app_links_json AppBookmark#app_links_json}
+        :param authentication_policy: The ID of the associated app_signon_policy. If this property is removed from the application the default sign-on-policy will be associated with this application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#authentication_policy AppBookmark#authentication_policy}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#auto_submit_toolbar AppBookmark#auto_submit_toolbar}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#enduser_note AppBookmark#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#hide_ios AppBookmark#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#hide_web AppBookmark#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#id AppBookmark#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#logo AppBookmark#logo}
+        :param request_integration: Would you like Okta to add an integration for this app? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#request_integration AppBookmark#request_integration}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#status AppBookmark#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#timeouts AppBookmark#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -151,7 +151,7 @@ class AppBookmark(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppBookmark to import.
-        :param import_from_id: The id of the existing AppBookmark that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppBookmark that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppBookmark to import is found.
         '''
         if __debug__:
@@ -171,9 +171,9 @@ class AppBookmark(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#create AppBookmark#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#read AppBookmark#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#update AppBookmark#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#create AppBookmark#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#read AppBookmark#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#update AppBookmark#update}.
         '''
         value = AppBookmarkTimeouts(create=create, read=read, update=update)
 
@@ -650,23 +650,23 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#label AppBookmark#label}
-        :param url: The URL of the bookmark. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#url AppBookmark#url}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#accessibility_error_redirect_url AppBookmark#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#accessibility_login_redirect_url AppBookmark#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#accessibility_self_service AppBookmark#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#admin_note AppBookmark#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#app_links_json AppBookmark#app_links_json}
-        :param authentication_policy: The ID of the associated app_signon_policy. If this property is removed from the application the default sign-on-policy will be associated with this application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#authentication_policy AppBookmark#authentication_policy}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#auto_submit_toolbar AppBookmark#auto_submit_toolbar}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#enduser_note AppBookmark#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#hide_ios AppBookmark#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#hide_web AppBookmark#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#id AppBookmark#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#logo AppBookmark#logo}
-        :param request_integration: Would you like Okta to add an integration for this app? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#request_integration AppBookmark#request_integration}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#status AppBookmark#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#timeouts AppBookmark#timeouts}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#label AppBookmark#label}
+        :param url: The URL of the bookmark. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#url AppBookmark#url}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#accessibility_error_redirect_url AppBookmark#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#accessibility_login_redirect_url AppBookmark#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#accessibility_self_service AppBookmark#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#admin_note AppBookmark#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#app_links_json AppBookmark#app_links_json}
+        :param authentication_policy: The ID of the associated app_signon_policy. If this property is removed from the application the default sign-on-policy will be associated with this application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#authentication_policy AppBookmark#authentication_policy}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#auto_submit_toolbar AppBookmark#auto_submit_toolbar}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#enduser_note AppBookmark#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#hide_ios AppBookmark#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#hide_web AppBookmark#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#id AppBookmark#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#logo AppBookmark#logo}
+        :param request_integration: Would you like Okta to add an integration for this app? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#request_integration AppBookmark#request_integration}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#status AppBookmark#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#timeouts AppBookmark#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -815,7 +815,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def label(self) -> builtins.str:
         '''The Application's display name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#label AppBookmark#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#label AppBookmark#label}
         '''
         result = self._values.get("label")
         assert result is not None, "Required property 'label' is missing"
@@ -825,7 +825,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def url(self) -> builtins.str:
         '''The URL of the bookmark.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#url AppBookmark#url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#url AppBookmark#url}
         '''
         result = self._values.get("url")
         assert result is not None, "Required property 'url' is missing"
@@ -835,7 +835,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_error_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom error page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#accessibility_error_redirect_url AppBookmark#accessibility_error_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#accessibility_error_redirect_url AppBookmark#accessibility_error_redirect_url}
         '''
         result = self._values.get("accessibility_error_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -844,7 +844,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_login_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom login page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#accessibility_login_redirect_url AppBookmark#accessibility_login_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#accessibility_login_redirect_url AppBookmark#accessibility_login_redirect_url}
         '''
         result = self._values.get("accessibility_login_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -855,7 +855,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Enable self service. Default is ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#accessibility_self_service AppBookmark#accessibility_self_service}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#accessibility_self_service AppBookmark#accessibility_self_service}
         '''
         result = self._values.get("accessibility_self_service")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -864,7 +864,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def admin_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for admins.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#admin_note AppBookmark#admin_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#admin_note AppBookmark#admin_note}
         '''
         result = self._values.get("admin_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -873,7 +873,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_links_json(self) -> typing.Optional[builtins.str]:
         '''Displays specific appLinks for the app. The value for each application link should be boolean.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#app_links_json AppBookmark#app_links_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#app_links_json AppBookmark#app_links_json}
         '''
         result = self._values.get("app_links_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -884,7 +884,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         If this property is removed from the application the default sign-on-policy will be associated with this application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#authentication_policy AppBookmark#authentication_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#authentication_policy AppBookmark#authentication_policy}
         '''
         result = self._values.get("authentication_policy")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -895,7 +895,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Display auto submit toolbar.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#auto_submit_toolbar AppBookmark#auto_submit_toolbar}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#auto_submit_toolbar AppBookmark#auto_submit_toolbar}
         '''
         result = self._values.get("auto_submit_toolbar")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -904,7 +904,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enduser_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for end users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#enduser_note AppBookmark#enduser_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#enduser_note AppBookmark#enduser_note}
         '''
         result = self._values.get("enduser_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -915,7 +915,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon on mobile app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#hide_ios AppBookmark#hide_ios}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#hide_ios AppBookmark#hide_ios}
         '''
         result = self._values.get("hide_ios")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -926,14 +926,14 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon to users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#hide_web AppBookmark#hide_web}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#hide_web AppBookmark#hide_web}
         '''
         result = self._values.get("hide_web")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#id AppBookmark#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#id AppBookmark#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -947,7 +947,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The file must be in PNG, JPG, or GIF format, and less than 1 MB in size.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#logo AppBookmark#logo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#logo AppBookmark#logo}
         '''
         result = self._values.get("logo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -958,7 +958,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Would you like Okta to add an integration for this app?
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#request_integration AppBookmark#request_integration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#request_integration AppBookmark#request_integration}
         '''
         result = self._values.get("request_integration")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -967,7 +967,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Status of application. By default, it is ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#status AppBookmark#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#status AppBookmark#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -976,7 +976,7 @@ class AppBookmarkConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["AppBookmarkTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#timeouts AppBookmark#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#timeouts AppBookmark#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["AppBookmarkTimeouts"], result)
@@ -1007,9 +1007,9 @@ class AppBookmarkTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#create AppBookmark#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#read AppBookmark#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#update AppBookmark#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#create AppBookmark#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#read AppBookmark#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#update AppBookmark#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__66380a70620a133ab1b0cba948ff58e23ff54a7d38614c2afb3d5e2964f29189)
@@ -1026,19 +1026,19 @@ class AppBookmarkTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#create AppBookmark#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#create AppBookmark#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#read AppBookmark#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#read AppBookmark#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_bookmark#update AppBookmark#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_bookmark#update AppBookmark#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 import click
 from aiohttp import web
 
-from schemathesis.cli import CsvEnumChoice
+from schemathesis.cli.ext.options import CsvEnumChoice
 
 try:
     from . import _graphql, openapi

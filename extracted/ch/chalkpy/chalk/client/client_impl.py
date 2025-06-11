@@ -921,6 +921,7 @@ class ChalkAPIClientImpl(ChalkClient):
         additional_headers: Optional[Mapping[str, str]] = None,
         default_job_timeout: float | timedelta | None = None,
         default_request_timeout: float | timedelta | None = None,
+        default_connect_timeout: float | timedelta | None = None,
         local: bool = False,
         ssl_context: ssl.SSLContext | None = None,
     ):
@@ -940,6 +941,10 @@ class ChalkAPIClientImpl(ChalkClient):
         if default_request_timeout is not None and isinstance(default_request_timeout, timedelta):
             default_request_timeout = default_request_timeout.total_seconds()
         self.default_request_timeout = default_request_timeout
+
+        if default_connect_timeout is not None and isinstance(default_connect_timeout, timedelta):
+            default_connect_timeout = default_connect_timeout.total_seconds()
+        self.default_connect_timeout = default_connect_timeout
 
         if session is None:
             session = requests.Session()
@@ -1185,6 +1190,7 @@ https://docs.chalk.ai/docs/debugging-queries#resolver-replay
         metadata_request: bool = True,
         extra_headers: Mapping[str, str] | None = None,
         timeout: float | None | ellipsis = ...,
+        connect_timeout: float | None | ellipsis = ...,
     ) -> requests.Response:
         ...
 
@@ -1203,6 +1209,7 @@ https://docs.chalk.ai/docs/debugging-queries#resolver-replay
         metadata_request: bool = True,
         extra_headers: Mapping[str, str] | None = None,
         timeout: float | None | ellipsis = ...,
+        connect_timeout: float | None | ellipsis = ...,
     ) -> T:
         ...
 
@@ -1220,6 +1227,7 @@ https://docs.chalk.ai/docs/debugging-queries#resolver-replay
         branch: str | None | ellipsis,
         data: Optional[bytes] = None,
         timeout: float | None | ellipsis,
+        connect_timeout: float | None | ellipsis,
     ):
         json_body = json and json.dict()
         headers = self._get_headers(
@@ -1246,7 +1254,28 @@ https://docs.chalk.ai/docs/debugging-queries#resolver-replay
             status_url = urljoin(self._api_server, "/v1/branches/start")
             status_headers = dict(self._default_headers)
             status_headers["X-Chalk-Env-Id"] = headers["X-Chalk-Env-Id"]
-            r = self.session.request(method="POST", headers=status_headers, url=status_url)
+            # Use the same timeout logic for branch server checks
+            if timeout is ...:
+                branch_timeout = self.default_request_timeout
+            else:
+                branch_timeout = timeout
+            if connect_timeout is ...:
+                branch_connect_timeout = self.default_connect_timeout
+            else:
+                branch_connect_timeout = connect_timeout
+
+            if branch_connect_timeout is not None and branch_timeout is not None:
+                branch_timeout_value = (branch_connect_timeout, branch_timeout)
+            elif branch_timeout is not None:
+                branch_timeout_value = branch_timeout
+            elif branch_connect_timeout is not None:
+                branch_timeout_value = (branch_connect_timeout, branch_connect_timeout)
+            else:
+                branch_timeout_value = None
+
+            r = self.session.request(
+                method="POST", headers=status_headers, url=status_url, timeout=branch_timeout_value
+            )
             # Only loop if the branch server needs to be started
             try:
                 resp_json = r.json()
@@ -1259,7 +1288,9 @@ https://docs.chalk.ai/docs/debugging-queries#resolver-replay
                 )
                 with tqdm(total=0, desc="Starting branch server") as pbar:
                     for _ in range(90):
-                        r = self.session.request(method="POST", headers=status_headers, url=status_url)
+                        r = self.session.request(
+                            method="POST", headers=status_headers, url=status_url, timeout=branch_timeout_value
+                        )
                         try:
                             resp_json = r.json()
                         except requests.exceptions.ConnectionError:
@@ -1280,8 +1311,23 @@ https://docs.chalk.ai/docs/debugging-queries#resolver-replay
 
         if timeout is ...:
             timeout = self.default_request_timeout
+        if connect_timeout is ...:
+            connect_timeout = self.default_connect_timeout
 
-        return self.session.request(method=method, headers=headers, url=url, json=json_body, data=data, timeout=timeout)
+        # If both connect_timeout and timeout are specified, use a tuple
+        if connect_timeout is not None and timeout is not None:
+            timeout_value = (connect_timeout, timeout)
+        elif timeout is not None:
+            timeout_value = timeout
+        elif connect_timeout is not None:
+            # If only connect_timeout is specified, use it for both connect and read
+            timeout_value = (connect_timeout, connect_timeout)
+        else:
+            timeout_value = None
+
+        return self.session.request(
+            method=method, headers=headers, url=url, json=json_body, data=data, timeout=timeout_value
+        )
 
     def _request(
         self,
@@ -1297,6 +1343,7 @@ https://docs.chalk.ai/docs/debugging-queries#resolver-replay
         metadata_request: bool = True,
         extra_headers: Mapping[str, str] | None = None,
         timeout: float | None | ellipsis = ...,
+        connect_timeout: float | None | ellipsis = ...,
     ) -> T | requests.Response:
         allow_credential_exchange: bool = True
 
@@ -1330,6 +1377,7 @@ https://docs.chalk.ai/docs/debugging-queries#resolver-replay
             metadata_request=metadata_request,
             extra_headers=extra_headers,
             timeout=timeout,
+            connect_timeout=connect_timeout,
         )
 
         if r.status_code in (401, 403) and allow_credential_exchange:
@@ -1357,6 +1405,7 @@ https://docs.chalk.ai/docs/debugging-queries#resolver-replay
                 metadata_request=metadata_request,
                 extra_headers=extra_headers,
                 timeout=timeout,
+                connect_timeout=connect_timeout,
             )
         if r.status_code in (401, 403):
             # If still authenticated, raise a nice exception
@@ -1732,6 +1781,7 @@ https://docs.chalk.ai/cli/apply
         required_resolver_tags: Optional[List[str]] = None,
         planner_options: Optional[Mapping[str, Union[str, int, bool]]] = None,
         request_timeout: float | ellipsis | None = ...,
+        connect_timeout: float | ellipsis | None = ...,
         headers: Mapping[str, str] | None = None,
         query_context: Mapping[str, JsonValue] | str | None = None,
         value_metrics_tag_by_features: Sequence[FeatureReference] = (),
@@ -1803,6 +1853,7 @@ https://docs.chalk.ai/cli/apply
             metadata_request=False,
             extra_headers=extra_headers,
             timeout=request_timeout,
+            connect_timeout=connect_timeout,
         )
         return OnlineQueryResponseImpl(data=resp.data, errors=resp.errors or [], warnings=all_warnings, meta=resp.meta)
 
@@ -2091,7 +2142,11 @@ https://docs.chalk.ai/cli/apply
         use_job_queue: bool = False,
     ) -> DatasetImpl:
         run_asynchronously = (
-            use_multiple_computers or run_asynchronously or num_shards is not None or num_workers is not None
+            use_multiple_computers
+            or use_job_queue
+            or run_asynchronously
+            or num_shards is not None
+            or num_workers is not None
         )
 
         lower_bound = _convert_datetime_or_timedelta_param("lower_bound", lower_bound)
@@ -2273,6 +2328,7 @@ https://docs.chalk.ai/cli/apply
         enable_profiling: bool = False,
         override_target_image_tag: Optional[str] = None,
         feature_for_lower_upper_bound: Optional[FeatureReference] = None,
+        use_job_queue: bool = False,
     ) -> Dataset:
         if sum([dataset_name is not None, dataset_id is not None, revision_id is not None, input is not None]) != 1:
             if input is None or dataset_name is None:
@@ -2290,7 +2346,11 @@ https://docs.chalk.ai/cli/apply
             dataset = None
 
         run_asynchronously = (
-            use_multiple_computers or run_asynchronously or num_shards is not None or num_workers is not None
+            use_multiple_computers
+            or use_job_queue
+            or run_asynchronously
+            or num_shards is not None
+            or num_workers is not None
         )
 
         lower_bound = _convert_datetime_or_timedelta_param("lower_bound", lower_bound)
@@ -2451,6 +2511,7 @@ https://docs.chalk.ai/cli/apply
             feature_for_lower_upper_bound=feature_for_lower_upper_bound,
             completion_deadline=timedelta_to_duration(completion_deadline) if completion_deadline is not None else None,
             max_retries=max_retries,
+            use_job_queue=use_job_queue,
         )
 
         response = self._request(

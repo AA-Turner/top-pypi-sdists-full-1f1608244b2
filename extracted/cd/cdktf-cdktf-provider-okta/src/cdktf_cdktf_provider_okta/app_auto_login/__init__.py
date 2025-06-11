@@ -1,7 +1,7 @@
 r'''
 # `okta_app_auto_login`
 
-Refer to the Terraform Registry for docs: [`okta_app_auto_login`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login).
+Refer to the Terraform Registry for docs: [`okta_app_auto_login`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppAutoLogin(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appAutoLogin.AppAutoLogin",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login okta_app_auto_login}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login okta_app_auto_login}.'''
 
     def __init__(
         self,
@@ -85,36 +85,36 @@ class AppAutoLogin(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login okta_app_auto_login} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login okta_app_auto_login} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#label AppAutoLogin#label}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#accessibility_error_redirect_url AppAutoLogin#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#accessibility_login_redirect_url AppAutoLogin#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#accessibility_self_service AppAutoLogin#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#admin_note AppAutoLogin#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#app_links_json AppAutoLogin#app_links_json}
-        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#app_settings_json AppAutoLogin#app_settings_json}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#auto_submit_toolbar AppAutoLogin#auto_submit_toolbar}
-        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#credentials_scheme AppAutoLogin#credentials_scheme}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#enduser_note AppAutoLogin#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#hide_ios AppAutoLogin#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#hide_web AppAutoLogin#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#id AppAutoLogin#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#logo AppAutoLogin#logo}
-        :param preconfigured_app: Tells Okta to use an existing application in their application catalog, as opposed to a custom application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#preconfigured_app AppAutoLogin#preconfigured_app}
-        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#reveal_password AppAutoLogin#reveal_password}
-        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#shared_password AppAutoLogin#shared_password}
-        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#shared_username AppAutoLogin#shared_username}
-        :param sign_on_redirect_url: Post login redirect URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#sign_on_redirect_url AppAutoLogin#sign_on_redirect_url}
-        :param sign_on_url: Login URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#sign_on_url AppAutoLogin#sign_on_url}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#status AppAutoLogin#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#timeouts AppAutoLogin#timeouts}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template AppAutoLogin#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template_push_status AppAutoLogin#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template_suffix AppAutoLogin#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template_type AppAutoLogin#user_name_template_type}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#label AppAutoLogin#label}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#accessibility_error_redirect_url AppAutoLogin#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#accessibility_login_redirect_url AppAutoLogin#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#accessibility_self_service AppAutoLogin#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#admin_note AppAutoLogin#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#app_links_json AppAutoLogin#app_links_json}
+        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#app_settings_json AppAutoLogin#app_settings_json}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#auto_submit_toolbar AppAutoLogin#auto_submit_toolbar}
+        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#credentials_scheme AppAutoLogin#credentials_scheme}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#enduser_note AppAutoLogin#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#hide_ios AppAutoLogin#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#hide_web AppAutoLogin#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#id AppAutoLogin#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#logo AppAutoLogin#logo}
+        :param preconfigured_app: Tells Okta to use an existing application in their application catalog, as opposed to a custom application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#preconfigured_app AppAutoLogin#preconfigured_app}
+        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#reveal_password AppAutoLogin#reveal_password}
+        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#shared_password AppAutoLogin#shared_password}
+        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#shared_username AppAutoLogin#shared_username}
+        :param sign_on_redirect_url: Post login redirect URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#sign_on_redirect_url AppAutoLogin#sign_on_redirect_url}
+        :param sign_on_url: Login URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#sign_on_url AppAutoLogin#sign_on_url}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#status AppAutoLogin#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#timeouts AppAutoLogin#timeouts}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template AppAutoLogin#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template_push_status AppAutoLogin#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template_suffix AppAutoLogin#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template_type AppAutoLogin#user_name_template_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -178,7 +178,7 @@ class AppAutoLogin(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppAutoLogin to import.
-        :param import_from_id: The id of the existing AppAutoLogin that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppAutoLogin that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppAutoLogin to import is found.
         '''
         if __debug__:
@@ -198,9 +198,9 @@ class AppAutoLogin(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#create AppAutoLogin#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#read AppAutoLogin#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#update AppAutoLogin#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#create AppAutoLogin#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#read AppAutoLogin#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#update AppAutoLogin#update}.
         '''
         value = AppAutoLoginTimeouts(create=create, read=read, update=update)
 
@@ -888,32 +888,32 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#label AppAutoLogin#label}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#accessibility_error_redirect_url AppAutoLogin#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#accessibility_login_redirect_url AppAutoLogin#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#accessibility_self_service AppAutoLogin#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#admin_note AppAutoLogin#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#app_links_json AppAutoLogin#app_links_json}
-        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#app_settings_json AppAutoLogin#app_settings_json}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#auto_submit_toolbar AppAutoLogin#auto_submit_toolbar}
-        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#credentials_scheme AppAutoLogin#credentials_scheme}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#enduser_note AppAutoLogin#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#hide_ios AppAutoLogin#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#hide_web AppAutoLogin#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#id AppAutoLogin#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#logo AppAutoLogin#logo}
-        :param preconfigured_app: Tells Okta to use an existing application in their application catalog, as opposed to a custom application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#preconfigured_app AppAutoLogin#preconfigured_app}
-        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#reveal_password AppAutoLogin#reveal_password}
-        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#shared_password AppAutoLogin#shared_password}
-        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#shared_username AppAutoLogin#shared_username}
-        :param sign_on_redirect_url: Post login redirect URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#sign_on_redirect_url AppAutoLogin#sign_on_redirect_url}
-        :param sign_on_url: Login URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#sign_on_url AppAutoLogin#sign_on_url}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#status AppAutoLogin#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#timeouts AppAutoLogin#timeouts}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template AppAutoLogin#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template_push_status AppAutoLogin#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template_suffix AppAutoLogin#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template_type AppAutoLogin#user_name_template_type}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#label AppAutoLogin#label}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#accessibility_error_redirect_url AppAutoLogin#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#accessibility_login_redirect_url AppAutoLogin#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#accessibility_self_service AppAutoLogin#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#admin_note AppAutoLogin#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#app_links_json AppAutoLogin#app_links_json}
+        :param app_settings_json: Application settings in JSON format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#app_settings_json AppAutoLogin#app_settings_json}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#auto_submit_toolbar AppAutoLogin#auto_submit_toolbar}
+        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#credentials_scheme AppAutoLogin#credentials_scheme}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#enduser_note AppAutoLogin#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#hide_ios AppAutoLogin#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#hide_web AppAutoLogin#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#id AppAutoLogin#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#logo AppAutoLogin#logo}
+        :param preconfigured_app: Tells Okta to use an existing application in their application catalog, as opposed to a custom application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#preconfigured_app AppAutoLogin#preconfigured_app}
+        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#reveal_password AppAutoLogin#reveal_password}
+        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#shared_password AppAutoLogin#shared_password}
+        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#shared_username AppAutoLogin#shared_username}
+        :param sign_on_redirect_url: Post login redirect URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#sign_on_redirect_url AppAutoLogin#sign_on_redirect_url}
+        :param sign_on_url: Login URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#sign_on_url AppAutoLogin#sign_on_url}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#status AppAutoLogin#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#timeouts AppAutoLogin#timeouts}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template AppAutoLogin#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template_push_status AppAutoLogin#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template_suffix AppAutoLogin#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template_type AppAutoLogin#user_name_template_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1090,7 +1090,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def label(self) -> builtins.str:
         '''The Application's display name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#label AppAutoLogin#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#label AppAutoLogin#label}
         '''
         result = self._values.get("label")
         assert result is not None, "Required property 'label' is missing"
@@ -1100,7 +1100,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_error_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom error page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#accessibility_error_redirect_url AppAutoLogin#accessibility_error_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#accessibility_error_redirect_url AppAutoLogin#accessibility_error_redirect_url}
         '''
         result = self._values.get("accessibility_error_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1109,7 +1109,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_login_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom login page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#accessibility_login_redirect_url AppAutoLogin#accessibility_login_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#accessibility_login_redirect_url AppAutoLogin#accessibility_login_redirect_url}
         '''
         result = self._values.get("accessibility_login_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1120,7 +1120,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Enable self service. Default is ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#accessibility_self_service AppAutoLogin#accessibility_self_service}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#accessibility_self_service AppAutoLogin#accessibility_self_service}
         '''
         result = self._values.get("accessibility_self_service")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1129,7 +1129,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def admin_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for admins.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#admin_note AppAutoLogin#admin_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#admin_note AppAutoLogin#admin_note}
         '''
         result = self._values.get("admin_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1138,7 +1138,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_links_json(self) -> typing.Optional[builtins.str]:
         '''Displays specific appLinks for the app. The value for each application link should be boolean.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#app_links_json AppAutoLogin#app_links_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#app_links_json AppAutoLogin#app_links_json}
         '''
         result = self._values.get("app_links_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1147,7 +1147,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_settings_json(self) -> typing.Optional[builtins.str]:
         '''Application settings in JSON format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#app_settings_json AppAutoLogin#app_settings_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#app_settings_json AppAutoLogin#app_settings_json}
         '''
         result = self._values.get("app_settings_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1158,7 +1158,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Display auto submit toolbar.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#auto_submit_toolbar AppAutoLogin#auto_submit_toolbar}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#auto_submit_toolbar AppAutoLogin#auto_submit_toolbar}
         '''
         result = self._values.get("auto_submit_toolbar")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1167,7 +1167,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def credentials_scheme(self) -> typing.Optional[builtins.str]:
         '''Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#credentials_scheme AppAutoLogin#credentials_scheme}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#credentials_scheme AppAutoLogin#credentials_scheme}
         '''
         result = self._values.get("credentials_scheme")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1176,7 +1176,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enduser_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for end users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#enduser_note AppAutoLogin#enduser_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#enduser_note AppAutoLogin#enduser_note}
         '''
         result = self._values.get("enduser_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1187,7 +1187,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon on mobile app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#hide_ios AppAutoLogin#hide_ios}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#hide_ios AppAutoLogin#hide_ios}
         '''
         result = self._values.get("hide_ios")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1198,14 +1198,14 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon to users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#hide_web AppAutoLogin#hide_web}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#hide_web AppAutoLogin#hide_web}
         '''
         result = self._values.get("hide_web")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#id AppAutoLogin#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#id AppAutoLogin#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1219,7 +1219,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The file must be in PNG, JPG, or GIF format, and less than 1 MB in size.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#logo AppAutoLogin#logo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#logo AppAutoLogin#logo}
         '''
         result = self._values.get("logo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1228,7 +1228,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def preconfigured_app(self) -> typing.Optional[builtins.str]:
         '''Tells Okta to use an existing application in their application catalog, as opposed to a custom application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#preconfigured_app AppAutoLogin#preconfigured_app}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#preconfigured_app AppAutoLogin#preconfigured_app}
         '''
         result = self._values.get("preconfigured_app")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1241,7 +1241,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#reveal_password AppAutoLogin#reveal_password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#reveal_password AppAutoLogin#reveal_password}
         '''
         result = self._values.get("reveal_password")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1250,7 +1250,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def shared_password(self) -> typing.Optional[builtins.str]:
         '''Shared password, required for certain schemes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#shared_password AppAutoLogin#shared_password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#shared_password AppAutoLogin#shared_password}
         '''
         result = self._values.get("shared_password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1259,7 +1259,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def shared_username(self) -> typing.Optional[builtins.str]:
         '''Shared username, required for certain schemes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#shared_username AppAutoLogin#shared_username}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#shared_username AppAutoLogin#shared_username}
         '''
         result = self._values.get("shared_username")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1268,7 +1268,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def sign_on_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Post login redirect URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#sign_on_redirect_url AppAutoLogin#sign_on_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#sign_on_redirect_url AppAutoLogin#sign_on_redirect_url}
         '''
         result = self._values.get("sign_on_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1277,7 +1277,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def sign_on_url(self) -> typing.Optional[builtins.str]:
         '''Login URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#sign_on_url AppAutoLogin#sign_on_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#sign_on_url AppAutoLogin#sign_on_url}
         '''
         result = self._values.get("sign_on_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1286,7 +1286,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Status of application. By default, it is ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#status AppAutoLogin#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#status AppAutoLogin#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1295,7 +1295,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["AppAutoLoginTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#timeouts AppAutoLogin#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#timeouts AppAutoLogin#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["AppAutoLoginTimeouts"], result)
@@ -1304,7 +1304,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template(self) -> typing.Optional[builtins.str]:
         '''Username template. Default: ``${source.login}``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template AppAutoLogin#user_name_template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template AppAutoLogin#user_name_template}
         '''
         result = self._values.get("user_name_template")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1313,7 +1313,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_push_status(self) -> typing.Optional[builtins.str]:
         '''Push username on update. Valid values: ``PUSH`` and ``DONT_PUSH``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template_push_status AppAutoLogin#user_name_template_push_status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template_push_status AppAutoLogin#user_name_template_push_status}
         '''
         result = self._values.get("user_name_template_push_status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1322,7 +1322,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_suffix(self) -> typing.Optional[builtins.str]:
         '''Username template suffix.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template_suffix AppAutoLogin#user_name_template_suffix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template_suffix AppAutoLogin#user_name_template_suffix}
         '''
         result = self._values.get("user_name_template_suffix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1331,7 +1331,7 @@ class AppAutoLoginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_type(self) -> typing.Optional[builtins.str]:
         '''Username template type. Default: ``BUILT_IN``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#user_name_template_type AppAutoLogin#user_name_template_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#user_name_template_type AppAutoLogin#user_name_template_type}
         '''
         result = self._values.get("user_name_template_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1362,9 +1362,9 @@ class AppAutoLoginTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#create AppAutoLogin#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#read AppAutoLogin#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#update AppAutoLogin#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#create AppAutoLogin#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#read AppAutoLogin#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#update AppAutoLogin#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__70f302eb65a2e1b8c439e4de742e4a0fcbc23685084eaf9b24f6dfafacbe33a0)
@@ -1381,19 +1381,19 @@ class AppAutoLoginTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#create AppAutoLogin#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#create AppAutoLogin#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#read AppAutoLogin#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#read AppAutoLogin#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_auto_login#update AppAutoLogin#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_auto_login#update AppAutoLogin#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 

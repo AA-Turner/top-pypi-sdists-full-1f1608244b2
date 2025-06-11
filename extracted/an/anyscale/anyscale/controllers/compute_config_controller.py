@@ -166,19 +166,6 @@ class ComputeConfigController(BaseController):
 
         Information in output: Link to cluster compute in UI, cluster compute id
         """
-        enable_compute_config_versioning = self.api_client.check_is_feature_flag_on_api_v2_userinfo_check_is_feature_flag_on_get(
-            "compute-config-versioning"
-        ).result.is_on
-
-        if not enable_compute_config_versioning and name and ":" in name:
-            log.warning(
-                "The compute config's name contains colons (`:`). "
-                "Colons will be a reserved character after 04/01/2024, "
-                "and before then, we are discouraging using colons in the name of compute configs. "
-                "Also, all existing colons will be replaced by hyphens at 04/01/2024 "
-                "as the versioning feature is enabled."
-            )
-
         try:
             cluster_compute: Dict[str, Any] = yaml.load(
                 cluster_compute_file, Loader=SafeLoader
@@ -212,9 +199,7 @@ class ComputeConfigController(BaseController):
 
         cluster_compute_response = self.anyscale_api_client.create_cluster_compute(
             CreateClusterCompute(
-                name=name,
-                config=cluster_compute_config,
-                new_version=enable_compute_config_versioning,
+                name=name, config=cluster_compute_config, new_version=True,
             )
         )
         created_cluster_compute = cluster_compute_response.result
@@ -222,7 +207,7 @@ class ComputeConfigController(BaseController):
         cluster_compute_name = created_cluster_compute.name
         cluster_compute_version = created_cluster_compute.version
         url = get_endpoint(f"/configurations/cluster-computes/{cluster_compute_id}")
-        if enable_compute_config_versioning and cluster_compute_version > 1:
+        if cluster_compute_version > 1:
             log.info(f"A new version of {cluster_compute_name} was created.")
         else:
             log.info("A new compute config was created.")
@@ -230,8 +215,7 @@ class ComputeConfigController(BaseController):
         log.info(f"View this compute config at: {url}.")
         log.info(f"Compute config id: {cluster_compute_id}.")
         log.info(f"Compute config name: {cluster_compute_name}.")
-        if enable_compute_config_versioning:
-            log.info(f"Compute config version: {cluster_compute_version}.")
+        log.info(f"Compute config version: {cluster_compute_version}.")
 
     def archive(
         self, compute_config_entity: Union[IdBasedEntity, NameBasedEntity]

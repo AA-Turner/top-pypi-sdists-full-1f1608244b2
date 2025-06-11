@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 import sys
-from dataclasses import dataclass
 from functools import lru_cache
 from typing import Any, Callable, Dict, Union, overload
 from urllib.request import urlopen
 
-import jsonschema
 import requests
-from jsonschema.exceptions import RefResolutionError
 
-from ...constants import DEFAULT_RESPONSE_TIMEOUT
-from ...internal.copy import fast_deepcopy
-from ...loaders import load_yaml
+from schemathesis.core.compat import RefResolutionError, RefResolver
+from schemathesis.core.deserialization import deserialize_yaml
+from schemathesis.core.transforms import deepclone
+from schemathesis.core.transport import DEFAULT_RESPONSE_TIMEOUT
+
 from .constants import ALL_KEYWORDS
 from .converter import to_json_schema_recursive
 from .utils import get_type
@@ -24,7 +23,7 @@ RECURSION_DEPTH_LIMIT = 100
 def load_file_impl(location: str, opener: Callable) -> dict[str, Any]:
     """Load a schema from the given file."""
     with opener(location) as fd:
-        return load_yaml(fd)
+        return deserialize_yaml(fd)
 
 
 @lru_cache
@@ -41,14 +40,14 @@ def load_file_uri(location: str) -> dict[str, Any]:
 
 def load_remote_uri(uri: str) -> Any:
     """Load the resource and parse it as YAML / JSON."""
-    response = requests.get(uri, timeout=DEFAULT_RESPONSE_TIMEOUT / 1000)
-    return load_yaml(response.content)
+    response = requests.get(uri, timeout=DEFAULT_RESPONSE_TIMEOUT)
+    return deserialize_yaml(response.content)
 
 
 JSONType = Union[None, bool, float, str, list, Dict[str, Any]]
 
 
-class InliningResolver(jsonschema.RefResolver):
+class InliningResolver(RefResolver):
     """Inlines resolved schemas."""
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -75,12 +74,10 @@ class InliningResolver(jsonschema.RefResolver):
                 raise
 
     @overload
-    def resolve_all(self, item: dict[str, Any], recursion_level: int = 0) -> dict[str, Any]:
-        pass
+    def resolve_all(self, item: dict[str, Any], recursion_level: int = 0) -> dict[str, Any]: ...
 
     @overload
-    def resolve_all(self, item: list, recursion_level: int = 0) -> list:
-        pass
+    def resolve_all(self, item: list, recursion_level: int = 0) -> list: ...
 
     def resolve_all(self, item: JSONType, recursion_level: int = 0) -> JSONType:
         """Recursively resolve all references in the given object."""
@@ -95,7 +92,7 @@ class InliningResolver(jsonschema.RefResolver):
                     # In other cases, this method create new objects for mutable types (dict & list)
                     next_recursion_level = recursion_level + 1
                     if next_recursion_level > RECURSION_DEPTH_LIMIT:
-                        copied = fast_deepcopy(resolved)
+                        copied = deepclone(resolved)
                         remove_optional_references(copied)
                         return copied
                     return resolve(resolved, next_recursion_level)
@@ -238,41 +235,3 @@ def remove_optional_references(schema: dict[str, Any]) -> None:
                 clean_additional_properties(definition)
             for k in on_single_item_combinators(definition):
                 del definition[k]
-
-
-@dataclass
-class Unresolvable:
-    pass
-
-
-UNRESOLVABLE = Unresolvable()
-
-
-def resolve_pointer(document: Any, pointer: str) -> dict | list | str | int | float | None | Unresolvable:
-    """Implementation is adapted from Rust's `serde-json` crate.
-
-    Ref: https://github.com/serde-rs/json/blob/master/src/value/mod.rs#L751
-    """
-    if not pointer:
-        return document
-    if not pointer.startswith("/"):
-        return UNRESOLVABLE
-
-    def replace(value: str) -> str:
-        return value.replace("~1", "/").replace("~0", "~")
-
-    tokens = map(replace, pointer.split("/")[1:])
-    target = document
-    for token in tokens:
-        if isinstance(target, dict):
-            target = target.get(token, UNRESOLVABLE)
-            if target is UNRESOLVABLE:
-                return UNRESOLVABLE
-        elif isinstance(target, list):
-            try:
-                target = target[int(token)]
-            except IndexError:
-                return UNRESOLVABLE
-        else:
-            return UNRESOLVABLE
-    return target

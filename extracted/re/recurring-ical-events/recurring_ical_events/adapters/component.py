@@ -60,7 +60,10 @@ class ComponentAdapter(ABC):
     @cached_property
     def span(self):
         """Return (start, end)."""
-        return make_comparable((self.raw_start, self.raw_end))
+        start, end = make_comparable((self.raw_start, self.raw_end))
+        if start > end:
+            return end, start
+        return start, end
 
     @property
     @abstractmethod
@@ -116,7 +119,9 @@ class ComponentAdapter(ABC):
         for subcomponent in self._component.subcomponents:
             copied_component.add_component(subcomponent)
         if "RECURRENCE-ID" not in copied_component:
-            copied_component["RECURRENCE-ID"] = copied_component["DTSTART"]
+            copied_component["RECURRENCE-ID"] = vDDDTypes(
+                copied_component["DTSTART"].dt
+            )
         return copied_component
 
     @cached_property

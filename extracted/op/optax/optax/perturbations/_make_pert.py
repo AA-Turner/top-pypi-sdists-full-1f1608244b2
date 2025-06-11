@@ -16,18 +16,13 @@
 """Creates a differentiable approximation of a function with perturbations."""
 
 
-import operator
-from typing import Any, Callable, Sequence
+from typing import Callable
 
 import chex
 import jax
-from jax import tree_util as jtu
 import jax.numpy as jnp
-from optax import tree_utils as otu
 from optax._src import base
-
-
-Shape = base.Shape
+import optax.tree
 
 
 class Normal:
@@ -35,11 +30,11 @@ class Normal:
 
   def sample(
       self,
-      seed: chex.PRNGKey,
-      sample_shape: Shape,
-      dtype: chex.ArrayDType = float,
+      key: jax.typing.ArrayLike,
+      sample_shape: base.Shape = (),
+      dtype: jax.typing.DTypeLike = float,
   ) -> jax.Array:
-    return jax.random.normal(seed, sample_shape, dtype)
+    return jax.random.normal(key, sample_shape, dtype)
 
   def log_prob(self, inputs: jax.Array) -> jax.Array:
     return -0.5 * inputs**2
@@ -50,45 +45,14 @@ class Gumbel:
 
   def sample(
       self,
-      seed: chex.PRNGKey,
-      sample_shape: Shape,
-      dtype: chex.ArrayDType = float,
+      key: jax.typing.ArrayLike,
+      sample_shape: base.Shape = (),
+      dtype: jax.typing.DTypeLike = float,
   ) -> jax.Array:
-    return jax.random.gumbel(seed, sample_shape, dtype)
+    return jax.random.gumbel(key, sample_shape, dtype)
 
   def log_prob(self, inputs: jax.Array) -> jax.Array:
     return -inputs - jnp.exp(-inputs)
-
-
-def _tree_mean_across(trees: Sequence[chex.ArrayTree]) -> chex.ArrayTree:
-  """Mean across a list of trees.
-
-  Args:
-    trees: List or tuple of pytrees with the same structure.
-
-  Returns:
-    a pytree with the same structure as each tree in ``trees`` with leaves being
-    the mean across the trees.
-
-  Examples:
-    >>> optax.tree_utils.tree_reduce_mean_across(
-    ...   [{'first': [1, 2], 'last': 3},
-    ...    {'first': [5, 6], 'last': 7}]
-    ...   )
-    {'first': [3, 4], 'last': 5}
-  """
-  mean_fun = lambda x: sum(x) / len(trees)
-  return jtu.tree_map(lambda *leaves: mean_fun(leaves), *trees)
-
-
-def _tree_vmap(
-    fun: Callable[[chex.ArrayTree], chex.ArrayTree],
-    trees: Sequence[chex.ArrayTree],
-) -> chex.ArrayTree:
-  """Applies a function to a list of trees, akin to a vmap."""
-  tree_def_in = jtu.tree_structure(trees[0])
-  has_in_structure = lambda x: jtu.tree_structure(x) == tree_def_in
-  return jtu.tree_map(fun, trees, is_leaf=has_in_structure)
 
 
 def make_perturbed_fun(
@@ -96,100 +60,112 @@ def make_perturbed_fun(
     num_samples: int = 1000,
     sigma: float = 0.1,
     noise=Gumbel(),
-) -> Callable[[chex.ArrayTree, chex.PRNGKey], chex.ArrayTree]:
-  r"""Turns a function into a differentiable approximation, with perturbations.
+    use_baseline=True,
+) -> Callable[[chex.PRNGKey, chex.ArrayTree], chex.ArrayTree]:
+  r"""Returns a differentiable approximation of a function, using stochastic perturbations.
 
-  For a function :math:`f` (``fun``), it creates a proxy :math:`f_\sigma`
-  defined by
+  Let :math:`f` be a function, :math:`\sigma` be a scalar, :math:`\mu` be a
+  noise distribution, and
 
   .. math::
+    f_\sigma(x) = \mathbb{E}_{z \sim \mu} f(x + \sigma z)
 
-    f_\sigma(x) = E[f(x +\sigma Z)]
+  Given certain conditions on :math:`\mu`, :math:`f_\sigma` is a smoothed,
+  differentiable approximation of :math:`f`, even if :math:`f` itself is not
+  differentiable.
 
-  for :math:`Z` a random variable sample from the noise sampler. This implements
-  a Monte-Carlo estimate.
+  :func:`optax.perturbations.make_perturbed_fun` yields a stochastic function
+  whose values and arbitrary-order derivatives (when computed through `JAX's
+  automatic differentiation
+  <https://docs.jax.dev/en/latest/automatic-differentiation.html>`_
+  system) are unbiased Monte-Carlo estimates of the corresponding values and
+  derivatives of :math:`f_\sigma`. These estimates are computed using only
+  values (not derivatives) of :math:`f`, at stochastic perturbations of the
+  input. Thus :math:`f` itself does not have to be differentiable.
 
   Args:
-    fun: The function to transform into a differentiable function. Signature
-      currently supported is from pytree to pytree, whose leaves are jax arrays.
+    fun: The function to transform into a differentiable function. The signature
+      currently supported is from pytree to pytree, whose leaves are JAX arrays.
     num_samples: an int, the number of perturbed outputs to average over.
     sigma: a float, the scale of the random perturbation.
-    noise: a distribution object that must implement a sample function and a
-      log-pdf of the desired distribution, similar to
-      :class:optax.perturbations.Gumbel. Default is Gumbel distribution.
+    noise: a distribution object that implements ``sample`` and ``log_prob``
+      methods, like :class:`optax.perturbations.Gumbel` (which is the default).
+    use_baseline: Use the value of the function at the unperturbed input as a
+      baseline for variance reduction.
 
   Returns:
-    A function with the same signature (plus an additional rng in the input)
-    that can be automatically differentiated.
+    A new function with the same signature as the original function, but with a
+    leading random PRNG key argument.
+
+  Example:
+    >>> import jax
+    >>> import jax.numpy as jnp
+    >>> from optax.perturbations import make_perturbed_fun
+    >>> key = jax.random.key(0)
+    >>> x = jnp.array([0.0, 0.0, 0.0])
+    >>> f = lambda x: jnp.sum(jnp.maximum(x, 0.0))
+    >>> fn = make_perturbed_fun(f, 1_000, 0.1)
+    >>> with jnp.printoptions(precision=2):
+    ...   print(jax.grad(fn, argnums=1)(key, x))
+    [0.69 0.72 0.58]
+
+  .. note::
+    For the curious reader, :math:`f_\sigma` can also be expressed as
+
+    .. math::
+      f_\sigma(x) = \mathbb{E}_{y \sim \nu(x, \sigma)} f(y)
+
+    where :math:`\nu(x, \sigma)` is the probability distribution of the random
+    variable :math:`x + \sigma z`.
+
+    The gradient can then be obtained by the score function estimator, a.k.a.
+    REINFORCE. We implement the score function estimator through the "magic
+    box" operator introduced by Foerster et al, 2018, so that the returned
+    function provides stochastic estimates of derivatives of any order by simply
+    using `JAX's automatic differentiation
+    <https://docs.jax.dev/en/latest/automatic-differentiation.html>`_ system.
 
   References:
     Berthet et al., `Learning with Differentiable Perturbed Optimizers
     <https://arxiv.org/abs/2002.08676>`_, 2020
 
+    Foerster et al., `DiCE: The Infinitely Differentiable Monte Carlo Estimator
+    <https://arxiv.org/abs/1802.05098>`_, 2018
+
   .. seealso::
     * :doc:`../_collections/examples/perturbations` example.
   """
 
-  def _compute_residuals(
-      inputs: chex.ArrayTree, rng: chex.PRNGKey
-  ) -> tuple[chex.ArrayTree, chex.ArrayTree]:
-    # random noise Zs to be added to inputs
-    samples = [
-        otu.tree_random_like(rng_, inputs, sampler=noise.sample)
-        for rng_ in jax.random.split(rng, num_samples)
-    ]
-    # creates [inputs + Z_1, ..., inputs + Z_num_samples]
-    inputs_pert = _tree_vmap(
-        lambda z: otu.tree_add_scalar_mul(inputs, sigma, z), samples
+  def mc_estimator(key: chex.PRNGKey, x: chex.ArrayTree) -> chex.ArrayTree:
+
+    def stoch_estimator(
+        key: chex.PRNGKey, x: chex.ArrayTree, baseline: chex.ArrayTree
+    ) -> chex.ArrayTree:
+      sample = optax.tree.random_like(key, x, sampler=noise.sample)
+      shifted_sample = jax.tree.map(lambda x, z: x + sigma * z, x, sample)
+      shifted_sample = jax.lax.stop_gradient(shifted_sample)
+      sample = jax.tree.map(lambda x, y: (y - x) / sigma, x, shifted_sample)
+
+      log_prob_sample = optax.tree.sum(jax.tree.map(noise.log_prob, sample))
+      box = _magicbox(log_prob_sample)
+      out = optax.tree.scale(box, fun(shifted_sample))
+      if use_baseline:
+        out = optax.tree.add_scale(out, 1 - box, baseline)
+      return out
+
+    if use_baseline:
+      baseline = fun(jax.lax.stop_gradient(x))
+    else:
+      baseline = None
+
+    out = jax.vmap(stoch_estimator, in_axes=(0, None, None), out_axes=0)(
+        jax.random.split(key, num_samples), x, baseline
     )
-    # applies fun: [fun(inputs + Z_1), ..., fun(inputs + Z_num_samples)]
-    outputs_pert = _tree_vmap(fun, inputs_pert)
-    return outputs_pert, samples
+    return jax.tree.map(lambda x: jnp.mean(x, axis=0), out)
 
-  @jax.custom_jvp
-  def fun_perturb(inputs: chex.ArrayTree, rng: chex.PRNGKey) -> chex.ArrayTree:
-    outputs_pert, _ = _compute_residuals(inputs, rng)
-    # averages the perturbed outputs
-    return _tree_mean_across(outputs_pert)
+  return mc_estimator
 
-  def fun_perturb_jvp(
-      tangent: chex.ArrayTree, _: Any, inputs: chex.ArrayTree, rng: chex.PRNGKey
-  ) -> chex.ArrayTree:
-    """Computes the jacobian vector product.
 
-    Following the method in [Berthet et al. 2020], for a vector `g`, we have
-    Jac(fun_perturb)(inputs) * g =
-    - E[fun(inputs + sigma * Z) * <grad log_prob(Z), g>].
-    This implements a Monte-Carlo estimate
-
-    Args:
-      tangent: the tangent in the jacobian vector product.
-      _: not used.
-      inputs: the inputs to the function.
-      rng: the random number generator key.
-
-    Returns:
-      The jacobian vector product.
-    """
-    outputs_pert, samples = _compute_residuals(inputs, rng)
-    array_sum_log_prob_func = lambda x: jnp.sum(noise.log_prob(x))
-    array_grad_log_prob_func = jax.grad(array_sum_log_prob_func)
-    # computes [grad log_prob(Z_1), ... , grad log_prob(Z_num_samples)]
-    tree_sum_log_probs = jtu.tree_map(array_grad_log_prob_func, samples)
-    fun_dot_prod = lambda z: jax.tree_util.tree_map(jnp.dot, z, tangent)
-    list_tree_dot_prods = _tree_vmap(fun_dot_prod, tree_sum_log_probs)
-    # computes [<grad log_prob(Z_1), g>, .. , <grad log_prob(Z_num_samples), g>]
-    list_dot_prods = _tree_vmap(
-        lambda x: jnp.sum(jtu.tree_reduce(operator.add, x)), list_tree_dot_prods
-    )
-    # TODO(qberthet): implement with the jvp of the grad log prob.
-    # computes 1/M * sum_i fun(inputs + sigma * Z_i) < - grad log_prob(Z_i), g>
-    tangent_out = _tree_mean_across([
-        otu.tree_scalar_mul(-scalar_dot_prod, output)
-        for scalar_dot_prod, output in zip(list_dot_prods, outputs_pert)
-    ])
-    return tangent_out
-
-  fun_perturb.defjvps(fun_perturb_jvp, None)
-
-  return fun_perturb
+def _magicbox(x):
+  """MagicBox operator."""
+  return jnp.exp(x - jax.lax.stop_gradient(x))

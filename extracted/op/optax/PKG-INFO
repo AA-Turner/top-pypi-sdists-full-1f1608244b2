@@ -1,10 +1,10 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: optax
-Version: 0.2.4
+Version: 0.2.5
 Summary: A gradient processing and optimization library in JAX.
 Keywords: python,machine learning,reinforcement-learning
 Author-email: Google DeepMind <optax-dev@google.com>
-Requires-Python: >=3.9
+Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 Classifier: Environment :: Console
 Classifier: Programming Language :: Python
@@ -16,12 +16,12 @@ Classifier: Development Status :: 4 - Beta
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
+License-File: LICENSE
 Requires-Dist: absl-py>=0.7.1
 Requires-Dist: chex>=0.1.87
 Requires-Dist: jax>=0.4.27
 Requires-Dist: jaxlib>=0.4.27
 Requires-Dist: numpy>=1.18.0
-Requires-Dist: etils[epy]
 Requires-Dist: sphinx>=6.0.0 ; extra == "docs"
 Requires-Dist: sphinx-book-theme>=1.0.1 ; extra == "docs"
 Requires-Dist: sphinxcontrib-katex ; extra == "docs"
@@ -31,21 +31,8 @@ Requires-Dist: myst-nb>=1.0.0 ; extra == "docs"
 Requires-Dist: matplotlib>=3.5.0 ; extra == "docs"
 Requires-Dist: sphinx-gallery>=0.14.0 ; extra == "docs"
 Requires-Dist: sphinx-collections>=0.0.1 ; extra == "docs"
-Requires-Dist: tensorflow>=2.4.0 ; extra == "docs"
-Requires-Dist: tensorflow-datasets>=4.2.0 ; extra == "docs"
 Requires-Dist: flax ; extra == "docs"
 Requires-Dist: sphinx_contributors ; extra == "docs"
-Requires-Dist: absl-py>=1.0.0 ; extra == "dp-accounting"
-Requires-Dist: attrs>=21.4.0 ; extra == "dp-accounting"
-Requires-Dist: mpmath>=1.2.1 ; extra == "dp-accounting"
-Requires-Dist: numpy>=1.21.4 ; extra == "dp-accounting"
-Requires-Dist: scipy>=1.7.1 ; extra == "dp-accounting"
-Requires-Dist: tensorflow-datasets>=4.2.0 ; extra == "examples"
-Requires-Dist: tensorflow>=2.4.0 ; extra == "examples"
-Requires-Dist: dp_accounting>=0.4 ; extra == "examples"
-Requires-Dist: ipywidgets ; extra == "examples"
-Requires-Dist: flax ; extra == "examples"
-Requires-Dist: dm-tree>=0.1.7 ; extra == "test"
 Requires-Dist: flax>=0.5.3 ; extra == "test"
 Requires-Dist: scipy>=1.7.1 ; extra == "test"
 Requires-Dist: scikit-learn ; extra == "test"
@@ -53,8 +40,6 @@ Project-URL: documentation, https://optax.readthedocs.io/
 Project-URL: homepage, https://github.com/google-deepmind/optax
 Project-URL: repository, https://github.com/google-deepmind/optax
 Provides-Extra: docs
-Provides-Extra: dp-accounting
-Provides-Extra: examples
 Provides-Extra: test
 
 # Optax

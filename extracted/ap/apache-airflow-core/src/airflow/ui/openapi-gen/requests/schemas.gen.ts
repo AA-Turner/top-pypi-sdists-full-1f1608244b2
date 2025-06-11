@@ -521,13 +521,6 @@ export const $BaseInfoResponse = {
   description: "Base info serializer for responses.",
 } as const;
 
-export const $BulkAction = {
-  type: "string",
-  enum: ["create", "delete", "update"],
-  title: "BulkAction",
-  description: "Bulk Action to be performed on the used model.",
-} as const;
-
 export const $BulkActionNotOnExistence = {
   type: "string",
   enum: ["fail", "skip"],
@@ -655,7 +648,9 @@ export const $BulkBody_VariableBody_ = {
 export const $BulkCreateAction_ConnectionBody_ = {
   properties: {
     action: {
-      $ref: "#/components/schemas/BulkAction",
+      type: "string",
+      const: "create",
+      title: "Action",
       description: "The action to be performed on the entities.",
     },
     entities: {
@@ -680,7 +675,9 @@ export const $BulkCreateAction_ConnectionBody_ = {
 export const $BulkCreateAction_PoolBody_ = {
   properties: {
     action: {
-      $ref: "#/components/schemas/BulkAction",
+      type: "string",
+      const: "create",
+      title: "Action",
       description: "The action to be performed on the entities.",
     },
     entities: {
@@ -705,7 +702,9 @@ export const $BulkCreateAction_PoolBody_ = {
 export const $BulkCreateAction_VariableBody_ = {
   properties: {
     action: {
-      $ref: "#/components/schemas/BulkAction",
+      type: "string",
+      const: "create",
+      title: "Action",
       description: "The action to be performed on the entities.",
     },
     entities: {
@@ -730,7 +729,9 @@ export const $BulkCreateAction_VariableBody_ = {
 export const $BulkDeleteAction_ConnectionBody_ = {
   properties: {
     action: {
-      $ref: "#/components/schemas/BulkAction",
+      type: "string",
+      const: "delete",
+      title: "Action",
       description: "The action to be performed on the entities.",
     },
     entities: {
@@ -755,7 +756,9 @@ export const $BulkDeleteAction_ConnectionBody_ = {
 export const $BulkDeleteAction_PoolBody_ = {
   properties: {
     action: {
-      $ref: "#/components/schemas/BulkAction",
+      type: "string",
+      const: "delete",
+      title: "Action",
       description: "The action to be performed on the entities.",
     },
     entities: {
@@ -780,7 +783,9 @@ export const $BulkDeleteAction_PoolBody_ = {
 export const $BulkDeleteAction_VariableBody_ = {
   properties: {
     action: {
-      $ref: "#/components/schemas/BulkAction",
+      type: "string",
+      const: "delete",
+      title: "Action",
       description: "The action to be performed on the entities.",
     },
     entities: {
@@ -850,7 +855,9 @@ Fields are populated in the response only if the respective action was part of t
 export const $BulkUpdateAction_ConnectionBody_ = {
   properties: {
     action: {
-      $ref: "#/components/schemas/BulkAction",
+      type: "string",
+      const: "update",
+      title: "Action",
       description: "The action to be performed on the entities.",
     },
     entities: {
@@ -875,7 +882,9 @@ export const $BulkUpdateAction_ConnectionBody_ = {
 export const $BulkUpdateAction_PoolBody_ = {
   properties: {
     action: {
-      $ref: "#/components/schemas/BulkAction",
+      type: "string",
+      const: "update",
+      title: "Action",
       description: "The action to be performed on the entities.",
     },
     entities: {
@@ -900,7 +909,9 @@ export const $BulkUpdateAction_PoolBody_ = {
 export const $BulkUpdateAction_VariableBody_ = {
   properties: {
     action: {
-      $ref: "#/components/schemas/BulkAction",
+      type: "string",
+      const: "update",
+      title: "Action",
       description: "The action to be performed on the entities.",
     },
     entities: {
@@ -1715,6 +1726,20 @@ export const $DAGDetailsResponse = {
       ],
       title: "Last Parsed",
     },
+    owner_links: {
+      anyOf: [
+        {
+          additionalProperties: {
+            type: "string",
+          },
+          type: "object",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Owner Links",
+    },
     file_token: {
       type: "string",
       title: "File Token",
@@ -2233,8 +2258,15 @@ export const $DAGRunResponse = {
       ],
     },
     conf: {
-      additionalProperties: true,
-      type: "object",
+      anyOf: [
+        {
+          additionalProperties: true,
+          type: "object",
+        },
+        {
+          type: "null",
+        },
+      ],
       title: "Conf",
     },
     note: {
@@ -5772,22 +5804,6 @@ export const $BaseNodeResponse = {
 
 export const $ConfigResponse = {
   properties: {
-    navbar_color: {
-      type: "string",
-      title: "Navbar Color",
-    },
-    navbar_text_color: {
-      type: "string",
-      title: "Navbar Text Color",
-    },
-    navbar_hover_color: {
-      type: "string",
-      title: "Navbar Hover Color",
-    },
-    navbar_text_hover_color: {
-      type: "string",
-      title: "Navbar Text Hover Color",
-    },
     page_size: {
       type: "integer",
       title: "Page Size",
@@ -5846,10 +5862,6 @@ export const $ConfigResponse = {
   },
   type: "object",
   required: [
-    "navbar_color",
-    "navbar_text_color",
-    "navbar_hover_color",
-    "navbar_text_hover_color",
     "page_size",
     "auto_refresh_interval",
     "hide_paused_dags_by_default",

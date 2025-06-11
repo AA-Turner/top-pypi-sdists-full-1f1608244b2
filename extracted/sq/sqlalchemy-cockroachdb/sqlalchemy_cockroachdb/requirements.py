@@ -155,6 +155,11 @@ class Requirements(SuiteRequirementsSQLA, SuiteRequirementsAlembic):
     implicitly_named_constraints = exclusions.open()
     supports_distinct_on = exclusions.open()
 
+    fk_ondelete_noaction = exclusions.closed()
+    fk_ondelete_restrict = exclusions.closed()
+    fk_onupdate = exclusions.closed()
+    fk_onupdate_restrict = exclusions.closed()
+
     @property
     def sync_driver(self):
         return exclusions.only_if(
@@ -176,12 +181,16 @@ class Requirements(SuiteRequirementsSQLA, SuiteRequirementsAlembic):
 
     @property
     def json_deserializer_binary(self):
-        return exclusions.only_if(
-            lambda config: config.db.dialect.driver in ["psycopg"]
-        )
+        return exclusions.only_if(lambda config: config.db.dialect.driver in ["psycopg"])
 
     def get_isolation_levels(self, config):
-        return {"default": "SERIALIZABLE", "supported": ["SERIALIZABLE", "AUTOCOMMIT"]}
+        info = {
+            "default": "SERIALIZABLE",
+            "supported": ["SERIALIZABLE", "AUTOCOMMIT"],
+        }
+        if config.db.dialect._is_v232plus:
+            info["supported"].append("READ COMMITTED")
+        return info
 
     @property
     def autocommit(self):

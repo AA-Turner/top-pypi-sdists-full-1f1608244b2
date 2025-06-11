@@ -48,7 +48,7 @@ def parse_pydantic_model(model: type[BaseModel], json_str: str) -> BaseModel:
         return model.model_validate_json(json_str)  # pyright: ignore[reportAttributeAccessIssue]
 
 
-def construct_pydantic_model(model: type[BaseModel], **kwargs: Any) -> BaseModel:
+def construct_pydantic_model(model: type[BaseModel], /, **kwargs: Any) -> BaseModel:
     if is_pydantic_v1 or _is_pydantic_v1_basemodel(model):
         return model.construct(**kwargs)
     else:

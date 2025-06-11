@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/google provider version 6.38.0
+# CDKTF prebuilt bindings for hashicorp/google provider version 6.39.0
 
-This repo builds and publishes the [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform google provider version 1:
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.38.0)
+* [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.39.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -184,6 +184,7 @@ __all__ = [
     "apigee_sync_authorization",
     "apigee_target_server",
     "apihub_api_hub_instance",
+    "apihub_curation",
     "apihub_host_project_registration",
     "apikeys_key",
     "app_engine_application",
@@ -419,6 +420,8 @@ __all__ = [
     "compute_instant_snapshot_iam_policy",
     "compute_interconnect",
     "compute_interconnect_attachment",
+    "compute_interconnect_attachment_group",
+    "compute_interconnect_group",
     "compute_managed_ssl_certificate",
     "compute_network",
     "compute_network_attachment",
@@ -487,6 +490,7 @@ __all__ = [
     "compute_snapshot_iam_binding",
     "compute_snapshot_iam_member",
     "compute_snapshot_iam_policy",
+    "compute_snapshot_settings",
     "compute_ssl_certificate",
     "compute_ssl_policy",
     "compute_storage_pool",
@@ -1607,6 +1611,7 @@ from . import apigee_sharedflow_deployment
 from . import apigee_sync_authorization
 from . import apigee_target_server
 from . import apihub_api_hub_instance
+from . import apihub_curation
 from . import apihub_host_project_registration
 from . import apikeys_key
 from . import app_engine_application
@@ -1842,6 +1847,8 @@ from . import compute_instant_snapshot_iam_member
 from . import compute_instant_snapshot_iam_policy
 from . import compute_interconnect
 from . import compute_interconnect_attachment
+from . import compute_interconnect_attachment_group
+from . import compute_interconnect_group
 from . import compute_managed_ssl_certificate
 from . import compute_network
 from . import compute_network_attachment
@@ -1910,6 +1917,7 @@ from . import compute_snapshot
 from . import compute_snapshot_iam_binding
 from . import compute_snapshot_iam_member
 from . import compute_snapshot_iam_policy
+from . import compute_snapshot_settings
 from . import compute_ssl_certificate
 from . import compute_ssl_policy
 from . import compute_storage_pool

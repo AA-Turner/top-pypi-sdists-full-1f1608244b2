@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-user-tasks
-Version: 3.4.0
+Version: 3.4.1
 Summary: Management of user-triggered asynchronous tasks in Django projects
 Home-page: https://github.com/openedx/django-user-tasks
 Author: edX
@@ -160,6 +160,14 @@ Change Log
 
 Unreleased
 ~~~~~~~~~~
+
+[3.4.1] - 2025-04-20
+~~~~~~~~~~~~~~~~~~~~
+
+Changed
++++++++
+* Fix `get_storage` method.
+
 
 [3.4.0] - 2025-04-05
 ~~~~~~~~~~~~~~~~~~~~

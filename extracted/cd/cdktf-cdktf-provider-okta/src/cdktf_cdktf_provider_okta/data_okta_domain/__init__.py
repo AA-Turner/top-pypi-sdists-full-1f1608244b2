@@ -1,7 +1,7 @@
 r'''
 # `data_okta_domain`
 
-Refer to the Terraform Registry for docs: [`data_okta_domain`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/domain).
+Refer to the Terraform Registry for docs: [`data_okta_domain`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/domain).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaDomain(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaDomain.DataOktaDomain",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/domain okta_domain}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/domain okta_domain}.'''
 
     def __init__(
         self,
@@ -60,11 +60,11 @@ class DataOktaDomain(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/domain okta_domain} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/domain okta_domain} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param domain_id_or_name: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/domain#domain_id_or_name DataOktaDomain#domain_id_or_name}
+        :param domain_id_or_name: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/domain#domain_id_or_name DataOktaDomain#domain_id_or_name}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -103,7 +103,7 @@ class DataOktaDomain(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaDomain to import.
-        :param import_from_id: The id of the existing DataOktaDomain that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/domain#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaDomain that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/domain#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaDomain to import is found.
         '''
         if __debug__:
@@ -210,7 +210,7 @@ class DataOktaDomainConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param domain_id_or_name: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/domain#domain_id_or_name DataOktaDomain#domain_id_or_name}
+        :param domain_id_or_name: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/domain#domain_id_or_name DataOktaDomain#domain_id_or_name}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -310,7 +310,7 @@ class DataOktaDomainConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def domain_id_or_name(self) -> builtins.str:
         '''Brand ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/domain#domain_id_or_name DataOktaDomain#domain_id_or_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/domain#domain_id_or_name DataOktaDomain#domain_id_or_name}
         '''
         result = self._values.get("domain_id_or_name")
         assert result is not None, "Required property 'domain_id_or_name' is missing"

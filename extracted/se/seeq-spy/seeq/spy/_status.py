@@ -9,12 +9,15 @@ from functools import wraps
 from typing import Tuple, Callable, Dict, Optional
 
 import pandas as pd
+import time
 
 import seeq
 from seeq.spy import _common, _datalab
 from seeq.spy._errors import *
 from seeq.spy._session import Session
 from seeq.spy._usage import Usage
+
+display_thread_lock = threading.Lock()
 
 
 class Status:
@@ -36,10 +39,15 @@ class Status:
     FAILURE = 2
     CANCELED = 3
 
+    JUPYTER_REFRESH_RATE_IN_SECONDS = 2.0
+
     class Interrupt(BaseException):
         pass
 
     jobs: Dict[object, Tuple[Tuple, Optional[Callable[[object, object], None]]]]
+    display_ipython_queue: queue.Queue
+    display_ipython_thread: threading.Thread
+    display_ipython_now: _common.AutoResetEvent
 
     def __init__(self, quiet: Optional[bool] = None, errors: Optional[str] = None,
                  *, session: Session = None, on_update: Optional[Callable[[object], None]] = None):
@@ -49,7 +57,7 @@ class Status:
         self.timer = _common.timer_start()
         self.message = None
         self.code = None
-        self.warnings = set()
+        self.warnings = list()
         self.printed_warnings = set()
         self.inner = dict()
         self.update_queue = queue.Queue()
@@ -59,6 +67,9 @@ class Status:
         self.on_update = on_update
         self.on_error = None
         self.session = session if session is not None else seeq.spy.session
+
+        # Used for testing only
+        self._display_callback = None
 
     def __str__(self):
         return self.message if self.message else 'Uninitialized'
@@ -100,7 +111,8 @@ class Status:
         return self.df.at[self.current_df_index, column]
 
     def warn(self, warning):
-        self.warnings.add(warning)
+        if warning not in self.warnings:
+            self.warnings.append(warning)
 
     def raise_or_put(self, e, column):
         self.put(column, _common.format_exception(e))
@@ -117,27 +129,33 @@ class Status:
             self.on_error(message)
 
     @staticmethod
-    def handle_keyboard_interrupt(*, errors=None, quiet=None):
+    def handle_keyboard_interrupt(*, errors=None, quiet=None, no_session=False, no_status=False):
         def decorator(func: Callable):
             @wraps(func)
             def out(*args, **kwargs):
-                kwargs['status'] = Status.validate(
-                    kwargs.get('status'), kwargs.get('session'),
-                    kwargs.get('quiet', quiet), kwargs.get('errors', errors))
+                if not no_session:
+                    kwargs['session'] = Session.validate(kwargs.get('session'))
 
-                for kwarg in ['quiet', 'errors']:
-                    if kwarg in kwargs:
-                        del kwargs[kwarg]
+                if not no_status:
+                    kwargs['status'] = Status.validate(
+                        kwargs.get('status'), kwargs.get('session'),
+                        kwargs.get('quiet', quiet), kwargs.get('errors', errors))
+
+                    for kwarg in ['quiet', 'errors']:
+                        if kwarg in kwargs:
+                            del kwargs[kwarg]
 
                 try:
                     return func(*args, **kwargs)
-                except KeyboardInterrupt as e:
-                    kwargs['status'].update('Operation canceled', Status.CANCELED)
+                except KeyboardInterrupt:
+                    if not no_status:
+                        kwargs['status'].update('Operation canceled', Status.CANCELED)
 
                     raise SPyKeyboardInterrupt('Operation canceled')
                 finally:
-                    # Ensures that any warnings that are added at the end of an operation are still displayed
-                    kwargs['status'].display()
+                    if not no_status:
+                        status: Status = kwargs['status']
+                        status._finish()
 
             return out
 
@@ -276,41 +294,79 @@ class Status:
             else:
                 self.message = self._display_html(new_message)
 
-    def _display_text(self, new_message):
-        if new_message == self.message:
-            return new_message
-        try:
-            from IPython.display import display
-        except ImportError:
-            return new_message
-
-        for warning in (self.warnings - self.printed_warnings):
-            display(warning)
-        self.printed_warnings = set(self.warnings)
-
-        text = re.sub(r'</?[^>]+>', '', new_message)
-
-        # noinspection PyTypeChecker
-        display(text)
-
-        return new_message
-
-    def display(self):
+    def display(self, *, finish: bool = False):
         """
-        Force the Status object to output its HTML-based display to the Notebook or the console. Note that this will
-        still honor the quiet flag and effectively do nothing if quiet is True.
+        Force this Status object to display its current message in the notebook. This is useful when you have inner
+        statuses that get hidden by an outer status, but the inner status is more useful (perhaps because it contains
+        links to workbooks etc). This will work regardless of whether `quiet` is set to True or False.
+        """
+        if not _common.display_supports_html():
+            self.message = self._display_text(self.message, warning_summary=finish)
+        else:
+            self.message = self._display_html(self.message)
+
+    def _finish(self):
+        """
+        Make sure all pending display messages are flushed to the notebook, otherwise the background thread could
+        call clear_output() on subsequent statements within the cell, erasing the output that the user wants to see.
         """
         if self._skip_display() or self.message is None:
             return
 
-        if not _common.display_supports_html():
-            self.message = self._display_text(self.message)
-        else:
-            self.message = self._display_html(self.message)
+        self.display(finish=True)
+
+        if not hasattr(Status, 'display_ipython_queue'):
+            return
+
+        timer = _common.timer_start()
+        while not Status.display_ipython_queue.empty():
+            try:
+                Status.display_ipython_now.set()
+                time.sleep(0.001)
+            except KeyboardInterrupt:
+                # This can happen if we are dying. Try to give some time for the display thread to finish.
+                if _common.timer_elapsed(timer) > 1.0:
+                    raise SPyKeyboardInterrupt()
+
+    def _display_text(self, new_message, *, warning_summary=False):
+        print_func = print
+        try:
+            from IPython.display import display, clear_output
+            clear_output(wait=True)
+            print_func = display
+        except ImportError:
+            pass
+
+        def _print_it(_str):
+            print_func(_str)
+            if self._display_callback is not None:
+                self._display_callback(_str)
+
+        if self.session is None:
+            pass
+
+        for warning in self.warnings[:self.session.options.status_warning_limit]:
+            if warning in self.printed_warnings:
+                continue
+
+            _print_it(warning)
+            self.printed_warnings.add(warning)
+
+        if warning_summary and len(self.warnings) > self.session.options.status_warning_limit:
+            _print_it(f' + {len(self.warnings) - self.session.options.status_warning_limit} more warning(s) '
+                      f'[set spy.options.status_warning_limit higher to see more warnings]')
+
+        if new_message == self.message:
+            return new_message
+
+        text = re.sub(r'</?[^>]+>', '', new_message)
+
+        if text:
+            _print_it(text)
+
+        return new_message
 
     def _display_html(self, new_message):
-        _common.ipython_clear_output(wait=True)
-
         display_df = self.df
         if self.code == Status.RUNNING and len(self.df) > 20 and 'Result' in self.df.columns:
             display_df = self.df[~self.df['Result'].str.startswith(('Queued', 'Success'))]
@@ -326,13 +382,19 @@ class Status:
 
         html = ''
         if len(self.warnings) > 0:
-            for warning in self.warnings:
-                html += '<div style="background-color: #FFFFCC; color:black;">%s</div>' % (
-                    Status._massage_cell(warning))
+            warning_list = list(sorted(self.warnings))
+            for warning in warning_list[:self.session.options.status_warning_limit]:
+                html += f'<div style="background-color: #FFFFCC; color:black;">{Status._massage_cell(warning)}</div>'
+            if len(warning_list) > self.session.options.status_warning_limit:
+                html += (f'<div style="background-color: #FFFFCC; color:black;">'
+                         f'  <strong>+ {len(warning_list) - self.session.options.status_warning_limit} more warning(s)</strong>'
+                         f'  [set spy.options.status_warning_limit higher to see more warnings]'
+                         f'</div>')
 
-        style = 'background-color: %s;' % color
-        html += '<div style="%s">%s</div>' % (
-            style + 'color:black; text-align: left;', Status._massage_cell(new_message))
+        style = f'background-color: %s;' % color
+        if new_message is not None:
+            html += '<div style="%s">%s</div>' % (
+                style + 'color:black; text-align: left;', Status._massage_cell(new_message))
 
         if len(display_df) > 0:
             # Ignore mathjax renderings so $...$ isn't converted to latex
@@ -360,18 +422,20 @@ class Status:
                         align = 'left' if isinstance(cell, str) else 'right'
                         html += '<td style="text-align: %s; vertical-align: top;">%s</td>' % \
                                 (align, Status._massage_cell(cell, links=True))
+
                 html += '</tr>'
 
             html += '</table>'
 
+        if not html:
+            return html
+
+        if self._display_callback is not None:
+            self._display_callback(html)
+
         # noinspection PyTypeChecker
         if _datalab.is_ipython():
-            try:
-                from IPython.display import display, HTML
-            except ImportError:
-                return new_message
-            _common.ipython_clear_output(wait=True)
-            display(HTML(html))
+            Status._display_ipython_html(html)
             return new_message
         elif _datalab.is_rkernel():
             # R users must wrap status messages in `display_html` to render them in the notebook. For example:
@@ -381,6 +445,67 @@ class Status:
             return html
         else:
             return html
+
+    @staticmethod
+    def _display_ipython_html(payload):
+        """
+        This method is used to display HTML content in Jupyter notebooks cell output. It uses a background thread to
+        periodically check for new content to display, throttling the number of IPython display() calls made to reduce
+        the chance that Jupyter will become unstable (see CRAB-49151).
+
+        The @Status.handle_keyboard_interrupt decorator plays a key role, it calls `Status._finish()` which waits until
+        the `display_ipython_queue` is drained by the background thread so that the messages relevant to a particular
+        Jupyter cell are guaranteed to appear in that cell and not "bleed" over to the next cell. It is therefore
+        important that the decorator is used on all top-level functions that involve Status and can be called by users.
+        """
+        with display_thread_lock:
+            if not hasattr(Status, 'display_ipython_queue'):
+                Status.display_ipython_queue = queue.Queue()
+                Status.display_ipython_now = _common.AutoResetEvent()
+                Status.display_ipython_thread = threading.Thread(target=Status._display_ipython_loop, daemon=True)
+                Status.display_ipython_thread.start()
+
+        Status.display_ipython_queue.put(payload)
+
+    @staticmethod
+    def _display_ipython_loop():
+        # This loop never exits (except by exception). It's launched as a "daemon" thread so it doesn't block the main
+        # thread from exiting, but it will continue to run in the background until the process exits.
+
+        try:
+            from IPython.display import display, HTML
+        except ImportError:
+            return
+
+        stop = False
+        while not stop:
+            # noinspection PyBroadException
+            try:
+                Status.display_ipython_now.wait(timeout=Status.JUPYTER_REFRESH_RATE_IN_SECONDS)
+            except:
+                # Try to get the last payload displayed before we have to exit
+                stop = True
+
+            payload = Status._get_ipython_display_payload()
+
+            if payload is None:
+                continue
+
+            if _common.display_supports_html():
+                display(HTML(payload), clear=True)
+            else:
+                display(payload, clear=True)
+
+    @staticmethod
+    def _get_ipython_display_payload():
+        payload = None
+        while True:
+            try:
+                payload = Status.display_ipython_queue.get_nowait()
+            except queue.Empty:
+                break
+
+        return payload
 
     @staticmethod
     def _massage_cell(cell, links=False):
@@ -448,6 +573,9 @@ class Status:
 
         if session is not None and not isinstance(session, Session):
             raise SPyTypeError(f'Argument session must be of type Session, not {type(session)}')
+
+        if session is None and (status is None or status.session is None):
+            session = seeq.spy.session
 
         if status is None:
             status = Status(quiet=quiet, errors=errors, session=session)

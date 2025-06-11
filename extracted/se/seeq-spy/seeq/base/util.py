@@ -5,12 +5,13 @@ import os
 import pathlib
 import re
 import shutil
-import sys
 import tempfile
-import time
 import warnings
 from inspect import stack
 from typing import Union
+
+import sys
+import time
 
 
 def remove_regex_capture_group_names(regex):
@@ -238,4 +239,22 @@ def handle_long_filenames(path: Union[str, pathlib.Path]):
 
 
 def cleanse_filename(filename, replacement_char='_'):
-    return re.sub(r'[:"%\\/<>^|?*&\[\]]', replacement_char, filename)
+    return re.sub(r'[:"%\\/<>^|?*&\[\]\x00-\x1F\x7F\u2028\u2029]', replacement_char, filename)
+
+
+def cleanse_path(path: str, replacement: str = "_") -> str:
+    drive, path_rest = os.path.splitdrive(path)
+
+    # Match:
+    # - control chars (ASCII 0–31 and 127)
+    # - illegal Windows characters: <>:"|?*
+    # - optionally, Unicode line/paragraph separators \u2028 \u2029
+    illegal_pattern = r'[<>:"|?*\x00-\x1F\x7F\u2028\u2029]'
+
+    path_rest = re.sub(illegal_pattern, replacement, path_rest)
+
+    # Strip trailing spaces or dots (invalid for Windows filenames)
+    path_rest = path_rest.rstrip(' .')
+
+    # noinspection PyTypeChecker
+    return os.path.join(drive, path_rest)

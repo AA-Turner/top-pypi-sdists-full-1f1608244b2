@@ -2,7 +2,6 @@ import os
 from typing import Iterable, Tuple
 
 import click
-from otel_extensions import instrumented
 from retry import retry
 
 from utf_queue_client.clients.sqa_test_result_producer import (
@@ -79,7 +78,6 @@ def cli(
         retry_wrapper()
 
 
-@instrumented
 def publish_test_results_through_queue(url, data_type: str, data_dict: dict):
     os.environ["UTF_QUEUE_SERVER_URL"] = url
     os.environ["UTF_PRODUCER_APP_ID"] = QUEUE_APP_ID
@@ -114,7 +112,6 @@ def publish_test_results_through_queue(url, data_type: str, data_dict: dict):
         )
 
 
-@instrumented()
 def prepare_session_data(data_dict: dict):
     return SqaTestSession(
         PK_ID=data_dict.get("PK_ID"),

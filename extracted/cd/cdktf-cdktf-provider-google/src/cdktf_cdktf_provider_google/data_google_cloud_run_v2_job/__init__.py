@@ -1,7 +1,7 @@
 r'''
 # `data_google_cloud_run_v2_job`
 
-Refer to the Terraform Registry for docs: [`data_google_cloud_run_v2_job`](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job).
+Refer to the Terraform Registry for docs: [`data_google_cloud_run_v2_job`](https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataGoogleCloudRunV2Job(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2Job",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job google_cloud_run_v2_job}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job google_cloud_run_v2_job}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class DataGoogleCloudRunV2Job(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job google_cloud_run_v2_job} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job google_cloud_run_v2_job} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the Job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#name DataGoogleCloudRunV2Job#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#id DataGoogleCloudRunV2Job#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param location: The location of the cloud run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#location DataGoogleCloudRunV2Job#location}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#project DataGoogleCloudRunV2Job#project}.
+        :param name: Name of the Job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#name DataGoogleCloudRunV2Job#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#id DataGoogleCloudRunV2Job#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param location: The location of the cloud run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#location DataGoogleCloudRunV2Job#location}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#project DataGoogleCloudRunV2Job#project}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class DataGoogleCloudRunV2Job(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataGoogleCloudRunV2Job to import.
-        :param import_from_id: The id of the existing DataGoogleCloudRunV2Job that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataGoogleCloudRunV2Job that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataGoogleCloudRunV2Job to import is found.
         '''
         if __debug__:
@@ -725,10 +725,10 @@ class DataGoogleCloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the Job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#name DataGoogleCloudRunV2Job#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#id DataGoogleCloudRunV2Job#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param location: The location of the cloud run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#location DataGoogleCloudRunV2Job#location}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#project DataGoogleCloudRunV2Job#project}.
+        :param name: Name of the Job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#name DataGoogleCloudRunV2Job#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#id DataGoogleCloudRunV2Job#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param location: The location of the cloud run job. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#location DataGoogleCloudRunV2Job#location}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#project DataGoogleCloudRunV2Job#project}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -837,7 +837,7 @@ class DataGoogleCloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the Job.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#name DataGoogleCloudRunV2Job#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#name DataGoogleCloudRunV2Job#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -845,7 +845,7 @@ class DataGoogleCloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#id DataGoogleCloudRunV2Job#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#id DataGoogleCloudRunV2Job#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -857,14 +857,14 @@ class DataGoogleCloudRunV2JobConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def location(self) -> typing.Optional[builtins.str]:
         '''The location of the cloud run job.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#location DataGoogleCloudRunV2Job#location}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#location DataGoogleCloudRunV2Job#location}
         '''
         result = self._values.get("location")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/cloud_run_v2_job#project DataGoogleCloudRunV2Job#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/cloud_run_v2_job#project DataGoogleCloudRunV2Job#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1812,6 +1812,11 @@ class DataGoogleCloudRunV2JobTemplateTemplateContainersOutputReference(
         return typing.cast(typing.List[builtins.str], jsii.get(self, "command"))
 
     @builtins.property
+    @jsii.member(jsii_name="dependsOn")
+    def depends_on(self) -> typing.List[builtins.str]:
+        return typing.cast(typing.List[builtins.str], jsii.get(self, "dependsOn"))
+
+    @builtins.property
     @jsii.member(jsii_name="env")
     def env(self) -> DataGoogleCloudRunV2JobTemplateTemplateContainersEnvList:
         return typing.cast(DataGoogleCloudRunV2JobTemplateTemplateContainersEnvList, jsii.get(self, "env"))
@@ -1837,6 +1842,13 @@ class DataGoogleCloudRunV2JobTemplateTemplateContainersOutputReference(
         self,
     ) -> "DataGoogleCloudRunV2JobTemplateTemplateContainersResourcesList":
         return typing.cast("DataGoogleCloudRunV2JobTemplateTemplateContainersResourcesList", jsii.get(self, "resources"))
+
+    @builtins.property
+    @jsii.member(jsii_name="startupProbe")
+    def startup_probe(
+        self,
+    ) -> "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeList":
+        return typing.cast("DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeList", jsii.get(self, "startupProbe"))
 
     @builtins.property
     @jsii.member(jsii_name="volumeMounts")
@@ -2161,6 +2173,794 @@ class DataGoogleCloudRunV2JobTemplateTemplateContainersResourcesOutputReference(
     ) -> None:
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__bb64d9af0c030e9ca52382c04c8515fa64153ea60ab85781bd9cccb8feefef29)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbe",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbe:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbe(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpc",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpc:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpc(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__66aac831c28487a3074a7a8c864742cc9d5d97bd58268ec3addeae7f512dbbd5)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__39518a34bbee70e94452bfa8467b2750763579a16041674f7131bf179b04a94d)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__82b96178290060c586ccd9a7a4c4210c6e75c1e04f886d6fd314a4609b1c1136)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__72d1c9a563fe20099b71b548823f18e062bb161c269709764fd1143825924c40)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9fe4b3e30a9720ba32aa0effd1392247c10575204030ff036503d643f8c53419)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f3a951f885308d40d43d7e073d1ce11578d59135df0bfcf14437d9cc564f4467)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="port")
+    def port(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "port"))
+
+    @builtins.property
+    @jsii.member(jsii_name="service")
+    def service(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "service"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpc]:
+        return typing.cast(typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpc], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpc],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2da4c493b63063c900d0c81a681f790e1db7c8ed11496afc37a6e2491116defc)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__740a97bdc541c8cb6f594dea35ce2481656415a3b220b67ee7234b9da4743c02)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c29f43a780ac08ecdffcc8b99cac6b5fddd6b3003f6b9050d11eae273bee5543)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__eecc51344941605570b3ff7c4f47fbd99cf901bb401ba6f573b32f54a66e6995)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f8d9f07f051764cdd0401635b83b0f2d9ddab18c3dee30fa189867abe0b84141)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__74db3276073d74163ed20ac24efd5f1a2dcde3bf081fce95236c7de576beac8b)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__764e821d1679394ca2157bd0d56c0152649bea2cfa3af862c63edd1ba5572a93)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="name")
+    def name(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "name"))
+
+    @builtins.property
+    @jsii.member(jsii_name="value")
+    def value(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "value"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders]:
+        return typing.cast(typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a39322ea2a9071bd895208edb60823fb669cb04acb3dea4683dab60ee3bd22f0)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__700d9d975a064f412b0bcbaac6d2bac067c0640d8169f45b7a7b11d43307adce)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4b7cc841b324299946cc21465e855286ec68211459d43056b26c8501786f02f9)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__da4cad0c6024e0c8dff3c55234db3e01c5f7ba8195408c2ac92115bc91de0af2)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__247db4b518dfc2ddad80c4973710ea064d4e24933dd4a0f0a1ac50457d34c2f8)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8cd986f455ca8705922fec7aff47646362662e0db878caf78d2e980e96b36440)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6455fd02fc26ac3707bc8d4a6078afc5b6227c305c1d18e6d78e21572608e200)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="httpHeaders")
+    def http_headers(
+        self,
+    ) -> DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList:
+        return typing.cast(DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList, jsii.get(self, "httpHeaders"))
+
+    @builtins.property
+    @jsii.member(jsii_name="path")
+    def path(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "path"))
+
+    @builtins.property
+    @jsii.member(jsii_name="port")
+    def port(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "port"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet]:
+        return typing.cast(typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__352e53336214c82b6ec56f32c8aa15b8627b25ba1104bec96258e39143f232b3)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0b3b91d9d481b14c91d3e85f3876bb515cbceb54224feca5163ddd0339c43c0f)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7db04f5a5ad09f0d94e2064e9d988fc48e2c3ac8f9291ea426a8b52b3260c310)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fa3ae23d138c1ae1d49365dd6c749610c845be0b5e950cda6ed9ee905c1034bb)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4bc5939fe57c0a4a04ae637ba94e265a71595123c3f0b4e494403097e9d5483e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6910c9b30175457301356480d175915508913b3894712af8dfd6b532a6b6d794)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__15ab723403263a9aabbf93087011cd5bbb61d3bbd3be438956af305edb23d36d)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="failureThreshold")
+    def failure_threshold(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "failureThreshold"))
+
+    @builtins.property
+    @jsii.member(jsii_name="grpc")
+    def grpc(
+        self,
+    ) -> DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcList:
+        return typing.cast(DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcList, jsii.get(self, "grpc"))
+
+    @builtins.property
+    @jsii.member(jsii_name="httpGet")
+    def http_get(
+        self,
+    ) -> DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetList:
+        return typing.cast(DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetList, jsii.get(self, "httpGet"))
+
+    @builtins.property
+    @jsii.member(jsii_name="initialDelaySeconds")
+    def initial_delay_seconds(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "initialDelaySeconds"))
+
+    @builtins.property
+    @jsii.member(jsii_name="periodSeconds")
+    def period_seconds(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "periodSeconds"))
+
+    @builtins.property
+    @jsii.member(jsii_name="tcpSocket")
+    def tcp_socket(
+        self,
+    ) -> "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketList":
+        return typing.cast("DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketList", jsii.get(self, "tcpSocket"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutSeconds")
+    def timeout_seconds(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "timeoutSeconds"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbe]:
+        return typing.cast(typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbe], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbe],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c5bf74d0ca0051d5f83a710fbd1fac41220c44ed933bf5cffa4c6e3f8af15ad7)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ab86f7abe0e9bee8b38e8d557fc7309b413e07303b0948d2c099c7c80e18e281)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b8c2e7bee10daecfac5c06082fa0b8b19c8b86100769f853da2bd9e2355f18e7)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__282c189130dbd8d0a281ba7a7b30bcd2d26f36bf2a0007af15108520389a9c06)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2ca9de41a440b0e6e70c49ef8278d240d88916a2617c9a695fc6ee0d578d297a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c596ade8024e41b75a7360907cb1f71d20491eb587e2823b3665bb8b8cf070f7)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleCloudRunV2Job.DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__af129f6e5bec9bf9ae905dba5e474bc986545f3a165f84b3c991476339c88deb)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="port")
+    def port(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "port"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket]:
+        return typing.cast(typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c11845252cb7017c48798ceaa9542bb5b2c22c9409675bff69fc2e9969dda6f3)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
@@ -4094,6 +4894,21 @@ __all__ = [
     "DataGoogleCloudRunV2JobTemplateTemplateContainersResources",
     "DataGoogleCloudRunV2JobTemplateTemplateContainersResourcesList",
     "DataGoogleCloudRunV2JobTemplateTemplateContainersResourcesOutputReference",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbe",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpc",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcList",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpcOutputReference",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersList",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeadersOutputReference",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetList",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetOutputReference",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeList",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeOutputReference",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketList",
+    "DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocketOutputReference",
     "DataGoogleCloudRunV2JobTemplateTemplateContainersVolumeMounts",
     "DataGoogleCloudRunV2JobTemplateTemplateContainersVolumeMountsList",
     "DataGoogleCloudRunV2JobTemplateTemplateContainersVolumeMountsOutputReference",
@@ -4668,6 +5483,241 @@ def _typecheckingstub__15391e9f51206ef63128edc155c65468f2a3312efd14152bd11e08667
 
 def _typecheckingstub__bb64d9af0c030e9ca52382c04c8515fa64153ea60ab85781bd9cccb8feefef29(
     value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersResources],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__66aac831c28487a3074a7a8c864742cc9d5d97bd58268ec3addeae7f512dbbd5(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__39518a34bbee70e94452bfa8467b2750763579a16041674f7131bf179b04a94d(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__82b96178290060c586ccd9a7a4c4210c6e75c1e04f886d6fd314a4609b1c1136(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__72d1c9a563fe20099b71b548823f18e062bb161c269709764fd1143825924c40(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9fe4b3e30a9720ba32aa0effd1392247c10575204030ff036503d643f8c53419(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f3a951f885308d40d43d7e073d1ce11578d59135df0bfcf14437d9cc564f4467(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2da4c493b63063c900d0c81a681f790e1db7c8ed11496afc37a6e2491116defc(
+    value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeGrpc],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__740a97bdc541c8cb6f594dea35ce2481656415a3b220b67ee7234b9da4743c02(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c29f43a780ac08ecdffcc8b99cac6b5fddd6b3003f6b9050d11eae273bee5543(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__eecc51344941605570b3ff7c4f47fbd99cf901bb401ba6f573b32f54a66e6995(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f8d9f07f051764cdd0401635b83b0f2d9ddab18c3dee30fa189867abe0b84141(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__74db3276073d74163ed20ac24efd5f1a2dcde3bf081fce95236c7de576beac8b(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__764e821d1679394ca2157bd0d56c0152649bea2cfa3af862c63edd1ba5572a93(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a39322ea2a9071bd895208edb60823fb669cb04acb3dea4683dab60ee3bd22f0(
+    value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGetHttpHeaders],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__700d9d975a064f412b0bcbaac6d2bac067c0640d8169f45b7a7b11d43307adce(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4b7cc841b324299946cc21465e855286ec68211459d43056b26c8501786f02f9(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__da4cad0c6024e0c8dff3c55234db3e01c5f7ba8195408c2ac92115bc91de0af2(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__247db4b518dfc2ddad80c4973710ea064d4e24933dd4a0f0a1ac50457d34c2f8(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8cd986f455ca8705922fec7aff47646362662e0db878caf78d2e980e96b36440(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6455fd02fc26ac3707bc8d4a6078afc5b6227c305c1d18e6d78e21572608e200(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__352e53336214c82b6ec56f32c8aa15b8627b25ba1104bec96258e39143f232b3(
+    value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeHttpGet],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0b3b91d9d481b14c91d3e85f3876bb515cbceb54224feca5163ddd0339c43c0f(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7db04f5a5ad09f0d94e2064e9d988fc48e2c3ac8f9291ea426a8b52b3260c310(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fa3ae23d138c1ae1d49365dd6c749610c845be0b5e950cda6ed9ee905c1034bb(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4bc5939fe57c0a4a04ae637ba94e265a71595123c3f0b4e494403097e9d5483e(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6910c9b30175457301356480d175915508913b3894712af8dfd6b532a6b6d794(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__15ab723403263a9aabbf93087011cd5bbb61d3bbd3be438956af305edb23d36d(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c5bf74d0ca0051d5f83a710fbd1fac41220c44ed933bf5cffa4c6e3f8af15ad7(
+    value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbe],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ab86f7abe0e9bee8b38e8d557fc7309b413e07303b0948d2c099c7c80e18e281(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b8c2e7bee10daecfac5c06082fa0b8b19c8b86100769f853da2bd9e2355f18e7(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__282c189130dbd8d0a281ba7a7b30bcd2d26f36bf2a0007af15108520389a9c06(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2ca9de41a440b0e6e70c49ef8278d240d88916a2617c9a695fc6ee0d578d297a(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c596ade8024e41b75a7360907cb1f71d20491eb587e2823b3665bb8b8cf070f7(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__af129f6e5bec9bf9ae905dba5e474bc986545f3a165f84b3c991476339c88deb(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c11845252cb7017c48798ceaa9542bb5b2c22c9409675bff69fc2e9969dda6f3(
+    value: typing.Optional[DataGoogleCloudRunV2JobTemplateTemplateContainersStartupProbeTcpSocket],
 ) -> None:
     """Type checking stubs"""
     pass

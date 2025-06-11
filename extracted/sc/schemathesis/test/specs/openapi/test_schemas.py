@@ -1,16 +1,15 @@
-from functools import partial
-
 import pytest
-from hypothesis import find
 
 import schemathesis
-from schemathesis.models import APIOperation
+from schemathesis.core.errors import InvalidSchema
+from schemathesis.schemas import APIOperation
 from schemathesis.specs.openapi.parameters import OpenAPI20Parameter, OpenAPI30Parameter
+from schemathesis.specs.openapi.schemas import check_header
 
 
 @pytest.mark.operations("get_user", "update_user")
 def test_get_operation_via_remote_reference(openapi_version, schema_url):
-    schema = schemathesis.from_uri(schema_url)
+    schema = schemathesis.openapi.from_url(schema_url)
     first = schema.get_operation_by_reference(f"{schema_url}#/paths/~1users~1{{user_id}}/patch")
     resolved = schema.get_operation_by_reference(f"{schema_url}#/paths/~1users~1{{user_id}}/patch")
     # Check caching
@@ -45,14 +44,14 @@ def test_operation_cache_sharing(mocker, schema_url):
     reference = f"{schema_url}#/paths/~1users~1{{user_id}}/patch"
     operation_id = "updateUser"
 
-    schema = schemathesis.from_uri(schema_url)
+    schema = schemathesis.openapi.from_url(schema_url)
     first = schema.get_operation_by_reference(reference)
     # After accessing by reference, there should not be an attempt to insert it again
     setup_mock(schema, "insert_operation")
     second = schema.get_operation_by_id(operation_id)
     assert first is second
     # And the other way around
-    schema = schemathesis.from_uri(schema_url)
+    schema = schemathesis.openapi.from_url(schema_url)
     first = schema.get_operation_by_id(operation_id)
     second = schema.get_operation_by_reference(reference)
     assert first is second
@@ -67,36 +66,14 @@ def test_operation_cache_sharing(mocker, schema_url):
     assert len(schema._operation_cache._operations) == 2
 
 
-SINGLE_METHOD_PATHS = {
-    "/test-2": {"get": {"responses": {"200": {"description": "OK"}}}},
-}
-TWO_METHOD_PATHS = {
-    "/test": {
-        "get": {"responses": {"200": {"description": "OK"}}},
-        "post": {"responses": {"200": {"description": "OK"}}},
-    },
-}
-
-
-def matches_operation(case, operation):
-    return operation.method.upper() == case.method.upper() and operation.full_path == case.full_path
-
-
-def test_path_as_strategy(ctx):
-    schema = ctx.openapi.build_schema(TWO_METHOD_PATHS)
-    schema = schemathesis.from_dict(schema)
-    operations = schema["/test"]
-    strategy = operations.as_strategy()
-    for operation in operations.values():
-        # All fields should be possible to generate
-        find(strategy, partial(matches_operation, operation=operation))
-
-
-def test_schema_as_strategy(ctx):
-    schema = ctx.openapi.build_schema({**SINGLE_METHOD_PATHS, **TWO_METHOD_PATHS})
-    schema = schemathesis.from_dict(schema)
-    strategy = schema.as_strategy()
-    for operations in schema.values():
-        for operation in operations.values():
-            # All operations should be possible to generate
-            find(strategy, partial(matches_operation, operation=operation))
+@pytest.mark.parametrize(
+    ["parameter", "expected"],
+    [
+        ({"name": ""}, "Header name should not be empty"),
+        ({"name": "Invalid\x80Name"}, "Header name should be ASCII: Invalid\x80Name"),
+        ({"name": "\nInvalid"}, "Invalid leading whitespace"),
+    ],
+)
+def test_check_header_errors(parameter, expected):
+    with pytest.raises(InvalidSchema, match=expected):
+        check_header(parameter)

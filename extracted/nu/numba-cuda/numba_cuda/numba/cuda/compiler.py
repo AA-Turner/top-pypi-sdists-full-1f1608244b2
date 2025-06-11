@@ -575,6 +575,7 @@ def compile(
     abi_info=None,
     output="ptx",
     forceinline=False,
+    launch_bounds=None,
 ):
     """Compile a Python function to PTX or LTO-IR for a given set of argument
     types.
@@ -620,6 +621,16 @@ def compile(
                         ``alwaysinline`` function attribute to the function
                         definition. This is only valid when the output is
                         ``"ltoir"``.
+    :param launch_bounds: Kernel launch bounds, specified as a scalar or a tuple
+                          of between one and three items. Tuple items provide:
+
+                          - The maximum number of threads per block,
+                          - The minimum number of blocks per SM,
+                          - The maximum number of blocks per cluster.
+
+                          If a scalar is provided, it is used as the maximum
+                          number of threads per block.
+    :type launch_bounds: int | tuple[int]
     :return: (code, resty): The compiled code and inferred return type
     :rtype: tuple
     """
@@ -662,7 +673,12 @@ def compile(
 
     args, return_type = sigutils.normalize_signature(sig)
 
-    cc = cc or config.CUDA_DEFAULT_PTX_CC
+    # If the user has used the config variable to specify a non-default that is
+    # greater than the lowest non-deprecated one, then we should default to
+    # their specified CC instead of the lowest non-deprecated one.
+    MIN_CC = max(config.CUDA_DEFAULT_PTX_CC, nvvm.LOWEST_CURRENT_CC)
+    cc = cc or MIN_CC
+
     cres = compile_cuda(
         pyfunc,
         return_type,
@@ -693,6 +709,7 @@ def compile(
         kernel = lib.get_function(cres.fndesc.llvm_func_name)
         lib._entry_name = cres.fndesc.llvm_func_name
         kernel_fixup(kernel, debug)
+        nvvm.set_launch_bounds(kernel, launch_bounds)
 
     if lto:
         code = lib.get_ltoir(cc=cc)
@@ -713,6 +730,7 @@ def compile_for_current_device(
     abi_info=None,
     output="ptx",
     forceinline=False,
+    launch_bounds=None,
 ):
     """Compile a Python function to PTX or LTO-IR for a given signature for the
     current device's compute capabilility. This calls :func:`compile` with an
@@ -731,6 +749,7 @@ def compile_for_current_device(
         abi_info=abi_info,
         output=output,
         forceinline=forceinline,
+        launch_bounds=launch_bounds,
     )
 
 
@@ -746,6 +765,7 @@ def compile_ptx(
     abi="numba",
     abi_info=None,
     forceinline=False,
+    launch_bounds=None,
 ):
     """Compile a Python function to PTX for a given signature. See
     :func:`compile`. The defaults for this function are to compile a kernel
@@ -764,6 +784,7 @@ def compile_ptx(
         abi_info=abi_info,
         output="ptx",
         forceinline=forceinline,
+        launch_bounds=launch_bounds,
     )
 
 
@@ -778,6 +799,7 @@ def compile_ptx_for_current_device(
     abi="numba",
     abi_info=None,
     forceinline=False,
+    launch_bounds=None,
 ):
     """Compile a Python function to PTX for a given signature for the current
     device's compute capabilility. See :func:`compile_ptx`."""
@@ -794,6 +816,7 @@ def compile_ptx_for_current_device(
         abi=abi,
         abi_info=abi_info,
         forceinline=forceinline,
+        launch_bounds=launch_bounds,
     )
 
 

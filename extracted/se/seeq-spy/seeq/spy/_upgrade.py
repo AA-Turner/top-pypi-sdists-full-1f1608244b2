@@ -7,6 +7,7 @@ from seeq.spy import _common, _login, Session, Status, _datalab
 from seeq.spy._errors import *
 
 
+@Status.handle_keyboard_interrupt()
 def upgrade(version: Optional[str] = None, force_restart: bool = False, use_testpypi: bool = False,
             status: Optional[Status] = None, session: Optional[Session] = None,
             dependencies: Optional[List[str]] = None):
@@ -62,8 +63,6 @@ def upgrade(version: Optional[str] = None, force_restart: bool = False, use_test
         (session, 'session', Session),
         (dependencies, 'dependencies', List)
     ])
-    session = Session.validate(session)
-    status = Status.validate(status, session)
 
     if session.client is None:
         raise SPyRuntimeError('Not logged in. Execute spy.login() before calling this function so that the upgrade '

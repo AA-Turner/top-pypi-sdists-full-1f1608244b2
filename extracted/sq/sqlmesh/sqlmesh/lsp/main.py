@@ -29,14 +29,28 @@ from sqlmesh.lsp.custom import (
     ALL_MODELS_FEATURE,
     ALL_MODELS_FOR_RENDER_FEATURE,
     RENDER_MODEL_FEATURE,
+    SUPPORTED_METHODS_FEATURE,
+    FORMAT_PROJECT_FEATURE,
     AllModelsRequest,
     AllModelsResponse,
     AllModelsForRenderRequest,
     AllModelsForRenderResponse,
+    CustomMethodResponseBaseClass,
     RenderModelRequest,
     RenderModelResponse,
+    SupportedMethodsRequest,
+    SupportedMethodsResponse,
+    FormatProjectRequest,
+    FormatProjectResponse,
+    CustomMethod,
 )
-from sqlmesh.lsp.reference import get_references, get_cte_references
+from sqlmesh.lsp.hints import get_hints
+from sqlmesh.lsp.reference import (
+    LSPCteReference,
+    LSPModelReference,
+    get_references,
+    get_all_references,
+)
 from sqlmesh.lsp.uri import URI
 from web.server.api.endpoints.lineage import column_lineage, model_lineage
 from web.server.api.endpoints.models import get_models
@@ -60,11 +74,167 @@ class SQLMeshLanguageServer:
         self.workspace_folders: t.List[Path] = []
 
         self.client_supports_pull_diagnostics = False
+        self._supported_custom_methods: t.Dict[
+            str,
+            t.Callable[
+                # mypy unable to recognise the base class
+                [LanguageServer, t.Any],
+                t.Any,
+            ],
+        ] = {
+            ALL_MODELS_FEATURE: self._custom_all_models,
+            RENDER_MODEL_FEATURE: self._custom_render_model,
+            ALL_MODELS_FOR_RENDER_FEATURE: self._custom_all_models_for_render,
+            API_FEATURE: self._custom_api,
+            SUPPORTED_METHODS_FEATURE: self._custom_supported_methods,
+            FORMAT_PROJECT_FEATURE: self._custom_format_project,
+        }
+
         # Register LSP features (e.g., formatting, hover, etc.)
         self._register_features()
 
+    def _create_lsp_context(self, paths: t.List[Path]) -> t.Optional[LSPContext]:
+        """Create a new LSPContext instance using the configured context class.
+
+        On success, sets self.lsp_context and returns the created context.
+
+        Args:
+            paths: List of paths to pass to the context constructor
+
+        Returns:
+            A new LSPContext instance wrapping the created context, or None if creation fails
+        """
+        try:
+            context = self.context_class(paths=paths)
+            lsp_context = LSPContext(context)
+            self.lsp_context = lsp_context
+            return lsp_context
+        except Exception as e:
+            self.server.log_trace(f"Error creating context: {e}")
+            return None
+
+    # All the custom LSP methods are registered here and prefixed with _custom
+    def _custom_all_models(self, ls: LanguageServer, params: AllModelsRequest) -> AllModelsResponse:
+        uri = URI(params.textDocument.uri)
+        # Get the document content
+        content = None
+        try:
+            document = ls.workspace.get_text_document(params.textDocument.uri)
+            content = document.source
+        except Exception:
+            pass
+        try:
+            context = self._context_get_or_load(uri)
+            return LSPContext.get_completions(context, uri, content)
+        except Exception as e:
+            from sqlmesh.lsp.completions import get_sql_completions
+
+            return get_sql_completions(None, URI(params.textDocument.uri), content)
+
+    def _custom_render_model(
+        self, ls: LanguageServer, params: RenderModelRequest
+    ) -> RenderModelResponse:
+        uri = URI(params.textDocumentUri)
+        context = self._context_get_or_load(uri)
+        return RenderModelResponse(models=context.render_model(uri))
+
+    def _custom_all_models_for_render(
+        self, ls: LanguageServer, params: AllModelsForRenderRequest
+    ) -> AllModelsForRenderResponse:
+        if self.lsp_context is None:
+            current_path = Path.cwd()
+            self._ensure_context_in_folder(current_path)
+        if self.lsp_context is None:
+            raise RuntimeError("No context found")
+        return AllModelsForRenderResponse(models=self.lsp_context.list_of_models_for_rendering())
+
+    def _custom_format_project(
+        self, ls: LanguageServer, params: FormatProjectRequest
+    ) -> FormatProjectResponse:
+        """Format all models in the current project."""
+        try:
+            if self.lsp_context is None:
+                current_path = Path.cwd()
+                self._ensure_context_in_folder(current_path)
+            if self.lsp_context is None:
+                raise RuntimeError("No context found")
+
+            # Call the format method on the context
+            self.lsp_context.context.format()
+            return FormatProjectResponse()
+        except Exception as e:
+            ls.log_trace(f"Error formatting project: {e}")
+            return FormatProjectResponse()
+
+    def _custom_api(
+        self, ls: LanguageServer, request: ApiRequest
+    ) -> t.Union[ApiResponseGetModels, ApiResponseGetColumnLineage, ApiResponseGetLineage]:
+        ls.log_trace(f"API request: {request}")
+        if self.lsp_context is None:
+            current_path = Path.cwd()
+            self._ensure_context_in_folder(current_path)
+        if self.lsp_context is None:
+            ls.log_trace("No context found in call")
+            raise RuntimeError("No context found")
+
+        parsed_url = urllib.parse.urlparse(request.url)
+        path_parts = parsed_url.path.strip("/").split("/")
+
+        if request.method == "GET":
+            if path_parts == ["api", "models"]:
+                # /api/models
+                return ApiResponseGetModels(data=get_models(self.lsp_context.context))
+
+            if path_parts[:2] == ["api", "lineage"]:
+                if len(path_parts) == 3:
+                    # /api/lineage/{model}
+                    model_name = urllib.parse.unquote(path_parts[2])
+                    lineage = model_lineage(model_name, self.lsp_context.context)
+                    non_set_lineage = {k: v for k, v in lineage.items() if v is not None}
+                    return ApiResponseGetLineage(data=non_set_lineage)
+
+                if len(path_parts) == 4:
+                    # /api/lineage/{model}/{column}
+                    model_name = urllib.parse.unquote(path_parts[2])
+                    column = urllib.parse.unquote(path_parts[3])
+                    models_only = False
+                    if hasattr(request, "params"):
+                        models_only = bool(getattr(request.params, "models_only", False))
+                    column_lineage_response = column_lineage(
+                        model_name, column, models_only, self.lsp_context.context
+                    )
+                    return ApiResponseGetColumnLineage(data=column_lineage_response)
+
+        raise NotImplementedError(f"API request not implemented: {request.url}")
+
+    def _custom_supported_methods(
+        self, ls: LanguageServer, params: SupportedMethodsRequest
+    ) -> SupportedMethodsResponse:
+        """Return all supported custom LSP methods."""
+        return SupportedMethodsResponse(
+            methods=[
+                CustomMethod(
+                    name=name,
+                )
+                for name in self._supported_custom_methods
+            ]
+        )
+
     def _register_features(self) -> None:
         """Register LSP features on the internal LanguageServer instance."""
+        for name, method in self._supported_custom_methods.items():
+
+            def create_function_call(method_func: t.Callable) -> t.Callable:
+                def function_call(ls: LanguageServer, params: t.Any) -> t.Dict[str, t.Any]:
+                    try:
+                        response = method_func(ls, params)
+                    except Exception as e:
+                        response = CustomMethodResponseBaseClass(response_error=str(e))
+                    return response.model_dump(mode="json")
+
+                return function_call
+
+            self.server.feature(name)(create_function_call(method))
 
         @self.server.feature(types.INITIALIZE)
         def initialize(ls: LanguageServer, params: types.InitializeParams) -> None:
@@ -94,102 +264,13 @@ class SQLMeshLanguageServer:
                         for ext in ("py", "yml", "yaml"):
                             config_path = folder_path / f"config.{ext}"
                             if config_path.exists():
-                                try:
-                                    # Use user-provided instantiator to build the context
-                                    created_context = self.context_class(paths=[folder_path])
-                                    self.lsp_context = LSPContext(created_context)
+                                if self._create_lsp_context([folder_path]):
                                     loaded_sqlmesh_message(ls, folder_path)
                                     return  # Exit after successfully loading any config
-                                except Exception as e:
-                                    ls.log_trace(
-                                        f"Error loading context from {config_path}: {e}",
-                                    )
             except Exception as e:
                 ls.log_trace(
                     f"Error initializing SQLMesh context: {e}",
                 )
-
-        @self.server.feature(ALL_MODELS_FEATURE)
-        def all_models(ls: LanguageServer, params: AllModelsRequest) -> AllModelsResponse:
-            uri = URI(params.textDocument.uri)
-
-            # Get the document content
-            content = None
-            try:
-                document = ls.workspace.get_text_document(params.textDocument.uri)
-                content = document.source
-            except Exception:
-                pass
-
-            try:
-                context = self._context_get_or_load(uri)
-                return context.get_autocomplete(uri, content)
-            except Exception as e:
-                from sqlmesh.lsp.completions import get_sql_completions
-
-                return get_sql_completions(None, URI(params.textDocument.uri), content)
-
-        @self.server.feature(RENDER_MODEL_FEATURE)
-        def render_model(ls: LanguageServer, params: RenderModelRequest) -> RenderModelResponse:
-            uri = URI(params.textDocumentUri)
-            context = self._context_get_or_load(uri)
-            return RenderModelResponse(models=context.render_model(uri))
-
-        @self.server.feature(ALL_MODELS_FOR_RENDER_FEATURE)
-        def all_models_for_render(
-            ls: LanguageServer, params: AllModelsForRenderRequest
-        ) -> AllModelsForRenderResponse:
-            if self.lsp_context is None:
-                current_path = Path.cwd()
-                self._ensure_context_in_folder(current_path)
-            if self.lsp_context is None:
-                raise RuntimeError("No context found")
-            return AllModelsForRenderResponse(
-                models=self.lsp_context.list_of_models_for_rendering()
-            )
-
-        @self.server.feature(API_FEATURE)
-        def api(ls: LanguageServer, request: ApiRequest) -> t.Dict[str, t.Any]:
-            ls.log_trace(f"API request: {request}")
-            if self.lsp_context is None:
-                current_path = Path.cwd()
-                self._ensure_context_in_folder(current_path)
-            if self.lsp_context is None:
-                raise RuntimeError("No context found")
-
-            parsed_url = urllib.parse.urlparse(request.url)
-            path_parts = parsed_url.path.strip("/").split("/")
-
-            if request.method == "GET":
-                if path_parts == ["api", "models"]:
-                    # /api/models
-                    return ApiResponseGetModels(
-                        data=get_models(self.lsp_context.context)
-                    ).model_dump(mode="json")
-
-                if path_parts[:2] == ["api", "lineage"]:
-                    if len(path_parts) == 3:
-                        # /api/lineage/{model}
-                        model_name = urllib.parse.unquote(path_parts[2])
-                        lineage = model_lineage(model_name, self.lsp_context.context)
-                        non_set_lineage = {k: v for k, v in lineage.items() if v is not None}
-                        return ApiResponseGetLineage(data=non_set_lineage).model_dump(mode="json")
-
-                    if len(path_parts) == 4:
-                        # /api/lineage/{model}/{column}
-                        model_name = urllib.parse.unquote(path_parts[2])
-                        column = urllib.parse.unquote(path_parts[3])
-                        models_only = False
-                        if hasattr(request, "params"):
-                            models_only = bool(getattr(request.params, "models_only", False))
-                        column_lineage_response = column_lineage(
-                            model_name, column, models_only, self.lsp_context.context
-                        )
-                        return ApiResponseGetColumnLineage(data=column_lineage_response).model_dump(
-                            mode="json"
-                        )
-
-            raise NotImplementedError(f"API request not implemented: {request.url}")
 
         @self.server.feature(types.TEXT_DOCUMENT_DID_OPEN)
         def did_open(ls: LanguageServer, params: types.DidOpenTextDocumentParams) -> None:
@@ -233,13 +314,8 @@ class SQLMeshLanguageServer:
 
             # Reload the entire context and create a new LSPContext
             if self.lsp_context is not None:
-                try:
-                    new_context = Context(paths=list(self.lsp_context.context.configs))
-                    new_full_context = LSPContext(new_context)
-                    self.lsp_context = new_full_context
+                if self._create_lsp_context(list(self.lsp_context.context.configs)):
                     return
-                except Exception as e:
-                    pass
 
             context = self._context_get_or_load(uri)
             models = context.map[uri.to_path()]
@@ -318,7 +394,7 @@ class SQLMeshLanguageServer:
                 if not references:
                     return None
                 reference = references[0]
-                if not reference.markdown_description:
+                if isinstance(reference, LSPCteReference) or not reference.markdown_description:
                     return None
                 return types.Hover(
                     contents=types.MarkupContent(
@@ -333,6 +409,25 @@ class SQLMeshLanguageServer:
                     f"Error getting hover information: {e}",
                 )
                 return None
+
+        @self.server.feature(types.TEXT_DOCUMENT_INLAY_HINT)
+        def inlay_hint(
+            ls: LanguageServer, params: types.InlayHintParams
+        ) -> t.List[types.InlayHint]:
+            """Implement type hints for sql columns as inlay hints"""
+            try:
+                uri = URI(params.text_document.uri)
+                self._ensure_context_for_document(uri)
+                if self.lsp_context is None:
+                    raise RuntimeError(f"No context found for document: {uri}")
+
+                start_line = params.range.start.line
+                end_line = params.range.end.line
+                hints = get_hints(self.lsp_context, uri, start_line, end_line)
+                return hints
+
+            except Exception as e:
+                return []
 
         @self.server.feature(types.TEXT_DOCUMENT_DEFINITION)
         def goto_definition(
@@ -349,8 +444,8 @@ class SQLMeshLanguageServer:
                 references = get_references(self.lsp_context, uri, params.position)
                 location_links = []
                 for reference in references:
-                    # Use target_range if available (for CTEs), otherwise default to start of file
-                    if reference.target_range:
+                    # Use target_range if available (CTEs, Macros), otherwise default to start of file
+                    if not isinstance(reference, LSPModelReference):
                         target_range = reference.target_range
                         target_selection_range = reference.target_range
                     else:
@@ -380,7 +475,7 @@ class SQLMeshLanguageServer:
         def find_references(
             ls: LanguageServer, params: types.ReferenceParams
         ) -> t.Optional[t.List[types.Location]]:
-            """Find all references of a symbol (currently supporting CTEs)"""
+            """Find all references of a symbol (supporting CTEs, models for now)"""
             try:
                 uri = URI(params.text_document.uri)
                 self._ensure_context_for_document(uri)
@@ -388,10 +483,10 @@ class SQLMeshLanguageServer:
                 if self.lsp_context is None:
                     raise RuntimeError(f"No context found for document: {document.path}")
 
-                cte_references = get_cte_references(self.lsp_context, uri, params.position)
+                all_references = get_all_references(self.lsp_context, uri, params.position)
 
                 # Convert references to Location objects
-                locations = [types.Location(uri=ref.uri, range=ref.range) for ref in cte_references]
+                locations = [types.Location(uri=ref.uri, range=ref.range) for ref in all_references]
 
                 return locations if locations else None
             except Exception as e:
@@ -491,7 +586,10 @@ class SQLMeshLanguageServer:
                 )
                 return types.WorkspaceDiagnosticReport(items=[])
 
-        @self.server.feature(types.TEXT_DOCUMENT_COMPLETION)
+        @self.server.feature(
+            types.TEXT_DOCUMENT_COMPLETION,
+            types.CompletionOptions(trigger_characters=["@"]),  # advertise "@" for macros
+        )
         def completion(
             ls: LanguageServer, params: types.CompletionParams
         ) -> t.Optional[types.CompletionList]:
@@ -509,7 +607,7 @@ class SQLMeshLanguageServer:
                     pass
 
                 # Get completions using the existing completions module
-                completion_response = context.get_autocomplete(uri, content)
+                completion_response = LSPContext.get_completions(context, uri, content)
 
                 completion_items = []
                 # Add model completions
@@ -521,7 +619,26 @@ class SQLMeshLanguageServer:
                             detail="SQLMesh Model",
                         )
                     )
-                # Add keyword completions
+                # Add macro completions
+                triggered_by_at = (
+                    params.context is not None
+                    and getattr(params.context, "trigger_character", None) == "@"
+                )
+
+                for macro_name in completion_response.macros:
+                    insert_text = macro_name if triggered_by_at else f"@{macro_name}"
+
+                    completion_items.append(
+                        types.CompletionItem(
+                            label=f"@{macro_name}",
+                            insert_text=insert_text,
+                            insert_text_format=types.InsertTextFormat.PlainText,
+                            filter_text=macro_name,
+                            kind=types.CompletionItemKind.Function,
+                            detail="SQLMesh Macro",
+                        )
+                    )
+
                 for keyword in completion_response.keywords:
                     completion_items.append(
                         types.CompletionItem(
@@ -568,29 +685,18 @@ class SQLMeshLanguageServer:
         for ext in ("py", "yml", "yaml"):
             config_path = folder_uri / f"config.{ext}"
             if config_path.exists():
-                try:
-                    created_context = self.context_class(paths=[folder_uri])
-                    self.lsp_context = LSPContext(created_context)
+                if self._create_lsp_context([folder_uri]):
                     loaded_sqlmesh_message(self.server, folder_uri)
                     return
-                except Exception as e:
-                    self.server.show_message(f"Error loading context: {e}", types.MessageType.Error)
 
         # If not found in the provided folder, search through all workspace folders
         for workspace_folder in self.workspace_folders:
             for ext in ("py", "yml", "yaml"):
                 config_path = workspace_folder / f"config.{ext}"
                 if config_path.exists():
-                    try:
-                        created_context = self.context_class(paths=[workspace_folder])
-                        self.lsp_context = LSPContext(created_context)
+                    if self._create_lsp_context([workspace_folder]):
                         loaded_sqlmesh_message(self.server, workspace_folder)
                         return
-                    except Exception as e:
-                        self.server.show_message(
-                            f"Error loading context from {config_path}: {e}",
-                            types.MessageType.Warning,
-                        )
 
     def _ensure_context_for_document(
         self,
@@ -617,17 +723,10 @@ class SQLMeshLanguageServer:
             for ext in ("py", "yml", "yaml"):
                 config_path = path / f"config.{ext}"
                 if config_path.exists():
-                    try:
-                        # Use user-provided instantiator to build the context
-                        created_context = self.context_class(paths=[path])
-                        self.lsp_context = LSPContext(created_context)
+                    if self._create_lsp_context([path]):
                         loaded = True
                         # Re-check context for the document now that it's loaded
                         return self._ensure_context_for_document(document_uri)
-                    except Exception as e:
-                        self.server.show_message(
-                            f"Error loading context: {e}", types.MessageType.Error
-                        )
             path = path.parent
 
         # If still no context found, try the workspace folders
@@ -636,16 +735,9 @@ class SQLMeshLanguageServer:
                 for ext in ("py", "yml", "yaml"):
                     config_path = workspace_folder / f"config.{ext}"
                     if config_path.exists():
-                        try:
-                            created_context = self.context_class(paths=[workspace_folder])
-                            self.lsp_context = LSPContext(created_context)
+                        if self._create_lsp_context([workspace_folder]):
                             loaded_sqlmesh_message(self.server, workspace_folder)
                             return
-                        except Exception as e:
-                            self.server.show_message(
-                                f"Error loading context from {config_path}: {e}",
-                                types.MessageType.Warning,
-                            )
 
         return
 

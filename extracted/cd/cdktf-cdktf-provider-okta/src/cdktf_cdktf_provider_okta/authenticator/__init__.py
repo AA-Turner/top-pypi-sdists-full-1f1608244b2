@@ -1,7 +1,7 @@
 r'''
 # `okta_authenticator`
 
-Refer to the Terraform Registry for docs: [`okta_authenticator`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator).
+Refer to the Terraform Registry for docs: [`okta_authenticator`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Authenticator(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.authenticator.Authenticator",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator okta_authenticator}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator okta_authenticator}.'''
 
     def __init__(
         self,
@@ -73,24 +73,24 @@ class Authenticator(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator okta_authenticator} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator okta_authenticator} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param key: A human-readable string that identifies the authenticator. Some authenticators are available by feature flag on the organization. Possible values inclue: ``duo``, ``external_idp``, ``google_otp``, ``okta_email``, ``okta_password``, ``okta_verify``, ``onprem_mfa``, ``phone_number``, ``rsa_token``, ``security_question``, ``webauthn`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#key Authenticator#key}
-        :param name: Display name of the Authenticator. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#name Authenticator#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#id Authenticator#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param legacy_ignore_name: Name does not trigger change detection (legacy behavior). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#legacy_ignore_name Authenticator#legacy_ignore_name}
-        :param provider_auth_port: The RADIUS server port (for example 1812). This is defined when the On-Prem RADIUS server is configured. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_auth_port Authenticator#provider_auth_port}
-        :param provider_host: (DUO specific) - The Duo Security API hostname. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_host Authenticator#provider_host}
-        :param provider_hostname: Server host name or IP address. Default is ``localhost``. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_hostname Authenticator#provider_hostname}
-        :param provider_integration_key: (DUO specific) - The Duo Security integration key. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_integration_key Authenticator#provider_integration_key}
-        :param provider_json: Provider JSON allows for expressive providervalues. This argument conflicts with the other 'provider_xxx' arguments. The `CreateProvider <https://developer.okta.com/docs/reference/api/authenticators-admin/#request>`_ illustrates detailed provider values for a Duo authenticator. `Provider values <https://developer.okta.com/docs/reference/api/authenticators-admin/#authenticators-administration-api-object>`_are listed in Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_json Authenticator#provider_json}
-        :param provider_secret_key: (DUO specific) - The Duo Security secret key. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_secret_key Authenticator#provider_secret_key}
-        :param provider_shared_secret: An authentication key that must be defined when the RADIUS server is configured, and must be the same on both the RADIUS client and server. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_shared_secret Authenticator#provider_shared_secret}
-        :param provider_user_name_template: Username template expected by the provider. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_user_name_template Authenticator#provider_user_name_template}
-        :param settings: Settings for the authenticator. The settings JSON contains values based on Authenticator key. It is not used for authenticators with type ``security_key`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#settings Authenticator#settings}
-        :param status: Authenticator status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#status Authenticator#status}
+        :param key: A human-readable string that identifies the authenticator. Some authenticators are available by feature flag on the organization. Possible values inclue: ``duo``, ``external_idp``, ``google_otp``, ``okta_email``, ``okta_password``, ``okta_verify``, ``onprem_mfa``, ``phone_number``, ``rsa_token``, ``security_question``, ``webauthn`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#key Authenticator#key}
+        :param name: Display name of the Authenticator. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#name Authenticator#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#id Authenticator#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param legacy_ignore_name: Name does not trigger change detection (legacy behavior). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#legacy_ignore_name Authenticator#legacy_ignore_name}
+        :param provider_auth_port: The RADIUS server port (for example 1812). This is defined when the On-Prem RADIUS server is configured. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_auth_port Authenticator#provider_auth_port}
+        :param provider_host: (DUO specific) - The Duo Security API hostname. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_host Authenticator#provider_host}
+        :param provider_hostname: Server host name or IP address. Default is ``localhost``. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_hostname Authenticator#provider_hostname}
+        :param provider_integration_key: (DUO specific) - The Duo Security integration key. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_integration_key Authenticator#provider_integration_key}
+        :param provider_json: Provider JSON allows for expressive providervalues. This argument conflicts with the other 'provider_xxx' arguments. The `CreateProvider <https://developer.okta.com/docs/reference/api/authenticators-admin/#request>`_ illustrates detailed provider values for a Duo authenticator. `Provider values <https://developer.okta.com/docs/reference/api/authenticators-admin/#authenticators-administration-api-object>`_are listed in Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_json Authenticator#provider_json}
+        :param provider_secret_key: (DUO specific) - The Duo Security secret key. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_secret_key Authenticator#provider_secret_key}
+        :param provider_shared_secret: An authentication key that must be defined when the RADIUS server is configured, and must be the same on both the RADIUS client and server. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_shared_secret Authenticator#provider_shared_secret}
+        :param provider_user_name_template: Username template expected by the provider. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_user_name_template Authenticator#provider_user_name_template}
+        :param settings: Settings for the authenticator. The settings JSON contains values based on Authenticator key. It is not used for authenticators with type ``security_key`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#settings Authenticator#settings}
+        :param status: Authenticator status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#status Authenticator#status}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -142,7 +142,7 @@ class Authenticator(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Authenticator to import.
-        :param import_from_id: The id of the existing Authenticator that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Authenticator that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Authenticator to import is found.
         '''
         if __debug__:
@@ -536,20 +536,20 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param key: A human-readable string that identifies the authenticator. Some authenticators are available by feature flag on the organization. Possible values inclue: ``duo``, ``external_idp``, ``google_otp``, ``okta_email``, ``okta_password``, ``okta_verify``, ``onprem_mfa``, ``phone_number``, ``rsa_token``, ``security_question``, ``webauthn`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#key Authenticator#key}
-        :param name: Display name of the Authenticator. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#name Authenticator#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#id Authenticator#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param legacy_ignore_name: Name does not trigger change detection (legacy behavior). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#legacy_ignore_name Authenticator#legacy_ignore_name}
-        :param provider_auth_port: The RADIUS server port (for example 1812). This is defined when the On-Prem RADIUS server is configured. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_auth_port Authenticator#provider_auth_port}
-        :param provider_host: (DUO specific) - The Duo Security API hostname. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_host Authenticator#provider_host}
-        :param provider_hostname: Server host name or IP address. Default is ``localhost``. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_hostname Authenticator#provider_hostname}
-        :param provider_integration_key: (DUO specific) - The Duo Security integration key. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_integration_key Authenticator#provider_integration_key}
-        :param provider_json: Provider JSON allows for expressive providervalues. This argument conflicts with the other 'provider_xxx' arguments. The `CreateProvider <https://developer.okta.com/docs/reference/api/authenticators-admin/#request>`_ illustrates detailed provider values for a Duo authenticator. `Provider values <https://developer.okta.com/docs/reference/api/authenticators-admin/#authenticators-administration-api-object>`_are listed in Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_json Authenticator#provider_json}
-        :param provider_secret_key: (DUO specific) - The Duo Security secret key. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_secret_key Authenticator#provider_secret_key}
-        :param provider_shared_secret: An authentication key that must be defined when the RADIUS server is configured, and must be the same on both the RADIUS client and server. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_shared_secret Authenticator#provider_shared_secret}
-        :param provider_user_name_template: Username template expected by the provider. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_user_name_template Authenticator#provider_user_name_template}
-        :param settings: Settings for the authenticator. The settings JSON contains values based on Authenticator key. It is not used for authenticators with type ``security_key`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#settings Authenticator#settings}
-        :param status: Authenticator status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#status Authenticator#status}
+        :param key: A human-readable string that identifies the authenticator. Some authenticators are available by feature flag on the organization. Possible values inclue: ``duo``, ``external_idp``, ``google_otp``, ``okta_email``, ``okta_password``, ``okta_verify``, ``onprem_mfa``, ``phone_number``, ``rsa_token``, ``security_question``, ``webauthn`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#key Authenticator#key}
+        :param name: Display name of the Authenticator. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#name Authenticator#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#id Authenticator#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param legacy_ignore_name: Name does not trigger change detection (legacy behavior). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#legacy_ignore_name Authenticator#legacy_ignore_name}
+        :param provider_auth_port: The RADIUS server port (for example 1812). This is defined when the On-Prem RADIUS server is configured. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_auth_port Authenticator#provider_auth_port}
+        :param provider_host: (DUO specific) - The Duo Security API hostname. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_host Authenticator#provider_host}
+        :param provider_hostname: Server host name or IP address. Default is ``localhost``. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_hostname Authenticator#provider_hostname}
+        :param provider_integration_key: (DUO specific) - The Duo Security integration key. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_integration_key Authenticator#provider_integration_key}
+        :param provider_json: Provider JSON allows for expressive providervalues. This argument conflicts with the other 'provider_xxx' arguments. The `CreateProvider <https://developer.okta.com/docs/reference/api/authenticators-admin/#request>`_ illustrates detailed provider values for a Duo authenticator. `Provider values <https://developer.okta.com/docs/reference/api/authenticators-admin/#authenticators-administration-api-object>`_are listed in Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_json Authenticator#provider_json}
+        :param provider_secret_key: (DUO specific) - The Duo Security secret key. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_secret_key Authenticator#provider_secret_key}
+        :param provider_shared_secret: An authentication key that must be defined when the RADIUS server is configured, and must be the same on both the RADIUS client and server. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_shared_secret Authenticator#provider_shared_secret}
+        :param provider_user_name_template: Username template expected by the provider. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_user_name_template Authenticator#provider_user_name_template}
+        :param settings: Settings for the authenticator. The settings JSON contains values based on Authenticator key. It is not used for authenticators with type ``security_key`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#settings Authenticator#settings}
+        :param status: Authenticator status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#status Authenticator#status}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -689,7 +689,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Some authenticators are available by feature flag on the organization. Possible values inclue: ``duo``, ``external_idp``, ``google_otp``, ``okta_email``, ``okta_password``, ``okta_verify``, ``onprem_mfa``, ``phone_number``, ``rsa_token``, ``security_question``, ``webauthn``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#key Authenticator#key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#key Authenticator#key}
         '''
         result = self._values.get("key")
         assert result is not None, "Required property 'key' is missing"
@@ -699,7 +699,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Display name of the Authenticator.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#name Authenticator#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#name Authenticator#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -707,7 +707,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#id Authenticator#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#id Authenticator#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -721,7 +721,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Name does not trigger change detection (legacy behavior).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#legacy_ignore_name Authenticator#legacy_ignore_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#legacy_ignore_name Authenticator#legacy_ignore_name}
         '''
         result = self._values.get("legacy_ignore_name")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -732,7 +732,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This is defined when the On-Prem RADIUS server is configured. Used only for authenticators with type ``security_key``.  Conflicts with ``provider_json`` argument.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_auth_port Authenticator#provider_auth_port}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_auth_port Authenticator#provider_auth_port}
         '''
         result = self._values.get("provider_auth_port")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -741,7 +741,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def provider_host(self) -> typing.Optional[builtins.str]:
         '''(DUO specific) - The Duo Security API hostname. Conflicts with ``provider_json`` argument.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_host Authenticator#provider_host}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_host Authenticator#provider_host}
         '''
         result = self._values.get("provider_host")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -752,7 +752,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Default is ``localhost``. Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_hostname Authenticator#provider_hostname}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_hostname Authenticator#provider_hostname}
         '''
         result = self._values.get("provider_hostname")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -761,7 +761,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def provider_integration_key(self) -> typing.Optional[builtins.str]:
         '''(DUO specific) - The Duo Security integration key.  Conflicts with ``provider_json`` argument.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_integration_key Authenticator#provider_integration_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_integration_key Authenticator#provider_integration_key}
         '''
         result = self._values.get("provider_integration_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -772,7 +772,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This argument conflicts with the other 'provider_xxx' arguments. The `CreateProvider <https://developer.okta.com/docs/reference/api/authenticators-admin/#request>`_ illustrates detailed provider values for a Duo authenticator. `Provider values <https://developer.okta.com/docs/reference/api/authenticators-admin/#authenticators-administration-api-object>`_are listed in Okta API.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_json Authenticator#provider_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_json Authenticator#provider_json}
         '''
         result = self._values.get("provider_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -781,7 +781,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def provider_secret_key(self) -> typing.Optional[builtins.str]:
         '''(DUO specific) - The Duo Security secret key.  Conflicts with ``provider_json`` argument.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_secret_key Authenticator#provider_secret_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_secret_key Authenticator#provider_secret_key}
         '''
         result = self._values.get("provider_secret_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -792,7 +792,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Used only for authenticators with type ``security_key``. Conflicts with ``provider_json`` argument.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_shared_secret Authenticator#provider_shared_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_shared_secret Authenticator#provider_shared_secret}
         '''
         result = self._values.get("provider_shared_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -801,7 +801,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def provider_user_name_template(self) -> typing.Optional[builtins.str]:
         '''Username template expected by the provider. Used only for authenticators with type ``security_key``.  Conflicts with ``provider_json`` argument.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#provider_user_name_template Authenticator#provider_user_name_template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#provider_user_name_template Authenticator#provider_user_name_template}
         '''
         result = self._values.get("provider_user_name_template")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -812,7 +812,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The settings JSON contains values based on Authenticator key. It is not used for authenticators with type ``security_key``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#settings Authenticator#settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#settings Authenticator#settings}
         '''
         result = self._values.get("settings")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -821,7 +821,7 @@ class AuthenticatorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Authenticator status: ``ACTIVE`` or ``INACTIVE``. Default: ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/authenticator#status Authenticator#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/authenticator#status Authenticator#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)

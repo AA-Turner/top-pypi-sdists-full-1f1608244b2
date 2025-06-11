@@ -151,6 +151,7 @@ def _call_send_email_api(session: Session, email_body: EmailRequestInput) -> Non
                                   f"Response content: {response.content}")
 
 
+@Status.handle_keyboard_interrupt()
 def send_email(to: RecipientType, subject: str, content: str, *,
                cc: Optional[RecipientType] = None, bcc: Optional[RecipientType] = None,
                attachments: Optional[AttachmentType] = None, errors: Optional[str] = None,
@@ -248,8 +249,6 @@ def send_email(to: RecipientType, subject: str, content: str, *,
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     email_request_body: EmailRequestInput = _create_email_request_input(to, subject, content, cc, bcc, attachments)

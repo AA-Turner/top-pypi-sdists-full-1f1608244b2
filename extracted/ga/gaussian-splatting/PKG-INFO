@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: gaussian_splatting
-Version: 1.16.5
+Version: 1.16.6
 Summary: Refactored python training and inference code for 3D Gaussian Splatting
 Home-page: https://github.com/yindaheng98/gaussian-splatting
 Author: yindaheng98
@@ -11,6 +11,8 @@ License-File: LICENSE.md
 Requires-Dist: tqdm
 Requires-Dist: plyfile
 Requires-Dist: tifffile
+Requires-Dist: numpy
+Requires-Dist: opencv-python
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier

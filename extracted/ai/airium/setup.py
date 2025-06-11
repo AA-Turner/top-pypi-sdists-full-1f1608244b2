@@ -14,7 +14,7 @@ long_description = read('README.md')
 dev_requires = read('requirements_dev.txt').splitlines()
 parse_requires = read('requirements_for_parsing.txt').splitlines()
 
-version_identifier = '0.2.6'
+version_identifier = '0.2.7'
 
 setup(
     name='airium',
@@ -23,7 +23,7 @@ setup(
     author_email='michal.s.kaczmarczyk@gmail.com',
     maintainer='Michał Kaczmarczyk',
     maintainer_email='michal.s.kaczmarczyk@gmail.com',
-    license='MIT license',
+    license='MIT',
     url='https://gitlab.com/kamichal/airium',
     description='Easy and quick html builder with natural syntax correspondence (python->html). '
                 'No templates needed. Serves pure pythonic library with no dependencies.',
@@ -41,13 +41,14 @@ setup(
         'Intended Audience :: Science/Research',
         'Intended Audience :: System Administrators',
         'Intended Audience :: Telecommunications Industry',
-        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Programming Language :: Python',
         'Topic :: Database :: Front-Ends',

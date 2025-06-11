@@ -290,6 +290,7 @@ from openapi_client.models.finetunedmodel_response import FinetunedmodelResponse
 from openapi_client.models.gcp_config import GCPConfig
 from openapi_client.models.gcp_file_store_config import GCPFileStoreConfig
 from openapi_client.models.gcp_memorystore_instance_config import GCPMemorystoreInstanceConfig
+from openapi_client.models.get_or_create_build_from_image_uri_request import GetOrCreateBuildFromImageUriRequest
 from openapi_client.models.grafana_dashboard import GrafanaDashboard
 from openapi_client.models.grpc_protocol_config import GrpcProtocolConfig
 from openapi_client.models.http_validation_error import HTTPValidationError

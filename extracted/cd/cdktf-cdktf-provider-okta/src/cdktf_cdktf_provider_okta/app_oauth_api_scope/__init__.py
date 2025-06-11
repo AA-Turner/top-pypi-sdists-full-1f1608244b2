@@ -1,7 +1,7 @@
 r'''
 # `okta_app_oauth_api_scope`
 
-Refer to the Terraform Registry for docs: [`okta_app_oauth_api_scope`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope).
+Refer to the Terraform Registry for docs: [`okta_app_oauth_api_scope`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppOauthApiScope(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appOauthApiScope.AppOauthApiScope",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope okta_app_oauth_api_scope}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope okta_app_oauth_api_scope}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class AppOauthApiScope(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope okta_app_oauth_api_scope} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope okta_app_oauth_api_scope} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param app_id: ID of the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#app_id AppOauthApiScope#app_id}
-        :param issuer: The issuer of your Org Authorization Server, your Org URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#issuer AppOauthApiScope#issuer}
-        :param scopes: Scopes of the application for which consent is granted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#scopes AppOauthApiScope#scopes}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#id AppOauthApiScope#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param app_id: ID of the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#app_id AppOauthApiScope#app_id}
+        :param issuer: The issuer of your Org Authorization Server, your Org URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#issuer AppOauthApiScope#issuer}
+        :param scopes: Scopes of the application for which consent is granted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#scopes AppOauthApiScope#scopes}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#id AppOauthApiScope#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class AppOauthApiScope(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppOauthApiScope to import.
-        :param import_from_id: The id of the existing AppOauthApiScope that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppOauthApiScope that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppOauthApiScope to import is found.
         '''
         if __debug__:
@@ -250,10 +250,10 @@ class AppOauthApiScopeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param app_id: ID of the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#app_id AppOauthApiScope#app_id}
-        :param issuer: The issuer of your Org Authorization Server, your Org URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#issuer AppOauthApiScope#issuer}
-        :param scopes: Scopes of the application for which consent is granted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#scopes AppOauthApiScope#scopes}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#id AppOauthApiScope#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param app_id: ID of the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#app_id AppOauthApiScope#app_id}
+        :param issuer: The issuer of your Org Authorization Server, your Org URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#issuer AppOauthApiScope#issuer}
+        :param scopes: Scopes of the application for which consent is granted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#scopes AppOauthApiScope#scopes}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#id AppOauthApiScope#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -360,7 +360,7 @@ class AppOauthApiScopeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_id(self) -> builtins.str:
         '''ID of the application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#app_id AppOauthApiScope#app_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#app_id AppOauthApiScope#app_id}
         '''
         result = self._values.get("app_id")
         assert result is not None, "Required property 'app_id' is missing"
@@ -370,7 +370,7 @@ class AppOauthApiScopeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def issuer(self) -> builtins.str:
         '''The issuer of your Org Authorization Server, your Org URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#issuer AppOauthApiScope#issuer}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#issuer AppOauthApiScope#issuer}
         '''
         result = self._values.get("issuer")
         assert result is not None, "Required property 'issuer' is missing"
@@ -380,7 +380,7 @@ class AppOauthApiScopeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def scopes(self) -> typing.List[builtins.str]:
         '''Scopes of the application for which consent is granted.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#scopes AppOauthApiScope#scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#scopes AppOauthApiScope#scopes}
         '''
         result = self._values.get("scopes")
         assert result is not None, "Required property 'scopes' is missing"
@@ -388,7 +388,7 @@ class AppOauthApiScopeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_oauth_api_scope#id AppOauthApiScope#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_oauth_api_scope#id AppOauthApiScope#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

@@ -11,6 +11,7 @@ from seeq.spy._status import Status
 
 
 # noinspection PyShadowingBuiltins
+@Status.handle_keyboard_interrupt(no_session=True)
 def zip(job_folder: str, *, overwrite: bool = False, quiet: Optional[bool] = None, status: Optional[Status] = None):
     """
     Creates a zip file of the job folder for easy sharing.
@@ -41,8 +42,6 @@ def zip(job_folder: str, *, overwrite: bool = False, quiet: Optional[bool] = Non
         (status, 'status', Status)
     ])
 
-    status = Status.validate(status, None, quiet)
-
     if not util.safe_exists(job_folder):
         raise SPyValueError(f'Job folder "{job_folder}" does not exist.')
 
@@ -54,6 +53,7 @@ def zip(job_folder: str, *, overwrite: bool = False, quiet: Optional[bool] = Non
             raise SPyRuntimeError(
                 f'Zip file "{job_folder_zip}" already exists. Specify overwrite=True to overwrite it.')
 
+        status.update(f'Removing "{job_folder_zip}"', Status.RUNNING)
         util.safe_remove(job_folder_zip)
 
     with zipfile.ZipFile(util.handle_long_filenames(job_folder_zip), "w", zipfile.ZIP_DEFLATED) as z:
@@ -62,13 +62,14 @@ def zip(job_folder: str, *, overwrite: bool = False, quiet: Optional[bool] = Non
                 filename = os.path.join(root, file)
                 if util.safe_isfile(filename):  # regular files only
                     archive_name = os.path.join(util.safe_relpath(root, job_folder), file)
-                    _common.print_output('Archiving %s' % archive_name)
+                    status.update(f'Archiving "{archive_name}"', Status.RUNNING)
                     # noinspection PyTypeChecker
                     z.write(filename, archive_name)
 
     status.update(f'Success: Zip file written to "{job_folder_zip}"', Status.SUCCESS)
 
 
+@Status.handle_keyboard_interrupt(no_session=True)
 def unzip(job_folder_zip: str, *, overwrite: bool = False,
           quiet: Optional[bool] = None, status: Optional[Status] = None):
     """
@@ -100,8 +101,6 @@ def unzip(job_folder_zip: str, *, overwrite: bool = False,
         (quiet, 'quiet', bool),
         (status, 'status', Status)
     ])
-
-    status = Status.validate(status, None, quiet)
 
     if not util.safe_exists(job_folder_zip):
         raise SPyValueError(f'Zip file "{job_folder_zip}" does not exist.')

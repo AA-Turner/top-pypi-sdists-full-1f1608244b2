@@ -146,9 +146,6 @@ def push(jobs_df: pd.DataFrame, spread: Optional[str] = None, datalab_notebook_u
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet)
-
     try:
         _schedule.schedule_df(session, jobs_df=jobs_df, spread=spread, datalab_notebook_url=datalab_notebook_url,
                               label=label, user=user, suspend=suspend,

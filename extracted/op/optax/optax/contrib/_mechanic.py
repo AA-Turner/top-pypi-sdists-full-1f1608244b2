@@ -26,14 +26,14 @@ of O(d) computations. We largely expect the wall clock time with and without
 using Mechanic to be the same for reasonably large batch sizes (>1k).
 """
 
-from typing import NamedTuple, Optional
+from typing import NamedTuple, Optional, Any, Union
 
 import chex
 import jax
 import jax.numpy as jnp
 from optax._src import base
 from optax._src import numerics
-import optax.tree_utils as otu
+import optax.tree
 
 
 class MechanicState(NamedTuple):
@@ -49,12 +49,13 @@ class MechanicState(NamedTuple):
 
 
 def mechanize(
-    base_optimizer: base.GradientTransformation,
+    base_optimizer: Union[base.GradientTransformation,
+                          base.GradientTransformationExtraArgs],
     weight_decay: float = 1e-2,
     eps: float = 1e-8,
     s_init: float = 1e-6,
     num_betas: int = 6,
-) -> base.GradientTransformation:
+) -> base.GradientTransformationExtraArgs:
   """Mechanic - a black box learning rate tuner/optimizer.
 
   Accumulates updates returned by the base_optimizer and learns the scale of
@@ -105,12 +106,14 @@ def mechanize(
     <https://arxiv.org/pdf/2306.00144.pdf>`_ 2023
   """
 
+  base_optimizer = base.with_extra_args_support(base_optimizer)
+
   def init_fn(params: base.Params) -> MechanicState:
     x0 = params
     # Define state parameters with the lowest dtype of the parameters to avoid
     # dtype promotion of parameters resulting in a dtype mismatch between
     # parameters and updates.
-    params_dtype = otu.tree_dtype(params, 'lowest')
+    params_dtype = optax.tree.dtype(params, 'lowest')
     r = jnp.zeros(
         [
             num_betas,
@@ -152,13 +155,14 @@ def mechanize(
       updates: base.Updates,
       state: MechanicState,
       params: Optional[base.Params] = None,
+      **extra_args: Any,
   ) -> tuple[base.Params, MechanicState]:
     if params is None:
       raise ValueError(base.NO_PARAMS_MSG)
 
     count_inc = numerics.safe_increment(state.count)
     new_neg_updates, base_optimizer_state = base_optimizer.update(
-        updates, state.base_optimizer_state, params
+        updates, state.base_optimizer_state, params, **extra_args
     )
     # Since a lot of training loops unfreezes weights to replace it with
     # pre-trained weights, we want to make sure we start from actually used
@@ -168,8 +172,8 @@ def mechanize(
     # Add weight decay to raw gradients, note that this is orthogonal to any
     # weight decay applied to inner_optimizer updates.
     s_sum = jnp.sum(state.s)
-    grad_norm = otu.tree_l2_norm(updates)
-    param_norm = otu.tree_l2_norm(params)
+    grad_norm = optax.tree.norm(updates)
+    param_norm = optax.tree.norm(params)
 
     def add_weight_decay(gi, pi):
       return gi + weight_decay * s_sum * grad_norm / (param_norm + eps) * pi
@@ -191,7 +195,7 @@ def mechanize(
     delta = jax.tree.map(lambda si, ui: si - ui, delta_prev, new_neg_updates)
 
     # Now we are ready to run the actual Mechanic algorithm.
-    h = otu.tree_vdot(updates, delta_prev)
+    h = optax.tree.vdot(updates, delta_prev)
 
     # This clipping was not part of the original paper but we introduced it
     # a little later.
@@ -225,4 +229,4 @@ def mechanize(
         x0=new_x0,
     )
 
-  return base.GradientTransformation(init_fn, update_fn)
+  return base.GradientTransformationExtraArgs(init_fn, update_fn)

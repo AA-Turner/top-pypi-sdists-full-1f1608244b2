@@ -2,7 +2,7 @@ from celery import chain, shared_task
 from django.db.models import Model
 
 
-@shared_task
+@shared_task(queue="llm")
 def save_instance_as_task(instance):
     instance.save(_with_llm=False)
 

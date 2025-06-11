@@ -12,6 +12,7 @@ from biolib._internal.data_record.push_data import (
     push_data_path,
     validate_data_path_and_get_files_and_size_of_directory,
 )
+from biolib._internal.errors import AuthenticationError
 from biolib._internal.file_utils import get_files_and_size_of_directory, get_iterable_zip_stream
 from biolib._internal.types.push import PushResponseDict
 from biolib.biolib_api_client import BiolibApiClient
@@ -195,7 +196,10 @@ def push_application(
     parsed_uri = parse_app_uri(app_uri)
     app_name = parsed_uri['app_name']
 
-    app_uri_to_fetch = f"@{parsed_uri['resource_name_prefix']}/{parsed_uri['account_handle_normalized']}/{app_name}"
+    app_uri_prefix = (
+        f"@{parsed_uri['resource_name_prefix']}/" if parsed_uri['resource_name_prefix'] != 'biolib.com' else ''
+    )
+    app_uri_to_fetch = f"{app_uri_prefix}{parsed_uri['account_handle_normalized']}/{app_name}"
 
     version = parsed_uri['version']
     semantic_version = f"{version['major']}.{version['minor']}.{version['patch']}" if version else None
@@ -204,13 +208,21 @@ def push_application(
 
     api_client = BiolibApiClient.get()
     if not api_client.is_signed_in:
-        # TODO: Create an exception class for expected errors like this that does not print stacktrace
-
-        raise Exception(
-            'You must be authenticated to push an application.\n'
-            'Please set the environment variable "BIOLIB_TOKEN=[your_deploy_token]"\n'
-            f'You can get a deploy key at: {api_client.base_url}/{app_uri_to_fetch}/settings/keys/'
-        ) from None
+        github_repository = os.getenv('GITHUB_REPOSITORY')
+        if github_repository and not api_client.resource_deploy_key:
+            github_secrets_url = f'https://github.com/{github_repository}/settings/secrets/actions/new'
+            raise AuthenticationError(
+                'You must be authenticated to push an application.\n'
+                'Please set the environment variable "BIOLIB_TOKEN=[your_deploy_token]"\n'
+                f'You can get a deploy key at: {api_client.base_url}/{app_uri_to_fetch}/settings/keys/\n'
+                f'Then add it to your GitHub repository at: {github_secrets_url}'
+            )
+        else:
+            raise AuthenticationError(
+                'You must be authenticated to push an application.\n'
+                'Please set the environment variable "BIOLIB_TOKEN=[your_deploy_token]"\n'
+                f'You can get a deploy key at: {api_client.base_url}/{app_uri_to_fetch}/settings/keys/'
+            )
 
     # prepare zip file
     config_yml_path = app_path_absolute.joinpath('.biolib/config.yml')

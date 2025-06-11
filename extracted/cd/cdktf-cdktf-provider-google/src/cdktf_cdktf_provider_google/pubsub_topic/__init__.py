@@ -1,7 +1,7 @@
 r'''
 # `google_pubsub_topic`
 
-Refer to the Terraform Registry for docs: [`google_pubsub_topic`](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic).
+Refer to the Terraform Registry for docs: [`google_pubsub_topic`](https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PubsubTopic(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.pubsubTopic.PubsubTopic",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic google_pubsub_topic}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic google_pubsub_topic}.'''
 
     def __init__(
         self,
@@ -58,6 +58,7 @@ class PubsubTopic(
         labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
         message_retention_duration: typing.Optional[builtins.str] = None,
         message_storage_policy: typing.Optional[typing.Union["PubsubTopicMessageStoragePolicy", typing.Dict[builtins.str, typing.Any]]] = None,
+        message_transforms: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["PubsubTopicMessageTransforms", typing.Dict[builtins.str, typing.Any]]]]] = None,
         project: typing.Optional[builtins.str] = None,
         schema_settings: typing.Optional[typing.Union["PubsubTopicSchemaSettings", typing.Dict[builtins.str, typing.Any]]] = None,
         timeouts: typing.Optional[typing.Union["PubsubTopicTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -69,20 +70,21 @@ class PubsubTopic(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic google_pubsub_topic} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic google_pubsub_topic} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the topic. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#name PubsubTopic#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#id PubsubTopic#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ingestion_data_source_settings: ingestion_data_source_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#ingestion_data_source_settings PubsubTopic#ingestion_data_source_settings}
-        :param kms_key_name: The resource name of the Cloud KMS CryptoKey to be used to protect access to messages published on this topic. Your project's PubSub service account ('service-{{PROJECT_NUMBER}}@gcp-sa-pubsub.iam.gserviceaccount.com') must have 'roles/cloudkms.cryptoKeyEncrypterDecrypter' to use this feature. The expected format is 'projects/* /locations/* /keyRings/* /cryptoKeys/*' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#kms_key_name PubsubTopic#kms_key_name} Note: The above comment contained a comment block ending sequence (* followed by /). We have introduced a space between to prevent syntax errors. Please ignore the space.
-        :param labels: A set of key/value label pairs to assign to this Topic. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#labels PubsubTopic#labels}
-        :param message_retention_duration: Indicates the minimum duration to retain a message after it is published to the topic. If this field is set, messages published to the topic in the last messageRetentionDuration are always available to subscribers. For instance, it allows any attached subscription to seek to a timestamp that is up to messageRetentionDuration in the past. If this field is not set, message retention is controlled by settings on individual subscriptions. The rotation period has the format of a decimal number, followed by the letter 's' (seconds). Cannot be more than 31 days or less than 10 minutes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#message_retention_duration PubsubTopic#message_retention_duration}
-        :param message_storage_policy: message_storage_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#message_storage_policy PubsubTopic#message_storage_policy}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#project PubsubTopic#project}.
-        :param schema_settings: schema_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#schema_settings PubsubTopic#schema_settings}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#timeouts PubsubTopic#timeouts}
+        :param name: Name of the topic. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#name PubsubTopic#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#id PubsubTopic#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ingestion_data_source_settings: ingestion_data_source_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#ingestion_data_source_settings PubsubTopic#ingestion_data_source_settings}
+        :param kms_key_name: The resource name of the Cloud KMS CryptoKey to be used to protect access to messages published on this topic. Your project's PubSub service account ('service-{{PROJECT_NUMBER}}@gcp-sa-pubsub.iam.gserviceaccount.com') must have 'roles/cloudkms.cryptoKeyEncrypterDecrypter' to use this feature. The expected format is 'projects/* /locations/* /keyRings/* /cryptoKeys/*' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#kms_key_name PubsubTopic#kms_key_name} Note: The above comment contained a comment block ending sequence (* followed by /). We have introduced a space between to prevent syntax errors. Please ignore the space.
+        :param labels: A set of key/value label pairs to assign to this Topic. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#labels PubsubTopic#labels}
+        :param message_retention_duration: Indicates the minimum duration to retain a message after it is published to the topic. If this field is set, messages published to the topic in the last messageRetentionDuration are always available to subscribers. For instance, it allows any attached subscription to seek to a timestamp that is up to messageRetentionDuration in the past. If this field is not set, message retention is controlled by settings on individual subscriptions. The rotation period has the format of a decimal number, followed by the letter 's' (seconds). Cannot be more than 31 days or less than 10 minutes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#message_retention_duration PubsubTopic#message_retention_duration}
+        :param message_storage_policy: message_storage_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#message_storage_policy PubsubTopic#message_storage_policy}
+        :param message_transforms: message_transforms block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#message_transforms PubsubTopic#message_transforms}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#project PubsubTopic#project}.
+        :param schema_settings: schema_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#schema_settings PubsubTopic#schema_settings}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#timeouts PubsubTopic#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -103,6 +105,7 @@ class PubsubTopic(
             labels=labels,
             message_retention_duration=message_retention_duration,
             message_storage_policy=message_storage_policy,
+            message_transforms=message_transforms,
             project=project,
             schema_settings=schema_settings,
             timeouts=timeouts,
@@ -130,7 +133,7 @@ class PubsubTopic(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PubsubTopic to import.
-        :param import_from_id: The id of the existing PubsubTopic that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PubsubTopic that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PubsubTopic to import is found.
         '''
         if __debug__:
@@ -153,12 +156,12 @@ class PubsubTopic(
         platform_logs_settings: typing.Optional[typing.Union["PubsubTopicIngestionDataSourceSettingsPlatformLogsSettings", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param aws_kinesis: aws_kinesis block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_kinesis PubsubTopic#aws_kinesis}
-        :param aws_msk: aws_msk block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_msk PubsubTopic#aws_msk}
-        :param azure_event_hubs: azure_event_hubs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#azure_event_hubs PubsubTopic#azure_event_hubs}
-        :param cloud_storage: cloud_storage block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#cloud_storage PubsubTopic#cloud_storage}
-        :param confluent_cloud: confluent_cloud block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#confluent_cloud PubsubTopic#confluent_cloud}
-        :param platform_logs_settings: platform_logs_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#platform_logs_settings PubsubTopic#platform_logs_settings}
+        :param aws_kinesis: aws_kinesis block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_kinesis PubsubTopic#aws_kinesis}
+        :param aws_msk: aws_msk block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_msk PubsubTopic#aws_msk}
+        :param azure_event_hubs: azure_event_hubs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#azure_event_hubs PubsubTopic#azure_event_hubs}
+        :param cloud_storage: cloud_storage block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#cloud_storage PubsubTopic#cloud_storage}
+        :param confluent_cloud: confluent_cloud block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#confluent_cloud PubsubTopic#confluent_cloud}
+        :param platform_logs_settings: platform_logs_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#platform_logs_settings PubsubTopic#platform_logs_settings}
         '''
         value = PubsubTopicIngestionDataSourceSettings(
             aws_kinesis=aws_kinesis,
@@ -179,8 +182,8 @@ class PubsubTopic(
         enforce_in_transit: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param allowed_persistence_regions: A list of IDs of GCP regions where messages that are published to the topic may be persisted in storage. Messages published by publishers running in non-allowed GCP regions (or running outside of GCP altogether) will be routed for storage in one of the allowed regions. An empty list means that no regions are allowed, and is not a valid configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#allowed_persistence_regions PubsubTopic#allowed_persistence_regions}
-        :param enforce_in_transit: If true, 'allowedPersistenceRegions' is also used to enforce in-transit guarantees for messages. That is, Pub/Sub will fail topics.publish operations on this topic and subscribe operations on any subscription attached to this topic in any region that is not in 'allowedPersistenceRegions'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#enforce_in_transit PubsubTopic#enforce_in_transit}
+        :param allowed_persistence_regions: A list of IDs of GCP regions where messages that are published to the topic may be persisted in storage. Messages published by publishers running in non-allowed GCP regions (or running outside of GCP altogether) will be routed for storage in one of the allowed regions. An empty list means that no regions are allowed, and is not a valid configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#allowed_persistence_regions PubsubTopic#allowed_persistence_regions}
+        :param enforce_in_transit: If true, 'allowedPersistenceRegions' is also used to enforce in-transit guarantees for messages. That is, Pub/Sub will fail topics.publish operations on this topic and subscribe operations on any subscription attached to this topic in any region that is not in 'allowedPersistenceRegions'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#enforce_in_transit PubsubTopic#enforce_in_transit}
         '''
         value = PubsubTopicMessageStoragePolicy(
             allowed_persistence_regions=allowed_persistence_regions,
@@ -188,6 +191,19 @@ class PubsubTopic(
         )
 
         return typing.cast(None, jsii.invoke(self, "putMessageStoragePolicy", [value]))
+
+    @jsii.member(jsii_name="putMessageTransforms")
+    def put_message_transforms(
+        self,
+        value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["PubsubTopicMessageTransforms", typing.Dict[builtins.str, typing.Any]]]],
+    ) -> None:
+        '''
+        :param value: -
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__009c6fd9469867de50acfe181dab89c198666c8beed63e0afeac165d426cc579)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        return typing.cast(None, jsii.invoke(self, "putMessageTransforms", [value]))
 
     @jsii.member(jsii_name="putSchemaSettings")
     def put_schema_settings(
@@ -197,8 +213,8 @@ class PubsubTopic(
         encoding: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param schema: The name of the schema that messages published should be validated against. Format is projects/{project}/schemas/{schema}. The value of this field will be *deleted-schema* if the schema has been deleted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#schema PubsubTopic#schema}
-        :param encoding: The encoding of messages validated against schema. Default value: "ENCODING_UNSPECIFIED" Possible values: ["ENCODING_UNSPECIFIED", "JSON", "BINARY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#encoding PubsubTopic#encoding}
+        :param schema: The name of the schema that messages published should be validated against. Format is projects/{project}/schemas/{schema}. The value of this field will be *deleted-schema* if the schema has been deleted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#schema PubsubTopic#schema}
+        :param encoding: The encoding of messages validated against schema. Default value: "ENCODING_UNSPECIFIED" Possible values: ["ENCODING_UNSPECIFIED", "JSON", "BINARY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#encoding PubsubTopic#encoding}
         '''
         value = PubsubTopicSchemaSettings(schema=schema, encoding=encoding)
 
@@ -213,9 +229,9 @@ class PubsubTopic(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#create PubsubTopic#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#delete PubsubTopic#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#update PubsubTopic#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#create PubsubTopic#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#delete PubsubTopic#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#update PubsubTopic#update}.
         '''
         value = PubsubTopicTimeouts(create=create, delete=delete, update=update)
 
@@ -244,6 +260,10 @@ class PubsubTopic(
     @jsii.member(jsii_name="resetMessageStoragePolicy")
     def reset_message_storage_policy(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetMessageStoragePolicy", []))
+
+    @jsii.member(jsii_name="resetMessageTransforms")
+    def reset_message_transforms(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetMessageTransforms", []))
 
     @jsii.member(jsii_name="resetProject")
     def reset_project(self) -> None:
@@ -288,6 +308,11 @@ class PubsubTopic(
         self,
     ) -> "PubsubTopicMessageStoragePolicyOutputReference":
         return typing.cast("PubsubTopicMessageStoragePolicyOutputReference", jsii.get(self, "messageStoragePolicy"))
+
+    @builtins.property
+    @jsii.member(jsii_name="messageTransforms")
+    def message_transforms(self) -> "PubsubTopicMessageTransformsList":
+        return typing.cast("PubsubTopicMessageTransformsList", jsii.get(self, "messageTransforms"))
 
     @builtins.property
     @jsii.member(jsii_name="schemaSettings")
@@ -339,6 +364,13 @@ class PubsubTopic(
         self,
     ) -> typing.Optional["PubsubTopicMessageStoragePolicy"]:
         return typing.cast(typing.Optional["PubsubTopicMessageStoragePolicy"], jsii.get(self, "messageStoragePolicyInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="messageTransformsInput")
+    def message_transforms_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PubsubTopicMessageTransforms"]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PubsubTopicMessageTransforms"]]], jsii.get(self, "messageTransformsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="nameInput")
@@ -453,6 +485,7 @@ class PubsubTopic(
         "labels": "labels",
         "message_retention_duration": "messageRetentionDuration",
         "message_storage_policy": "messageStoragePolicy",
+        "message_transforms": "messageTransforms",
         "project": "project",
         "schema_settings": "schemaSettings",
         "timeouts": "timeouts",
@@ -476,6 +509,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
         message_retention_duration: typing.Optional[builtins.str] = None,
         message_storage_policy: typing.Optional[typing.Union["PubsubTopicMessageStoragePolicy", typing.Dict[builtins.str, typing.Any]]] = None,
+        message_transforms: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["PubsubTopicMessageTransforms", typing.Dict[builtins.str, typing.Any]]]]] = None,
         project: typing.Optional[builtins.str] = None,
         schema_settings: typing.Optional[typing.Union["PubsubTopicSchemaSettings", typing.Dict[builtins.str, typing.Any]]] = None,
         timeouts: typing.Optional[typing.Union["PubsubTopicTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -488,16 +522,17 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the topic. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#name PubsubTopic#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#id PubsubTopic#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ingestion_data_source_settings: ingestion_data_source_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#ingestion_data_source_settings PubsubTopic#ingestion_data_source_settings}
-        :param kms_key_name: The resource name of the Cloud KMS CryptoKey to be used to protect access to messages published on this topic. Your project's PubSub service account ('service-{{PROJECT_NUMBER}}@gcp-sa-pubsub.iam.gserviceaccount.com') must have 'roles/cloudkms.cryptoKeyEncrypterDecrypter' to use this feature. The expected format is 'projects/* /locations/* /keyRings/* /cryptoKeys/*' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#kms_key_name PubsubTopic#kms_key_name} Note: The above comment contained a comment block ending sequence (* followed by /). We have introduced a space between to prevent syntax errors. Please ignore the space.
-        :param labels: A set of key/value label pairs to assign to this Topic. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#labels PubsubTopic#labels}
-        :param message_retention_duration: Indicates the minimum duration to retain a message after it is published to the topic. If this field is set, messages published to the topic in the last messageRetentionDuration are always available to subscribers. For instance, it allows any attached subscription to seek to a timestamp that is up to messageRetentionDuration in the past. If this field is not set, message retention is controlled by settings on individual subscriptions. The rotation period has the format of a decimal number, followed by the letter 's' (seconds). Cannot be more than 31 days or less than 10 minutes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#message_retention_duration PubsubTopic#message_retention_duration}
-        :param message_storage_policy: message_storage_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#message_storage_policy PubsubTopic#message_storage_policy}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#project PubsubTopic#project}.
-        :param schema_settings: schema_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#schema_settings PubsubTopic#schema_settings}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#timeouts PubsubTopic#timeouts}
+        :param name: Name of the topic. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#name PubsubTopic#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#id PubsubTopic#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ingestion_data_source_settings: ingestion_data_source_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#ingestion_data_source_settings PubsubTopic#ingestion_data_source_settings}
+        :param kms_key_name: The resource name of the Cloud KMS CryptoKey to be used to protect access to messages published on this topic. Your project's PubSub service account ('service-{{PROJECT_NUMBER}}@gcp-sa-pubsub.iam.gserviceaccount.com') must have 'roles/cloudkms.cryptoKeyEncrypterDecrypter' to use this feature. The expected format is 'projects/* /locations/* /keyRings/* /cryptoKeys/*' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#kms_key_name PubsubTopic#kms_key_name} Note: The above comment contained a comment block ending sequence (* followed by /). We have introduced a space between to prevent syntax errors. Please ignore the space.
+        :param labels: A set of key/value label pairs to assign to this Topic. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#labels PubsubTopic#labels}
+        :param message_retention_duration: Indicates the minimum duration to retain a message after it is published to the topic. If this field is set, messages published to the topic in the last messageRetentionDuration are always available to subscribers. For instance, it allows any attached subscription to seek to a timestamp that is up to messageRetentionDuration in the past. If this field is not set, message retention is controlled by settings on individual subscriptions. The rotation period has the format of a decimal number, followed by the letter 's' (seconds). Cannot be more than 31 days or less than 10 minutes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#message_retention_duration PubsubTopic#message_retention_duration}
+        :param message_storage_policy: message_storage_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#message_storage_policy PubsubTopic#message_storage_policy}
+        :param message_transforms: message_transforms block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#message_transforms PubsubTopic#message_transforms}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#project PubsubTopic#project}.
+        :param schema_settings: schema_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#schema_settings PubsubTopic#schema_settings}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#timeouts PubsubTopic#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -525,6 +560,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument labels", value=labels, expected_type=type_hints["labels"])
             check_type(argname="argument message_retention_duration", value=message_retention_duration, expected_type=type_hints["message_retention_duration"])
             check_type(argname="argument message_storage_policy", value=message_storage_policy, expected_type=type_hints["message_storage_policy"])
+            check_type(argname="argument message_transforms", value=message_transforms, expected_type=type_hints["message_transforms"])
             check_type(argname="argument project", value=project, expected_type=type_hints["project"])
             check_type(argname="argument schema_settings", value=schema_settings, expected_type=type_hints["schema_settings"])
             check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
@@ -557,6 +593,8 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["message_retention_duration"] = message_retention_duration
         if message_storage_policy is not None:
             self._values["message_storage_policy"] = message_storage_policy
+        if message_transforms is not None:
+            self._values["message_transforms"] = message_transforms
         if project is not None:
             self._values["project"] = project
         if schema_settings is not None:
@@ -632,7 +670,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the topic.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#name PubsubTopic#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#name PubsubTopic#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -640,7 +678,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#id PubsubTopic#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#id PubsubTopic#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -654,7 +692,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettings"]:
         '''ingestion_data_source_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#ingestion_data_source_settings PubsubTopic#ingestion_data_source_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#ingestion_data_source_settings PubsubTopic#ingestion_data_source_settings}
         '''
         result = self._values.get("ingestion_data_source_settings")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettings"], result)
@@ -668,7 +706,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         'roles/cloudkms.cryptoKeyEncrypterDecrypter' to use this feature.
         The expected format is 'projects/* /locations/* /keyRings/* /cryptoKeys/*'
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#kms_key_name PubsubTopic#kms_key_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#kms_key_name PubsubTopic#kms_key_name}
 
         Note: The above comment contained a comment block ending sequence (* followed by /). We have introduced a space between to prevent syntax errors. Please ignore the space.
         '''
@@ -682,7 +720,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
         Please refer to the field 'effective_labels' for all of the labels present on the resource.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#labels PubsubTopic#labels}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#labels PubsubTopic#labels}
         '''
         result = self._values.get("labels")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -699,7 +737,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         The rotation period has the format of a decimal number, followed by the
         letter 's' (seconds). Cannot be more than 31 days or less than 10 minutes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#message_retention_duration PubsubTopic#message_retention_duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#message_retention_duration PubsubTopic#message_retention_duration}
         '''
         result = self._values.get("message_retention_duration")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -710,14 +748,25 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional["PubsubTopicMessageStoragePolicy"]:
         '''message_storage_policy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#message_storage_policy PubsubTopic#message_storage_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#message_storage_policy PubsubTopic#message_storage_policy}
         '''
         result = self._values.get("message_storage_policy")
         return typing.cast(typing.Optional["PubsubTopicMessageStoragePolicy"], result)
 
     @builtins.property
+    def message_transforms(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PubsubTopicMessageTransforms"]]]:
+        '''message_transforms block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#message_transforms PubsubTopic#message_transforms}
+        '''
+        result = self._values.get("message_transforms")
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["PubsubTopicMessageTransforms"]]], result)
+
+    @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#project PubsubTopic#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#project PubsubTopic#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -725,7 +774,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def schema_settings(self) -> typing.Optional["PubsubTopicSchemaSettings"]:
         '''schema_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#schema_settings PubsubTopic#schema_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#schema_settings PubsubTopic#schema_settings}
         '''
         result = self._values.get("schema_settings")
         return typing.cast(typing.Optional["PubsubTopicSchemaSettings"], result)
@@ -734,7 +783,7 @@ class PubsubTopicConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["PubsubTopicTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#timeouts PubsubTopic#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#timeouts PubsubTopic#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["PubsubTopicTimeouts"], result)
@@ -775,12 +824,12 @@ class PubsubTopicIngestionDataSourceSettings:
         platform_logs_settings: typing.Optional[typing.Union["PubsubTopicIngestionDataSourceSettingsPlatformLogsSettings", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param aws_kinesis: aws_kinesis block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_kinesis PubsubTopic#aws_kinesis}
-        :param aws_msk: aws_msk block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_msk PubsubTopic#aws_msk}
-        :param azure_event_hubs: azure_event_hubs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#azure_event_hubs PubsubTopic#azure_event_hubs}
-        :param cloud_storage: cloud_storage block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#cloud_storage PubsubTopic#cloud_storage}
-        :param confluent_cloud: confluent_cloud block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#confluent_cloud PubsubTopic#confluent_cloud}
-        :param platform_logs_settings: platform_logs_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#platform_logs_settings PubsubTopic#platform_logs_settings}
+        :param aws_kinesis: aws_kinesis block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_kinesis PubsubTopic#aws_kinesis}
+        :param aws_msk: aws_msk block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_msk PubsubTopic#aws_msk}
+        :param azure_event_hubs: azure_event_hubs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#azure_event_hubs PubsubTopic#azure_event_hubs}
+        :param cloud_storage: cloud_storage block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#cloud_storage PubsubTopic#cloud_storage}
+        :param confluent_cloud: confluent_cloud block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#confluent_cloud PubsubTopic#confluent_cloud}
+        :param platform_logs_settings: platform_logs_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#platform_logs_settings PubsubTopic#platform_logs_settings}
         '''
         if isinstance(aws_kinesis, dict):
             aws_kinesis = PubsubTopicIngestionDataSourceSettingsAwsKinesis(**aws_kinesis)
@@ -822,7 +871,7 @@ class PubsubTopicIngestionDataSourceSettings:
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettingsAwsKinesis"]:
         '''aws_kinesis block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_kinesis PubsubTopic#aws_kinesis}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_kinesis PubsubTopic#aws_kinesis}
         '''
         result = self._values.get("aws_kinesis")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettingsAwsKinesis"], result)
@@ -833,7 +882,7 @@ class PubsubTopicIngestionDataSourceSettings:
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettingsAwsMsk"]:
         '''aws_msk block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_msk PubsubTopic#aws_msk}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_msk PubsubTopic#aws_msk}
         '''
         result = self._values.get("aws_msk")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettingsAwsMsk"], result)
@@ -844,7 +893,7 @@ class PubsubTopicIngestionDataSourceSettings:
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettingsAzureEventHubs"]:
         '''azure_event_hubs block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#azure_event_hubs PubsubTopic#azure_event_hubs}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#azure_event_hubs PubsubTopic#azure_event_hubs}
         '''
         result = self._values.get("azure_event_hubs")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettingsAzureEventHubs"], result)
@@ -855,7 +904,7 @@ class PubsubTopicIngestionDataSourceSettings:
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettingsCloudStorage"]:
         '''cloud_storage block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#cloud_storage PubsubTopic#cloud_storage}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#cloud_storage PubsubTopic#cloud_storage}
         '''
         result = self._values.get("cloud_storage")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettingsCloudStorage"], result)
@@ -866,7 +915,7 @@ class PubsubTopicIngestionDataSourceSettings:
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettingsConfluentCloud"]:
         '''confluent_cloud block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#confluent_cloud PubsubTopic#confluent_cloud}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#confluent_cloud PubsubTopic#confluent_cloud}
         '''
         result = self._values.get("confluent_cloud")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettingsConfluentCloud"], result)
@@ -877,7 +926,7 @@ class PubsubTopicIngestionDataSourceSettings:
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettingsPlatformLogsSettings"]:
         '''platform_logs_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#platform_logs_settings PubsubTopic#platform_logs_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#platform_logs_settings PubsubTopic#platform_logs_settings}
         '''
         result = self._values.get("platform_logs_settings")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettingsPlatformLogsSettings"], result)
@@ -914,10 +963,10 @@ class PubsubTopicIngestionDataSourceSettingsAwsKinesis:
         stream_arn: builtins.str,
     ) -> None:
         '''
-        :param aws_role_arn: AWS role ARN to be used for Federated Identity authentication with Kinesis. Check the Pub/Sub docs for how to set up this role and the required permissions that need to be attached to it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
-        :param consumer_arn: The Kinesis consumer ARN to used for ingestion in Enhanced Fan-Out mode. The consumer must be already created and ready to be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#consumer_arn PubsubTopic#consumer_arn}
-        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Kinesis (via a 'AssumeRoleWithWebIdentity' call for the provided role). The 'awsRoleArn' must be set up with 'accounts.google.com:sub' equals to this service account number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
-        :param stream_arn: The Kinesis stream ARN to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#stream_arn PubsubTopic#stream_arn}
+        :param aws_role_arn: AWS role ARN to be used for Federated Identity authentication with Kinesis. Check the Pub/Sub docs for how to set up this role and the required permissions that need to be attached to it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
+        :param consumer_arn: The Kinesis consumer ARN to used for ingestion in Enhanced Fan-Out mode. The consumer must be already created and ready to be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#consumer_arn PubsubTopic#consumer_arn}
+        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Kinesis (via a 'AssumeRoleWithWebIdentity' call for the provided role). The 'awsRoleArn' must be set up with 'accounts.google.com:sub' equals to this service account number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        :param stream_arn: The Kinesis stream ARN to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#stream_arn PubsubTopic#stream_arn}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__27f19aa50a07dc992a8fa3377e488bc230ce92fe9d073d6dd3a814b2851136fa)
@@ -939,7 +988,7 @@ class PubsubTopicIngestionDataSourceSettingsAwsKinesis:
         Check the Pub/Sub docs for how to set up this role and the
         required permissions that need to be attached to it.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
         '''
         result = self._values.get("aws_role_arn")
         assert result is not None, "Required property 'aws_role_arn' is missing"
@@ -952,7 +1001,7 @@ class PubsubTopicIngestionDataSourceSettingsAwsKinesis:
         The consumer must be already
         created and ready to be used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#consumer_arn PubsubTopic#consumer_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#consumer_arn PubsubTopic#consumer_arn}
         '''
         result = self._values.get("consumer_arn")
         assert result is not None, "Required property 'consumer_arn' is missing"
@@ -965,7 +1014,7 @@ class PubsubTopicIngestionDataSourceSettingsAwsKinesis:
         The 'awsRoleArn' must be set up with 'accounts.google.com:sub'
         equals to this service account number.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
         '''
         result = self._values.get("gcp_service_account")
         assert result is not None, "Required property 'gcp_service_account' is missing"
@@ -975,7 +1024,7 @@ class PubsubTopicIngestionDataSourceSettingsAwsKinesis:
     def stream_arn(self) -> builtins.str:
         '''The Kinesis stream ARN to ingest data from.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#stream_arn PubsubTopic#stream_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#stream_arn PubsubTopic#stream_arn}
         '''
         result = self._values.get("stream_arn")
         assert result is not None, "Required property 'stream_arn' is missing"
@@ -1119,10 +1168,10 @@ class PubsubTopicIngestionDataSourceSettingsAwsMsk:
         topic: builtins.str,
     ) -> None:
         '''
-        :param aws_role_arn: AWS role ARN to be used for Federated Identity authentication with MSK. Check the Pub/Sub docs for how to set up this role and the required permissions that need to be attached to it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
-        :param cluster_arn: ARN that uniquely identifies the MSK cluster. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#cluster_arn PubsubTopic#cluster_arn}
-        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with MSK (via a 'AssumeRoleWithWebIdentity' call for the provided role). The 'awsRoleArn' must be set up with 'accounts.google.com:sub' equals to this service account number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
-        :param topic: The name of the MSK topic that Pub/Sub will import from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
+        :param aws_role_arn: AWS role ARN to be used for Federated Identity authentication with MSK. Check the Pub/Sub docs for how to set up this role and the required permissions that need to be attached to it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
+        :param cluster_arn: ARN that uniquely identifies the MSK cluster. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#cluster_arn PubsubTopic#cluster_arn}
+        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with MSK (via a 'AssumeRoleWithWebIdentity' call for the provided role). The 'awsRoleArn' must be set up with 'accounts.google.com:sub' equals to this service account number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        :param topic: The name of the MSK topic that Pub/Sub will import from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__3eefd0227008352a9df18c2573584a05e1a8ad677a343426f04f515015b5ab4a)
@@ -1144,7 +1193,7 @@ class PubsubTopicIngestionDataSourceSettingsAwsMsk:
         Check the Pub/Sub docs for how to set up this role and the
         required permissions that need to be attached to it.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
         '''
         result = self._values.get("aws_role_arn")
         assert result is not None, "Required property 'aws_role_arn' is missing"
@@ -1154,7 +1203,7 @@ class PubsubTopicIngestionDataSourceSettingsAwsMsk:
     def cluster_arn(self) -> builtins.str:
         '''ARN that uniquely identifies the MSK cluster.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#cluster_arn PubsubTopic#cluster_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#cluster_arn PubsubTopic#cluster_arn}
         '''
         result = self._values.get("cluster_arn")
         assert result is not None, "Required property 'cluster_arn' is missing"
@@ -1167,7 +1216,7 @@ class PubsubTopicIngestionDataSourceSettingsAwsMsk:
         The 'awsRoleArn' must be set up with 'accounts.google.com:sub'
         equals to this service account number.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
         '''
         result = self._values.get("gcp_service_account")
         assert result is not None, "Required property 'gcp_service_account' is missing"
@@ -1177,7 +1226,7 @@ class PubsubTopicIngestionDataSourceSettingsAwsMsk:
     def topic(self) -> builtins.str:
         '''The name of the MSK topic that Pub/Sub will import from.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
         '''
         result = self._values.get("topic")
         assert result is not None, "Required property 'topic' is missing"
@@ -1327,13 +1376,13 @@ class PubsubTopicIngestionDataSourceSettingsAzureEventHubs:
         tenant_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param client_id: The Azure event hub client ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#client_id PubsubTopic#client_id}
-        :param event_hub: The Azure event hub to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#event_hub PubsubTopic#event_hub}
-        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Azure (via a 'AssumeRoleWithWebIdentity' call for the provided role). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
-        :param namespace: The Azure event hub namespace to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#namespace PubsubTopic#namespace}
-        :param resource_group: The name of the resource group within an Azure subscription. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#resource_group PubsubTopic#resource_group}
-        :param subscription_id: The Azure event hub subscription ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#subscription_id PubsubTopic#subscription_id}
-        :param tenant_id: The Azure event hub tenant ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#tenant_id PubsubTopic#tenant_id}
+        :param client_id: The Azure event hub client ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#client_id PubsubTopic#client_id}
+        :param event_hub: The Azure event hub to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#event_hub PubsubTopic#event_hub}
+        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Azure (via a 'AssumeRoleWithWebIdentity' call for the provided role). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        :param namespace: The Azure event hub namespace to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#namespace PubsubTopic#namespace}
+        :param resource_group: The name of the resource group within an Azure subscription. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#resource_group PubsubTopic#resource_group}
+        :param subscription_id: The Azure event hub subscription ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#subscription_id PubsubTopic#subscription_id}
+        :param tenant_id: The Azure event hub tenant ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#tenant_id PubsubTopic#tenant_id}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__4de7d74087af1aaff78a5f2ec132051092de1f130885df3c3c855e91cf18eea7)
@@ -1364,7 +1413,7 @@ class PubsubTopicIngestionDataSourceSettingsAzureEventHubs:
     def client_id(self) -> typing.Optional[builtins.str]:
         '''The Azure event hub client ID to use for ingestion.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#client_id PubsubTopic#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#client_id PubsubTopic#client_id}
         '''
         result = self._values.get("client_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1373,7 +1422,7 @@ class PubsubTopicIngestionDataSourceSettingsAzureEventHubs:
     def event_hub(self) -> typing.Optional[builtins.str]:
         '''The Azure event hub to ingest data from.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#event_hub PubsubTopic#event_hub}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#event_hub PubsubTopic#event_hub}
         '''
         result = self._values.get("event_hub")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1382,7 +1431,7 @@ class PubsubTopicIngestionDataSourceSettingsAzureEventHubs:
     def gcp_service_account(self) -> typing.Optional[builtins.str]:
         '''The GCP service account to be used for Federated Identity authentication with Azure (via a 'AssumeRoleWithWebIdentity' call for the provided role).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
         '''
         result = self._values.get("gcp_service_account")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1391,7 +1440,7 @@ class PubsubTopicIngestionDataSourceSettingsAzureEventHubs:
     def namespace(self) -> typing.Optional[builtins.str]:
         '''The Azure event hub namespace to ingest data from.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#namespace PubsubTopic#namespace}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#namespace PubsubTopic#namespace}
         '''
         result = self._values.get("namespace")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1400,7 +1449,7 @@ class PubsubTopicIngestionDataSourceSettingsAzureEventHubs:
     def resource_group(self) -> typing.Optional[builtins.str]:
         '''The name of the resource group within an Azure subscription.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#resource_group PubsubTopic#resource_group}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#resource_group PubsubTopic#resource_group}
         '''
         result = self._values.get("resource_group")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1409,7 +1458,7 @@ class PubsubTopicIngestionDataSourceSettingsAzureEventHubs:
     def subscription_id(self) -> typing.Optional[builtins.str]:
         '''The Azure event hub subscription ID to use for ingestion.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#subscription_id PubsubTopic#subscription_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#subscription_id PubsubTopic#subscription_id}
         '''
         result = self._values.get("subscription_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1418,7 +1467,7 @@ class PubsubTopicIngestionDataSourceSettingsAzureEventHubs:
     def tenant_id(self) -> typing.Optional[builtins.str]:
         '''The Azure event hub tenant ID to use for ingestion.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#tenant_id PubsubTopic#tenant_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#tenant_id PubsubTopic#tenant_id}
         '''
         result = self._values.get("tenant_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1644,12 +1693,12 @@ class PubsubTopicIngestionDataSourceSettingsCloudStorage:
         text_format: typing.Optional[typing.Union["PubsubTopicIngestionDataSourceSettingsCloudStorageTextFormat", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param bucket: Cloud Storage bucket. The bucket name must be without any prefix like "gs://". See the bucket naming requirements: https://cloud.google.com/storage/docs/buckets#naming. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#bucket PubsubTopic#bucket}
-        :param avro_format: avro_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#avro_format PubsubTopic#avro_format}
-        :param match_glob: Glob pattern used to match objects that will be ingested. If unset, all objects will be ingested. See the supported patterns: https://cloud.google.com/storage/docs/json_api/v1/objects/list#list-objects-and-prefixes-using-glob Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#match_glob PubsubTopic#match_glob}
-        :param minimum_object_create_time: The timestamp set in RFC3339 text format. If set, only objects with a larger or equal timestamp will be ingested. Unset by default, meaning all objects will be ingested. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#minimum_object_create_time PubsubTopic#minimum_object_create_time}
-        :param pubsub_avro_format: pubsub_avro_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#pubsub_avro_format PubsubTopic#pubsub_avro_format}
-        :param text_format: text_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#text_format PubsubTopic#text_format}
+        :param bucket: Cloud Storage bucket. The bucket name must be without any prefix like "gs://". See the bucket naming requirements: https://cloud.google.com/storage/docs/buckets#naming. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#bucket PubsubTopic#bucket}
+        :param avro_format: avro_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#avro_format PubsubTopic#avro_format}
+        :param match_glob: Glob pattern used to match objects that will be ingested. If unset, all objects will be ingested. See the supported patterns: https://cloud.google.com/storage/docs/json_api/v1/objects/list#list-objects-and-prefixes-using-glob Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#match_glob PubsubTopic#match_glob}
+        :param minimum_object_create_time: The timestamp set in RFC3339 text format. If set, only objects with a larger or equal timestamp will be ingested. Unset by default, meaning all objects will be ingested. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#minimum_object_create_time PubsubTopic#minimum_object_create_time}
+        :param pubsub_avro_format: pubsub_avro_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#pubsub_avro_format PubsubTopic#pubsub_avro_format}
+        :param text_format: text_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#text_format PubsubTopic#text_format}
         '''
         if isinstance(avro_format, dict):
             avro_format = PubsubTopicIngestionDataSourceSettingsCloudStorageAvroFormat(**avro_format)
@@ -1683,7 +1732,7 @@ class PubsubTopicIngestionDataSourceSettingsCloudStorage:
     def bucket(self) -> builtins.str:
         '''Cloud Storage bucket. The bucket name must be without any prefix like "gs://". See the bucket naming requirements: https://cloud.google.com/storage/docs/buckets#naming.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#bucket PubsubTopic#bucket}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#bucket PubsubTopic#bucket}
         '''
         result = self._values.get("bucket")
         assert result is not None, "Required property 'bucket' is missing"
@@ -1695,7 +1744,7 @@ class PubsubTopicIngestionDataSourceSettingsCloudStorage:
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettingsCloudStorageAvroFormat"]:
         '''avro_format block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#avro_format PubsubTopic#avro_format}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#avro_format PubsubTopic#avro_format}
         '''
         result = self._values.get("avro_format")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettingsCloudStorageAvroFormat"], result)
@@ -1708,7 +1757,7 @@ class PubsubTopicIngestionDataSourceSettingsCloudStorage:
         objects will be ingested. See the supported patterns:
         https://cloud.google.com/storage/docs/json_api/v1/objects/list#list-objects-and-prefixes-using-glob
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#match_glob PubsubTopic#match_glob}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#match_glob PubsubTopic#match_glob}
         '''
         result = self._values.get("match_glob")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1721,7 +1770,7 @@ class PubsubTopicIngestionDataSourceSettingsCloudStorage:
         larger or equal timestamp will be ingested. Unset by default, meaning
         all objects will be ingested.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#minimum_object_create_time PubsubTopic#minimum_object_create_time}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#minimum_object_create_time PubsubTopic#minimum_object_create_time}
         '''
         result = self._values.get("minimum_object_create_time")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1732,7 +1781,7 @@ class PubsubTopicIngestionDataSourceSettingsCloudStorage:
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettingsCloudStoragePubsubAvroFormat"]:
         '''pubsub_avro_format block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#pubsub_avro_format PubsubTopic#pubsub_avro_format}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#pubsub_avro_format PubsubTopic#pubsub_avro_format}
         '''
         result = self._values.get("pubsub_avro_format")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettingsCloudStoragePubsubAvroFormat"], result)
@@ -1743,7 +1792,7 @@ class PubsubTopicIngestionDataSourceSettingsCloudStorage:
     ) -> typing.Optional["PubsubTopicIngestionDataSourceSettingsCloudStorageTextFormat"]:
         '''text_format block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#text_format PubsubTopic#text_format}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#text_format PubsubTopic#text_format}
         '''
         result = self._values.get("text_format")
         return typing.cast(typing.Optional["PubsubTopicIngestionDataSourceSettingsCloudStorageTextFormat"], result)
@@ -1858,7 +1907,7 @@ class PubsubTopicIngestionDataSourceSettingsCloudStorageOutputReference(
         delimiter: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param delimiter: The delimiter to use when using the 'text' format. Each line of text as specified by the delimiter will be set to the 'data' field of a Pub/Sub message. When unset, '\\n' is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#delimiter PubsubTopic#delimiter}
+        :param delimiter: The delimiter to use when using the 'text' format. Each line of text as specified by the delimiter will be set to the 'data' field of a Pub/Sub message. When unset, '\\n' is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#delimiter PubsubTopic#delimiter}
         '''
         value = PubsubTopicIngestionDataSourceSettingsCloudStorageTextFormat(
             delimiter=delimiter
@@ -2064,7 +2113,7 @@ class PubsubTopicIngestionDataSourceSettingsCloudStoragePubsubAvroFormatOutputRe
 class PubsubTopicIngestionDataSourceSettingsCloudStorageTextFormat:
     def __init__(self, *, delimiter: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param delimiter: The delimiter to use when using the 'text' format. Each line of text as specified by the delimiter will be set to the 'data' field of a Pub/Sub message. When unset, '\\n' is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#delimiter PubsubTopic#delimiter}
+        :param delimiter: The delimiter to use when using the 'text' format. Each line of text as specified by the delimiter will be set to the 'data' field of a Pub/Sub message. When unset, '\\n' is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#delimiter PubsubTopic#delimiter}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__f40583c2140ff95e6741181becced4820725dde9fc0a2a4aab0c86f973369128)
@@ -2081,7 +2130,7 @@ class PubsubTopicIngestionDataSourceSettingsCloudStorageTextFormat:
         specified by the delimiter will be set to the 'data' field of a Pub/Sub
         message. When unset, '\\n' is used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#delimiter PubsubTopic#delimiter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#delimiter PubsubTopic#delimiter}
         '''
         result = self._values.get("delimiter")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2179,11 +2228,11 @@ class PubsubTopicIngestionDataSourceSettingsConfluentCloud:
         cluster_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param bootstrap_server: The Confluent Cloud bootstrap server. The format is url:port. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#bootstrap_server PubsubTopic#bootstrap_server}
-        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Confluent Cloud. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
-        :param identity_pool_id: Identity pool ID to be used for Federated Identity authentication with Confluent Cloud. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#identity_pool_id PubsubTopic#identity_pool_id}
-        :param topic: Name of the Confluent Cloud topic that Pub/Sub will import from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
-        :param cluster_id: The Confluent Cloud cluster ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#cluster_id PubsubTopic#cluster_id}
+        :param bootstrap_server: The Confluent Cloud bootstrap server. The format is url:port. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#bootstrap_server PubsubTopic#bootstrap_server}
+        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Confluent Cloud. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        :param identity_pool_id: Identity pool ID to be used for Federated Identity authentication with Confluent Cloud. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#identity_pool_id PubsubTopic#identity_pool_id}
+        :param topic: Name of the Confluent Cloud topic that Pub/Sub will import from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
+        :param cluster_id: The Confluent Cloud cluster ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#cluster_id PubsubTopic#cluster_id}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__436fd1bcf6e13adb53578bdd2dbbe284ae9022702779a2a82ff7f827dd753241)
@@ -2205,7 +2254,7 @@ class PubsubTopicIngestionDataSourceSettingsConfluentCloud:
     def bootstrap_server(self) -> builtins.str:
         '''The Confluent Cloud bootstrap server. The format is url:port.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#bootstrap_server PubsubTopic#bootstrap_server}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#bootstrap_server PubsubTopic#bootstrap_server}
         '''
         result = self._values.get("bootstrap_server")
         assert result is not None, "Required property 'bootstrap_server' is missing"
@@ -2215,7 +2264,7 @@ class PubsubTopicIngestionDataSourceSettingsConfluentCloud:
     def gcp_service_account(self) -> builtins.str:
         '''The GCP service account to be used for Federated Identity authentication with Confluent Cloud.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
         '''
         result = self._values.get("gcp_service_account")
         assert result is not None, "Required property 'gcp_service_account' is missing"
@@ -2225,7 +2274,7 @@ class PubsubTopicIngestionDataSourceSettingsConfluentCloud:
     def identity_pool_id(self) -> builtins.str:
         '''Identity pool ID to be used for Federated Identity authentication with Confluent Cloud.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#identity_pool_id PubsubTopic#identity_pool_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#identity_pool_id PubsubTopic#identity_pool_id}
         '''
         result = self._values.get("identity_pool_id")
         assert result is not None, "Required property 'identity_pool_id' is missing"
@@ -2235,7 +2284,7 @@ class PubsubTopicIngestionDataSourceSettingsConfluentCloud:
     def topic(self) -> builtins.str:
         '''Name of the Confluent Cloud topic that Pub/Sub will import from.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
         '''
         result = self._values.get("topic")
         assert result is not None, "Required property 'topic' is missing"
@@ -2245,7 +2294,7 @@ class PubsubTopicIngestionDataSourceSettingsConfluentCloud:
     def cluster_id(self) -> typing.Optional[builtins.str]:
         '''The Confluent Cloud cluster ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#cluster_id PubsubTopic#cluster_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#cluster_id PubsubTopic#cluster_id}
         '''
         result = self._values.get("cluster_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2419,10 +2468,10 @@ class PubsubTopicIngestionDataSourceSettingsOutputReference(
         stream_arn: builtins.str,
     ) -> None:
         '''
-        :param aws_role_arn: AWS role ARN to be used for Federated Identity authentication with Kinesis. Check the Pub/Sub docs for how to set up this role and the required permissions that need to be attached to it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
-        :param consumer_arn: The Kinesis consumer ARN to used for ingestion in Enhanced Fan-Out mode. The consumer must be already created and ready to be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#consumer_arn PubsubTopic#consumer_arn}
-        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Kinesis (via a 'AssumeRoleWithWebIdentity' call for the provided role). The 'awsRoleArn' must be set up with 'accounts.google.com:sub' equals to this service account number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
-        :param stream_arn: The Kinesis stream ARN to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#stream_arn PubsubTopic#stream_arn}
+        :param aws_role_arn: AWS role ARN to be used for Federated Identity authentication with Kinesis. Check the Pub/Sub docs for how to set up this role and the required permissions that need to be attached to it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
+        :param consumer_arn: The Kinesis consumer ARN to used for ingestion in Enhanced Fan-Out mode. The consumer must be already created and ready to be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#consumer_arn PubsubTopic#consumer_arn}
+        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Kinesis (via a 'AssumeRoleWithWebIdentity' call for the provided role). The 'awsRoleArn' must be set up with 'accounts.google.com:sub' equals to this service account number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        :param stream_arn: The Kinesis stream ARN to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#stream_arn PubsubTopic#stream_arn}
         '''
         value = PubsubTopicIngestionDataSourceSettingsAwsKinesis(
             aws_role_arn=aws_role_arn,
@@ -2443,10 +2492,10 @@ class PubsubTopicIngestionDataSourceSettingsOutputReference(
         topic: builtins.str,
     ) -> None:
         '''
-        :param aws_role_arn: AWS role ARN to be used for Federated Identity authentication with MSK. Check the Pub/Sub docs for how to set up this role and the required permissions that need to be attached to it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
-        :param cluster_arn: ARN that uniquely identifies the MSK cluster. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#cluster_arn PubsubTopic#cluster_arn}
-        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with MSK (via a 'AssumeRoleWithWebIdentity' call for the provided role). The 'awsRoleArn' must be set up with 'accounts.google.com:sub' equals to this service account number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
-        :param topic: The name of the MSK topic that Pub/Sub will import from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
+        :param aws_role_arn: AWS role ARN to be used for Federated Identity authentication with MSK. Check the Pub/Sub docs for how to set up this role and the required permissions that need to be attached to it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#aws_role_arn PubsubTopic#aws_role_arn}
+        :param cluster_arn: ARN that uniquely identifies the MSK cluster. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#cluster_arn PubsubTopic#cluster_arn}
+        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with MSK (via a 'AssumeRoleWithWebIdentity' call for the provided role). The 'awsRoleArn' must be set up with 'accounts.google.com:sub' equals to this service account number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        :param topic: The name of the MSK topic that Pub/Sub will import from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
         '''
         value = PubsubTopicIngestionDataSourceSettingsAwsMsk(
             aws_role_arn=aws_role_arn,
@@ -2470,13 +2519,13 @@ class PubsubTopicIngestionDataSourceSettingsOutputReference(
         tenant_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param client_id: The Azure event hub client ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#client_id PubsubTopic#client_id}
-        :param event_hub: The Azure event hub to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#event_hub PubsubTopic#event_hub}
-        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Azure (via a 'AssumeRoleWithWebIdentity' call for the provided role). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
-        :param namespace: The Azure event hub namespace to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#namespace PubsubTopic#namespace}
-        :param resource_group: The name of the resource group within an Azure subscription. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#resource_group PubsubTopic#resource_group}
-        :param subscription_id: The Azure event hub subscription ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#subscription_id PubsubTopic#subscription_id}
-        :param tenant_id: The Azure event hub tenant ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#tenant_id PubsubTopic#tenant_id}
+        :param client_id: The Azure event hub client ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#client_id PubsubTopic#client_id}
+        :param event_hub: The Azure event hub to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#event_hub PubsubTopic#event_hub}
+        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Azure (via a 'AssumeRoleWithWebIdentity' call for the provided role). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        :param namespace: The Azure event hub namespace to ingest data from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#namespace PubsubTopic#namespace}
+        :param resource_group: The name of the resource group within an Azure subscription. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#resource_group PubsubTopic#resource_group}
+        :param subscription_id: The Azure event hub subscription ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#subscription_id PubsubTopic#subscription_id}
+        :param tenant_id: The Azure event hub tenant ID to use for ingestion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#tenant_id PubsubTopic#tenant_id}
         '''
         value = PubsubTopicIngestionDataSourceSettingsAzureEventHubs(
             client_id=client_id,
@@ -2502,12 +2551,12 @@ class PubsubTopicIngestionDataSourceSettingsOutputReference(
         text_format: typing.Optional[typing.Union[PubsubTopicIngestionDataSourceSettingsCloudStorageTextFormat, typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param bucket: Cloud Storage bucket. The bucket name must be without any prefix like "gs://". See the bucket naming requirements: https://cloud.google.com/storage/docs/buckets#naming. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#bucket PubsubTopic#bucket}
-        :param avro_format: avro_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#avro_format PubsubTopic#avro_format}
-        :param match_glob: Glob pattern used to match objects that will be ingested. If unset, all objects will be ingested. See the supported patterns: https://cloud.google.com/storage/docs/json_api/v1/objects/list#list-objects-and-prefixes-using-glob Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#match_glob PubsubTopic#match_glob}
-        :param minimum_object_create_time: The timestamp set in RFC3339 text format. If set, only objects with a larger or equal timestamp will be ingested. Unset by default, meaning all objects will be ingested. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#minimum_object_create_time PubsubTopic#minimum_object_create_time}
-        :param pubsub_avro_format: pubsub_avro_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#pubsub_avro_format PubsubTopic#pubsub_avro_format}
-        :param text_format: text_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#text_format PubsubTopic#text_format}
+        :param bucket: Cloud Storage bucket. The bucket name must be without any prefix like "gs://". See the bucket naming requirements: https://cloud.google.com/storage/docs/buckets#naming. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#bucket PubsubTopic#bucket}
+        :param avro_format: avro_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#avro_format PubsubTopic#avro_format}
+        :param match_glob: Glob pattern used to match objects that will be ingested. If unset, all objects will be ingested. See the supported patterns: https://cloud.google.com/storage/docs/json_api/v1/objects/list#list-objects-and-prefixes-using-glob Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#match_glob PubsubTopic#match_glob}
+        :param minimum_object_create_time: The timestamp set in RFC3339 text format. If set, only objects with a larger or equal timestamp will be ingested. Unset by default, meaning all objects will be ingested. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#minimum_object_create_time PubsubTopic#minimum_object_create_time}
+        :param pubsub_avro_format: pubsub_avro_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#pubsub_avro_format PubsubTopic#pubsub_avro_format}
+        :param text_format: text_format block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#text_format PubsubTopic#text_format}
         '''
         value = PubsubTopicIngestionDataSourceSettingsCloudStorage(
             bucket=bucket,
@@ -2531,11 +2580,11 @@ class PubsubTopicIngestionDataSourceSettingsOutputReference(
         cluster_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param bootstrap_server: The Confluent Cloud bootstrap server. The format is url:port. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#bootstrap_server PubsubTopic#bootstrap_server}
-        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Confluent Cloud. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
-        :param identity_pool_id: Identity pool ID to be used for Federated Identity authentication with Confluent Cloud. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#identity_pool_id PubsubTopic#identity_pool_id}
-        :param topic: Name of the Confluent Cloud topic that Pub/Sub will import from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
-        :param cluster_id: The Confluent Cloud cluster ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#cluster_id PubsubTopic#cluster_id}
+        :param bootstrap_server: The Confluent Cloud bootstrap server. The format is url:port. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#bootstrap_server PubsubTopic#bootstrap_server}
+        :param gcp_service_account: The GCP service account to be used for Federated Identity authentication with Confluent Cloud. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#gcp_service_account PubsubTopic#gcp_service_account}
+        :param identity_pool_id: Identity pool ID to be used for Federated Identity authentication with Confluent Cloud. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#identity_pool_id PubsubTopic#identity_pool_id}
+        :param topic: Name of the Confluent Cloud topic that Pub/Sub will import from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#topic PubsubTopic#topic}
+        :param cluster_id: The Confluent Cloud cluster ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#cluster_id PubsubTopic#cluster_id}
         '''
         value = PubsubTopicIngestionDataSourceSettingsConfluentCloud(
             bootstrap_server=bootstrap_server,
@@ -2554,7 +2603,7 @@ class PubsubTopicIngestionDataSourceSettingsOutputReference(
         severity: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param severity: The minimum severity level of Platform Logs that will be written. If unspecified, no Platform Logs will be written. Default value: "SEVERITY_UNSPECIFIED" Possible values: ["SEVERITY_UNSPECIFIED", "DISABLED", "DEBUG", "INFO", "WARNING", "ERROR"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#severity PubsubTopic#severity}
+        :param severity: The minimum severity level of Platform Logs that will be written. If unspecified, no Platform Logs will be written. Default value: "SEVERITY_UNSPECIFIED" Possible values: ["SEVERITY_UNSPECIFIED", "DISABLED", "DEBUG", "INFO", "WARNING", "ERROR"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#severity PubsubTopic#severity}
         '''
         value = PubsubTopicIngestionDataSourceSettingsPlatformLogsSettings(
             severity=severity
@@ -2692,7 +2741,7 @@ class PubsubTopicIngestionDataSourceSettingsOutputReference(
 class PubsubTopicIngestionDataSourceSettingsPlatformLogsSettings:
     def __init__(self, *, severity: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param severity: The minimum severity level of Platform Logs that will be written. If unspecified, no Platform Logs will be written. Default value: "SEVERITY_UNSPECIFIED" Possible values: ["SEVERITY_UNSPECIFIED", "DISABLED", "DEBUG", "INFO", "WARNING", "ERROR"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#severity PubsubTopic#severity}
+        :param severity: The minimum severity level of Platform Logs that will be written. If unspecified, no Platform Logs will be written. Default value: "SEVERITY_UNSPECIFIED" Possible values: ["SEVERITY_UNSPECIFIED", "DISABLED", "DEBUG", "INFO", "WARNING", "ERROR"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#severity PubsubTopic#severity}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__87daa3461a23c77188c9ce9b57663af7d34365f42bbedc26ad2bd0eb9285ef45)
@@ -2708,7 +2757,7 @@ class PubsubTopicIngestionDataSourceSettingsPlatformLogsSettings:
         If unspecified,
         no Platform Logs will be written. Default value: "SEVERITY_UNSPECIFIED" Possible values: ["SEVERITY_UNSPECIFIED", "DISABLED", "DEBUG", "INFO", "WARNING", "ERROR"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#severity PubsubTopic#severity}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#severity PubsubTopic#severity}
         '''
         result = self._values.get("severity")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2800,8 +2849,8 @@ class PubsubTopicMessageStoragePolicy:
         enforce_in_transit: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param allowed_persistence_regions: A list of IDs of GCP regions where messages that are published to the topic may be persisted in storage. Messages published by publishers running in non-allowed GCP regions (or running outside of GCP altogether) will be routed for storage in one of the allowed regions. An empty list means that no regions are allowed, and is not a valid configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#allowed_persistence_regions PubsubTopic#allowed_persistence_regions}
-        :param enforce_in_transit: If true, 'allowedPersistenceRegions' is also used to enforce in-transit guarantees for messages. That is, Pub/Sub will fail topics.publish operations on this topic and subscribe operations on any subscription attached to this topic in any region that is not in 'allowedPersistenceRegions'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#enforce_in_transit PubsubTopic#enforce_in_transit}
+        :param allowed_persistence_regions: A list of IDs of GCP regions where messages that are published to the topic may be persisted in storage. Messages published by publishers running in non-allowed GCP regions (or running outside of GCP altogether) will be routed for storage in one of the allowed regions. An empty list means that no regions are allowed, and is not a valid configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#allowed_persistence_regions PubsubTopic#allowed_persistence_regions}
+        :param enforce_in_transit: If true, 'allowedPersistenceRegions' is also used to enforce in-transit guarantees for messages. That is, Pub/Sub will fail topics.publish operations on this topic and subscribe operations on any subscription attached to this topic in any region that is not in 'allowedPersistenceRegions'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#enforce_in_transit PubsubTopic#enforce_in_transit}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__7acfce2f26378d4dd851ee8b921b9a42a96b61fda75583caa51f0fc5ead3c5c6)
@@ -2823,7 +2872,7 @@ class PubsubTopicMessageStoragePolicy:
         allowed regions. An empty list means that no regions are allowed,
         and is not a valid configuration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#allowed_persistence_regions PubsubTopic#allowed_persistence_regions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#allowed_persistence_regions PubsubTopic#allowed_persistence_regions}
         '''
         result = self._values.get("allowed_persistence_regions")
         assert result is not None, "Required property 'allowed_persistence_regions' is missing"
@@ -2839,7 +2888,7 @@ class PubsubTopicMessageStoragePolicy:
         operations on this topic and subscribe operations on any subscription
         attached to this topic in any region that is not in 'allowedPersistenceRegions'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#enforce_in_transit PubsubTopic#enforce_in_transit}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#enforce_in_transit PubsubTopic#enforce_in_transit}
         '''
         result = self._values.get("enforce_in_transit")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2940,6 +2989,407 @@ class PubsubTopicMessageStoragePolicyOutputReference(
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-google.pubsubTopic.PubsubTopicMessageTransforms",
+    jsii_struct_bases=[],
+    name_mapping={"disabled": "disabled", "javascript_udf": "javascriptUdf"},
+)
+class PubsubTopicMessageTransforms:
+    def __init__(
+        self,
+        *,
+        disabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        javascript_udf: typing.Optional[typing.Union["PubsubTopicMessageTransformsJavascriptUdf", typing.Dict[builtins.str, typing.Any]]] = None,
+    ) -> None:
+        '''
+        :param disabled: Controls whether or not to use this transform. If not set or 'false', the transform will be applied to messages. Default: 'true'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#disabled PubsubTopic#disabled}
+        :param javascript_udf: javascript_udf block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#javascript_udf PubsubTopic#javascript_udf}
+        '''
+        if isinstance(javascript_udf, dict):
+            javascript_udf = PubsubTopicMessageTransformsJavascriptUdf(**javascript_udf)
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__607d7fb70cc745bfcfe96633eb9673a3aedd7a595a04d9a0bf51bf20f69da497)
+            check_type(argname="argument disabled", value=disabled, expected_type=type_hints["disabled"])
+            check_type(argname="argument javascript_udf", value=javascript_udf, expected_type=type_hints["javascript_udf"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if disabled is not None:
+            self._values["disabled"] = disabled
+        if javascript_udf is not None:
+            self._values["javascript_udf"] = javascript_udf
+
+    @builtins.property
+    def disabled(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Controls whether or not to use this transform.
+
+        If not set or 'false',
+        the transform will be applied to messages. Default: 'true'.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#disabled PubsubTopic#disabled}
+        '''
+        result = self._values.get("disabled")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
+    def javascript_udf(
+        self,
+    ) -> typing.Optional["PubsubTopicMessageTransformsJavascriptUdf"]:
+        '''javascript_udf block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#javascript_udf PubsubTopic#javascript_udf}
+        '''
+        result = self._values.get("javascript_udf")
+        return typing.cast(typing.Optional["PubsubTopicMessageTransformsJavascriptUdf"], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "PubsubTopicMessageTransforms(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.pubsubTopic.PubsubTopicMessageTransformsJavascriptUdf",
+    jsii_struct_bases=[],
+    name_mapping={"code": "code", "function_name": "functionName"},
+)
+class PubsubTopicMessageTransformsJavascriptUdf:
+    def __init__(self, *, code: builtins.str, function_name: builtins.str) -> None:
+        '''
+        :param code: JavaScript code that contains a function 'function_name' with the following signature: ``` /** * Transforms a Pub/Sub message. - -
+        :param function_name: Name of the JavaScript function that should be applied to Pub/Sub messages. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#function_name PubsubTopic#function_name}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8231b90ea7012a6c3fa72f6a466c3d873d529772ffe9954d494dfbaba4c1d405)
+            check_type(argname="argument code", value=code, expected_type=type_hints["code"])
+            check_type(argname="argument function_name", value=function_name, expected_type=type_hints["function_name"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "code": code,
+            "function_name": function_name,
+        }
+
+    @builtins.property
+    def code(self) -> builtins.str:
+        '''JavaScript code that contains a function 'function_name' with the following signature: ```   /**   * Transforms a Pub/Sub message.
+
+        -
+          -
+
+        :return:
+
+        - To
+
+        - filter a message, return 'null'. To transform a message return a map
+        - with the following keys:
+        -
+        - (required) 'data' : {string}
+
+        -
+        - (optional) 'attributes' : {Object<string, string>}
+
+        - Returning empty 'attributes' will remove all attributes from the
+        - message.
+        - -
+        '''
+        result = self._values.get("code")
+        assert result is not None, "Required property 'code' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def function_name(self) -> builtins.str:
+        '''Name of the JavaScript function that should be applied to Pub/Sub messages.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#function_name PubsubTopic#function_name}
+        '''
+        result = self._values.get("function_name")
+        assert result is not None, "Required property 'function_name' is missing"
+        return typing.cast(builtins.str, result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "PubsubTopicMessageTransformsJavascriptUdf(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class PubsubTopicMessageTransformsJavascriptUdfOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.pubsubTopic.PubsubTopicMessageTransformsJavascriptUdfOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2017c9e61471754c8e70477b6b16ef0ee4b0cc4c6a4a09644c536eb71a409edb)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @builtins.property
+    @jsii.member(jsii_name="codeInput")
+    def code_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "codeInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="functionNameInput")
+    def function_name_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "functionNameInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="code")
+    def code(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "code"))
+
+    @code.setter
+    def code(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__cde5ef7c6ee8e7863b8bd767c9ba8da20da5cc8a349856b394fdf8acadbde714)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "code", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="functionName")
+    def function_name(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "functionName"))
+
+    @function_name.setter
+    def function_name(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a5cd82a31f5f736c4569cc0383df7a14bdd6fe666ad830b55ad569991c726a40)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "functionName", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[PubsubTopicMessageTransformsJavascriptUdf]:
+        return typing.cast(typing.Optional[PubsubTopicMessageTransformsJavascriptUdf], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[PubsubTopicMessageTransformsJavascriptUdf],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c438d192eaf38b2bfdd1e24d55b72dcbe6d6163e37e4f85de95d208b71241195)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class PubsubTopicMessageTransformsList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.pubsubTopic.PubsubTopicMessageTransformsList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fe61c7b97a10e88e9f29c084622424474bb02ae121e623a870830d5d435361e3)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(self, index: jsii.Number) -> "PubsubTopicMessageTransformsOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__672eee35aa648cd18e1874e804d73a112798c4e89282400b3eaf436fa0f96b24)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("PubsubTopicMessageTransformsOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c6bbf9e96d65bc06faa8c8c6c34560a1bd12cbec07472f2e2f19140fecc1da95)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e54e9eccd448c5dc06b4408675a6d1bc2fcbb43f37d9f5f27f1bbce258814c29)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c9a17c0e735fed46e8ea4cf950b17fc25a7274b1dd6fe6d51c8dc41c5fb0328c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PubsubTopicMessageTransforms]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PubsubTopicMessageTransforms]]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PubsubTopicMessageTransforms]]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c065f562d27e2d6727be1c8b625b8102ceeef79de0f2112d99867c68f286934d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class PubsubTopicMessageTransformsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.pubsubTopic.PubsubTopicMessageTransformsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3a5ca2b87eac7c380fdbf6d07500e416dbb49b2680181d1c4bf405ac2bf50ab0)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @jsii.member(jsii_name="putJavascriptUdf")
+    def put_javascript_udf(
+        self,
+        *,
+        code: builtins.str,
+        function_name: builtins.str,
+    ) -> None:
+        '''
+        :param code: JavaScript code that contains a function 'function_name' with the following signature: ``` /** * Transforms a Pub/Sub message. - -
+        :param function_name: Name of the JavaScript function that should be applied to Pub/Sub messages. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#function_name PubsubTopic#function_name}
+        '''
+        value = PubsubTopicMessageTransformsJavascriptUdf(
+            code=code, function_name=function_name
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putJavascriptUdf", [value]))
+
+    @jsii.member(jsii_name="resetDisabled")
+    def reset_disabled(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDisabled", []))
+
+    @jsii.member(jsii_name="resetJavascriptUdf")
+    def reset_javascript_udf(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetJavascriptUdf", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="javascriptUdf")
+    def javascript_udf(
+        self,
+    ) -> PubsubTopicMessageTransformsJavascriptUdfOutputReference:
+        return typing.cast(PubsubTopicMessageTransformsJavascriptUdfOutputReference, jsii.get(self, "javascriptUdf"))
+
+    @builtins.property
+    @jsii.member(jsii_name="disabledInput")
+    def disabled_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "disabledInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="javascriptUdfInput")
+    def javascript_udf_input(
+        self,
+    ) -> typing.Optional[PubsubTopicMessageTransformsJavascriptUdf]:
+        return typing.cast(typing.Optional[PubsubTopicMessageTransformsJavascriptUdf], jsii.get(self, "javascriptUdfInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="disabled")
+    def disabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "disabled"))
+
+    @disabled.setter
+    def disabled(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__981118d14b68aca56a4ebf4723fe61230a613db275fd57555e9643755cebdb4a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "disabled", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, PubsubTopicMessageTransforms]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, PubsubTopicMessageTransforms]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, PubsubTopicMessageTransforms]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7a46378ed226a8f67a0224e3455e088e52944cac16a409c8c97408026b971aa0)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-google.pubsubTopic.PubsubTopicSchemaSettings",
     jsii_struct_bases=[],
     name_mapping={"schema": "schema", "encoding": "encoding"},
@@ -2952,8 +3402,8 @@ class PubsubTopicSchemaSettings:
         encoding: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param schema: The name of the schema that messages published should be validated against. Format is projects/{project}/schemas/{schema}. The value of this field will be *deleted-schema* if the schema has been deleted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#schema PubsubTopic#schema}
-        :param encoding: The encoding of messages validated against schema. Default value: "ENCODING_UNSPECIFIED" Possible values: ["ENCODING_UNSPECIFIED", "JSON", "BINARY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#encoding PubsubTopic#encoding}
+        :param schema: The name of the schema that messages published should be validated against. Format is projects/{project}/schemas/{schema}. The value of this field will be *deleted-schema* if the schema has been deleted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#schema PubsubTopic#schema}
+        :param encoding: The encoding of messages validated against schema. Default value: "ENCODING_UNSPECIFIED" Possible values: ["ENCODING_UNSPECIFIED", "JSON", "BINARY"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#encoding PubsubTopic#encoding}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__688c60bd4a7eac17eabc2fbfa16f0fbb5bd8cf9a5eeb311d7f911b577debd93a)
@@ -2973,7 +3423,7 @@ class PubsubTopicSchemaSettings:
         The value of this field will be *deleted-schema*
         if the schema has been deleted.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#schema PubsubTopic#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#schema PubsubTopic#schema}
         '''
         result = self._values.get("schema")
         assert result is not None, "Required property 'schema' is missing"
@@ -2983,7 +3433,7 @@ class PubsubTopicSchemaSettings:
     def encoding(self) -> typing.Optional[builtins.str]:
         '''The encoding of messages validated against schema. Default value: "ENCODING_UNSPECIFIED" Possible values: ["ENCODING_UNSPECIFIED", "JSON", "BINARY"].
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#encoding PubsubTopic#encoding}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#encoding PubsubTopic#encoding}
         '''
         result = self._values.get("encoding")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3085,9 +3535,9 @@ class PubsubTopicTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#create PubsubTopic#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#delete PubsubTopic#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#update PubsubTopic#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#create PubsubTopic#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#delete PubsubTopic#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#update PubsubTopic#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__feb0c463d37c538826397283298ff29190717e9fada957e9e1faf70b79274c3f)
@@ -3104,19 +3554,19 @@ class PubsubTopicTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#create PubsubTopic#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#create PubsubTopic#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#delete PubsubTopic#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#delete PubsubTopic#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/pubsub_topic#update PubsubTopic#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/pubsub_topic#update PubsubTopic#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -3258,6 +3708,11 @@ __all__ = [
     "PubsubTopicIngestionDataSourceSettingsPlatformLogsSettingsOutputReference",
     "PubsubTopicMessageStoragePolicy",
     "PubsubTopicMessageStoragePolicyOutputReference",
+    "PubsubTopicMessageTransforms",
+    "PubsubTopicMessageTransformsJavascriptUdf",
+    "PubsubTopicMessageTransformsJavascriptUdfOutputReference",
+    "PubsubTopicMessageTransformsList",
+    "PubsubTopicMessageTransformsOutputReference",
     "PubsubTopicSchemaSettings",
     "PubsubTopicSchemaSettingsOutputReference",
     "PubsubTopicTimeouts",
@@ -3277,6 +3732,7 @@ def _typecheckingstub__25a4b255d477dbb29368b5c62db08af517f7c9e151c7e77fc3a8e34ac
     labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     message_retention_duration: typing.Optional[builtins.str] = None,
     message_storage_policy: typing.Optional[typing.Union[PubsubTopicMessageStoragePolicy, typing.Dict[builtins.str, typing.Any]]] = None,
+    message_transforms: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[PubsubTopicMessageTransforms, typing.Dict[builtins.str, typing.Any]]]]] = None,
     project: typing.Optional[builtins.str] = None,
     schema_settings: typing.Optional[typing.Union[PubsubTopicSchemaSettings, typing.Dict[builtins.str, typing.Any]]] = None,
     timeouts: typing.Optional[typing.Union[PubsubTopicTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
@@ -3296,6 +3752,12 @@ def _typecheckingstub__09054ad2222523bdb5dececfb3440b992705e3a3e3b98cd7c7320b085
     import_to_id: builtins.str,
     import_from_id: builtins.str,
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__009c6fd9469867de50acfe181dab89c198666c8beed63e0afeac165d426cc579(
+    value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[PubsubTopicMessageTransforms, typing.Dict[builtins.str, typing.Any]]]],
 ) -> None:
     """Type checking stubs"""
     pass
@@ -3352,6 +3814,7 @@ def _typecheckingstub__327caa8e14d39eec3aad85ca2d4b60b93037ee83beffe48d7c74526cd
     labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     message_retention_duration: typing.Optional[builtins.str] = None,
     message_storage_policy: typing.Optional[typing.Union[PubsubTopicMessageStoragePolicy, typing.Dict[builtins.str, typing.Any]]] = None,
+    message_transforms: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[PubsubTopicMessageTransforms, typing.Dict[builtins.str, typing.Any]]]]] = None,
     project: typing.Optional[builtins.str] = None,
     schema_settings: typing.Optional[typing.Union[PubsubTopicSchemaSettings, typing.Dict[builtins.str, typing.Any]]] = None,
     timeouts: typing.Optional[typing.Union[PubsubTopicTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
@@ -3750,6 +4213,106 @@ def _typecheckingstub__8af2631b2bc47640d88bc8a7a6917d98272a2215e61913b71ddc6aee9
 
 def _typecheckingstub__ada06454be42e6f402f600fd28a01f0dd64720bf1a633a76b7df309f85f4b039(
     value: typing.Optional[PubsubTopicMessageStoragePolicy],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__607d7fb70cc745bfcfe96633eb9673a3aedd7a595a04d9a0bf51bf20f69da497(
+    *,
+    disabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    javascript_udf: typing.Optional[typing.Union[PubsubTopicMessageTransformsJavascriptUdf, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8231b90ea7012a6c3fa72f6a466c3d873d529772ffe9954d494dfbaba4c1d405(
+    *,
+    code: builtins.str,
+    function_name: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2017c9e61471754c8e70477b6b16ef0ee4b0cc4c6a4a09644c536eb71a409edb(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__cde5ef7c6ee8e7863b8bd767c9ba8da20da5cc8a349856b394fdf8acadbde714(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a5cd82a31f5f736c4569cc0383df7a14bdd6fe666ad830b55ad569991c726a40(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c438d192eaf38b2bfdd1e24d55b72dcbe6d6163e37e4f85de95d208b71241195(
+    value: typing.Optional[PubsubTopicMessageTransformsJavascriptUdf],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fe61c7b97a10e88e9f29c084622424474bb02ae121e623a870830d5d435361e3(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__672eee35aa648cd18e1874e804d73a112798c4e89282400b3eaf436fa0f96b24(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c6bbf9e96d65bc06faa8c8c6c34560a1bd12cbec07472f2e2f19140fecc1da95(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e54e9eccd448c5dc06b4408675a6d1bc2fcbb43f37d9f5f27f1bbce258814c29(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c9a17c0e735fed46e8ea4cf950b17fc25a7274b1dd6fe6d51c8dc41c5fb0328c(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c065f562d27e2d6727be1c8b625b8102ceeef79de0f2112d99867c68f286934d(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[PubsubTopicMessageTransforms]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3a5ca2b87eac7c380fdbf6d07500e416dbb49b2680181d1c4bf405ac2bf50ab0(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__981118d14b68aca56a4ebf4723fe61230a613db275fd57555e9643755cebdb4a(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7a46378ed226a8f67a0224e3455e088e52944cac16a409c8c97408026b971aa0(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, PubsubTopicMessageTransforms]],
 ) -> None:
     """Type checking stubs"""
     pass

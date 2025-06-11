@@ -29,12 +29,6 @@ class SPREADSHEET_HT_header(bpy.types.Header):
         :param context:
         """
 
-    def selection_filter_available(self, space) -> None:
-        """
-
-        :param space:
-        """
-
 class SPREADSHEET_MT_editor_menus(bpy.types.Menu):
     bl_idname: typing.Any
     bl_label: typing.Any

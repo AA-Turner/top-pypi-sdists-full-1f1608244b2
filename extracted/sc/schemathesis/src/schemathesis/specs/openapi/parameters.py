@@ -4,12 +4,13 @@ import json
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, ClassVar, Iterable
 
-from ...exceptions import OperationSchemaError
-from ...parameters import Parameter
+from schemathesis.core.errors import InvalidSchema
+from schemathesis.schemas import Parameter
+
 from .converter import to_json_schema_recursive
 
 if TYPE_CHECKING:
-    from ...models import APIOperation
+    from ...schemas import APIOperation
 
 
 @dataclass(eq=False)
@@ -22,6 +23,7 @@ class OpenAPIParameter(Parameter):
     supported_jsonschema_keywords: ClassVar[tuple[str, ...]]
 
     def _repr_pretty_(self, *args: Any, **kwargs: Any) -> None: ...
+
     @property
     def description(self) -> str | None:
         """A brief parameter description."""
@@ -312,9 +314,6 @@ def parameters_to_json_schema(
 ) -> dict[str, Any]:
     """Create an "object" JSON schema from a list of Open API parameters.
 
-    :param List[OpenAPIParameter] parameters: A list of Open API parameters related to the same location. All of
-        them are expected to have the same "in" value.
-
     For each input parameter, there will be a property in the output schema.
 
     This:
@@ -371,13 +370,12 @@ def get_parameter_schema(operation: APIOperation, data: dict[str, Any]) -> dict[
     # In Open API 3.0, there could be "schema" or "content" field. They are mutually exclusive.
     if "schema" in data:
         if not isinstance(data["schema"], dict):
-            raise OperationSchemaError(
+            raise InvalidSchema(
                 INVALID_SCHEMA_MESSAGE.format(
                     location=data.get("in", ""), name=data.get("name", "<UNKNOWN>"), schema=data["schema"]
                 ),
                 path=operation.path,
                 method=operation.method,
-                full_path=operation.full_path,
             )
         return data["schema"]
     # https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md#fixed-fields-10
@@ -385,11 +383,10 @@ def get_parameter_schema(operation: APIOperation, data: dict[str, Any]) -> dict[
     try:
         content = data["content"]
     except KeyError as exc:
-        raise OperationSchemaError(
+        raise InvalidSchema(
             MISSING_SCHEMA_OR_CONTENT_MESSAGE.format(location=data.get("in", ""), name=data.get("name", "<UNKNOWN>")),
             path=operation.path,
             method=operation.method,
-            full_path=operation.full_path,
         ) from exc
     options = iter(content.values())
     media_type_object = next(options)

@@ -1,7 +1,7 @@
 r'''
 # `okta_brand`
 
-Refer to the Terraform Registry for docs: [`okta_brand`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand).
+Refer to the Terraform Registry for docs: [`okta_brand`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Brand(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.brand.Brand",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand okta_brand}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand okta_brand}.'''
 
     def __init__(
         self,
@@ -68,19 +68,19 @@ class Brand(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand okta_brand} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand okta_brand} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the brand. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#name Brand#name}
-        :param agree_to_custom_privacy_policy: Is a required input flag with when changing custom_privacy_url, shouldn't be considered as a readable property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#agree_to_custom_privacy_policy Brand#agree_to_custom_privacy_policy}
-        :param brand_id: Brand ID - Note: Okta API for brands only reads and updates therefore the okta_brand resource needs to act as a quasi data source. Do this by setting brand_id. ``DEPRECATED``: Okta has fully support brand creation, this attribute is a no op and will be removed Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#brand_id Brand#brand_id}
-        :param custom_privacy_policy_url: Custom privacy policy URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#custom_privacy_policy_url Brand#custom_privacy_policy_url}
-        :param default_app_app_instance_id: Default app app instance id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#default_app_app_instance_id Brand#default_app_app_instance_id}
-        :param default_app_app_link_name: Default app app link name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#default_app_app_link_name Brand#default_app_app_link_name}
-        :param default_app_classic_application_uri: Default app classic application uri. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#default_app_classic_application_uri Brand#default_app_classic_application_uri}
-        :param locale: The language specified as an IETF BCP 47 language tag. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#locale Brand#locale}
-        :param remove_powered_by_okta: Removes "Powered by Okta" from the Okta-hosted sign-in page and "© 2021 Okta, Inc." from the Okta End-User Dashboard. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#remove_powered_by_okta Brand#remove_powered_by_okta}
+        :param name: Name of the brand. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#name Brand#name}
+        :param agree_to_custom_privacy_policy: Is a required input flag with when changing custom_privacy_url, shouldn't be considered as a readable property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#agree_to_custom_privacy_policy Brand#agree_to_custom_privacy_policy}
+        :param brand_id: Brand ID - Note: Okta API for brands only reads and updates therefore the okta_brand resource needs to act as a quasi data source. Do this by setting brand_id. ``DEPRECATED``: Okta has fully support brand creation, this attribute is a no op and will be removed Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#brand_id Brand#brand_id}
+        :param custom_privacy_policy_url: Custom privacy policy URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#custom_privacy_policy_url Brand#custom_privacy_policy_url}
+        :param default_app_app_instance_id: Default app app instance id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#default_app_app_instance_id Brand#default_app_app_instance_id}
+        :param default_app_app_link_name: Default app app link name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#default_app_app_link_name Brand#default_app_app_link_name}
+        :param default_app_classic_application_uri: Default app classic application uri. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#default_app_classic_application_uri Brand#default_app_classic_application_uri}
+        :param locale: The language specified as an IETF BCP 47 language tag. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#locale Brand#locale}
+        :param remove_powered_by_okta: Removes "Powered by Okta" from the Okta-hosted sign-in page and "© 2021 Okta, Inc." from the Okta End-User Dashboard. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#remove_powered_by_okta Brand#remove_powered_by_okta}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -127,7 +127,7 @@ class Brand(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Brand to import.
-        :param import_from_id: The id of the existing Brand that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Brand that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Brand to import is found.
         '''
         if __debug__:
@@ -424,15 +424,15 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the brand. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#name Brand#name}
-        :param agree_to_custom_privacy_policy: Is a required input flag with when changing custom_privacy_url, shouldn't be considered as a readable property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#agree_to_custom_privacy_policy Brand#agree_to_custom_privacy_policy}
-        :param brand_id: Brand ID - Note: Okta API for brands only reads and updates therefore the okta_brand resource needs to act as a quasi data source. Do this by setting brand_id. ``DEPRECATED``: Okta has fully support brand creation, this attribute is a no op and will be removed Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#brand_id Brand#brand_id}
-        :param custom_privacy_policy_url: Custom privacy policy URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#custom_privacy_policy_url Brand#custom_privacy_policy_url}
-        :param default_app_app_instance_id: Default app app instance id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#default_app_app_instance_id Brand#default_app_app_instance_id}
-        :param default_app_app_link_name: Default app app link name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#default_app_app_link_name Brand#default_app_app_link_name}
-        :param default_app_classic_application_uri: Default app classic application uri. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#default_app_classic_application_uri Brand#default_app_classic_application_uri}
-        :param locale: The language specified as an IETF BCP 47 language tag. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#locale Brand#locale}
-        :param remove_powered_by_okta: Removes "Powered by Okta" from the Okta-hosted sign-in page and "© 2021 Okta, Inc." from the Okta End-User Dashboard. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#remove_powered_by_okta Brand#remove_powered_by_okta}
+        :param name: Name of the brand. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#name Brand#name}
+        :param agree_to_custom_privacy_policy: Is a required input flag with when changing custom_privacy_url, shouldn't be considered as a readable property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#agree_to_custom_privacy_policy Brand#agree_to_custom_privacy_policy}
+        :param brand_id: Brand ID - Note: Okta API for brands only reads and updates therefore the okta_brand resource needs to act as a quasi data source. Do this by setting brand_id. ``DEPRECATED``: Okta has fully support brand creation, this attribute is a no op and will be removed Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#brand_id Brand#brand_id}
+        :param custom_privacy_policy_url: Custom privacy policy URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#custom_privacy_policy_url Brand#custom_privacy_policy_url}
+        :param default_app_app_instance_id: Default app app instance id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#default_app_app_instance_id Brand#default_app_app_instance_id}
+        :param default_app_app_link_name: Default app app link name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#default_app_app_link_name Brand#default_app_app_link_name}
+        :param default_app_classic_application_uri: Default app classic application uri. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#default_app_classic_application_uri Brand#default_app_classic_application_uri}
+        :param locale: The language specified as an IETF BCP 47 language tag. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#locale Brand#locale}
+        :param remove_powered_by_okta: Removes "Powered by Okta" from the Okta-hosted sign-in page and "© 2021 Okta, Inc." from the Okta End-User Dashboard. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#remove_powered_by_okta Brand#remove_powered_by_okta}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -556,7 +556,7 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the brand.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#name Brand#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#name Brand#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -568,7 +568,7 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Is a required input flag with when changing custom_privacy_url, shouldn't be considered as a readable property.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#agree_to_custom_privacy_policy Brand#agree_to_custom_privacy_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#agree_to_custom_privacy_policy Brand#agree_to_custom_privacy_policy}
         '''
         result = self._values.get("agree_to_custom_privacy_policy")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -579,7 +579,7 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Do this by setting brand_id. ``DEPRECATED``: Okta has fully support brand creation, this attribute is a no op and will be removed
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#brand_id Brand#brand_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#brand_id Brand#brand_id}
         '''
         result = self._values.get("brand_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -588,7 +588,7 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def custom_privacy_policy_url(self) -> typing.Optional[builtins.str]:
         '''Custom privacy policy URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#custom_privacy_policy_url Brand#custom_privacy_policy_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#custom_privacy_policy_url Brand#custom_privacy_policy_url}
         '''
         result = self._values.get("custom_privacy_policy_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -597,7 +597,7 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def default_app_app_instance_id(self) -> typing.Optional[builtins.str]:
         '''Default app app instance id.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#default_app_app_instance_id Brand#default_app_app_instance_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#default_app_app_instance_id Brand#default_app_app_instance_id}
         '''
         result = self._values.get("default_app_app_instance_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -606,7 +606,7 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def default_app_app_link_name(self) -> typing.Optional[builtins.str]:
         '''Default app app link name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#default_app_app_link_name Brand#default_app_app_link_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#default_app_app_link_name Brand#default_app_app_link_name}
         '''
         result = self._values.get("default_app_app_link_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -615,7 +615,7 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def default_app_classic_application_uri(self) -> typing.Optional[builtins.str]:
         '''Default app classic application uri.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#default_app_classic_application_uri Brand#default_app_classic_application_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#default_app_classic_application_uri Brand#default_app_classic_application_uri}
         '''
         result = self._values.get("default_app_classic_application_uri")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -624,7 +624,7 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def locale(self) -> typing.Optional[builtins.str]:
         '''The language specified as an IETF BCP 47 language tag.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#locale Brand#locale}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#locale Brand#locale}
         '''
         result = self._values.get("locale")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -635,7 +635,7 @@ class BrandConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Removes "Powered by Okta" from the Okta-hosted sign-in page and "© 2021 Okta, Inc." from the Okta End-User Dashboard.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/brand#remove_powered_by_okta Brand#remove_powered_by_okta}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/brand#remove_powered_by_okta Brand#remove_powered_by_okta}
         '''
         result = self._values.get("remove_powered_by_okta")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)

@@ -23,43 +23,37 @@ from fastapi import Depends, status
 from airflow.api_fastapi.common.router import AirflowRouter
 from airflow.api_fastapi.core_api.datamodels.ui.config import ConfigResponse
 from airflow.api_fastapi.core_api.openapi.exceptions import create_openapi_http_exception_doc
-from airflow.api_fastapi.core_api.security import requires_access_configuration
+from airflow.api_fastapi.core_api.security import requires_authenticated
 from airflow.configuration import conf
 from airflow.settings import DASHBOARD_UIALERTS
 
 config_router = AirflowRouter(tags=["Config"])
 
 WEBSERVER_CONFIG_KEYS = [
-    "navbar_color",
     "page_size",
     "auto_refresh_interval",
     "hide_paused_dags_by_default",
     "warn_deployment_exposure",
     "default_wrap",
     "require_confirmation_dag_change",
-    "enable_swagger_ui",
     "instance_name_has_markup",
-    "navbar_text_color",
-    "navbar_hover_color",
-    "navbar_text_hover_color",
 ]
 
 
 @config_router.get(
     "/config",
     responses=create_openapi_http_exception_doc([status.HTTP_404_NOT_FOUND]),
-    dependencies=[Depends(requires_access_configuration("GET"))],
+    dependencies=[Depends(requires_authenticated())],
 )
 def get_configs() -> ConfigResponse:
     """Get configs for UI."""
-    conf_dict = conf.as_dict()
-
-    config = {key: conf_dict["webserver"].get(key) for key in WEBSERVER_CONFIG_KEYS}
+    config = {key: conf.get("webserver", key) for key in WEBSERVER_CONFIG_KEYS}
 
     additional_config: dict[str, Any] = {
         "instance_name": conf.get("webserver", "instance_name", fallback="Airflow"),
         "audit_view_included_events": conf.get("webserver", "audit_view_included_events", fallback=""),
         "audit_view_excluded_events": conf.get("webserver", "audit_view_excluded_events", fallback=""),
+        "enable_swagger_ui": conf.get("api", "enable_swagger_ui"),
         "test_connection": conf.get("core", "test_connection", fallback="Disabled"),
         "dashboard_alert": DASHBOARD_UIALERTS,
     }

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-health-check
-Version: 3.19.1
+Version: 3.19.2
 Summary: Monitor the health of your Django app and its connected services.
 Keywords: django,postgresql
 Author-email: Kristian Ollegaard <kristian@oellegaard.com>, Johannes Maron <johannes@maron.family>
@@ -142,6 +142,20 @@ To use Health Check Subsets, Specify a subset name and associate it with the rel
             "startup-probe": ["MigrationsHealthCheck", "DatabaseBackend"],
             "liveness-probe": ["DatabaseBackend"],
             "<SUBSET_NAME>": ["<Health_Check_Service_Name>"]
+        },
+        # .....
+    }
+```
+
+To add checks on a specific database, it's possible to parameterize `DatabaseBackend` to use a specific database:
+```python
+    HEALTH_CHECK = {
+        # .....
+        "SUBSETS": {
+            "database-probe": [
+                "DatabaseBackend[default]",  # This is equivalent to "DatabaseBackend"
+                "DatabaseBackend[secondary]",
+            ],
         },
         # .....
     }

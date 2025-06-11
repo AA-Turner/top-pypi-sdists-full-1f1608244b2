@@ -310,7 +310,7 @@ def control_variates_jacobians(
   # gradient.
   # The rng has to be the same as passed to the grad_estimator above so that we
   # obtain the same samples.
-  samples = dist_builder(*params).sample((num_samples,), seed=rng)
+  samples = dist_builder(*params).sample((num_samples,), key=rng)
   # If the CV has state, update it.
   control_variate_state = update_state_cv(
       params, samples, control_variate_state
@@ -455,7 +455,7 @@ def estimate_control_variate_coefficients(
     cv_coeff = jnp.sum(cov) / (jnp.sum(jnp.var(param_cv_jacs, axis=0)) + eps)
     return jax.lax.stop_gradient(cv_coeff)
 
-  return [
+  return [  # pytype: disable=bad-return-type
       compute_coeff(cv_jacobians[i], function_jacobians[i])
       for i in range(len(params))
   ]

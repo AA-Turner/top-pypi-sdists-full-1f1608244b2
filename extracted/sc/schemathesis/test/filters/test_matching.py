@@ -4,8 +4,8 @@ import pytest
 
 import schemathesis
 from schemathesis import filters
-from schemathesis.exceptions import UsageError
-from schemathesis.models import APIOperation
+from schemathesis.core.errors import IncorrectUsage
+from schemathesis.schemas import APIOperation
 
 RAW_SCHEMA = {
     "openapi": "3.0.2",
@@ -31,7 +31,7 @@ RAW_SCHEMA = {
         },
     },
 }
-SCHEMA = schemathesis.from_dict(RAW_SCHEMA)
+SCHEMA = schemathesis.openapi.from_dict(RAW_SCHEMA)
 USERS_GET = SCHEMA["/users/"]["GET"]
 USERS_POST = SCHEMA["/users/"]["POST"]
 USER_ID_PATCH = SCHEMA["/users/{user_id}/"]["PATCH"]
@@ -142,8 +142,12 @@ def test_matchers(chain, expected):
     for method, kwargs in chain:
         getattr(filter_set, method)(**kwargs)
         schema = getattr(schema, method)(**kwargs)
-    assert filter_set.apply_to(OPERATIONS) == expected
-    assert schema.filter_set.apply_to(OPERATIONS) == expected
+    assert applies_to(filter_set, OPERATIONS) == expected
+    assert applies_to(schema.filter_set, OPERATIONS) == expected
+
+
+def applies_to(filter_set, operations) -> list[APIOperation]:
+    return [operation for operation in operations if filter_set.applies_to(operation=operation)]
 
 
 def matcher_func(ctx):
@@ -196,7 +200,7 @@ def test_matcher_repr():
     ],
 )
 def test_exclude_custom(args, kwargs, expected):
-    lazy_schema = schemathesis.from_pytest_fixture("name")
+    lazy_schema = schemathesis.pytest.from_fixture("name")
     schemas = [SCHEMA, lazy_schema]
     for schema in schemas:
         assert (
@@ -206,7 +210,7 @@ def test_exclude_custom(args, kwargs, expected):
 
 
 def test_sanity_checks():
-    with pytest.raises(UsageError, match=filters.ERROR_EMPTY_FILTER):
+    with pytest.raises(IncorrectUsage, match=filters.ERROR_EMPTY_FILTER):
         filters.FilterSet().include()
 
 
@@ -237,11 +241,11 @@ def test_repeating_filter(method, kwargs):
     # Adding the same filter twice is an error
     filter_set = filters.FilterSet()
     filter_set.include(**kwargs)
-    with pytest.raises(UsageError, match=filters.ERROR_FILTER_EXISTS):
+    with pytest.raises(IncorrectUsage, match=filters.ERROR_FILTER_EXISTS):
         method(filter_set, **kwargs)
 
 
 def test_forbid_value_and_auth():
     filter_set = filters.FilterSet()
-    with pytest.raises(UsageError, match=filters.ERROR_EXPECTED_AND_REGEX):
+    with pytest.raises(IncorrectUsage, match=filters.ERROR_EXPECTED_AND_REGEX):
         filter_set.include(method="POST", method_regex="GET")

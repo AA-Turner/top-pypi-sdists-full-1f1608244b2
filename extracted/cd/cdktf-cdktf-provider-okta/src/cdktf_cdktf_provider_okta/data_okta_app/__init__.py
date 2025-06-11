@@ -1,7 +1,7 @@
 r'''
 # `data_okta_app`
 
-Refer to the Terraform Registry for docs: [`data_okta_app`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app).
+Refer to the Terraform Registry for docs: [`data_okta_app`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaApp(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaApp.DataOktaApp",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app okta_app}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app okta_app}.'''
 
     def __init__(
         self,
@@ -65,16 +65,16 @@ class DataOktaApp(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app okta_app} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app okta_app} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param active_only: Search only ACTIVE applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#active_only DataOktaApp#active_only}
-        :param id: Id of application to retrieve, conflicts with label and label_prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#id DataOktaApp#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param label: The label of the app to retrieve, conflicts with label_prefix and id. Label uses the ?q= query parameter exposed by Okta's List Apps API. The API will search both name and label using that query. Therefore similarily named and labeled apps may be returned in the query and have the unitended result of associating the wrong app with this data source. See: https://developer.okta.com/docs/reference/api/apps/#list-applications Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#label DataOktaApp#label}
-        :param label_prefix: Label prefix of the app to retrieve, conflicts with label and id. This will tell the provider to do a starts with query as opposed to an equals query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#label_prefix DataOktaApp#label_prefix}
-        :param skip_groups: Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#skip_groups DataOktaApp#skip_groups}
-        :param skip_users: Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#skip_users DataOktaApp#skip_users}
+        :param active_only: Search only ACTIVE applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#active_only DataOktaApp#active_only}
+        :param id: Id of application to retrieve, conflicts with label and label_prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#id DataOktaApp#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param label: The label of the app to retrieve, conflicts with label_prefix and id. Label uses the ?q= query parameter exposed by Okta's List Apps API. The API will search both name and label using that query. Therefore similarily named and labeled apps may be returned in the query and have the unitended result of associating the wrong app with this data source. See: https://developer.okta.com/docs/reference/api/apps/#list-applications Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#label DataOktaApp#label}
+        :param label_prefix: Label prefix of the app to retrieve, conflicts with label and id. This will tell the provider to do a starts with query as opposed to an equals query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#label_prefix DataOktaApp#label_prefix}
+        :param skip_groups: Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#skip_groups DataOktaApp#skip_groups}
+        :param skip_users: Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#skip_users DataOktaApp#skip_users}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -118,7 +118,7 @@ class DataOktaApp(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaApp to import.
-        :param import_from_id: The id of the existing DataOktaApp that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaApp that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaApp to import is found.
         '''
         if __debug__:
@@ -354,12 +354,12 @@ class DataOktaAppConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param active_only: Search only ACTIVE applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#active_only DataOktaApp#active_only}
-        :param id: Id of application to retrieve, conflicts with label and label_prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#id DataOktaApp#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param label: The label of the app to retrieve, conflicts with label_prefix and id. Label uses the ?q= query parameter exposed by Okta's List Apps API. The API will search both name and label using that query. Therefore similarily named and labeled apps may be returned in the query and have the unitended result of associating the wrong app with this data source. See: https://developer.okta.com/docs/reference/api/apps/#list-applications Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#label DataOktaApp#label}
-        :param label_prefix: Label prefix of the app to retrieve, conflicts with label and id. This will tell the provider to do a starts with query as opposed to an equals query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#label_prefix DataOktaApp#label_prefix}
-        :param skip_groups: Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#skip_groups DataOktaApp#skip_groups}
-        :param skip_users: Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#skip_users DataOktaApp#skip_users}
+        :param active_only: Search only ACTIVE applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#active_only DataOktaApp#active_only}
+        :param id: Id of application to retrieve, conflicts with label and label_prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#id DataOktaApp#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param label: The label of the app to retrieve, conflicts with label_prefix and id. Label uses the ?q= query parameter exposed by Okta's List Apps API. The API will search both name and label using that query. Therefore similarily named and labeled apps may be returned in the query and have the unitended result of associating the wrong app with this data source. See: https://developer.okta.com/docs/reference/api/apps/#list-applications Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#label DataOktaApp#label}
+        :param label_prefix: Label prefix of the app to retrieve, conflicts with label and id. This will tell the provider to do a starts with query as opposed to an equals query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#label_prefix DataOktaApp#label_prefix}
+        :param skip_groups: Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#skip_groups DataOktaApp#skip_groups}
+        :param skip_users: Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#skip_users DataOktaApp#skip_users}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -476,7 +476,7 @@ class DataOktaAppConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Search only ACTIVE applications.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#active_only DataOktaApp#active_only}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#active_only DataOktaApp#active_only}
         '''
         result = self._values.get("active_only")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -485,7 +485,7 @@ class DataOktaAppConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def id(self) -> typing.Optional[builtins.str]:
         '''Id of application to retrieve, conflicts with label and label_prefix.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#id DataOktaApp#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#id DataOktaApp#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -504,7 +504,7 @@ class DataOktaAppConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         source. See:
         https://developer.okta.com/docs/reference/api/apps/#list-applications
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#label DataOktaApp#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#label DataOktaApp#label}
         '''
         result = self._values.get("label")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -516,7 +516,7 @@ class DataOktaAppConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         This will tell the
         provider to do a starts with query as opposed to an equals query.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#label_prefix DataOktaApp#label_prefix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#label_prefix DataOktaApp#label_prefix}
         '''
         result = self._values.get("label_prefix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -527,7 +527,7 @@ class DataOktaAppConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#skip_groups DataOktaApp#skip_groups}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#skip_groups DataOktaApp#skip_groups}
         '''
         result = self._values.get("skip_groups")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -538,7 +538,7 @@ class DataOktaAppConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app#skip_users DataOktaApp#skip_users}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/app#skip_users DataOktaApp#skip_users}
         '''
         result = self._values.get("skip_users")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)

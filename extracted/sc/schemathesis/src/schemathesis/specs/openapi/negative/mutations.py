@@ -11,7 +11,8 @@ from hypothesis import reject
 from hypothesis import strategies as st
 from hypothesis.strategies._internal.featureflags import FeatureStrategy
 
-from ....internal.copy import fast_deepcopy
+from schemathesis.core.transforms import deepclone
+
 from ..utils import get_type, is_header_location
 from .types import Draw, Schema
 from .utils import can_negate
@@ -19,7 +20,7 @@ from .utils import can_negate
 T = TypeVar("T")
 
 
-class MutationResult(enum.Enum):
+class MutationResult(int, enum.Enum):
     """The result of applying some mutation to some schema.
 
     Failing to mutate something means that by applying some mutation, it is not possible to change
@@ -111,7 +112,7 @@ class MutationContext:
             # Body can be of any type and does not have any specific type semantic.
             mutations = draw(ordered(get_mutations(draw, self.keywords)))
         # Deep copy all keywords to avoid modifying the original schema
-        new_schema = fast_deepcopy(self.keywords)
+        new_schema = deepclone(self.keywords)
         enabled_mutations = draw(st.shared(FeatureStrategy(), key="mutations"))  # type: ignore
         # Always apply at least one mutation, otherwise everything is rejected, and we'd like to avoid it
         # for performance reasons
@@ -401,8 +402,8 @@ def negate_constraints(context: MutationContext, draw: Draw, schema: Schema) -> 
                 if key in DEPENDENCIES:
                     # If this keyword has a dependency, then it should be also negated
                     dependency = DEPENDENCIES[key]
-                    if dependency not in negated:
-                        negated[dependency] = copied[dependency]  # Assuming the schema is valid
+                    if dependency not in negated and dependency in copied:
+                        negated[dependency] = copied[dependency]
         else:
             schema[key] = value
     if is_negated:

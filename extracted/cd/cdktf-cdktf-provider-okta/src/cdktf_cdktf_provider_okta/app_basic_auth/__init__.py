@@ -1,7 +1,7 @@
 r'''
 # `okta_app_basic_auth`
 
-Refer to the Terraform Registry for docs: [`okta_app_basic_auth`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth).
+Refer to the Terraform Registry for docs: [`okta_app_basic_auth`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppBasicAuth(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appBasicAuth.AppBasicAuth",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth okta_app_basic_auth}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth okta_app_basic_auth}.'''
 
     def __init__(
         self,
@@ -83,34 +83,34 @@ class AppBasicAuth(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth okta_app_basic_auth} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth okta_app_basic_auth} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param auth_url: The URL of the authenticating site for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
-        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
-        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#credentials_scheme AppBasicAuth#credentials_scheme}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#id AppBasicAuth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
-        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#reveal_password AppBasicAuth#reveal_password}
-        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_password AppBasicAuth#shared_password}
-        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_username AppBasicAuth#shared_username}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template AppBasicAuth#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH``, ``DONT_PUSH`` and ``NOT_CONFIGURED``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_push_status AppBasicAuth#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_suffix AppBasicAuth#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Valid values: ``NONE``, ``CUSTOM``, ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_type AppBasicAuth#user_name_template_type}
+        :param auth_url: The URL of the authenticating site for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
+        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
+        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#credentials_scheme AppBasicAuth#credentials_scheme}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#id AppBasicAuth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
+        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#reveal_password AppBasicAuth#reveal_password}
+        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#shared_password AppBasicAuth#shared_password}
+        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#shared_username AppBasicAuth#shared_username}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template AppBasicAuth#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH``, ``DONT_PUSH`` and ``NOT_CONFIGURED``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template_push_status AppBasicAuth#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template_suffix AppBasicAuth#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Valid values: ``NONE``, ``CUSTOM``, ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template_type AppBasicAuth#user_name_template_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -172,7 +172,7 @@ class AppBasicAuth(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppBasicAuth to import.
-        :param import_from_id: The id of the existing AppBasicAuth that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppBasicAuth that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppBasicAuth to import is found.
         '''
         if __debug__:
@@ -192,9 +192,9 @@ class AppBasicAuth(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.
         '''
         value = AppBasicAuthTimeouts(create=create, read=read, update=update)
 
@@ -828,30 +828,30 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param auth_url: The URL of the authenticating site for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
-        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
-        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#credentials_scheme AppBasicAuth#credentials_scheme}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#id AppBasicAuth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
-        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#reveal_password AppBasicAuth#reveal_password}
-        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_password AppBasicAuth#shared_password}
-        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_username AppBasicAuth#shared_username}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
-        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template AppBasicAuth#user_name_template}
-        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH``, ``DONT_PUSH`` and ``NOT_CONFIGURED``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_push_status AppBasicAuth#user_name_template_push_status}
-        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_suffix AppBasicAuth#user_name_template_suffix}
-        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Valid values: ``NONE``, ``CUSTOM``, ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_type AppBasicAuth#user_name_template_type}
+        :param auth_url: The URL of the authenticating site for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
+        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
+        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#credentials_scheme AppBasicAuth#credentials_scheme}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#id AppBasicAuth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
+        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#reveal_password AppBasicAuth#reveal_password}
+        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#shared_password AppBasicAuth#shared_password}
+        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#shared_username AppBasicAuth#shared_username}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template AppBasicAuth#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH``, ``DONT_PUSH`` and ``NOT_CONFIGURED``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template_push_status AppBasicAuth#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template_suffix AppBasicAuth#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Valid values: ``NONE``, ``CUSTOM``, ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template_type AppBasicAuth#user_name_template_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1020,7 +1020,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auth_url(self) -> builtins.str:
         '''The URL of the authenticating site for this app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
         '''
         result = self._values.get("auth_url")
         assert result is not None, "Required property 'auth_url' is missing"
@@ -1030,7 +1030,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def label(self) -> builtins.str:
         '''The Application's display name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
         '''
         result = self._values.get("label")
         assert result is not None, "Required property 'label' is missing"
@@ -1040,7 +1040,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def url(self) -> builtins.str:
         '''The URL of the sign-in page for this app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
         '''
         result = self._values.get("url")
         assert result is not None, "Required property 'url' is missing"
@@ -1050,7 +1050,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_error_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom error page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
         '''
         result = self._values.get("accessibility_error_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1059,7 +1059,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_login_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom login page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
         '''
         result = self._values.get("accessibility_login_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1070,7 +1070,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Enable self service. Default is ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
         '''
         result = self._values.get("accessibility_self_service")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1079,7 +1079,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def admin_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for admins.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
         '''
         result = self._values.get("admin_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1088,7 +1088,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_links_json(self) -> typing.Optional[builtins.str]:
         '''Displays specific appLinks for the app. The value for each application link should be boolean.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
         '''
         result = self._values.get("app_links_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1099,7 +1099,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Display auto submit toolbar.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
         '''
         result = self._values.get("auto_submit_toolbar")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1108,7 +1108,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def credentials_scheme(self) -> typing.Optional[builtins.str]:
         '''Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#credentials_scheme AppBasicAuth#credentials_scheme}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#credentials_scheme AppBasicAuth#credentials_scheme}
         '''
         result = self._values.get("credentials_scheme")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1117,7 +1117,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enduser_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for end users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
         '''
         result = self._values.get("enduser_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1128,7 +1128,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon on mobile app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
         '''
         result = self._values.get("hide_ios")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1139,14 +1139,14 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon to users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
         '''
         result = self._values.get("hide_web")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#id AppBasicAuth#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#id AppBasicAuth#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1160,7 +1160,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The file must be in PNG, JPG, or GIF format, and less than 1 MB in size.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
         '''
         result = self._values.get("logo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1173,7 +1173,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#reveal_password AppBasicAuth#reveal_password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#reveal_password AppBasicAuth#reveal_password}
         '''
         result = self._values.get("reveal_password")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1182,7 +1182,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def shared_password(self) -> typing.Optional[builtins.str]:
         '''Shared password, required for certain schemes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_password AppBasicAuth#shared_password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#shared_password AppBasicAuth#shared_password}
         '''
         result = self._values.get("shared_password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1191,7 +1191,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def shared_username(self) -> typing.Optional[builtins.str]:
         '''Shared username, required for certain schemes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_username AppBasicAuth#shared_username}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#shared_username AppBasicAuth#shared_username}
         '''
         result = self._values.get("shared_username")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1200,7 +1200,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Status of application. By default, it is ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1209,7 +1209,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["AppBasicAuthTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["AppBasicAuthTimeouts"], result)
@@ -1218,7 +1218,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template(self) -> typing.Optional[builtins.str]:
         '''Username template. Default: ``${source.login}``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template AppBasicAuth#user_name_template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template AppBasicAuth#user_name_template}
         '''
         result = self._values.get("user_name_template")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1227,7 +1227,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_push_status(self) -> typing.Optional[builtins.str]:
         '''Push username on update. Valid values: ``PUSH``, ``DONT_PUSH`` and ``NOT_CONFIGURED``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_push_status AppBasicAuth#user_name_template_push_status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template_push_status AppBasicAuth#user_name_template_push_status}
         '''
         result = self._values.get("user_name_template_push_status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1236,7 +1236,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_suffix(self) -> typing.Optional[builtins.str]:
         '''Username template suffix.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_suffix AppBasicAuth#user_name_template_suffix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template_suffix AppBasicAuth#user_name_template_suffix}
         '''
         result = self._values.get("user_name_template_suffix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1245,7 +1245,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name_template_type(self) -> typing.Optional[builtins.str]:
         '''Username template type. Default: ``BUILT_IN``. Valid values: ``NONE``, ``CUSTOM``, ``BUILT_IN``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_type AppBasicAuth#user_name_template_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#user_name_template_type AppBasicAuth#user_name_template_type}
         '''
         result = self._values.get("user_name_template_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1276,9 +1276,9 @@ class AppBasicAuthTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__f38857adcd5046c32b3c0049010c48a93cfe90e41d70d3160c1e279b96aa3ea1)
@@ -1295,19 +1295,19 @@ class AppBasicAuthTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 

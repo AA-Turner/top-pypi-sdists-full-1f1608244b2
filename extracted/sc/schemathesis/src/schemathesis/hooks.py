@@ -2,26 +2,26 @@ from __future__ import annotations
 
 import inspect
 from collections import defaultdict
-from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import Enum, unique
 from functools import partial
 from typing import TYPE_CHECKING, Any, Callable, ClassVar, cast
 
-from .filters import FilterSet, attach_filter_chain
-from .internal.deprecation import deprecated_property
+from schemathesis.core.marks import Mark
+from schemathesis.core.transport import Response
+from schemathesis.filters import FilterSet, attach_filter_chain
 
 if TYPE_CHECKING:
     from hypothesis import strategies as st
 
-    from .models import APIOperation, Case
-    from .schemas import BaseSchema
-    from .transports.responses import GenericResponse
-    from .types import GenericTest
+    from schemathesis.generation.case import Case
+    from schemathesis.schemas import APIOperation, BaseSchema
+
+HookDispatcherMark = Mark["HookDispatcher"](attr_name="hook_dispatcher")
 
 
 @unique
-class HookScope(Enum):
+class HookScope(int, Enum):
     GLOBAL = 1
     SCHEMA = 2
     TEST = 3
@@ -37,17 +37,15 @@ class RegisteredHook:
 
 @dataclass
 class HookContext:
-    """A context that is passed to some hook functions.
+    """A context that is passed to some hook functions."""
 
-    :ivar Optional[APIOperation] operation: API operation that is currently being processed.
-                                            Might be absent in some cases.
-    """
+    operation: APIOperation | None
+    """API operation that is currently being processed."""
 
-    operation: APIOperation | None = None
+    __slots__ = ("operation",)
 
-    @deprecated_property(removed_in="4.0", replacement="`operation`")
-    def endpoint(self) -> APIOperation | None:
-        return self.operation
+    def __init__(self, *, operation: APIOperation | None = None) -> None:
+        self.operation = operation
 
 
 def to_filterable_hook(dispatcher: HookDispatcher) -> Callable:
@@ -114,60 +112,29 @@ class HookDispatcher:
     _specs: ClassVar[dict[str, RegisteredHook]] = {}
 
     def __post_init__(self) -> None:
-        self.register = to_filterable_hook(self)  # type: ignore[method-assign]
+        self.hook = to_filterable_hook(self)  # type: ignore[method-assign]
 
-    def register(self, hook: str | Callable) -> Callable:
-        """Register a new hook.
-
-        :param hook: Either a hook function or a string.
-
-        Can be used as a decorator in two forms.
-        Without arguments for registering hooks and autodetecting their names:
-
-        .. code-block:: python
-
-            @schemathesis.hook
-            def before_generate_query(context, strategy):
-                ...
-
-        With a hook name as the first argument:
-
-        .. code-block:: python
-
-            @schemathesis.hook("before_generate_query")
-            def hook(context, strategy):
-                ...
-        """
+    def hook(self, hook: str | Callable) -> Callable:
         raise NotImplementedError
-
-    def merge(self, other: HookDispatcher) -> HookDispatcher:
-        """Merge two dispatches together.
-
-        The resulting dispatcher will call the `self` hooks first.
-        """
-        all_hooks = deepcopy(self._hooks)
-        for name, hooks in other._hooks.items():
-            all_hooks[name].extend(hooks)
-        instance = self.__class__(scope=self.scope)
-        instance._hooks = all_hooks
-        return instance
 
     def apply(self, hook: Callable, *, name: str | None = None) -> Callable[[Callable], Callable]:
         """Register hook to run only on one test function.
 
-        :param hook: A hook function.
-        :param Optional[str] name: A hook name.
+        Args:
+            hook: A hook function.
+            name: A hook name.
 
-        .. code-block:: python
-
-            def before_generate_query(context, strategy):
+        Example:
+            ```python
+            def filter_query(ctx, value):
                 ...
 
 
-            @schema.hooks.apply(before_generate_query)
+            @schema.hooks.apply(filter_query)
             @schema.parametrize()
             def test_api(case):
                 ...
+            ```
 
         """
         if name is None:
@@ -175,7 +142,7 @@ class HookDispatcher:
         else:
             hook_name = name
 
-        def decorator(func: GenericTest) -> GenericTest:
+        def decorator(func: Callable) -> Callable:
             dispatcher = self.add_dispatcher(func)
             dispatcher.register_hook_with_name(hook, hook_name)
             return func
@@ -183,11 +150,13 @@ class HookDispatcher:
         return decorator
 
     @classmethod
-    def add_dispatcher(cls, func: GenericTest) -> HookDispatcher:
+    def add_dispatcher(cls, func: Callable) -> HookDispatcher:
         """Attach a new dispatcher instance to the test if it is not already present."""
-        if not hasattr(func, "_schemathesis_hooks"):
-            func._schemathesis_hooks = cls(scope=HookScope.TEST)  # type: ignore
-        return func._schemathesis_hooks  # type: ignore
+        if not HookDispatcherMark.is_set(func):
+            HookDispatcherMark.set(func, cls(scope=HookScope.TEST))
+        dispatcher = HookDispatcherMark.get(func)
+        assert dispatcher is not None
+        return dispatcher
 
     def register_hook_with_name(self, hook: Callable, name: str) -> Callable:
         """A helper for hooks registration."""
@@ -226,18 +195,9 @@ class HookDispatcher:
                 f"Hook '{name}' takes {len(spec.signature.parameters)} arguments but {len(signature.parameters)} is defined"
             )
 
-    def collect_statistic(self) -> dict[str, int]:
-        return {name: len(hooks) for name, hooks in self._hooks.items()}
-
     def get_all_by_name(self, name: str) -> list[Callable]:
         """Get a list of hooks registered for a name."""
         return self._hooks.get(name, [])
-
-    def is_installed(self, name: str, needle: Callable) -> bool:
-        for hook in self.get_all_by_name(name):
-            if hook is needle:
-                return True
-        return False
 
     def apply_to_container(
         self, strategy: st.SearchStrategy, container: str, context: HookContext
@@ -271,10 +231,7 @@ class HookDispatcher:
             hook(context, *args, **kwargs)
 
     def unregister(self, hook: Callable) -> None:
-        """Unregister a specific hook.
-
-        :param hook: A hook function to unregister.
-        """
+        """Unregister a specific hook."""
         # It removes this function from all places
         for hooks in self._hooks.values():
             hooks[:] = [item for item in hooks if item is not hook]
@@ -307,19 +264,12 @@ def apply_to_all_dispatchers(
     return strategy
 
 
-def should_skip_operation(dispatcher: HookDispatcher, context: HookContext) -> bool:
-    for hook in dispatcher.get_all_by_name("filter_operations"):
-        if not hook(context):
-            return True
-    return False
-
-
 def validate_filterable_hook(hook: str | Callable) -> None:
     if callable(hook):
         name = hook.__name__
     else:
         name = hook
-    if name in ("before_process_path", "before_load_schema", "after_load_schema", "after_init_cli_run_handlers"):
+    if name in ("before_process_path", "before_load_schema", "after_load_schema"):
         raise ValueError(f"Filters are not applicable to this hook: `{name}`")
 
 
@@ -373,11 +323,6 @@ def before_process_path(context: HookContext, path: str, methods: dict[str, Any]
     """Called before API path is processed."""
 
 
-@all_scopes
-def filter_operations(context: HookContext) -> bool | None:
-    """Decide whether testing of this particular API operation should be skipped or not."""
-
-
 @HookDispatcher.register_spec([HookScope.GLOBAL])
 def before_load_schema(context: HookContext, raw_schema: dict[str, Any]) -> None:
     """Called before schema instance is created."""
@@ -402,15 +347,7 @@ def before_init_operation(context: HookContext, operation: APIOperation) -> None
 
 
 @HookDispatcher.register_spec([HookScope.GLOBAL])
-def add_case(context: HookContext, case: Case, response: GenericResponse) -> Case | None:
-    """Creates an additional test per API operation. If this hook returns None, no additional test created.
-
-    Called with a copy of the original case object and the server's response to the original case.
-    """
-
-
-@HookDispatcher.register_spec([HookScope.GLOBAL])
-def before_call(context: HookContext, case: Case) -> None:
+def before_call(context: HookContext, case: Case, **kwargs: Any) -> None:
     """Called before every network call in CLI tests.
 
     Use cases:
@@ -420,7 +357,7 @@ def before_call(context: HookContext, case: Case) -> None:
 
 
 @HookDispatcher.register_spec([HookScope.GLOBAL])
-def after_call(context: HookContext, case: Case, response: GenericResponse) -> None:
+def after_call(context: HookContext, case: Case, response: Response) -> None:
     """Called after every network call in CLI tests.
 
     Note that you need to modify the response in-place.
@@ -434,8 +371,50 @@ def after_call(context: HookContext, case: Case, response: GenericResponse) -> N
 GLOBAL_HOOK_DISPATCHER = HookDispatcher(scope=HookScope.GLOBAL)
 dispatch = GLOBAL_HOOK_DISPATCHER.dispatch
 get_all_by_name = GLOBAL_HOOK_DISPATCHER.get_all_by_name
-is_installed = GLOBAL_HOOK_DISPATCHER.is_installed
-collect_statistic = GLOBAL_HOOK_DISPATCHER.collect_statistic
-register = GLOBAL_HOOK_DISPATCHER.register
 unregister = GLOBAL_HOOK_DISPATCHER.unregister
 unregister_all = GLOBAL_HOOK_DISPATCHER.unregister_all
+
+
+def hook(hook: str | Callable) -> Callable:
+    """Register a new hook.
+
+    Args:
+        hook: Either a hook function (autodetecting its name) or a string matching one of the supported hook names.
+
+    Example:
+        Can be used as a decorator in two ways:
+
+        1. Without arguments (auto-detect the hook name from the function name):
+
+            ```python
+            @schemathesis.hook
+            def filter_query(ctx, query):
+                \"\"\"Skip cases where query is None or invalid\"\"\"
+                return query and "user_id" in query
+
+            @schemathesis.hook
+            def before_call(ctx, case):
+                \"\"\"Modify headers before sending each request\"\"\"
+                if case.headers is None:
+                    case.headers = {}
+                case.headers["X-Test-Mode"] = "true"
+                return None
+            ```
+
+        2. With an explicit hook name as the first argument:
+
+            ```python
+            @schemathesis.hook("map_headers")
+            def add_custom_header(ctx, headers):
+                \"\"\"Inject a test header into every request\"\"\"
+                if headers is None:
+                    headers = {}
+                headers["X-Custom"] = "value"
+                return headers
+            ```
+
+    """
+    return GLOBAL_HOOK_DISPATCHER.hook(hook)
+
+
+hook.__dict__ = GLOBAL_HOOK_DISPATCHER.hook.__dict__

@@ -11,15 +11,16 @@ from seeq.spy._status import Status
 from seeq.spy.workbooks.job.data import _pull, _push
 
 
+@Status.handle_keyboard_interrupt(no_session=True)
 def redo(job_folder: str, items_df: Union[pd.DataFrame, str, list], action: Optional[str] = None,
          *, quiet: Optional[bool] = None, status: Optional[Status] = None):
     """
-    Creates a zip file of the job folder for easy sharing.
+    Marks a set of data items to be redone in the specified job folder.
 
     Parameters
     ----------
     job_folder : {str}
-        A full or partial path to the job folder to be zipped.
+        A full or partial path to the job folder.
 
     items_df : {pd.DataFrame, str, list}
         A DataFrame containing an 'ID' column that can be used to identify
@@ -50,8 +51,6 @@ def redo(job_folder: str, items_df: Union[pd.DataFrame, str, list], action: Opti
         (quiet, 'quiet', bool),
         (status, 'status', Status)
     ])
-
-    status = Status.validate(status, None, quiet)
 
     if not util.safe_exists(job_folder):
         raise SPyValueError(f'Job folder "{job_folder}" does not exist.')

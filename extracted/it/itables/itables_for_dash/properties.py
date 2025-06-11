@@ -1,21 +1,24 @@
 try:
     from dash import Output, no_update  # type: ignore
-except ImportError as e:
+except ImportError as e:  # type: ignore
     import_error = e
 
-    def Output(*args, **kwargs):
+    def Output(*args, **kwargs):  # type: ignore
         raise import_error
 
-    def no_update(*args, **kwargs):
+    def no_update(*args, **kwargs):  # type: ignore
         raise import_error
 
 
-from typing import Optional
+from typing import Any, Optional, cast
 
 from typing_extensions import Unpack
 
-from itables.javascript import get_expanded_style, get_itables_extension_arguments
-from itables.typing import DataTableOptions, ITableOptions
+from itables.javascript import (
+    get_expanded_style,
+    get_itables_extension_arguments,
+)
+from itables.typing import DataFrameOrSeries, DTForITablesOptions, ITableOptions
 
 ITABLE_PROPERTIES = (
     "caption",
@@ -27,11 +30,11 @@ ITABLE_PROPERTIES = (
 
 
 def get_itable_component_kwargs(
-    df=None,
-    *args,
+    df: Optional[DataFrameOrSeries] = None,
+    caption: Optional[str] = None,
     **kwargs: Unpack[ITableOptions],
-):
-    dt_args, other_args = get_itables_extension_arguments(df=df, *args, **kwargs)
+) -> dict[str, Any]:
+    dt_args, other_args = get_itables_extension_arguments(df, caption, **kwargs)
 
     style = get_expanded_style(other_args.pop("style"))
     for key in style:
@@ -48,16 +51,25 @@ def get_itable_component_kwargs(
     }
 
 
-def ITableOutputs(id):
+def ITableOutputs(id: str) -> list[Any]:
+    """
+    Return the list of Output components for the ITable component
+    with the given id.
+    """
     return [Output(id, key) for key in ITABLE_PROPERTIES]
 
 
 def updated_itable_outputs(
-    df=None,
-    current_dt_args: Optional[DataTableOptions] = None,
+    df: Optional[DataFrameOrSeries] = None,
+    caption: Optional[str] = None,
+    current_dt_args: Optional[DTForITablesOptions] = None,
     **kwargs: Unpack[ITableOptions],
-):
-    updated_properties = get_itable_component_kwargs(df, **kwargs)
+) -> list[Any]:
+    """
+    Return the updated properties for the ITable component, in the same
+    order as ITableOutputs.
+    """
+    updated_properties = get_itable_component_kwargs(df, caption, **kwargs)
 
     if current_dt_args is not None:
         if df is None:
@@ -70,7 +82,7 @@ def updated_itable_outputs(
                 if k in current_dt_args:
                     updated_properties["dt_args"][k] = current_dt_args[k]
 
-        if current_dt_args == updated_properties["dt_args"]:
+        if current_dt_args == cast(DTForITablesOptions, updated_properties["dt_args"]):
             updated_properties["dt_args"] = no_update
 
     ordered_list_of_updated_properties = [

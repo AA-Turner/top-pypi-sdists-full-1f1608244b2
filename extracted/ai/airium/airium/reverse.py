@@ -1,7 +1,7 @@
 import keyword
 import pprint
 import sys
-from typing import Optional, Union
+from typing import TYPE_CHECKING, Optional, Union, cast
 
 from airium import Tag as AiriumTag
 
@@ -15,7 +15,10 @@ try:
 
 except ImportError:
     bs4_imported = False
-    BeautifulSoup, Tag, NavigableString, PreformattedString = (None, None, None, None)
+    BeautifulSoup, Tag, NavigableString, PreformattedString = (None, None, None, None)  # type: ignore[assignment,misc]
+
+if TYPE_CHECKING:
+    from bs4.element import PageElement
 
 
 def _warn_dependencies(fcn):
@@ -104,7 +107,7 @@ def translate_el(node: Union[Tag, PreformattedString, NavigableString, str], doc
     if node.name.lower() == 'pre':
         if args:
             args += ', '
-        lines = [f"{repr(str(c))}" for c in node.contents or ['']]
+        lines = [f"{repr(str(c))}" for c in node.contents or [cast("PageElement", '')]]
         if len(lines) > 1 or sum(map(len, lines)) > 100:
             raw_html = "".join(f"\n    {line}" for line in lines)
             return f'{doc_obj}.{node.name}({args}_t={raw_html})'

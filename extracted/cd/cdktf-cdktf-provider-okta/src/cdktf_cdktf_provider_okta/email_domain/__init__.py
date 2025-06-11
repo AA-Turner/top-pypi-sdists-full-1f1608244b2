@@ -1,7 +1,7 @@
 r'''
 # `okta_email_domain`
 
-Refer to the Terraform Registry for docs: [`okta_email_domain`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain).
+Refer to the Terraform Registry for docs: [`okta_email_domain`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class EmailDomain(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.emailDomain.EmailDomain",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain okta_email_domain}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain okta_email_domain}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class EmailDomain(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain okta_email_domain} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain okta_email_domain} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param brand_id: Brand id of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#brand_id EmailDomain#brand_id}
-        :param display_name: Display name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#display_name EmailDomain#display_name}
-        :param domain: Mail domain to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#domain EmailDomain#domain}
-        :param user_name: User name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#user_name EmailDomain#user_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#id EmailDomain#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param brand_id: Brand id of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#brand_id EmailDomain#brand_id}
+        :param display_name: Display name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#display_name EmailDomain#display_name}
+        :param domain: Mail domain to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#domain EmailDomain#domain}
+        :param user_name: User name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#user_name EmailDomain#user_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#id EmailDomain#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class EmailDomain(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the EmailDomain to import.
-        :param import_from_id: The id of the existing EmailDomain that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing EmailDomain that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the EmailDomain to import is found.
         '''
         if __debug__:
@@ -282,11 +282,11 @@ class EmailDomainConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param brand_id: Brand id of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#brand_id EmailDomain#brand_id}
-        :param display_name: Display name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#display_name EmailDomain#display_name}
-        :param domain: Mail domain to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#domain EmailDomain#domain}
-        :param user_name: User name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#user_name EmailDomain#user_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#id EmailDomain#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param brand_id: Brand id of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#brand_id EmailDomain#brand_id}
+        :param display_name: Display name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#display_name EmailDomain#display_name}
+        :param domain: Mail domain to send from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#domain EmailDomain#domain}
+        :param user_name: User name of the email domain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#user_name EmailDomain#user_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#id EmailDomain#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -395,7 +395,7 @@ class EmailDomainConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def brand_id(self) -> builtins.str:
         '''Brand id of the email domain.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#brand_id EmailDomain#brand_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#brand_id EmailDomain#brand_id}
         '''
         result = self._values.get("brand_id")
         assert result is not None, "Required property 'brand_id' is missing"
@@ -405,7 +405,7 @@ class EmailDomainConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def display_name(self) -> builtins.str:
         '''Display name of the email domain.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#display_name EmailDomain#display_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#display_name EmailDomain#display_name}
         '''
         result = self._values.get("display_name")
         assert result is not None, "Required property 'display_name' is missing"
@@ -415,7 +415,7 @@ class EmailDomainConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def domain(self) -> builtins.str:
         '''Mail domain to send from.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#domain EmailDomain#domain}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#domain EmailDomain#domain}
         '''
         result = self._values.get("domain")
         assert result is not None, "Required property 'domain' is missing"
@@ -425,7 +425,7 @@ class EmailDomainConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_name(self) -> builtins.str:
         '''User name of the email domain.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#user_name EmailDomain#user_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#user_name EmailDomain#user_name}
         '''
         result = self._values.get("user_name")
         assert result is not None, "Required property 'user_name' is missing"
@@ -433,7 +433,7 @@ class EmailDomainConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain#id EmailDomain#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/email_domain#id EmailDomain#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

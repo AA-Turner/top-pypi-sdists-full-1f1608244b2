@@ -82,8 +82,12 @@ class ImportExportDRFMixin(ImportExportMixin):
     def get_resource_serializer_class(self):
         resource_kwargs = {}
         with suppress(AttributeError, AssertionError):
+            # we have to mocky patch the action to be "list" because sometime we differentiate the serializer to use
+            previous_action = getattr(self, "action", "list")
+            setattr(self, "action", "list")
             serializer_class = self.get_serializer_class()
             resource_kwargs["serializer_class_path"] = serializer_class.__module__ + "." + serializer_class.__name__
+            setattr(self, "action", previous_action)
         return resource_kwargs
 
     def _get_data_for_export(self, request, queryset, *args, **kwargs) -> tablib.Dataset:

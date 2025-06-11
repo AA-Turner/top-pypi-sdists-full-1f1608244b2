@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import json
+from contextlib import contextmanager
 from dataclasses import dataclass
 from textwrap import dedent
 from typing import Any
 
 import pytest
 import yaml
+
+from schemathesis.checks import CHECKS
 
 
 @dataclass
@@ -65,11 +68,32 @@ class Context:
         raise ValueError(f"Unknown format: {format}")
 
     def write_pymodule(self, content: str, *, filename: str = "module"):
-        content = f"import schemathesis\n{dedent(content)}"
+        content = f"import schemathesis\nnote=print\n{dedent(content)}"
         module = self._testdir.makepyfile(**{filename: content})
         pkgroot = module.dirpath()
         module._ensuresyspath(True, pkgroot)
         return module.purebasename
+
+    @contextmanager
+    def check(self, content: str):
+        with self.restore_checks():
+            yield self.write_pymodule(content)
+
+    @contextmanager
+    def restore_checks(self):
+        names = set(CHECKS.get_all_names())
+        try:
+            yield
+        finally:
+            new_names = set(CHECKS.get_all_names()) - names
+            for name in new_names:
+                CHECKS.unregister(name)
+
+
+@pytest.fixture
+def restore_checks(ctx):
+    with ctx.restore_checks():
+        yield
 
 
 @pytest.fixture

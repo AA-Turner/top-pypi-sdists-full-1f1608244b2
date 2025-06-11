@@ -1,8 +1,10 @@
 import logging
+import sys
 from typing import Optional
 
 import click
 
+from biolib._internal.errors import AuthenticationError
 from biolib._internal.push_application import push_application
 from biolib.biolib_logging import logger, logger_no_user_data
 
@@ -34,11 +36,15 @@ def push(uri, path: str, copy_images_from_version: Optional[str], dev: bool, pre
     elif pre_release:
         set_as_active = False
         set_as_published = True
-    push_application(
-        app_path=path,
-        app_uri=uri,
-        app_version_to_copy_images_from=copy_images_from_version,
-        set_as_active=set_as_active,
-        set_as_published=set_as_published,
-        dry_run=dry_run,
-    )
+    try:
+        push_application(
+            app_path=path,
+            app_uri=uri,
+            app_version_to_copy_images_from=copy_images_from_version,
+            set_as_active=set_as_active,
+            set_as_published=set_as_published,
+            dry_run=dry_run,
+        )
+    except AuthenticationError as error:
+        print(error.message, file=sys.stderr)
+        exit(1)

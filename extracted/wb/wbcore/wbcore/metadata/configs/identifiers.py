@@ -7,7 +7,9 @@ class IdentifierViewConfig(WBCoreViewConfig):
 
     # TODO: This does not yet work on the frontend, but should
     def get_metadata(self) -> str | None:
-        if identifier := getattr(self.view, "IDENTIFIER", None):
+        if (get_identifier := getattr(self.view, "get_identifier", None)) and callable(get_identifier):
+            return self.view.get_identifier(self.request)
+        elif identifier := getattr(self.view, "IDENTIFIER", None):
             return identifier
 
         content_type = self.view.get_content_type()  # type: ignore

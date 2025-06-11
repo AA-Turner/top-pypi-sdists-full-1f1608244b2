@@ -1,7 +1,7 @@
 r'''
 # `data_google_pubsub_subscription`
 
-Refer to the Terraform Registry for docs: [`data_google_pubsub_subscription`](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription).
+Refer to the Terraform Registry for docs: [`data_google_pubsub_subscription`](https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataGooglePubsubSubscription(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.dataGooglePubsubSubscription.DataGooglePubsubSubscription",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription google_pubsub_subscription}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription google_pubsub_subscription}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class DataGooglePubsubSubscription(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription google_pubsub_subscription} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription google_pubsub_subscription} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the subscription. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#name DataGooglePubsubSubscription#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#id DataGooglePubsubSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#project DataGooglePubsubSubscription#project}.
+        :param name: Name of the subscription. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#name DataGooglePubsubSubscription#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#id DataGooglePubsubSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#project DataGooglePubsubSubscription#project}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class DataGooglePubsubSubscription(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataGooglePubsubSubscription to import.
-        :param import_from_id: The id of the existing DataGooglePubsubSubscription that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataGooglePubsubSubscription that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataGooglePubsubSubscription to import is found.
         '''
         if __debug__:
@@ -197,6 +197,11 @@ class DataGooglePubsubSubscription(
     @jsii.member(jsii_name="messageRetentionDuration")
     def message_retention_duration(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "messageRetentionDuration"))
+
+    @builtins.property
+    @jsii.member(jsii_name="messageTransforms")
+    def message_transforms(self) -> "DataGooglePubsubSubscriptionMessageTransformsList":
+        return typing.cast("DataGooglePubsubSubscriptionMessageTransformsList", jsii.get(self, "messageTransforms"))
 
     @builtins.property
     @jsii.member(jsii_name="pushConfig")
@@ -829,9 +834,9 @@ class DataGooglePubsubSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArguments)
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the subscription. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#name DataGooglePubsubSubscription#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#id DataGooglePubsubSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#project DataGooglePubsubSubscription#project}.
+        :param name: Name of the subscription. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#name DataGooglePubsubSubscription#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#id DataGooglePubsubSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#project DataGooglePubsubSubscription#project}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -937,7 +942,7 @@ class DataGooglePubsubSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArguments)
     def name(self) -> builtins.str:
         '''Name of the subscription.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#name DataGooglePubsubSubscription#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#name DataGooglePubsubSubscription#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -945,7 +950,7 @@ class DataGooglePubsubSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArguments)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#id DataGooglePubsubSubscription#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#id DataGooglePubsubSubscription#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -955,7 +960,7 @@ class DataGooglePubsubSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArguments)
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/pubsub_subscription#project DataGooglePubsubSubscription#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/pubsub_subscription#project DataGooglePubsubSubscription#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1264,6 +1269,310 @@ class DataGooglePubsubSubscriptionExpirationPolicyOutputReference(
     ) -> None:
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b7912c8611959a4be6cffd5b33751965d2da9fb7b489608a7e2255932ad79388)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGooglePubsubSubscription.DataGooglePubsubSubscriptionMessageTransforms",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGooglePubsubSubscriptionMessageTransforms:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGooglePubsubSubscriptionMessageTransforms(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGooglePubsubSubscription.DataGooglePubsubSubscriptionMessageTransformsJavascriptUdf",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGooglePubsubSubscriptionMessageTransformsJavascriptUdf:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGooglePubsubSubscriptionMessageTransformsJavascriptUdf(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGooglePubsubSubscription.DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f7b0693993182417a52658d18d1a58196253cf3d7919b0fc8743b42d1c959064)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__252dc6e90a9b112985eb9b9dfe285140fe80807bfa79c6c1d659e5f23fb46765)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9c1e9abe411513794e2b9606f841d3b6be1f247c70835833c6d86f93fb5a9a88)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__452740064e5aa0a2ed5be5dd7b5d982037d500a8234a276b6d1b5266ae8cda6e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d750589a60104b54cc6ba88e68054fc5f9dfdea8d04ac4eaac4bbb651926f4ae)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGooglePubsubSubscription.DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a574563a832c5665f9630ce23e3b9ec7433fb30191836f0d382aeacf32edd331)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="code")
+    def code(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "code"))
+
+    @builtins.property
+    @jsii.member(jsii_name="functionName")
+    def function_name(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "functionName"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGooglePubsubSubscriptionMessageTransformsJavascriptUdf]:
+        return typing.cast(typing.Optional[DataGooglePubsubSubscriptionMessageTransformsJavascriptUdf], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGooglePubsubSubscriptionMessageTransformsJavascriptUdf],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__374fb1e5405c771ad143577d986fac9cec45a4ee7c71f10b912e837714a1e445)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGooglePubsubSubscriptionMessageTransformsList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGooglePubsubSubscription.DataGooglePubsubSubscriptionMessageTransformsList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__454a892b391eb741e7ad2237c9363d32e8023da9bfc520ca68240ba214f676c7)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGooglePubsubSubscriptionMessageTransformsOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5379277964772d1e71510c49413ac82362072cfc4fee72f93b46db5189fd9d29)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGooglePubsubSubscriptionMessageTransformsOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__dd5b50e6889474f464dc532813be55aa8a86212cc8df945aa9dd43eb20f0ba3d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__549c18a73e03f013b12dea4b429dbb6f77539113b8a36298df98627c0cf6f1d0)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__27f6ed7a24538aa8cb9a4646c8e699937551198f7df75d161329f2367c0855ed)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGooglePubsubSubscriptionMessageTransformsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGooglePubsubSubscription.DataGooglePubsubSubscriptionMessageTransformsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3256e20600179cdfd8e6a3bfa97970c3d12bee769202d27edd162fc7c26e34ff)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="disabled")
+    def disabled(self) -> _cdktf_9a9027ec.IResolvable:
+        return typing.cast(_cdktf_9a9027ec.IResolvable, jsii.get(self, "disabled"))
+
+    @builtins.property
+    @jsii.member(jsii_name="javascriptUdf")
+    def javascript_udf(
+        self,
+    ) -> DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfList:
+        return typing.cast(DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfList, jsii.get(self, "javascriptUdf"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGooglePubsubSubscriptionMessageTransforms]:
+        return typing.cast(typing.Optional[DataGooglePubsubSubscriptionMessageTransforms], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGooglePubsubSubscriptionMessageTransforms],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__77fa76ce164c48c9f5441ee11fbff364717dda3668cbe7b123654c5d4bcf8098)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
@@ -1893,6 +2202,12 @@ __all__ = [
     "DataGooglePubsubSubscriptionExpirationPolicy",
     "DataGooglePubsubSubscriptionExpirationPolicyList",
     "DataGooglePubsubSubscriptionExpirationPolicyOutputReference",
+    "DataGooglePubsubSubscriptionMessageTransforms",
+    "DataGooglePubsubSubscriptionMessageTransformsJavascriptUdf",
+    "DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfList",
+    "DataGooglePubsubSubscriptionMessageTransformsJavascriptUdfOutputReference",
+    "DataGooglePubsubSubscriptionMessageTransformsList",
+    "DataGooglePubsubSubscriptionMessageTransformsOutputReference",
     "DataGooglePubsubSubscriptionPushConfig",
     "DataGooglePubsubSubscriptionPushConfigList",
     "DataGooglePubsubSubscriptionPushConfigNoWrapper",
@@ -2201,6 +2516,100 @@ def _typecheckingstub__333dd877de3b04a5e1c79e2e10535d0f4b102042f168c728a5cf13ad1
 
 def _typecheckingstub__b7912c8611959a4be6cffd5b33751965d2da9fb7b489608a7e2255932ad79388(
     value: typing.Optional[DataGooglePubsubSubscriptionExpirationPolicy],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f7b0693993182417a52658d18d1a58196253cf3d7919b0fc8743b42d1c959064(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__252dc6e90a9b112985eb9b9dfe285140fe80807bfa79c6c1d659e5f23fb46765(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9c1e9abe411513794e2b9606f841d3b6be1f247c70835833c6d86f93fb5a9a88(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__452740064e5aa0a2ed5be5dd7b5d982037d500a8234a276b6d1b5266ae8cda6e(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d750589a60104b54cc6ba88e68054fc5f9dfdea8d04ac4eaac4bbb651926f4ae(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a574563a832c5665f9630ce23e3b9ec7433fb30191836f0d382aeacf32edd331(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__374fb1e5405c771ad143577d986fac9cec45a4ee7c71f10b912e837714a1e445(
+    value: typing.Optional[DataGooglePubsubSubscriptionMessageTransformsJavascriptUdf],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__454a892b391eb741e7ad2237c9363d32e8023da9bfc520ca68240ba214f676c7(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__5379277964772d1e71510c49413ac82362072cfc4fee72f93b46db5189fd9d29(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__dd5b50e6889474f464dc532813be55aa8a86212cc8df945aa9dd43eb20f0ba3d(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__549c18a73e03f013b12dea4b429dbb6f77539113b8a36298df98627c0cf6f1d0(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__27f6ed7a24538aa8cb9a4646c8e699937551198f7df75d161329f2367c0855ed(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3256e20600179cdfd8e6a3bfa97970c3d12bee769202d27edd162fc7c26e34ff(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__77fa76ce164c48c9f5441ee11fbff364717dda3668cbe7b123654c5d4bcf8098(
+    value: typing.Optional[DataGooglePubsubSubscriptionMessageTransforms],
 ) -> None:
     """Type checking stubs"""
     pass

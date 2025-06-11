@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "pepperize.cdk-vpc",
-    "version": "0.0.1159",
+    "version": "0.0.1161",
     "description": "Utility constructs for tagging subnets or creating a cheaper vpc.",
     "license": "MIT",
     "url": "https://github.com/pepperize/cdk-vpc.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "pepperize_cdk_vpc._jsii": [
-            "cdk-vpc@0.0.1159.jsii.tgz"
+            "cdk-vpc@0.0.1161.jsii.tgz"
         ],
         "pepperize_cdk_vpc": [
             "py.typed"

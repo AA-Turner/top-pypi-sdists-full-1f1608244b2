@@ -81,7 +81,7 @@ def tree_div(tree_x: Any, tree_y: Any) -> Any:
   return jax.tree.map(operator.truediv, tree_x, tree_y)
 
 
-def tree_scalar_mul(
+def tree_scale(
     scalar: Union[float, jax.Array],
     tree: Any,
 ) -> Any:
@@ -99,7 +99,7 @@ def tree_scalar_mul(
   return jax.tree.map(lambda x: scalar * x, tree)
 
 
-def tree_add_scalar_mul(
+def tree_add_scale(
     tree_x: Any, scalar: Union[float, jax.Array], tree_y: Any
 ) -> Any:
   r"""Add two trees, where the second tree is scaled by a scalar.
@@ -183,52 +183,76 @@ def tree_max(tree: Any) -> chex.Numeric:
   return jax.tree.reduce(jnp.maximum, maxes, initializer=jnp.array(-jnp.inf))
 
 
+def tree_conj(tree: Any) -> Any:
+  """Compute the conjugate of a pytree.
+
+  Args:
+    tree: pytree.
+
+  Returns:
+    a pytree with the same structure as ``tree``.
+  """
+  return jax.tree.map(jnp.conj, tree)
+
+
+def tree_real(tree: Any) -> Any:
+  """Compute the real part of a pytree.
+
+  Args:
+    tree: pytree.
+
+  Returns:
+    a pytree with the same structure as ``tree``.
+  """
+  return jax.tree.map(jnp.real, tree)
+
+
 def _square(leaf):
   return jnp.square(leaf.real) + jnp.square(leaf.imag)
 
 
-def tree_l2_norm(tree: Any, squared: bool = False) -> chex.Numeric:
-  """Compute the l2 norm of a pytree.
+def tree_norm(tree: Any,
+              ord: int | str | float | None = None,  # pylint: disable=redefined-builtin
+              squared: bool = False) -> jax.Array:
+  """Compute the vector norm of the given ord of a pytree.
 
   Args:
     tree: pytree.
+    ord: the order of the vector norm to compute from (None, 1, 2, inf).
     squared: whether the norm should be returned squared or not.
 
   Returns:
     a scalar value.
   """
-  squared_tree = jax.tree.map(_square, tree)
-  sqnorm = tree_sum(squared_tree)
-  if squared:
-    return sqnorm
+  if ord is None or ord == 2:
+    squared_tree = jax.tree.map(_square, tree)
+    sqnorm = tree_sum(squared_tree)
+    return jnp.array(sqnorm if squared else jnp.sqrt(sqnorm))
+  elif ord == 1:
+    ret = tree_sum(jax.tree.map(jnp.abs, tree))
+  elif ord == jnp.inf or ord in ("inf", "infinity"):
+    ret = tree_max(jax.tree.map(jnp.abs, tree))
   else:
-    return jnp.sqrt(sqnorm)
+    raise ValueError(f"Unsupported ord: {ord}")
+  return jnp.array(ret if not squared else _square(ret))
 
 
-def tree_l1_norm(tree: Any) -> chex.Numeric:
-  """Compute the l1 norm of a pytree.
-
-  Args:
-    tree: pytree.
-
-  Returns:
-    a scalar value.
-  """
-  abs_tree = jax.tree.map(jnp.abs, tree)
-  return tree_sum(abs_tree)
-
-
-def tree_linf_norm(tree: Any) -> chex.Numeric:
-  """Compute the l-infinity norm of a pytree.
+def tree_batch_shape(
+    tree: Any,
+    shape: tuple[int, ...] = (),
+):
+  """Add leading batch dimensions to each leaf of a pytree.
 
   Args:
-    tree: pytree.
+    tree: a pytree.
+    shape: a shape indicating what leading batch dimensions to add.
 
   Returns:
-    a scalar value.
+    a pytree with the leading batch dimensions added.
   """
-  abs_tree = jax.tree.map(jnp.abs, tree)
-  return tree_max(abs_tree)
+  return jax.tree.map(
+      lambda x: jnp.broadcast_to(x, (*shape, *jnp.shape(x))), tree
+  )
 
 
 def tree_zeros_like(
@@ -283,18 +307,20 @@ def tree_full_like(
 
 def tree_clip(
     tree: Any,
-    min_value: Optional[jax.typing.ArrayLike],
-    max_value: Optional[jax.typing.ArrayLike],
+    min_value: Optional[jax.typing.ArrayLike] = None,
+    max_value: Optional[jax.typing.ArrayLike] = None,
 ) -> Any:
   """Creates an identical tree where all tensors are clipped to `[min, max]`.
 
   Args:
     tree: pytree.
-    min_value: min value to clip all tensors to.
-    max_value: max value to clip all tensors to.
+    min_value: optional minimal value to clip all tensors to. If ``None``
+      (default) then result will not be clipped to any minimum value.
+    max_value: optional maximal value to clip all tensors to. If ``None``
+      (default) then result will not be clipped to any maximum value.
 
   Returns:
-    an tree with the same structure as ``tree``.
+    a tree with the same structure as ``tree``.
 
   .. versionadded:: 0.2.3
   """
@@ -330,13 +356,13 @@ def tree_update_moment_per_elem_norm(updates, moments, decay, order):
 
   def orderth_norm(g):
     if jnp.isrealobj(g):
-      return g**order
-    else:
-      half_order = order / 2
-      # JAX generates different HLO for int and float `order`
-      if half_order.is_integer():
-        half_order = int(half_order)
-      return numerics.abs_sq(g) ** half_order
+      return g ** order
+
+    half_order = order / 2
+    # JAX generates different HLO for int and float `order`
+    if half_order.is_integer():
+      half_order = int(half_order)
+    return numerics.abs_sq(g) ** half_order
 
   return jax.tree.map(
       lambda g, t: (

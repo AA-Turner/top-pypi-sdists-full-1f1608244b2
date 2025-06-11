@@ -14,33 +14,38 @@
 # ==============================================================================
 """Differential Privacy utilities."""
 
-from typing import Any, NamedTuple, Optional
+from typing import NamedTuple, Optional
+
+import warnings
 
 import jax
 from optax._src import base
 from optax._src import clipping
 from optax._src import combine
 from optax._src import transform
+from optax._src import utils
 
 
 class DifferentiallyPrivateAggregateState(NamedTuple):
   """State containing PRNGKey for `differentially_private_aggregate`."""
 
-  # TODO(optax-dev): rng_key used to be annotated as `jnp.array` but that is
-  # not a valid annotation (it's a function and secretely resolved to `Any`).
-  # We should add back typing.
-  rng_key: Any
+  rng_key: jax.Array
 
 
 def differentially_private_aggregate(
-    l2_norm_clip: float, noise_multiplier: float, seed: int
+    l2_norm_clip: float,
+    noise_multiplier: float,
+    key: jax.Array | int | None = None,
+    *,
+    seed: int | None = None,  # deprecated
 ) -> base.GradientTransformation:
   """Aggregates gradients based on the DPSGD algorithm.
 
   Args:
     l2_norm_clip: maximum L2 norm of the per-example gradients.
     noise_multiplier: ratio of standard deviation to the clipping norm.
-    seed: initial seed used for the jax.random.PRNGKey
+    key: random generator key for noise generation.
+    seed: deprecated, use key instead.
 
   Returns:
     A :class:`optax.GradientTransformation`.
@@ -55,12 +60,32 @@ def differentially_private_aggregate(
     function expects per-example gradients as input (which are easy to obtain in
     JAX using `jax.vmap`). It can still be composed with other transformations
     as long as it is the first in the chain.
+
+  .. warning::
+    Generic gradient aggregation tools like :class:`optax.MultiSteps` or
+    :func:`optax.apply_every` won't work correctly with this transformation
+    since the whole point of this transformation is to aggregate gradients in a
+    specific way.
   """
+
+  if seed is not None:
+    warnings.warn(
+        '"seed" is deprecated and will be removed in optax 0.3.0, use "key".',
+        DeprecationWarning,
+    )
+    if key is not None:
+      raise ValueError('Only one of seed or key can be specified.')
+    key = jax.random.key(seed)
+  if key is None:
+    warnings.warn('Specifying a key will be required in optax 0.3.0.')
+    key = jax.random.key(0)
+  key = utils.canonicalize_key(key)
+
   noise_std = l2_norm_clip * noise_multiplier
 
   def init_fn(params):
     del params
-    return DifferentiallyPrivateAggregateState(rng_key=jax.random.PRNGKey(seed))
+    return DifferentiallyPrivateAggregateState(rng_key=key)
 
   def update_fn(updates, state, params=None):
     del params
@@ -116,6 +141,12 @@ def dpsgd(
     This :class:`optax.GradientTransformation` expects input updates to have a
     batch dimension on the 0th axis. That is, this function expects per-example
     gradients as input (which are easy to obtain in JAX using `jax.vmap`).
+
+  .. warning::
+    Generic gradient aggregation tools like :class:`optax.MultiSteps` or
+    :func:`optax.apply_every` won't work correctly with this transformation
+    since the whole point of this transformation is to aggregate gradients in a
+    specific way.
   """
   return combine.chain(
       differentially_private_aggregate(

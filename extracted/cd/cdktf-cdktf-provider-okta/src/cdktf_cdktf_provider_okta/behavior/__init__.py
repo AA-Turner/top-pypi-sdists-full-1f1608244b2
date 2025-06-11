@@ -1,7 +1,7 @@
 r'''
 # `okta_behavior`
 
-Refer to the Terraform Registry for docs: [`okta_behavior`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior).
+Refer to the Terraform Registry for docs: [`okta_behavior`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Behavior(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.behavior.Behavior",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior okta_behavior}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior okta_behavior}.'''
 
     def __init__(
         self,
@@ -67,18 +67,18 @@ class Behavior(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior okta_behavior} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior okta_behavior} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#name Behavior#name}
-        :param type: Type of the behavior. Can be set to ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE``, ``ANOMALOUS_IP`` or ``VELOCITY``. Resource will be recreated when the type changes.e Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#type Behavior#type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#id Behavior#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param location_granularity_type: Determines the method and level of detail used to evaluate the behavior. Required for ``ANOMALOUS_LOCATION`` behavior type. Can be set to ``LAT_LONG``, ``CITY``, ``COUNTRY`` or ``SUBDIVISION``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#location_granularity_type Behavior#location_granularity_type}
-        :param number_of_authentications: The number of recent authentications used to evaluate the behavior. Required for ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE`` and ``ANOMALOUS_IP`` behavior types. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#number_of_authentications Behavior#number_of_authentications}
-        :param radius_from_location: Radius from location (in kilometers). Should be at least 5. Required when ``location_granularity_type`` is set to ``LAT_LONG``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#radius_from_location Behavior#radius_from_location}
-        :param status: Behavior status: ACTIVE or INACTIVE. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#status Behavior#status}
-        :param velocity: Velocity (in kilometers per hour). Should be at least 1. Required for ``VELOCITY`` behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#velocity Behavior#velocity}
+        :param name: Name of the behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#name Behavior#name}
+        :param type: Type of the behavior. Can be set to ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE``, ``ANOMALOUS_IP`` or ``VELOCITY``. Resource will be recreated when the type changes.e Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#type Behavior#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#id Behavior#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param location_granularity_type: Determines the method and level of detail used to evaluate the behavior. Required for ``ANOMALOUS_LOCATION`` behavior type. Can be set to ``LAT_LONG``, ``CITY``, ``COUNTRY`` or ``SUBDIVISION``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#location_granularity_type Behavior#location_granularity_type}
+        :param number_of_authentications: The number of recent authentications used to evaluate the behavior. Required for ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE`` and ``ANOMALOUS_IP`` behavior types. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#number_of_authentications Behavior#number_of_authentications}
+        :param radius_from_location: Radius from location (in kilometers). Should be at least 5. Required when ``location_granularity_type`` is set to ``LAT_LONG``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#radius_from_location Behavior#radius_from_location}
+        :param status: Behavior status: ACTIVE or INACTIVE. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#status Behavior#status}
+        :param velocity: Velocity (in kilometers per hour). Should be at least 1. Required for ``VELOCITY`` behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#velocity Behavior#velocity}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -124,7 +124,7 @@ class Behavior(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Behavior to import.
-        :param import_from_id: The id of the existing Behavior that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Behavior that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Behavior to import is found.
         '''
         if __debug__:
@@ -358,14 +358,14 @@ class BehaviorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#name Behavior#name}
-        :param type: Type of the behavior. Can be set to ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE``, ``ANOMALOUS_IP`` or ``VELOCITY``. Resource will be recreated when the type changes.e Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#type Behavior#type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#id Behavior#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param location_granularity_type: Determines the method and level of detail used to evaluate the behavior. Required for ``ANOMALOUS_LOCATION`` behavior type. Can be set to ``LAT_LONG``, ``CITY``, ``COUNTRY`` or ``SUBDIVISION``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#location_granularity_type Behavior#location_granularity_type}
-        :param number_of_authentications: The number of recent authentications used to evaluate the behavior. Required for ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE`` and ``ANOMALOUS_IP`` behavior types. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#number_of_authentications Behavior#number_of_authentications}
-        :param radius_from_location: Radius from location (in kilometers). Should be at least 5. Required when ``location_granularity_type`` is set to ``LAT_LONG``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#radius_from_location Behavior#radius_from_location}
-        :param status: Behavior status: ACTIVE or INACTIVE. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#status Behavior#status}
-        :param velocity: Velocity (in kilometers per hour). Should be at least 1. Required for ``VELOCITY`` behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#velocity Behavior#velocity}
+        :param name: Name of the behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#name Behavior#name}
+        :param type: Type of the behavior. Can be set to ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE``, ``ANOMALOUS_IP`` or ``VELOCITY``. Resource will be recreated when the type changes.e Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#type Behavior#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#id Behavior#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param location_granularity_type: Determines the method and level of detail used to evaluate the behavior. Required for ``ANOMALOUS_LOCATION`` behavior type. Can be set to ``LAT_LONG``, ``CITY``, ``COUNTRY`` or ``SUBDIVISION``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#location_granularity_type Behavior#location_granularity_type}
+        :param number_of_authentications: The number of recent authentications used to evaluate the behavior. Required for ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE`` and ``ANOMALOUS_IP`` behavior types. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#number_of_authentications Behavior#number_of_authentications}
+        :param radius_from_location: Radius from location (in kilometers). Should be at least 5. Required when ``location_granularity_type`` is set to ``LAT_LONG``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#radius_from_location Behavior#radius_from_location}
+        :param status: Behavior status: ACTIVE or INACTIVE. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#status Behavior#status}
+        :param velocity: Velocity (in kilometers per hour). Should be at least 1. Required for ``VELOCITY`` behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#velocity Behavior#velocity}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -485,7 +485,7 @@ class BehaviorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the behavior.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#name Behavior#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#name Behavior#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -497,7 +497,7 @@ class BehaviorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Can be set to ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE``, ``ANOMALOUS_IP`` or ``VELOCITY``. Resource will be recreated when the type changes.e
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#type Behavior#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#type Behavior#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -505,7 +505,7 @@ class BehaviorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#id Behavior#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#id Behavior#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -519,7 +519,7 @@ class BehaviorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Required for ``ANOMALOUS_LOCATION`` behavior type. Can be set to ``LAT_LONG``, ``CITY``, ``COUNTRY`` or ``SUBDIVISION``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#location_granularity_type Behavior#location_granularity_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#location_granularity_type Behavior#location_granularity_type}
         '''
         result = self._values.get("location_granularity_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -528,7 +528,7 @@ class BehaviorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def number_of_authentications(self) -> typing.Optional[jsii.Number]:
         '''The number of recent authentications used to evaluate the behavior. Required for ``ANOMALOUS_LOCATION``, ``ANOMALOUS_DEVICE`` and ``ANOMALOUS_IP`` behavior types.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#number_of_authentications Behavior#number_of_authentications}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#number_of_authentications Behavior#number_of_authentications}
         '''
         result = self._values.get("number_of_authentications")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -537,7 +537,7 @@ class BehaviorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def radius_from_location(self) -> typing.Optional[jsii.Number]:
         '''Radius from location (in kilometers). Should be at least 5. Required when ``location_granularity_type`` is set to ``LAT_LONG``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#radius_from_location Behavior#radius_from_location}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#radius_from_location Behavior#radius_from_location}
         '''
         result = self._values.get("radius_from_location")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -546,7 +546,7 @@ class BehaviorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Behavior status: ACTIVE or INACTIVE. Default: ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#status Behavior#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#status Behavior#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -555,7 +555,7 @@ class BehaviorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def velocity(self) -> typing.Optional[jsii.Number]:
         '''Velocity (in kilometers per hour). Should be at least 1. Required for ``VELOCITY`` behavior.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/behavior#velocity Behavior#velocity}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/behavior#velocity Behavior#velocity}
         '''
         result = self._values.get("velocity")
         return typing.cast(typing.Optional[jsii.Number], result)

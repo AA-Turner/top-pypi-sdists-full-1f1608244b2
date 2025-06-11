@@ -942,16 +942,19 @@ class MdiSubWindow(QtWidgets.QMdiSubWindow):
 
 class MdiAreaWidget(MdiAreaMixin, QtWidgets.QMdiArea):
     add_window_request = QtCore.Signal(list)
+    create_window_request = QtCore.Signal()
     open_files_request = QtCore.Signal(object)
+    search_request = QtCore.Signal()
 
     def __init__(self, comparison=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.setAcceptDrops(True)
-        self.placeholder_text = (
-            "Drag and drop channels, or select channels and press the <Create window> button, to create new windows"
-        )
         self.comparison = comparison
+
+        self.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.open_menu)
+
         self.show()
 
     def cascadeSubWindows(self):
@@ -1029,6 +1032,59 @@ class MdiAreaWidget(MdiAreaMixin, QtWidgets.QMdiArea):
                 except:
                     print(format_exc())
                     event.ignore()
+
+    def open_menu(self, position=None):
+        viewport = self.viewport()
+        if not self.childAt(position) is viewport:
+            return
+
+        self.context_menu = menu = QtWidgets.QMenu()
+        menu.addAction(f"{len(self.subWindowList())} existing windows")
+        menu.addSeparator()
+        action = QtGui.QAction(QtGui.QIcon(":/search.png"), "Search", menu)
+        action.setShortcut(QtGui.QKeySequence("Ctrl+F"))
+        menu.addAction(action)
+        menu.addSeparator()
+        menu.addAction(QtGui.QIcon(":/plus.png"), "Add new window")
+
+        menu.addSeparator()
+        action = QtGui.QAction("Cascade sub-windows", menu)
+        action.setShortcut(QtGui.QKeySequence("Shift+C"))
+        menu.addAction(action)
+
+        action = QtGui.QAction("Tile sub-windows in a grid", menu)
+        action.setShortcut(QtGui.QKeySequence("Shift+T"))
+        menu.addAction(action)
+
+        action = QtGui.QAction("Tile sub-windows vertically", menu)
+        action.setShortcut(QtGui.QKeySequence("Shift+V"))
+        menu.addAction(action)
+
+        action = QtGui.QAction("Tile sub-windows horizontally", menu)
+        action.setShortcut(QtGui.QKeySequence("Shift+H"))
+        menu.addAction(action)
+
+        action = menu.exec(viewport.mapToGlobal(position))
+
+        if action is None:
+            return
+
+        action_text = action.text()
+        match action_text:
+            case "Search":
+                self.search_request.emit()
+            case "Add new window":
+                self.create_window_request.emit()
+            case "Cascade sub-windows":
+                self.cascadeSubWindows()
+            case "Tile sub-windows in a grid":
+                self.tileSubWindows()
+            case "Tile sub-windows vertically":
+                self.tile_vertically()
+            case "Tile sub-windows horizontally":
+                self.tile_horizontally()
+            case _:
+                pass
 
     def tile_horizontally(self):
         sub_windows = self.subWindowList()
@@ -1111,21 +1167,6 @@ class MdiAreaWidget(MdiAreaMixin, QtWidgets.QMdiArea):
             if isinstance(wid, Plot):
                 wid._inhibit_x_range_changed_signal = False
             window.blockSignals(False)
-
-    def paintEvent(self, event):
-        super().paintEvent(event)
-        sub_windows = self.subWindowList()
-        if not sub_windows and self.placeholder_text:
-            painter = QtGui.QPainter(self.viewport())
-            painter.save()
-            col = self.palette().placeholderText().color()
-            painter.setPen(col)
-            fm = self.fontMetrics()
-            elided_text = fm.elidedText(
-                self.placeholder_text, QtCore.Qt.TextElideMode.ElideRight, self.viewport().width()
-            )
-            painter.drawText(self.viewport().rect(), QtCore.Qt.AlignmentFlag.AlignCenter, elided_text)
-            painter.restore()
 
 
 class WithMDIArea:

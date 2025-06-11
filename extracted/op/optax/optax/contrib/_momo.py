@@ -28,7 +28,7 @@ from jax import lax
 import jax.numpy as jnp
 from optax._src import base
 from optax._src import numerics
-import optax.tree_utils as otu
+import optax.tree
 
 
 class MomoState(NamedTuple):
@@ -107,8 +107,8 @@ def momo(
     # Define state parameters with the lowest dtype of the parameters to avoid
     # dtype promotion of parameters resulting in a dtype mismatch between
     # parameters and updates.
-    params_dtype = otu.tree_dtype(params, 'lowest')
-    exp_avg = otu.tree_zeros_like(params)
+    params_dtype = optax.tree.dtype(params, 'lowest')
+    exp_avg = optax.tree.zeros_like(params)
     barf = jnp.zeros([], dtype=params_dtype)
     gamma = jnp.zeros([], dtype=params_dtype)
     init_lb = jnp.array(lower_bound, dtype=params_dtype)
@@ -123,7 +123,8 @@ def momo(
       value: Optional[jax.Array] = None,
       **extra_args,
   ) -> tuple[base.Updates, MomoState]:
-    del extra_args
+    del extra_args  # complies with signature of GradientTransformationExtraArgs
+                    # but ignores the extra_args
     if params is None:
       raise ValueError(base.NO_PARAMS_MSG)
     if value is None:
@@ -132,13 +133,13 @@ def momo(
     count = state.count
     # initialize at first gradient, and loss
     bt = jnp.where(count == 0, 0.0, beta)
-    barf = bt * state.barf + (1 - bt) * value
+    barf = bt * state.barf + (1 - bt) * value.astype(state.barf.dtype)
     exp_avg = jax.tree.map(
         lambda ea, g: bt * ea + (1 - bt) * g, state.exp_avg, updates
     )
-    gamma = bt * state.gamma + (1 - bt) * otu.tree_vdot(updates, params)
-    exp_avg_norm = otu.tree_l2_norm(exp_avg, squared=True)
-    iprod = otu.tree_vdot(exp_avg, params)
+    gamma = bt * state.gamma + (1 - bt) * optax.tree.vdot(updates, params)
+    exp_avg_norm = optax.tree.norm(exp_avg, squared=True)
+    iprod = optax.tree.vdot(exp_avg, params)
     alpha = learning_rate(count) if callable(learning_rate) else learning_rate
     # Reset lower bound
     if adapt_lower_bound:
@@ -264,9 +265,9 @@ def momo_adam(
     # Define state parameters with the lowest dtype of the parameters to avoid
     # dtype promotion of parameters resulting in a dtype mismatch between
     # parameters and updates.
-    params_dtype = otu.tree_dtype(params, 'lowest')
-    exp_avg = otu.tree_zeros_like(params)
-    exp_avg_sq = otu.tree_zeros_like(params)
+    params_dtype = optax.tree.dtype(params, 'lowest')
+    exp_avg = optax.tree.zeros_like(params)
+    exp_avg_sq = optax.tree.zeros_like(params)
     barf = jnp.zeros([], dtype=params_dtype)
     gamma = jnp.zeros([], dtype=params_dtype)
     init_lb = jnp.array(lower_bound, dtype=params_dtype)
@@ -281,7 +282,8 @@ def momo_adam(
       value: Optional[jax.Array],
       **extra_args,
   ) -> tuple[base.Updates, MomoAdamState]:
-    del extra_args
+    del extra_args  # complies with signature of GradientTransformationExtraArgs
+                    # but ignores the extra_args
     if params is None:
       raise ValueError(base.NO_PARAMS_MSG)
     if value is None:
@@ -289,7 +291,7 @@ def momo_adam(
                        Use ``jax.value_and_grad`` for this.""")
     count = state.count
     count_inc = numerics.safe_increment(count)
-    barf = b1 * state.barf + (1 - b1) * value
+    barf = b1 * state.barf + (1 - b1) * value.astype(state.barf.dtype)
     exp_avg = jax.tree.map(
         lambda ea, g: b1 * ea + (1 - b1) * g, state.exp_avg, updates
     )
@@ -303,9 +305,9 @@ def momo_adam(
     exp_avg_weighted = jax.tree.map(
         lambda ea, prec: ea / prec, exp_avg, precond
     )
-    exp_avg_norm = otu.tree_vdot(exp_avg, exp_avg_weighted)
-    gamma = b1 * state.gamma + (1 - b1) * otu.tree_vdot(updates, params)
-    iprod = otu.tree_vdot(exp_avg, params)
+    exp_avg_norm = optax.tree.vdot(exp_avg, exp_avg_weighted)
+    gamma = b1 * state.gamma + (1 - b1) * optax.tree.vdot(updates, params)
+    iprod = optax.tree.vdot(exp_avg, params)
     alpha = learning_rate(count) if callable(learning_rate) else learning_rate
     bc1 = jnp.asarray(1 - b1**count_inc, dtype=barf.dtype)
     # Reset lower bound

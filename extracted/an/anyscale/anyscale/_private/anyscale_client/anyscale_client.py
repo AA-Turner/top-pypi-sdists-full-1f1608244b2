@@ -68,6 +68,7 @@ from anyscale.client.openapi_client.models import (
     ExperimentalWorkspace,
     FineTunedModel,
     FinetunedmodelListResponse,
+    GetOrCreateBuildFromImageUriRequest,
     InternalProductionJob,
     JobQueueSortDirective,
     JobQueuesQuery,
@@ -946,69 +947,15 @@ class AnyscaleClient(AnyscaleClientInterface):
         ray_version: Optional[str] = None,
         name: Optional[str] = None,
     ) -> str:
-        if image_uri.is_cluster_env_image():
-            identifier = image_uri.to_cluster_env_identifier()
-            try:
-                build = self._external_api_client.find_cluster_environment_build_by_identifier(
-                    identifier=identifier
-                ).result
-                if build.status == ClusterEnvironmentBuildStatus.SUCCEEDED:
-                    return build.id
-                else:
-                    raise RuntimeError(
-                        f"Legacy cluster environment build '{identifier}' is not a successful build."
-                    )
-            except ExternalApiException as e:
-                if e.status == 404:
-                    raise RuntimeError(
-                        f"Legacy cluster environment '{identifier}' is not found."
-                    )
-        elif image_uri.is_default_image():
-            # Default image
-            cluster_envs = self._internal_api_client.list_application_templates_api_v2_application_templates_get(
-                image_name_contains=image_uri.image_uri
-            ).results
-            for cluster_env in cluster_envs:
-                if (
-                    cluster_env.latest_build is not None
-                    and cluster_env.latest_build.docker_image_name
-                    == image_uri.image_uri
-                ):
-                    return cluster_env.latest_build.id
-            raise RuntimeError(f"Default image '{image_uri.image_uri}' is not found.")
-
-        # BYOD image
-        cluster_env_name = name if name else image_uri.to_cluster_env_name()
-        image_uri_str = str(image_uri)
-        cluster_env = self._find_or_create_cluster_env(
-            cluster_env_name,
-            anonymous=not name,
-            image_uri=image_uri_str,
-            registry_login_secret=registry_login_secret,
-            ray_version=ray_version,
-        )
-        for build in self.list_cluster_env_builds(cluster_env.id):
-            if (
-                # NOTE: Ignore ray version mismatch for now. We plan to eventually remove ray version from the API model.
-                build.docker_image_name == image_uri_str
-                and build.registry_login_secret == registry_login_secret
-                and build.status == ClusterEnvironmentBuildStatus.SUCCEEDED
-            ):
-                return build.id
-
-        # Still create a new build if the cluster env already exists but the build does not match the image_uri.
-        result = self._external_api_client.create_cluster_environment_build(
-            CreateClusterEnvironmentBuild(
-                # For historical reasons, we have to use docker_image_name instead of image_uri; but it is just a URI to the image.
-                cluster_environment_id=cluster_env.id,
-                docker_image_name=image_uri_str,
+        build = self._internal_api_client.get_or_create_build_from_image_uri_api_v2_builds_get_or_create_build_from_image_uri_post(
+            GetOrCreateBuildFromImageUriRequest(
+                image_uri=str(image_uri),
                 registry_login_secret=registry_login_secret,
-                ray_version=ray_version if ray_version else LATEST_RAY_VERSION,
+                ray_version=ray_version,
+                cluster_env_name=name,
             )
         ).result
-
-        assert result.completed
-        return result.cluster_environment_build_id
+        return build.id
 
     @handle_api_exceptions
     def send_workspace_notification(

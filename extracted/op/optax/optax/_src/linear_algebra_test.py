@@ -22,10 +22,11 @@ from absl.testing import parameterized
 import chex
 import flax.linen as nn
 import jax
+from jax import random
 import jax.numpy as jnp
 import numpy as np
 from optax._src import linear_algebra
-import optax.tree_utils as otu
+import optax.tree
 import scipy.stats
 
 
@@ -46,10 +47,10 @@ class LinearAlgebraTest(chex.TestCase):
 
   def test_global_norm(self):
     flat_updates = jnp.array([2.0, 4.0, 3.0, 5.0], dtype=jnp.float32)
-    nested_updates = dict(
-        a=jnp.array([2.0, 4.0], dtype=jnp.float32),
-        b=jnp.array([3.0, 5.0], dtype=jnp.float32),
-    )
+    nested_updates = {
+        'a': jnp.array([2.0, 4.0], dtype=jnp.float32),
+        'b': jnp.array([3.0, 5.0], dtype=jnp.float32),
+    }
     np.testing.assert_array_equal(
         jnp.sqrt(jnp.sum(flat_updates**2)),
         linear_algebra.global_norm(nested_updates),
@@ -57,7 +58,7 @@ class LinearAlgebraTest(chex.TestCase):
 
   def test_power_iteration_cond_fun(self, dim=6):
     """Test the condition function for power iteration."""
-    matrix = jax.random.normal(jax.random.PRNGKey(0), (dim, dim))
+    matrix = jax.random.normal(jax.random.key(0), (dim, dim))
     matrix = matrix @ matrix.T
     all_eigenval, all_eigenvec = jax.numpy.linalg.eigh(matrix)
     dominant_eigenval = all_eigenval[-1]
@@ -78,8 +79,8 @@ class LinearAlgebraTest(chex.TestCase):
 
   @chex.all_variants
   @parameterized.parameters(
-      dict(implicit=True),
-      dict(implicit=False),
+      {'implicit': True},
+      {'implicit': False},
   )
   def test_power_iteration(self, implicit, dim=6, tol=1e-3, num_iters=100):
     """Test power_iteration by comparing to numpy.linalg.eigh."""
@@ -102,7 +103,7 @@ class LinearAlgebraTest(chex.TestCase):
     power_iteration = self.variant(power_iteration)
 
     # create a random PSD matrix
-    matrix = jax.random.normal(jax.random.PRNGKey(0), (dim, dim))
+    matrix = jax.random.normal(jax.random.key(0), (dim, dim))
     matrix = matrix @ matrix.T
     v0 = jnp.ones((dim,))
 
@@ -148,7 +149,7 @@ class LinearAlgebraTest(chex.TestCase):
   ):
     """Test power_iteration on the Hessian of an MLP."""
     mlp = MLP(num_outputs=output_dim, hidden_sizes=[input_dim, 8, output_dim])
-    key = jax.random.PRNGKey(0)
+    key = jax.random.key(0)
     key_params, key_input, key_output = jax.random.split(key, 3)
     # initialize the mlp
     params = mlp.init(key_params, jnp.ones(input_dim))
@@ -164,7 +165,7 @@ class LinearAlgebraTest(chex.TestCase):
       return jax.jvp(jax.grad(train_obj), (params,), (tangents_,))[1]
 
     eigval_power, eigvec_power = linear_algebra.power_iteration(
-        hessian_vector_product, v0=otu.tree_ones_like(params)
+        hessian_vector_product, v0=optax.tree.ones_like(params)
     )
 
     params_flat, unravel = jax.flatten_util.ravel_pytree(params)
@@ -209,6 +210,40 @@ class LinearAlgebraTest(chex.TestCase):
         # No guarantee of success after e >= 7
         pass
 
+  @parameterized.product(m=[10, 20], n=[11, 21], seed=[0],
+                         dtype=[jnp.float32, jnp.bfloat16], k=[(), (5,)])
+  def test_nnls(self, m, n, k, seed, dtype, tol=0.0):
+    """Test non-negative least squares solver."""
+
+    keys = random.split(random.key(seed), 2)
+    A = random.normal(keys[0], (m, n), dtype=dtype)  # pylint: disable=invalid-name
+    b = random.normal(keys[1], (m, *k), dtype=dtype)
+
+    ys = []
+
+    for iters in range(5):
+
+      x = linear_algebra.nnls(A, b, iters=iters)
+
+      with self.subTest('x has the correct dtype'):
+        assert x.dtype == dtype
+
+      with self.subTest('x has the correct shape'):
+        assert x.shape == A.shape[-1:] + b.shape[1:]
+
+      with self.subTest('x is non-negative'):
+        assert (x >= 0).all()
+
+      y = jnp.square(A @ x - b).sum(0)
+      ys.append(y)
+
+    ys = jnp.stack(ys)
+    diff = jnp.diff(ys, axis=0)
+
+    with self.subTest('objective decreases with more iterations'):
+      assert (diff <= tol).all()
+
 
 if __name__ == '__main__':
+  jax.config.update('jax_threefry_partitionable', False)
   absltest.main()

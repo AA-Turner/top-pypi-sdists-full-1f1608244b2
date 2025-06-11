@@ -1,7 +1,7 @@
 r'''
 # `okta_network_zone`
 
-Refer to the Terraform Registry for docs: [`okta_network_zone`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone).
+Refer to the Terraform Registry for docs: [`okta_network_zone`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class NetworkZone(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.networkZone.NetworkZone",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone okta_network_zone}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone okta_network_zone}.'''
 
     def __init__(
         self,
@@ -72,23 +72,23 @@ class NetworkZone(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone okta_network_zone} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone okta_network_zone} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the Network Zone Resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#name NetworkZone#name}
-        :param type: Type of the Network Zone - can be ``IP``, ``DYNAMIC`` or ``DYNAMIC_V2`` only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#type NetworkZone#type}
-        :param asns: List of asns included. Format of each array value: a string representation of an ASN numeric value. Use with type ``DYNAMIC`` or ``DYNAMIC_V2`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#asns NetworkZone#asns}
-        :param dynamic_locations: Array of locations ISO-3166-1(2) included. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC`` or ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#dynamic_locations NetworkZone#dynamic_locations}
-        :param dynamic_locations_exclude: Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#dynamic_locations_exclude NetworkZone#dynamic_locations_exclude}
-        :param dynamic_proxy_type: Type of proxy being controlled by this dynamic network zone - can be one of ``Any``, ``TorAnonymizer`` or ``NotTorAnonymizer``. Use with type ``DYNAMIC`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#dynamic_proxy_type NetworkZone#dynamic_proxy_type}
-        :param gateways: Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Use with type ``IP``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#gateways NetworkZone#gateways}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#id NetworkZone#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ip_service_categories_exclude: List of ip service excluded. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#ip_service_categories_exclude NetworkZone#ip_service_categories_exclude}
-        :param ip_service_categories_include: List of ip service included. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#ip_service_categories_include NetworkZone#ip_service_categories_include}
-        :param proxies: Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Can not be set if ``usage`` is set to ``BLOCKLIST``. Use with type ``IP``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#proxies NetworkZone#proxies}
-        :param status: Network Status - can either be ``ACTIVE`` or ``INACTIVE`` only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#status NetworkZone#status}
-        :param usage: Usage of the Network Zone - can be either ``POLICY`` or ``BLOCKLIST``. By default, it is ``POLICY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#usage NetworkZone#usage}
+        :param name: Name of the Network Zone Resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#name NetworkZone#name}
+        :param type: Type of the Network Zone - can be ``IP``, ``DYNAMIC`` or ``DYNAMIC_V2`` only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#type NetworkZone#type}
+        :param asns: List of asns included. Format of each array value: a string representation of an ASN numeric value. Use with type ``DYNAMIC`` or ``DYNAMIC_V2`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#asns NetworkZone#asns}
+        :param dynamic_locations: Array of locations ISO-3166-1(2) included. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC`` or ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#dynamic_locations NetworkZone#dynamic_locations}
+        :param dynamic_locations_exclude: Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#dynamic_locations_exclude NetworkZone#dynamic_locations_exclude}
+        :param dynamic_proxy_type: Type of proxy being controlled by this dynamic network zone - can be one of ``Any``, ``TorAnonymizer`` or ``NotTorAnonymizer``. Use with type ``DYNAMIC`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#dynamic_proxy_type NetworkZone#dynamic_proxy_type}
+        :param gateways: Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Use with type ``IP``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#gateways NetworkZone#gateways}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#id NetworkZone#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ip_service_categories_exclude: List of ip service excluded. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#ip_service_categories_exclude NetworkZone#ip_service_categories_exclude}
+        :param ip_service_categories_include: List of ip service included. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#ip_service_categories_include NetworkZone#ip_service_categories_include}
+        :param proxies: Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Can not be set if ``usage`` is set to ``BLOCKLIST``. Use with type ``IP``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#proxies NetworkZone#proxies}
+        :param status: Network Status - can either be ``ACTIVE`` or ``INACTIVE`` only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#status NetworkZone#status}
+        :param usage: Usage of the Network Zone - can be either ``POLICY`` or ``BLOCKLIST``. By default, it is ``POLICY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#usage NetworkZone#usage}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -139,7 +139,7 @@ class NetworkZone(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the NetworkZone to import.
-        :param import_from_id: The id of the existing NetworkZone that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing NetworkZone that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the NetworkZone to import is found.
         '''
         if __debug__:
@@ -494,19 +494,19 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the Network Zone Resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#name NetworkZone#name}
-        :param type: Type of the Network Zone - can be ``IP``, ``DYNAMIC`` or ``DYNAMIC_V2`` only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#type NetworkZone#type}
-        :param asns: List of asns included. Format of each array value: a string representation of an ASN numeric value. Use with type ``DYNAMIC`` or ``DYNAMIC_V2`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#asns NetworkZone#asns}
-        :param dynamic_locations: Array of locations ISO-3166-1(2) included. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC`` or ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#dynamic_locations NetworkZone#dynamic_locations}
-        :param dynamic_locations_exclude: Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#dynamic_locations_exclude NetworkZone#dynamic_locations_exclude}
-        :param dynamic_proxy_type: Type of proxy being controlled by this dynamic network zone - can be one of ``Any``, ``TorAnonymizer`` or ``NotTorAnonymizer``. Use with type ``DYNAMIC`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#dynamic_proxy_type NetworkZone#dynamic_proxy_type}
-        :param gateways: Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Use with type ``IP``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#gateways NetworkZone#gateways}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#id NetworkZone#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ip_service_categories_exclude: List of ip service excluded. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#ip_service_categories_exclude NetworkZone#ip_service_categories_exclude}
-        :param ip_service_categories_include: List of ip service included. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#ip_service_categories_include NetworkZone#ip_service_categories_include}
-        :param proxies: Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Can not be set if ``usage`` is set to ``BLOCKLIST``. Use with type ``IP``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#proxies NetworkZone#proxies}
-        :param status: Network Status - can either be ``ACTIVE`` or ``INACTIVE`` only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#status NetworkZone#status}
-        :param usage: Usage of the Network Zone - can be either ``POLICY`` or ``BLOCKLIST``. By default, it is ``POLICY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#usage NetworkZone#usage}
+        :param name: Name of the Network Zone Resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#name NetworkZone#name}
+        :param type: Type of the Network Zone - can be ``IP``, ``DYNAMIC`` or ``DYNAMIC_V2`` only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#type NetworkZone#type}
+        :param asns: List of asns included. Format of each array value: a string representation of an ASN numeric value. Use with type ``DYNAMIC`` or ``DYNAMIC_V2`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#asns NetworkZone#asns}
+        :param dynamic_locations: Array of locations ISO-3166-1(2) included. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC`` or ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#dynamic_locations NetworkZone#dynamic_locations}
+        :param dynamic_locations_exclude: Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#dynamic_locations_exclude NetworkZone#dynamic_locations_exclude}
+        :param dynamic_proxy_type: Type of proxy being controlled by this dynamic network zone - can be one of ``Any``, ``TorAnonymizer`` or ``NotTorAnonymizer``. Use with type ``DYNAMIC`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#dynamic_proxy_type NetworkZone#dynamic_proxy_type}
+        :param gateways: Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Use with type ``IP``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#gateways NetworkZone#gateways}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#id NetworkZone#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ip_service_categories_exclude: List of ip service excluded. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#ip_service_categories_exclude NetworkZone#ip_service_categories_exclude}
+        :param ip_service_categories_include: List of ip service included. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#ip_service_categories_include NetworkZone#ip_service_categories_include}
+        :param proxies: Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Can not be set if ``usage`` is set to ``BLOCKLIST``. Use with type ``IP``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#proxies NetworkZone#proxies}
+        :param status: Network Status - can either be ``ACTIVE`` or ``INACTIVE`` only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#status NetworkZone#status}
+        :param usage: Usage of the Network Zone - can be either ``POLICY`` or ``BLOCKLIST``. By default, it is ``POLICY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#usage NetworkZone#usage}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -641,7 +641,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the Network Zone Resource.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#name NetworkZone#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#name NetworkZone#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -651,7 +651,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''Type of the Network Zone - can be ``IP``, ``DYNAMIC`` or ``DYNAMIC_V2`` only.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#type NetworkZone#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#type NetworkZone#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -663,7 +663,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Format of each array value: a string representation of an ASN numeric value. Use with type ``DYNAMIC`` or ``DYNAMIC_V2``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#asns NetworkZone#asns}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#asns NetworkZone#asns}
         '''
         result = self._values.get("asns")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -672,7 +672,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def dynamic_locations(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Array of locations ISO-3166-1(2) included. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC`` or ``DYNAMIC_V2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#dynamic_locations NetworkZone#dynamic_locations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#dynamic_locations NetworkZone#dynamic_locations}
         '''
         result = self._values.get("dynamic_locations")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -681,7 +681,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def dynamic_locations_exclude(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#dynamic_locations_exclude NetworkZone#dynamic_locations_exclude}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#dynamic_locations_exclude NetworkZone#dynamic_locations_exclude}
         '''
         result = self._values.get("dynamic_locations_exclude")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -692,7 +692,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Use with type ``DYNAMIC``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#dynamic_proxy_type NetworkZone#dynamic_proxy_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#dynamic_proxy_type NetworkZone#dynamic_proxy_type}
         '''
         result = self._values.get("dynamic_proxy_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -701,14 +701,14 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def gateways(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Use with type ``IP``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#gateways NetworkZone#gateways}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#gateways NetworkZone#gateways}
         '''
         result = self._values.get("gateways")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#id NetworkZone#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#id NetworkZone#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -722,7 +722,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.List[builtins.str]]:
         '''List of ip service excluded. Use with type ``DYNAMIC_V2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#ip_service_categories_exclude NetworkZone#ip_service_categories_exclude}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#ip_service_categories_exclude NetworkZone#ip_service_categories_exclude}
         '''
         result = self._values.get("ip_service_categories_exclude")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -733,7 +733,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.List[builtins.str]]:
         '''List of ip service included. Use with type ``DYNAMIC_V2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#ip_service_categories_include NetworkZone#ip_service_categories_include}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#ip_service_categories_include NetworkZone#ip_service_categories_include}
         '''
         result = self._values.get("ip_service_categories_include")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -742,7 +742,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def proxies(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Array of values in CIDR/range form depending on the way it's been declared (i.e. CIDR will contain /suffix). Please check API docs for examples. Can not be set if ``usage`` is set to ``BLOCKLIST``. Use with type ``IP``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#proxies NetworkZone#proxies}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#proxies NetworkZone#proxies}
         '''
         result = self._values.get("proxies")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -751,7 +751,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Network Status - can either be ``ACTIVE`` or ``INACTIVE`` only.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#status NetworkZone#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#status NetworkZone#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -760,7 +760,7 @@ class NetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def usage(self) -> typing.Optional[builtins.str]:
         '''Usage of the Network Zone - can be either ``POLICY`` or ``BLOCKLIST``. By default, it is ``POLICY``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/network_zone#usage NetworkZone#usage}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/network_zone#usage NetworkZone#usage}
         '''
         result = self._values.get("usage")
         return typing.cast(typing.Optional[builtins.str], result)

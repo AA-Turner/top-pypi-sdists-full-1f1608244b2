@@ -23,7 +23,6 @@ from model_clone.utils import (
 
 
 class CloneMixin(object):
-
     """CloneMixin mixin to duplicate an object using the model's class.
 
     :param _clone_fields: Restricted List of fields to copy from the instance.
@@ -34,6 +33,9 @@ class CloneMixin(object):
     :type _clone_m2o_or_o2m_fields: collections.Iterable
     :param _clone_o2o_fields: One to One fields.
     :type _clone_o2o_fields: collections.Iterable
+
+    :param _clone_linked_m2m_fields: List of fields to link to the cloned instance.
+    :type _clone_linked_m2m_fields: collections.Iterable
 
     :param _clone_excluded_fields: Excluded model fields.
     :type _clone_excluded_fields: collections.Iterable

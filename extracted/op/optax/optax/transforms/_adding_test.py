@@ -35,31 +35,31 @@ class AddingTest(chex.TestCase):
     # Define a transform that add decayed weights.
     # We can define a mask either as a pytree, or as a function that
     # returns the pytree. Below we define the pytree directly.
-    mask = (True, dict(a=True, b=False))
+    mask = (True, {"a": True, "b": False})
     tx = _adding.add_decayed_weights(0.1, mask=mask)
     # Define input updates and weights.
     updates = (
         jnp.zeros((2,), dtype=jnp.float32),
-        dict(
-            a=jnp.zeros((2,), dtype=jnp.float32),
-            b=jnp.zeros((2,), dtype=jnp.float32),
-        ),
+        {
+            "a": jnp.zeros((2,), dtype=jnp.float32),
+            "b": jnp.zeros((2,), dtype=jnp.float32),
+        },
     )
     weights = (
         jnp.ones((2,), dtype=jnp.float32),
-        dict(
-            a=jnp.ones((2,), dtype=jnp.float32),
-            b=jnp.ones((2,), dtype=jnp.float32),
-        ),
+        {
+            "a": jnp.ones((2,), dtype=jnp.float32),
+            "b": jnp.ones((2,), dtype=jnp.float32),
+        },
     )
     # This mask means that we will add decayed weights to the first two
     # terms in the input updates, but not to the last element.
     expected_tx_updates = (
-        0.1 * jnp.ones((2,), dtype=jnp.float32),
-        dict(
-            a=0.1 * jnp.ones((2,), dtype=jnp.float32),
-            b=jnp.zeros((2,), dtype=jnp.float32),
-        ),
+        0.1*jnp.ones((2,), dtype=jnp.float32),
+        {
+            "a": 0.1*jnp.ones((2,), dtype=jnp.float32),
+            "b": jnp.zeros((2,), dtype=jnp.float32),
+        },
     )
     # Apply transform
     state = tx.init(weights)
@@ -73,9 +73,9 @@ class AddingTest(chex.TestCase):
     # Prepare to compare noise with a rescaled unit-variance substitute.
     eta = 0.3
     gamma = 0.55
-    seed = 314
-    noise = _adding.add_noise(eta, gamma, seed)
-    noise_unit = _adding.add_noise(1.0, 0.0, seed)
+    key = 314
+    noise = _adding.add_noise(eta, gamma, key)
+    noise_unit = _adding.add_noise(1.0, 0.0, key)
 
     params = self.init_params
     state = noise.init(params)
@@ -99,10 +99,10 @@ class AddingTest(chex.TestCase):
   def test_none_argument(self):
     weights = (
         jnp.ones((2,), dtype=jnp.float32),
-        dict(
-            a=jnp.ones((2,), dtype=jnp.float32),
-            b=jnp.ones((2,), dtype=jnp.float32),
-        ),
+        {
+            "a": jnp.ones((2,), dtype=jnp.float32),
+            "b": jnp.ones((2,), dtype=jnp.float32),
+        },
     )
     tf = _adding.add_decayed_weights(0.1, mask=None)
     tf.update(None, 0, weights)

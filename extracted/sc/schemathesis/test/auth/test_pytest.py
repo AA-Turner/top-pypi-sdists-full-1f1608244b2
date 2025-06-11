@@ -1,5 +1,3 @@
-import sys
-
 import pytest
 
 AUTH_CLASS_NAME = "TokenAuth"
@@ -136,7 +134,7 @@ def token():
         return {{"access_token": "{APP_TEST_TOKEN}"}}
     return {{"detail": "Unauthorized"}}, 401
 
-schema = schemathesis.from_wsgi("/schema.json", app=app)"""
+schema = schemathesis.openapi.from_wsgi("/schema.json", app=app)"""
     if python_app_type == "asgi":
         return f"""
 from fastapi import FastAPI, HTTPException
@@ -155,7 +153,7 @@ def token(data: AuthInput):
         return {{"access_token": "{APP_TEST_TOKEN}"}}
     raise HTTPException(status_code=401, detail="Unauthorized")
 
-schema = schemathesis.from_asgi("/openapi.json", app=app, force_schema_version="30")
+schema = schemathesis.openapi.from_asgi("/openapi.json", app=app)
 """
 
 
@@ -179,36 +177,6 @@ def test(case):
     result.assert_outcomes(passed=1)
 
 
-def test_from_pytest_fixture(testdir):
-    # When auth is registered on a schema created via a pytest fixture
-    testdir.make_test(
-        f"""
-lazy_schema = schemathesis.from_pytest_fixture("simple_schema")
-
-TOKEN = "Foo"
-
-@lazy_schema.auth()
-class {AUTH_CLASS_NAME}:
-
-    def get(self, case, context):
-        return TOKEN
-
-    def set(self, case, data, context):
-        case.headers = case.headers or {{}}
-        case.headers["Authorization"] = f"Bearer {{data}}"
-
-@lazy_schema.parametrize()
-@settings(max_examples=2)
-def test(case):
-    assert case.headers is not None
-    assert case.headers["Authorization"] == f"Bearer {{TOKEN}}"
-        """,
-    )
-    result = testdir.runpytest("-s")
-    # Then there should be a way to get auth from them
-    result.assert_outcomes(passed=1)
-
-
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("success", "text")
 def test_requests_auth(testdir, app_schema, openapi3_base_url):
@@ -217,7 +185,7 @@ def test_requests_auth(testdir, app_schema, openapi3_base_url):
         f"""
 from requests.auth import HTTPBasicAuth
 
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 auth = HTTPBasicAuth("user", "pass")
 
 schema.auth.set_from_requests(auth).apply_to(method="GET", path="/success")
@@ -242,23 +210,13 @@ def test(case):
 @pytest.mark.operations("success", "text")
 def test_conditional(testdir, app_schema, openapi3_base_url):
     # When the user sets up multiple auths applied to different API operations
-    if sys.version_info < (3, 9):
-        dec1 = """
-auth = schema.auth()
-@auth.apply_to(method="GET", path="/text")"""
-        dec2 = """
-auth = schema.auth()
-@auth.apply_to(method="GET", path="/success")"""
-    else:
-        dec1 = '@schema.auth().apply_to(method="GET", path="/text")'
-        dec2 = '@schema.auth().apply_to(method="GET", path="/success")'
     testdir.make_test(
         f"""
-schema.base_url = "{openapi3_base_url}"
+schema.config.update(base_url="{openapi3_base_url}")
 
 TOKEN_1 = "ABC"
 
-{dec1}
+@schema.auth().apply_to(method="GET", path="/text")
 class TokenAuth1:
     def get(self, case, context):
         return TOKEN_1
@@ -269,7 +227,7 @@ class TokenAuth1:
 
 TOKEN_2 = "DEF"
 
-{dec2}
+@schema.auth().apply_to(method="GET", path="/success")
 class TokenAuth2:
     def get(self, case, context):
         return TOKEN_2

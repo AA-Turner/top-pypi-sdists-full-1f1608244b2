@@ -86,7 +86,6 @@ savepoint_state = _SavepointState()
 
 class CockroachDBDialect(PGDialect):
     name = "cockroachdb"
-    supports_comments = False
     supports_empty_insert = True
     supports_multivalues_insert = True
     supports_sequences = False
@@ -135,6 +134,11 @@ class CockroachDBDialect(PGDialect):
         self._is_v222plus = self._is_v221plus and (" v22.1." not in sversion)
         self._is_v231plus = self._is_v222plus and (" v22.2." not in sversion)
         self._is_v232plus = self._is_v231plus and (" v23.1." not in sversion)
+        self._is_v241plus = self._is_v232plus and (" v23.2." not in sversion)
+        self._is_v242plus = self._is_v241plus and (" v24.1." not in sversion)
+        self._is_v243plus = self._is_v242plus and (" v24.2." not in sversion)
+        self._is_v251plus = self._is_v243plus and (" v24.3." not in sversion)
+        self._is_v252plus = self._is_v251plus and (" v25.1." not in sversion)
         self._has_native_json = self._is_v2plus
         self._has_native_jsonb = self._is_v2plus
         self._supports_savepoints = self._is_v201plus
@@ -182,9 +186,10 @@ class CockroachDBDialect(PGDialect):
         if not self._is_v191plus:
             # v2.x does not have is_generated or generation_expression
             sql = (
-                "SELECT column_name, data_type, is_nullable::bool, column_default, "
+                "SELECT column_name, data_type, is_nullable::bool, column_default,"
                 "numeric_precision, numeric_scale, character_maximum_length, "
-                "NULL AS is_generated, NULL AS generation_expression, is_hidden::bool "
+                "NULL AS is_generated, NULL AS generation_expression, is_hidden::bool,"
+                "column_comment AS comment "
                 "FROM information_schema.columns "
                 "WHERE table_schema = :table_schema AND table_name = :table_name "
             )
@@ -200,7 +205,7 @@ class CockroachDBDialect(PGDialect):
                 "numeric_precision, numeric_scale, character_maximum_length, "
                 "CASE is_generated WHEN 'ALWAYS' THEN true WHEN 'NEVER' THEN false "
                 "ELSE is_generated::bool END AS is_generated, "
-                "generation_expression, is_hidden::bool, crdb_sql_type "
+                "generation_expression, is_hidden::bool, crdb_sql_type, column_comment AS comment "
                 "FROM information_schema.columns "
                 "WHERE table_schema = :table_schema AND table_name = :table_name "
             )
@@ -281,6 +286,7 @@ class CockroachDBDialect(PGDialect):
                 default=default,
                 autoincrement=autoincrement,
                 is_hidden=row.is_hidden,
+                comment=row.comment,
             )
             if computed is not None:
                 column_info["computed"] = computed
@@ -339,6 +345,22 @@ class CockroachDBDialect(PGDialect):
             )
         return result
 
+    def get_multi_indexes(
+        self, connection, schema, filter_names, scope, kind, **kw
+    ):
+        result = super().get_multi_indexes(
+            connection, schema, filter_names, scope, kind, **kw
+        )
+        if schema is None:
+            result = dict(result)
+            for k in [
+                (None, "spatial_ref_sys"),
+                (None, "geometry_columns"),
+                (None, "geography_columns"),
+            ]:
+                result.pop(k, None)
+        return result
+
     def get_foreign_keys_v1(self, conn, table_name, schema=None, **kw):
         fkeys = []
         FK_REGEX = re.compile(r"(?P<referred_table>.+)?\.\[(?P<referred_columns>.+)?]")
@@ -374,9 +396,9 @@ class CockroachDBDialect(PGDialect):
             r"FOREIGN KEY \((.*?)\) "
             rf"REFERENCES (?:({qtoken})\.)?({qtoken})\(((?:{qtoken}(?: *, *)?)+)\)"  # noqa: E501
             r"[\s]?(MATCH (FULL|PARTIAL|SIMPLE)+)?"
-            r"[\s]?(ON UPDATE "
-            r"(CASCADE|RESTRICT|NO ACTION|SET NULL|SET DEFAULT)+)?"
             r"[\s]?(ON DELETE "
+            r"(CASCADE|RESTRICT|NO ACTION|SET NULL|SET DEFAULT)+)?"
+            r"[\s]?(ON UPDATE "
             r"(CASCADE|RESTRICT|NO ACTION|SET NULL|SET DEFAULT)+)?"
             r"[\s]?(DEFERRABLE|NOT DEFERRABLE)?"
             r"[\s]?(INITIALLY (DEFERRED|IMMEDIATE)+)?"
@@ -431,9 +453,9 @@ class CockroachDBDialect(PGDialect):
                 _,
                 match,
                 _,
-                onupdate,
-                _,
                 ondelete,
+                _,
+                onupdate,
                 deferrable,
                 _,
                 initially,
@@ -505,6 +527,20 @@ class CockroachDBDialect(PGDialect):
             res["name"] = pk["name"]
         return res
 
+    def get_multi_pk_constraint(self, connection, schema, filter_names, scope, kind, **kw):
+        result = super().get_multi_pk_constraint(
+            connection, schema, filter_names, scope, kind, **kw
+        )
+        if schema is None:
+            result = dict(result)
+            for k in [
+                (None, "spatial_ref_sys"),
+                (None, "geometry_columns"),
+                (None, "geography_columns"),
+            ]:
+                result.pop(k, None)
+        return result
+
     def get_unique_constraints(self, conn, table_name, schema=None, **kw):
         if self._is_v21plus:
             return super().get_unique_constraints(conn, table_name, schema, **kw)
@@ -523,13 +559,21 @@ class CockroachDBDialect(PGDialect):
                 res.append(index)
         return res
 
-    def get_check_constraints(self, conn, table_name, schema=None, **kw):
-        if self._is_v21plus:
-            return super().get_check_constraints(conn, table_name, schema, **kw)
-        # TODO(bdarnell): The postgres dialect implementation depends on
-        # pg_table_is_visible, which is supported in cockroachdb 1.1
-        # but not in 1.0. Figure out a versioning strategy.
-        return []
+    def get_multi_check_constraints(
+        self, connection, schema, filter_names, scope, kind, **kw
+    ):
+        result = super().get_multi_check_constraints(
+            connection, schema, filter_names, scope, kind, **kw
+        )
+        if schema is None:
+            result = dict(result)
+            for k in [
+                (None, "spatial_ref_sys"),
+                (None, "geometry_columns"),
+                (None, "geography_columns"),
+            ]:
+                result.pop(k, None)
+        return result
 
     def do_savepoint(self, connection, name):
         # Savepoint logic customized to work with run_transaction().
@@ -567,6 +611,10 @@ else:
     @compiles(alembic.ddl.postgresql.PostgresqlColumnType, "cockroachdb")
     def visit_column_type(*args, **kwargs):
         return alembic.ddl.postgresql.visit_column_type(*args, **kwargs)
+
+    @compiles(alembic.ddl.postgresql.ColumnComment, "cockroachdb")
+    def visit_column_comment(*args, **kwargs):
+        return alembic.ddl.postgresql.visit_column_comment(*args, **kwargs)
 
 
 # If sqlalchemy-migrate is installed, register there too.

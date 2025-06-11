@@ -8,7 +8,8 @@ from hypothesis_jsonschema._canonicalise import HypothesisRefResolutionError
 from jsonschema.validators import Draft4Validator
 
 import schemathesis
-from schemathesis.exceptions import SchemaError
+from schemathesis.core.errors import LoaderError
+from schemathesis.generation.modes import GenerationMode
 
 from .utils import as_param, get_schema, integer
 
@@ -75,7 +76,7 @@ def test_resolve(petstore, ref, expected):
 def test_recursive_reference(mocker, schema_with_recursive_references):
     mocker.patch("schemathesis.specs.openapi.references.RECURSION_DEPTH_LIMIT", 1)
     reference = {"$ref": "#/components/schemas/Node"}
-    schema = schemathesis.from_dict(schema_with_recursive_references)
+    schema = schemathesis.openapi.from_dict(schema_with_recursive_references)
     assert schema.resolver.resolve_all(reference) == {
         "properties": {"child": {"properties": {"child": reference}, "required": ["child"], "type": "object"}},
         "required": ["child"],
@@ -160,7 +161,7 @@ def build_schema_with_recursion(schema, definition):
 def test_drop_recursive_references_from_the_last_resolution_level(ctx, definition):
     raw_schema = ctx.openapi.build_schema({})
     build_schema_with_recursion(raw_schema, definition)
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
 
     validator = Draft4Validator({**USER_REFERENCE, "components": raw_schema["components"]})
 
@@ -208,7 +209,7 @@ def test_drop_recursive_references_from_the_last_resolution_level(ctx, definitio
 def test_non_removable_recursive_references(ctx, definition):
     schema = ctx.openapi.build_schema({})
     build_schema_with_recursion(schema, definition)
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(case=schema["/users"]["POST"].as_strategy())
     @settings(max_examples=1)
@@ -274,7 +275,7 @@ def test_nested_recursive_references(ctx):
             }
         },
     )
-    schema = schemathesis.from_dict(schema, validate_schema=True)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(case=schema["/folders"]["POST"].as_strategy())
     @settings(max_examples=1)
@@ -288,7 +289,7 @@ def test_simple_dereference(testdir):
     # When a given parameter contains a JSON reference
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -312,18 +313,19 @@ def test_(request, case):
             }
         },
         definitions={"SimpleIntRef": {"type": "integer"}},
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly resolved and used in the generated case
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 def test_recursive_dereference(testdir):
     # When a given parameter contains a JSON reference, that reference an object with another reference
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -355,18 +357,19 @@ def test_(request, case):
             },
             "SimpleIntRef": {"type": "integer"},
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly resolved and used in the generated case
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 def test_inner_dereference(testdir):
     # When a given parameter contains a JSON reference inside a property of an object
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -394,18 +397,19 @@ def test_(request, case):
             }
         },
         definitions={"SimpleIntRef": {"type": "integer"}},
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly resolved and used in the generated case
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 def test_inner_dereference_with_lists(testdir):
     # When a given parameter contains a JSON reference inside a list in `allOf`
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -439,11 +443,12 @@ def test_(request, case):
             "A": {"type": "object", "required": ["a"], "properties": {"a": {"type": "integer"}}},
             "B": {"type": "object", "required": ["b"], "properties": {"b": {"type": "string"}}},
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly resolved and used in the generated case
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 @pytest.mark.parametrize("extra", [{}, {"enum": ["foo"]}])
@@ -471,17 +476,18 @@ def test_(request, case):
     assert case.method == "GET"
 """,
         schema=schema,
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly resolved and used in the generated case
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 def test_nullable_properties(testdir):
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1)
 def test_(request, case):
     assume(case.body["id"] is None)
@@ -508,24 +514,26 @@ def test_(request, case):
                 }
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly resolved and used in the generated case
     result = testdir.runpytest("-vv", "-s")
     result.assert_outcomes(passed=1)
     # At least one `None` value should be generated
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 def test_nullable_ref(testdir):
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=1)
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
     assert case.path == "/users"
     assert case.method == "POST"
-    assert case.body is None
+    if not hasattr(case.meta.phase.data, "description"):
+        assert case.body is None
 """,
         paths={
             "/users": {
@@ -543,11 +551,12 @@ def test_(request, case):
             }
         },
         definitions={"NullableIntRef": {"type": "integer", "x-nullable": True}},
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly resolved and used in the generated case
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 3$"])
 
 
 def test_path_ref(testdir):
@@ -573,11 +582,12 @@ def test_(request, case):
                 }
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly resolved and used in the generated case
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 def test_nullable_enum(testdir):
@@ -589,18 +599,20 @@ def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
     assert case.path == "/users"
     assert case.method == "GET"
-    assert case.query["id"] == "null"
+    if not hasattr(case.meta.phase.data, "description"):
+        assert case.query["id"] == "null"
 """,
         **as_param(integer(name="id", required=True, enum=[1, 2], **{"x-nullable": True})),
+        generation_modes=[GenerationMode.POSITIVE],
     )
     # Then it should be correctly resolved and used in the generated case
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 4$"])
 
 
 def test_complex_dereference(testdir, complex_schema):
-    schema = schemathesis.from_path(complex_schema)
+    schema = schemathesis.openapi.from_path(complex_schema)
     path = Path(str(testdir))
     body_definition = {
         "schema": {
@@ -729,7 +741,7 @@ def test_unique_objects_after_inlining(ctx):
             }
         },
     )
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
     # Then inlined objects should be unique
     assert_unique_objects(schema["/test"]["post"].body[0].definition)
 
@@ -766,13 +778,13 @@ def test_unresolvable_reference_during_generation(ctx, testdir):
     )
     main = testdir.mkdir("root") / "main.json"
     main.write_text(json.dumps(schema), "utf8")
-    schema = schemathesis.from_path(str(main))
+    schema = schemathesis.openapi.from_path(str(main))
 
     @given(case=schema["/test"]["GET"].as_strategy())
     def test(case):
         pass
 
-    with pytest.raises(SchemaError, match="Unresolvable JSON pointer in the schema: /components/schemas/Key8"):
+    with pytest.raises(LoaderError, match="Unresolvable JSON pointer in the schema: /components/schemas/Key8"):
         test()
 
 
@@ -795,7 +807,7 @@ def test_uncommon_type_in_generation(ctx, testdir, key, expected):
     )
     main = testdir.mkdir("root") / "main.json"
     main.write_text(json.dumps(schema), "utf8")
-    schema = schemathesis.from_path(str(main))
+    schema = schemathesis.openapi.from_path(str(main))
 
     @given(case=schema["/test"]["GET"].as_strategy())
     def test(case):
@@ -805,7 +817,7 @@ def test_uncommon_type_in_generation(ctx, testdir, key, expected):
         test()
 
 
-def test_global_security_schemes_with_custom_scope(ctx, testdir, cli, snapshot_cli):
+def test_global_security_schemes_with_custom_scope(ctx, testdir, cli, snapshot_cli, openapi3_base_url):
     # See GH-2300
     schema = ctx.openapi.build_schema(
         {
@@ -840,13 +852,16 @@ def test_global_security_schemes_with_custom_scope(ctx, testdir, cli, snapshot_c
     (security_schemes / "bearerAuth.json").write_text(json.dumps(bearer), "utf8")
     (tests / "test.json").write_text(json.dumps(operation), "utf8")
 
-    assert cli.run(str(raw_schema_path), "--dry-run", "--show-trace") == snapshot_cli
+    assert (
+        cli.run(str(raw_schema_path), f"--url={openapi3_base_url}", "--checks=not_a_server_error", "--mode=all")
+        == snapshot_cli
+    )
 
 
-def test_missing_file_in_resolution(ctx, testdir, cli, snapshot_cli):
+def test_missing_file_in_resolution(ctx, testdir, cli, snapshot_cli, openapi3_base_url):
     schema = ctx.openapi.build_schema({"/test": {"$ref": "paths/test.json"}})
     root = testdir.mkdir("root")
     raw_schema_path = root / "openapi.json"
     raw_schema_path.write_text(json.dumps(schema), "utf8")
 
-    assert cli.run(str(raw_schema_path), "--dry-run", "--show-trace") == snapshot_cli
+    assert cli.run(str(raw_schema_path), f"--url={openapi3_base_url}") == snapshot_cli

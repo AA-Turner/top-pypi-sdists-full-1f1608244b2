@@ -16,6 +16,7 @@ from pydantic import BaseModel
 
 
 @shared_task(
+    queue="llm",
     autoretry_for=tuple(APIStatusErrors),
     retry_backoff=10,
     max_retries=5,  # retry 5 times maximum

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: darkgraylib
-Version: 2.3.0
+Version: 2.4.0
 Summary: Common supporting code for Darker and Graylint
 Author-email: Antti Kaihola <13725+akaihola@users.noreply.github.com>
 License: BSD-3-Clause
@@ -48,7 +48,7 @@ Dynamic: license-file
 .. |changelog-badge| image:: https://img.shields.io/badge/-change%20log-purple
    :alt: Change log
    :target: https://github.com/akaihola/darkgraylib/blob/main/CHANGES.rst
-.. |next-milestone| image:: https://img.shields.io/github/milestones/progress/akaihola/darkgraylib/17?color=red&label=release%202.3.1
+.. |next-milestone| image:: https://img.shields.io/github/milestones/progress/akaihola/darkgraylib/18?color=red&label=release%202.4.1
    :alt: Next milestone
    :target: https://github.com/akaihola/darkgraylib/milestone/4
 

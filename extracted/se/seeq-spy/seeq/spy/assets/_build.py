@@ -16,7 +16,7 @@ from seeq.spy.assets._model import _AssetBase, BuildContext, BuildPhase, SPyDepe
 from seeq.spy.workbooks import Workbook
 
 
-@Status.handle_keyboard_interrupt(errors='catalog')
+@Status.handle_keyboard_interrupt(errors='catalog', no_session=True)
 def build(model, metadata, *, workbooks=None, errors=None, quiet=None, status: Status = None):
     """
     Utilizes a Python Class-based asset model specification to produce a set
@@ -88,8 +88,6 @@ def build(model, metadata, *, workbooks=None, errors=None, quiet=None, status: S
         (quiet, 'quiet', bool),
         (status, 'status', Status)
     ])
-
-    status = Status.validate(status, None, quiet, errors)
 
     status.update('Initializing', Status.RUNNING)
 

@@ -1,7 +1,7 @@
 r'''
 # `data_okta_role_subscription`
 
-Refer to the Terraform Registry for docs: [`data_okta_role_subscription`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription).
+Refer to the Terraform Registry for docs: [`data_okta_role_subscription`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaRoleSubscription(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaRoleSubscription.DataOktaRoleSubscription",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription okta_role_subscription}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription okta_role_subscription}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class DataOktaRoleSubscription(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription okta_role_subscription} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription okta_role_subscription} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param notification_type: Type of the notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#notification_type DataOktaRoleSubscription#notification_type}
-        :param role_type: Type of the role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#role_type DataOktaRoleSubscription#role_type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#id DataOktaRoleSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param notification_type: Type of the notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#notification_type DataOktaRoleSubscription#notification_type}
+        :param role_type: Type of the role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#role_type DataOktaRoleSubscription#role_type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#id DataOktaRoleSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class DataOktaRoleSubscription(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaRoleSubscription to import.
-        :param import_from_id: The id of the existing DataOktaRoleSubscription that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaRoleSubscription that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaRoleSubscription to import is found.
         '''
         if __debug__:
@@ -233,9 +233,9 @@ class DataOktaRoleSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param notification_type: Type of the notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#notification_type DataOktaRoleSubscription#notification_type}
-        :param role_type: Type of the role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#role_type DataOktaRoleSubscription#role_type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#id DataOktaRoleSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param notification_type: Type of the notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#notification_type DataOktaRoleSubscription#notification_type}
+        :param role_type: Type of the role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#role_type DataOktaRoleSubscription#role_type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#id DataOktaRoleSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -340,7 +340,7 @@ class DataOktaRoleSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def notification_type(self) -> builtins.str:
         '''Type of the notification.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#notification_type DataOktaRoleSubscription#notification_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#notification_type DataOktaRoleSubscription#notification_type}
         '''
         result = self._values.get("notification_type")
         assert result is not None, "Required property 'notification_type' is missing"
@@ -350,7 +350,7 @@ class DataOktaRoleSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def role_type(self) -> builtins.str:
         '''Type of the role.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#role_type DataOktaRoleSubscription#role_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#role_type DataOktaRoleSubscription#role_type}
         '''
         result = self._values.get("role_type")
         assert result is not None, "Required property 'role_type' is missing"
@@ -358,7 +358,7 @@ class DataOktaRoleSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/role_subscription#id DataOktaRoleSubscription#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/role_subscription#id DataOktaRoleSubscription#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

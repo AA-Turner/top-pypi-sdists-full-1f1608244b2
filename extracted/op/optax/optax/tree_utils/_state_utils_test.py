@@ -28,6 +28,7 @@ from optax._src import combine
 from optax._src import transform
 from optax.schedules import _inject
 from optax.schedules import _schedule
+from optax.tree_utils import _random
 from optax.tree_utils import _state_utils
 
 
@@ -307,16 +308,17 @@ class StateUtilsTest(absltest.TestCase):
       self.assertEqual(found_values, expected_result)
 
     with self.subTest('Test with optional filtering'):
-      state = dict(hparams=dict(learning_rate=1.0), learning_rate='foo')
+      state = {'hparams': {'learning_rate': 1.0}, 'learning_rate': 'foo'}
 
       # Without filtering two values are found
       found_values = _state_utils.tree_get_all_with_path(state, 'learning_rate')
       self.assertLen(found_values, 2)
 
       # With filtering only the float entry is returned
-      filtering = lambda _, value: isinstance(value, float)
       found_values = _state_utils.tree_get_all_with_path(
-          state, 'learning_rate', filtering=filtering
+          state,
+          'learning_rate',
+          filtering=lambda _, value: isinstance(value, float),
       )
       self.assertLen(found_values, 1)
       expected_result = [(
@@ -327,10 +329,11 @@ class StateUtilsTest(absltest.TestCase):
 
     with self.subTest('Test to get a subtree (here hyperparams_states)'):
       opt = _inject.inject_hyperparams(alias.sgd)(learning_rate=lambda x: x)
-      filtering = lambda _, value: isinstance(value, tuple)
       state = opt.init(params)
       found_values = _state_utils.tree_get_all_with_path(
-          state, 'learning_rate', filtering=filtering
+          state,
+          'learning_rate',
+          filtering=lambda _, value: isinstance(value, tuple),
       )
       expected_result = [(
           (
@@ -346,7 +349,7 @@ class StateUtilsTest(absltest.TestCase):
       self.assertEqual(found_values, expected_result)
 
     with self.subTest('Test with nested tree containing a key'):
-      tree = dict(a=dict(a=1.0))
+      tree = {'a': {'a': 1.0}}
       found_values = _state_utils.tree_get_all_with_path(tree, 'a')
       expected_result = [
           ((jtu.DictKey(key='a'),), {'a': 1.0}),
@@ -384,12 +387,13 @@ class StateUtilsTest(absltest.TestCase):
           learning_rate=lambda x: 1 / (x + 1)
       )
       state = opt.init(params)
-      filtering = lambda _, value: isinstance(value, jnp.ndarray)
 
       @jax.jit
       def get_learning_rate(state):
         return _state_utils.tree_get(
-            state, 'learning_rate', filtering=filtering
+            state,
+            'learning_rate',
+            filtering=lambda _, value: isinstance(value, jnp.ndarray)
         )
 
       for i in range(4):
@@ -399,14 +403,17 @@ class StateUtilsTest(absltest.TestCase):
         self.assertEqual(lr, 1 / (i + 1))
 
     with self.subTest('Test with optional filtering'):
-      state = dict(hparams=dict(learning_rate=1.0), learning_rate='foo')
+      state = {'hparams': {'learning_rate': 1.0}, 'learning_rate': 'foo'}
 
       # Without filtering raises an error
       self.assertRaises(KeyError, _state_utils.tree_get, state, 'learning_rate')
 
       # With filtering, fetches the float entry
-      filtering = lambda path, value: isinstance(value, float)
-      lr = _state_utils.tree_get(state, 'learning_rate', filtering=filtering)
+      lr = _state_utils.tree_get(
+          state,
+          'learning_rate',
+          filtering=lambda _, value: isinstance(value, float),
+      )
       self.assertEqual(lr, 1.0)
 
     with self.subTest('Test filtering for specific state'):
@@ -415,10 +422,11 @@ class StateUtilsTest(absltest.TestCase):
       )
       state = opt.init(params)
 
-      filtering = (
-          lambda path, _: isinstance(path[-1], _state_utils.NamedTupleKey)
-          and path[-1].tuple_name == 'ScaleByAdamState'
-      )
+      def filtering(path, _):
+        return (
+            isinstance(path[-1], _state_utils.NamedTupleKey)
+            and path[-1].tuple_name == 'ScaleByAdamState'
+        )
 
       count = _state_utils.tree_get(state, 'count', filtering=filtering)
       self.assertEqual(count, jnp.asarray(0, dtype=jnp.dtype('int32')))
@@ -433,7 +441,10 @@ class StateUtilsTest(absltest.TestCase):
           count=jnp.asarray(0),
           rng_key=jnp.array([0, 0], dtype=jnp.dtype('uint32')),
       )
-      chex.assert_trees_all_equal(noise_state, expected_result)
+      chex.assert_trees_all_equal(
+          _random.tree_unwrap_random_key_data(noise_state),
+          _random.tree_unwrap_random_key_data(expected_result)
+      )
 
   def test_tree_set(self):
     params = jnp.array([1.0, 2.0, 3.0])
@@ -490,9 +501,12 @@ class StateUtilsTest(absltest.TestCase):
         self.assertEqual(value, 2.0)
 
     with self.subTest('Test with optional filtering'):
-      state = dict(hparams=dict(learning_rate=1.0), learning_rate='foo')
-      filtering = lambda _, value: isinstance(value, float)
-      new_state = _state_utils.tree_set(state, filtering, learning_rate=0.5)
+      state = {'hparams': {'learning_rate': 1.0}, 'learning_rate': 'foo'}
+      new_state = _state_utils.tree_set(
+          state,
+          lambda _, value: isinstance(value, float),
+          learning_rate=0.5,
+      )
       found_values = _state_utils.tree_get_all_with_path(
           new_state, 'learning_rate'
       )
@@ -503,17 +517,23 @@ class StateUtilsTest(absltest.TestCase):
       self.assertEqual(found_values, expected_result)
 
     with self.subTest('Test with nested trees and filtering'):
-      tree = dict(a=dict(a=1.0), b=dict(a=1))
-      filtering = lambda _, value: isinstance(value, float)
-      new_tree = _state_utils.tree_set(tree, filtering, a=2.0)
-      expected_result = dict(a=dict(a=2.0), b=dict(a=1))
+      tree = {'a': {'a': 1.0}, 'b': {'a': 1}}
+      new_tree = _state_utils.tree_set(
+          tree,
+          lambda _, value: isinstance(value, float),
+          a=2.0,
+      )
+      expected_result = {'a': {'a': 2.0}, 'b': {'a': 1}}
       self.assertEqual(new_tree, expected_result)
 
     with self.subTest('Test setting a subtree'):
-      tree = dict(a=dict(a=1.0), b=dict(a=1))
-      filtering = lambda _, value: isinstance(value, dict)
-      new_tree = _state_utils.tree_set(tree, filtering, a=dict(c=0.0))
-      expected_result = dict(a=dict(c=0.0), b=dict(a=1))
+      tree = {'a': {'a': 1.0}, 'b': {'a': 1}}
+      new_tree = _state_utils.tree_set(
+          tree,
+          lambda _, value: isinstance(value, dict),
+          a={'c': 0.0},
+      )
+      expected_result = {'a': {'c': 0.0}, 'b': {'a': 1}}
       self.assertEqual(new_tree, expected_result)
 
     with self.subTest('Test setting a specific state'):
@@ -522,10 +542,11 @@ class StateUtilsTest(absltest.TestCase):
       )
       state = opt.init(params)
 
-      filtering = (
-          lambda path, _: isinstance(path[-1], _state_utils.NamedTupleKey)
-          and path[-1].tuple_name == 'ScaleByAdamState'
-      )
+      def filtering(path, _):
+        return (
+            isinstance(path[-1], _state_utils.NamedTupleKey)
+            and path[-1].tuple_name == 'ScaleByAdamState'
+        )
 
       new_state = _state_utils.tree_set(state, filtering, count=jnp.array(42))
       expected_result = (
@@ -539,8 +560,10 @@ class StateUtilsTest(absltest.TestCase):
               nu=jnp.array([0.0, 0.0, 0.0]),
           ),
       )
-      chex.assert_trees_all_equal(new_state, expected_result)
-
+      chex.assert_trees_all_equal(
+          _random.tree_unwrap_random_key_data(new_state),
+          _random.tree_unwrap_random_key_data(expected_result)
+      )
     with self.subTest('Test setting a state'):
       opt = combine.chain(
           transform.add_noise(1.0, 0.9, 0), transform.scale_by_adam()

@@ -7,7 +7,7 @@ name = "pineappl"
 # due to a bug in warehouse, https://github.com/pypi/warehouse/issues/8090, this file must be the
 # same across all wheels of a single version and therefore `requires-python` must give the minimum
 # Python version that we support
-requires-python = ">=3.6"
+requires-python = ">=3.7"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Science/Research",
@@ -26,10 +26,11 @@ dynamic = ["version"]
 [project.optional-dependencies]
 cli = ["pineappl-cli"]
 docs = [
-  "sphinx>=6.2.1",
+  "sphinx>=7.0.0",
   "sphinx_rtd_theme>=1.2.2",
-  "sphinxcontrib-bibtex>=2.5.0",
-  "nbsphinx>=0.9.2",
+  "nbsphinx>=0.8.8",
+  "ipykernel>=6.13.0",
+  "polars>=1.8.0"
 ]
 test = ["pytest", "pytest-cov"]
 

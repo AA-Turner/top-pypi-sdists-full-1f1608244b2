@@ -1,7 +1,7 @@
 r'''
 # `okta_trusted_server`
 
-Refer to the Terraform Registry for docs: [`okta_trusted_server`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server).
+Refer to the Terraform Registry for docs: [`okta_trusted_server`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class TrustedServer(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.trustedServer.TrustedServer",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server okta_trusted_server}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server okta_trusted_server}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class TrustedServer(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server okta_trusted_server} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server okta_trusted_server} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param auth_server_id: Authorization server ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server#auth_server_id TrustedServer#auth_server_id}
-        :param trusted: A list of the authorization server IDs user want to trust. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server#trusted TrustedServer#trusted}
+        :param auth_server_id: Authorization server ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server#auth_server_id TrustedServer#auth_server_id}
+        :param trusted: A list of the authorization server IDs user want to trust. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server#trusted TrustedServer#trusted}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class TrustedServer(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the TrustedServer to import.
-        :param import_from_id: The id of the existing TrustedServer that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing TrustedServer that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the TrustedServer to import is found.
         '''
         if __debug__:
@@ -207,8 +207,8 @@ class TrustedServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param auth_server_id: Authorization server ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server#auth_server_id TrustedServer#auth_server_id}
-        :param trusted: A list of the authorization server IDs user want to trust. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server#trusted TrustedServer#trusted}
+        :param auth_server_id: Authorization server ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server#auth_server_id TrustedServer#auth_server_id}
+        :param trusted: A list of the authorization server IDs user want to trust. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server#trusted TrustedServer#trusted}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -310,7 +310,7 @@ class TrustedServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auth_server_id(self) -> builtins.str:
         '''Authorization server ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server#auth_server_id TrustedServer#auth_server_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server#auth_server_id TrustedServer#auth_server_id}
         '''
         result = self._values.get("auth_server_id")
         assert result is not None, "Required property 'auth_server_id' is missing"
@@ -320,7 +320,7 @@ class TrustedServerConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def trusted(self) -> typing.List[builtins.str]:
         '''A list of the authorization server IDs user want to trust.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_server#trusted TrustedServer#trusted}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/trusted_server#trusted TrustedServer#trusted}
         '''
         result = self._values.get("trusted")
         assert result is not None, "Required property 'trusted' is missing"

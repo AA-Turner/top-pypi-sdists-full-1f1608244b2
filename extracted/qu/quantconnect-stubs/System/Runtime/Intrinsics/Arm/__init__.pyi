@@ -7059,6 +7059,22 @@ class Sve2(System.Runtime.Intrinsics.Arm.Sve, metaclass=abc.ABCMeta):
         ...
 
     @staticmethod
+    def absolute_difference_widening_lower(left: System.Numerics.Vector[int], right: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svint16_t svabdlb[_s16](svint8_t op1, svint8_t op2)
+          SABDLB Zresult.H, Zop1.B, Zop2.B
+        """
+        ...
+
+    @staticmethod
+    def absolute_difference_widening_upper(left: System.Numerics.Vector[int], right: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svint16_t svabdlt[_s16](svint8_t op1, svint8_t op2)
+          SABDLT Zresult.H, Zop1.B, Zop2.B
+        """
+        ...
+
+    @staticmethod
     def bitwise_clear_xor(xor: System.Numerics.Vector[int], value: System.Numerics.Vector[int], mask: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
         """
         svuint8_t svbcax[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)

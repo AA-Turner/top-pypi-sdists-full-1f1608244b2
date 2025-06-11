@@ -13,9 +13,10 @@ def test_junitxml_option(cli, schema_url, hypothesis_max_examples, tmp_path):
     xml_path = tmp_path / "junit.xml"
     result = cli.run(
         schema_url,
-        f"--junit-xml={xml_path}",
-        f"--hypothesis-max-examples={hypothesis_max_examples or 2}",
-        "--hypothesis-seed=1",
+        f"--report-junit-path={xml_path}",
+        f"--max-examples={hypothesis_max_examples or 2}",
+        "--checks=not_a_server_error",
+        "--seed=1",
     )
     # Command executed successfully
     assert result.exit_code == ExitCode.OK, result.stdout
@@ -25,17 +26,25 @@ def test_junitxml_option(cli, schema_url, hypothesis_max_examples, tmp_path):
     ElementTree.parse(xml_path)
 
 
+@pytest.mark.parametrize("in_config", [True, False])
 @pytest.mark.parametrize("path", ["junit.xml", "does-not-exist/junit.xml"])
 @pytest.mark.operations("success", "failure", "unsatisfiable", "empty_string")
-def test_junitxml_file(cli, schema_url, hypothesis_max_examples, tmp_path, path, server_host):
+def test_junitxml_file(cli, schema_url, hypothesis_max_examples, tmp_path, path, server_host, in_config):
     xml_path = tmp_path / path
-    cli.run(
-        schema_url,
-        f"--junit-xml={xml_path}",
-        f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-        "--hypothesis-seed=1",
+    args = [
+        f"--max-examples={hypothesis_max_examples or 1}",
+        "--seed=1",
         "--checks=all",
-    )
+        "--exclude-checks=positive_data_acceptance",
+        "--mode=positive",
+    ]
+    kwargs = {}
+    if in_config:
+        kwargs["config"] = {"reports": {"junit": {"path": str(xml_path)}}}
+    else:
+        args.append(f"--report-junit-path={xml_path}")
+    result = cli.run(schema_url, *args, **kwargs)
+    assert result.exit_code == ExitCode.TESTS_FAILED, result.stdout
     tree = ElementTree.parse(xml_path)
     # Inspect root element `testsuites`
     root = tree.getroot()
@@ -53,54 +62,69 @@ def test_junitxml_file(cli, schema_url, hypothesis_max_examples, tmp_path, path,
     # Inspected nested `testcase`s
     testcases = list(testsuite)
     assert len(testcases) == 4
+
+    # Create a mapping from testcase name to element
+    testcases_by_name = {tc.attrib["name"]: tc for tc in testcases}
+
     # Inspected testcase with a failure
-    assert testcases[1].tag == "testcase"
-    assert testcases[1].attrib["name"] == "GET /api/failure"
-    assert testcases[1][0].tag == "failure"
-    assert testcases[1][0].attrib["type"] == "failure"
+    failure = testcases_by_name["GET /failure"]
+    assert failure.tag == "testcase"
+    assert failure[0].tag == "failure"
+    assert failure[0].attrib["type"] == "failure"
     assert (
-        extract_message(testcases[1][0], server_host)
+        extract_message(failure[0], server_host)
         == "1. Test Case ID: <PLACEHOLDER>  - Server error  - Undocumented Content-Type      Received: text/plain; charset=utf-8     Documented: application/json  [500] Internal Server Error:      `500: Internal Server Error`  Reproduce with:       curl -X GET http://localhost/api/failure"
     )
+
     # Inspect passed testcase
-    assert testcases[2].attrib["name"] == "GET /api/success"
+    success = testcases_by_name["GET /success"]
+    assert success.tag == "testcase"
+
     # Inspect testcase with an error
-    assert testcases[3].attrib["name"] == "POST /api/unsatisfiable"
-    assert testcases[3][0].tag == "error"
-    assert testcases[3][0].attrib["type"] == "error"
+    error = testcases_by_name["POST /unsatisfiable"]
+    assert error.tag == "testcase"
+    assert error[0].tag == "error"
+    assert error[0].attrib["type"] == "error"
     assert (
-        testcases[3][0].text.replace("\n", " ")
+        error[0].text.replace("\n", " ")
         == "Schema Error  Failed to generate test cases for this API operation. Possible reasons:      - Contradictory schema constraints, such as a minimum value exceeding the maximum.     - Invalid schema definitions for headers or cookies, for example allowing for non-ASCII characters.     - Excessive schema complexity, which hinders parameter generation.  Tip: Examine the schema for inconsistencies and consider simplifying it."
     )
 
 
-@pytest.mark.parametrize(
-    ("args", "expected"),
-    [
-        ((), "Runtime Error  division by zero"),
-        (("--show-trace",), "Runtime Error  division by zero      Traceback (most recent call last): "),
-    ],
-)
+@pytest.fixture
+def with_error(ctx):
+    with ctx.check("""
+@schemathesis.check
+def with_error(ctx, response, case):
+    1 / 0
+""") as module:
+        yield module
+
+
 @pytest.mark.skipif(
     sys.version_info < (3, 11) or platform.system() == "Windows",
     reason="Cover only tracebacks that highlight error positions in every line",
 )
 @pytest.mark.operations("success")
 @pytest.mark.openapi_version("3.0")
-def test_error_with_traceback(ctx, cli, schema_url, tmp_path, args, expected):
-    module = ctx.write_pymodule(
-        """
-@schemathesis.check
-def with_error(ctx, response, case):
-    1 / 0
-"""
-    )
+def test_error_with_traceback(with_error, cli, schema_url, tmp_path):
     xml_path = tmp_path / "junit.xml"
-    cli.main("run", schema_url, "-c", "with_error", f"--junit-xml={xml_path}", *args, hooks=module)
+    cli.main(
+        "run",
+        schema_url,
+        "-c",
+        "with_error",
+        f"--report-junit-path={xml_path}",
+        hooks=with_error,
+    )
     tree = ElementTree.parse(xml_path)
     root = tree.getroot()
     testcases = list(root[0])
-    assert testcases[0][0].text.replace("\n", " ").startswith(expected)
+    assert (
+        testcases[0][0]
+        .text.replace("\n", " ")
+        .startswith("Runtime Error  division by zero      Traceback (most recent call last): ")
+    )
 
 
 def extract_message(testcase, server_host):
@@ -127,12 +151,18 @@ def test_binary_response(ctx, cli, openapi3_base_url, tmp_path, server_host):
             },
         }
     )
-    cli.run(str(schema_path), f"--base-url={openapi3_base_url}", "--checks=all", f"--junit-xml={xml_path}")
+    cli.run(
+        str(schema_path),
+        f"--url={openapi3_base_url}",
+        "--checks=all",
+        f"--report-junit-path={xml_path}",
+        "--exclude-checks=positive_data_acceptance",
+    )
     tree = ElementTree.parse(xml_path)
     testsuite = tree.getroot()[0]
     testcases = list(testsuite)
     assert testcases[0].tag == "testcase"
-    assert testcases[0].attrib["name"] == "GET /api/binary"
+    assert testcases[0].attrib["name"] == "GET /binary"
     assert testcases[0][0].tag == "failure"
     assert testcases[0][0].attrib["type"] == "failure"
     assert (
@@ -143,27 +173,24 @@ def test_binary_response(ctx, cli, openapi3_base_url, tmp_path, server_host):
 
 @pytest.mark.operations("slow")
 @pytest.mark.openapi_version("3.0")
-def test_timeout(cli, tmp_path, schema_url, hypothesis_max_examples, server_host):
+def test_timeout(cli, tmp_path, schema_url, hypothesis_max_examples):
     xml_path = tmp_path / "junit.xml"
     cli.run(
         schema_url,
-        f"--junit-xml={xml_path}",
-        f"--hypothesis-max-examples={hypothesis_max_examples or 1}",
-        "--hypothesis-seed=1",
-        "--request-timeout=10",
+        f"--report-junit-path={xml_path}",
+        f"--max-examples={hypothesis_max_examples or 1}",
+        "--seed=1",
+        "--request-timeout=0.01",
         "--checks=all",
     )
     tree = ElementTree.parse(xml_path)
     testsuite = tree.getroot()[0]
     testcases = list(testsuite)
     assert testcases[0].tag == "testcase"
-    assert testcases[0].attrib["name"] == "GET /api/slow"
-    assert testcases[0][0].tag == "failure"
-    assert testcases[0][0].attrib["type"] == "failure"
-    assert (
-        extract_message(testcases[0][0], server_host)
-        == "1. Test Case ID: <PLACEHOLDER>  - Response timeout      The server failed to respond within the specified limit of 10.00ms  Reproduce with:       curl -X GET http://localhost/api/slow"
-    )
+    assert testcases[0].attrib["name"] == "GET /slow"
+    assert testcases[0][0].tag == "error"
+    assert testcases[0][0].attrib["type"] == "error"
+    assert "Read timed out after 0.01 seconds" in testcases[0][0].text
 
 
 @pytest.mark.operations("success")
@@ -172,19 +199,19 @@ def test_skipped(cli, tmp_path, schema_url, server_host):
     xml_path = tmp_path / "junit.xml"
     cli.run(
         schema_url,
-        f"--junit-xml={xml_path}",
-        "--hypothesis-seed=1",
-        "--hypothesis-phases=explicit",
+        f"--report-junit-path={xml_path}",
+        "--seed=1",
+        "--phases=examples",
         "--checks=all",
     )
     tree = ElementTree.parse(xml_path)
     testsuite = tree.getroot()[0]
     testcases = list(testsuite)
     assert testcases[0].tag == "testcase"
-    assert testcases[0].attrib["name"] == "GET /api/success"
+    assert testcases[0].attrib["name"] == "GET /success"
     assert testcases[0][0].tag == "skipped"
     assert testcases[0][0].attrib["type"] == "skipped"
-    assert extract_message(testcases[0][0], server_host) == "Hypothesis has been told to run no examples for this test."
+    assert extract_message(testcases[0][0], server_host) == "No examples in schema"
 
 
 @pytest.mark.parametrize("path", ["junit.xml", "does-not-exist/junit.xml"])
@@ -194,6 +221,7 @@ def test_permission_denied(cli, tmp_path, schema_url, path):
     dir_path = tmp_path / "output"
     dir_path.mkdir(mode=0o555)
     xml_path = dir_path / path
-    result = cli.run(schema_url, f"--junit-xml={xml_path}")
+    result = cli.run(schema_url, f"--report-junit-path={xml_path}")
     assert result.exit_code == ExitCode.INTERRUPTED, result.stdout
-    assert "Permission denied" in result.stdout
+    # Depends on the Click version (Python 3.9 tests have an older one)
+    assert "Permission denied" in result.stdout or "Permission denied" in result.stderr

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: versioningit
-Version: 3.1.3
+Version: 3.2.0
 Summary: Versioning It with your Version In Git
 Project-URL: Source Code, https://github.com/jwodder/versioningit
 Project-URL: Bug Tracker, https://github.com/jwodder/versioningit/issues
@@ -79,7 +79,8 @@ extraction & calculation.
 
   .. _hatch: https://hatch.pypa.io
 
-- Installed & configured through :pep:`518`'s ``pyproject.toml``
+- Installed & configured through :pep:`518`'s ``pyproject.toml`` (or,
+  alternatively, through ``versioningit.toml`` for non-Python projects)
 
 - Supports Git, modern Git archives, and Mercurial
 

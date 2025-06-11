@@ -1,7 +1,7 @@
 r'''
 # `okta_group_schema_property`
 
-Refer to the Terraform Registry for docs: [`okta_group_schema_property`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property).
+Refer to the Terraform Registry for docs: [`okta_group_schema_property`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class GroupSchemaProperty(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.groupSchemaProperty.GroupSchemaProperty",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property okta_group_schema_property}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property okta_group_schema_property}.'''
 
     def __init__(
         self,
@@ -79,30 +79,30 @@ class GroupSchemaProperty(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property okta_group_schema_property} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property okta_group_schema_property} Resource.
 
         :param scope_: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#index GroupSchemaProperty#index}
-        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
-        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}
-        :param array_enum: Array of values that an array property's items can be set to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#array_enum GroupSchemaProperty#array_enum}
-        :param array_one_of: array_one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#array_one_of GroupSchemaProperty#array_one_of}
-        :param array_type: The type of the array elements if ``type`` is set to ``array``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#array_type GroupSchemaProperty#array_type}
-        :param description: The description of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#description GroupSchemaProperty#description}
-        :param enum: Array of values a primitive property can be set to. See ``array_enum`` for arrays. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#enum GroupSchemaProperty#enum}
-        :param external_name: External name of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#external_name GroupSchemaProperty#external_name}
-        :param external_namespace: External namespace of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#external_namespace GroupSchemaProperty#external_namespace}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#id GroupSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param master: Master priority for the group schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``. Default: ``PROFILE_MASTER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#master GroupSchemaProperty#master}
-        :param master_override_priority: master_override_priority block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#master_override_priority GroupSchemaProperty#master_override_priority}
-        :param max_length: The maximum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#max_length GroupSchemaProperty#max_length}
-        :param min_length: The minimum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#min_length GroupSchemaProperty#min_length}
-        :param one_of: one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#one_of GroupSchemaProperty#one_of}
-        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#permissions GroupSchemaProperty#permissions}
-        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#required GroupSchemaProperty#required}
-        :param scope: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#scope GroupSchemaProperty#scope}.
-        :param unique: Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#unique GroupSchemaProperty#unique}
+        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#index GroupSchemaProperty#index}
+        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
+        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}
+        :param array_enum: Array of values that an array property's items can be set to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#array_enum GroupSchemaProperty#array_enum}
+        :param array_one_of: array_one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#array_one_of GroupSchemaProperty#array_one_of}
+        :param array_type: The type of the array elements if ``type`` is set to ``array``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#array_type GroupSchemaProperty#array_type}
+        :param description: The description of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#description GroupSchemaProperty#description}
+        :param enum: Array of values a primitive property can be set to. See ``array_enum`` for arrays. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#enum GroupSchemaProperty#enum}
+        :param external_name: External name of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#external_name GroupSchemaProperty#external_name}
+        :param external_namespace: External namespace of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#external_namespace GroupSchemaProperty#external_namespace}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#id GroupSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param master: Master priority for the group schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``. Default: ``PROFILE_MASTER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#master GroupSchemaProperty#master}
+        :param master_override_priority: master_override_priority block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#master_override_priority GroupSchemaProperty#master_override_priority}
+        :param max_length: The maximum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#max_length GroupSchemaProperty#max_length}
+        :param min_length: The minimum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#min_length GroupSchemaProperty#min_length}
+        :param one_of: one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#one_of GroupSchemaProperty#one_of}
+        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#permissions GroupSchemaProperty#permissions}
+        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#required GroupSchemaProperty#required}
+        :param scope: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#scope GroupSchemaProperty#scope}.
+        :param unique: Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#unique GroupSchemaProperty#unique}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -160,7 +160,7 @@ class GroupSchemaProperty(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the GroupSchemaProperty to import.
-        :param import_from_id: The id of the existing GroupSchemaProperty that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing GroupSchemaProperty that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the GroupSchemaProperty to import is found.
         '''
         if __debug__:
@@ -632,8 +632,8 @@ class GroupSchemaProperty(
 class GroupSchemaPropertyArrayOneOf:
     def __init__(self, *, const: builtins.str, title: builtins.str) -> None:
         '''
-        :param const: Value mapping to member of ``array_enum``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#const GroupSchemaProperty#const}
-        :param title: Display name for the enum value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
+        :param const: Value mapping to member of ``array_enum``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#const GroupSchemaProperty#const}
+        :param title: Display name for the enum value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__01bf05f4c2ff702c5d0560d7818d6c38476d0dc5796e67e816813b10f20a37da)
@@ -648,7 +648,7 @@ class GroupSchemaPropertyArrayOneOf:
     def const(self) -> builtins.str:
         '''Value mapping to member of ``array_enum``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#const GroupSchemaProperty#const}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#const GroupSchemaProperty#const}
         '''
         result = self._values.get("const")
         assert result is not None, "Required property 'const' is missing"
@@ -658,7 +658,7 @@ class GroupSchemaPropertyArrayOneOf:
     def title(self) -> builtins.str:
         '''Display name for the enum value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
         '''
         result = self._values.get("title")
         assert result is not None, "Required property 'title' is missing"
@@ -917,26 +917,26 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#index GroupSchemaProperty#index}
-        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
-        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}
-        :param array_enum: Array of values that an array property's items can be set to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#array_enum GroupSchemaProperty#array_enum}
-        :param array_one_of: array_one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#array_one_of GroupSchemaProperty#array_one_of}
-        :param array_type: The type of the array elements if ``type`` is set to ``array``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#array_type GroupSchemaProperty#array_type}
-        :param description: The description of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#description GroupSchemaProperty#description}
-        :param enum: Array of values a primitive property can be set to. See ``array_enum`` for arrays. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#enum GroupSchemaProperty#enum}
-        :param external_name: External name of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#external_name GroupSchemaProperty#external_name}
-        :param external_namespace: External namespace of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#external_namespace GroupSchemaProperty#external_namespace}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#id GroupSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param master: Master priority for the group schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``. Default: ``PROFILE_MASTER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#master GroupSchemaProperty#master}
-        :param master_override_priority: master_override_priority block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#master_override_priority GroupSchemaProperty#master_override_priority}
-        :param max_length: The maximum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#max_length GroupSchemaProperty#max_length}
-        :param min_length: The minimum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#min_length GroupSchemaProperty#min_length}
-        :param one_of: one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#one_of GroupSchemaProperty#one_of}
-        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#permissions GroupSchemaProperty#permissions}
-        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#required GroupSchemaProperty#required}
-        :param scope: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#scope GroupSchemaProperty#scope}.
-        :param unique: Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#unique GroupSchemaProperty#unique}
+        :param index: Subschema unique string identifier. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#index GroupSchemaProperty#index}
+        :param title: Subschema title (display name). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
+        :param type: The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}
+        :param array_enum: Array of values that an array property's items can be set to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#array_enum GroupSchemaProperty#array_enum}
+        :param array_one_of: array_one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#array_one_of GroupSchemaProperty#array_one_of}
+        :param array_type: The type of the array elements if ``type`` is set to ``array``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#array_type GroupSchemaProperty#array_type}
+        :param description: The description of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#description GroupSchemaProperty#description}
+        :param enum: Array of values a primitive property can be set to. See ``array_enum`` for arrays. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#enum GroupSchemaProperty#enum}
+        :param external_name: External name of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#external_name GroupSchemaProperty#external_name}
+        :param external_namespace: External namespace of the user schema property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#external_namespace GroupSchemaProperty#external_namespace}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#id GroupSchemaProperty#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param master: Master priority for the group schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``. Default: ``PROFILE_MASTER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#master GroupSchemaProperty#master}
+        :param master_override_priority: master_override_priority block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#master_override_priority GroupSchemaProperty#master_override_priority}
+        :param max_length: The maximum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#max_length GroupSchemaProperty#max_length}
+        :param min_length: The minimum length of the user property value. Only applies to type ``string``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#min_length GroupSchemaProperty#min_length}
+        :param one_of: one_of block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#one_of GroupSchemaProperty#one_of}
+        :param permissions: Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#permissions GroupSchemaProperty#permissions}
+        :param required: Whether the subschema is required. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#required GroupSchemaProperty#required}
+        :param scope: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#scope GroupSchemaProperty#scope}.
+        :param unique: Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#unique GroupSchemaProperty#unique}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1091,7 +1091,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def index(self) -> builtins.str:
         '''Subschema unique string identifier.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#index GroupSchemaProperty#index}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#index GroupSchemaProperty#index}
         '''
         result = self._values.get("index")
         assert result is not None, "Required property 'index' is missing"
@@ -1101,7 +1101,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def title(self) -> builtins.str:
         '''Subschema title (display name).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
         '''
         result = self._values.get("title")
         assert result is not None, "Required property 'title' is missing"
@@ -1111,7 +1111,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''The type of the schema property. It can be ``string``, ``boolean``, ``number``, ``integer``, ``array``, or ``object``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -1121,7 +1121,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def array_enum(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Array of values that an array property's items can be set to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#array_enum GroupSchemaProperty#array_enum}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#array_enum GroupSchemaProperty#array_enum}
         '''
         result = self._values.get("array_enum")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1132,7 +1132,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[GroupSchemaPropertyArrayOneOf]]]:
         '''array_one_of block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#array_one_of GroupSchemaProperty#array_one_of}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#array_one_of GroupSchemaProperty#array_one_of}
         '''
         result = self._values.get("array_one_of")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[GroupSchemaPropertyArrayOneOf]]], result)
@@ -1141,7 +1141,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def array_type(self) -> typing.Optional[builtins.str]:
         '''The type of the array elements if ``type`` is set to ``array``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#array_type GroupSchemaProperty#array_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#array_type GroupSchemaProperty#array_type}
         '''
         result = self._values.get("array_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1150,7 +1150,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''The description of the user schema property.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#description GroupSchemaProperty#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#description GroupSchemaProperty#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1159,7 +1159,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enum(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Array of values a primitive property can be set to. See ``array_enum`` for arrays.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#enum GroupSchemaProperty#enum}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#enum GroupSchemaProperty#enum}
         '''
         result = self._values.get("enum")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1168,7 +1168,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def external_name(self) -> typing.Optional[builtins.str]:
         '''External name of the user schema property.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#external_name GroupSchemaProperty#external_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#external_name GroupSchemaProperty#external_name}
         '''
         result = self._values.get("external_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1177,14 +1177,14 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def external_namespace(self) -> typing.Optional[builtins.str]:
         '''External namespace of the user schema property.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#external_namespace GroupSchemaProperty#external_namespace}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#external_namespace GroupSchemaProperty#external_namespace}
         '''
         result = self._values.get("external_namespace")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#id GroupSchemaProperty#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#id GroupSchemaProperty#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1196,7 +1196,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def master(self) -> typing.Optional[builtins.str]:
         '''Master priority for the group schema property. It can be set to ``PROFILE_MASTER``, ``OVERRIDE`` or ``OKTA``. Default: ``PROFILE_MASTER``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#master GroupSchemaProperty#master}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#master GroupSchemaProperty#master}
         '''
         result = self._values.get("master")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1207,7 +1207,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["GroupSchemaPropertyMasterOverridePriority"]]]:
         '''master_override_priority block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#master_override_priority GroupSchemaProperty#master_override_priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#master_override_priority GroupSchemaProperty#master_override_priority}
         '''
         result = self._values.get("master_override_priority")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["GroupSchemaPropertyMasterOverridePriority"]]], result)
@@ -1216,7 +1216,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def max_length(self) -> typing.Optional[jsii.Number]:
         '''The maximum length of the user property value. Only applies to type ``string``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#max_length GroupSchemaProperty#max_length}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#max_length GroupSchemaProperty#max_length}
         '''
         result = self._values.get("max_length")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1225,7 +1225,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def min_length(self) -> typing.Optional[jsii.Number]:
         '''The minimum length of the user property value. Only applies to type ``string``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#min_length GroupSchemaProperty#min_length}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#min_length GroupSchemaProperty#min_length}
         '''
         result = self._values.get("min_length")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1236,7 +1236,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["GroupSchemaPropertyOneOf"]]]:
         '''one_of block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#one_of GroupSchemaProperty#one_of}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#one_of GroupSchemaProperty#one_of}
         '''
         result = self._values.get("one_of")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["GroupSchemaPropertyOneOf"]]], result)
@@ -1245,7 +1245,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def permissions(self) -> typing.Optional[builtins.str]:
         '''Access control permissions for the property. It can be set to ``READ_WRITE``, ``READ_ONLY``, ``HIDE``. Default: ``READ_ONLY``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#permissions GroupSchemaProperty#permissions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#permissions GroupSchemaProperty#permissions}
         '''
         result = self._values.get("permissions")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1256,14 +1256,14 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the subschema is required.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#required GroupSchemaProperty#required}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#required GroupSchemaProperty#required}
         '''
         result = self._values.get("required")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def scope(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#scope GroupSchemaProperty#scope}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#scope GroupSchemaProperty#scope}.'''
         result = self._values.get("scope")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1271,7 +1271,7 @@ class GroupSchemaPropertyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def unique(self) -> typing.Optional[builtins.str]:
         '''Whether the property should be unique. It can be set to ``UNIQUE_VALIDATED`` or ``NOT_UNIQUE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#unique GroupSchemaProperty#unique}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#unique GroupSchemaProperty#unique}
         '''
         result = self._values.get("unique")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1301,8 +1301,8 @@ class GroupSchemaPropertyMasterOverridePriority:
         type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#value GroupSchemaProperty#value}.
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}.
+        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#value GroupSchemaProperty#value}.
+        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0323d3dc83da1da90e973ccdcd9ca8232063d294d3c2bcdec1e678d47af52067)
@@ -1316,14 +1316,14 @@ class GroupSchemaPropertyMasterOverridePriority:
 
     @builtins.property
     def value(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#value GroupSchemaProperty#value}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#value GroupSchemaProperty#value}.'''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#type GroupSchemaProperty#type}.'''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1522,8 +1522,8 @@ class GroupSchemaPropertyMasterOverridePriorityOutputReference(
 class GroupSchemaPropertyOneOf:
     def __init__(self, *, const: builtins.str, title: builtins.str) -> None:
         '''
-        :param const: Enum value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#const GroupSchemaProperty#const}
-        :param title: Enum title. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
+        :param const: Enum value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#const GroupSchemaProperty#const}
+        :param title: Enum title. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__f24dd6b63ea0f0b2cd595bac1e691ec69044c47446750689e04a3141f9168984)
@@ -1538,7 +1538,7 @@ class GroupSchemaPropertyOneOf:
     def const(self) -> builtins.str:
         '''Enum value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#const GroupSchemaProperty#const}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#const GroupSchemaProperty#const}
         '''
         result = self._values.get("const")
         assert result is not None, "Required property 'const' is missing"
@@ -1548,7 +1548,7 @@ class GroupSchemaPropertyOneOf:
     def title(self) -> builtins.str:
         '''Enum title.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/group_schema_property#title GroupSchemaProperty#title}
         '''
         result = self._values.get("title")
         assert result is not None, "Required property 'title' is missing"

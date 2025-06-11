@@ -1,7 +1,7 @@
 r'''
 # `okta_link_definition`
 
-Refer to the Terraform Registry for docs: [`okta_link_definition`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition).
+Refer to the Terraform Registry for docs: [`okta_link_definition`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class LinkDefinition(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.linkDefinition.LinkDefinition",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition okta_link_definition}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition okta_link_definition}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class LinkDefinition(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition okta_link_definition} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition okta_link_definition} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param associated_description: Description of the associated relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#associated_description LinkDefinition#associated_description}
-        :param associated_name: API name of the associated link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#associated_name LinkDefinition#associated_name}
-        :param associated_title: Display name of the associated link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#associated_title LinkDefinition#associated_title}
-        :param primary_description: Description of the primary relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#primary_description LinkDefinition#primary_description}
-        :param primary_name: API name of the primary link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#primary_name LinkDefinition#primary_name}
-        :param primary_title: Display name of the primary link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#primary_title LinkDefinition#primary_title}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#id LinkDefinition#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param associated_description: Description of the associated relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#associated_description LinkDefinition#associated_description}
+        :param associated_name: API name of the associated link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#associated_name LinkDefinition#associated_name}
+        :param associated_title: Display name of the associated link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#associated_title LinkDefinition#associated_title}
+        :param primary_description: Description of the primary relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#primary_description LinkDefinition#primary_description}
+        :param primary_name: API name of the primary link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#primary_name LinkDefinition#primary_name}
+        :param primary_title: Display name of the primary link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#primary_title LinkDefinition#primary_title}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#id LinkDefinition#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class LinkDefinition(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the LinkDefinition to import.
-        :param import_from_id: The id of the existing LinkDefinition that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing LinkDefinition that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the LinkDefinition to import is found.
         '''
         if __debug__:
@@ -316,13 +316,13 @@ class LinkDefinitionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param associated_description: Description of the associated relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#associated_description LinkDefinition#associated_description}
-        :param associated_name: API name of the associated link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#associated_name LinkDefinition#associated_name}
-        :param associated_title: Display name of the associated link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#associated_title LinkDefinition#associated_title}
-        :param primary_description: Description of the primary relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#primary_description LinkDefinition#primary_description}
-        :param primary_name: API name of the primary link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#primary_name LinkDefinition#primary_name}
-        :param primary_title: Display name of the primary link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#primary_title LinkDefinition#primary_title}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#id LinkDefinition#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param associated_description: Description of the associated relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#associated_description LinkDefinition#associated_description}
+        :param associated_name: API name of the associated link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#associated_name LinkDefinition#associated_name}
+        :param associated_title: Display name of the associated link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#associated_title LinkDefinition#associated_title}
+        :param primary_description: Description of the primary relationship. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#primary_description LinkDefinition#primary_description}
+        :param primary_name: API name of the primary link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#primary_name LinkDefinition#primary_name}
+        :param primary_title: Display name of the primary link. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#primary_title LinkDefinition#primary_title}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#id LinkDefinition#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -435,7 +435,7 @@ class LinkDefinitionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def associated_description(self) -> builtins.str:
         '''Description of the associated relationship.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#associated_description LinkDefinition#associated_description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#associated_description LinkDefinition#associated_description}
         '''
         result = self._values.get("associated_description")
         assert result is not None, "Required property 'associated_description' is missing"
@@ -445,7 +445,7 @@ class LinkDefinitionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def associated_name(self) -> builtins.str:
         '''API name of the associated link.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#associated_name LinkDefinition#associated_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#associated_name LinkDefinition#associated_name}
         '''
         result = self._values.get("associated_name")
         assert result is not None, "Required property 'associated_name' is missing"
@@ -455,7 +455,7 @@ class LinkDefinitionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def associated_title(self) -> builtins.str:
         '''Display name of the associated link.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#associated_title LinkDefinition#associated_title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#associated_title LinkDefinition#associated_title}
         '''
         result = self._values.get("associated_title")
         assert result is not None, "Required property 'associated_title' is missing"
@@ -465,7 +465,7 @@ class LinkDefinitionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def primary_description(self) -> builtins.str:
         '''Description of the primary relationship.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#primary_description LinkDefinition#primary_description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#primary_description LinkDefinition#primary_description}
         '''
         result = self._values.get("primary_description")
         assert result is not None, "Required property 'primary_description' is missing"
@@ -475,7 +475,7 @@ class LinkDefinitionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def primary_name(self) -> builtins.str:
         '''API name of the primary link.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#primary_name LinkDefinition#primary_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#primary_name LinkDefinition#primary_name}
         '''
         result = self._values.get("primary_name")
         assert result is not None, "Required property 'primary_name' is missing"
@@ -485,7 +485,7 @@ class LinkDefinitionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def primary_title(self) -> builtins.str:
         '''Display name of the primary link.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#primary_title LinkDefinition#primary_title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#primary_title LinkDefinition#primary_title}
         '''
         result = self._values.get("primary_title")
         assert result is not None, "Required property 'primary_title' is missing"
@@ -493,7 +493,7 @@ class LinkDefinitionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/link_definition#id LinkDefinition#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/link_definition#id LinkDefinition#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

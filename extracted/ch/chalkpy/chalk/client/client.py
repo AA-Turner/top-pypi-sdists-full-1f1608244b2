@@ -65,6 +65,7 @@ class ChalkClient:
         additional_headers: Mapping[str, str] | None = None,
         default_job_timeout: float | timedelta | None = None,
         default_request_timeout: float | timedelta | None = None,
+        default_connect_timeout: float | timedelta | None = None,
         local: bool = False,
         ssl_context: ssl.SSLContext | None = None,
     ):
@@ -121,6 +122,10 @@ class ChalkClient:
         default_request_timeout:
             The default wait timeout, in seconds, to wait for network requests to complete.
             If not specified, the default is no timeout.
+        default_connect_timeout:
+            The default connection timeout, in seconds, to wait for establishing a connection.
+            This is separate from the request timeout and controls only the connection phase.
+            If not specified, the default is no timeout.
         local
             If True, point the client at a local version of the code.
         ssl_context
@@ -159,6 +164,7 @@ class ChalkClient:
         required_resolver_tags: list[str] | None = None,
         planner_options: Mapping[str, Union[str, int, bool]] | None = None,
         request_timeout: Optional[float] = None,
+        connect_timeout: Optional[float] = None,
         headers: Mapping[str, str] | None = None,
         query_context: Mapping[str, Union[str, int, float, bool, None]] | str | None = None,
     ) -> OnlineQueryResult:
@@ -255,6 +261,9 @@ class ChalkClient:
         request_timeout
             Float value indicating number of seconds that the request should wait before timing out
             at the network level. May not cancel resources on the server processing the query.
+        connect_timeout
+            Float value indicating number of seconds to wait for establishing a connection.
+            This is separate from request_timeout and controls only the connection phase.
         headers
             Additional headers to provide with the request
 

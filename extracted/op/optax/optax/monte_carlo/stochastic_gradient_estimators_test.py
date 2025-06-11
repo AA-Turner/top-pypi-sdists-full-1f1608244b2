@@ -88,9 +88,9 @@ class GradientEstimatorsTest(chex.TestCase):
               ('0.9', 0.9),
           ],
           named=True,
-      )
+      ),
   )
-  def testConstantFunction(self, estimator, constant):
+  def test_constant_function(self, estimator, constant):
     data_dims = 3
     num_samples = _estimator_to_num_samples[estimator]
 
@@ -99,7 +99,7 @@ class GradientEstimatorsTest(chex.TestCase):
 
     effective_log_scale = 0.0
     log_scale = effective_log_scale * _ones(data_dims)
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     jacobians = _estimator_variant(self.variant, estimator)(
         lambda x: jnp.array(constant),
@@ -137,12 +137,14 @@ class GradientEstimatorsTest(chex.TestCase):
               ('0.8_0.1', 0.8, 0.1),
           ],
           named=True,
-      )
+      ),
   )
-  def testLinearFunction(self, estimator, effective_mean, effective_log_scale):
+  def test_linear_function(
+      self, estimator, effective_mean, effective_log_scale
+  ):
     data_dims = 3
     num_samples = _estimator_to_num_samples[estimator]
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     mean = effective_mean * _ones(data_dims)
     log_scale = effective_log_scale * _ones(data_dims)
@@ -176,14 +178,14 @@ class GradientEstimatorsTest(chex.TestCase):
               ('1.0_0.3', 1.0, 0.3),
           ],
           named=True,
-      )
+      ),
   )
-  def testQuadraticFunction(
+  def test_quadratic_function(
       self, estimator, effective_mean, effective_log_scale
   ):
     data_dims = 3
     num_samples = _estimator_to_num_samples[estimator]
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     mean = effective_mean * _ones(data_dims)
     log_scale = effective_log_scale * _ones(data_dims)
@@ -225,13 +227,13 @@ class GradientEstimatorsTest(chex.TestCase):
               ('case_3', [1.0, 2.0, 3.0], [0.1, 0.2, 0.1], [10.0, 5.0, 1.0]),
           ],
           named=True,
-      )
+      ),
   )
-  def testWeightedLinear(
+  def test_weighted_linear(
       self, estimator, effective_mean, effective_log_scale, weights
   ):
     num_samples = _weighted_estimator_to_num_samples[estimator]
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     mean = jnp.array(effective_mean)
     log_scale = jnp.array(effective_log_scale)
@@ -274,11 +276,11 @@ class GradientEstimatorsTest(chex.TestCase):
           named=True,
       )
   )
-  def testWeightedQuadratic(
+  def test_weighted_quadratic(
       self, estimator, effective_mean, effective_log_scale, weights
   ):
     num_samples = _weighted_estimator_to_num_samples[estimator]
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     mean = jnp.array(effective_mean, dtype=jnp.float32)
     log_scale = jnp.array(effective_log_scale, dtype=jnp.float32)
@@ -340,7 +342,7 @@ class GradientEstimatorsTest(chex.TestCase):
       self, effective_mean, effective_log_scale, function, coupling
   ):
     num_samples = 10**5
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
     measure_rng, pathwise_rng = jax.random.split(rng)
 
     mean = jnp.array(effective_mean, dtype=jnp.float32)
@@ -401,9 +403,9 @@ class MeasuredValuedEstimatorsTest(chex.TestCase):
 
   @chex.all_variants
   @parameterized.parameters([True, False])
-  def testRaisesErrorForNonGaussian(self, coupling):
+  def test_raises_error_for_non_gaussian(self, coupling):
     num_samples = 10**5
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     function = lambda x: jnp.sum(x) ** 2
 

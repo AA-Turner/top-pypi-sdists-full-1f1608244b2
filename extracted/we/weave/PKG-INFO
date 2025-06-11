@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: weave
-Version: 0.51.51
+Version: 0.51.52
 Summary: A toolkit for building composable interactive data driven applications.
 Project-URL: Company, https://wandb.com
 Project-URL: Documentation, https://docs.wandb.com/
@@ -344,10 +344,13 @@ Provides-Extra: test
 Requires-Dist: azure-storage-blob>=12.24.0; extra == 'test'
 Requires-Dist: boto3>=1.34.0; extra == 'test'
 Requires-Dist: clickhouse-connect==0.7.0; extra == 'test'
+Requires-Dist: confluent-kafka; extra == 'test'
 Requires-Dist: ddtrace>=2.7.0; extra == 'test'
+Requires-Dist: eval-type-backport; extra == 'test'
 Requires-Dist: fastapi>=0.110.0; extra == 'test'
 Requires-Dist: filelock; extra == 'test'
 Requires-Dist: flask; extra == 'test'
+Requires-Dist: freezegun; extra == 'test'
 Requires-Dist: google-cloud-storage>=2.7.0; extra == 'test'
 Requires-Dist: httpx; extra == 'test'
 Requires-Dist: litellm>=1.36.1; extra == 'test'

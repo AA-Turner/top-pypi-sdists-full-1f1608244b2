@@ -144,8 +144,8 @@ class Tree:
             (status, 'status', Status),
             (session, 'session', Session)
         ])
-        self.session = Session.validate(session)
-        self.status = Status.validate(status, self.session, quiet, errors)
+        self.session = session
+        self.status = status
 
         self._workbook = workbook
         self._datasource = datasource if datasource else _common.DEFAULT_DATASOURCE_ID
@@ -1096,7 +1096,7 @@ class Tree:
 
         return result
 
-    @Status.handle_keyboard_interrupt()
+    @Status.handle_keyboard_interrupt(no_session=True)
     def push(self, *,
              metadata_state_file: Optional[str] = None,
              errors: Optional[str] = None,

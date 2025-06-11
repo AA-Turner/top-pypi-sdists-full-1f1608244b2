@@ -5,6 +5,7 @@ import json
 import os
 import re
 import string
+import threading
 import traceback
 import types
 import uuid
@@ -16,6 +17,7 @@ import numpy as np
 import pandas as pd
 import pytz
 import sys
+import time
 from deprecated import deprecated
 
 from seeq.base import util
@@ -176,24 +178,6 @@ def is_guid(s: object):
 
 def sanitize_guid(g):
     return g.upper()
-
-
-def sanitize_path(path: str, replacement: str = "_") -> str:
-    drive, path_rest = os.path.splitdrive(path)
-    directory, filename = os.path.split(path_rest)
-
-    # Match:
-    # - control chars (ASCII 0–31 and 127)
-    # - illegal Windows characters: <>:"|?*
-    # - optionally, Unicode line/paragraph separators \u2028 \u2029
-    illegal_pattern = r'[<>:"|?*\x00-\x1F\x7F\u2028\u2029]'
-
-    directory = re.sub(illegal_pattern, replacement, directory)
-
-    # Strip trailing spaces or dots (invalid for Windows filenames)
-    directory = directory.rstrip(' .')
-
-    return os.path.join(drive, directory, filename)
 
 
 def new_placeholder_guid():
@@ -462,23 +446,6 @@ def display_supports_html():
 
         except Exception:
             return False
-
-
-def ipython_clear_output(wait=False):
-    try:
-        from IPython.display import clear_output
-    except ImportError:
-        return
-    clear_output(wait)
-
-
-def ipython_display(*objs, include=None, exclude=None, metadata=None, transient=None, display_id=None, **kwargs):
-    try:
-        from IPython.display import display
-    except ImportError:
-        return
-    display(*objs, include=include, exclude=exclude, metadata=metadata, transient=transient,
-            display_id=display_id, **kwargs)
 
 
 def get_data_lab_datasource_input():
@@ -1087,3 +1054,36 @@ def docstring_parameter(*sub):
         return obj
 
     return dec
+
+
+class AutoResetEvent:
+    """
+    This is modeled after the same functionality as .NET's AutoResetEvent class. It represents a thread
+    synchronization event that, when signaled, releases one single waiting thread and then resets automatically.
+    """
+
+    def __init__(self):
+        self._cond = threading.Condition()
+        self._flag = False
+
+    def set(self):
+        with self._cond:
+            self._flag = True
+            self._cond.notify()
+
+    def wait(self, timeout: float = None) -> bool:
+        with self._cond:
+            if not self._flag:
+                # Wait with timeout
+                end_time = None
+                if timeout is not None:
+                    end_time = time.monotonic() + timeout
+
+                while not self._flag:
+                    remaining = None if end_time is None else end_time - time.monotonic()
+                    if remaining is not None and remaining <= 0:
+                        return False
+                    self._cond.wait(remaining)
+
+            self._flag = False  # auto-reset
+            return True

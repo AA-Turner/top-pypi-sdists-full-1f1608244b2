@@ -74,10 +74,10 @@ class DeltaControlVariateTest(chex.TestCase):
 
   @chex.all_variants
   @parameterized.parameters([(1.0, 0.5)])
-  def testQuadraticFunction(self, effective_mean, effective_log_scale):
+  def test_quadratic_function(self, effective_mean, effective_log_scale):
     data_dims = 20
     num_samples = 10**6
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     mean = effective_mean * jnp.ones(shape=(data_dims), dtype=jnp.float32)
     log_scale = effective_log_scale * jnp.ones(
@@ -100,7 +100,7 @@ class DeltaControlVariateTest(chex.TestCase):
 
   @chex.all_variants
   @parameterized.parameters([(1.0, 1.0)])
-  def testPolynomialFunction(self, effective_mean, effective_log_scale):
+  def test_polynomial_function(self, effective_mean, effective_log_scale):
     data_dims = 10
     num_samples = 10**3
 
@@ -111,7 +111,7 @@ class DeltaControlVariateTest(chex.TestCase):
     params = [mean, log_scale]
 
     dist = utils.multi_normal(*params)
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
     dist_samples = dist.sample((num_samples,), rng)
     function = lambda x: jnp.sum(x**5)
 
@@ -123,7 +123,7 @@ class DeltaControlVariateTest(chex.TestCase):
     _assert_equal(avg_cv, expected_cv(params, None), rtol=1e-1, atol=1e-3)
 
   @chex.all_variants
-  def testNonPolynomialFunction(self):
+  def test_non_polynomial_function(self):
     data_dims = 10
     num_samples = 10**3
 
@@ -131,7 +131,7 @@ class DeltaControlVariateTest(chex.TestCase):
     log_scale = jnp.ones(shape=(data_dims), dtype=jnp.float32)
     params = [mean, log_scale]
 
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
     dist = utils.multi_normal(*params)
     dist_samples = dist.sample((num_samples,), rng)
     function = lambda x: jnp.sum(jnp.log(x**2))
@@ -154,8 +154,8 @@ class MovingAverageBaselineTest(chex.TestCase):
 
   @chex.all_variants
   @parameterized.parameters([(1.0, 0.5, 0.9), (1.0, 0.5, 0.99)])
-  def testLinearFunction(self, effective_mean, effective_log_scale, decay):
-    weights = jnp.array([1.0, 2.0, 3.0], dtype=jnp.float32)
+  def test_linear_function(self, effective_mean, effective_log_scale, decay):
+    weights = jnp.array([1., 2., 3.], dtype=jnp.float32)
     num_samples = 10**4
     data_dims = len(weights)
 
@@ -167,7 +167,7 @@ class MovingAverageBaselineTest(chex.TestCase):
     params = [mean, log_scale]
     function = lambda x: jnp.sum(weights * x)
 
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
     dist = utils.multi_normal(*params)
     dist_samples = dist.sample((num_samples,), rng)
 
@@ -204,10 +204,10 @@ class MovingAverageBaselineTest(chex.TestCase):
 
   @chex.all_variants
   @parameterized.parameters([(1.0, 0.5, 0.9), (1.0, 0.5, 0.99)])
-  def testLinearFunctionWithHeuristic(
+  def test_linear_function_with_heuristic(
       self, effective_mean, effective_log_scale, decay
   ):
-    weights = jnp.array([1.0, 2.0, 3.0], dtype=jnp.float32)
+    weights = jnp.array([1., 2., 3.], dtype=jnp.float32)
     num_samples = 10**5
     data_dims = len(weights)
 
@@ -219,7 +219,7 @@ class MovingAverageBaselineTest(chex.TestCase):
     params = [mean, log_scale]
     function = lambda x: jnp.sum(weights * x)
 
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
     dist = utils.multi_normal(*params)
     dist_samples = dist.sample((num_samples,), rng)
 
@@ -259,10 +259,10 @@ class MovingAverageBaselineTest(chex.TestCase):
     )
 
   @parameterized.parameters([(1.0, 0.5, 0.9), (1.0, 0.5, 0.99)])
-  def testLinearFunctionZeroDebias(
+  def test_linear_function_zero_debias(
       self, effective_mean, effective_log_scale, decay
   ):
-    weights = jnp.array([1.0, 2.0, 3.0], dtype=jnp.float32)
+    weights = jnp.array([1., 2., 3.], dtype=jnp.float32)
     num_samples = 10**5
     data_dims = len(weights)
 
@@ -274,7 +274,7 @@ class MovingAverageBaselineTest(chex.TestCase):
     params = [mean, log_scale]
     function = lambda x: jnp.sum(weights * x)
 
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
     dist = utils.multi_normal(*params)
     dist_samples = dist.sample((num_samples,), rng)
 
@@ -329,7 +329,7 @@ class DeltaMethodAnalyticalExpectedGrads(chex.TestCase):
           named=True,
       )
   )
-  def testQuadraticFunction(
+  def test_quadratic_function(
       self,
       effective_mean,
       effective_log_scale,
@@ -346,7 +346,7 @@ class DeltaMethodAnalyticalExpectedGrads(chex.TestCase):
 
     params = [mean, log_scale]
     function = lambda x: jnp.sum(x**2)
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     jacobians = _cv_jac_variant(self.variant)(
         function,
@@ -410,9 +410,9 @@ class DeltaMethodAnalyticalExpectedGrads(chex.TestCase):
               ('no_estimate_cv_coeffs', False),
           ],
           named=True,
-      )
+      ),
   )
-  def testCubicFunction(
+  def test_cubic_function(
       self,
       effective_mean,
       effective_log_scale,
@@ -429,7 +429,7 @@ class DeltaMethodAnalyticalExpectedGrads(chex.TestCase):
 
     params = [mean, log_scale]
     function = lambda x: jnp.sum(x**3)
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     jacobians = _cv_jac_variant(self.variant)(
         function,
@@ -497,9 +497,9 @@ class DeltaMethodAnalyticalExpectedGrads(chex.TestCase):
               ('no_estimate_cv_coeffs', False),
           ],
           named=True,
-      )
+      ),
   )
-  def testForthPowerFunction(
+  def test_forth_power_function(
       self,
       effective_mean,
       effective_log_scale,
@@ -516,7 +516,7 @@ class DeltaMethodAnalyticalExpectedGrads(chex.TestCase):
 
     params = [mean, log_scale]
     function = lambda x: jnp.sum(x**4)
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
 
     jacobians = _cv_jac_variant(self.variant)(
         function,
@@ -592,9 +592,9 @@ class ConsistencyWithStandardEstimators(chex.TestCase):
               ),
           ],
           named=True,
-      )
+      ),
   )
-  def testWeightedLinearFunction(
+  def test_weighted_linear_function(
       self,
       effective_mean,
       effective_log_scale,
@@ -613,7 +613,7 @@ class ConsistencyWithStandardEstimators(chex.TestCase):
 
     params = [mean, log_scale]
     function = lambda x: jnp.sum(weights * x)
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
     cv_rng, ge_rng = jax.random.split(rng)
 
     jacobians = _cv_jac_variant(self.variant)(
@@ -682,9 +682,9 @@ class ConsistencyWithStandardEstimators(chex.TestCase):
               ('moving_avg_baseline', control_variates.moving_avg_baseline),
           ],
           named=True,
-      )
+      ),
   )
-  def testNonPolynomialFunction(
+  def test_non_polynomial_function(
       self,
       effective_mean,
       effective_log_scale,
@@ -702,7 +702,7 @@ class ConsistencyWithStandardEstimators(chex.TestCase):
 
     params = [mean, log_scale]
     function = lambda x: jnp.log(jnp.sum(x**2))
-    rng = jax.random.PRNGKey(1)
+    rng = jax.random.key(1)
     cv_rng, ge_rng = jax.random.split(rng)
 
     jacobians = _cv_jac_variant(self.variant)(

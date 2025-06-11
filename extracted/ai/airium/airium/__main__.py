@@ -42,6 +42,8 @@ def get_html_as_strnig(input_arg: str) -> Optional[str]:
             with open(file_path, 'rt') as f:
                 return f.read()
 
+        return None
+
     def from_uri(uri: str) -> Optional[str]:
         try:
             import requests
@@ -49,13 +51,13 @@ def get_html_as_strnig(input_arg: str) -> Optional[str]:
         except ImportError as e:
             sys.stderr.write("\nPlease install `requests` package in order to fetch html files from web.\n")
             sys.stderr.write(f"{type(e).__name__}: {e}\n")
-            return
+            return None
 
         try:
             response = requests.get(uri, auth=('user', 'pass'))
         except IOError as e:
             sys.stderr.write(f"{type(e).__name__}: {e}\n")
-            return
+            return None
 
         if response.status_code == 200:
             ct = response.headers['content-type']
@@ -63,7 +65,9 @@ def get_html_as_strnig(input_arg: str) -> Optional[str]:
                 return response.text
             else:
                 sys.stderr.write(f"Bad content type returned from {input_arg}: {ct}.")
-                return
+                return None
+
+        return None
 
     ret = None
     for method_ in [from_local_file, from_uri]:
@@ -73,6 +77,8 @@ def get_html_as_strnig(input_arg: str) -> Optional[str]:
             pass
         if ret is not None:
             return ret
+
+    return None
 
 
 def parse_options(args) -> argparse.Namespace:
@@ -89,4 +95,4 @@ def parse_options(args) -> argparse.Namespace:
 
 
 if __name__ == '__main__':  # pragma: no cover
-    sys.exit(entry_main())
+    sys.exit(entry_main())  # type: ignore[func-returns-value]

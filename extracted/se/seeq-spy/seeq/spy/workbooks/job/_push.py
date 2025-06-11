@@ -189,8 +189,6 @@ def push(job_folder, *, resume: bool = True, path: str = None, owner: str = None
         (scope_globals_to_workbook, 'scope_globals_to_workbook', bool)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     if not util.safe_exists(job_folder):

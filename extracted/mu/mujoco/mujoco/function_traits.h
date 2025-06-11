@@ -121,6 +121,17 @@ struct mj_compile {
   }
 };
 
+struct mj_copyBack {
+  static constexpr char name[] = "mj_copyBack";
+  static constexpr char doc[] = "Copy real-valued arrays from model to spec, returns 1 on success.";
+  using type = int (mjSpec *, const mjModel *);
+  static constexpr auto param_names = std::make_tuple("s", "m");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mj_copyBack;
+  }
+};
+
 struct mj_recompile {
   static constexpr char name[] = "mj_recompile";
   static constexpr char doc[] = "Recompile spec to model, preserving the state, return 0 on success.";
@@ -371,6 +382,17 @@ struct mj_copyData {
 
   MUJOCO_ALWAYS_INLINE static type& GetFunc() {
     return ::mj_copyData;
+  }
+};
+
+struct mjv_copyData {
+  static constexpr char name[] = "mjv_copyData";
+  static constexpr char doc[] = "Copy mjData, skip large arrays not required for visualization.";
+  using type = mjData * (mjData *, const mjModel *, const mjData *);
+  static constexpr auto param_names = std::make_tuple("dest", "m", "src");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mjv_copyData;
   }
 };
 
@@ -935,6 +957,17 @@ struct mj_crb {
   }
 };
 
+struct mj_makeM {
+  static constexpr char name[] = "mj_makeM";
+  static constexpr char doc[] = "Make inertia matrix.";
+  using type = void (const mjModel *, mjData *);
+  static constexpr auto param_names = std::make_tuple("m", "d");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mj_makeM;
+  }
+};
+
 struct mj_factorM {
   static constexpr char name[] = "mj_factorM";
   static constexpr char doc[] = "Compute sparse L'*D*L factorizaton of inertia matrix.";
@@ -1355,7 +1388,7 @@ struct mj_mulM2 {
 
 struct mj_addM {
   static constexpr char name[] = "mj_addM";
-  static constexpr char doc[] = "Add inertia matrix to destination matrix. Destination can be sparse uncompressed, or dense when all int* are NULL";
+  static constexpr char doc[] = "Add inertia matrix to destination matrix. Destination can be sparse or dense when all int* are NULL.";
   using type = void (const mjModel *, mjData *, mjtNum *, int *, int *, int *);
   static constexpr auto param_names = std::make_tuple("m", "d", "dst", "rownnz", "rowadr", "colind");
 
@@ -1727,17 +1760,6 @@ struct mjv_moveCamera {
   }
 };
 
-struct mjv_moveCameraFromState {
-  static constexpr char name[] = "mjv_moveCameraFromState";
-  static constexpr char doc[] = "Move camera with mouse given a scene state; action is mjtMouse.";
-  using type = void (const mjvSceneState *, int, mjtNum, mjtNum, const mjvScene *, mjvCamera *);
-  static constexpr auto param_names = std::make_tuple("scnstate", "action", "reldx", "reldy", "scn", "cam");
-
-  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
-    return ::mjv_moveCameraFromState;
-  }
-};
-
 struct mjv_movePerturb {
   static constexpr char name[] = "mjv_movePerturb";
   static constexpr char doc[] = "Move perturb object with mouse; action is mjtMouse.";
@@ -1746,17 +1768,6 @@ struct mjv_movePerturb {
 
   MUJOCO_ALWAYS_INLINE static type& GetFunc() {
     return ::mjv_movePerturb;
-  }
-};
-
-struct mjv_movePerturbFromState {
-  static constexpr char name[] = "mjv_movePerturbFromState";
-  static constexpr char doc[] = "Move perturb object with mouse given a scene state; action is mjtMouse.";
-  using type = void (const mjvSceneState *, int, mjtNum, mjtNum, const mjvScene *, mjvPerturb *);
-  static constexpr auto param_names = std::make_tuple("scnstate", "action", "reldx", "reldy", "scn", "pert");
-
-  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
-    return ::mjv_movePerturbFromState;
   }
 };
 
@@ -1914,17 +1925,6 @@ struct mjv_updateScene {
   }
 };
 
-struct mjv_updateSceneFromState {
-  static constexpr char name[] = "mjv_updateSceneFromState";
-  static constexpr char doc[] = "Update entire scene from a scene state, return the number of new mjWARN_VGEOMFULL warnings.";
-  using type = int (const mjvSceneState *, const mjvOption *, const mjvPerturb *, mjvCamera *, int, mjvScene *);
-  static constexpr auto param_names = std::make_tuple("scnstate", "opt", "pert", "cam", "catmask", "scn");
-
-  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
-    return ::mjv_updateSceneFromState;
-  }
-};
-
 struct mjv_copyModel {
   static constexpr char name[] = "mjv_copyModel";
   static constexpr char doc[] = "Copy mjModel, skip large arrays not required for abstract visualization.";
@@ -1933,50 +1933,6 @@ struct mjv_copyModel {
 
   MUJOCO_ALWAYS_INLINE static type& GetFunc() {
     return ::mjv_copyModel;
-  }
-};
-
-struct mjv_defaultSceneState {
-  static constexpr char name[] = "mjv_defaultSceneState";
-  static constexpr char doc[] = "Set default scene state.";
-  using type = void (mjvSceneState *);
-  static constexpr auto param_names = std::make_tuple("scnstate");
-
-  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
-    return ::mjv_defaultSceneState;
-  }
-};
-
-struct mjv_makeSceneState {
-  static constexpr char name[] = "mjv_makeSceneState";
-  static constexpr char doc[] = "Allocate resources and initialize a scene state object.";
-  using type = void (const mjModel *, const mjData *, mjvSceneState *, int);
-  static constexpr auto param_names = std::make_tuple("m", "d", "scnstate", "maxgeom");
-
-  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
-    return ::mjv_makeSceneState;
-  }
-};
-
-struct mjv_freeSceneState {
-  static constexpr char name[] = "mjv_freeSceneState";
-  static constexpr char doc[] = "Free scene state.";
-  using type = void (mjvSceneState *);
-  static constexpr auto param_names = std::make_tuple("scnstate");
-
-  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
-    return ::mjv_freeSceneState;
-  }
-};
-
-struct mjv_updateSceneState {
-  static constexpr char name[] = "mjv_updateSceneState";
-  static constexpr char doc[] = "Update a scene state from model and data.";
-  using type = void (const mjModel *, mjData *, const mjvOption *, mjvSceneState *);
-  static constexpr auto param_names = std::make_tuple("m", "d", "opt", "scnstate");
-
-  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
-    return ::mjv_updateSceneState;
   }
 };
 
@@ -3641,6 +3597,39 @@ struct mju_sigmoid {
   }
 };
 
+struct mjc_getSDF {
+  static constexpr char name[] = "mjc_getSDF";
+  static constexpr char doc[] = "get sdf from geom id";
+  using type = const mjpPlugin * (const mjModel *, int);
+  static constexpr auto param_names = std::make_tuple("m", "id");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mjc_getSDF;
+  }
+};
+
+struct mjc_distance {
+  static constexpr char name[] = "mjc_distance";
+  static constexpr char doc[] = "signed distance function";
+  using type = mjtNum (const mjModel *, const mjData *, const mjSDF *, const mjtNum (*)[3]);
+  static constexpr auto param_names = std::make_tuple("m", "d", "s", "x");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return *reinterpret_cast<type*>(&::mjc_distance);
+  }
+};
+
+struct mjc_gradient {
+  static constexpr char name[] = "mjc_gradient";
+  static constexpr char doc[] = "gradient of sdf";
+  using type = void (const mjModel *, const mjData *, const mjSDF *, mjtNum (*)[3], const mjtNum (*)[3]);
+  static constexpr auto param_names = std::make_tuple("m", "d", "s", "gradient", "x");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return *reinterpret_cast<type*>(&::mjc_gradient);
+  }
+};
+
 struct mjd_transitionFD {
   static constexpr char name[] = "mjd_transitionFD";
   static constexpr char doc[] = "Finite differenced transition matrices (control theory notation)   d(x_next) = A*dx + B*du   d(sensor) = C*dx + D*du   required output matrix dimensions:      A: (2*nv+na x 2*nv+na)      B: (2*nv+na x nu)      D: (nsensordata x 2*nv+na)      C: (nsensordata x nu)";
@@ -4180,6 +4169,94 @@ struct mjs_addDefault {
   }
 };
 
+struct mjs_setToMotor {
+  static constexpr char name[] = "mjs_setToMotor";
+  static constexpr char doc[] = "Set actuator to motor, return error if any.";
+  using type = const char * (mjsActuator *);
+  static constexpr auto param_names = std::make_tuple("actuator");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mjs_setToMotor;
+  }
+};
+
+struct mjs_setToPosition {
+  static constexpr char name[] = "mjs_setToPosition";
+  static constexpr char doc[] = "Set actuator to position, return error if any.";
+  using type = const char * (mjsActuator *, double, double (*)[1], double (*)[1], double (*)[1], double);
+  static constexpr auto param_names = std::make_tuple("actuator", "kp", "kv", "dampratio", "timeconst", "inheritrange");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return *reinterpret_cast<type*>(&::mjs_setToPosition);
+  }
+};
+
+struct mjs_setToIntVelocity {
+  static constexpr char name[] = "mjs_setToIntVelocity";
+  static constexpr char doc[] = "Set actuator to integrated velocity, return error if any.";
+  using type = const char * (mjsActuator *, double, double (*)[1], double (*)[1], double (*)[1], double);
+  static constexpr auto param_names = std::make_tuple("actuator", "kp", "kv", "dampratio", "timeconst", "inheritrange");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return *reinterpret_cast<type*>(&::mjs_setToIntVelocity);
+  }
+};
+
+struct mjs_setToVelocity {
+  static constexpr char name[] = "mjs_setToVelocity";
+  static constexpr char doc[] = "Set actuator to velocity servo, return error if any.";
+  using type = const char * (mjsActuator *, double);
+  static constexpr auto param_names = std::make_tuple("actuator", "kv");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mjs_setToVelocity;
+  }
+};
+
+struct mjs_setToDamper {
+  static constexpr char name[] = "mjs_setToDamper";
+  static constexpr char doc[] = "Set actuator to activate damper, return error if any.";
+  using type = const char * (mjsActuator *, double);
+  static constexpr auto param_names = std::make_tuple("actuator", "kv");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mjs_setToDamper;
+  }
+};
+
+struct mjs_setToCylinder {
+  static constexpr char name[] = "mjs_setToCylinder";
+  static constexpr char doc[] = "Set actuator to hydraulic or pneumatic cylinder, return error if any.";
+  using type = const char * (mjsActuator *, double, double, double, double);
+  static constexpr auto param_names = std::make_tuple("actuator", "timeconst", "bias", "area", "diameter");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mjs_setToCylinder;
+  }
+};
+
+struct mjs_setToMuscle {
+  static constexpr char name[] = "mjs_setToMuscle";
+  static constexpr char doc[] = "Set actuator to muscle, return error if any.a";
+  using type = const char * (mjsActuator *, double (*)[2], double, double (*)[2], double, double, double, double, double, double, double);
+  static constexpr auto param_names = std::make_tuple("actuator", "timeconst", "tausmooth", "range", "force", "scale", "lmin", "lmax", "vmax", "fpmax", "fvmax");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return *reinterpret_cast<type*>(&::mjs_setToMuscle);
+  }
+};
+
+struct mjs_setToAdhesion {
+  static constexpr char name[] = "mjs_setToAdhesion";
+  static constexpr char doc[] = "Set actuator to active adhesion, return error if any.";
+  using type = const char * (mjsActuator *, double);
+  static constexpr auto param_names = std::make_tuple("actuator", "gain");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mjs_setToAdhesion;
+  }
+};
+
 struct mjs_addMesh {
   static constexpr char name[] = "mjs_addMesh";
   static constexpr char doc[] = "Add mesh.";
@@ -4551,6 +4628,17 @@ struct mjs_getDouble {
 
   MUJOCO_ALWAYS_INLINE static type& GetFunc() {
     return ::mjs_getDouble;
+  }
+};
+
+struct mjs_getPluginAttributes {
+  static constexpr char name[] = "mjs_getPluginAttributes";
+  static constexpr char doc[] = "Get plugin attributes.";
+  using type = const void * (const mjsPlugin *);
+  static constexpr auto param_names = std::make_tuple("plugin");
+
+  MUJOCO_ALWAYS_INLINE static type& GetFunc() {
+    return ::mjs_getPluginAttributes;
   }
 };
 

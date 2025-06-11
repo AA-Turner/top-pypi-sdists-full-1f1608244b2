@@ -151,6 +151,8 @@ class GradientTransformation(NamedTuple):
   # pylint: disable=line-too-long
   """A pair of pure functions implementing a gradient transformation.
 
+  Prefer :class:`GradientTransformationExtraArgs` for new optimizers.
+
   Optax optimizers are all implemented as *gradient transformations*.
   A gradient transformation is defined to be a pair of pure functions, which
   are combined together in a `NamedTuple` so that they can be referred to by
@@ -158,7 +160,7 @@ class GradientTransformation(NamedTuple):
 
   Note that an extended API is provided for users wishing to build optimizers
   that take additional arguments during the update step. For more details,
-  see :func:`optax.GradientTransoformationExtraArgs`.
+  see :func:`optax.GradientTransformationExtraArgs`.
 
   Since gradient transformations do not contain any internal state, all stateful
   optimizer properties (such as the current step count when using optimizer
@@ -167,7 +169,7 @@ class GradientTransformation(NamedTuple):
   transformation is applied, a new state is computed and returned, ready to be
   passed to the next call to the gradient transformation.
 
-  Since gradient transformations are pure, idempotent functions, the only way
+  Since gradient transformations are pure functions, the only way
   to change the behavior of a gradient transformation between steps, is to
   change the values in the optimizer state. To see an example of mutating the
   optimizer state in order to control the behavior of an optax gradient
@@ -249,7 +251,7 @@ def set_to_zero() -> GradientTransformation:
   returned from this transformation are applied to the model parameters, the
   model parameters will remain unchanged.
 
-  This can be used in combination with `multi_transform` or `masked` to freeze
+  This can be used in combination with `partition` or `masked` to freeze
   (i.e. keep fixed) some parts of the tree of model parameters while applying
   gradient updates to other parts of the tree.
 

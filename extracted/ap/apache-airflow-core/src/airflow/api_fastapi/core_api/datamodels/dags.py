@@ -107,7 +107,7 @@ class DAGResponse(BaseModel):
     @property
     def file_token(self) -> str:
         """Return file token."""
-        serializer = URLSafeSerializer(conf.get_mandatory_value("webserver", "secret_key"))
+        serializer = URLSafeSerializer(conf.get_mandatory_value("api", "secret_key"))
         payload = {
             "bundle_name": self.bundle_name,
             "relative_fileloc": self.relative_fileloc,
@@ -155,6 +155,7 @@ class DAGDetailsResponse(DAGResponse):
     template_search_path: Iterable[str] | None
     timezone: str | None
     last_parsed: datetime | None
+    owner_links: dict[str, str] | None = None
 
     @field_validator("timezone", mode="before")
     @classmethod

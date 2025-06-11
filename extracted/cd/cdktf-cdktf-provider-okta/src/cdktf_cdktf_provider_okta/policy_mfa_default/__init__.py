@@ -1,7 +1,7 @@
 r'''
 # `okta_policy_mfa_default`
 
-Refer to the Terraform Registry for docs: [`okta_policy_mfa_default`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default).
+Refer to the Terraform Registry for docs: [`okta_policy_mfa_default`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PolicyMfaDefault(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.policyMfaDefault.PolicyMfaDefault",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default okta_policy_mfa_default}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default okta_policy_mfa_default}.'''
 
     def __init__(
         self,
@@ -84,35 +84,35 @@ class PolicyMfaDefault(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default okta_policy_mfa_default} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default okta_policy_mfa_default} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param duo: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#duo PolicyMfaDefault#duo}.
-        :param external_idp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#external_idp PolicyMfaDefault#external_idp}.
-        :param external_idps: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#external_idps PolicyMfaDefault#external_idps}.
-        :param fido_u2_f: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#fido_u2f PolicyMfaDefault#fido_u2f}.
-        :param fido_webauthn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#fido_webauthn PolicyMfaDefault#fido_webauthn}.
-        :param google_otp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#google_otp PolicyMfaDefault#google_otp}.
-        :param hotp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#hotp PolicyMfaDefault#hotp}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#id PolicyMfaDefault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_oie: Is the policy using Okta Identity Engine (OIE) with authenticators instead of factors? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#is_oie PolicyMfaDefault#is_oie}
-        :param okta_call: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_call PolicyMfaDefault#okta_call}.
-        :param okta_email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_email PolicyMfaDefault#okta_email}.
-        :param okta_otp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_otp PolicyMfaDefault#okta_otp}.
-        :param okta_password: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_password PolicyMfaDefault#okta_password}.
-        :param okta_push: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_push PolicyMfaDefault#okta_push}.
-        :param okta_question: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_question PolicyMfaDefault#okta_question}.
-        :param okta_sms: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_sms PolicyMfaDefault#okta_sms}.
-        :param okta_verify: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_verify PolicyMfaDefault#okta_verify}.
-        :param onprem_mfa: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#onprem_mfa PolicyMfaDefault#onprem_mfa}.
-        :param phone_number: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#phone_number PolicyMfaDefault#phone_number}.
-        :param rsa_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#rsa_token PolicyMfaDefault#rsa_token}.
-        :param security_question: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#security_question PolicyMfaDefault#security_question}.
-        :param smart_card_idp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#smart_card_idp PolicyMfaDefault#smart_card_idp}.
-        :param symantec_vip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#symantec_vip PolicyMfaDefault#symantec_vip}.
-        :param webauthn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#webauthn PolicyMfaDefault#webauthn}.
-        :param yubikey_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#yubikey_token PolicyMfaDefault#yubikey_token}.
+        :param duo: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#duo PolicyMfaDefault#duo}.
+        :param external_idp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#external_idp PolicyMfaDefault#external_idp}.
+        :param external_idps: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#external_idps PolicyMfaDefault#external_idps}.
+        :param fido_u2_f: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#fido_u2f PolicyMfaDefault#fido_u2f}.
+        :param fido_webauthn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#fido_webauthn PolicyMfaDefault#fido_webauthn}.
+        :param google_otp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#google_otp PolicyMfaDefault#google_otp}.
+        :param hotp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#hotp PolicyMfaDefault#hotp}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#id PolicyMfaDefault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_oie: Is the policy using Okta Identity Engine (OIE) with authenticators instead of factors? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#is_oie PolicyMfaDefault#is_oie}
+        :param okta_call: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_call PolicyMfaDefault#okta_call}.
+        :param okta_email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_email PolicyMfaDefault#okta_email}.
+        :param okta_otp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_otp PolicyMfaDefault#okta_otp}.
+        :param okta_password: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_password PolicyMfaDefault#okta_password}.
+        :param okta_push: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_push PolicyMfaDefault#okta_push}.
+        :param okta_question: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_question PolicyMfaDefault#okta_question}.
+        :param okta_sms: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_sms PolicyMfaDefault#okta_sms}.
+        :param okta_verify: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_verify PolicyMfaDefault#okta_verify}.
+        :param onprem_mfa: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#onprem_mfa PolicyMfaDefault#onprem_mfa}.
+        :param phone_number: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#phone_number PolicyMfaDefault#phone_number}.
+        :param rsa_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#rsa_token PolicyMfaDefault#rsa_token}.
+        :param security_question: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#security_question PolicyMfaDefault#security_question}.
+        :param smart_card_idp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#smart_card_idp PolicyMfaDefault#smart_card_idp}.
+        :param symantec_vip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#symantec_vip PolicyMfaDefault#symantec_vip}.
+        :param webauthn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#webauthn PolicyMfaDefault#webauthn}.
+        :param yubikey_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#yubikey_token PolicyMfaDefault#yubikey_token}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -175,7 +175,7 @@ class PolicyMfaDefault(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PolicyMfaDefault to import.
-        :param import_from_id: The id of the existing PolicyMfaDefault that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PolicyMfaDefault that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PolicyMfaDefault to import is found.
         '''
         if __debug__:
@@ -888,31 +888,31 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param duo: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#duo PolicyMfaDefault#duo}.
-        :param external_idp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#external_idp PolicyMfaDefault#external_idp}.
-        :param external_idps: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#external_idps PolicyMfaDefault#external_idps}.
-        :param fido_u2_f: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#fido_u2f PolicyMfaDefault#fido_u2f}.
-        :param fido_webauthn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#fido_webauthn PolicyMfaDefault#fido_webauthn}.
-        :param google_otp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#google_otp PolicyMfaDefault#google_otp}.
-        :param hotp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#hotp PolicyMfaDefault#hotp}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#id PolicyMfaDefault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_oie: Is the policy using Okta Identity Engine (OIE) with authenticators instead of factors? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#is_oie PolicyMfaDefault#is_oie}
-        :param okta_call: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_call PolicyMfaDefault#okta_call}.
-        :param okta_email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_email PolicyMfaDefault#okta_email}.
-        :param okta_otp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_otp PolicyMfaDefault#okta_otp}.
-        :param okta_password: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_password PolicyMfaDefault#okta_password}.
-        :param okta_push: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_push PolicyMfaDefault#okta_push}.
-        :param okta_question: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_question PolicyMfaDefault#okta_question}.
-        :param okta_sms: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_sms PolicyMfaDefault#okta_sms}.
-        :param okta_verify: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_verify PolicyMfaDefault#okta_verify}.
-        :param onprem_mfa: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#onprem_mfa PolicyMfaDefault#onprem_mfa}.
-        :param phone_number: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#phone_number PolicyMfaDefault#phone_number}.
-        :param rsa_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#rsa_token PolicyMfaDefault#rsa_token}.
-        :param security_question: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#security_question PolicyMfaDefault#security_question}.
-        :param smart_card_idp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#smart_card_idp PolicyMfaDefault#smart_card_idp}.
-        :param symantec_vip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#symantec_vip PolicyMfaDefault#symantec_vip}.
-        :param webauthn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#webauthn PolicyMfaDefault#webauthn}.
-        :param yubikey_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#yubikey_token PolicyMfaDefault#yubikey_token}.
+        :param duo: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#duo PolicyMfaDefault#duo}.
+        :param external_idp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#external_idp PolicyMfaDefault#external_idp}.
+        :param external_idps: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#external_idps PolicyMfaDefault#external_idps}.
+        :param fido_u2_f: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#fido_u2f PolicyMfaDefault#fido_u2f}.
+        :param fido_webauthn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#fido_webauthn PolicyMfaDefault#fido_webauthn}.
+        :param google_otp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#google_otp PolicyMfaDefault#google_otp}.
+        :param hotp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#hotp PolicyMfaDefault#hotp}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#id PolicyMfaDefault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_oie: Is the policy using Okta Identity Engine (OIE) with authenticators instead of factors? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#is_oie PolicyMfaDefault#is_oie}
+        :param okta_call: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_call PolicyMfaDefault#okta_call}.
+        :param okta_email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_email PolicyMfaDefault#okta_email}.
+        :param okta_otp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_otp PolicyMfaDefault#okta_otp}.
+        :param okta_password: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_password PolicyMfaDefault#okta_password}.
+        :param okta_push: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_push PolicyMfaDefault#okta_push}.
+        :param okta_question: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_question PolicyMfaDefault#okta_question}.
+        :param okta_sms: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_sms PolicyMfaDefault#okta_sms}.
+        :param okta_verify: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_verify PolicyMfaDefault#okta_verify}.
+        :param onprem_mfa: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#onprem_mfa PolicyMfaDefault#onprem_mfa}.
+        :param phone_number: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#phone_number PolicyMfaDefault#phone_number}.
+        :param rsa_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#rsa_token PolicyMfaDefault#rsa_token}.
+        :param security_question: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#security_question PolicyMfaDefault#security_question}.
+        :param smart_card_idp: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#smart_card_idp PolicyMfaDefault#smart_card_idp}.
+        :param symantec_vip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#symantec_vip PolicyMfaDefault#symantec_vip}.
+        :param webauthn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#webauthn PolicyMfaDefault#webauthn}.
+        :param yubikey_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#yubikey_token PolicyMfaDefault#yubikey_token}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1082,7 +1082,7 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def duo(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#duo PolicyMfaDefault#duo}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#duo PolicyMfaDefault#duo}.'''
         result = self._values.get("duo")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1090,7 +1090,7 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def external_idp(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#external_idp PolicyMfaDefault#external_idp}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#external_idp PolicyMfaDefault#external_idp}.'''
         result = self._values.get("external_idp")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1098,13 +1098,13 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def external_idps(
         self,
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[typing.Mapping[builtins.str, builtins.str]]]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#external_idps PolicyMfaDefault#external_idps}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#external_idps PolicyMfaDefault#external_idps}.'''
         result = self._values.get("external_idps")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[typing.Mapping[builtins.str, builtins.str]]]], result)
 
     @builtins.property
     def fido_u2_f(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#fido_u2f PolicyMfaDefault#fido_u2f}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#fido_u2f PolicyMfaDefault#fido_u2f}.'''
         result = self._values.get("fido_u2_f")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1112,25 +1112,25 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def fido_webauthn(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#fido_webauthn PolicyMfaDefault#fido_webauthn}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#fido_webauthn PolicyMfaDefault#fido_webauthn}.'''
         result = self._values.get("fido_webauthn")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def google_otp(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#google_otp PolicyMfaDefault#google_otp}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#google_otp PolicyMfaDefault#google_otp}.'''
         result = self._values.get("google_otp")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def hotp(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#hotp PolicyMfaDefault#hotp}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#hotp PolicyMfaDefault#hotp}.'''
         result = self._values.get("hotp")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#id PolicyMfaDefault#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#id PolicyMfaDefault#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1144,26 +1144,26 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Is the policy using Okta Identity Engine (OIE) with authenticators instead of factors?
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#is_oie PolicyMfaDefault#is_oie}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#is_oie PolicyMfaDefault#is_oie}
         '''
         result = self._values.get("is_oie")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def okta_call(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_call PolicyMfaDefault#okta_call}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_call PolicyMfaDefault#okta_call}.'''
         result = self._values.get("okta_call")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def okta_email(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_email PolicyMfaDefault#okta_email}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_email PolicyMfaDefault#okta_email}.'''
         result = self._values.get("okta_email")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def okta_otp(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_otp PolicyMfaDefault#okta_otp}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_otp PolicyMfaDefault#okta_otp}.'''
         result = self._values.get("okta_otp")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1171,13 +1171,13 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def okta_password(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_password PolicyMfaDefault#okta_password}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_password PolicyMfaDefault#okta_password}.'''
         result = self._values.get("okta_password")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def okta_push(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_push PolicyMfaDefault#okta_push}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_push PolicyMfaDefault#okta_push}.'''
         result = self._values.get("okta_push")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1185,13 +1185,13 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def okta_question(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_question PolicyMfaDefault#okta_question}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_question PolicyMfaDefault#okta_question}.'''
         result = self._values.get("okta_question")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def okta_sms(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_sms PolicyMfaDefault#okta_sms}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_sms PolicyMfaDefault#okta_sms}.'''
         result = self._values.get("okta_sms")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1199,13 +1199,13 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def okta_verify(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#okta_verify PolicyMfaDefault#okta_verify}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#okta_verify PolicyMfaDefault#okta_verify}.'''
         result = self._values.get("okta_verify")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def onprem_mfa(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#onprem_mfa PolicyMfaDefault#onprem_mfa}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#onprem_mfa PolicyMfaDefault#onprem_mfa}.'''
         result = self._values.get("onprem_mfa")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1213,13 +1213,13 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def phone_number(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#phone_number PolicyMfaDefault#phone_number}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#phone_number PolicyMfaDefault#phone_number}.'''
         result = self._values.get("phone_number")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def rsa_token(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#rsa_token PolicyMfaDefault#rsa_token}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#rsa_token PolicyMfaDefault#rsa_token}.'''
         result = self._values.get("rsa_token")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1227,7 +1227,7 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def security_question(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#security_question PolicyMfaDefault#security_question}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#security_question PolicyMfaDefault#security_question}.'''
         result = self._values.get("security_question")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1235,7 +1235,7 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def smart_card_idp(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#smart_card_idp PolicyMfaDefault#smart_card_idp}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#smart_card_idp PolicyMfaDefault#smart_card_idp}.'''
         result = self._values.get("smart_card_idp")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1243,13 +1243,13 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def symantec_vip(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#symantec_vip PolicyMfaDefault#symantec_vip}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#symantec_vip PolicyMfaDefault#symantec_vip}.'''
         result = self._values.get("symantec_vip")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def webauthn(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#webauthn PolicyMfaDefault#webauthn}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#webauthn PolicyMfaDefault#webauthn}.'''
         result = self._values.get("webauthn")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1257,7 +1257,7 @@ class PolicyMfaDefaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def yubikey_token(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_mfa_default#yubikey_token PolicyMfaDefault#yubikey_token}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/resources/policy_mfa_default#yubikey_token PolicyMfaDefault#yubikey_token}.'''
         result = self._values.get("yubikey_token")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 

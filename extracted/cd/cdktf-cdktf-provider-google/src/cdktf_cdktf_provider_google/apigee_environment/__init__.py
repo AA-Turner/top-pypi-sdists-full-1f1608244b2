@@ -1,7 +1,7 @@
 r'''
 # `google_apigee_environment`
 
-Refer to the Terraform Registry for docs: [`google_apigee_environment`](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment).
+Refer to the Terraform Registry for docs: [`google_apigee_environment`](https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class ApigeeEnvironment(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.apigeeEnvironment.ApigeeEnvironment",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment google_apigee_environment}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment google_apigee_environment}.'''
 
     def __init__(
         self,
@@ -54,6 +54,7 @@ class ApigeeEnvironment(
         name: builtins.str,
         org_id: builtins.str,
         api_proxy_type: typing.Optional[builtins.str] = None,
+        client_ip_resolution_config: typing.Optional[typing.Union["ApigeeEnvironmentClientIpResolutionConfig", typing.Dict[builtins.str, typing.Any]]] = None,
         deployment_type: typing.Optional[builtins.str] = None,
         description: typing.Optional[builtins.str] = None,
         display_name: typing.Optional[builtins.str] = None,
@@ -71,22 +72,23 @@ class ApigeeEnvironment(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment google_apigee_environment} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment google_apigee_environment} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: The resource ID of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
-        :param org_id: The Apigee Organization associated with the Apigee environment, in the format 'organizations/{{org_name}}'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#org_id ApigeeEnvironment#org_id}
-        :param api_proxy_type: Optional. API Proxy type supported by the environment. The type can be set when creating the Environment and cannot be changed. Possible values: ["API_PROXY_TYPE_UNSPECIFIED", "PROGRAMMABLE", "CONFIGURABLE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#api_proxy_type ApigeeEnvironment#api_proxy_type}
-        :param deployment_type: Optional. Deployment type supported by the environment. The deployment type can be set when creating the environment and cannot be changed. When you enable archive deployment, you will be prevented from performing a subset of actions within the environment, including: Managing the deployment of API proxy or shared flow revisions; Creating, updating, or deleting resource files; Creating, updating, or deleting target servers. Possible values: ["DEPLOYMENT_TYPE_UNSPECIFIED", "PROXY", "ARCHIVE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#deployment_type ApigeeEnvironment#deployment_type}
-        :param description: Description of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#description ApigeeEnvironment#description}
-        :param display_name: Display name of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#display_name ApigeeEnvironment#display_name}
-        :param forward_proxy_uri: Optional. URI of the forward proxy to be applied to the runtime instances in this environment. Must be in the format of {scheme}://{hostname}:{port}. Note that the scheme must be one of "http" or "https", and the port must be supplied. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#forward_proxy_uri ApigeeEnvironment#forward_proxy_uri}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#id ApigeeEnvironment#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param node_config: node_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#node_config ApigeeEnvironment#node_config}
-        :param properties: properties block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#properties ApigeeEnvironment#properties}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#timeouts ApigeeEnvironment#timeouts}
-        :param type: Types that can be selected for an Environment. Each of the types are limited by capability and capacity. Refer to Apigee's public documentation to understand about each of these types in details. An Apigee org can support heterogeneous Environments. Possible values: ["ENVIRONMENT_TYPE_UNSPECIFIED", "BASE", "INTERMEDIATE", "COMPREHENSIVE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#type ApigeeEnvironment#type}
+        :param name: The resource ID of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
+        :param org_id: The Apigee Organization associated with the Apigee environment, in the format 'organizations/{{org_name}}'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#org_id ApigeeEnvironment#org_id}
+        :param api_proxy_type: Optional. API Proxy type supported by the environment. The type can be set when creating the Environment and cannot be changed. Possible values: ["API_PROXY_TYPE_UNSPECIFIED", "PROGRAMMABLE", "CONFIGURABLE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#api_proxy_type ApigeeEnvironment#api_proxy_type}
+        :param client_ip_resolution_config: client_ip_resolution_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#client_ip_resolution_config ApigeeEnvironment#client_ip_resolution_config}
+        :param deployment_type: Optional. Deployment type supported by the environment. The deployment type can be set when creating the environment and cannot be changed. When you enable archive deployment, you will be prevented from performing a subset of actions within the environment, including: Managing the deployment of API proxy or shared flow revisions; Creating, updating, or deleting resource files; Creating, updating, or deleting target servers. Possible values: ["DEPLOYMENT_TYPE_UNSPECIFIED", "PROXY", "ARCHIVE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#deployment_type ApigeeEnvironment#deployment_type}
+        :param description: Description of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#description ApigeeEnvironment#description}
+        :param display_name: Display name of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#display_name ApigeeEnvironment#display_name}
+        :param forward_proxy_uri: Optional. URI of the forward proxy to be applied to the runtime instances in this environment. Must be in the format of {scheme}://{hostname}:{port}. Note that the scheme must be one of "http" or "https", and the port must be supplied. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#forward_proxy_uri ApigeeEnvironment#forward_proxy_uri}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#id ApigeeEnvironment#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param node_config: node_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#node_config ApigeeEnvironment#node_config}
+        :param properties: properties block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#properties ApigeeEnvironment#properties}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#timeouts ApigeeEnvironment#timeouts}
+        :param type: Types that can be selected for an Environment. Each of the types are limited by capability and capacity. Refer to Apigee's public documentation to understand about each of these types in details. An Apigee org can support heterogeneous Environments. Possible values: ["ENVIRONMENT_TYPE_UNSPECIFIED", "BASE", "INTERMEDIATE", "COMPREHENSIVE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#type ApigeeEnvironment#type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -103,6 +105,7 @@ class ApigeeEnvironment(
             name=name,
             org_id=org_id,
             api_proxy_type=api_proxy_type,
+            client_ip_resolution_config=client_ip_resolution_config,
             deployment_type=deployment_type,
             description=description,
             display_name=display_name,
@@ -136,7 +139,7 @@ class ApigeeEnvironment(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ApigeeEnvironment to import.
-        :param import_from_id: The id of the existing ApigeeEnvironment that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ApigeeEnvironment that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ApigeeEnvironment to import is found.
         '''
         if __debug__:
@@ -147,6 +150,21 @@ class ApigeeEnvironment(
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
 
+    @jsii.member(jsii_name="putClientIpResolutionConfig")
+    def put_client_ip_resolution_config(
+        self,
+        *,
+        header_index_algorithm: typing.Optional[typing.Union["ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm", typing.Dict[builtins.str, typing.Any]]] = None,
+    ) -> None:
+        '''
+        :param header_index_algorithm: header_index_algorithm block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#header_index_algorithm ApigeeEnvironment#header_index_algorithm}
+        '''
+        value = ApigeeEnvironmentClientIpResolutionConfig(
+            header_index_algorithm=header_index_algorithm
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putClientIpResolutionConfig", [value]))
+
     @jsii.member(jsii_name="putNodeConfig")
     def put_node_config(
         self,
@@ -155,8 +173,8 @@ class ApigeeEnvironment(
         min_node_count: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param max_node_count: The maximum total number of gateway nodes that the is reserved for all instances that has the specified environment. If not specified, the default is determined by the recommended maximum number of nodes for that gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#max_node_count ApigeeEnvironment#max_node_count}
-        :param min_node_count: The minimum total number of gateway nodes that the is reserved for all instances that has the specified environment. If not specified, the default is determined by the recommended minimum number of nodes for that gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#min_node_count ApigeeEnvironment#min_node_count}
+        :param max_node_count: The maximum total number of gateway nodes that the is reserved for all instances that has the specified environment. If not specified, the default is determined by the recommended maximum number of nodes for that gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#max_node_count ApigeeEnvironment#max_node_count}
+        :param min_node_count: The minimum total number of gateway nodes that the is reserved for all instances that has the specified environment. If not specified, the default is determined by the recommended minimum number of nodes for that gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#min_node_count ApigeeEnvironment#min_node_count}
         '''
         value = ApigeeEnvironmentNodeConfig(
             max_node_count=max_node_count, min_node_count=min_node_count
@@ -171,7 +189,7 @@ class ApigeeEnvironment(
         property: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["ApigeeEnvironmentPropertiesProperty", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param property: property block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#property ApigeeEnvironment#property}
+        :param property: property block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#property ApigeeEnvironment#property}
         '''
         value = ApigeeEnvironmentProperties(property=property)
 
@@ -186,9 +204,9 @@ class ApigeeEnvironment(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#create ApigeeEnvironment#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#delete ApigeeEnvironment#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#update ApigeeEnvironment#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#create ApigeeEnvironment#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#delete ApigeeEnvironment#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#update ApigeeEnvironment#update}.
         '''
         value = ApigeeEnvironmentTimeouts(create=create, delete=delete, update=update)
 
@@ -197,6 +215,10 @@ class ApigeeEnvironment(
     @jsii.member(jsii_name="resetApiProxyType")
     def reset_api_proxy_type(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetApiProxyType", []))
+
+    @jsii.member(jsii_name="resetClientIpResolutionConfig")
+    def reset_client_ip_resolution_config(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetClientIpResolutionConfig", []))
 
     @jsii.member(jsii_name="resetDeploymentType")
     def reset_deployment_type(self) -> None:
@@ -248,6 +270,13 @@ class ApigeeEnvironment(
         return typing.cast(builtins.str, jsii.sget(cls, "tfResourceType"))
 
     @builtins.property
+    @jsii.member(jsii_name="clientIpResolutionConfig")
+    def client_ip_resolution_config(
+        self,
+    ) -> "ApigeeEnvironmentClientIpResolutionConfigOutputReference":
+        return typing.cast("ApigeeEnvironmentClientIpResolutionConfigOutputReference", jsii.get(self, "clientIpResolutionConfig"))
+
+    @builtins.property
     @jsii.member(jsii_name="nodeConfig")
     def node_config(self) -> "ApigeeEnvironmentNodeConfigOutputReference":
         return typing.cast("ApigeeEnvironmentNodeConfigOutputReference", jsii.get(self, "nodeConfig"))
@@ -266,6 +295,13 @@ class ApigeeEnvironment(
     @jsii.member(jsii_name="apiProxyTypeInput")
     def api_proxy_type_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "apiProxyTypeInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="clientIpResolutionConfigInput")
+    def client_ip_resolution_config_input(
+        self,
+    ) -> typing.Optional["ApigeeEnvironmentClientIpResolutionConfig"]:
+        return typing.cast(typing.Optional["ApigeeEnvironmentClientIpResolutionConfig"], jsii.get(self, "clientIpResolutionConfigInput"))
 
     @builtins.property
     @jsii.member(jsii_name="deploymentTypeInput")
@@ -434,6 +470,259 @@ class ApigeeEnvironment(
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-google.apigeeEnvironment.ApigeeEnvironmentClientIpResolutionConfig",
+    jsii_struct_bases=[],
+    name_mapping={"header_index_algorithm": "headerIndexAlgorithm"},
+)
+class ApigeeEnvironmentClientIpResolutionConfig:
+    def __init__(
+        self,
+        *,
+        header_index_algorithm: typing.Optional[typing.Union["ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm", typing.Dict[builtins.str, typing.Any]]] = None,
+    ) -> None:
+        '''
+        :param header_index_algorithm: header_index_algorithm block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#header_index_algorithm ApigeeEnvironment#header_index_algorithm}
+        '''
+        if isinstance(header_index_algorithm, dict):
+            header_index_algorithm = ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm(**header_index_algorithm)
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__99cb417c890e51b89a693ce0858aac7fb6a0fc31474c0480ad87b948e2f1f9fd)
+            check_type(argname="argument header_index_algorithm", value=header_index_algorithm, expected_type=type_hints["header_index_algorithm"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if header_index_algorithm is not None:
+            self._values["header_index_algorithm"] = header_index_algorithm
+
+    @builtins.property
+    def header_index_algorithm(
+        self,
+    ) -> typing.Optional["ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm"]:
+        '''header_index_algorithm block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#header_index_algorithm ApigeeEnvironment#header_index_algorithm}
+        '''
+        result = self._values.get("header_index_algorithm")
+        return typing.cast(typing.Optional["ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm"], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "ApigeeEnvironmentClientIpResolutionConfig(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.apigeeEnvironment.ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm",
+    jsii_struct_bases=[],
+    name_mapping={
+        "ip_header_index": "ipHeaderIndex",
+        "ip_header_name": "ipHeaderName",
+    },
+)
+class ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm:
+    def __init__(
+        self,
+        *,
+        ip_header_index: jsii.Number,
+        ip_header_name: builtins.str,
+    ) -> None:
+        '''
+        :param ip_header_index: The index of the ip in the header. Positive indices 0, 1, 2, 3 chooses indices from the left (first ips). Negative indices -1, -2, -3 chooses indices from the right (last ips). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#ip_header_index ApigeeEnvironment#ip_header_index}
+        :param ip_header_name: The name of the header to extract the client ip from. We are currently only supporting the X-Forwarded-For header. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#ip_header_name ApigeeEnvironment#ip_header_name}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0d6cea53c655efefd2839c6fb3e8b234c046e973c7c6c9555fed5e51bd8fce4c)
+            check_type(argname="argument ip_header_index", value=ip_header_index, expected_type=type_hints["ip_header_index"])
+            check_type(argname="argument ip_header_name", value=ip_header_name, expected_type=type_hints["ip_header_name"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "ip_header_index": ip_header_index,
+            "ip_header_name": ip_header_name,
+        }
+
+    @builtins.property
+    def ip_header_index(self) -> jsii.Number:
+        '''The index of the ip in the header.
+
+        Positive indices 0, 1, 2, 3 chooses indices from the left (first ips). Negative indices -1, -2, -3 chooses indices from the right (last ips).
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#ip_header_index ApigeeEnvironment#ip_header_index}
+        '''
+        result = self._values.get("ip_header_index")
+        assert result is not None, "Required property 'ip_header_index' is missing"
+        return typing.cast(jsii.Number, result)
+
+    @builtins.property
+    def ip_header_name(self) -> builtins.str:
+        '''The name of the header to extract the client ip from. We are currently only supporting the X-Forwarded-For header.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#ip_header_name ApigeeEnvironment#ip_header_name}
+        '''
+        result = self._values.get("ip_header_name")
+        assert result is not None, "Required property 'ip_header_name' is missing"
+        return typing.cast(builtins.str, result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithmOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.apigeeEnvironment.ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithmOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__83255040095d9af6e5e37608a954361c832b9d8017cd0ec33a8ffff3820d587b)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @builtins.property
+    @jsii.member(jsii_name="ipHeaderIndexInput")
+    def ip_header_index_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "ipHeaderIndexInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="ipHeaderNameInput")
+    def ip_header_name_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "ipHeaderNameInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="ipHeaderIndex")
+    def ip_header_index(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "ipHeaderIndex"))
+
+    @ip_header_index.setter
+    def ip_header_index(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__74fefb2c67ca92cc916b2186e82b0257e401eb40d6c21094da5426748d27edff)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "ipHeaderIndex", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="ipHeaderName")
+    def ip_header_name(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "ipHeaderName"))
+
+    @ip_header_name.setter
+    def ip_header_name(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e23cb9e01669f0ce079dcee741f91771ff942a4432348a4d5af2688d8ddf6ec3)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "ipHeaderName", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm]:
+        return typing.cast(typing.Optional[ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2e405f97e3f54c63be5ee65bb8540764e6bafd0af3138230870f53e94ab003c3)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class ApigeeEnvironmentClientIpResolutionConfigOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.apigeeEnvironment.ApigeeEnvironmentClientIpResolutionConfigOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3f32c6732ccd6f3cdd7098c9ed641eaa1088ce1ea5aaad0296db4d2fe42f9611)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="putHeaderIndexAlgorithm")
+    def put_header_index_algorithm(
+        self,
+        *,
+        ip_header_index: jsii.Number,
+        ip_header_name: builtins.str,
+    ) -> None:
+        '''
+        :param ip_header_index: The index of the ip in the header. Positive indices 0, 1, 2, 3 chooses indices from the left (first ips). Negative indices -1, -2, -3 chooses indices from the right (last ips). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#ip_header_index ApigeeEnvironment#ip_header_index}
+        :param ip_header_name: The name of the header to extract the client ip from. We are currently only supporting the X-Forwarded-For header. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#ip_header_name ApigeeEnvironment#ip_header_name}
+        '''
+        value = ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm(
+            ip_header_index=ip_header_index, ip_header_name=ip_header_name
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putHeaderIndexAlgorithm", [value]))
+
+    @jsii.member(jsii_name="resetHeaderIndexAlgorithm")
+    def reset_header_index_algorithm(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetHeaderIndexAlgorithm", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="headerIndexAlgorithm")
+    def header_index_algorithm(
+        self,
+    ) -> ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithmOutputReference:
+        return typing.cast(ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithmOutputReference, jsii.get(self, "headerIndexAlgorithm"))
+
+    @builtins.property
+    @jsii.member(jsii_name="headerIndexAlgorithmInput")
+    def header_index_algorithm_input(
+        self,
+    ) -> typing.Optional[ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm]:
+        return typing.cast(typing.Optional[ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm], jsii.get(self, "headerIndexAlgorithmInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[ApigeeEnvironmentClientIpResolutionConfig]:
+        return typing.cast(typing.Optional[ApigeeEnvironmentClientIpResolutionConfig], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[ApigeeEnvironmentClientIpResolutionConfig],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__91e58b2c542e180d95b79bb3f2e14b8b2b523a72c7f7bd94110872d76e8eb980)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-google.apigeeEnvironment.ApigeeEnvironmentConfig",
     jsii_struct_bases=[_cdktf_9a9027ec.TerraformMetaArguments],
     name_mapping={
@@ -447,6 +736,7 @@ class ApigeeEnvironment(
         "name": "name",
         "org_id": "orgId",
         "api_proxy_type": "apiProxyType",
+        "client_ip_resolution_config": "clientIpResolutionConfig",
         "deployment_type": "deploymentType",
         "description": "description",
         "display_name": "displayName",
@@ -472,6 +762,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         name: builtins.str,
         org_id: builtins.str,
         api_proxy_type: typing.Optional[builtins.str] = None,
+        client_ip_resolution_config: typing.Optional[typing.Union[ApigeeEnvironmentClientIpResolutionConfig, typing.Dict[builtins.str, typing.Any]]] = None,
         deployment_type: typing.Optional[builtins.str] = None,
         description: typing.Optional[builtins.str] = None,
         display_name: typing.Optional[builtins.str] = None,
@@ -490,21 +781,24 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: The resource ID of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
-        :param org_id: The Apigee Organization associated with the Apigee environment, in the format 'organizations/{{org_name}}'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#org_id ApigeeEnvironment#org_id}
-        :param api_proxy_type: Optional. API Proxy type supported by the environment. The type can be set when creating the Environment and cannot be changed. Possible values: ["API_PROXY_TYPE_UNSPECIFIED", "PROGRAMMABLE", "CONFIGURABLE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#api_proxy_type ApigeeEnvironment#api_proxy_type}
-        :param deployment_type: Optional. Deployment type supported by the environment. The deployment type can be set when creating the environment and cannot be changed. When you enable archive deployment, you will be prevented from performing a subset of actions within the environment, including: Managing the deployment of API proxy or shared flow revisions; Creating, updating, or deleting resource files; Creating, updating, or deleting target servers. Possible values: ["DEPLOYMENT_TYPE_UNSPECIFIED", "PROXY", "ARCHIVE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#deployment_type ApigeeEnvironment#deployment_type}
-        :param description: Description of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#description ApigeeEnvironment#description}
-        :param display_name: Display name of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#display_name ApigeeEnvironment#display_name}
-        :param forward_proxy_uri: Optional. URI of the forward proxy to be applied to the runtime instances in this environment. Must be in the format of {scheme}://{hostname}:{port}. Note that the scheme must be one of "http" or "https", and the port must be supplied. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#forward_proxy_uri ApigeeEnvironment#forward_proxy_uri}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#id ApigeeEnvironment#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param node_config: node_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#node_config ApigeeEnvironment#node_config}
-        :param properties: properties block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#properties ApigeeEnvironment#properties}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#timeouts ApigeeEnvironment#timeouts}
-        :param type: Types that can be selected for an Environment. Each of the types are limited by capability and capacity. Refer to Apigee's public documentation to understand about each of these types in details. An Apigee org can support heterogeneous Environments. Possible values: ["ENVIRONMENT_TYPE_UNSPECIFIED", "BASE", "INTERMEDIATE", "COMPREHENSIVE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#type ApigeeEnvironment#type}
+        :param name: The resource ID of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
+        :param org_id: The Apigee Organization associated with the Apigee environment, in the format 'organizations/{{org_name}}'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#org_id ApigeeEnvironment#org_id}
+        :param api_proxy_type: Optional. API Proxy type supported by the environment. The type can be set when creating the Environment and cannot be changed. Possible values: ["API_PROXY_TYPE_UNSPECIFIED", "PROGRAMMABLE", "CONFIGURABLE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#api_proxy_type ApigeeEnvironment#api_proxy_type}
+        :param client_ip_resolution_config: client_ip_resolution_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#client_ip_resolution_config ApigeeEnvironment#client_ip_resolution_config}
+        :param deployment_type: Optional. Deployment type supported by the environment. The deployment type can be set when creating the environment and cannot be changed. When you enable archive deployment, you will be prevented from performing a subset of actions within the environment, including: Managing the deployment of API proxy or shared flow revisions; Creating, updating, or deleting resource files; Creating, updating, or deleting target servers. Possible values: ["DEPLOYMENT_TYPE_UNSPECIFIED", "PROXY", "ARCHIVE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#deployment_type ApigeeEnvironment#deployment_type}
+        :param description: Description of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#description ApigeeEnvironment#description}
+        :param display_name: Display name of the environment. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#display_name ApigeeEnvironment#display_name}
+        :param forward_proxy_uri: Optional. URI of the forward proxy to be applied to the runtime instances in this environment. Must be in the format of {scheme}://{hostname}:{port}. Note that the scheme must be one of "http" or "https", and the port must be supplied. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#forward_proxy_uri ApigeeEnvironment#forward_proxy_uri}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#id ApigeeEnvironment#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param node_config: node_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#node_config ApigeeEnvironment#node_config}
+        :param properties: properties block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#properties ApigeeEnvironment#properties}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#timeouts ApigeeEnvironment#timeouts}
+        :param type: Types that can be selected for an Environment. Each of the types are limited by capability and capacity. Refer to Apigee's public documentation to understand about each of these types in details. An Apigee org can support heterogeneous Environments. Possible values: ["ENVIRONMENT_TYPE_UNSPECIFIED", "BASE", "INTERMEDIATE", "COMPREHENSIVE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#type ApigeeEnvironment#type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(client_ip_resolution_config, dict):
+            client_ip_resolution_config = ApigeeEnvironmentClientIpResolutionConfig(**client_ip_resolution_config)
         if isinstance(node_config, dict):
             node_config = ApigeeEnvironmentNodeConfig(**node_config)
         if isinstance(properties, dict):
@@ -523,6 +817,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
             check_type(argname="argument org_id", value=org_id, expected_type=type_hints["org_id"])
             check_type(argname="argument api_proxy_type", value=api_proxy_type, expected_type=type_hints["api_proxy_type"])
+            check_type(argname="argument client_ip_resolution_config", value=client_ip_resolution_config, expected_type=type_hints["client_ip_resolution_config"])
             check_type(argname="argument deployment_type", value=deployment_type, expected_type=type_hints["deployment_type"])
             check_type(argname="argument description", value=description, expected_type=type_hints["description"])
             check_type(argname="argument display_name", value=display_name, expected_type=type_hints["display_name"])
@@ -552,6 +847,8 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["provisioners"] = provisioners
         if api_proxy_type is not None:
             self._values["api_proxy_type"] = api_proxy_type
+        if client_ip_resolution_config is not None:
+            self._values["client_ip_resolution_config"] = client_ip_resolution_config
         if deployment_type is not None:
             self._values["deployment_type"] = deployment_type
         if description is not None:
@@ -639,7 +936,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The resource ID of the environment.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -649,7 +946,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def org_id(self) -> builtins.str:
         '''The Apigee Organization associated with the Apigee environment, in the format 'organizations/{{org_name}}'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#org_id ApigeeEnvironment#org_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#org_id ApigeeEnvironment#org_id}
         '''
         result = self._values.get("org_id")
         assert result is not None, "Required property 'org_id' is missing"
@@ -662,10 +959,21 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         API Proxy type supported by the environment. The type can be set when creating
         the Environment and cannot be changed. Possible values: ["API_PROXY_TYPE_UNSPECIFIED", "PROGRAMMABLE", "CONFIGURABLE"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#api_proxy_type ApigeeEnvironment#api_proxy_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#api_proxy_type ApigeeEnvironment#api_proxy_type}
         '''
         result = self._values.get("api_proxy_type")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def client_ip_resolution_config(
+        self,
+    ) -> typing.Optional[ApigeeEnvironmentClientIpResolutionConfig]:
+        '''client_ip_resolution_config block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#client_ip_resolution_config ApigeeEnvironment#client_ip_resolution_config}
+        '''
+        result = self._values.get("client_ip_resolution_config")
+        return typing.cast(typing.Optional[ApigeeEnvironmentClientIpResolutionConfig], result)
 
     @builtins.property
     def deployment_type(self) -> typing.Optional[builtins.str]:
@@ -679,7 +987,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         Creating, updating, or deleting resource files;
         Creating, updating, or deleting target servers. Possible values: ["DEPLOYMENT_TYPE_UNSPECIFIED", "PROXY", "ARCHIVE"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#deployment_type ApigeeEnvironment#deployment_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#deployment_type ApigeeEnvironment#deployment_type}
         '''
         result = self._values.get("deployment_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -688,7 +996,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''Description of the environment.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#description ApigeeEnvironment#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#description ApigeeEnvironment#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -697,7 +1005,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def display_name(self) -> typing.Optional[builtins.str]:
         '''Display name of the environment.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#display_name ApigeeEnvironment#display_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#display_name ApigeeEnvironment#display_name}
         '''
         result = self._values.get("display_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -708,14 +1016,14 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         URI of the forward proxy to be applied to the runtime instances in this environment. Must be in the format of {scheme}://{hostname}:{port}. Note that the scheme must be one of "http" or "https", and the port must be supplied.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#forward_proxy_uri ApigeeEnvironment#forward_proxy_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#forward_proxy_uri ApigeeEnvironment#forward_proxy_uri}
         '''
         result = self._values.get("forward_proxy_uri")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#id ApigeeEnvironment#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#id ApigeeEnvironment#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -727,7 +1035,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def node_config(self) -> typing.Optional["ApigeeEnvironmentNodeConfig"]:
         '''node_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#node_config ApigeeEnvironment#node_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#node_config ApigeeEnvironment#node_config}
         '''
         result = self._values.get("node_config")
         return typing.cast(typing.Optional["ApigeeEnvironmentNodeConfig"], result)
@@ -736,7 +1044,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def properties(self) -> typing.Optional["ApigeeEnvironmentProperties"]:
         '''properties block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#properties ApigeeEnvironment#properties}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#properties ApigeeEnvironment#properties}
         '''
         result = self._values.get("properties")
         return typing.cast(typing.Optional["ApigeeEnvironmentProperties"], result)
@@ -745,7 +1053,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["ApigeeEnvironmentTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#timeouts ApigeeEnvironment#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#timeouts ApigeeEnvironment#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["ApigeeEnvironmentTimeouts"], result)
@@ -759,7 +1067,7 @@ class ApigeeEnvironmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         to understand about each of these types in details.
         An Apigee org can support heterogeneous Environments. Possible values: ["ENVIRONMENT_TYPE_UNSPECIFIED", "BASE", "INTERMEDIATE", "COMPREHENSIVE"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#type ApigeeEnvironment#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#type ApigeeEnvironment#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -789,8 +1097,8 @@ class ApigeeEnvironmentNodeConfig:
         min_node_count: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param max_node_count: The maximum total number of gateway nodes that the is reserved for all instances that has the specified environment. If not specified, the default is determined by the recommended maximum number of nodes for that gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#max_node_count ApigeeEnvironment#max_node_count}
-        :param min_node_count: The minimum total number of gateway nodes that the is reserved for all instances that has the specified environment. If not specified, the default is determined by the recommended minimum number of nodes for that gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#min_node_count ApigeeEnvironment#min_node_count}
+        :param max_node_count: The maximum total number of gateway nodes that the is reserved for all instances that has the specified environment. If not specified, the default is determined by the recommended maximum number of nodes for that gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#max_node_count ApigeeEnvironment#max_node_count}
+        :param min_node_count: The minimum total number of gateway nodes that the is reserved for all instances that has the specified environment. If not specified, the default is determined by the recommended minimum number of nodes for that gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#min_node_count ApigeeEnvironment#min_node_count}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__4a95ec9ecc2d1bb7caf18c1be31f3afbe226f3021885101ae2dc107a30f851ff)
@@ -809,7 +1117,7 @@ class ApigeeEnvironmentNodeConfig:
         If not specified, the default is determined by the
         recommended maximum number of nodes for that gateway.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#max_node_count ApigeeEnvironment#max_node_count}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#max_node_count ApigeeEnvironment#max_node_count}
         '''
         result = self._values.get("max_node_count")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -821,7 +1129,7 @@ class ApigeeEnvironmentNodeConfig:
         If not specified, the default is determined by the
         recommended minimum number of nodes for that gateway.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#min_node_count ApigeeEnvironment#min_node_count}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#min_node_count ApigeeEnvironment#min_node_count}
         '''
         result = self._values.get("min_node_count")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -933,7 +1241,7 @@ class ApigeeEnvironmentProperties:
         property: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["ApigeeEnvironmentPropertiesProperty", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param property: property block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#property ApigeeEnvironment#property}
+        :param property: property block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#property ApigeeEnvironment#property}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__69eb44385d1ce4142ef861a0866da18fbb39b1846206d37036722d7567d31656)
@@ -948,7 +1256,7 @@ class ApigeeEnvironmentProperties:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ApigeeEnvironmentPropertiesProperty"]]]:
         '''property block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#property ApigeeEnvironment#property}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#property ApigeeEnvironment#property}
         '''
         result = self._values.get("property")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ApigeeEnvironmentPropertiesProperty"]]], result)
@@ -1043,8 +1351,8 @@ class ApigeeEnvironmentPropertiesProperty:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: The property key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
-        :param value: The property value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#value ApigeeEnvironment#value}
+        :param name: The property key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
+        :param value: The property value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#value ApigeeEnvironment#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__35daf95d822c812562b40f8442c102b44af8de1635982f166d2f3aa29debbfce)
@@ -1060,7 +1368,7 @@ class ApigeeEnvironmentPropertiesProperty:
     def name(self) -> typing.Optional[builtins.str]:
         '''The property key.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#name ApigeeEnvironment#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1069,7 +1377,7 @@ class ApigeeEnvironmentPropertiesProperty:
     def value(self) -> typing.Optional[builtins.str]:
         '''The property value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#value ApigeeEnvironment#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#value ApigeeEnvironment#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1279,9 +1587,9 @@ class ApigeeEnvironmentTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#create ApigeeEnvironment#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#delete ApigeeEnvironment#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#update ApigeeEnvironment#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#create ApigeeEnvironment#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#delete ApigeeEnvironment#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#update ApigeeEnvironment#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0cbc1abd5c6ec607e51a9d7dc1f434de3d78e2bac53745e33bce355bd0c23e0c)
@@ -1298,19 +1606,19 @@ class ApigeeEnvironmentTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#create ApigeeEnvironment#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#create ApigeeEnvironment#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#delete ApigeeEnvironment#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#delete ApigeeEnvironment#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/apigee_environment#update ApigeeEnvironment#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/resources/apigee_environment#update ApigeeEnvironment#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1429,6 +1737,10 @@ class ApigeeEnvironmentTimeoutsOutputReference(
 
 __all__ = [
     "ApigeeEnvironment",
+    "ApigeeEnvironmentClientIpResolutionConfig",
+    "ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm",
+    "ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithmOutputReference",
+    "ApigeeEnvironmentClientIpResolutionConfigOutputReference",
     "ApigeeEnvironmentConfig",
     "ApigeeEnvironmentNodeConfig",
     "ApigeeEnvironmentNodeConfigOutputReference",
@@ -1450,6 +1762,7 @@ def _typecheckingstub__ea40fd31858cddb5d1fe77fda8ff1648ead93d911063b38b92c865558
     name: builtins.str,
     org_id: builtins.str,
     api_proxy_type: typing.Optional[builtins.str] = None,
+    client_ip_resolution_config: typing.Optional[typing.Union[ApigeeEnvironmentClientIpResolutionConfig, typing.Dict[builtins.str, typing.Any]]] = None,
     deployment_type: typing.Optional[builtins.str] = None,
     description: typing.Optional[builtins.str] = None,
     display_name: typing.Optional[builtins.str] = None,
@@ -1533,6 +1846,59 @@ def _typecheckingstub__80ee83fd149c306745fcb0902da78d3bedd7359a6051972b1f3a57107
     """Type checking stubs"""
     pass
 
+def _typecheckingstub__99cb417c890e51b89a693ce0858aac7fb6a0fc31474c0480ad87b948e2f1f9fd(
+    *,
+    header_index_algorithm: typing.Optional[typing.Union[ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0d6cea53c655efefd2839c6fb3e8b234c046e973c7c6c9555fed5e51bd8fce4c(
+    *,
+    ip_header_index: jsii.Number,
+    ip_header_name: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__83255040095d9af6e5e37608a954361c832b9d8017cd0ec33a8ffff3820d587b(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__74fefb2c67ca92cc916b2186e82b0257e401eb40d6c21094da5426748d27edff(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e23cb9e01669f0ce079dcee741f91771ff942a4432348a4d5af2688d8ddf6ec3(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2e405f97e3f54c63be5ee65bb8540764e6bafd0af3138230870f53e94ab003c3(
+    value: typing.Optional[ApigeeEnvironmentClientIpResolutionConfigHeaderIndexAlgorithm],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3f32c6732ccd6f3cdd7098c9ed641eaa1088ce1ea5aaad0296db4d2fe42f9611(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__91e58b2c542e180d95b79bb3f2e14b8b2b523a72c7f7bd94110872d76e8eb980(
+    value: typing.Optional[ApigeeEnvironmentClientIpResolutionConfig],
+) -> None:
+    """Type checking stubs"""
+    pass
+
 def _typecheckingstub__4f606507ccdfee0f97787f22694fe38b5b722ab3d633647d75847a2aa1654b58(
     *,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
@@ -1545,6 +1911,7 @@ def _typecheckingstub__4f606507ccdfee0f97787f22694fe38b5b722ab3d633647d75847a2aa
     name: builtins.str,
     org_id: builtins.str,
     api_proxy_type: typing.Optional[builtins.str] = None,
+    client_ip_resolution_config: typing.Optional[typing.Union[ApigeeEnvironmentClientIpResolutionConfig, typing.Dict[builtins.str, typing.Any]]] = None,
     deployment_type: typing.Optional[builtins.str] = None,
     description: typing.Optional[builtins.str] = None,
     display_name: typing.Optional[builtins.str] = None,

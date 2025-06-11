@@ -5,7 +5,8 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 import schemathesis
-from schemathesis.transports import RequestsTransport, WSGITransport
+from schemathesis.transport.requests import REQUESTS_TRANSPORT
+from schemathesis.transport.wsgi import WSGI_TRANSPORT
 
 HERE = Path(__file__).absolute().parent
 
@@ -13,9 +14,8 @@ HERE = Path(__file__).absolute().parent
 @pytest.fixture(autouse=True)
 def cleanup():
     yield
-    schemathesis.openapi.media_types.unregister_all()
-    assert MEDIA_TYPE not in schemathesis.openapi.media_types.MEDIA_TYPES
-    assert MEDIA_TYPE not in schemathesis.serializers.SERIALIZERS
+    schemathesis.specs.openapi.media_types.unregister_all()
+    assert MEDIA_TYPE not in schemathesis.specs.openapi.media_types.MEDIA_TYPES
 
 
 SAMPLE_PDF = (HERE / "blank.pdf").read_bytes()
@@ -42,7 +42,7 @@ def test_pdf_generation(ctx):
         }
     )
     schemathesis.openapi.media_type(MEDIA_TYPE, PDFS, aliases=[ALIAS])
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     strategy = schema["/pdf"]["post"].as_strategy()
 
@@ -50,7 +50,7 @@ def test_pdf_generation(ctx):
     def test(case):
         assert case.body == SAMPLE_PDF
         assert case.media_type in (MEDIA_TYPE, ALIAS)
-        for transport in (RequestsTransport(), WSGITransport(app=None)):
+        for transport in (REQUESTS_TRANSPORT, WSGI_TRANSPORT):
             assert transport.serialize_case(case)["data"] == SAMPLE_PDF
 
     test()
@@ -77,4 +77,4 @@ def test_explicit_example_with_custom_media_type(ctx, cli, snapshot_cli, openapi
     )
     schemathesis.openapi.media_type("text/csv", st.sampled_from([b"a,b,c\n2,3,4"]))
 
-    assert cli.run(str(schema_path), f"--base-url={openapi3_base_url}") == snapshot_cli
+    assert cli.run(str(schema_path), f"--url={openapi3_base_url}", "--mode=positive") == snapshot_cli

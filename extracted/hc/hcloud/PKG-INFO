@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: hcloud
-Version: 2.5.2
+Version: 2.5.3
 Summary: Official Hetzner Cloud python library
 Home-page: https://github.com/hetznercloud/hcloud-python
 Author: Hetzner Cloud GmbH
@@ -34,9 +34,9 @@ Requires-Dist: watchdog<6.1,>=6; extra == "docs"
 Provides-Extra: test
 Requires-Dist: coverage<7.9,>=7.8; extra == "test"
 Requires-Dist: pylint<3.4,>=3; extra == "test"
-Requires-Dist: pytest<8.4,>=8; extra == "test"
+Requires-Dist: pytest<8.5,>=8; extra == "test"
 Requires-Dist: pytest-cov<6.2,>=6; extra == "test"
-Requires-Dist: mypy<1.16,>=1.15; extra == "test"
+Requires-Dist: mypy<1.17,>=1.16; extra == "test"
 Requires-Dist: types-python-dateutil; extra == "test"
 Requires-Dist: types-requests; extra == "test"
 Dynamic: author

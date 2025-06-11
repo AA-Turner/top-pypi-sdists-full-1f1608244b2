@@ -1,7 +1,7 @@
 r'''
 # `data_google_gke_hub_feature`
 
-Refer to the Terraform Registry for docs: [`data_google_gke_hub_feature`](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature).
+Refer to the Terraform Registry for docs: [`data_google_gke_hub_feature`](https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataGoogleGkeHubFeature(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.dataGoogleGkeHubFeature.DataGoogleGkeHubFeature",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature google_gke_hub_feature}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature google_gke_hub_feature}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class DataGoogleGkeHubFeature(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature google_gke_hub_feature} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature google_gke_hub_feature} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param location: The location for the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#location DataGoogleGkeHubFeature#location}
-        :param name: The full, unique name of this Feature resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#name DataGoogleGkeHubFeature#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#id DataGoogleGkeHubFeature#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#project DataGoogleGkeHubFeature#project}.
+        :param location: The location for the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#location DataGoogleGkeHubFeature#location}
+        :param name: The full, unique name of this Feature resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#name DataGoogleGkeHubFeature#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#id DataGoogleGkeHubFeature#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#project DataGoogleGkeHubFeature#project}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class DataGoogleGkeHubFeature(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataGoogleGkeHubFeature to import.
-        :param import_from_id: The id of the existing DataGoogleGkeHubFeature that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataGoogleGkeHubFeature that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataGoogleGkeHubFeature to import is found.
         '''
         if __debug__:
@@ -306,10 +306,10 @@ class DataGoogleGkeHubFeatureConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param location: The location for the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#location DataGoogleGkeHubFeature#location}
-        :param name: The full, unique name of this Feature resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#name DataGoogleGkeHubFeature#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#id DataGoogleGkeHubFeature#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#project DataGoogleGkeHubFeature#project}.
+        :param location: The location for the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#location DataGoogleGkeHubFeature#location}
+        :param name: The full, unique name of this Feature resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#name DataGoogleGkeHubFeature#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#id DataGoogleGkeHubFeature#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#project DataGoogleGkeHubFeature#project}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -417,7 +417,7 @@ class DataGoogleGkeHubFeatureConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def location(self) -> builtins.str:
         '''The location for the resource.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#location DataGoogleGkeHubFeature#location}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#location DataGoogleGkeHubFeature#location}
         '''
         result = self._values.get("location")
         assert result is not None, "Required property 'location' is missing"
@@ -427,7 +427,7 @@ class DataGoogleGkeHubFeatureConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The full, unique name of this Feature resource.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#name DataGoogleGkeHubFeature#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#name DataGoogleGkeHubFeature#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -435,7 +435,7 @@ class DataGoogleGkeHubFeatureConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#id DataGoogleGkeHubFeature#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#id DataGoogleGkeHubFeature#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -445,7 +445,7 @@ class DataGoogleGkeHubFeatureConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/gke_hub_feature#project DataGoogleGkeHubFeature#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.39.0/docs/data-sources/gke_hub_feature#project DataGoogleGkeHubFeature#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -4972,6 +4972,13 @@ class DataGoogleGkeHubFeatureSpecOutputReference(
         return typing.cast(DataGoogleGkeHubFeatureSpecMulticlusteringressList, jsii.get(self, "multiclusteringress"))
 
     @builtins.property
+    @jsii.member(jsii_name="rbacrolebindingactuation")
+    def rbacrolebindingactuation(
+        self,
+    ) -> "DataGoogleGkeHubFeatureSpecRbacrolebindingactuationList":
+        return typing.cast("DataGoogleGkeHubFeatureSpecRbacrolebindingactuationList", jsii.get(self, "rbacrolebindingactuation"))
+
+    @builtins.property
     @jsii.member(jsii_name="internalValue")
     def internal_value(self) -> typing.Optional[DataGoogleGkeHubFeatureSpec]:
         return typing.cast(typing.Optional[DataGoogleGkeHubFeatureSpec], jsii.get(self, "internalValue"))
@@ -4983,6 +4990,152 @@ class DataGoogleGkeHubFeatureSpecOutputReference(
     ) -> None:
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__955248bba9fa2e0d18ff412559570cd3856663855b38a9b92e14268a7977f7f1)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGoogleGkeHubFeature.DataGoogleGkeHubFeatureSpecRbacrolebindingactuation",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGoogleGkeHubFeatureSpecRbacrolebindingactuation:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGoogleGkeHubFeatureSpecRbacrolebindingactuation(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DataGoogleGkeHubFeatureSpecRbacrolebindingactuationList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleGkeHubFeature.DataGoogleGkeHubFeatureSpecRbacrolebindingactuationList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__cd5488478cc429abe3644b423a75b3ac5e1241ad84eda520567efb6cc145cc2e)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGoogleGkeHubFeatureSpecRbacrolebindingactuationOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__37d9895d3fcd536ea6af5f4e385a4a6f6b7b4d977090c99146598df517527789)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGoogleGkeHubFeatureSpecRbacrolebindingactuationOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__bc236c6e60adb67d60c774ea26847a20dbea9d1257ef8c7408d10a47e560ba5c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4c7aa863a470bcdead6580a0b87281d1c90134dc41cdd726ad2aabbf34d14f57)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__11d1e26a043930a0b24358d49e09927227cc4143ac571f2993883694227ee370)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleGkeHubFeatureSpecRbacrolebindingactuationOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleGkeHubFeature.DataGoogleGkeHubFeatureSpecRbacrolebindingactuationOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c48e7ef48793096c12bbfaccdfc62c72405467712a45a8d01ec35284a4429d46)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="allowedCustomRoles")
+    def allowed_custom_roles(self) -> typing.List[builtins.str]:
+        return typing.cast(typing.List[builtins.str], jsii.get(self, "allowedCustomRoles"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGoogleGkeHubFeatureSpecRbacrolebindingactuation]:
+        return typing.cast(typing.Optional[DataGoogleGkeHubFeatureSpecRbacrolebindingactuation], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGoogleGkeHubFeatureSpecRbacrolebindingactuation],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__be57a33484f7566ffba2e4125083943850c583ec58e46c1c59de91d60d19f22d)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
@@ -5372,6 +5525,9 @@ __all__ = [
     "DataGoogleGkeHubFeatureSpecMulticlusteringressList",
     "DataGoogleGkeHubFeatureSpecMulticlusteringressOutputReference",
     "DataGoogleGkeHubFeatureSpecOutputReference",
+    "DataGoogleGkeHubFeatureSpecRbacrolebindingactuation",
+    "DataGoogleGkeHubFeatureSpecRbacrolebindingactuationList",
+    "DataGoogleGkeHubFeatureSpecRbacrolebindingactuationOutputReference",
     "DataGoogleGkeHubFeatureState",
     "DataGoogleGkeHubFeatureStateList",
     "DataGoogleGkeHubFeatureStateOutputReference",
@@ -6810,6 +6966,53 @@ def _typecheckingstub__fa14738d0c545590a5f228085115e67317f0371a19f0cd1fd8118b720
 
 def _typecheckingstub__955248bba9fa2e0d18ff412559570cd3856663855b38a9b92e14268a7977f7f1(
     value: typing.Optional[DataGoogleGkeHubFeatureSpec],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__cd5488478cc429abe3644b423a75b3ac5e1241ad84eda520567efb6cc145cc2e(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__37d9895d3fcd536ea6af5f4e385a4a6f6b7b4d977090c99146598df517527789(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__bc236c6e60adb67d60c774ea26847a20dbea9d1257ef8c7408d10a47e560ba5c(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4c7aa863a470bcdead6580a0b87281d1c90134dc41cdd726ad2aabbf34d14f57(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__11d1e26a043930a0b24358d49e09927227cc4143ac571f2993883694227ee370(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c48e7ef48793096c12bbfaccdfc62c72405467712a45a8d01ec35284a4429d46(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__be57a33484f7566ffba2e4125083943850c583ec58e46c1c59de91d60d19f22d(
+    value: typing.Optional[DataGoogleGkeHubFeatureSpecRbacrolebindingactuation],
 ) -> None:
     """Type checking stubs"""
     pass

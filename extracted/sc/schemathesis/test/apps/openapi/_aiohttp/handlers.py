@@ -8,9 +8,9 @@ from uuid import uuid4
 import jsonschema
 from aiohttp import web
 
-from schemathesis.constants import BOM_MARK
-from schemathesis.internal.output import MAX_PAYLOAD_SIZE
-from schemathesis.transports.content_types import parse_content_type
+from schemathesis.config._output import MAX_PAYLOAD_SIZE
+from schemathesis.core import media_types
+from schemathesis.core.errors import MalformedMediaType
 
 try:
     from ..schema import PAYLOAD_VALIDATOR
@@ -20,15 +20,16 @@ except (ImportError, ValueError):
 
 async def expect_content_type(request: web.Request, value: str):
     content_type = request.headers.get("Content-Type", "")
-    main, sub = parse_content_type(content_type)
-    if f"{main}/{sub}" != value:
-        raise web.HTTPInternalServerError(text=f"Expected {value} payload")
+    try:
+        main, sub = media_types.parse(content_type)
+        if f"{main}/{sub}" != value:
+            raise web.HTTPInternalServerError(text=f"Expected {value} payload")
+    except MalformedMediaType:
+        raise web.HTTPInternalServerError(text=f"Expected {value} payload") from None
     return await request.read()
 
 
 async def success(request: web.Request) -> web.Response:
-    if request.app["config"]["prefix_with_bom"]:
-        return web.Response(body=(BOM_MARK + '{"success": true}').encode(), content_type="application/json")
     return web.json_response({"success": True})
 
 
@@ -288,6 +289,8 @@ async def update_user(request: web.Request) -> web.Response:
     try:
         user = request.app["users"][user_id]
         data = await request.json()
+        if not isinstance(data, dict):
+            raise web.HTTPBadRequest(text='{"detail": "Invalid input type, expected an object"}')
         for field in ("first_name", "last_name"):
             if field not in data:
                 raise web.HTTPBadRequest(text=f'{{"detail": "Missing `{field}`"}}')

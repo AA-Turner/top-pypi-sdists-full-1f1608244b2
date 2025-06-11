@@ -138,8 +138,6 @@ def search(query: Union[pd.DataFrame, pd.Series, dict, list, str], *, errors: Op
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     try:

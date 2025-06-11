@@ -1,14 +1,10 @@
-from importlib import metadata
-
 import pytest
-from packaging import version
+
+from schemathesis.generation.modes import GenerationMode
 
 from .utils import integer
 
-IS_OLD_PYTEST_ASYNCIO_VERSION = version.parse(metadata.version("pytest_asyncio")) < version.parse("0.11.0")
-ASYNCIO_PLUGIN_NAME = "pytest_asyncio" if IS_OLD_PYTEST_ASYNCIO_VERSION else "asyncio"
-
-ALL_PLUGINS = {"aiohttp.pytest_plugin": "", ASYNCIO_PLUGIN_NAME: "@pytest.mark.asyncio", "trio": "@pytest.mark.trio"}
+ALL_PLUGINS = {"aiohttp.pytest_plugin": "", "asyncio": "@pytest.mark.asyncio", "trio": "@pytest.mark.trio"}
 
 
 def build_pytest_args(plugin):
@@ -36,7 +32,6 @@ async def func():
 @schema.parametrize()
 async def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/users"
     assert case.method == "GET"
     assert await func() == 1
     if "{plugin}" == "trio":
@@ -45,12 +40,13 @@ async def test_(request, case):
         await trio.sleep(0)
 """,
         pytest_plugins=[plugin],
+        generation_modes=[GenerationMode.POSITIVE],
     )
     args = build_pytest_args(plugin)
     result = testdir.runpytest(*args)
     result.assert_outcomes(passed=1)
     # Then it should be executed as any other test
-    result.stdout.re_match_lines([r"test_simple.py::test_\[GET /v1/users\] PASSED", r"Hypothesis calls: 1"])
+    result.stdout.re_match_lines([r"test_simple.py::test_\[GET /users\] PASSED", r"Hypothesis calls: 2"])
 
 
 def test_settings_first(testdir, plugin):
@@ -64,17 +60,17 @@ def test_settings_first(testdir, plugin):
 @settings(max_examples=5)
 async def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
-    assert case.full_path == "/v1/users"
     assert case.method in ("GET", "POST")
 """,
         pytest_plugins=[plugin],
         paths={"/users": {"get": parameters, "post": parameters}},
+        generation_modes=[GenerationMode.POSITIVE],
     )
     args = build_pytest_args(plugin)
     result = testdir.runpytest(*args)
     result.assert_outcomes(passed=2)
     # Then it should be executed as any other test
-    result.stdout.re_match_lines([r"Hypothesis calls: 10$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 12$"])
 
 
 def test_aiohttp_client(testdir):
@@ -97,7 +93,7 @@ def app():
         return web.Response()
 
     app = web.Application()
-    app.add_routes([web.get("/schema.yaml", schema), web.get("/v1/users", users)])
+    app.add_routes([web.get("/schema.yaml", schema), web.get("/users", users)])
     app["saved_requests"] = saved_requests
     return app
 
@@ -106,14 +102,15 @@ def app():
 async def test_(request, aiohttp_client, app, case):
     request.config.HYPOTHESIS_CASES += 1
     client = await aiohttp_client(app)
-    response = await client.request(case.method, f"/v1{case.formatted_path}", headers=case.headers)
+    response = await client.request(case.method, "/users", headers=case.headers)
     assert response.status < 500
-    assert len(app["saved_requests"]) == 1
+    assert len(app["saved_requests"]) <= 3
     assert app["saved_requests"][0].method == "GET"
-    assert app["saved_requests"][0].path == "/v1/users"
-"""
+    assert app["saved_requests"][0].path == "/users"
+""",
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
     # Then it should be executed as any other test
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])

@@ -110,8 +110,6 @@ def archive(items: pd.DataFrame,
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
     activity = 'archiv' if not undo else 'unarchiv'
 

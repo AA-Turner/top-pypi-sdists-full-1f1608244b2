@@ -86,8 +86,6 @@ def push(job_folder, *, resume: bool = True, replace: Optional[dict] = None,
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     data_results = load_data_results(job_folder, 'push')

@@ -38,6 +38,7 @@ from mteb.models import (
     e5_v,
     evaclip_models,
     fa_models,
+    geogpt_models,
     gme_v_models,
     google_models,
     gritlm_models,
@@ -68,6 +69,7 @@ from mteb.models import (
     promptriever_models,
     qodo_models,
     qtack_models,
+    qwen3_models,
     repllama_models,
     rerankers_custom,
     rerankers_monot5_based,
@@ -89,11 +91,13 @@ from mteb.models import (
     vlm2vec_models,
     voyage_models,
     voyage_v,
+    xyz_models,
 )
 
 logger = logging.getLogger(__name__)
 
 model_modules = [
+    xyz_models,
     align_models,
     arctic_models,
     bedrock_models,
@@ -143,6 +147,7 @@ model_modules = [
     promptriever_models,
     qodo_models,
     qtack_models,
+    qwen3_models,
     repllama_models,
     rerankers_custom,
     rerankers_monot5_based,
@@ -171,6 +176,7 @@ model_modules = [
     colpali_models,
     colqwen_models,
     colsmol_models,
+    geogpt_models,
 ]
 MODEL_REGISTRY = {}
 

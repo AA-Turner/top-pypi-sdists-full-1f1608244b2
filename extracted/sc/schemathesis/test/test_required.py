@@ -1,12 +1,14 @@
 import pytest
 
+from schemathesis.generation.modes import GenerationMode
+
 from .utils import as_param
 
 
 def test_required_parameters(testdir):
     testdir.make_test(
         """
-@schema.parametrize(method="POST")
+@schema.include(method="POST").parametrize()
 @settings(max_examples=20, suppress_health_check=[HealthCheck.data_too_large])
 def test_(request, case):
     request.config.HYPOTHESIS_CASES += 1
@@ -29,10 +31,11 @@ def test_(request, case):
                 }
             }
         },
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 20$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 21$"])
 
 
 def test_not_required_parameters(testdir):
@@ -46,10 +49,11 @@ def test_(request, case):
     assert case.method == "GET"
 """,
         **as_param({"in": "query", "name": "key", "required": False, "type": "string"}),
+        generation_modes=[GenerationMode.POSITIVE],
     )
     result = testdir.runpytest("-v", "-s")
     result.assert_outcomes(passed=1)
-    result.stdout.re_match_lines([r"Hypothesis calls: 1$"])
+    result.stdout.re_match_lines([r"Hypothesis calls: 2$"])
 
 
 @pytest.mark.parametrize(

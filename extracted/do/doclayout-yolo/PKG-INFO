@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: doclayout_yolo
-Version: 0.0.3
+Version: 0.0.4
 Summary: DocLayout-YOLO: an effecient and robust document layout analysis method.
 Author: Zhiyuan Zhao, Hengrui Kang, Bin Wang, Conghui He
 Maintainer: Zhiyuan Zhao, Bin Wang
@@ -73,6 +73,7 @@ Requires-Dist: hub-sdk>=0.0.5; extra == "extra"
 Requires-Dist: ipython; extra == "extra"
 Requires-Dist: albumentations>=1.0.3; extra == "extra"
 Requires-Dist: pycocotools>=2.0.7; extra == "extra"
+Dynamic: license-file
 
 <div align="center">
 

@@ -162,7 +162,7 @@ class AccumulationTest(chex.TestCase):
     data = jnp.ones([batch_size, x_size])
     loss = Loss()
 
-    params = loss.init({'params': jax.random.PRNGKey(0)}, data)['params']
+    params = loss.init({'params': jax.random.key(0)}, data)['params']
 
     def loss_apply(params, data):
       return loss.apply({'params': params}, data)
@@ -215,9 +215,9 @@ class AccumulationTest(chex.TestCase):
         alias.sgd(1e-4), lambda grad_step: jnp.where(grad_step < 2, 1, 3)
     )
     opt_init, opt_update = ms_opt.gradient_transformation()
-    params = dict(a=jnp.zeros([]))
+    params = {'a': jnp.zeros([])}
     opt_state = opt_init(params)
-    grad = dict(a=jnp.zeros([]))
+    grad = {'a': jnp.zeros([])}
     self.assertFalse(ms_opt.has_updated(opt_state))
     # First two steps have 1 mini-step per update.
     for _ in range(2):
@@ -239,9 +239,9 @@ class AccumulationTest(chex.TestCase):
         every_k_schedule=2,
     )
     opt_init, opt_update = ms_opt.gradient_transformation()
-    params = dict(a=jnp.zeros([]))
+    params = {'a': jnp.zeros([])}
     opt_state = opt_init(params)
-    grad = dict(a=jnp.zeros([]))
+    grad = {'a': jnp.zeros([])}
     opt_update(grad, opt_state, params)
 
   def test_multi_steps_computes_mean(self):
@@ -250,9 +250,9 @@ class AccumulationTest(chex.TestCase):
         transform.scale(1.0), k_steps, use_grad_mean=True
     )
     opt_init, opt_update = ms_opt.gradient_transformation()
-    params = dict(a=jnp.zeros([]))
+    params = {'a': jnp.zeros([])}
     opt_state = opt_init(params)
-    grads = [dict(a=jnp.ones([]) * i) for i in [1, 2, 3, 4]]
+    grads = [{'a': jnp.ones([]) * i} for i in [1, 2, 3, 4]]
     self.assertFalse(ms_opt.has_updated(opt_state))
 
     # First 3 steps don't update.
@@ -275,39 +275,37 @@ class AccumulationTest(chex.TestCase):
     opt_init, opt_update = ms_opt.gradient_transformation()
     opt_init = jax.jit(opt_init)
     opt_update = jax.jit(opt_update)
-    params = dict(a=jnp.zeros([]))
+    params = {'a': jnp.zeros([])}
     opt_state = opt_init(params)
 
     with self.subTest('test_good_updates'):
-      updates, opt_state = opt_update(dict(a=jnp.ones([])), opt_state, params)
+      updates, opt_state = opt_update({'a': jnp.ones([])}, opt_state, params)
       self.assertEqual(int(opt_state.mini_step), 1)
       params = update.apply_updates(params, updates)
-      updates, opt_state = opt_update(dict(a=jnp.ones([])), opt_state, params)
+      updates, opt_state = opt_update({'a': jnp.ones([])}, opt_state, params)
       self.assertEqual(int(opt_state.mini_step), 0)
       params = update.apply_updates(params, updates)
       np.testing.assert_array_equal(params['a'], jnp.negative(jnp.ones([])))
 
     with self.subTest('test_inf_updates'):
       updates, opt_state = opt_update(
-          dict(a=jnp.array(float('inf'))), opt_state, params
-      )
+          {'a': jnp.array(float('inf'))}, opt_state, params)
       self.assertEqual(int(opt_state.mini_step), 0)  # No increase in mini_step
       params = update.apply_updates(params, updates)
       np.testing.assert_array_equal(params['a'], jnp.negative(jnp.ones([])))
 
     with self.subTest('test_nan_updates'):
       updates, opt_state = opt_update(
-          dict(a=jnp.full([], float('nan'))), opt_state, params
-      )
+          {'a': jnp.full([], float('nan'))}, opt_state, params)
       self.assertEqual(int(opt_state.mini_step), 0)  # No increase in mini_step
       params = update.apply_updates(params, updates)
       np.testing.assert_array_equal(params['a'], jnp.negative(jnp.ones([])))
 
     with self.subTest('test_final_good_updates'):
-      updates, opt_state = opt_update(dict(a=jnp.ones([])), opt_state, params)
+      updates, opt_state = opt_update({'a': jnp.ones([])}, opt_state, params)
       self.assertEqual(int(opt_state.mini_step), 1)
       params = update.apply_updates(params, updates)
-      updates, opt_state = opt_update(dict(a=jnp.ones([])), opt_state, params)
+      updates, opt_state = opt_update({'a': jnp.ones([])}, opt_state, params)
       self.assertEqual(int(opt_state.mini_step), 0)
       params = update.apply_updates(params, updates)
       np.testing.assert_array_equal(
@@ -348,8 +346,8 @@ class AccumulationTest(chex.TestCase):
 
     # Utility for dtype comparison
     def compare_dtypes(tree1, tree2):
-      return jax.tree_util.tree_all(
-          jax.tree_util.tree_map(lambda x, y: x.dtype == y.dtype, tree1, tree2)
+      return jax.tree.all(
+          jax.tree.map(lambda x, y: x.dtype == y.dtype, tree1, tree2)
       )
 
     # Iterate over parameter and update dtypes
@@ -361,7 +359,7 @@ class AccumulationTest(chex.TestCase):
         ):
           # Initialize parameters with current combination of dtypes
           params = loss.init(
-              {'params': jax.random.PRNGKey(0)}, data, param_dtype=param_dtype
+              {'params': jax.random.key(0)}, data, param_dtype=param_dtype
           )['params']
           opt_state = opt.init(params)
           ms_opt_state = ms_opt_init(params)

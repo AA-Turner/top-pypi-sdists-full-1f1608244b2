@@ -1,5 +1,6 @@
 import csv
 import platform
+import re
 import string
 from contextlib import suppress
 from io import StringIO
@@ -10,15 +11,14 @@ from hypothesis import HealthCheck, Phase, given, settings
 from hypothesis import strategies as st
 
 import schemathesis
-from schemathesis import serializers
-from schemathesis.exceptions import (
+from schemathesis.core.errors import (
     SERIALIZATION_FOR_TYPE_IS_NOT_POSSIBLE_MESSAGE,
     SerializationError,
     SerializationNotPossible,
-    UnboundPrefixError,
 )
-from schemathesis.internal.copy import fast_deepcopy
-from schemathesis.transports import RequestsTransport, WSGITransport
+from schemathesis.core.transforms import deepclone
+from schemathesis.transport.requests import REQUESTS_TRANSPORT, RequestsTransport
+from schemathesis.transport.wsgi import WSGI_TRANSPORT, WSGITransport
 from test.utils import assert_requests_call
 
 
@@ -35,30 +35,23 @@ def to_csv(data):
 
 @pytest.fixture
 def csv_serializer():
-    @schemathesis.serializer("text/csv", aliases=["text/tsv"])
-    class CSVSerializer:
-        def as_requests(self, context, value):
-            return {"data": to_csv(value)}
-
-        def as_werkzeug(self, context, value):
-            return {"data": to_csv(value)}
-
-    assert serializers.SERIALIZERS["text/csv"] is CSVSerializer
-    assert serializers.SERIALIZERS["text/tsv"] is CSVSerializer
+    @schemathesis.serializer("text/csv")
+    def serialize_csv(ctx, value):
+        return to_csv(value)
 
     yield
 
-    serializers.unregister("text/csv")
-    schemathesis.serializers.unregister("text/tsv")
+    for transport in (REQUESTS_TRANSPORT, WSGI_TRANSPORT):
+        transport.unregister_serializer("text/csv", "text/tsv")
 
 
 @pytest.fixture(params=["aiohttp", "flask"])
 def api_schema(request, openapi_version):
     if request.param == "aiohttp":
         schema_url = request.getfixturevalue("schema_url")
-        return schemathesis.from_uri(schema_url)
+        return schemathesis.openapi.from_url(schema_url)
     app = request.getfixturevalue("flask_app")
-    return schemathesis.from_wsgi("/schema.yaml", app=app)
+    return schemathesis.openapi.from_wsgi("/schema.yaml", app=app)
 
 
 @pytest.mark.hypothesis_nested
@@ -74,33 +67,29 @@ def test_text_csv(api_schema):
         # Then this serializer should be used
         response = case.call_and_validate()
         # And data should be successfully sent to the API as CSV
-        if case.app is not None:
-            data = response.json
-        else:
-            data = response.json()
-        assert data == case.body
+        assert response.json() == case.body
 
     test()
 
 
-def test_register_incomplete_serializer():
-    # When register a new serializer without a required method
-    # Then you'll have a TypeError
-    with pytest.raises(TypeError, match="`CSVSerializer` is not a valid serializer."):
-
-        @schemathesis.serializer("text/csv")
-        class CSVSerializer:
-            def as_requests(self, context, value):
-                pass
+@pytest.fixture
+def tsv_schema(schema_url):
+    schema = schemathesis.openapi.from_url(schema_url)
+    definition = schema.raw_schema["paths"]["/csv"]["post"]
+    if "consumes" in definition:
+        definition["consumes"] = ["text/tsv"]
+    else:
+        definition["requestBody"]["content"]["text/tsv"] = definition["requestBody"]["content"].pop("text/csv")
+    return schema
 
 
 @pytest.mark.hypothesis_nested
 @pytest.mark.operations("csv_payload")
-def test_no_serialization_possible(api_schema):
-    # When API expects `text/csv`
+def test_no_serialization_possible(tsv_schema):
+    # When API expects `text/tsv`
     # And there is no registered serializer for this media type
 
-    @given(case=api_schema["/csv"]["POST"].as_strategy())
+    @given(case=tsv_schema["/csv"]["POST"].as_strategy())
     @settings(max_examples=5)
     def test(case):
         pass
@@ -108,23 +97,26 @@ def test_no_serialization_possible(api_schema):
     # Then there should be an error indicating this
     with pytest.raises(
         SerializationNotPossible,
-        match="Schemathesis can't serialize data to any of the defined media types: text/csv",
+        match="No supported serializers for media types: text/tsv",
     ):
         test()
 
 
 @pytest.mark.openapi_version("3.0")
 @pytest.mark.operations("csv_payload")
-def test_in_cli(cli, schema_url, snapshot_cli):
-    assert cli.run(schema_url) == snapshot_cli
+def test_in_cli(ctx, cli, tsv_schema, snapshot_cli, openapi3_base_url):
+    schema_path = ctx.openapi.write_schema(tsv_schema.raw_schema["paths"])
+    assert cli.run(str(schema_path), f"--url={openapi3_base_url}") == snapshot_cli
 
 
-@pytest.mark.parametrize("transport", [RequestsTransport(), WSGITransport(42)])
+@pytest.mark.parametrize("transport", [RequestsTransport, WSGITransport])
 def test_serialize_yaml(open_api_3_schema_with_yaml_payload, transport):
     # See GH-1010
     # When API expects `text/yaml`
-    schema = schemathesis.from_dict(open_api_3_schema_with_yaml_payload)
-    schema.transport = transport
+    schema = schemathesis.openapi.from_dict(open_api_3_schema_with_yaml_payload)
+
+    if transport is WSGITransport:
+        schema.app = 42
 
     @given(case=schema["/yaml"]["POST"].as_strategy())
     @settings(max_examples=1)
@@ -153,13 +145,13 @@ def test_serialize_any(ctx):
             },
         }
     )
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(case=schema["/any"]["POST"].as_strategy())
     @settings(max_examples=1)
     def test(case):
         # Then Schemathesis should generate valid data of any supported type
-        assert case.as_transport_kwargs()["headers"]["Content-Type"] in serializers.SERIALIZERS
+        assert case.as_transport_kwargs()["headers"]["Content-Type"] in REQUESTS_TRANSPORT._serializers
 
     test()
 
@@ -182,14 +174,15 @@ def test_serialization_not_possible_manual(ctx):
             },
         }
     )
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(case=schema["/test"]["POST"].as_strategy())
     @settings(max_examples=1)
     def test(case):
         case.media_type = "application/whatever"
         with pytest.raises(
-            SerializationNotPossible, match=SERIALIZATION_FOR_TYPE_IS_NOT_POSSIBLE_MESSAGE.format(case.media_type)
+            SerializationNotPossible,
+            match=re.escape(SERIALIZATION_FOR_TYPE_IS_NOT_POSSIBLE_MESSAGE.format(case.media_type)),
         ):
             case.as_transport_kwargs()
 
@@ -218,13 +211,13 @@ def test_binary_data(ctx, media_type):
             },
         }
     )
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
     operation = schema["/test"]["POST"]
     # When an explicit bytes value is passed as body (it happens with `externalValue`)
     body = b"\x92\x42"
-    case = operation.make_case(body=body, media_type=media_type)
+    case = operation.Case(body=body, media_type=media_type)
     # Then it should be used as is
-    for transport in (RequestsTransport(), WSGITransport(app=None)):
+    for transport in (REQUESTS_TRANSPORT, WSGI_TRANSPORT):
         kwargs = transport.serialize_case(case)
         assert kwargs["data"] == body
         if media_type != "multipart/form-data":
@@ -262,10 +255,10 @@ def test_unknown_multipart_fields_openapi3(ctx):
     )
     schema = schemathesis.openapi.from_dict(schema)
     operation = schema["/test"]["POST"]
-    case = operation.make_case(
+    case = operation.Case(
         body={"data": b"\x92\x42", "note": "foo", "unknown": "seen"}, media_type="multipart/form-data"
     )
-    serialized = RequestsTransport().serialize_case(case)
+    serialized = REQUESTS_TRANSPORT.serialize_case(case)
     assert serialized["files"] == [
         ("data", b"\x92B"),
         ("note", (None, "foo")),
@@ -302,10 +295,10 @@ def test_unknown_multipart_fields_openapi2(ctx):
     )
     schema = schemathesis.openapi.from_dict(schema)
     operation = schema["/test"]["POST"]
-    case = operation.make_case(
+    case = operation.Case(
         body={"data": b"\x92\x42", "note": "foo", "unknown": "seen"}, media_type="multipart/form-data"
     )
-    serialized = RequestsTransport().serialize_case(case)
+    serialized = REQUESTS_TRANSPORT.serialize_case(case)
     assert serialized["files"] == [
         ("data", b"\x92B"),
         ("note", "foo"),
@@ -335,11 +328,28 @@ def test_multipart_with_references(ctx):
             "/test": {"$ref": f"{paths}#/paths/Test"},
         }
     )
-    schema = schemathesis.from_path(str(schema))
+    schema = schemathesis.openapi.from_path(schema)
     operation = schema["/test"]["POST"]
-    case = operation.make_case(body={}, media_type="multipart/form-data")
-    serialized = RequestsTransport().serialize_case(case)
+    case = operation.Case(body={}, media_type="multipart/form-data")
+    serialized = REQUESTS_TRANSPORT.serialize_case(case)
     assert serialized["files"] is None
+
+
+TRANSPORT = RequestsTransport()
+
+
+@TRANSPORT.serializer(
+    "application/json",
+    "multipart/form-data",
+    "application/problem+json",
+    "application/octet-stream",
+    "application/x-www-form-urlencoded",
+    "application/x-yaml",
+    "application/yaml",
+    "application/xml",
+)
+def foo(ctx, value):
+    pass
 
 
 @pytest.mark.parametrize(
@@ -352,6 +362,7 @@ def test_multipart_with_references(ctx):
             {
                 "application/json",
                 "application/octet-stream",
+                "application/problem+json",
                 "application/x-www-form-urlencoded",
                 "application/x-yaml",
                 "application/yaml",
@@ -359,11 +370,11 @@ def test_multipart_with_references(ctx):
             },
         ),
         ("*/form-data", {"multipart/form-data"}),
-        ("*/*", set(serializers.SERIALIZERS)),
+        ("*/*", set(TRANSPORT._serializers)),
     ],
 )
 def test_get_matching_serializers(media_type, expected):
-    assert set(serializers.get_matching_media_types(media_type)) == expected
+    assert {media_type for media_type, _ in TRANSPORT.get_matching_media_types(media_type)} == expected
 
 
 @pytest.mark.parametrize(
@@ -442,20 +453,20 @@ def test_get_matching_serializers(media_type, expected):
 )
 def test_serialize_xml(openapi_3_schema_with_xml, path, expected):
     # When the schema contains XML payload
-    schema = schemathesis.from_dict(openapi_3_schema_with_xml)
+    schema = schemathesis.openapi.from_dict(openapi_3_schema_with_xml)
 
     @given(case=schema[path]["POST"].as_strategy())
     @settings(max_examples=1)
     def test(case):
         # Then it should be correctly serialized
-        for transport in (RequestsTransport(), WSGITransport(app=None)):
+        for transport in (REQUESTS_TRANSPORT, WSGI_TRANSPORT):
             data = transport.serialize_case(case)["data"]
             assert data == expected
             # Arrays may be serialized into multiple elements without root, therefore wrapping everything and check if
             # it can be parsed.
             ElementTree.fromstring(f"<root xmlns:smp='http://example.com/schema'>{data.decode('utf8')}</root>")
 
-    original = fast_deepcopy(schema[path]["POST"].body[0].definition)
+    original = deepclone(schema[path]["POST"].body[0].definition)
 
     test()
     # And serialization does not modify the original schema
@@ -498,7 +509,7 @@ def test_serialize_xml_unbound_prefix(ctx, schema_object):
         components={"schemas": {"Main": schema_object}},
     )
 
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(case=schema["/test"]["POST"].as_strategy())
     @settings(max_examples=1)
@@ -558,14 +569,14 @@ def test_serialize_xml_hypothesis(data, schema_object, media_type):
         "components": {"schemas": {"Main": schema_object}},
     }
 
-    schema = schemathesis.from_dict(raw_schema)
+    schema = schemathesis.openapi.from_dict(raw_schema)
 
     case = data.draw(schema["/test"]["POST"].as_strategy())
 
     # Arrays may be serialized into multiple elements without root, therefore wrapping everything and check if
     # it can be parsed.
-    with suppress(SerializationError, UnboundPrefixError):
-        for transport in (RequestsTransport(), WSGITransport(app=None)):
+    with suppress(SerializationError):
+        for transport in (REQUESTS_TRANSPORT, WSGI_TRANSPORT):
             serialized_data = transport.serialize_case(case)["data"].decode("utf8")
             ElementTree.fromstring(f"<root xmlns:smp='http://example.com/schema'>{serialized_data}</root>")
 
@@ -585,12 +596,12 @@ def test_xml_with_binary(ctx):
         }
     )
 
-    schema = schemathesis.from_dict(schema)
+    schema = schemathesis.openapi.from_dict(schema)
 
     @given(case=schema["/test"]["POST"].as_strategy())
     @settings(max_examples=1)
     def test(case):
-        assert case.as_transport_kwargs()["data"] == ""
+        assert case.as_transport_kwargs()["data"] in ("", "0")
 
     test()
 
@@ -626,8 +637,8 @@ def test_duplicate_xml_attributes(ctx):
         }
     )
 
-    schema = schemathesis.from_dict(schema)
-    case = schema["/test"]["POST"].make_case(body={"prop1": 1, "prop2": 2})
+    schema = schemathesis.openapi.from_dict(schema)
+    case = schema["/test"]["POST"].Case(body={"prop1": 1, "prop2": 2})
 
     serialized_data = case.as_transport_kwargs()["data"].decode("utf8")
     ElementTree.fromstring(serialized_data)

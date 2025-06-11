@@ -1,7 +1,7 @@
 r'''
 # `data_okta_groups`
 
-Refer to the Terraform Registry for docs: [`data_okta_groups`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups).
+Refer to the Terraform Registry for docs: [`data_okta_groups`](https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaGroups(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaGroups.DataOktaGroups",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups okta_groups}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups okta_groups}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class DataOktaGroups(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups okta_groups} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups okta_groups} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#id DataOktaGroups#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param limit: The maximum number of groups returned by the Okta API, between 1 and 10000. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#limit DataOktaGroups#limit}
-        :param q: Searches the name property of groups for matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#q DataOktaGroups#q}
-        :param search: Searches for groups with a supported filtering expression for all attributes except for '_embedded', '_links', and 'objectClass'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#search DataOktaGroups#search}
-        :param type: Type of the group. When specified in the terraform resource, will act as a filter when searching for the groups Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#type DataOktaGroups#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#id DataOktaGroups#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param limit: The maximum number of groups returned by the Okta API, between 1 and 10000. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#limit DataOktaGroups#limit}
+        :param q: Searches the name property of groups for matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#q DataOktaGroups#q}
+        :param search: Searches for groups with a supported filtering expression for all attributes except for '_embedded', '_links', and 'objectClass'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#search DataOktaGroups#search}
+        :param type: Type of the group. When specified in the terraform resource, will act as a filter when searching for the groups Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#type DataOktaGroups#type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class DataOktaGroups(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaGroups to import.
-        :param import_from_id: The id of the existing DataOktaGroups that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaGroups that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaGroups to import is found.
         '''
         if __debug__:
@@ -293,11 +293,11 @@ class DataOktaGroupsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#id DataOktaGroups#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param limit: The maximum number of groups returned by the Okta API, between 1 and 10000. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#limit DataOktaGroups#limit}
-        :param q: Searches the name property of groups for matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#q DataOktaGroups#q}
-        :param search: Searches for groups with a supported filtering expression for all attributes except for '_embedded', '_links', and 'objectClass'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#search DataOktaGroups#search}
-        :param type: Type of the group. When specified in the terraform resource, will act as a filter when searching for the groups Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#type DataOktaGroups#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#id DataOktaGroups#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param limit: The maximum number of groups returned by the Okta API, between 1 and 10000. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#limit DataOktaGroups#limit}
+        :param q: Searches the name property of groups for matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#q DataOktaGroups#q}
+        :param search: Searches for groups with a supported filtering expression for all attributes except for '_embedded', '_links', and 'objectClass'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#search DataOktaGroups#search}
+        :param type: Type of the group. When specified in the terraform resource, will act as a filter when searching for the groups Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#type DataOktaGroups#type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -407,7 +407,7 @@ class DataOktaGroupsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#id DataOktaGroups#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#id DataOktaGroups#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -419,7 +419,7 @@ class DataOktaGroupsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def limit(self) -> typing.Optional[jsii.Number]:
         '''The maximum number of groups returned by the Okta API, between 1 and 10000.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#limit DataOktaGroups#limit}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#limit DataOktaGroups#limit}
         '''
         result = self._values.get("limit")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -428,7 +428,7 @@ class DataOktaGroupsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def q(self) -> typing.Optional[builtins.str]:
         '''Searches the name property of groups for matching value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#q DataOktaGroups#q}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#q DataOktaGroups#q}
         '''
         result = self._values.get("q")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -437,7 +437,7 @@ class DataOktaGroupsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def search(self) -> typing.Optional[builtins.str]:
         '''Searches for groups with a supported filtering expression for all attributes except for '_embedded', '_links', and 'objectClass'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#search DataOktaGroups#search}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#search DataOktaGroups#search}
         '''
         result = self._values.get("search")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -448,7 +448,7 @@ class DataOktaGroupsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         When specified in the terraform resource, will act as a filter when searching for the groups
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/groups#type DataOktaGroups#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.20.0/docs/data-sources/groups#type DataOktaGroups#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)

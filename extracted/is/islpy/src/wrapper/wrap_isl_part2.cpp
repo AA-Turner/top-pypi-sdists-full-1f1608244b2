@@ -8,20 +8,34 @@ namespace isl
 void islpy_expose_part2(py::module_ &m)
 {
   MAKE_WRAP(basic_set, BasicSet);
+  wrap_basic_set.def("__hash__", [](isl::basic_set const &self) {
+                       isl::set set_self(self);
+                       return isl_set_get_hash(set_self.m_data);
+                     });
+  // used in align_dims
+  wrap_basic_set.def("is_params", [](isl::basic_set const &self) {
+                       isl::set set_self(self);
+                       return bool(isl_set_is_params(set_self.m_data));
+                     });
 
   MAKE_WRAP(basic_map, BasicMap);
+  wrap_basic_map.def("__hash__", [](isl::basic_map const &self) {
+                       isl::map map_self(self);
+                       return isl_map_get_hash(map_self.m_data);
+                     });
 
   MAKE_WRAP(set, Set);
-  wrap_set.def(py::init_implicit<isl::basic_set const &>());
+  MAKE_INIT_CONVERTIBLE(basic_set, set);
 
   MAKE_WRAP(map, Map);
-  wrap_map.def(py::init_implicit<isl::basic_map const &>());
+  MAKE_INIT_CONVERTIBLE(basic_map, map);
+  MAKE_TO_METHOD(basic_map, map);
 
   MAKE_WRAP(union_set, UnionSet);
-  wrap_union_set.def(py::init_implicit<isl::set const &>());
+  MAKE_INIT_CONVERTIBLE(set, union_set);
 
   MAKE_WRAP(union_map, UnionMap);
-  wrap_union_map.def(py::init_implicit<isl::map const &>());
+  MAKE_INIT_CONVERTIBLE(map, union_map);
 
   MAKE_WRAP(point, Point);
 

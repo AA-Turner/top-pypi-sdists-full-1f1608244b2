@@ -33,31 +33,15 @@ jobs:
         with:
           python-version: 3.11
 
-      - uses: hynek/setup-cached-uv@v2
+      - uses: astral-sh/setup-uv@v6
 
       - run: uvx pre-commit run --all-files
-
-  docs:
-    name: Documentation
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4.2.1
-        with:
-          fetch-depth: 1
-      - uses: ammaraskar/sphinx-action@master
-        with:
-          docs-folder: "docs/"
 
   tests:
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2019]
-        python: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
-        # Set the patch version for "python", so GitHub adds these configurations instead of expanding existing ones
-        include:
-          - os: ubuntu-22.04
-            python: "3.9.16"
-            tox_env: pytest6
+        os: [ubuntu-22.04, windows-2022]
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
       fail-fast: false
 
     name: Tests (Python ${{ matrix.python }} on ${{ matrix.os }} ${{ matrix.tox_env }})
@@ -71,7 +55,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - uses: hynek/setup-cached-uv@v2
+      - uses: astral-sh/setup-uv@v6
 
       - if: ${{ matrix.tox_env }}
         run: uvx --with="tox" --with="tox-gh-actions" --with="tox-uv" tox -e ${{ matrix.tox_env }}
@@ -80,7 +64,7 @@ jobs:
         run: uvx --with="tox" --with="tox-gh-actions" --with="tox-uv" tox
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5.1.2
+        uses: codecov/codecov-action@v5.4.3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -88,7 +72,7 @@ jobs:
   tests-pipe-with-encoding:
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2019]
+        os: [ubuntu-22.04, windows-2022]
       fail-fast: false
     name: Test piping output to a file with CP1252 encoding on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -101,7 +85,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - uses: hynek/setup-cached-uv@v2
+      - uses: astral-sh/setup-uv@v6
 
       - run: uv tool install ".[dev]"
 

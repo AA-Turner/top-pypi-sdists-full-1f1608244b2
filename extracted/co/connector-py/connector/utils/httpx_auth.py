@@ -2,6 +2,9 @@ from typing import Any
 
 import httpx
 
+from connector.error import ConnectorError
+from connector.generated import ErrorCode
+
 
 class BearerAuth(httpx.Auth):
     """Authorization schema for authorization via token in header with default Bearer prefix."""
@@ -15,6 +18,13 @@ class BearerAuth(httpx.Auth):
     ) -> None:
         if custom_headers is None:
             custom_headers = {"Content-Type": "application/json"}
+
+        if not token:
+            raise ConnectorError(
+                message="Token credential is required and cannot be empty.",
+                error_code=ErrorCode.BAD_REQUEST,
+            )
+
         self._token = token
         self._token_prefix = token_prefix
         self._auth_header = auth_header

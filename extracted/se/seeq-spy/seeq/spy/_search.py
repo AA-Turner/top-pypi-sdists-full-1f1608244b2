@@ -394,8 +394,6 @@ def search(query, *, all_properties=False, include_properties: List[str] = None,
         (session, 'session', Session)
     ])
 
-    session = Session.validate(session)
-    status = Status.validate(status, session, quiet, errors)
     _login.validate_login(session, status)
 
     if all_properties:

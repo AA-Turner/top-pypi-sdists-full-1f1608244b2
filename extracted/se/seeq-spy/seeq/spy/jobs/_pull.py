@@ -18,6 +18,7 @@ from seeq.spy.jobs import _push
 from seeq.spy.jobs import _schedule
 
 
+@Status.handle_keyboard_interrupt(no_status=True)
 def pull(datalab_notebook_url: Optional[str] = None, label: Optional[str] = None,
          interactive_index: Union[Optional[int], Optional[str]] = None,
          all: bool = False, session: Optional[Session] = None) -> Optional[pd.Series]:
@@ -73,8 +74,6 @@ def pull(datalab_notebook_url: Optional[str] = None, label: Optional[str] = None
         (all, 'all', bool),
         (session, 'session', Session)
     ])
-
-    session = Session.validate(session)
 
     if interactive_index is None and not all and not _datalab.is_executor():
         raise SPyValueError(f'When not running in an executor, an interactive_index must be supplied for spy.jobs.pull '
