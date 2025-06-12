@@ -101,13 +101,13 @@ export enum DiagnosticRule {
     reportUnusedExpression = 'reportUnusedExpression',
     reportUnnecessaryTypeIgnoreComment = 'reportUnnecessaryTypeIgnoreComment',
     reportMatchNotExhaustive = 'reportMatchNotExhaustive',
+    reportUnreachable = 'reportUnreachable',
     reportShadowedImports = 'reportShadowedImports',
     reportImplicitOverride = 'reportImplicitOverride',
 
     // basedpyright options:
     failOnWarnings = 'failOnWarnings',
     strictGenericNarrowing = 'strictGenericNarrowing',
-    reportUnreachable = 'reportUnreachable',
     reportAny = 'reportAny',
     reportExplicitAny = 'reportExplicitAny',
     reportIgnoreCommentWithoutRule = 'reportIgnoreCommentWithoutRule',

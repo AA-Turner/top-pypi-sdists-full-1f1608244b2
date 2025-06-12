@@ -3,19 +3,18 @@ import sys
 from pathlib import Path
 from typing import List, Optional, Union
 
-import toml
-
 from .exceptions import CouldNotParseRequirements, RequirementsNotFound
 from .handle_setup import from_setup_py
 from .poetry_semver import parse_constraint
 from .poetry_semver.version_constraint import VersionConstraint
 from .requirement import DetectedRequirement
 
-_USE_TOMLLIB = sys.version_info.major > 3 or sys.version_info.minor >= 11
-if _USE_TOMLLIB:
+try:
+    # added in Python 3.11: https://docs.python.org/3/library/tomllib.html
     import tomllib
-else:
-    import toml
+except ImportError:
+    # for Python <= 3.10:
+    import tomli as tomllib
 
 __all__ = [
     "find_requirements",
@@ -89,7 +88,7 @@ def find_requirements(path: P) -> List[DetectedRequirement]:
         if reqfile.exists and reqfile.is_file():
             try:
                 requirements += from_requirements_txt(reqfile)
-            except CouldNotParseRequirements as e:
+            except CouldNotParseRequirements:
                 pass
 
     requirements_dir = path / "requirements"
@@ -135,11 +134,9 @@ def from_pyproject_toml(toml_file: P) -> List[DetectedRequirement]:
     if isinstance(toml_file, str):
         toml_file = Path(toml_file)
 
-    if _USE_TOMLLIB:
-        with open(toml_file, "rb") as toml_file_open:
-            parsed = tomllib.load(toml_file_open)
-    else:
-        parsed = toml.load(toml_file)
+    with open(toml_file, "rb") as toml_file_open:
+        parsed = tomllib.load(toml_file_open)
+
     poetry_section = parsed.get("tool", {}).get("poetry", {})
     dependencies = poetry_section.get("dependencies", {})
     dependencies.update(poetry_section.get("dev-dependencies", {}))
@@ -156,7 +153,12 @@ def from_pyproject_toml(toml_file: P) -> List[DetectedRequirement]:
                 continue
         assert parsed_spec_obj is not None
         parsed_spec = str(parsed_spec_obj)
-        if "," not in parsed_spec and "<" not in parsed_spec and ">" not in parsed_spec and "=" not in parsed_spec:
+        if (
+            "," not in parsed_spec
+            and "<" not in parsed_spec
+            and ">" not in parsed_spec
+            and "=" not in parsed_spec
+        ):
             parsed_spec = f"=={parsed_spec}"
 
         req = DetectedRequirement.parse(f"{name}{parsed_spec}", toml_file)

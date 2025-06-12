@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: lightly
-Version: 1.5.20
+Version: 1.5.21
 Summary: A deep learning package for self-supervised learning
 Author-email: Lightly Team <team@lightly.ai>
 License: Copyright (c) 2018 The Python Packaging Authority
@@ -55,7 +55,7 @@ Requires-Dist: hydra-core>=1.0.0
 Requires-Dist: lightly_utils~=0.0.0
 Requires-Dist: numpy>=1.18.1
 Requires-Dist: python_dateutil>=2.5.3
-Requires-Dist: requests>=2.23.0
+Requires-Dist: requests>=2.27.0
 Requires-Dist: six>=1.10
 Requires-Dist: tqdm>=4.44
 Requires-Dist: torch
@@ -93,6 +93,7 @@ Requires-Dist: isort==5.11.5; extra == "dev"
 Requires-Dist: mypy==1.4.1; extra == "dev"
 Requires-Dist: types-python-dateutil; extra == "dev"
 Requires-Dist: types-toml; extra == "dev"
+Requires-Dist: types-requests; extra == "dev"
 Requires-Dist: nbformat; extra == "dev"
 Requires-Dist: jupytext; extra == "dev"
 Provides-Extra: minimal
@@ -524,6 +525,7 @@ make format
 
 ## Lightly in Research
 
+- [Joint-Embedding vs Reconstruction: Provable Benefits of Latent Space Prediction for Self-Supervised Learning, 2025](https://arxiv.org/abs/2505.12477)
 - [Reverse Engineering Self-Supervised Learning, 2023](https://arxiv.org/abs/2305.15614)
 - [Learning Visual Representations via Language-Guided Sampling, 2023](https://arxiv.org/pdf/2302.12248.pdf)
 - [Self-Supervised Learning Methods for Label-Efficient Dental Caries Classification, 2022](https://www.mdpi.com/2075-4418/12/5/1237)

@@ -12,6 +12,10 @@ def disable() -> None:
 def dump_traceback(file: FileDescriptorLike = ..., all_threads: bool = ...) -> None:
     """Dump the traceback of the current thread, or of all threads if all_threads is True, into file."""
     ...
+
+if sys.version_info >= (3, 14):
+    def dump_c_stack(file: FileDescriptorLike = ...) -> None: ...
+
 def dump_traceback_later(timeout: float, repeat: bool = ..., file: FileDescriptorLike = ..., exit: bool = ...) -> None:
     """
     Dump the traceback of all threads in timeout seconds,

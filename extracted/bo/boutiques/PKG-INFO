@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: boutiques
-Version: 0.5.29
+Version: 0.5.30
 Summary: Schema for describing bash command-line tools
 Project-URL: Homepage, http://github.com/boutiques/boutiques
 Author-email: Tristan Glatard <tristan.glatard@concordia.ca>, Gregory Kiar <gkiar07@gmail.com>

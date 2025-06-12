@@ -1,10 +1,16 @@
+"""Define utility functions used across the emmet namespace packages."""
+from __future__ import annotations
+
 import copy
 import datetime
+import hashlib
 from enum import Enum
 from itertools import groupby
-from typing import Any, Dict, Iterator, List, Optional, Union
+from math import gcd
+from typing import Any, Dict, Iterator, List, Optional, Union, TYPE_CHECKING
 
 import numpy as np
+from monty.io import zopen
 from monty.json import MSONable
 from pydantic import BaseModel
 from pymatgen.analysis.elasticity.strain import Deformation
@@ -30,6 +36,11 @@ try:
 except ImportError:
     bson = None  # type: ignore
 
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+    from emmet.core.typing import PathLike
+
+
 SETTINGS = EmmetSettings()
 
 
@@ -39,6 +50,23 @@ def get_sg(struc, symprec=SETTINGS.SYMPREC) -> int:
         return struc.get_space_group_info(symprec=symprec)[1]
     except Exception:
         return -1
+
+
+def get_num_formula_units(composition: Mapping[Any, int | float]) -> int:
+    """Get the number of formula units in a dict-like composition.
+
+    This implementation differs slightly from how some pymatgen/atomate2
+    internals work. In those, certain formulas, e.g., N, will assume
+    a smallest formula unit of N2. Thus even if a specified composition is
+    `{"N": 1}`, the reduced composition will be `{"N": 2}`, and the number of
+    formula units 1/2.
+
+    This always just returns the greatest common divisor of a composition.
+    """
+    num_form_u = 1
+    if all(abs(int(val) - val) < 1e-6 for val in composition.values()):
+        num_form_u = gcd(*[int(sc) for sc in composition.values()])
+    return num_form_u
 
 
 def group_structures(
@@ -110,7 +138,7 @@ def generate_robocrys_condensed_struct_and_description(
     structure: Structure,
     mineral_matcher=None,
     symprecs: list[float] = [0.01, 0.1, 1.0e-3],
-) -> tuple[dict[str, Any], str]:
+) -> tuple[dict[str, Any], Any]:
     """
     Get robocrystallographer description of a structure.
 
@@ -437,3 +465,27 @@ class IgnoreCaseEnum(ValueEnum):
 def utcnow() -> datetime.datetime:
     """Get UTC time right now."""
     return datetime.datetime.now(datetime.timezone.utc)
+
+
+def get_md5_blocked(file_path: PathLike, chunk_size: int = 1_000_000) -> str:
+    """
+    Get the MD5 hash of a file in byte chunks.
+
+    Parameters
+    -----------
+    file_path : PathLike
+    chunk_size : int = 1,000,000 bytes (default)
+        The byte chunk size to use in iteratively computing the MD5
+
+    Returns
+    -----------
+    The MD5 as a str
+    """
+    md5 = hashlib.md5()
+    with zopen(str(file_path), "rb") as f:
+        while True:
+            data = f.read(chunk_size)
+            if not data:
+                break
+            md5.update(data)
+        return md5.hexdigest()

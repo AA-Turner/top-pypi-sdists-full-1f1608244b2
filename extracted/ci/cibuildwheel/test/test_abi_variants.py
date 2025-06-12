@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import textwrap
 
 from . import test_projects, utils
@@ -37,32 +35,39 @@ def test_abi3(tmp_path):
     project_dir = tmp_path / "project"
     limited_api_project.generate(project_dir)
 
-    single_python_tag = "cp{}{}".format(*utils.SINGLE_PYTHON_VERSION)
-
     # build the wheels
     actual_wheels = utils.cibuildwheel_run(
         project_dir,
         add_env={
-            # free_threaded and PyPy do not have a Py_LIMITED_API equivalent, just build one of those
+            # free_threaded, GraalPy, and PyPy do not have a Py_LIMITED_API equivalent, just build one of those
             # also limit the number of builds for test performance reasons
-            "CIBW_BUILD": f"cp39-* cp310-* pp310-* {single_python_tag}-* cp313t-*"
+            "CIBW_BUILD": "cp39-* cp310-* pp310-* gp311_242-* cp312-* cp313t-*",
+            "CIBW_ENABLE": "all",
         },
     )
 
     # check that the expected wheels are produced
-    expected_wheels = utils.expected_wheels("spam", "0.1.0")
-    if utils.platform == "pyodide":
-        # there's only 1 possible configuration for pyodide, the single_python_tag one
-        expected_wheels = [
-            w.replace(f"{single_python_tag}-{single_python_tag}", "cp310-abi3")
-            for w in expected_wheels
-        ]
+    if utils.get_platform() == "pyodide":
+        # there's only 1 possible configuration for pyodide, cp312. It builds
+        # a wheel that is tagged abi3, compatible back to 3.10
+        expected_wheels = utils.expected_wheels(
+            "spam",
+            "0.1.0",
+            python_abi_tags=["cp310-abi3"],
+        )
     else:
-        expected_wheels = [
-            w.replace("cp310-cp310", "cp310-abi3")
-            for w in expected_wheels
-            if "-cp39" in w or "-cp310" in w or "-pp310" in w or "-cp313t" in w
-        ]
+        expected_wheels = utils.expected_wheels(
+            "spam",
+            "0.1.0",
+            python_abi_tags=[
+                "cp39-cp39",
+                "cp310-abi3",  # <-- ABI3, works with 3.10 and 3.12
+                "cp313-cp313t",
+                "pp310-pypy310_pp73",
+                "graalpy311-graalpy242_311_native",
+            ],
+        )
+
     assert set(actual_wheels) == set(expected_wheels)
 
 
@@ -101,18 +106,19 @@ ctypes_project.files["setup.py"] = textwrap.dedent(
     setup(
         name="ctypesexample",
         version="1.0.0",
+        package_dir = {"": "src"},
         py_modules = ["ctypesexample.summing"],
         ext_modules=[
             CTypesExtension(
                 "ctypesexample.csumlib",
-                ["ctypesexample/csumlib.c"],
+                ["src/ctypesexample/csumlib.c"],
             ),
         ],
         cmdclass={'build_ext': build_ext, 'bdist_wheel': bdist_wheel_abi_none},
     )
     """
 )
-ctypes_project.files["ctypesexample/csumlib.c"] = textwrap.dedent(
+ctypes_project.files["src/ctypesexample/csumlib.c"] = textwrap.dedent(
     """
     #ifdef _WIN32
     #define LIBRARY_API __declspec(dllexport)
@@ -136,7 +142,7 @@ ctypes_project.files["ctypesexample/csumlib.c"] = textwrap.dedent(
     }
     """
 )
-ctypes_project.files["ctypesexample/summing.py"] = textwrap.dedent(
+ctypes_project.files["src/ctypesexample/summing.py"] = textwrap.dedent(
     """
     import ctypes
     import pathlib
@@ -184,18 +190,21 @@ def test_abi_none(tmp_path, capfd):
             "CIBW_TEST_COMMAND": f"{utils.invoke_pytest()} {{project}}/test",
             # limit the number of builds for test performance reasons
             "CIBW_BUILD": "cp38-* cp{}{}-* cp313t-* pp310-*".format(*utils.SINGLE_PYTHON_VERSION),
+            "CIBW_ENABLE": "all",
         },
     )
 
-    # check that the expected wheels are produced
     expected_wheels = utils.expected_wheels("ctypesexample", "1.0.0", python_abi_tags=["py3-none"])
+    # check that the expected wheels are produced
     assert set(actual_wheels) == set(expected_wheels)
 
-    # check that each wheel was built once, and reused
     captured = capfd.readouterr()
-    assert "Building wheel..." in captured.out
-    if utils.platform == "pyodide":
-        # there's only 1 possible configuration for pyodide, we won't see the message expected on following builds
+
+    if utils.get_platform() == "pyodide":
+        # pyodide builds a different platform tag for each python version, so
+        # wheels are not reused
         assert "Found previously built wheel" not in captured.out
     else:
+        # check that each wheel was built once, and reused
+        assert "Building wheel..." in captured.out
         assert "Found previously built wheel" in captured.out

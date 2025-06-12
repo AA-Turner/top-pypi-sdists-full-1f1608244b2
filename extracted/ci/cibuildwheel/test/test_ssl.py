@@ -1,5 +1,4 @@
-from __future__ import annotations
-
+import socket
 import textwrap
 
 from . import test_projects, utils
@@ -12,9 +11,9 @@ project_with_ssl_tests = test_projects.new_c_project(
         from urllib.request import urlopen
 
         context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-        data = urlopen("https://www.nist.gov", context=context)
-        data = urlopen("https://raw.githubusercontent.com/pypa/cibuildwheel/main/CI.md", context=context)
-        data = urlopen("https://raw.githubusercontent.com/pypa/cibuildwheel/main/CI.md")
+        # badssl.com is a HTTPS test server that can be used to test SSL connections
+        data = urlopen("https://tls-v1-2.badssl.com", context=context)
+        data = urlopen("https://tls-v1-2.badssl.com")
         """
     )
 )
@@ -25,6 +24,9 @@ def test(tmp_path):
     # some checks in setup.py.
     project_dir = tmp_path / "project"
     project_with_ssl_tests.generate(project_dir)
+
+    # warm up connection
+    socket.getaddrinfo("tls-v1-2.badssl.com", 443)
 
     actual_wheels = utils.cibuildwheel_run(project_dir)
 

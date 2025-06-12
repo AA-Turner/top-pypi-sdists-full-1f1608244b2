@@ -66,7 +66,6 @@ class LightDarkBoxAnalyzer():
         self.save_path, self.body_part, self.fps, self.threshold, self.min_dur = save_path, body_part, fps, threshold, minimum_episode_duration
         self.file_cnt = len(list(self.data_paths.keys()))
 
-
     def _remove_outliers(self, df: pd.DataFrame):
         outlier_sequences = [g for g in (list(map(lambda x: x[1], grp)) for _, grp in groupby(enumerate(df.index[df['DURATION (S)'] < self.min_dur]), lambda x: x[0] - x[1]))]
         for outlier_sequence in outlier_sequences:

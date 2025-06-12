@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "benchling-sdk"
-version = "1.21.2"   # NOTE: This version number is ignored and does not correspond to releases (see README)
+version = "1.22.0"   # NOTE: This version number is ignored and does not correspond to releases (see README)
 description = "SDK for interacting with the Benchling Platform."
 authors = ["Benchling Support <support@benchling.com>"]
 packages = [{include = "benchling_sdk"}]
@@ -28,7 +28,7 @@ PyYAML = "^6.0"
 # See issue: https://github.com/giampaolo/psutil/issues/2165
 psutil = {version = "^5.9.4", python = "^3.11" }
 jwcrypto = "^1.5.1"
-benchling-api-client = "2.0.342"
+benchling-api-client = "2.0.390"
 # Minimum version due to vulnerability in 2022.9.24
 certifi = ">=2022.12.7"
 # Cryptography extras - see ExtrasPackage.CRYPTOGRAPHY
@@ -52,7 +52,6 @@ taskipy = "^1.6.0"
 Jinja2 = "^3.1.2"
 Markdown = "3.3.4" # Errors in Markdown 3.3.5 related to TypeError: entry_points() got an unexpected keyword argument 'group'
 toml = "^0.10.2"
-packaging = "^20.9"
 coverage = "^5.5"
 ddt = "1.4.4"
 pytest = "^7.1.2"
@@ -60,7 +59,7 @@ beautifulsoup4 = "4.10.0"
 sphinx = "^4.4.0"
 types-PyYAML = "^6.0.8"
 # Used by integration tests for retrieving API secrets in SSM
-boto3 = "^1.24.67"
+boto3 = "1.34.135"
 boto3-stubs = {extras = ["ssm"], version = "1.24.67"}
 types-s3transfer = "0.6.0.post4"
 botocore-stubs = "1.28.4"
@@ -70,6 +69,12 @@ python-jose = "^3.3.0"
 gitpython = "^3.1.31"
 pytest-rerunfailures = "^12.0"
 respx = "^0.20.2"
+black = "^25.1.0"
+sphinxcontrib-applehelp = "1.0.4"
+sphinxcontrib-devhelp = "1.0.2"
+sphinxcontrib-htmlhelp = "2.0.1"
+sphinxcontrib-qthelp = "1.0.3"
+sphinxcontrib-serializinghtml = "1.1.5"
 
 [tool.taskipy.tasks]
 unit = "pytest -s tests/unit/"

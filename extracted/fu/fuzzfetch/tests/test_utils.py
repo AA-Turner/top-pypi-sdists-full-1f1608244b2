@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 """Assorted fuzzfetch utilities"""
+
 import pytest  # pylint: disable=import-error
 
 from fuzzfetch.utils import is_date, is_namespace, is_rev
@@ -11,6 +12,7 @@ from fuzzfetch.utils import is_date, is_namespace, is_rev
     "build, expected_date, expected_rev, expected_namespace",
     [
         ("2024-01-01", True, False, False),  # Date string
+        ("20240101120000", True, False, False),  # build id Date
         ("a1b2c3d4e5f6", False, True, False),  # 12-character rev
         ("a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2", False, True, False),  # 40-char rev
         (

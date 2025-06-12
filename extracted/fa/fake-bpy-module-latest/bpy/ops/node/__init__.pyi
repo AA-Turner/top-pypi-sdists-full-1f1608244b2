@@ -1499,6 +1499,21 @@ def mute_toggle(
     :type undo: bool | None
     """
 
+def new_compositing_node_group(
+    execution_context: int | str | None = None,
+    undo: bool | None = None,
+    /,
+    *,
+    name: str = "Compositing Node Tree",
+) -> None:
+    """Create a new compositing node tree and initialize it with default nodes
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    :param name: Name
+    :type name: str
+    """
+
 def new_geometry_node_group_assign(
     execution_context: int | str | None = None, undo: bool | None = None
 ) -> None:

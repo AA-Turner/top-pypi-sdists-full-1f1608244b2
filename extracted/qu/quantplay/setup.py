@@ -21,7 +21,7 @@ requirements = [
 setup(
     name="quantplay",
     long_description=Path("README.md").read_text(),
-    version="2.1.82",
+    version="2.1.83",
     setup_requires=["pytest-runner"],
     install_requires=requirements,
     tests_require=[],

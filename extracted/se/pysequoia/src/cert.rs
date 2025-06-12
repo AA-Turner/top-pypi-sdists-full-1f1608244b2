@@ -41,8 +41,25 @@ impl Cert {
         &self.cert
     }
 
-    pub fn policy(&self) -> MutexGuard<Box<dyn Policy>> {
+    pub fn policy(&self) -> MutexGuard<'_, Box<dyn Policy>> {
         self.policy.lock().unwrap()
+    }
+}
+
+#[derive(Clone, Copy, Default)]
+#[pyclass]
+pub enum Profile {
+    #[default]
+    RFC4880,
+    RFC9580,
+}
+
+impl From<Profile> for sequoia_openpgp::Profile {
+    fn from(profile: Profile) -> Self {
+        match profile {
+            Profile::RFC4880 => sequoia_openpgp::Profile::RFC4880,
+            Profile::RFC9580 => sequoia_openpgp::Profile::RFC9580,
+        }
     }
 }
 
@@ -81,9 +98,14 @@ impl Cert {
     }
 
     #[staticmethod]
-    #[pyo3(signature = (user_id=None, user_ids=None))]
-    pub fn generate(user_id: Option<&str>, user_ids: Option<Vec<String>>) -> PyResult<Self> {
+    #[pyo3(signature = (user_id=None, user_ids=None, profile=None))]
+    pub fn generate(
+        user_id: Option<&str>,
+        user_ids: Option<Vec<String>>,
+        profile: Option<Profile>,
+    ) -> PyResult<Self> {
         let mut builder = CertBuilder::new()
+            .set_profile(profile.unwrap_or_default().into())?
             .set_cipher_suite(CipherSuite::default())
             .set_primary_key_flags(KeyFlags::empty().set_certification())
             .set_validity_period(std::time::Duration::new(3 * 52 * 7 * 24 * 60 * 60, 0))
@@ -240,7 +262,7 @@ impl Cert {
         Ok(cert.into())
     }
 
-    pub fn __bytes__(&self) -> PyResult<Cow<[u8]>> {
+    pub fn __bytes__(&self) -> PyResult<Cow<'_, [u8]>> {
         Ok(self.cert.to_vec()?.into())
     }
 

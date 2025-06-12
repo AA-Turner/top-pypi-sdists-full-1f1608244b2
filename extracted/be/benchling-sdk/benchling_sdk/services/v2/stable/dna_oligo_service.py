@@ -71,6 +71,7 @@ class DnaOligoService(BaseService):
     def _dna_oligos_page(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         bases: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -97,6 +98,7 @@ class DnaOligoService(BaseService):
         response = list_dna_oligos.sync_detailed(
             client=self.client,
             modified_at=none_as_unset(modified_at),
+            created_at=none_as_unset(created_at),
             name=none_as_unset(name),
             bases=none_as_unset(bases),
             folder_id=none_as_unset(folder_id),
@@ -126,6 +128,7 @@ class DnaOligoService(BaseService):
     def list(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         bases: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -157,6 +160,7 @@ class DnaOligoService(BaseService):
         def api_call(next_token: NextToken) -> Response[DnaOligosPaginatedList]:
             return self._dna_oligos_page(
                 modified_at=modified_at,
+                created_at=created_at,
                 name=name,
                 bases=bases,
                 folder_id=folder_id,

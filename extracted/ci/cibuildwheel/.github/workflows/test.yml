@@ -6,9 +6,25 @@ on:
       - main
       - 2.x
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
     paths-ignore:
-      - 'docs/**'
+      - .ci*
+      - bin/*
+      - docs/**
+      - examples/azure-pipelines-*
+      - examples/ci*
+      - examples/travis-ci-*
       - .pre-commit-config.yaml
+      - .readthedocs.yml
+      - .travis.yml
+      - README.md
+      - azure-pipelines.yml
+      - mkdocs.yml
+      - noxfile.py
   workflow_dispatch:
     # allow manual runs on branches without a PR
 
@@ -27,8 +43,6 @@ jobs:
       with:
         python-version: "3.x"
     - uses: pre-commit/action@v3.0.1
-    - name: Check manifest
-      run: pipx run --python "${{ steps.python.outputs.python-path }}" nox -s check_manifest
     - name: PyLint checks
       run: pipx run --python "${{ steps.python.outputs.python-path }}" nox -s pylint -- --output-format=github
 
@@ -38,11 +52,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-13, macos-14]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-11-arm, macos-13, macos-15]
         python_version: ['3.13']
         include:
         - os: ubuntu-latest
-          python_version: '3.8'
+          python_version: '3.11'
+        - os: ubuntu-latest
+          python_version: '3.14'
     timeout-minutes: 180
     steps:
     - uses: actions/checkout@v4
@@ -52,7 +68,7 @@ jobs:
         python-version: ${{ matrix.python_version }}
         allow-prereleases: true
 
-    - uses: astral-sh/setup-uv@v3
+    - uses: astral-sh/setup-uv@v6
 
     # free some space to prevent reaching GHA disk space limits
     - name: Clean docker images
@@ -70,9 +86,29 @@ jobs:
       run: |
         uv sync --no-dev --group test
 
+    - uses: joerick/pr-labels-action@v1.0.9
+    - name: Set CIBW_ENABLE
+      shell: bash
+      run: |
+        if [[ "${{ github.ref_name }}" == "main" ]]; then
+          CIBW_ENABLE=all
+        else
+          # get the default CIBW_ENABLE value from the test module
+          CIBW_ENABLE=$(uv run --no-sync python -c 'import sys, test.utils as c; sys.stdout.write(c.DEFAULT_CIBW_ENABLE)')
+
+          # if this is a PR, check for labels
+          if [[ -n "$GITHUB_PR_LABEL_CI_PYPY" ]]; then
+            CIBW_ENABLE+=" pypy"
+          fi
+          if [[ -n "$GITHUB_PR_LABEL_CI_GRAALPY" ]]; then
+            CIBW_ENABLE+=" graalpy"
+          fi
+        fi
+        echo "CIBW_ENABLE=${CIBW_ENABLE}" >> $GITHUB_ENV
+
     - name: Generate a sample project
       run: |
-        uv run -m test.test_projects test.test_0_basic.basic_project sample_proj
+        uv run --no-sync -m test.test_projects test.test_0_basic.basic_project sample_proj
 
     - name: Run a sample build (GitHub Action)
       uses: ./
@@ -82,8 +118,6 @@ jobs:
       env:
         CIBW_ARCHS_MACOS: x86_64 universal2 arm64
         CIBW_BUILD_FRONTEND: 'build[uv]'
-        CIBW_FREE_THREADED_SUPPORT: 1
-        CIBW_PRERELEASE_PYTHONS: 1
 
     - name: Run a sample build (GitHub Action, only)
       uses: ./
@@ -125,7 +159,7 @@ jobs:
 
     - name: Test cibuildwheel
       run: |
-        uv run bin/run_tests.py ${{ (runner.os == 'Linux' && runner.arch == 'X64') && '--run-podman' || '' }}
+        uv run --no-sync bin/run_tests.py ${{ (runner.os == 'Linux' && runner.arch == 'X64') && '--run-podman' || '' }}
 
   emulated-archs:
     name: Get qemu emulated architectures
@@ -138,13 +172,13 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.x"
-    - uses: astral-sh/setup-uv@v3
+    - uses: astral-sh/setup-uv@v6
     - name: Install dependencies
       run: uv sync --no-dev --group test
     - name: Get qemu emulated architectures
       id: archs
       run: |
-        OUTPUT=$(uv run python -c "from json import dumps; from test.utils import EMULATED_ARCHS; print(dumps(EMULATED_ARCHS))")
+        OUTPUT=$(uv run --no-sync python -c "from json import dumps; from test.utils import EMULATED_ARCHS; print(dumps(EMULATED_ARCHS))")
         echo "${OUTPUT}"
         echo "archs=${OUTPUT}" >> "$GITHUB_OUTPUT"
 
@@ -161,7 +195,7 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.x"
-    - uses: astral-sh/setup-uv@v3
+    - uses: astral-sh/setup-uv@v6
     - name: Install dependencies
       run: uv sync --no-dev --group test
 
@@ -169,10 +203,10 @@ jobs:
       uses: docker/setup-qemu-action@v3
 
     - name: Run the emulation tests
-      run: uv run pytest --run-emulation ${{ matrix.arch }} test/test_emulation.py
+      run: uv run --no-sync pytest --run-emulation ${{ matrix.arch }} test/test_emulation.py
 
   test-pyodide:
-    name: Test cibuildwheel building Pyodide wheels
+    name: Test pyodide
     needs: lint
     runs-on: ubuntu-24.04
     timeout-minutes: 180
@@ -182,14 +216,14 @@ jobs:
       name: Install Python 3.12
       with:
         python-version: '3.12'
-    - uses: astral-sh/setup-uv@v3
+    - uses: astral-sh/setup-uv@v6
 
     - name: Install dependencies
       run: uv sync --no-dev --group test
 
     - name: Generate a sample project
       run: |
-        uv run -m test.test_projects test.test_0_basic.basic_project sample_proj
+        uv run --no-sync -m test.test_projects test.test_0_basic.basic_project sample_proj
 
     - name: Run a sample build (GitHub Action)
       uses: ./
@@ -199,8 +233,21 @@ jobs:
       env:
         CIBW_PLATFORM: pyodide
 
+    - name: Run a sample build (GitHub Action) for an overridden Pyodide version
+      uses: ./
+      with:
+        package-dir: sample_proj
+        output-dir: wheelhouse
+        # In case this breaks at any point in time, switch to using the latest version
+        # available or any other version that is not the same as the default one set
+        # in cibuildwheel/resources/build-platforms.toml.
+      env:
+        CIBW_PLATFORM: pyodide
+        CIBW_BUILD: "cp312*"
+        CIBW_PYODIDE_VERSION: "0.27.6"
+
     - name: Run tests with 'CIBW_PLATFORM' set to 'pyodide'
       run: |
-        uv run ./bin/run_tests.py
+        uv run --no-sync ./bin/run_tests.py
       env:
         CIBW_PLATFORM: pyodide

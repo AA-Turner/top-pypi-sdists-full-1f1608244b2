@@ -183,6 +183,7 @@ def update_oidc_upstreams(
     auto_create_status,
     prompt_mode,
     oidc_flavor,
+    client_authorization_type=None,
     **kwargs,
 ):
     token = context.get_token(ctx)
@@ -222,6 +223,8 @@ def update_oidc_upstreams(
                 upstream.prompt_mode = prompt_mode
             if oidc_flavor is not None:
                 upstream.oidc_flavor = oidc_flavor
+            if client_authorization_type is not None:
+                upstream.client_authorization_type = client_authorization_type
             return apiclient.issuers_api.replace_issuer(
                 issuer_id, issuer, **kwargs
             ).to_dict()

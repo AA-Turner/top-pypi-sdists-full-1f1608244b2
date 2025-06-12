@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from typing import Any, cast, Generic, Optional, Type, TypeVar
+from typing import Any, cast, Generic, List, Optional, Type, TypeVar, Union
 
 from benchling_api_client.v2.stable.client import Client
 
 from benchling_sdk.helpers.serialization_helpers import unset_as_none
-from benchling_sdk.models import AsyncTaskErrors, AsyncTaskLink, AsyncTaskStatus
+from benchling_sdk.models import AsyncTaskErrors, AsyncTaskErrorsItem, AsyncTaskLink, AsyncTaskStatus
 
 ResponseT = TypeVar("ResponseT")
 
@@ -14,7 +14,7 @@ class TaskCompletion(Generic[ResponseT]):
     """Return type for TaskHelper.wait_for_task, same as AsyncTask but with a typed response."""
 
     success: bool
-    errors: Optional[AsyncTaskErrors] = None
+    errors: Optional[Union[AsyncTaskErrors, List[AsyncTaskErrorsItem]]] = None
     message: Optional[str] = None
     response: Optional[ResponseT] = None
 
@@ -23,7 +23,7 @@ class TaskCompletion(Generic[ResponseT]):
 class TaskFailureException(Exception):
     """Exception type used by :py:class:`.TaskHelper` methods."""
 
-    errors: AsyncTaskErrors
+    errors: Union[AsyncTaskErrors, List[AsyncTaskErrorsItem]]
     message: Optional[str]
 
 
@@ -112,7 +112,7 @@ class TaskHelper(AsyncTaskLink, Generic[ResponseT]):
         message = None if task.status != AsyncTaskStatus.FAILED else unset_as_none(task.message)
         return TaskCompletion(
             success=task.status == AsyncTaskStatus.SUCCEEDED,
-            errors=errors,
+            errors=errors,  # type: ignore
             message=message,
             response=response,
         )

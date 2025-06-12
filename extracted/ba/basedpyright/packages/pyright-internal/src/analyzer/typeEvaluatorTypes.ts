@@ -215,6 +215,7 @@ export interface PrefetchedTypes {
     unionTypeClass: Type;
     awaitableClass: Type;
     functionClass: Type;
+    methodClass: Type;
     tupleClass: Type;
     boolClass: Type;
     intClass: Type;
@@ -225,6 +226,7 @@ export interface PrefetchedTypes {
     typedDictPrivateClass: Type;
     supportsKeysAndGetItemClass: Type;
     mappingClass: Type;
+    templateClass: Type;
 }
 
 export interface TypeResult<T extends Type = Type> {

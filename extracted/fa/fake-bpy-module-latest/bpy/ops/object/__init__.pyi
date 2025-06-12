@@ -4289,6 +4289,7 @@ def subdivision_set(
     *,
     level: int | None = 1,
     relative: bool | None = False,
+    ensure_modifier: bool | None = True,
 ) -> None:
     """Sets a Subdivision Surface level (1 to 5)
 
@@ -4298,6 +4299,8 @@ def subdivision_set(
     :type level: int | None
     :param relative: Relative, Apply the subdivision surface level as an offset relative to the current level
     :type relative: bool | None
+    :param ensure_modifier: Ensure Modifier, Create the corresponding modifier if it does not exist
+    :type ensure_modifier: bool | None
     """
 
 def surfacedeform_bind(

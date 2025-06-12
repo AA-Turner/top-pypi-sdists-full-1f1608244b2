@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: growthbook
-Version: 1.2.1
+Version: 1.3.0
 Summary: Powerful Feature flagging and A/B testing for Python apps
 Home-page: https://github.com/growthbook/growthbook-python
 Author: GrowthBook
@@ -18,7 +18,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
-Requires-Python: >=3.6
+Requires-Python: >=3.7
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: cryptography
@@ -30,22 +30,27 @@ Requires-Dist: aiohttp>=3.6.0
 Requires-Dist: importlib-metadata; python_version < "3.8"
 Dynamic: author
 Dynamic: home-page
+Dynamic: license-file
 Dynamic: requires-python
 
 # GrowthBook Python SDK
 
-Powerful Feature flagging and A/B testing for Python apps.
-
 ![Build Status](https://github.com/growthbook/growthbook-python/workflows/Build/badge.svg)
+[![PyPI](https://img.shields.io/pypi/v/growthbook.svg?maxAge=2592000)](https://pypi.org/project/growthbook/)
+[![PyPI](https://img.shields.io/pypi/pyversions/growthbook.svg)](https://pypi.org/project/growthbook/)
+
+## Overview
+
+Powerful Feature flagging and A/B testing for Python apps.
 
 - **Lightweight and fast**
 - **Local evaluation**, no network requests required
-- Python 3.6+
-- 100% test coverage
 - Flexible **targeting**
 - **Use your existing event tracking** (GA, Segment, Mixpanel, custom)
 - **Remote configuration** to change feature flags without deploying new code
 - **Async support** with real-time feature updates
+- Python 3.6+
+- 100% test coverage
 
 ## Installation
 
@@ -409,6 +414,33 @@ gb = GrowthBook(
   on_experiment_viewed = on_experiment_viewed
 )
 ```
+
+#### Built-in Tracking Plugin
+
+For easier setup, you can use the built-in tracking plugin that automatically sends experiment and feature events to GrowthBook's data warehouse:
+
+```python
+from growthbook import GrowthBook
+from growthbook.plugins import growthbook_tracking_plugin, request_context_plugin
+
+gb = GrowthBook(
+  attributes={"id": "user-123"},
+  plugins=[
+    request_context_plugin(),  # Extracts request data
+    growthbook_tracking_plugin(
+      ingestor_host="https://gb-ingest.growthbook.io",
+      # Optional: Add custom tracking callback
+      additional_callback=my_custom_tracker
+    )
+  ]
+)
+
+# Events are now automatically tracked for experiments and features
+result = gb.run(experiment)  # -> Tracked automatically
+is_enabled = gb.is_on("my-feature")  # -> Tracked automatically
+```
+
+The tracking plugin provides batching, error handling, and works alongside your existing tracking callbacks. See the [plugin documentation](https://docs.growthbook.io/lib/python#tracking-plugins) for more details.
 
 ## Using Features
 

@@ -1,9 +1,11 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: binary
-Version: 1.0.1
+Version: 1.0.2
 Project-URL: Homepage, https://github.com/ofek/binary
 Author-email: Ofek Lev <oss@ofek.dev>
-License: MIT OR Apache-2.0
+License-Expression: MIT OR Apache-2.0
+License-File: LICENSE-APACHE
+License-File: LICENSE-MIT
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: Natural Language :: English
@@ -27,7 +29,7 @@ binary
     :target: https://pypi.org/project/binary
     :alt: Latest PyPI version
 
-.. image:: https://github.com/ofek/binary/workflows/test/badge.svg
+.. image:: https://github.com/ofek/binary/actions/workflows/test.yml/badge.svg
     :target: https://github.com/ofek/binary/actions/workflows/test.yml
     :alt: GitHub Actions
 
@@ -39,9 +41,13 @@ binary
     :target: https://pypi.org/project/binary
     :alt: Supported Python versions
 
-.. image:: https://img.shields.io/pypi/l/binary.svg?style=flat-square
-    :target: https://choosealicense.com/licenses
+.. image:: https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-9400d3.svg
+    :target: https://spdx.org/licenses/
     :alt: License
+
+.. image:: https://img.shields.io/github/sponsors/ofek?logo=GitHub%20Sponsors&style=social
+    :target: https://github.com/sponsors/ofek
+    :alt: GitHub sponsors
 
 -----
 
@@ -53,10 +59,6 @@ binary (`IEC`_) and decimal (`SI`_) units.
 
 Installation
 ------------
-
-``binary`` is distributed on `PyPI <https://pypi.org>`_ as a universal
-wheel and is available on Linux/macOS and Windows and supports
-Python 2.7/3.5+ and PyPy.
 
 .. code-block:: bash
 
@@ -184,6 +186,12 @@ Changelog
 ---------
 
 Important changes are emphasized.
+
+1.0.2
+^^^^^
+
+- Perform floor division when explicitly converting to bytes
+- Support negative values
 
 1.0.1
 ^^^^^

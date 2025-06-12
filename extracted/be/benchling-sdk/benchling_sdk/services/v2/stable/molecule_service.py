@@ -69,6 +69,7 @@ class MoleculeService(BaseService):
     def _molecules_page(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         name_includes: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -92,6 +93,7 @@ class MoleculeService(BaseService):
         response = list_molecules.sync_detailed(
             client=self.client,
             modified_at=none_as_unset(modified_at),
+            created_at=none_as_unset(created_at),
             name=none_as_unset(name),
             name_includes=none_as_unset(name_includes),
             folder_id=none_as_unset(folder_id),
@@ -118,6 +120,7 @@ class MoleculeService(BaseService):
     def list(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         name_includes: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -148,6 +151,7 @@ class MoleculeService(BaseService):
         def api_call(next_token: NextToken) -> Response[MoleculesPaginatedList]:
             return self._molecules_page(
                 modified_at=modified_at,
+                created_at=created_at,
                 name=name,
                 name_includes=name_includes,
                 folder_id=folder_id,

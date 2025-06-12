@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: pdftext
-Version: 0.6.2
+Version: 0.6.3
 Summary: Extract structured text from pdfs quickly
 License: Apache-2.0
 Keywords: pdf,text,extraction

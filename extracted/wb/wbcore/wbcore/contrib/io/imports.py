@@ -225,6 +225,7 @@ class ImportExportHandler:
         history: Optional[models.QuerySet] = None,
         read_only=False,
         include_update_fields=None,
+        raise_exception: bool = True,
         **kwargs,
     ):
         data = nest_row(data)
@@ -251,7 +252,7 @@ class ImportExportHandler:
             _object = self._create_instance(data, **kwargs)
             self._post_processing_created_object(_object)
             import_state = ImportState.CREATED
-        if not _object:
+        if not _object and raise_exception:
             data_repr = " ".join([f'{k}="{v}"' for k, v in data.items()])
             raise DeserializationError(f"{self.model._meta.verbose_name} data couldn't be parsed ({data_repr})")
         if inject_internal_id_res:

@@ -14,12 +14,16 @@ if TYPE_CHECKING:
     from benchling_sdk.services.v2.stable.app_service import AppService
     from benchling_sdk.services.v2.stable.assay_result_service import AssayResultService
     from benchling_sdk.services.v2.stable.assay_run_service import AssayRunService
+    from benchling_sdk.services.v2.stable.audit_service import AuditService
     from benchling_sdk.services.v2.stable.blob_service import BlobService
     from benchling_sdk.services.v2.stable.box_service import BoxService
     from benchling_sdk.services.v2.stable.codon_usage_table_service import CodonUsageTableService
+    from benchling_sdk.services.v2.stable.connect_service import ConnectService
     from benchling_sdk.services.v2.stable.container_service import ContainerService
     from benchling_sdk.services.v2.stable.custom_entity_service import CustomEntityService
     from benchling_sdk.services.v2.stable.custom_notation_service import CustomNotationService
+    from benchling_sdk.services.v2.stable.data_frame_service import DataFrameService
+    from benchling_sdk.services.v2.stable.dataset_service import DatasetService
     from benchling_sdk.services.v2.stable.dna_alignments_service import DnaAlignmentsService
     from benchling_sdk.services.v2.stable.dna_oligo_service import DnaOligoService
     from benchling_sdk.services.v2.stable.dna_sequence_service import DnaSequenceService
@@ -30,11 +34,13 @@ if TYPE_CHECKING:
     from benchling_sdk.services.v2.stable.event_service import EventService
     from benchling_sdk.services.v2.stable.export_service import ExportService
     from benchling_sdk.services.v2.stable.feature_library_service import FeatureLibraryService
+    from benchling_sdk.services.v2.stable.file_service import FileService
     from benchling_sdk.services.v2.stable.folder_service import FolderService
     from benchling_sdk.services.v2.stable.instrument_query_service import InstrumentQueryService
     from benchling_sdk.services.v2.stable.inventory_service import InventoryService
     from benchling_sdk.services.v2.stable.lab_automation_service import LabAutomationService
     from benchling_sdk.services.v2.stable.label_template_service import LabelTemplateService
+    from benchling_sdk.services.v2.stable.legacy_request_service import LegacyRequestService
     from benchling_sdk.services.v2.stable.location_service import LocationService
     from benchling_sdk.services.v2.stable.mixture_service import MixtureService
     from benchling_sdk.services.v2.stable.molecule_service import MoleculeService
@@ -46,12 +52,12 @@ if TYPE_CHECKING:
     from benchling_sdk.services.v2.stable.printer_service import PrinterService
     from benchling_sdk.services.v2.stable.project_service import ProjectService
     from benchling_sdk.services.v2.stable.registry_service import RegistryService
-    from benchling_sdk.services.v2.stable.request_service import RequestService
     from benchling_sdk.services.v2.stable.rna_oligo_service import RnaOligoService
     from benchling_sdk.services.v2.stable.rna_sequence_service import RnaSequenceService
     from benchling_sdk.services.v2.stable.schema_service import SchemaService
     from benchling_sdk.services.v2.stable.task_service import TaskService
     from benchling_sdk.services.v2.stable.team_service import TeamService
+    from benchling_sdk.services.v2.stable.test_order_service import TestOrderService
     from benchling_sdk.services.v2.stable.user_service import UserService
     from benchling_sdk.services.v2.stable.warehouse_service import WarehouseService
     from benchling_sdk.services.v2.stable.workflow_flowchart_config_version_service import (
@@ -150,6 +156,19 @@ class V2StableService(BaseService):
         return self._create_service(AssayRunService)
 
     @cached_property
+    def audit(self) -> AuditService:
+        """
+        Audits.
+
+        Export audit log data for Benchling objects.
+
+        https://benchling.com/api/reference#/Audit
+        """
+        from .stable.audit_service import AuditService
+
+        return self._create_service(AuditService)
+
+    @cached_property
     def blobs(self) -> BlobService:
         """
         Blobs.
@@ -198,6 +217,19 @@ class V2StableService(BaseService):
         return self._create_service(CodonUsageTableService)
 
     @cached_property
+    def connect(self) -> ConnectService:
+        """
+        Connect.
+
+        Connect endpoints support Benchling Connect actions, like instrument data conversion.
+
+        See https://benchling.com/api/reference#/Connect
+        """
+        from .stable.connect_service import ConnectService
+
+        return self._create_service(ConnectService)
+
+    @cached_property
     def containers(self) -> ContainerService:
         """
         Containers.
@@ -244,6 +276,33 @@ class V2StableService(BaseService):
         from .stable.custom_notation_service import CustomNotationService
 
         return self._create_service(CustomNotationService)
+
+    @cached_property
+    def data_frames(self) -> DataFrameService:
+        """
+        DataFrames.
+
+        DataFrames are Benchling objects that represent tabular data with typed columns and rows of data.
+
+        See https://benchling.com/api/v2/reference#/Data%20Frames
+        """
+        from .stable.data_frame_service import DataFrameService
+
+        return self._create_service(DataFrameService)
+
+    @cached_property
+    def datasets(self) -> DatasetService:
+        """
+        Datasets.
+
+        Datasets are Benchling objects that represent tabular data with typed columns and rows of data. Unlike
+        Data Frames, Datasets are located in folders and can be searched in the UI.
+
+        See https://benchling.com/api/v2/reference#/Datasets
+        """
+        from .stable.dataset_service import DatasetService
+
+        return self._create_service(DatasetService)
 
     @cached_property
     def dna_alignments(self) -> DnaAlignmentsService:
@@ -396,6 +455,21 @@ class V2StableService(BaseService):
         return self._create_service(FeatureLibraryService)
 
     @cached_property
+    def files(self) -> FileService:
+        """
+        Files.
+
+        Files are Benchling objects that represent files and their metadata. Compared to Blobs, which are used
+        by most Benchling products for attachments, Files are primarily used in the Analysis and Connect
+        product.
+
+        See https://benchling.com/api/v2/reference#/Files
+        """
+        from .stable.file_service import FileService
+
+        return self._create_service(FileService)
+
+    @cached_property
     def folders(self) -> FolderService:
         """
         Folders.
@@ -460,6 +534,19 @@ class V2StableService(BaseService):
         from .stable.label_template_service import LabelTemplateService
 
         return self._create_service(LabelTemplateService)
+
+    @cached_property
+    def legacy_requests(self) -> LegacyRequestService:
+        """
+        Legacy Requests.
+
+        Legacy Requests allow scientists and teams to collaborate around experimental assays and workflows.
+
+        See https://benchling.com/api/reference#/Legacy%20Requests
+        """
+        from .stable.legacy_request_service import LegacyRequestService
+
+        return self._create_service(LegacyRequestService)
 
     @cached_property
     def locations(self) -> LocationService:
@@ -619,19 +706,6 @@ class V2StableService(BaseService):
         return self._create_service(RegistryService)
 
     @cached_property
-    def requests(self) -> RequestService:
-        """
-        Requests.
-
-        Requests allow scientists and teams to collaborate around experimental assays and workflows.
-
-        See https://benchling.com/api/reference#/Requests
-        """
-        from .stable.request_service import RequestService
-
-        return self._create_service(RequestService)
-
-    @cached_property
     def rna_oligos(self) -> RnaOligoService:
         """
         RNA Oligos.
@@ -691,6 +765,19 @@ class V2StableService(BaseService):
         from .stable.team_service import TeamService
 
         return self._create_service(TeamService)
+
+    @cached_property
+    def test_orders(self) -> TestOrderService:
+        """
+        Test Orders.
+
+        Test orders enable users to order tests for specific sample/container combinations that will be fulfilled in assays.
+
+        See https://benchling.com/api/reference?availability=la#/Test%20Orders/
+        """
+        from .stable.test_order_service import TestOrderService
+
+        return self._create_service(TestOrderService)
 
     @cached_property
     def users(self) -> UserService:

@@ -24,6 +24,7 @@ from langsmith.utils import get_tracer_project
 from pydantic import ValidationError
 from pydantic.v1 import ValidationError as ValidationErrorLegacy
 
+from langgraph_api import __version__
 from langgraph_api import store as api_store
 from langgraph_api.asyncio import ValueEvent, wait_if_not_done
 from langgraph_api.command import map_cmd
@@ -118,6 +119,7 @@ async def astream_state(
     config["metadata"]["run_attempt"] = attempt
     # attach langgraph metadata
     config["metadata"]["langgraph_version"] = langgraph.version.__version__
+    config["metadata"]["langgraph_api_version"] = __version__
     config["metadata"]["langgraph_plan"] = PLAN
     config["metadata"]["langgraph_host"] = HOST
     config["metadata"]["langgraph_api_url"] = USER_API_URL

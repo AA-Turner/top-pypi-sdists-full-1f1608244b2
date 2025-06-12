@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "python-semantic-release"
-version = "10.0.2"
+version = "10.1.0"
 description = "Automatic Semantic Versioning for Python projects"
 requires-python = ">=3.8"
 license = { text = "MIT" }
@@ -28,7 +28,7 @@ dependencies = [
   "gitpython ~= 3.0",
   "requests ~= 2.25",
   "jinja2 ~= 3.1",
-  "python-gitlab >= 4.0.0, < 6.0.0",
+  "python-gitlab >= 4.0.0, < 7.0.0",
   "tomlkit ~= 0.11",
   "dotty-dict ~= 1.3",
   "importlib-resources ~= 6.0",
@@ -84,7 +84,7 @@ dev = [
   "ruff == 0.6.1"
 ]
 mypy = [
-  "mypy == 1.15.0",
+  "mypy == 1.16.0",
   "types-Deprecated ~= 1.2",
   "types-requests ~= 2.32.0",
   "types-pyyaml ~= 6.0",
@@ -414,6 +414,8 @@ build_command = """
 major_on_zero = true
 version_variables = [
   "src/gh_action/requirements.txt:python-semantic-release:nf",
+  "docs/configuration/automatic-releases/github-actions.rst:python-semantic-release/python-semantic-release:tf",
+  "docs/configuration/automatic-releases/github-actions.rst:python-semantic-release/publish-action:tf",
 ]
 version_toml = ["pyproject.toml:project.version"]
 

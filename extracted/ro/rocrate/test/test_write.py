@@ -1,10 +1,12 @@
-# Copyright 2019-2024 The University of Manchester, UK
-# Copyright 2020-2024 Vlaams Instituut voor Biotechnologie (VIB), BE
-# Copyright 2020-2024 Barcelona Supercomputing Center (BSC), ES
-# Copyright 2020-2024 Center for Advanced Studies, Research and Development in Sardinia (CRS4), IT
-# Copyright 2022-2024 École Polytechnique Fédérale de Lausanne, CH
-# Copyright 2024 Data Centre, SciLifeLab, SE
-# Copyright 2024 National Institute of Informatics (NII), JP
+# Copyright 2019-2025 The University of Manchester, UK
+# Copyright 2020-2025 Vlaams Instituut voor Biotechnologie (VIB), BE
+# Copyright 2020-2025 Barcelona Supercomputing Center (BSC), ES
+# Copyright 2020-2025 Center for Advanced Studies, Research and Development in Sardinia (CRS4), IT
+# Copyright 2022-2025 École Polytechnique Fédérale de Lausanne, CH
+# Copyright 2024-2025 Data Centre, SciLifeLab, SE
+# Copyright 2024-2025 National Institute of Informatics (NII), JP
+# Copyright 2025 Senckenberg Society for Nature Research (SGN), DE
+# Copyright 2025 European Molecular Biology Laboratory (EMBL), Heidelberg, DE
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -395,6 +397,21 @@ def test_no_parts(tmpdir, helpers):
     assert "hasPart" not in json_entities["./"]
 
 
+def test_write_zip_copy_unlisted(test_data_dir, tmpdir):
+    crate_dir = test_data_dir / 'ro-crate-galaxy-sortchangecase'
+    crate = ROCrate(crate_dir)
+
+    zip_name = 'ro_crate_out.crate.zip'
+    zip_path = tmpdir / zip_name
+    crate.write_zip(zip_path)
+    out_path = tmpdir / 'ro_crate_out'
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        zf.extractall(out_path)
+
+    assert (out_path / "test" / "test1" / "input.bed").is_file()
+    assert (out_path / "test" / "test1" / "output_exp.bed").is_file()
+
+
 def test_no_zip_in_zip(test_data_dir, tmpdir):
     crate_dir = test_data_dir / 'ro-crate-galaxy-sortchangecase'
     crate = ROCrate(crate_dir)
@@ -462,3 +479,121 @@ def test_http_header(tmpdir):
     assert "sdDatePublished" in props
     with requests.head(url) as response:
         assert props["sdDatePublished"] == response.headers.get("last-modified")
+
+
+def test_stream(test_data_dir, tmpdir):
+    source = test_data_dir / "read_crate"
+    crate = ROCrate(source)
+
+    out_path = tmpdir / 'ro_crate_out.zip'
+    with open(out_path, "wb") as out:
+        for chunk in crate.stream_zip():
+            out.write(chunk)
+
+    with zipfile.ZipFile(out_path, "r") as zf:
+        assert not zf.testzip()
+        for info in zf.infolist():
+            assert info.file_size > 0
+
+    extract_path = tmpdir / 'ro_crate_out'
+    with zipfile.ZipFile(out_path, "r") as zf:
+        zf.extractall(extract_path)
+    assert (extract_path / "ro-crate-metadata.jsonld").is_file()
+    assert (extract_path / "examples" / "README.txt").is_file()
+    assert (extract_path / "test" / "test-metadata.json").is_file()
+
+
+def test_percent_escape(test_data_dir, tmpdir, helpers):
+    crate = ROCrate()
+    f_path = test_data_dir / "read_crate" / "with space.txt"
+    f1 = crate.add_file(f_path)
+    assert f1.id == "with%20space.txt"
+    f2 = crate.add_file(f_path, dest_path="subdir/with space.txt")
+    assert f2.id == "subdir/with%20space.txt"
+    f3 = crate.add_file(test_data_dir / "read_crate" / "without%20space.txt")
+    assert f3.id == "without%2520space.txt"
+    d_path = test_data_dir / "read_crate" / "a b"
+    d1 = crate.add_dataset(d_path)
+    assert d1.id == "a%20b/"
+    d2 = crate.add_dataset(d_path, dest_path="subdir/a b")
+    assert d2.id == "subdir/a%20b/"
+    d3 = crate.add_dataset(test_data_dir / "read_crate" / "j%20k")
+    assert d3.id == "j%2520k/"
+    out_path = tmpdir / "ro_crate_out"
+    crate.write(out_path)
+    json_entities = helpers.read_json_entities(out_path)
+    assert "with%20space.txt" in json_entities
+    assert "subdir/with%20space.txt" in json_entities
+    assert "without%2520space.txt" in json_entities
+    assert "a%20b/" in json_entities
+    assert "subdir/a%20b/" in json_entities
+    assert "j%2520k/" in json_entities
+    assert (out_path / "with space.txt").is_file()
+    assert (out_path / "subdir" / "with space.txt").is_file()
+    assert (out_path / "without%20space.txt").is_file()
+    assert (out_path / "a b" / "c d.txt").is_file()
+    assert (out_path / "subdir" / "a b" / "c d.txt").is_file()
+    assert (out_path / "j%20k" / "l%20m.txt").is_file()
+    out_zip_path = tmpdir / "ro_crate_out.zip"
+    crate.write_zip(out_zip_path)
+    unpack_path = tmpdir / "unpack"
+    with zipfile.ZipFile(out_zip_path, "r") as zf:
+        zf.extractall(unpack_path)
+    json_entities = helpers.read_json_entities(unpack_path)
+    assert "with%20space.txt" in json_entities
+    assert "subdir/with%20space.txt" in json_entities
+    assert "without%2520space.txt" in json_entities
+    assert "a%20b/" in json_entities
+    assert "subdir/a%20b/" in json_entities
+    assert "j%2520k/" in json_entities
+    assert (unpack_path / "with space.txt").is_file()
+    assert (unpack_path / "subdir" / "with space.txt").is_file()
+    assert (unpack_path / "without%20space.txt").is_file()
+    assert (unpack_path / "a b" / "c d.txt").is_file()
+    assert (unpack_path / "subdir" / "a b" / "c d.txt").is_file()
+    assert (unpack_path / "j%20k" / "l%20m.txt").is_file()
+
+
+def test_stream_empty_file(test_data_dir, tmpdir):
+    """
+    Test that empty files are written correctly to the zip file.
+    """
+    crate = ROCrate()
+    crate_dir = test_data_dir / "empty_file_crate"
+    crate.add_file(crate_dir / "empty.txt")
+    crate.add_directory(crate_dir / "folder")
+
+    # write the crate to a zip file
+    out_path = tmpdir / 'ro_crate_out.zip'
+    crate.write_zip(out_path)
+
+    # Check that the zip file contains empty files
+    assert out_path.is_file()
+    files_in_zip = {}
+    with zipfile.ZipFile(out_path, "r") as zf:
+        for info in zf.infolist():
+            files_in_zip[info.filename] = info.file_size
+
+    assert files_in_zip["empty.txt"] == 0
+    assert files_in_zip["folder/empty_not_listed.txt"] == 0
+
+
+def test_write_zip_nested_dest(tmpdir, helpers):
+    root = tmpdir / "root"
+    root.mkdir()
+    (root / "a b").mkdir()
+    (root / "a b" / "c d.txt").write_text("C D\n")
+    (root / "a b" / "j k").mkdir()
+    (root / "a b" / "j k" / "l m.txt").write_text("L M\n")
+    crate = ROCrate()
+    d1 = crate.add_dataset(root / "a b", dest_path="subdir/a b")
+    assert d1.id == "subdir/a%20b/"
+    out_zip_path = tmpdir / "ro_crate_out.zip"
+    crate.write_zip(out_zip_path)
+    unpack_path = tmpdir / "unpack"
+    with zipfile.ZipFile(out_zip_path, "r") as zf:
+        zf.extractall(unpack_path)
+    json_entities = helpers.read_json_entities(unpack_path)
+    assert "subdir/a%20b/" in json_entities
+    assert (unpack_path / "subdir" / "a b" / "c d.txt").is_file()
+    assert (unpack_path / "subdir" / "a b" / "j k" / "l m.txt").is_file()

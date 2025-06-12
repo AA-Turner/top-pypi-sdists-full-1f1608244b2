@@ -178,11 +178,16 @@ async def worker(
                         else None
                     ),
                 )
-        except Exception as ee:
-            # Note we don't handle asyncio.CancelledError here, as we want to
-            # let it bubble up and rollback db transaction, thus marking the run
-            # as available to be picked up by another worker
+        except (Exception, asyncio.CancelledError) as ee:
             exception = ee
+        except BaseException as eee:
+            await logger.aerror(
+                "Bubbling failed background run",
+                run_id=str(run_id),
+                exception_type=str(type(eee)),
+                exception=str(eee),
+            )
+            raise
 
         # handle exceptions and set status
         async with connect() as conn:
@@ -286,7 +291,7 @@ async def worker(
                 run_ended_at_dt = datetime.now(UTC)
                 run_ended_at = run_ended_at_dt.isoformat()
                 await logger.awarning(
-                    f"Background run failed, will retry. Exception: {exception}",
+                    f"Background run failed, will retry. Exception: {type(exception)}({exception})",
                     exc_info=True,
                     run_id=str(run_id),
                     run_attempt=attempt,
@@ -301,7 +306,7 @@ async def worker(
                 run_ended_at_dt = datetime.now(UTC)
                 run_ended_at = run_ended_at_dt.isoformat()
                 await logger.aexception(
-                    f"Background run failed. Exception: {exception}",
+                    f"Background run failed. Exception: {type(exception)}({exception})",
                     exc_info=not isinstance(exception, RemoteException),
                     run_id=str(run_id),
                     run_attempt=attempt,

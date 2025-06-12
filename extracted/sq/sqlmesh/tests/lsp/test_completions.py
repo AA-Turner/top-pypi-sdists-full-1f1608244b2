@@ -33,8 +33,26 @@ def test_get_macros():
     file_uri = URI.from_path(file_path)
     completions = LSPContext.get_completions(lsp_context, file_uri, file_content)
 
-    assert "each" in completions.macros
-    assert "add_one" in completions.macros
+    each_macro = next((m for m in completions.macros if m.name == "each"))
+    assert each_macro.name == "each"
+    assert each_macro.description
+    add_one_macro = next((m for m in completions.macros if m.name == "add_one"))
+    assert add_one_macro.name == "add_one"
+    assert add_one_macro.description
+
+
+def test_model_completions_include_descriptions():
+    context = Context(paths=["examples/sushi"])
+    lsp_context = LSPContext(context)
+
+    completions = LSPContext.get_completions(lsp_context, None)
+
+    model_entry = next(
+        (m for m in completions.model_completions if m.name == "sushi.customers"),
+        None,
+    )
+    assert model_entry is not None
+    assert model_entry.description
 
 
 def test_get_sql_completions_with_context_no_file_uri():

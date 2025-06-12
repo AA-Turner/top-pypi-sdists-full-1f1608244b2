@@ -1,10 +1,12 @@
-# Copyright 2019-2024 The University of Manchester, UK
-# Copyright 2020-2024 Vlaams Instituut voor Biotechnologie (VIB), BE
-# Copyright 2020-2024 Barcelona Supercomputing Center (BSC), ES
-# Copyright 2020-2024 Center for Advanced Studies, Research and Development in Sardinia (CRS4), IT
-# Copyright 2022-2024 École Polytechnique Fédérale de Lausanne, CH
-# Copyright 2024 Data Centre, SciLifeLab, SE
-# Copyright 2024 National Institute of Informatics (NII), JP
+# Copyright 2019-2025 The University of Manchester, UK
+# Copyright 2020-2025 Vlaams Instituut voor Biotechnologie (VIB), BE
+# Copyright 2020-2025 Barcelona Supercomputing Center (BSC), ES
+# Copyright 2020-2025 Center for Advanced Studies, Research and Development in Sardinia (CRS4), IT
+# Copyright 2022-2025 École Polytechnique Fédérale de Lausanne, CH
+# Copyright 2024-2025 Data Centre, SciLifeLab, SE
+# Copyright 2024-2025 National Institute of Informatics (NII), JP
+# Copyright 2025 Senckenberg Society for Nature Research (SGN), DE
+# Copyright 2025 European Molecular Biology Laboratory (EMBL), Heidelberg, DE
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -53,6 +55,8 @@ def test_crate_dir_loading(test_data_dir, tmpdir, helpers, gen_preview, from_zip
         "https://raw.githubusercontent.com/ResearchObject/ro-crate-py/master/test/test-data/sample_file.txt",
         "examples/",
         "test/",
+        "with%20space.txt",
+        "a%20b/",
     }
     assert set(_["@id"] for _ in crate.contextual_entities) == {"#joe"}
 
@@ -536,6 +540,9 @@ def test_indirect_data_entity(tmpdir):
     d2_e = crate.dereference("d1/d2")
     assert d2_e
     assert d2_e in crate.data_entities
+    f1_e = crate.dereference("d1/d2/f1")
+    assert f1_e
+    assert f1_e in crate.data_entities
 
 
 @pytest.mark.filterwarnings("ignore")
@@ -594,3 +601,85 @@ def test_from_dict(tmpdir):
     for entity in d1, d2, f1:
         entity.source = None
     crate.write(out_path)
+    with pytest.raises(ValueError):
+        ROCrate(metadata, init=True)
+
+
+def test_no_data_entity_link_from_file():
+    metadata = {
+        "@context": "https://w3id.org/ro/crate/1.1/context",
+        "@graph": [
+            {
+                "@id": "ro-crate-metadata.json",
+                "@type": "CreativeWork",
+                "about": {"@id": "./"},
+                "conformsTo": {"@id": "https://w3id.org/ro/crate/1.1"}
+            },
+            {
+                "@id": "./",
+                "@type": "Dataset",
+                "hasPart": [
+                    {"@id": "d1"},
+                    {"@id": "packed.cwl"}
+                ]
+            },
+            {
+                "@id": "d1",
+                "@type": "Dataset"
+            },
+            {
+                "@id": "packed.cwl",
+                "@type": [
+                    "File",
+                    "SoftwareSourceCode",
+                    "ComputationalWorkflow"
+                ],
+                "hasPart": [
+                    {"@id": "packed.cwl#do_this.cwl"},
+                    {"@id": "packed.cwl#do_that.cwl"}
+                ]
+            },
+            {
+                "@id": "packed.cwl#do_this.cwl",
+                "@type": "SoftwareApplication",
+            },
+            {
+                "@id": "packed.cwl#do_that.cwl",
+                "@type": "SoftwareApplication",
+            }
+        ]
+    }
+    crate = ROCrate(metadata)
+    d1 = crate.dereference("d1")
+    assert d1
+    assert d1 in crate.data_entities
+    assert d1 not in crate.contextual_entities
+    wf = crate.dereference("packed.cwl")
+    assert wf
+    assert wf in crate.data_entities
+    assert wf not in crate.contextual_entities
+    t1 = crate.dereference("packed.cwl#do_this.cwl")
+    assert t1
+    assert t1 not in crate.data_entities
+    assert t1 in crate.contextual_entities
+
+
+def test_init_percent_escape(tmpdir, helpers):
+    in_crate = tmpdir / "in_crate"
+    in_file = in_crate / "in file.txt"
+    in_dir = in_crate / "in dir"
+    deep_file = in_crate / "in dir" / "deep file.txt"
+    out_crate = tmpdir / "out_crate"
+    in_crate.mkdir()
+    in_file.write_text("IN FILE\n")
+    in_dir.mkdir()
+    deep_file.write_text("DEEP FILE\n")
+    crate = ROCrate(in_crate, init=True)
+    crate.write(out_crate)
+    json_entities = helpers.read_json_entities(out_crate)
+    assert "in%20file.txt" in json_entities
+    assert "in%20dir/" in json_entities
+    assert "in%20dir/deep%20file.txt" in json_entities
+    assert (out_crate / "in file.txt").is_file()
+    assert (out_crate / "in dir").is_dir()
+    assert (out_crate / "in dir" / "deep file.txt").is_file()

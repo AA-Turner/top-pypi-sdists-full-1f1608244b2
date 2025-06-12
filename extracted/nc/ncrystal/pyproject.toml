@@ -25,9 +25,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ncrystal"
-version = "4.1.8"
+version = "4.2.0"
 requires-python = ">=3.8"
-dependencies = [ 'ncrystal-core==4.1.8', 'ncrystal-python==4.1.8' ]
+dependencies = [ 'ncrystal-core==4.2.0', 'ncrystal-python==4.2.0' ]
 authors = [
   { name="NCrystal developers (Thomas Kittelmann, Xiao Xiao Cai)" },
 ]
@@ -44,12 +44,13 @@ classifiers = [
 "Bug Tracker" = "https://github.com/mctools/ncrystal/issues"
 
 [project.optional-dependencies]
-#NB: We pin ASE due to https://gitlab.com/ase/ase/-/issues/1597 breaking 3.24
 composer = ['spglib>=2.1.0']
-cif = ['ase<3.24.0', 'gemmi>=0.6.1', 'spglib>=2.1.0']
+cif = ['ase>=3.23.0', 'gemmi>=0.6.1', 'spglib>=2.1.0']
+endf = ['endf-parserpy>=0.13.0']
 plot = ['matplotlib>=3.6.0']
-all = ['ase<3.24.0', 'gemmi>=0.6.1', 'matplotlib>=3.6.0', 'spglib>=2.1.0']
-devel = [ 'PyYAML>=6.0.0', 'ase<3.24.0', 'cppcheck', 'gemmi>=0.6.1',
-          'matplotlib>=3.6.0', 'mpmath>=1.3.0', 'numpy>=1.22', 'ruff>=0.8.1',
-          'simple-build-system>=1.6.0', 'spglib>=2.1.0',
-          'tomli>=2.0.0; python_version < "3.11"', 'pybind11>=2.11.0' ]
+all = [ 'ase>=3.23.0', 'endf-parserpy>=0.13.0', 'gemmi>=0.6.1',
+        'matplotlib>=3.6.0', 'spglib>=2.1.0' ]
+devel = [ 'PyYAML>=6.0.0', 'ase>=3.23.0', 'cppcheck', 'endf-parserpy>=0.13.0',
+          'gemmi>=0.6.1','matplotlib>=3.6.0', 'mpmath>=1.3.0', 'numpy>=1.22',
+          'pybind11>=2.11.0', 'ruff>=0.8.1', 'simple-build-system>=1.6.0',
+          'spglib>=2.1.0', 'tomli>=2.0.0; python_version < "3.11"' ]

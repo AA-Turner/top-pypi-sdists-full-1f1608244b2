@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: param
-Version: 2.2.0
+Version: 2.2.1
 Summary: Make your Python code clearer and more reliable by declaring Parameters.
 Project-URL: Homepage, https://param.holoviz.org/
 Project-URL: Tracker, https://github.com/holoviz/param/issues

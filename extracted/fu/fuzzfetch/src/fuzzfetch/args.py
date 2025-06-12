@@ -8,12 +8,15 @@ from __future__ import annotations
 import itertools
 import platform as std_platform
 from argparse import ArgumentParser, Namespace
-from collections.abc import Sequence
 from logging import getLogger
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from .models import BuildSearchOrder, Platform
 from .utils import extract_branch_from_ns, is_namespace
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 LOG = getLogger("fuzzfetch")
 
@@ -21,7 +24,7 @@ LOG = getLogger("fuzzfetch")
 class FetcherArgs:
     """Class for parsing and recording Fetcher arguments"""
 
-    DEFAULT_TARGETS = ["firefox"]
+    DEFAULT_TARGETS = ("firefox",)
 
     BUILD_OPTIONS = (
         # Build flags
@@ -85,8 +88,9 @@ class FetcherArgs:
             default="latest",
             metavar="DATE|REV|NS",
             help="Specify the build to download, (default: %(default)s)"
-            " Accepts values in format YYYY-MM-DD (2017-01-01)"
-            " revision (57b37213d81150642f5139764e7044b07b9dccc3)"
+            " Accepts values in format YYYY-MM-DD (2017-01-01),"
+            " BuildID (20170101120101),"
+            " revision (57b37213d81150642f5139764e7044b07b9dccc3),"
             " or TaskCluster namespace (gecko.v2....)",
         )
 

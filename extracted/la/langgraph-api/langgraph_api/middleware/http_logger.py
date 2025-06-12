@@ -5,8 +5,6 @@ import structlog
 from starlette.requests import ClientDisconnect
 from starlette.types import Message, Receive, Scope, Send
 
-from langgraph_api.logging import LOG_JSON
-
 asgi = structlog.stdlib.get_logger("asgi")
 
 PATHS_IGNORE = {"/ok", "/metrics"}
@@ -28,7 +26,7 @@ class AccessLoggerMiddleware:
             self.debug_enabled = False
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        if scope["type"] != "http" or (LOG_JSON and scope.get("path") in PATHS_IGNORE):
+        if scope["type"] != "http" or scope.get("path") in PATHS_IGNORE:
             return await self.app(scope, receive, send)  # pragma: no cover
 
         loop = asyncio.get_event_loop()

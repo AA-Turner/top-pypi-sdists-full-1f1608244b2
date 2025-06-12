@@ -178,7 +178,7 @@ class CodeType:
     def co_firstlineno(self) -> int: ...
     if sys.version_info >= (3, 10):
         @property
-        @deprecated("Will be removed in Python 3.14. Use the co_lines() method instead.")
+        @deprecated("Will be removed in Python 3.15. Use the co_lines() method instead.")
         def co_lnotab(self) -> bytes: ...
     else:
         @property
@@ -198,6 +198,8 @@ class CodeType:
         @property
         def co_qualname(self) -> str: ...
         def co_positions(self) -> Iterable[tuple[int | None, int | None, int | None, int | None]]: ...
+    if sys.version_info >= (3, 14):
+        def co_branches(self) -> Iterator[tuple[int, int, int]]: ...
 
     if sys.version_info >= (3, 11):
         def __new__(
@@ -665,6 +667,12 @@ class MethodType:
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         """Call self as a function."""
         ...
+
+    if sys.version_info >= (3, 13):
+        def __get__(self, instance: object, owner: type | None = None, /) -> Self:
+            """Return an attribute of instance, which is of type owner."""
+            ...
+
     def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
         ...
@@ -798,6 +806,9 @@ class FrameType:
     def clear(self) -> None:
         """F.clear(): clear most references held by the frame"""
         ...
+    if sys.version_info >= (3, 14):
+        @property
+        def f_generator(self) -> GeneratorType[Any, Any, Any] | CoroutineType[Any, Any, Any] | None: ...
 
 @final
 class GetSetDescriptorType:

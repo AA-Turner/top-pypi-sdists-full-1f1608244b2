@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: asdf_standard
-Version: 1.2.0
+Version: 1.3.0
 Summary: The ASDF Standard schemas
 Author-email: The ASDF Developers <help@stsci.edu>
 Project-URL: tracker, https://github.com/asdf-format/asdf-standard/issues

@@ -6,6 +6,8 @@ import math
 import os
 from typing import Optional, Tuple, Union
 
+from prompt_toolkit.key_binding.bindings.named_commands import end_of_buffer
+
 try:
     from typing import Literal
 except:
@@ -47,7 +49,7 @@ from simba.utils.printing import SimbaTimer, stdout_success
 from simba.utils.read_write import (
     check_if_hhmmss_timestamp_is_valid_part_of_video, get_fn_ext,
     get_memory_usage_array, get_video_meta_data, read_df,
-    read_img_batch_from_video_gpu)
+    read_img_batch_from_video_gpu, create_directory, concatenate_videos_in_folder, read_img_batch_from_video)
 
 warnings.simplefilter('ignore', category=NumbaPerformanceWarning)
 
@@ -714,11 +716,7 @@ def _cuda_is_inside_polygon(x, y, polygon_vertices):
     p1x, p1y = polygon_vertices[0]
     for j in range(n + 1):
         p2x, p2y = polygon_vertices[j % n]
-        if (
-                (y > min(p1y, p2y))
-                and (y <= max(p1y, p2y))
-                and (x <= max(p1x, p2x))
-        ):
+        if ((y > min(p1y, p2y)) and (y <= max(p1y, p2y)) and (x <= max(p1x, p2x))):
             if p1y != p2y:
                 xints = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
             if p1x == p2x or x <= xints:
@@ -779,8 +777,9 @@ def _cuda_create_circle_masks(shapes, imgs):
 
 def slice_imgs(video_path: Union[str, os.PathLike],
                shapes: np.ndarray,
-               batch_size: Optional[int] = 1000,
-               verbose: Optional[bool] = True):
+               batch_size: int = 1000,
+               verbose: bool = True,
+               save_dir: Optional[Union[str, os.PathLike]] = None):
 
     """
     Slice frames from a video based on given shape coordinates (rectangles or circles) and return the cropped regions using GPU acceleration.
@@ -797,6 +796,11 @@ def slice_imgs(video_path: Union[str, os.PathLike],
        :align: center
        :class: simba-table
        :header-rows: 1
+
+
+    .. seealso::
+       For multicore CPU method, see :func:`simba.mixins.image_mixin.ImageMixin.slice_shapes_in_img`
+       For single core method, see :func:`simba.mixins.image_mixin.ImageMixin.slice_shapes_in_imgs`
 
     :param Union[str, os.PathLike] video_path: Path to the video file.
     :param np.ndarray shapes: A NumPy array of shape `(n, m, 2)` where `n` is the number of frames. Each frame contains 4 (x, y) or one points representing the bounding shapes (e.g., rectangles edges) or centroid and radius (if circles) to slice from each frame.
@@ -826,23 +830,25 @@ def slice_imgs(video_path: Union[str, os.PathLike],
     """
     THREADS_PER_BLOCK = (32, 32, 1)
 
-    video_meta_data = get_video_meta_data(video_path=video_path)
+    video_meta_data = get_video_meta_data(video_path=video_path, fps_as_int=False)
     video_meta_data['frame_count'] = shapes.shape[0]
     n, w, h = video_meta_data['frame_count'], video_meta_data['width'], video_meta_data['height']
     is_color = ImageMixin.is_video_color(video=video_path)
-    timer = SimbaTimer(start=True)
-    if is_color:
-        results = np.zeros((n, h, w, 3), dtype=np.uint8)
+    timer, save_temp_dir, results, video_out_path = SimbaTimer(start=True), None, None, None
+    if save_dir is None:
+        results = np.zeros((n, h, w, 3), dtype=np.uint8) if is_color else np.zeros((n, h, w), dtype=np.uint8)
     else:
-        results = np.zeros((n, h, w), dtype=np.uint8)
-    for start_img_idx in range(0, n, batch_size):
+        save_temp_dir = os.path.join(save_dir, f'temp_{video_meta_data["video_name"]}')
+        create_directory(path=save_temp_dir, overwrite=True)
+        video_out_path = os.path.join(save_dir, f'{video_meta_data["video_name"]}.mp4')
+    for batch_cnt, start_img_idx in enumerate(range(0, n, batch_size)):
         end_img_idx = start_img_idx + batch_size
-        if end_img_idx > video_meta_data['frame_count']:
-            end_img_idx = video_meta_data['frame_count']
-        if verbose:
-            print(f'Processing images {start_img_idx} to {end_img_idx} (of {n})...')
+        end_img_idx = video_meta_data['frame_count'] if end_img_idx > video_meta_data['frame_count'] else end_img_idx
         batch_n = end_img_idx - start_img_idx
-        batch_imgs = read_img_batch_from_video_gpu(video_path=video_path, start_frm=start_img_idx, end_frm=end_img_idx)
+        if verbose: print(f'Processing images {start_img_idx} - {end_img_idx} (of {n})...')
+        if save_dir is not None:
+            batch_save_path = os.path.join(save_temp_dir, f'{batch_cnt}.mp4')
+        batch_imgs = read_img_batch_from_video_gpu(video_path=video_path, start_frm=start_img_idx, end_frm=end_img_idx-1)
         batch_imgs = np.stack(list(batch_imgs.values()), axis=0)
         batch_shapes = shapes[start_img_idx:end_img_idx].astype(np.int32)
         x_dev = cuda.to_device(batch_shapes)
@@ -855,7 +861,13 @@ def slice_imgs(video_path: Union[str, os.PathLike],
             _cuda_create_circle_masks[bpg, THREADS_PER_BLOCK](x_dev, batch_img_dev)
         else:
             _cuda_create_rectangle_masks[bpg, THREADS_PER_BLOCK](x_dev, batch_img_dev)
-        results[start_img_idx: end_img_idx] = batch_img_dev.copy_to_host()
+        if save_dir is None:
+            results[start_img_idx: end_img_idx] = batch_img_dev.copy_to_host()
+        else:
+            results = {k: v for k, v in enumerate(batch_img_dev.copy_to_host())}
+            ImageMixin().img_stack_to_video(imgs=results, fps=video_meta_data['fps'], save_path=batch_save_path, verbose=False)
+    if save_dir:
+        concatenate_videos_in_folder(in_folder=save_temp_dir, save_path=video_out_path, remove_splits=True, gpu=True)
     timer.stop_timer()
     if verbose:
         stdout_success(msg='Shapes sliced in video.', elapsed_time=timer.elapsed_time_str)
@@ -1315,7 +1327,30 @@ def pose_plotter(data: Union[str, os.PathLike, np.ndarray],
     if verbose:
         stdout_success(msg=f'Pose-estimation video saved at {save_path}.', elapsed_time=total_timer.elapsed_time_str)
 
+from simba.mixins.geometry_mixin import GeometryMixin
 
+video_path = "/mnt/c/troubleshooting/RAT_NOR/project_folder/videos/03152021_NOB_IOT_8.mp4"
+data_path = "/mnt/c/troubleshooting/RAT_NOR/project_folder/csv/outlier_corrected_movement_location/03152021_NOB_IOT_8.csv"
+save_dir = '/mnt/d/netholabs/yolo_videos/input/mp4_20250606083508'
+
+get_video_meta_data(video_path)
+
+nose_arr = read_df(file_path=data_path, file_type='csv', usecols=['Nose_x', 'Nose_y', 'Tail_base_x', 'Tail_base_y', 'Lat_left_x', 'Lat_left_y', 'Lat_right_x', 'Lat_right_y']).values.reshape(-1, 4, 2).astype(np.int32) ## READ THE BODY-PART THAT DEFINES THE HULL AND CONVERT TO ARRAY
+
+polygons = GeometryMixin().multiframe_bodyparts_to_polygon(data=nose_arr, parallel_offset=60) ## CONVERT THE BODY-PART TO POLYGONS WITH A LITTLE BUFFER
+polygons = GeometryMixin().multiframe_minimum_rotated_rectangle(shapes=polygons) # CONVERT THE POLYGONS TO RECTANGLES (I.E., WITH 4 UNIQUE POINTS).
+polygon_lst = [] # GET THE POINTS OF THE RECTANGLES
+for i in polygons: polygon_lst.append(np.array(i.exterior.coords))
+polygons = np.stack(polygon_lst, axis=0)
+sliced_imgs = slice_imgs(video_path=video_path, shapes=polygons, batch_size=1000, save_dir=save_dir) #SLICE THE RECTANGLES IN THE VIDEO.
+
+#sliced_imgs =  {k: v for k, v in enumerate(sliced_imgs)}
+
+#ImageMixin().img_stack_to_video(imgs=sliced_imgs, fps=29.97, save_path=r'/mnt/d/netholabs/yolo_videos/input/mp4_20250606083508/stacked.mp4')
+
+#get_video_meta_data("/mnt/c/troubleshooting/RAT_NOR/project_folder/videos/03152021_NOB_IOT_8.mp4")
+# cv2.imshow('asdasdas', sliced_imgs[500])
+# cv2.waitKey(0)
 
 # DATA_PATH = "/mnt/c/troubleshooting/RAT_NOR/project_folder/csv/outlier_corrected_movement_location/03152021_NOB_IOT_8.csv"
 # VIDEO_PATH = "/mnt/c/troubleshooting/RAT_NOR/project_folder/videos/03152021_NOB_IOT_8.mp4"

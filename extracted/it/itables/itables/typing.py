@@ -54,6 +54,7 @@ class DataTableOptions(TypedDict):
             Sequence[Sequence[Union[int, str]]],
         ]
     ]
+    pageLength: NotRequired[int]
     order: NotRequired[
         Union[Sequence[Sequence[Union[int, str]]], Mapping[str, Union[int, str]]]
     ]
@@ -150,7 +151,7 @@ class DTForITablesOptions(DataTableOptions):
     display_logo_when_loading: NotRequired[bool]
 
 
-def is_typeguard_available():
+def is_typeguard_available() -> bool:
     """Check if typeguard is available"""
     try:
         typeguard_version = version("typeguard")

@@ -1,25 +1,25 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: pluralizer
-Version: 1.2.0
-Summary: Singularize or pluralize a given word useing a pre-defined list of rules
-Home-page: https://github.com/weixu365/pluralizer-py
+Version: 2.0.0
+Summary: Singularize or pluralize a given word using a pre-defined list of rules
+Project-URL: Homepage, https://github.com/weixu365/pluralizer-py
+Project-URL: Issues, https://github.com/weixu365/pluralizer-py/issues
 Author: Wei Xu
-License: MIT
-Keywords: pluralize,singularize,singular,plural
-Platform: any
+License-Expression: MIT
+License-File: LICENSE
+Keywords: plural,pluralize,singular,singularize
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
-Classifier: Topic :: Software Development :: Libraries :: Python Modules
-Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.6
-Requires-Python: >=3.6
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.10
 Description-Content-Type: text/markdown
-License-File: LICENSE
 
 [![PyPI](https://img.shields.io/pypi/v/pluralizer?style=plastic)](https://pypi.org/project/pluralizer/)
 [![Codecov](https://img.shields.io/codecov/c/github/weixu365/pluralizer-py?style=plastic)](https://codecov.io/gh/weixu365/pluralizer-py)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/weixu365/pluralizer-py/Python%20package?style=plastic)](https://github.com/weixu365/pluralizer-py/actions?query=branch%3Amaster)
+[![GitHub Workflow Status](https://github.com/weixu365/pluralizer-py/actions/workflows/pythonpackage.yml/badge.svg)](https://github.com/weixu365/pluralizer-py/actions)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/pluralizer?style=plastic)](https://pypistats.org/packages/pluralizer)
 
 ## Why this project?
@@ -62,5 +62,3 @@ assert pluralizer.isSingular('apple') == True
 MIT
 
 All credits to https://github.com/blakeembrey/pluralize. 
-
-

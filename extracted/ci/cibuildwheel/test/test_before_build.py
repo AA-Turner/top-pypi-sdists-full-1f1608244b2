@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import subprocess
 import textwrap
 
@@ -8,7 +6,7 @@ import pytest
 from . import test_projects, utils
 
 # pyodide does not support building without isolation, need to check the base_prefix
-SYS_PREFIX = f"sys.{'base_' if utils.platform == 'pyodide' else ''}prefix"
+SYS_PREFIX = f"sys.{'base_' if utils.get_platform() == 'pyodide' else ''}prefix"
 
 
 project_with_before_build_asserts = test_projects.new_c_project(
@@ -43,9 +41,13 @@ def test(tmp_path):
     project_with_before_build_asserts.generate(project_dir)
 
     before_build = (
-        """python -c "import sys; open('{project}/pythonversion_bb.txt', 'w').write(sys.version)" && """
-        f'''python -c "import sys; open('{{project}}/pythonprefix_bb.txt', 'w').write({SYS_PREFIX})"'''
+        """python -c "import pathlib, sys; pathlib.Path('{project}/pythonversion_bb.txt').write_text(sys.version)" && """
+        f'''python -c "import pathlib, sys; pathlib.Path('{{project}}/pythonprefix_bb.txt').write_text({SYS_PREFIX})"'''
     )
+    frontend = "build"
+    if utils.get_platform() != "pyodide":
+        before_build = f"python -m pip install setuptools && {before_build}"
+        frontend = f"{frontend};args: --no-isolation"
 
     # build the wheels
     actual_wheels = utils.cibuildwheel_run(
@@ -54,6 +56,7 @@ def test(tmp_path):
             # write python version information to a temporary file, this is
             # checked in setup.py
             "CIBW_BEFORE_BUILD": before_build,
+            "CIBW_BUILD_FRONTEND": frontend,
         },
     )
 

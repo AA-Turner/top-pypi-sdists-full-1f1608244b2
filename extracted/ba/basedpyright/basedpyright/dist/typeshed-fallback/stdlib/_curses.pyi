@@ -459,6 +459,9 @@ if sys.version_info >= (3, 10):
         """
         ...
 
+if sys.version_info >= (3, 14):
+    def assume_default_colors(fg: int, bg: int, /) -> None: ...
+
 def has_ic() -> bool:
     """Return True if the terminal has insert- and delete-character capabilities."""
     ...

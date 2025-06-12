@@ -134,7 +134,11 @@ ODOO_MSGS = {
         "manifest-version-format",
         CHECK_DESCRIPTION,
     ),
-    "C8107": ('String parameter on "%s" requires translation. Use %s_(%s)', "translation-required", CHECK_DESCRIPTION),
+    "C8107": (
+        'String parameter on "%s" requires translation. Use %s%s(%s)',
+        "translation-required",
+        CHECK_DESCRIPTION,
+    ),
     "C8108": ('Name of compute method should start with "_compute_"', "method-compute", CHECK_DESCRIPTION),
     "C8109": ('Name of search method should start with "_search_"', "method-search", CHECK_DESCRIPTION),
     "C8110": ('Name of inverse method should start with "_inverse_"', "method-inverse", CHECK_DESCRIPTION),
@@ -645,6 +649,14 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
         """Clear variables"""
         self._from_imports = {}
 
+    def _get_max_valid_odoo_versions(self):
+        odoo_versions = [misc.version_parse(odoo_version) for odoo_version in self.linter.config.valid_odoo_versions]
+        if () in odoo_versions:
+            # Empty value means odoo_version value could not be adapted
+            return
+        max_valid_version = max(odoo_versions)
+        return max_valid_version
+
     def open(self):
         super().open()
         self.deprecated_field_parameters = self.colon_list_to_dict(self.linter.config.deprecated_field_parameters)
@@ -653,9 +665,9 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
             deprecated_model_methods = ast.literal_eval(self.linter.config.deprecated_odoo_model_methods)
         else:
             deprecated_model_methods = DFTL_DEPRECATED_ODOO_MODEL_METHODS
-        odoo_versions = [misc.version_parse(odoo_version) for odoo_version in self.linter.config.valid_odoo_versions]
-        if () in odoo_versions:
-            # Empty value means odoo_version value could not be adapted
+
+        max_valid_version = self._get_max_valid_odoo_versions()
+        if max_valid_version is None:
             warnings.warn(
                 f"Invalid manifest versions format {self.linter.config.valid_odoo_versions}. "
                 "It was not possible to supress checks based on particular odoo version",
@@ -663,7 +675,6 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
                 stacklevel=2,
             )
             return
-        max_valid_version = max(odoo_versions)
         for version, checks in deprecated_model_methods.items():
             if misc.version_parse(version) <= max_valid_version:
                 self._deprecated_odoo_methods.update(checks)
@@ -822,6 +833,19 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
                     if assign_node.targets[0].as_string() == node.as_string():
                         yield assign_node.value
 
+    def _get_str_value(self, node):
+        """Check if the node is str (constant) and get value or f-string get values"""
+        if isinstance(node, nodes.Const) and node.name == "str":
+            return node.value
+        if isinstance(node, nodes.JoinedStr):
+            value = ""
+            for val in node.values:
+                if isinstance(val, nodes.Const):
+                    value += val.value
+                else:
+                    value += "{}"
+            return value
+
     @utils.only_required_for_messages(
         "attribute-string-redundant",
         "bad-builtin-groupby",
@@ -873,19 +897,18 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
                 # Check this 'name = fields.Char("name")'
                 if (
                     not is_related
-                    and isinstance(argument, nodes.Const)
-                    and (index == FIELDS_METHOD.get(argument.parent.func.attrname, 0))
-                    and (argument.value == field_name.title())
+                    and self._get_str_value(argument) == field_name.title()
+                    and index == FIELDS_METHOD.get(argument.parent.func.attrname, 0)
                 ):
                     self.add_message("attribute-string-redundant", node=node)
                 if isinstance(argument, nodes.Keyword):
                     argument_aux = argument.value
                     deprecated = self.deprecated_field_parameters
+                    value = self._get_str_value(argument_aux)
                     if (
                         argument.arg in ["compute", "search", "inverse"]
-                        and isinstance(argument_aux, nodes.Const)
-                        and isinstance(argument_aux.value, str)
-                        and not argument_aux.value.startswith("_" + argument.arg + "_")
+                        and value is not None
+                        and not value.startswith("_" + argument.arg + "_")
                     ):
                         self.add_message("method-" + argument.arg, node=argument_aux)
                     # Check if the param string is equal to the name
@@ -893,7 +916,7 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
                     elif (
                         not is_related
                         and argument.arg == "string"
-                        and (isinstance(argument_aux, nodes.Const) and argument_aux.value == field_name.title())
+                        and self._get_str_value(argument_aux) == field_name.title()
                     ):
                         self.add_message("attribute-string-redundant", node=node)
                     elif argument.arg in deprecated:
@@ -988,13 +1011,13 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
                     continue
                 as_string = ""
                 # case: message_post(body='String')
-                if isinstance(value, nodes.Const):
+                if isinstance(value, (nodes.Const, nodes.JoinedStr)):
                     as_string = value.as_string()
                 # case: message_post(body='String %s' % (...))
                 elif (
                     isinstance(value, nodes.BinOp)
                     and value.op == "%"
-                    and isinstance(value.left, nodes.Const)
+                    and isinstance(value.left, (nodes.Const, nodes.JoinedStr))
                     # The right part is translatable only if it's a
                     # function or a list of functions
                     and not (
@@ -1007,13 +1030,19 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
                 elif (
                     isinstance(value, nodes.Call)
                     and isinstance(value.func, nodes.Attribute)
-                    and isinstance(value.func.expr, nodes.Const)
+                    and isinstance(value.func.expr, (nodes.Const, nodes.JoinedStr))
                     and value.func.attrname == "format"
                 ):
                     as_string = value.func.expr.as_string()
                 if as_string:
                     keyword = keyword and "%s=" % keyword
-                    self.add_message("translation-required", node=node, args=("message_post", keyword, as_string))
+                    tl_method = "_"
+                    max_valid_odoo_version = self._get_max_valid_odoo_versions()
+                    if max_valid_odoo_version is None or max_valid_odoo_version >= (8, 0):
+                        tl_method = "self.env._"
+                    self.add_message(
+                        "translation-required", node=node, args=("message_post", keyword, tl_method, as_string)
+                    )
 
         # Call _(...) with variables into the term to be translated
         if self.get_func_name(node.func) in misc.TRANSLATION_METHODS and node.args:
@@ -1141,12 +1170,14 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
                     self.add_message("no-search-all", node=node, args=(self.get_func_name(node.func),))
 
     @utils.only_required_for_messages(
+        "category-allowed",
         "development-status-allowed",
         "license-allowed",
-        "category-allowed",
         "manifest-author-string",
+        "manifest-behind-migrations",
         "manifest-data-duplicated",
         "manifest-deprecated-key",
+        "manifest-external-assets",
         "manifest-maintainers-list",
         "manifest-required-author",
         "manifest-required-key",
@@ -1154,8 +1185,6 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
         "missing-readme",
         "resource-not-exist",
         "website-manifest-key-not-valid-uri",
-        "manifest-behind-migrations",
-        "manifest-external-assets",
     )
     def visit_dict(self, node):
         if not os.path.basename(self.linter.current_file) in misc.MANIFEST_FILES or not isinstance(
@@ -1329,9 +1358,9 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
 
         for _, item in node.items:
             for element in item.elts:
-                if isinstance(element, nodes.Const):
-                    if is_external_url(element.value):
-                        self.add_message("manifest-external-assets", node=element, args=(element.value,))
+                if (value := self._get_str_value(element)) is not None:
+                    if is_external_url(value):
+                        self.add_message("manifest-external-assets", node=element, args=(value,))
                 elif isinstance(element, (nodes.Tuple, nodes.List)):
                     for entry in element.elts:
                         if isinstance(entry, nodes.Const) and is_external_url(entry.value):
@@ -1351,11 +1380,11 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
         return node.name in self._deprecated_odoo_methods
 
     @utils.only_required_for_messages(
-        "method-required-super",
-        "prohibited-method-override",
-        "missing-return",
-        "deprecated-odoo-model-method",
         "deprecated-name-get",
+        "deprecated-odoo-model-method",
+        "method-required-super",
+        "missing-return",
+        "prohibited-method-override",
     )
     def visit_functiondef(self, node):
         """Check that `api.one` and `api.multi` decorators not exists together
@@ -1525,13 +1554,12 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
             argument = argument.func.expr
         elif isinstance(argument, nodes.BinOp):
             argument = argument.left
-
-        if (
-            isinstance(argument, nodes.Const)
-            and argument.name == "str"
-            and func_name in self.linter.config.odoo_exceptions
-        ):
-            self.add_message("translation-required", node=node, args=(func_name, "", argument.as_string()))
+        if self._get_str_value(argument) is not None and func_name in self.linter.config.odoo_exceptions:
+            tl_method = "_"
+            max_valid_odoo_version = self._get_max_valid_odoo_versions()
+            if max_valid_odoo_version is None or max_valid_odoo_version >= (8, 0):
+                tl_method = "self.env._"
+            self.add_message("translation-required", node=node, args=(func_name, "", tl_method, argument.as_string()))
 
     @utils.only_required_for_messages("translation-required", "no-raise-unlink")
     def visit_raise(self, node):
@@ -1772,12 +1800,18 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
                 if class_base_name in ["Model", "AbstractModel", "TransientModel"]:
                     return (class_base_name, class_base)
 
-    @utils.only_required_for_messages("no-write-in-compute", "no-wizard-in-models")
+    @utils.only_required_for_messages(
+        "no-wizard-in-models",
+        "no-write-in-compute",
+    )
     def visit_classdef(self, node):
         self.class_odoo_models = self.get_odoo_models_class(node)
         self.odoo_computes = set()
 
-    @utils.only_required_for_messages("no-write-in-compute", "no-wizard-in-models")
+    @utils.only_required_for_messages(
+        "no-wizard-in-models",
+        "no-write-in-compute",
+    )
     def leave_classdef(self, node):
         if self.class_odoo_models:
             for odoo_compute in self.odoo_computes:

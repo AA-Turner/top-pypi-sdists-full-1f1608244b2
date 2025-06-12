@@ -93,6 +93,7 @@ class AaSequenceService(BaseService):
     def _aa_sequences_page(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         amino_acids: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -118,6 +119,7 @@ class AaSequenceService(BaseService):
         response = list_aa_sequences.sync_detailed(
             client=self.client,
             modified_at=none_as_unset(modified_at),
+            created_at=none_as_unset(created_at),
             name=none_as_unset(name),
             amino_acids=none_as_unset(amino_acids),
             folder_id=none_as_unset(folder_id),
@@ -145,6 +147,7 @@ class AaSequenceService(BaseService):
     def list(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         amino_acids: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -177,6 +180,7 @@ class AaSequenceService(BaseService):
         def api_call(next_token: NextToken) -> Response[AaSequencesPaginatedList]:
             return self._aa_sequences_page(
                 modified_at=modified_at,
+                created_at=created_at,
                 name=name,
                 amino_acids=amino_acids,
                 folder_id=folder_id,

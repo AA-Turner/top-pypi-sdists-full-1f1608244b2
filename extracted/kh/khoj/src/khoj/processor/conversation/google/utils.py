@@ -39,7 +39,8 @@ gemini_clients: Dict[str, genai.Client] = {}
 
 # Output tokens should be more than reasoning tokens.
 # This avoids premature response termination.
-MAX_OUTPUT_TOKENS_GEMINI = 20000
+MAX_OUTPUT_TOKENS_FOR_REASONING_GEMINI = 20000
+MAX_OUTPUT_TOKENS_FOR_STANDARD_GEMINI = 8000
 MAX_REASONING_TOKENS_GEMINI = 10000
 
 SAFETY_SETTINGS = [
@@ -111,15 +112,19 @@ def gemini_completion_with_backoff(
         response_schema = clean_response_schema(model_kwargs["response_schema"])
 
     thinking_config = None
-    if deepthought and model_name.startswith("gemini-2.5"):
+    if deepthought and is_reasoning_model(model_name):
         thinking_config = gtypes.ThinkingConfig(thinking_budget=MAX_REASONING_TOKENS_GEMINI)
+
+    max_output_tokens = MAX_OUTPUT_TOKENS_FOR_STANDARD_GEMINI
+    if is_reasoning_model(model_name):
+        max_output_tokens = MAX_OUTPUT_TOKENS_FOR_REASONING_GEMINI
 
     seed = int(os.getenv("KHOJ_LLM_SEED")) if os.getenv("KHOJ_LLM_SEED") else None
     config = gtypes.GenerateContentConfig(
         system_instruction=system_instruction,
         temperature=temperature,
         thinking_config=thinking_config,
-        max_output_tokens=MAX_OUTPUT_TOKENS_GEMINI,
+        max_output_tokens=max_output_tokens,
         safety_settings=SAFETY_SETTINGS,
         response_mime_type=model_kwargs.get("response_mime_type", "text/plain") if model_kwargs else "text/plain",
         response_schema=response_schema,
@@ -188,15 +193,19 @@ async def gemini_chat_completion_with_backoff(
     formatted_messages, system_instruction = format_messages_for_gemini(messages, system_prompt)
 
     thinking_config = None
-    if deepthought and model_name.startswith("gemini-2.5"):
+    if deepthought and is_reasoning_model(model_name):
         thinking_config = gtypes.ThinkingConfig(thinking_budget=MAX_REASONING_TOKENS_GEMINI, include_thoughts=True)
+
+    max_output_tokens = MAX_OUTPUT_TOKENS_FOR_STANDARD_GEMINI
+    if is_reasoning_model(model_name):
+        max_output_tokens = MAX_OUTPUT_TOKENS_FOR_REASONING_GEMINI
 
     seed = int(os.getenv("KHOJ_LLM_SEED")) if os.getenv("KHOJ_LLM_SEED") else None
     config = gtypes.GenerateContentConfig(
         system_instruction=system_instruction,
         temperature=temperature,
         thinking_config=thinking_config,
-        max_output_tokens=MAX_OUTPUT_TOKENS_GEMINI,
+        max_output_tokens=max_output_tokens,
         stop_sequences=["Notes:\n["],
         safety_settings=SAFETY_SETTINGS,
         seed=seed,
@@ -230,12 +239,11 @@ async def gemini_chat_completion_with_backoff(
 
         # emit thought vs response parts
         for part in chunk.candidates[0].content.parts:
-            if part.text:
-                aggregated_response += part.text
-                yield ResponseWithThought(response=part.text)
             if part.thought:
                 yield ResponseWithThought(thought=part.text)
-
+            elif part.text:
+                aggregated_response += part.text
+                yield ResponseWithThought(response=part.text)
     # Calculate cost of chat
     input_tokens = final_chunk.usage_metadata.prompt_token_count or 0 if final_chunk else 0
     output_tokens = final_chunk.usage_metadata.candidates_token_count or 0 if final_chunk else 0
@@ -385,3 +393,10 @@ def clean_response_schema(response_schema: BaseModel) -> dict:
     # Generate content in the order in which the schema properties were defined
     response_schema_dict["property_ordering"] = field_names
     return response_schema_dict
+
+
+def is_reasoning_model(model_name: str) -> bool:
+    """
+    Check if the model is a reasoning model.
+    """
+    return model_name.startswith("gemini-2.5")

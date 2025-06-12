@@ -50,6 +50,7 @@ class NucleotideAlignmentsService(BaseService):
     def _nucleotide_alignments_page(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         name_includes: Optional[str] = None,
         ids: Optional[List[str]] = None,
@@ -63,6 +64,7 @@ class NucleotideAlignmentsService(BaseService):
         response = list_nucleotide_alignments.sync_detailed(
             client=self.client,
             modified_at=none_as_unset(modified_at),
+            created_at=none_as_unset(created_at),
             name=none_as_unset(name),
             name_includes=none_as_unset(name_includes),
             ids=none_as_unset(optional_array_query_param(ids)),
@@ -79,6 +81,7 @@ class NucleotideAlignmentsService(BaseService):
     def list(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         name_includes: Optional[str] = None,
         ids: Optional[List[str]] = None,
@@ -97,6 +100,7 @@ class NucleotideAlignmentsService(BaseService):
         def api_call(next_token: NextToken) -> Response[NucleotideAlignmentsPaginatedList]:
             return self._nucleotide_alignments_page(
                 modified_at=modified_at,
+                created_at=created_at,
                 name=name,
                 name_includes=name_includes,
                 ids=ids,

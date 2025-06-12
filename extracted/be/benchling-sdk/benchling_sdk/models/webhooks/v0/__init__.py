@@ -19,8 +19,10 @@ __all__ = [
     "AssayRunCreatedWebhookV2Type",
     "AssayRunUpdatedFieldsWebhookV2",
     "AssayRunUpdatedFieldsWebhookV2Type",
+    "CanvasCreatedWebhookV2",
     "CanvasCreatedWebhookV2Beta",
     "CanvasCreatedWebhookV2BetaType",
+    "CanvasCreatedWebhookV2Type",
     "CanvasInitializeWebhookV2",
     "CanvasInitializeWebhookV2Type",
     "CanvasInteractionWebhookV2",
@@ -132,8 +134,10 @@ if TYPE_CHECKING:
     import benchling_api_client.webhooks.v0.stable.models.assay_run_created_webhook_v2_type
     import benchling_api_client.webhooks.v0.stable.models.assay_run_updated_fields_webhook_v2
     import benchling_api_client.webhooks.v0.stable.models.assay_run_updated_fields_webhook_v2_type
+    import benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2
     import benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2_beta
     import benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2_beta_type
+    import benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2_type
     import benchling_api_client.webhooks.v0.stable.models.canvas_initialize_webhook_v2
     import benchling_api_client.webhooks.v0.stable.models.canvas_initialize_webhook_v2_type
     import benchling_api_client.webhooks.v0.stable.models.canvas_interaction_webhook_v2
@@ -263,11 +267,17 @@ if TYPE_CHECKING:
     AssayRunUpdatedFieldsWebhookV2Type = (
         benchling_api_client.webhooks.v0.stable.models.assay_run_updated_fields_webhook_v2_type.AssayRunUpdatedFieldsWebhookV2Type
     )
+    CanvasCreatedWebhookV2 = (
+        benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2.CanvasCreatedWebhookV2
+    )
     CanvasCreatedWebhookV2Beta = (
         benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2_beta.CanvasCreatedWebhookV2Beta
     )
     CanvasCreatedWebhookV2BetaType = (
         benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2_beta_type.CanvasCreatedWebhookV2BetaType
+    )
+    CanvasCreatedWebhookV2Type = (
+        benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2_type.CanvasCreatedWebhookV2Type
     )
     CanvasInitializeWebhookV2 = (
         benchling_api_client.webhooks.v0.stable.models.canvas_initialize_webhook_v2.CanvasInitializeWebhookV2
@@ -350,8 +360,12 @@ if TYPE_CHECKING:
     LifecycleDeactivateWebhookV0Type = (
         benchling_api_client.webhooks.v0.stable.models.lifecycle_deactivate_webhook_v0_type.LifecycleDeactivateWebhookV0Type
     )
-    MessageBase = benchling_api_client.webhooks.v0.stable.models.message_base.MessageBase
-    MessageBaseV0 = benchling_api_client.webhooks.v0.stable.models.message_base_v0.MessageBaseV0
+    MessageBase = (
+        benchling_api_client.webhooks.v0.stable.models.message_base.MessageBase
+    )
+    MessageBaseV0 = (
+        benchling_api_client.webhooks.v0.stable.models.message_base_v0.MessageBaseV0
+    )
     RequestCreatedWebhookV2 = (
         benchling_api_client.webhooks.v0.stable.models.request_created_webhook_v2.RequestCreatedWebhookV2
     )
@@ -484,7 +498,9 @@ if TYPE_CHECKING:
     V2WorkflowTaskUpdatedStatusEventEventType = (
         benchling_api_client.webhooks.v0.stable.models.v2_workflow_task_updated_status_event_event_type.V2WorkflowTaskUpdatedStatusEventEventType
     )
-    WebhookEnvelopeV0 = benchling_api_client.webhooks.v0.stable.models.webhook_envelope_v0.WebhookEnvelopeV0
+    WebhookEnvelopeV0 = (
+        benchling_api_client.webhooks.v0.stable.models.webhook_envelope_v0.WebhookEnvelopeV0
+    )
     WebhookEnvelopeV0App = (
         benchling_api_client.webhooks.v0.stable.models.webhook_envelope_v0_app.WebhookEnvelopeV0App
     )
@@ -494,7 +510,9 @@ if TYPE_CHECKING:
     WebhookEnvelopeV0Version = (
         benchling_api_client.webhooks.v0.stable.models.webhook_envelope_v0_version.WebhookEnvelopeV0Version
     )
-    WebhookMessageV0 = benchling_api_client.webhooks.v0.stable.models.webhook_message_v0.WebhookMessageV0
+    WebhookMessageV0 = (
+        benchling_api_client.webhooks.v0.stable.models.webhook_message_v0.WebhookMessageV0
+    )
     WorkflowOutputCreatedWebhookV2 = (
         benchling_api_client.webhooks.v0.stable.models.workflow_output_created_webhook_v2.WorkflowOutputCreatedWebhookV2
     )
@@ -568,8 +586,10 @@ else:
         "AssayRunCreatedWebhookV2Type": "benchling_api_client.webhooks.v0.stable.models.assay_run_created_webhook_v2_type",
         "AssayRunUpdatedFieldsWebhookV2": "benchling_api_client.webhooks.v0.stable.models.assay_run_updated_fields_webhook_v2",
         "AssayRunUpdatedFieldsWebhookV2Type": "benchling_api_client.webhooks.v0.stable.models.assay_run_updated_fields_webhook_v2_type",
+        "CanvasCreatedWebhookV2": "benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2",
         "CanvasCreatedWebhookV2Beta": "benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2_beta",
         "CanvasCreatedWebhookV2BetaType": "benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2_beta_type",
+        "CanvasCreatedWebhookV2Type": "benchling_api_client.webhooks.v0.stable.models.canvas_created_webhook_v2_type",
         "CanvasInitializeWebhookV2": "benchling_api_client.webhooks.v0.stable.models.canvas_initialize_webhook_v2",
         "CanvasInitializeWebhookV2Type": "benchling_api_client.webhooks.v0.stable.models.canvas_initialize_webhook_v2_type",
         "CanvasInteractionWebhookV2": "benchling_api_client.webhooks.v0.stable.models.canvas_interaction_webhook_v2",

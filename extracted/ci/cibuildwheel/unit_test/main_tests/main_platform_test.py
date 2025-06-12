@@ -1,12 +1,10 @@
-from __future__ import annotations
-
 import sys
 
 import pytest
 
 from cibuildwheel.__main__ import main
 from cibuildwheel.architecture import Architecture
-from cibuildwheel.util import EnableGroups
+from cibuildwheel.selector import EnableGroup
 
 from ..conftest import MOCK_PACKAGE_DIR
 
@@ -43,7 +41,7 @@ def test_unknown_platform_on_ci(monkeypatch, capsys):
     assert exit.value.code == 2
     _, err = capsys.readouterr()
 
-    assert 'cibuildwheel: Unable to detect platform from "sys.platform"' in err
+    assert 'Unable to detect platform from "sys.platform"' in err
 
 
 def test_unknown_platform(monkeypatch, capsys):
@@ -54,7 +52,7 @@ def test_unknown_platform(monkeypatch, capsys):
     _, err = capsys.readouterr()
 
     assert exit.value.code == 2
-    assert "cibuildwheel: Unsupported platform: nonexistent" in err
+    assert "Unsupported platform: nonexistent" in err
 
 
 def test_platform_argument(platform, intercepted_build_args, monkeypatch):
@@ -81,7 +79,7 @@ def test_archs_default(platform, intercepted_build_args):
     options = intercepted_build_args.args[0]
 
     if platform == "linux":
-        assert options.globals.architectures == {Architecture.x86_64, Architecture.i686}
+        assert options.globals.architectures == {Architecture.x86_64}
     elif platform == "windows":
         assert options.globals.architectures == {Architecture.AMD64, Architecture.x86}
     else:
@@ -181,6 +179,7 @@ def test_archs_platform_all(platform, intercepted_build_args, monkeypatch):
             Architecture.ppc64le,
             Architecture.s390x,
             Architecture.armv7l,
+            Architecture.riscv64,
         }
     elif platform == "windows":
         assert options.globals.architectures == {
@@ -217,7 +216,7 @@ def test_only_argument(intercepted_build_args, monkeypatch, only, plat):
     assert options.globals.build_selector.skip_config == ""
     assert options.platform == plat
     assert options.globals.architectures == Architecture.all_archs(plat)
-    assert EnableGroups.PyPy in options.globals.build_selector.enable
+    assert EnableGroup.PyPy in options.globals.build_selector.enable
 
 
 @pytest.mark.parametrize("only", ("cp311-manylxinux_x86_64", "some_linux_thing"))
@@ -278,4 +277,4 @@ def test_pyodide_on_windows(monkeypatch, capsys):
     _, err = capsys.readouterr()
 
     assert exit.value.code == 2
-    assert "cibuildwheel: Building for pyodide is not supported on Windows" in err
+    assert "Building for pyodide is not supported on Windows" in err

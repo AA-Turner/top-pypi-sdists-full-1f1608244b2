@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: evervault
-Version: 4.4.2
+Version: 4.4.3
 Summary: Evervault SDK
 Home-page: https://evervault.com
 License: MIT
@@ -18,7 +18,7 @@ Requires-Dist: cryptography (>=43,<44)
 Requires-Dist: evervault-attestation-bindings (==0.4.0)
 Requires-Dist: pyasn1 (>=0.4.8,<0.5.0)
 Requires-Dist: pycryptodome (>=3.10.1,<4.0.0)
-Requires-Dist: requests (>=2.32.2,<3.0.0)
+Requires-Dist: requests (>=2.32.4,<3.0.0)
 Project-URL: Repository, https://github.com/evervault/evervault-python
 Description-Content-Type: text/markdown
 

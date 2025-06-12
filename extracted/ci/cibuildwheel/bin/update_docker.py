@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-from __future__ import annotations
 
 import configparser
-from dataclasses import dataclass
+import dataclasses
 from pathlib import Path
 
 import requests
@@ -12,63 +11,48 @@ DIR = Path(__file__).parent.resolve()
 RESOURCES = DIR.parent / "cibuildwheel/resources"
 
 
-@dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True)
 class Image:
     manylinux_version: str
-    platform: str
+    platforms: list[str]
     image_name: str
-    tag: str | None  # Set this to pin the image
+    tag: str | None = None  # Set this to pin the image
+    use_platform_suffix: bool = False
+
+
+class PyPAImage(Image):
+    def __init__(self, manylinux_version: str, platforms: list[str], tag: str | None = None):
+        image_name = f"quay.io/pypa/{manylinux_version}"
+        super().__init__(manylinux_version, platforms, image_name, tag, True)
 
 
 images = [
-    # manylinux1 images
-    Image("manylinux1", "x86_64", "quay.io/pypa/manylinux1_x86_64", None),
-    Image("manylinux1", "i686", "quay.io/pypa/manylinux1_i686", None),
-    # manylinux2010 images
-    Image("manylinux2010", "x86_64", "quay.io/pypa/manylinux2010_x86_64", None),
-    Image("manylinux2010", "i686", "quay.io/pypa/manylinux2010_i686", None),
-    Image("manylinux2010", "pypy_x86_64", "quay.io/pypa/manylinux2010_x86_64", None),
-    Image("manylinux2010", "pypy_i686", "quay.io/pypa/manylinux2010_i686", None),
     # manylinux2014 images
-    Image("manylinux2014", "x86_64", "quay.io/pypa/manylinux2014_x86_64", None),
-    Image("manylinux2014", "i686", "quay.io/pypa/manylinux2014_i686", None),
-    Image("manylinux2014", "aarch64", "quay.io/pypa/manylinux2014_aarch64", None),
-    Image("manylinux2014", "ppc64le", "quay.io/pypa/manylinux2014_ppc64le", None),
-    Image("manylinux2014", "s390x", "quay.io/pypa/manylinux2014_s390x", None),
-    Image("manylinux2014", "pypy_x86_64", "quay.io/pypa/manylinux2014_x86_64", None),
-    Image("manylinux2014", "pypy_i686", "quay.io/pypa/manylinux2014_i686", None),
-    Image("manylinux2014", "pypy_aarch64", "quay.io/pypa/manylinux2014_aarch64", None),
-    # manylinux_2_24 images
-    Image("manylinux_2_24", "x86_64", "quay.io/pypa/manylinux_2_24_x86_64", None),
-    Image("manylinux_2_24", "i686", "quay.io/pypa/manylinux_2_24_i686", None),
-    Image("manylinux_2_24", "aarch64", "quay.io/pypa/manylinux_2_24_aarch64", None),
-    Image("manylinux_2_24", "ppc64le", "quay.io/pypa/manylinux_2_24_ppc64le", None),
-    Image("manylinux_2_24", "s390x", "quay.io/pypa/manylinux_2_24_s390x", None),
-    Image("manylinux_2_24", "pypy_x86_64", "quay.io/pypa/manylinux_2_24_x86_64", None),
-    Image("manylinux_2_24", "pypy_i686", "quay.io/pypa/manylinux_2_24_i686", None),
-    Image("manylinux_2_24", "pypy_aarch64", "quay.io/pypa/manylinux_2_24_aarch64", None),
+    PyPAImage(
+        "manylinux2014",
+        [
+            "x86_64",
+            "i686",
+            "aarch64",
+            "ppc64le",
+            "s390x",
+            "pypy_x86_64",
+            "pypy_i686",
+            "pypy_aarch64",
+        ],
+    ),
     # manylinux_2_28 images
-    Image("manylinux_2_28", "x86_64", "quay.io/pypa/manylinux_2_28_x86_64", None),
-    Image("manylinux_2_28", "aarch64", "quay.io/pypa/manylinux_2_28_aarch64", None),
-    Image("manylinux_2_28", "ppc64le", "quay.io/pypa/manylinux_2_28_ppc64le", None),
-    Image("manylinux_2_28", "s390x", "quay.io/pypa/manylinux_2_28_s390x", None),
-    Image("manylinux_2_28", "pypy_x86_64", "quay.io/pypa/manylinux_2_28_x86_64", None),
-    Image("manylinux_2_28", "pypy_aarch64", "quay.io/pypa/manylinux_2_28_aarch64", None),
+    PyPAImage(
+        "manylinux_2_28", ["x86_64", "aarch64", "ppc64le", "s390x", "pypy_x86_64", "pypy_aarch64"]
+    ),
     # manylinux_2_31 images
-    Image("manylinux_2_31", "armv7l", "quay.io/pypa/manylinux_2_31_armv7l", None),
-    # musllinux_1_1 images
-    Image("musllinux_1_1", "x86_64", "quay.io/pypa/musllinux_1_1_x86_64", None),
-    Image("musllinux_1_1", "i686", "quay.io/pypa/musllinux_1_1_i686", None),
-    Image("musllinux_1_1", "aarch64", "quay.io/pypa/musllinux_1_1_aarch64", None),
-    Image("musllinux_1_1", "ppc64le", "quay.io/pypa/musllinux_1_1_ppc64le", None),
-    Image("musllinux_1_1", "s390x", "quay.io/pypa/musllinux_1_1_s390x", None),
+    PyPAImage("manylinux_2_31", ["armv7l"]),
+    # manylinux_2_34 images
+    PyPAImage(
+        "manylinux_2_34", ["x86_64", "aarch64", "ppc64le", "s390x", "pypy_x86_64", "pypy_aarch64"]
+    ),
     # musllinux_1_2 images
-    Image("musllinux_1_2", "x86_64", "quay.io/pypa/musllinux_1_2_x86_64", None),
-    Image("musllinux_1_2", "i686", "quay.io/pypa/musllinux_1_2_i686", None),
-    Image("musllinux_1_2", "aarch64", "quay.io/pypa/musllinux_1_2_aarch64", None),
-    Image("musllinux_1_2", "ppc64le", "quay.io/pypa/musllinux_1_2_ppc64le", None),
-    Image("musllinux_1_2", "s390x", "quay.io/pypa/musllinux_1_2_s390x", None),
-    Image("musllinux_1_2", "armv7l", "quay.io/pypa/musllinux_1_2_armv7l", None),
+    PyPAImage("musllinux_1_2", ["x86_64", "i686", "aarch64", "ppc64le", "s390x", "armv7l"]),
 ]
 
 config = configparser.ConfigParser()
@@ -124,10 +108,16 @@ for image in images:
         )
         tag_name = pinned_tag["name"]
 
-    if not config.has_section(image.platform):
-        config[image.platform] = {}
+    for platform in image.platforms:
+        if not config.has_section(platform):
+            config[platform] = {}
+        suffix = ""
+        if image.use_platform_suffix:
+            suffix = f"_{platform.removeprefix('pypy_')}"
+        config[platform][image.manylinux_version] = f"{image.image_name}{suffix}:{tag_name}"
 
-    config[image.platform][image.manylinux_version] = f"{image.image_name}:{tag_name}"
+if not config.has_section("riscv64"):
+    config["riscv64"] = {}
 
 with open(RESOURCES / "pinned_docker_images.cfg", "w") as f:
     config.write(f)

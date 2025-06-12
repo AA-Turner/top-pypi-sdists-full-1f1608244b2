@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: g4f
-Version: 0.5.3.2
+Version: 0.5.4.0
 Summary: The official gpt4free repository | various collection of powerful language models
 Home-page: https://github.com/xtekky/gpt4free
 Author: Tekky
@@ -40,9 +40,6 @@ Requires-Dist: python-multipart; extra == "all"
 Requires-Dist: pywebview; extra == "all"
 Requires-Dist: plyer; extra == "all"
 Requires-Dist: setuptools; extra == "all"
-Requires-Dist: odfpy; extra == "all"
-Requires-Dist: ebooklib; extra == "all"
-Requires-Dist: openpyxl; extra == "all"
 Requires-Dist: markitdown[all]; extra == "all"
 Provides-Extra: slim
 Requires-Dist: curl_cffi>=0.6.2; extra == "slim"
@@ -57,7 +54,7 @@ Requires-Dist: flask; extra == "slim"
 Requires-Dist: fastapi; extra == "slim"
 Requires-Dist: uvicorn; extra == "slim"
 Requires-Dist: python-multipart; extra == "slim"
-Requires-Dist: markitdown[docx,pdf,pptx]; extra == "slim"
+Requires-Dist: markitdown[all]; extra == "slim"
 Provides-Extra: image
 Requires-Dist: pillow; extra == "image"
 Requires-Dist: cairosvg; extra == "image"
@@ -86,9 +83,6 @@ Provides-Extra: local
 Requires-Dist: gpt4all; extra == "local"
 Provides-Extra: files
 Requires-Dist: beautifulsoup4; extra == "files"
-Requires-Dist: odfpy; extra == "files"
-Requires-Dist: ebooklib; extra == "files"
-Requires-Dist: openpyxl; extra == "files"
 Requires-Dist: markitdown[all]; extra == "files"
 Dynamic: author
 Dynamic: author-email
@@ -102,7 +96,6 @@ Dynamic: project-url
 Dynamic: provides-extra
 Dynamic: requires-dist
 Dynamic: summary
-
 
 <a href="https://trendshift.io/repositories/1692" target="_blank"><img src="https://trendshift.io/api/badge/repositories/1692" alt="xtekky%2Fgpt4free | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 

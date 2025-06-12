@@ -1,21 +1,23 @@
-from __future__ import annotations
-
+import dataclasses
 import subprocess
-from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import dataclass
-from typing import Callable, Dict, List  # noqa: TID251
+from collections.abc import (
+    Callable,
+    Iterable,
+    Mapping,
+    Sequence,
+)
 
 import bashlex
 
 # a function that takes a command and the environment, and returns the result
-EnvironmentExecutor = Callable[[List[str], Dict[str, str]], str]
+EnvironmentExecutor = Callable[[list[str], dict[str, str]], str]
 
 
 def local_environment_executor(command: Sequence[str], env: Mapping[str, str]) -> str:
     return subprocess.run(command, env=env, text=True, stdout=subprocess.PIPE, check=True).stdout
 
 
-@dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True, kw_only=True)
 class NodeExecutionContext:
     environment: dict[str, str]
     input: str

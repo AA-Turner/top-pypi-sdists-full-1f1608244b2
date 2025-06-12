@@ -1,10 +1,12 @@
-# Copyright 2019-2024 The University of Manchester, UK
-# Copyright 2020-2024 Vlaams Instituut voor Biotechnologie (VIB), BE
-# Copyright 2020-2024 Barcelona Supercomputing Center (BSC), ES
-# Copyright 2020-2024 Center for Advanced Studies, Research and Development in Sardinia (CRS4), IT
-# Copyright 2022-2024 École Polytechnique Fédérale de Lausanne, CH
-# Copyright 2024 Data Centre, SciLifeLab, SE
-# Copyright 2024 National Institute of Informatics (NII), JP
+# Copyright 2019-2025 The University of Manchester, UK
+# Copyright 2020-2025 Vlaams Instituut voor Biotechnologie (VIB), BE
+# Copyright 2020-2025 Barcelona Supercomputing Center (BSC), ES
+# Copyright 2020-2025 Center for Advanced Studies, Research and Development in Sardinia (CRS4), IT
+# Copyright 2022-2025 École Polytechnique Fédérale de Lausanne, CH
+# Copyright 2024-2025 Data Centre, SciLifeLab, SE
+# Copyright 2024-2025 National Institute of Informatics (NII), JP
+# Copyright 2025 Senckenberg Society for Nature Research (SGN), DE
+# Copyright 2025 European Molecular Biology Laboratory (EMBL), Heidelberg, DE
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,6 +33,7 @@ from collections import OrderedDict
 from pathlib import Path
 from urllib.parse import urljoin
 
+from .memory_buffer import MemoryBuffer
 from .model import (
     ComputationalWorkflow,
     ComputerLanguage,
@@ -57,7 +60,7 @@ from .model.computerlanguage import get_lang
 from .model.testservice import get_service
 from .model.softwareapplication import get_app
 
-from .utils import is_url, subclasses, get_norm_value, walk, as_list
+from .utils import is_url, subclasses, get_norm_value, walk, as_list, Mode
 from .metadata import read_metadata, find_root_entity_id
 
 
@@ -76,6 +79,8 @@ def pick_type(json_entity, type_map, fallback=None):
 class ROCrate():
 
     def __init__(self, source=None, gen_preview=False, init=False, exclude=None):
+        self.mode = None
+        self.source = source
         self.exclude = exclude
         self.__entity_map = {}
         # TODO: add this as @base in the context? At least when loading
@@ -86,11 +91,15 @@ class ROCrate():
         if gen_preview:
             self.add(Preview(self))
         if not source:
-            # create a new ro-crate
+            self.mode = Mode.CREATE
             self.add(RootDataset(self), Metadata(self))
         elif init:
+            self.mode = Mode.INIT
+            if isinstance(source, dict):
+                raise ValueError("parameter 'init' is not compatible with a dict source")
             self.__init_from_tree(source, gen_preview=gen_preview)
         else:
+            self.mode = Mode.READ
             source = self.__read(source, gen_preview=gen_preview)
         # in the zip case, self.source is the extracted dir
         self.source = source
@@ -172,7 +181,8 @@ class ROCrate():
                 else:
                     instance = cls(self, source / id_, id_, properties=entity)
             self.add(instance)
-            self.__add_parts(as_list(entity.get("hasPart", [])), entities, source)
+            if instance.type == "Dataset":
+                self.__add_parts(as_list(entity.get("hasPart", [])), entities, source)
 
     def __read_contextual_entities(self, entities):
         type_map = {_.__name__: _ for _ in subclasses(ContextEntity)}
@@ -469,15 +479,56 @@ class ROCrate():
 
     def write_zip(self, out_path):
         out_path = Path(out_path)
-        if out_path.suffix == ".zip":
-            out_path = out_path.parent / out_path.stem
-        tmp_dir = tempfile.mkdtemp(prefix="rocrate_")
-        try:
-            self.write(tmp_dir)
-            archive = shutil.make_archive(out_path, "zip", tmp_dir)
-        finally:
-            shutil.rmtree(tmp_dir)
-        return archive
+        with open(out_path, "wb") as f:
+            for chunk in self._stream_zip(out_path=out_path):
+                f.write(chunk)
+        return out_path
+
+    def stream_zip(self, chunk_size=8192):
+        """ Create a stream of bytes representing the RO-Crate as a ZIP file. """
+        yield from self._stream_zip(chunk_size=chunk_size)
+
+    def _stream_zip(self, chunk_size=8192, out_path=None):
+        """ Create a stream of bytes representing the RO-Crate as a ZIP file.
+        The out_path argument is used to exclude the file from the ZIP stream if the output is inside the crate folder
+        and can be omitted if the stream is not written into a file inside the crate dir.
+        """
+        with MemoryBuffer() as buffer:
+            with zipfile.ZipFile(buffer, mode='w', compression=zipfile.ZIP_DEFLATED) as archive:
+                for writeable_entity in self.data_entities + self.default_entities:
+                    current_file_path, current_out_file = None, None
+                    for path, chunk in writeable_entity.stream(chunk_size=chunk_size):
+                        if path != current_file_path:
+                            if current_out_file:
+                                current_out_file.close()
+                            current_file_path = path
+                            current_out_file = archive.open(path, mode='w', force_zip64=True)
+                        current_out_file.write(chunk)
+                        while len(buffer) >= chunk_size:
+                            yield buffer.read(chunk_size)
+                    if current_out_file:
+                        current_out_file.close()
+
+                # add additional unlisted files to stream
+                listed_files = [archived_file for archived_file in archive.namelist()]
+                for root, dirs, files in walk(str(self.source), exclude=self.exclude):
+                    for name in files:
+                        source = Path(root) / name
+
+                        # ignore out_path to not include a zip in itself
+                        if out_path and out_path.samefile(source):
+                            continue
+
+                        rel = source.relative_to(self.source)
+                        if not self.dereference(str(rel)) and not str(rel) in listed_files:
+                            with archive.open(str(rel), mode='w') as out_file, open(source, 'rb') as in_file:
+                                while chunk := in_file.read(chunk_size):
+                                    out_file.write(chunk)
+                                    while len(buffer) >= chunk_size:
+                                        yield buffer.read(chunk_size)
+
+            while chunk := buffer.read(chunk_size):
+                yield chunk
 
     def add_workflow(
             self, source=None, dest_path=None, fetch_remote=False, validate_url=False, properties=None,
@@ -580,6 +631,47 @@ class ROCrate():
             action["result"] = result
         self.root_dataset.append_to("mentions", action)
         return action
+
+    def add_formal_parameter(
+            self,
+            name,
+            additionalType,
+            identifier=None,
+            description=None,
+            valueRequired=False,
+            defaultValue=None,
+            properties=None
+    ):
+        """\
+        Add a FormalParameter to describe an input or output of a workflow.
+
+        A FormalParameter represents an input or output slot of a workflow, not
+        the actual value taken by a parameter. For further information see
+        https://w3id.org/ro/wfrun/workflow
+
+        Returns the created FormalParameter entity, which can be associated to
+        a workflow (e.g. as an input) using the syntax:
+          workflow_entity.append_to("input", formal_parameter_entity)
+        """
+        if properties is None:
+            properties = {}
+        props = {
+            "@type": "FormalParameter",
+            "name": name,
+            "additionalType": additionalType,
+            "valueRequired": valueRequired,
+            "conformsTo": {
+                "@id": "https://bioschemas.org/profiles/FormalParameter/1.0-RELEASE"
+            }
+        }
+        if description:
+            props["description"] = description
+        if defaultValue:
+            props["defaultValue"] = defaultValue
+        props.update(properties)
+        return self.add(
+            ContextEntity(self, identifier=identifier, properties=props)
+        )
 
     def add_jsonld(self, jsonld):
         """Add a JSON-LD dictionary as a contextual entity to the RO-Crate.

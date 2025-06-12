@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from __future__ import annotations
 
+import dataclasses
 import difflib
 import logging
-from dataclasses import dataclass
+import tomllib
 from pathlib import Path
 from typing import Final
 
@@ -15,8 +15,6 @@ import rich
 from packaging.version import InvalidVersion, Version
 from rich.logging import RichHandler
 from rich.syntax import Syntax
-
-from cibuildwheel._compat import tomllib
 
 log = logging.getLogger("cibw")
 
@@ -29,7 +27,7 @@ NODEJS_DIST: Final[str] = "https://nodejs.org/dist/"
 NODEJS_INDEX: Final[str] = f"{NODEJS_DIST}index.json"
 
 
-@dataclass(frozen=True, order=True)
+@dataclasses.dataclass(frozen=True, order=True)
 class VersionTuple:
     version: Version
     version_string: str

@@ -7,8 +7,8 @@ import sys
 ###########################################################################
 
 # Check Python's version info and exit early if it is too old
-if sys.version_info < (3, 8):
-    print("This module requires Python >= 3.8")
+if sys.version_info < (3, 9):
+    print("This module requires Python >= 3.9")
     sys.exit(0)
 
 ###########################################################################
@@ -16,7 +16,7 @@ if sys.version_info < (3, 8):
 from setuptools import find_packages, setup, Command, Extension
 
 try:
-    from wheel.bdist_wheel import bdist_wheel
+    from setuptools.command.bdist_wheel import bdist_wheel
 except ImportError:
     bdist_wheel = None
 
@@ -280,7 +280,7 @@ class IgraphCCoreCMakeBuilder:
             args.append("-DIGRAPH_GRAPHML_SUPPORT:BOOL=OFF")
 
         # Build the Python interface with vendored libraries
-        for deps in "ARPACK BLAS GLPK GMP LAPACK".split():
+        for deps in "ARPACK BLAS GLPK GMP LAPACK PLFIT".split():
             args.append("-DIGRAPH_USE_INTERNAL_" + deps + "=ON")
 
         # Use link-time optinization if available
@@ -916,8 +916,6 @@ else:
     bdist_wheel_abi3 = None
 
 # We are going to build an abi3 wheel if we are at least on CPython 3.9.
-# This is because the C code contains conditionals for CPython 3.8 so we cannot
-# use an abi3 wheel built with CPython 3.8 on CPython 3.9
 should_build_abi3_wheel = (
     bdist_wheel_abi3
     and platform.python_implementation() == "CPython"
@@ -955,7 +953,7 @@ library, primarily aimed at complex network research and analysis.
 Graph plotting functionality is provided by the Cairo library, so make
 sure you install the Python bindings of Cairo if you want to generate
 publication-quality graph plots. You can try either `pycairo
-<http://cairographics.org/pycairo>`_ or `cairocffi <http://cairocffi.readthedocs.io>`_,
+<http://cairographics.org/pycairo>`_ or `cairocffi <https://doc.courtbouillon.org/cairocffi/>`_,
 ``cairocffi`` is recommended because there were bug reports affecting igraph
 graph plots in Jupyter notebooks when using ``pycairo`` (but not with
 ``cairocffi``).
@@ -985,7 +983,7 @@ options = {
         "Bug Tracker": "https://github.com/igraph/python-igraph/issues",
         "Changelog": "https://github.com/igraph/python-igraph/blob/main/CHANGELOG.md",
         "CI": "https://github.com/igraph/python-igraph/actions",
-        "Documentation": "https://igraph.readthedocs.io",
+        "Documentation": "https://python.igraph.org",
         "Source Code": "https://github.com/igraph/python-igraph",
     },
     "ext_modules": [igraph_extension],
@@ -1022,6 +1020,15 @@ options = {
             "plotly>=5.3.0",
             "Pillow>=9; platform_python_implementation != 'PyPy'",
         ],
+        # Dependencies needed for testing on Windows ARM64; only those that are either
+        # pure Python or have Windows ARM64 wheels as we don't want to compile wheels
+        # in CI
+        "test-win-arm64": [
+            "cairocffi>=1.2.0",
+            "networkx>=2.5",
+            "pytest>=7.0.1",
+            "pytest-timeout>=2.1.0",
+        ],
         # Dependencies needed for testing on musllinux; only those that are either
         # pure Python or have musllinux wheels as we don't want to compile wheels
         # in CI
@@ -1039,7 +1046,7 @@ options = {
             "pydoctor>=23.4.0",
         ],
     },
-    "python_requires": ">=3.8",
+    "python_requires": ">=3.9",
     "headers": headers,
     "platforms": "ALL",
     "keywords": [
@@ -1057,11 +1064,11 @@ options = {
         "Operating System :: OS Independent",
         "Programming Language :: C",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: 3 :: Only",
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Information Analysis",

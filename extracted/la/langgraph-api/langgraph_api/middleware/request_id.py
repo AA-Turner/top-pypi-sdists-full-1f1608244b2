@@ -21,6 +21,8 @@ class RequestIdMiddleware:
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send):
         if scope["type"] == "http" and self.pattern.match(scope["path"]):
+            from langgraph_api.logging import set_logging_context
+
             request_id = next(
                 (h[1] for h in scope["headers"] if h[0] == b"x-request-id"),
                 None,
@@ -29,4 +31,5 @@ class RequestIdMiddleware:
                 request_id = str(uuid.uuid4()).encode()
                 scope["headers"].append((b"x-request-id", request_id))
             scope["request_start_time_ms"] = int(time.time() * 1000)
+            set_logging_context({"request_id": request_id.decode()})
         await self.app(scope, receive, send)

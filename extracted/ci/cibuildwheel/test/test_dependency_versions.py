@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import platform
 import re
 import textwrap
@@ -7,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-import cibuildwheel.util
+from cibuildwheel.util import resources
 
 from . import test_projects, utils
 
@@ -53,14 +51,18 @@ def get_versions_from_constraint_file(constraint_file: Path) -> dict[str, str]:
     return dict(re.findall(VERSION_REGEX, constraint_file_text))
 
 
-@pytest.mark.parametrize("python_version", ["3.6", "3.8", "3.12"])
+@pytest.mark.parametrize("python_version", ["3.8", "3.12"])
 def test_pinned_versions(tmp_path, python_version, build_frontend_env_nouv):
-    if utils.platform == "linux":
+    if utils.get_platform() == "linux":
         pytest.skip("linux doesn't pin individual tool versions, it pins manylinux images instead")
-    if python_version == "3.6" and utils.platform == "macos" and platform.machine() == "arm64":
-        pytest.skip("macOS arm64 does not support Python 3.6")
-    if python_version != "3.12" and utils.platform == "pyodide":
+    if python_version != "3.12" and utils.get_platform() == "pyodide":
         pytest.skip(f"pyodide does not support Python {python_version}")
+    if (
+        python_version == "3.8"
+        and utils.get_platform() == "windows"
+        and platform.machine() == "ARM64"
+    ):
+        pytest.skip(f"Windows ARM64 does not support Python {python_version}")
 
     project_dir = tmp_path / "project"
     project_with_expected_version_checks.generate(project_dir)
@@ -68,8 +70,11 @@ def test_pinned_versions(tmp_path, python_version, build_frontend_env_nouv):
     version_no_dot = python_version.replace(".", "")
     build_environment = {}
     build_pattern = f"[cp]p{version_no_dot}-*"
-    constraint_filename = f"constraints-python{version_no_dot}.txt"
-    constraint_file = cibuildwheel.util.resources_dir / constraint_filename
+    if utils.get_platform() == "pyodide":
+        constraint_filename = f"constraints-pyodide{version_no_dot}.txt"
+    else:
+        constraint_filename = f"constraints-python{version_no_dot}.txt"
+    constraint_file = resources.PATH / constraint_filename
     constraint_versions = get_versions_from_constraint_file(constraint_file)
 
     build_environment["EXPECTED_PIP_VERSION"] = constraint_versions["pip"]
@@ -96,8 +101,9 @@ def test_pinned_versions(tmp_path, python_version, build_frontend_env_nouv):
     assert set(actual_wheels) == set(expected_wheels)
 
 
-def test_dependency_constraints_file(tmp_path, build_frontend_env_nouv):
-    if utils.platform == "linux":
+@pytest.mark.parametrize("method", ["inline", "file"])
+def test_dependency_constraints(method, tmp_path, build_frontend_env_nouv):
+    if utils.get_platform() == "linux":
         pytest.skip("linux doesn't pin individual tool versions, it pins manylinux images instead")
 
     project_dir = tmp_path / "project"
@@ -108,17 +114,37 @@ def test_dependency_constraints_file(tmp_path, build_frontend_env_nouv):
         "delocate": "0.10.3",
     }
 
-    constraints_file = tmp_path / "constraints file.txt"
-    constraints_file.write_text(
-        textwrap.dedent(
-            """
-            pip=={pip}
-            delocate=={delocate}
-            """.format(**tool_versions)
+    if method == "file":
+        constraints_file = tmp_path / "constraints file.txt"
+        constraints_file.write_text(
+            textwrap.dedent(
+                """
+                pip=={pip}
+                delocate=={delocate}
+                """.format(**tool_versions)
+            )
         )
-    )
+        dependency_version_option = str(constraints_file)
+    elif method == "inline":
+        dependency_version_option = "packages: " + " ".join(
+            f"{k}=={v}" for k, v in tool_versions.items()
+        )
+    else:
+        msg = f"Unknown method: {method}"
+        raise ValueError(msg)
 
     build_environment = {}
+
+    if (
+        utils.get_platform() == "windows"
+        and method == "file"
+        and build_frontend_env_nouv["CIBW_BUILD_FRONTEND"] == "build"
+    ):
+        # GraalPy fails to discover its standard library when a venv is created
+        # from a virtualenv seeded executable. See
+        # https://github.com/oracle/graalpython/issues/491 and remove this once
+        # fixed upstream.
+        build_frontend_env_nouv["CIBW_SKIP"] = "gp*"
 
     for package_name, version in tool_versions.items():
         env_name = f"EXPECTED_{package_name.upper()}_VERSION"
@@ -131,13 +157,21 @@ def test_dependency_constraints_file(tmp_path, build_frontend_env_nouv):
         project_dir,
         add_env={
             "CIBW_ENVIRONMENT": cibw_environment_option,
-            "CIBW_DEPENDENCY_VERSIONS": str(constraints_file),
-            "CIBW_SKIP": "cp36-*",
+            "CIBW_DEPENDENCY_VERSIONS": dependency_version_option,
             **build_frontend_env_nouv,
         },
     )
 
     # also check that we got the right wheels
-    expected_wheels = [w for w in utils.expected_wheels("spam", "0.1.0") if "-cp36" not in w]
+    expected_wheels = utils.expected_wheels("spam", "0.1.0")
+
+    if (
+        utils.get_platform() == "windows"
+        and method == "file"
+        and build_frontend_env_nouv["CIBW_BUILD_FRONTEND"] == "build"
+    ):
+        # See reference to https://github.com/oracle/graalpython/issues/491
+        # above
+        expected_wheels = [w for w in expected_wheels if "graalpy" not in w]
 
     assert set(actual_wheels) == set(expected_wheels)

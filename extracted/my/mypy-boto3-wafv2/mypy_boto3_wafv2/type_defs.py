@@ -40,6 +40,7 @@ from .literals import (
     JsonMatchScopeType,
     LabelMatchScopeType,
     LogScopeType,
+    LowReputationModeType,
     MapMatchScopeType,
     OversizeHandlingType,
     PayloadTypeType,
@@ -50,8 +51,10 @@ from .literals import (
     ResponseContentTypeType,
     ScopeType,
     SensitivityLevelType,
+    SensitivityToActType,
     SizeInspectionLimitType,
     TextTransformationTypeType,
+    UsageOfActionType,
 )
 
 if sys.version_info >= (3, 9):
@@ -74,6 +77,9 @@ __all__ = (
     "AWSManagedRulesATPRuleSetOutputTypeDef",
     "AWSManagedRulesATPRuleSetTypeDef",
     "AWSManagedRulesATPRuleSetUnionTypeDef",
+    "AWSManagedRulesAntiDDoSRuleSetOutputTypeDef",
+    "AWSManagedRulesAntiDDoSRuleSetTypeDef",
+    "AWSManagedRulesAntiDDoSRuleSetUnionTypeDef",
     "AWSManagedRulesBotControlRuleSetTypeDef",
     "ActionConditionTypeDef",
     "AddressFieldTypeDef",
@@ -110,6 +116,12 @@ __all__ = (
     "ChallengeResponseTypeDef",
     "CheckCapacityRequestTypeDef",
     "CheckCapacityResponseTypeDef",
+    "ClientSideActionConfigOutputTypeDef",
+    "ClientSideActionConfigTypeDef",
+    "ClientSideActionConfigUnionTypeDef",
+    "ClientSideActionOutputTypeDef",
+    "ClientSideActionTypeDef",
+    "ClientSideActionUnionTypeDef",
     "ConditionTypeDef",
     "CookieMatchPatternOutputTypeDef",
     "CookieMatchPatternTypeDef",
@@ -274,6 +286,7 @@ __all__ = (
     "NotStatementOutputTypeDef",
     "NotStatementTypeDef",
     "NotStatementUnionTypeDef",
+    "OnSourceDDoSProtectionConfigTypeDef",
     "OrStatementOutputTypeDef",
     "OrStatementTypeDef",
     "OrStatementUnionTypeDef",
@@ -483,6 +496,10 @@ class ResponseMetadataTypeDef(TypedDict):
     HostId: NotRequired[str]
 
 
+class RegexTypeDef(TypedDict):
+    RegexString: NotRequired[str]
+
+
 class LabelNameConditionTypeDef(TypedDict):
     LabelName: str
 
@@ -517,10 +534,6 @@ class IPSetSummaryTypeDef(TypedDict):
     ARN: NotRequired[str]
 
 
-class RegexTypeDef(TypedDict):
-    RegexString: NotRequired[str]
-
-
 class RegexPatternSetSummaryTypeDef(TypedDict):
     Name: NotRequired[str]
     Id: NotRequired[str]
@@ -546,6 +559,10 @@ class RuleGroupSummaryTypeDef(TypedDict):
     Description: NotRequired[str]
     LockToken: NotRequired[str]
     ARN: NotRequired[str]
+
+
+class OnSourceDDoSProtectionConfigTypeDef(TypedDict):
+    ALBLowReputationMode: LowReputationModeType
 
 
 class WebACLSummaryTypeDef(TypedDict):
@@ -1201,6 +1218,35 @@ class UpdateWebACLResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class ClientSideActionOutputTypeDef(TypedDict):
+    UsageOfAction: UsageOfActionType
+    Sensitivity: NotRequired[SensitivityToActType]
+    ExemptUriRegularExpressions: NotRequired[List[RegexTypeDef]]
+
+
+class ClientSideActionTypeDef(TypedDict):
+    UsageOfAction: UsageOfActionType
+    Sensitivity: NotRequired[SensitivityToActType]
+    ExemptUriRegularExpressions: NotRequired[Sequence[RegexTypeDef]]
+
+
+class RegexPatternSetTypeDef(TypedDict):
+    Name: NotRequired[str]
+    Id: NotRequired[str]
+    ARN: NotRequired[str]
+    Description: NotRequired[str]
+    RegularExpressionList: NotRequired[List[RegexTypeDef]]
+
+
+class UpdateRegexPatternSetRequestTypeDef(TypedDict):
+    Name: str
+    Scope: ScopeType
+    Id: str
+    RegularExpressionList: Sequence[RegexTypeDef]
+    LockToken: str
+    Description: NotRequired[str]
+
+
 class ConditionTypeDef(TypedDict):
     ActionCondition: NotRequired[ActionConditionTypeDef]
     LabelNameCondition: NotRequired[LabelNameConditionTypeDef]
@@ -1220,6 +1266,14 @@ class CreateIPSetRequestTypeDef(TypedDict):
     Scope: ScopeType
     IPAddressVersion: IPAddressVersionType
     Addresses: Sequence[str]
+    Description: NotRequired[str]
+    Tags: NotRequired[Sequence[TagTypeDef]]
+
+
+class CreateRegexPatternSetRequestTypeDef(TypedDict):
+    Name: str
+    Scope: ScopeType
+    RegularExpressionList: Sequence[RegexTypeDef]
     Description: NotRequired[str]
     Tags: NotRequired[Sequence[TagTypeDef]]
 
@@ -1250,31 +1304,6 @@ class ListIPSetsResponseTypeDef(TypedDict):
     NextMarker: str
     IPSets: List[IPSetSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
-
-
-class CreateRegexPatternSetRequestTypeDef(TypedDict):
-    Name: str
-    Scope: ScopeType
-    RegularExpressionList: Sequence[RegexTypeDef]
-    Description: NotRequired[str]
-    Tags: NotRequired[Sequence[TagTypeDef]]
-
-
-class RegexPatternSetTypeDef(TypedDict):
-    Name: NotRequired[str]
-    Id: NotRequired[str]
-    ARN: NotRequired[str]
-    Description: NotRequired[str]
-    RegularExpressionList: NotRequired[List[RegexTypeDef]]
-
-
-class UpdateRegexPatternSetRequestTypeDef(TypedDict):
-    Name: str
-    Scope: ScopeType
-    Id: str
-    RegularExpressionList: Sequence[RegexTypeDef]
-    LockToken: str
-    Description: NotRequired[str]
 
 
 class CreateRegexPatternSetResponseTypeDef(TypedDict):
@@ -1539,6 +1568,19 @@ class RateBasedStatementCustomKeyOutputTypeDef(TypedDict):
 RateLimitUriPathUnionTypeDef = Union[RateLimitUriPathTypeDef, RateLimitUriPathOutputTypeDef]
 
 
+class ClientSideActionConfigOutputTypeDef(TypedDict):
+    Challenge: ClientSideActionOutputTypeDef
+
+
+ClientSideActionUnionTypeDef = Union[ClientSideActionTypeDef, ClientSideActionOutputTypeDef]
+
+
+class GetRegexPatternSetResponseTypeDef(TypedDict):
+    RegexPatternSet: RegexPatternSetTypeDef
+    LockToken: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
 class FilterOutputTypeDef(TypedDict):
     Behavior: FilterBehaviorType
     Requirement: FilterRequirementType
@@ -1565,12 +1607,6 @@ class GetMobileSdkReleaseResponseTypeDef(TypedDict):
 class ListTagsForResourceResponseTypeDef(TypedDict):
     NextMarker: str
     TagInfoForResource: TagInfoForResourceTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
-class GetRegexPatternSetResponseTypeDef(TypedDict):
-    RegexPatternSet: RegexPatternSetTypeDef
-    LockToken: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -1714,6 +1750,15 @@ class RateBasedStatementCustomKeyTypeDef(TypedDict):
     ASN: NotRequired[Mapping[str, Any]]
 
 
+class AWSManagedRulesAntiDDoSRuleSetOutputTypeDef(TypedDict):
+    ClientSideActionConfig: ClientSideActionConfigOutputTypeDef
+    SensitivityToBlock: NotRequired[SensitivityToActType]
+
+
+class ClientSideActionConfigTypeDef(TypedDict):
+    Challenge: ClientSideActionUnionTypeDef
+
+
 class LoggingFilterOutputTypeDef(TypedDict):
     Filters: List[FilterOutputTypeDef]
     DefaultBehavior: FilterBehaviorType
@@ -1820,18 +1865,6 @@ class XssMatchStatementOutputTypeDef(TypedDict):
 
 
 JsonBodyUnionTypeDef = Union[JsonBodyTypeDef, JsonBodyOutputTypeDef]
-
-
-class ManagedRuleGroupConfigOutputTypeDef(TypedDict):
-    LoginPath: NotRequired[str]
-    PayloadType: NotRequired[PayloadTypeType]
-    UsernameField: NotRequired[UsernameFieldTypeDef]
-    PasswordField: NotRequired[PasswordFieldTypeDef]
-    AWSManagedRulesBotControlRuleSet: NotRequired[AWSManagedRulesBotControlRuleSetTypeDef]
-    AWSManagedRulesATPRuleSet: NotRequired[AWSManagedRulesATPRuleSetOutputTypeDef]
-    AWSManagedRulesACFPRuleSet: NotRequired[AWSManagedRulesACFPRuleSetOutputTypeDef]
-
-
 ResponseInspectionUnionTypeDef = Union[ResponseInspectionTypeDef, ResponseInspectionOutputTypeDef]
 
 
@@ -1845,6 +1878,22 @@ class GetSampledRequestsRequestTypeDef(TypedDict):
 
 RateBasedStatementCustomKeyUnionTypeDef = Union[
     RateBasedStatementCustomKeyTypeDef, RateBasedStatementCustomKeyOutputTypeDef
+]
+
+
+class ManagedRuleGroupConfigOutputTypeDef(TypedDict):
+    LoginPath: NotRequired[str]
+    PayloadType: NotRequired[PayloadTypeType]
+    UsernameField: NotRequired[UsernameFieldTypeDef]
+    PasswordField: NotRequired[PasswordFieldTypeDef]
+    AWSManagedRulesBotControlRuleSet: NotRequired[AWSManagedRulesBotControlRuleSetTypeDef]
+    AWSManagedRulesATPRuleSet: NotRequired[AWSManagedRulesATPRuleSetOutputTypeDef]
+    AWSManagedRulesACFPRuleSet: NotRequired[AWSManagedRulesACFPRuleSetOutputTypeDef]
+    AWSManagedRulesAntiDDoSRuleSet: NotRequired[AWSManagedRulesAntiDDoSRuleSetOutputTypeDef]
+
+
+ClientSideActionConfigUnionTypeDef = Union[
+    ClientSideActionConfigTypeDef, ClientSideActionConfigOutputTypeDef
 ]
 
 
@@ -1921,6 +1970,11 @@ class RateBasedStatementTypeDef(TypedDict):
     ScopeDownStatement: NotRequired[Mapping[str, Any]]
     ForwardedIPConfig: NotRequired[ForwardedIPConfigTypeDef]
     CustomKeys: NotRequired[Sequence[RateBasedStatementCustomKeyUnionTypeDef]]
+
+
+class AWSManagedRulesAntiDDoSRuleSetTypeDef(TypedDict):
+    ClientSideActionConfig: ClientSideActionConfigUnionTypeDef
+    SensitivityToBlock: NotRequired[SensitivityToActType]
 
 
 class GetLoggingConfigurationResponseTypeDef(TypedDict):
@@ -2004,6 +2058,9 @@ AWSManagedRulesATPRuleSetUnionTypeDef = Union[
     AWSManagedRulesATPRuleSetTypeDef, AWSManagedRulesATPRuleSetOutputTypeDef
 ]
 RateBasedStatementUnionTypeDef = Union[RateBasedStatementTypeDef, RateBasedStatementOutputTypeDef]
+AWSManagedRulesAntiDDoSRuleSetUnionTypeDef = Union[
+    AWSManagedRulesAntiDDoSRuleSetTypeDef, AWSManagedRulesAntiDDoSRuleSetOutputTypeDef
+]
 OverrideActionUnionTypeDef = Union[OverrideActionTypeDef, OverrideActionOutputTypeDef]
 
 
@@ -2084,6 +2141,7 @@ class ManagedRuleGroupConfigTypeDef(TypedDict):
     AWSManagedRulesBotControlRuleSet: NotRequired[AWSManagedRulesBotControlRuleSetTypeDef]
     AWSManagedRulesATPRuleSet: NotRequired[AWSManagedRulesATPRuleSetUnionTypeDef]
     AWSManagedRulesACFPRuleSet: NotRequired[AWSManagedRulesACFPRuleSetUnionTypeDef]
+    AWSManagedRulesAntiDDoSRuleSet: NotRequired[AWSManagedRulesAntiDDoSRuleSetUnionTypeDef]
 
 
 class FirewallManagerRuleGroupTypeDef(TypedDict):
@@ -2168,6 +2226,7 @@ class WebACLTypeDef(TypedDict):
     TokenDomains: NotRequired[List[str]]
     AssociationConfig: NotRequired[AssociationConfigOutputTypeDef]
     RetrofittedByFirewallManager: NotRequired[bool]
+    OnSourceDDoSProtectionConfig: NotRequired[OnSourceDDoSProtectionConfigTypeDef]
 
 
 RuleActionOverrideUnionTypeDef = Union[RuleActionOverrideTypeDef, RuleActionOverrideOutputTypeDef]
@@ -2282,6 +2341,7 @@ class CreateWebACLRequestTypeDef(TypedDict):
     ChallengeConfig: NotRequired[ChallengeConfigTypeDef]
     TokenDomains: NotRequired[Sequence[str]]
     AssociationConfig: NotRequired[AssociationConfigUnionTypeDef]
+    OnSourceDDoSProtectionConfig: NotRequired[OnSourceDDoSProtectionConfigTypeDef]
 
 
 class UpdateRuleGroupRequestTypeDef(TypedDict):
@@ -2310,3 +2370,4 @@ class UpdateWebACLRequestTypeDef(TypedDict):
     ChallengeConfig: NotRequired[ChallengeConfigTypeDef]
     TokenDomains: NotRequired[Sequence[str]]
     AssociationConfig: NotRequired[AssociationConfigUnionTypeDef]
+    OnSourceDDoSProtectionConfig: NotRequired[OnSourceDDoSProtectionConfigTypeDef]

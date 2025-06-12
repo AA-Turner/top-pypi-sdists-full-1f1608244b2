@@ -788,7 +788,7 @@ class Transaction(Resource):
         The values in this field will vary from gateway to gateway.
     id : str
         Transaction ID
-    indicator : str
+    initiator : str
         Must be sent for one-time transactions in order to provide context on which entity is submitting the transaction to ensure proper fraud checks are observed, such as 3DS. If the customer is in session, send `customer`. If this is a merchant initiated one-time transaction, send `merchant`.
     invoice : InvoiceMini
         Invoice mini details
@@ -870,7 +870,7 @@ class Transaction(Resource):
         "gateway_response_time": float,
         "gateway_response_values": dict,
         "id": str,
-        "indicator": str,
+        "initiator": str,
         "invoice": "InvoiceMini",
         "ip_address_country": str,
         "ip_address_v4": str,
@@ -1602,6 +1602,8 @@ class Invoice(Resource):
         If the invoice is charging or refunding for one or more subscriptions, these are their IDs.
     subtotal : float
         The summation of charges and credits, before discounts and taxes.
+    subtotal_after_discount : float
+        The summation of charges and credits, after discounts applied.
     tax : float
         The total tax on this invoice.
     tax_info : TaxInfo
@@ -1660,6 +1662,7 @@ class Invoice(Resource):
         "state": str,
         "subscription_ids": list,
         "subtotal": float,
+        "subtotal_after_discount": float,
         "tax": float,
         "tax_info": "TaxInfo",
         "terms_and_conditions": str,
@@ -1805,7 +1808,7 @@ class LineItem(Resource):
     add_on_id : str
         If the line item is a charge or credit for an add-on this is its ID.
     amount : float
-        `(quantity * unit_amount) - (discount + tax)`
+        `(quantity * unit_amount) - discount + tax`
     avalara_service_type : int
         Used by Avalara for Communications taxes. The transaction type in combination with the service type describe how the line item is taxed. Refer to [the documentation](https://help.avalara.com/AvaTax_for_Communications/Tax_Calculation/AvaTax_for_Communications_Tax_Engine/Mapping_Resources/TM_00115_AFC_Modules_Corresponding_Transaction_Types) for more available t/s types.
     avalara_transaction_type : int

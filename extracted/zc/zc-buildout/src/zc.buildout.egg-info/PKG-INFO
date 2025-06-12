@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: zc.buildout
-Version: 4.1.10
+Version: 4.1.12
 Summary: System for managing development buildouts
 Home-page: http://buildout.org
 Author: Jim Fulton
@@ -105,6 +105,33 @@ Change History
    https://github.com/buildout/buildout/blob/master/doc/ADD-A-NEWS-ITEM.rst
 
 .. towncrier release notes start
+
+4.1.12 (2025-06-11)
+-------------------
+
+Bug fixes:
+
+
+- Fix error ``get_win_launcher`` not found on Windows on setuptools 80.3+.
+  [maurits] (#713)
+
+
+4.1.11 (2025-06-11)
+-------------------
+
+Bug fixes:
+
+
+- Fix development installs to still work when using setuptools 80.0.0.
+  From then on, setuptools internally calls ``pip install --editable``.
+  Note that "distutils scripts" can no longer be detected with setuptools 80.
+  This seems an ancient technology, and probably hardly used.
+  [maurits] (#708)
+- Use a copy of ``package_index.py`` from ``setuptools`` 80.2.0.
+  This fixes compatibility with ``setuptools`` 80.3.0 where this module was removed.
+  Merged some of our patches into this copy.
+  [maurits] (#710)
+
 
 4.1.10 (2025-05-21)
 -------------------

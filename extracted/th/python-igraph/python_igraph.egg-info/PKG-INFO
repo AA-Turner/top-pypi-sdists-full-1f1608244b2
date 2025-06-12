@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: python-igraph
-Version: 0.11.8
+Version: 0.11.9
 Summary: High performance graph data structures and algorithms (legacy package)
 Home-page: https://igraph.org/python
 Author: Tamas Nepusz
@@ -33,7 +33,7 @@ Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Requires-Python: >=3.6
 License-File: LICENSE
-Requires-Dist: igraph==0.11.8
+Requires-Dist: igraph==0.11.9
 Provides-Extra: cairo
 Requires-Dist: cairocffi>=1.2.0; extra == "cairo"
 Provides-Extra: matplotlib
@@ -42,6 +42,20 @@ Provides-Extra: plotly
 Requires-Dist: plotly>=5.3.0; extra == "plotly"
 Provides-Extra: plotting
 Requires-Dist: cairocffi>=1.2.0; extra == "plotting"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: platform
+Dynamic: project-url
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 Python interface to the igraph high performance graph
 library, primarily aimed at complex network research and analysis.

@@ -5508,6 +5508,18 @@ class AWSManagedPolicies(enum.Enum):
     '''
     :stability: experimental
     '''
+    AWSSECURITY_HUB_V2_SERVICE_ROLE_POLICY = "AWSSECURITY_HUB_V2_SERVICE_ROLE_POLICY"
+    '''
+    :stability: experimental
+    '''
+    AWSNETWORK_FIREWALL_READ_ONLY_ACCESS = "AWSNETWORK_FIREWALL_READ_ONLY_ACCESS"
+    '''
+    :stability: experimental
+    '''
+    AWSNETWORK_FIREWALL_FULL_ACCESS = "AWSNETWORK_FIREWALL_FULL_ACCESS"
+    '''
+    :stability: experimental
+    '''
 
 
 class LambdaArmFunction(

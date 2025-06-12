@@ -7,12 +7,12 @@ from __future__ import annotations
 
 import itertools
 import platform as std_platform
-from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, fields
 from datetime import datetime
 from enum import Enum
 from logging import getLogger
-from typing import Any
+from types import MappingProxyType
+from typing import TYPE_CHECKING, Any
 
 from pytz import timezone
 from requests import RequestException
@@ -20,6 +20,9 @@ from requests import RequestException
 from .download import HTTP_SESSION, get_url
 from .errors import FetcherException
 from .utils import is_date, is_namespace, is_rev
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
 
 LOG = getLogger("fuzzfetch")
 
@@ -169,11 +172,18 @@ class BuildTask:
 
         if is_date(build):
             flag_str = flags.build_string()
+            if "-" in build:
+                build_date_ns = build.replace("-", ".")
+                filt = ""
+            else:
+                build_date_ns = f"{build[:4]}.{build[4:6]}.{build[6:8]}"
+                filt = build
             task_template_paths: Iterable[tuple[str, str]] = tuple(
                 (template, path + flag_str)
                 for (template, path) in cls._pushdate_template_paths(
-                    build.replace("-", "."), branch, target_platform
+                    build_date_ns, branch, target_platform
                 )
+                if filt in path
             )
 
         elif is_rev(build):
@@ -351,35 +361,47 @@ class HgRevision:
 class Platform:
     """Class representing target OS and CPU, and how it maps to a Gecko mozconfig"""
 
-    SUPPORTED = {
-        "Darwin": {
-            "arm64": "macosx64-aarch64",
-            "x86_64": "macosx64",
-        },
-        "Linux": {
-            "arm64": "linux64-aarch64",
-            "x86": "linux",
-            "x86_64": "linux64",
-        },
-        "Windows": {
-            "arm64": "win64-aarch64",
-            "x86": "win32",
-            "x86_64": "win64",
-        },
-        "Android": {
-            "arm": "android-arm",
-            "arm64": "android-aarch64",
-            "x86": "android-x86",
-            "x86_64": "android-x86_64",
-        },
-    }
-    CPU_ALIASES = {
-        "ARM64": "arm64",
-        "AMD64": "x86_64",
-        "aarch64": "arm64",
-        "i686": "x86",
-        "x64": "x86_64",
-    }
+    SUPPORTED = MappingProxyType(
+        {
+            "Darwin": MappingProxyType(
+                {
+                    "arm64": "macosx64-aarch64",
+                    "x86_64": "macosx64",
+                }
+            ),
+            "Linux": MappingProxyType(
+                {
+                    "arm64": "linux64-aarch64",
+                    "x86": "linux",
+                    "x86_64": "linux64",
+                }
+            ),
+            "Windows": MappingProxyType(
+                {
+                    "arm64": "win64-aarch64",
+                    "x86": "win32",
+                    "x86_64": "win64",
+                }
+            ),
+            "Android": MappingProxyType(
+                {
+                    "arm": "android-arm",
+                    "arm64": "android-aarch64",
+                    "x86": "android-x86",
+                    "x86_64": "android-x86_64",
+                }
+            ),
+        }
+    )
+    CPU_ALIASES = MappingProxyType(
+        {
+            "ARM64": "arm64",
+            "AMD64": "x86_64",
+            "aarch64": "arm64",
+            "i686": "x86",
+            "x64": "x86_64",
+        }
+    )
 
     def __init__(
         self,

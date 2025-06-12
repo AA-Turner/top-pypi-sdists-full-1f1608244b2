@@ -1,26 +1,19 @@
 #!/usr/bin/env python3
 
 # /// script
-# dependencies = ["click", "packaging", "tomli; python_version<'3.11'"]
+# dependencies = ["click", "packaging"]
 # ///
 
 
-from __future__ import annotations
-
-import glob
 import os
 import subprocess
 import sys
+import tomllib
 import urllib.parse
 from pathlib import Path
 
 import click
 from packaging.version import InvalidVersion, Version
-
-if sys.version_info < (3, 11):
-    import tomli as tomllib
-else:
-    import tomllib
 
 config = [
     # file path, version find/replace format
@@ -29,7 +22,6 @@ config = [
     ("cibuildwheel/__init__.py", '__version__ = "{}"'),
     ("docs/faq.md", "cibuildwheel=={}"),
     ("docs/faq.md", "cibuildwheel@v{}"),
-    ("docs/setup.md", "cibuildwheel=={}"),
     ("examples/*", "cibuildwheel=={}"),
     ("examples/*", "cibuildwheel@v{}"),
 ]
@@ -90,7 +82,7 @@ def bump_version() -> None:
     actions = []
 
     for path_pattern, version_pattern in config:
-        paths = [Path(p) for p in glob.glob(path_pattern)]
+        paths = list(Path().glob(path_pattern))
 
         if not paths:
             print(f"error: Pattern {path_pattern} didn't match any files")
@@ -137,8 +129,8 @@ def bump_version() -> None:
         contents = contents.replace(find, replace)
         path.write_text(contents, encoding="utf8")
 
-    print("Files updated. If you want to update the changelog as part of this")
-    print("commit, do that now.")
+    print("Files updated. If you want to update docs/changelog.md as part of")
+    print("this commit, do that now.")
     print()
 
     while input('Type "done" to continue: ').strip().lower() != "done":

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""InflatableObject utils."""
+"""InflatableObject gRPC utils."""
 
 
 from typing import Callable

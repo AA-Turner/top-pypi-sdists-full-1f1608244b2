@@ -103,13 +103,7 @@ def _deserialize_task_from_instance(task_instance) -> AsyncTask:
             return AsyncTask.from_dict(serialized)
     except (NotPresentErrorAlpha, NotPresentErrorBeta, NotPresentError):
         pass
+
     serialized = task_instance.to_dict()
-    # AsyncErrors data is always in additional_properties,
-    # It has no modeled properties of its own. They don't copy over properly so manually move them
-    try:
-        if hasattr(task_instance, "errors") and task_instance.errors is not None:
-            serialized["errors"] = task_instance.errors.additional_properties
-    except (NotPresentErrorAlpha, NotPresentErrorBeta, NotPresentError):
-        pass
     serialized["response"] = UNSET
     return AsyncTask.from_dict(serialized)

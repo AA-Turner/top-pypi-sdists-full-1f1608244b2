@@ -23,14 +23,12 @@ from hypothesis.strategies import (
     sets,
     timedeltas,
     timezones,
-    uuids,
 )
 from luigi import Task
 from numpy import inf, int64, isfinite, isinf, isnan, ravel, rint
 from pathvalidate import validate_filepath
 from pytest import mark, raises
-from sqlalchemy import Column, Integer, MetaData, Table, insert, select
-from sqlalchemy.ext.asyncio import AsyncEngine
+from whenever import Date, DateDelta, PlainDateTime, Time, TimeDelta, ZonedDateTime
 
 from tests.conftest import SKIPIF_CI_AND_WINDOWS
 from utilities.datetime import (
@@ -45,7 +43,6 @@ from utilities.datetime import (
 )
 from utilities.functions import ensure_int
 from utilities.hypothesis import (
-    _SQLALCHEMY_ENGINE_DIALECTS,
     MaybeSearchStrategy,
     PlainDateTimesError,
     Shape,
@@ -54,8 +51,10 @@ from utilities.hypothesis import (
     _Draw2InputResolvedToSentinelError,
     assume_does_not_raise,
     bool_arrays,
+    date_deltas_whenever,
     date_durations,
     dates_two_digit_year,
+    dates_whenever,
     datetime_durations,
     draw2,
     float32s,
@@ -77,13 +76,13 @@ from utilities.hypothesis import (
     pairs,
     paths,
     plain_datetimes,
+    plain_datetimes_whenever,
     random_states,
     sentinels,
     sets_fixed_length,
     settings_with_reduced_examples,
     setup_hypothesis_profiles,
     slices,
-    sqlalchemy_engines,
     str_arrays,
     temp_dirs,
     temp_paths,
@@ -93,12 +92,15 @@ from utilities.hypothesis import (
     text_clean,
     text_digits,
     text_printable,
+    time_deltas_whenever,
     timedeltas_2w,
+    times_whenever,
     triples,
     uint32s,
     uint64s,
     versions,
     zoned_datetimes,
+    zoned_datetimes_whenever,
 )
 from utilities.math import (
     MAX_FLOAT32,
@@ -119,7 +121,6 @@ from utilities.math import (
 from utilities.os import temp_environ
 from utilities.platform import maybe_yield_lower_case
 from utilities.sentinel import Sentinel
-from utilities.sqlalchemy import Dialect, _get_dialect
 from utilities.version import Version
 from utilities.whenever import (
     MAX_SERIALIZABLE_TIMEDELTA,
@@ -134,7 +135,6 @@ from utilities.whenever import (
 if TYPE_CHECKING:
     from collections.abc import Iterable
     from collections.abc import Set as AbstractSet
-    from uuid import UUID
     from zoneinfo import ZoneInfo
 
     from utilities.datetime import Month
@@ -183,6 +183,35 @@ class TestBoolArrays:
         array = data.draw(bool_arrays(shape=shape))
         assert array.dtype == bool
         assert array.shape == shape
+
+
+class TestDateDeltasWhenever:
+    @given(data=data(), parsable=booleans())
+    def test_main(self, *, data: DataObject, parsable: bool) -> None:
+        min_value = data.draw(date_deltas_whenever() | none())
+        max_value = data.draw(date_deltas_whenever() | none())
+        with assume_does_not_raise(InvalidArgument):
+            delta = data.draw(
+                date_deltas_whenever(
+                    min_value=min_value, max_value=max_value, parsable=parsable
+                )
+            )
+        assert isinstance(delta, DateDelta)
+        years, months, days = delta.in_years_months_days()
+        assert years == 0
+        assert months == 0
+        if min_value is not None:
+            min_years, min_months, min_days = min_value.in_years_months_days()
+            assert min_years == 0
+            assert min_months == 0
+            assert days >= min_days
+        if max_value is not None:
+            max_years, max_months, max_days = max_value.in_years_months_days()
+            assert max_years == 0
+            assert max_months == 0
+            assert days <= max_days
+        if parsable:
+            assert DateDelta.parse_common_iso(delta.format_common_iso()) == delta
 
 
 class TestDateDurations:
@@ -262,6 +291,21 @@ class TestDatesTwoDigitYear:
         year = f"{date:%y}"
         parsed = parse_two_digit_year(year)
         assert date.year == parsed
+
+
+class TestDatesWhenever:
+    @given(data=data())
+    def test_main(self, *, data: DataObject) -> None:
+        min_value = data.draw(dates_whenever() | none())
+        max_value = data.draw(dates_whenever() | none())
+        with assume_does_not_raise(InvalidArgument):
+            date = data.draw(dates_whenever(min_value=min_value, max_value=max_value))
+        assert isinstance(date, Date)
+        assert Date.parse_common_iso(date.format_common_iso()) == date
+        if min_value is not None:
+            assert date >= min_value
+        if max_value is not None:
+            assert date <= max_value
 
 
 class TestDateTimeDurations:
@@ -847,6 +891,23 @@ class TestPlainDateTimes:
             _ = data.draw(plain_datetimes(round_="standard"))
 
 
+class TestPlainDateTimesWhenever:
+    @given(data=data())
+    def test_main(self, *, data: DataObject) -> None:
+        min_value = data.draw(plain_datetimes_whenever() | none())
+        max_value = data.draw(plain_datetimes_whenever() | none())
+        with assume_does_not_raise(InvalidArgument):
+            datetime = data.draw(
+                plain_datetimes_whenever(min_value=min_value, max_value=max_value)
+            )
+        assert isinstance(datetime, PlainDateTime)
+        assert PlainDateTime.parse_common_iso(datetime.format_common_iso()) == datetime
+        if min_value is not None:
+            assert datetime >= min_value
+        if max_value is not None:
+            assert datetime <= max_value
+
+
 class TestRandomStates:
     @given(data=data())
     def test_main(self, *, data: DataObject) -> None:
@@ -915,38 +976,6 @@ class TestSlices:
             InvalidArgument, match=r"Slice length \d+ exceeds iterable length \d+"
         ):
             _ = data.draw(slices(iter_len, slice_len=iter_len + 1))
-
-
-class TestSQLAlchemyEngines:
-    @given(
-        data=data(),
-        name=uuids(),
-        dialect=_SQLALCHEMY_ENGINE_DIALECTS,
-        ids=sets(integers(0, 10), min_size=1),
-    )
-    @settings(phases={Phase.generate})
-    async def test_main(
-        self, *, data: DataObject, name: UUID, dialect: Dialect, ids: set[int]
-    ) -> None:
-        table = Table(
-            f"test_{name}", MetaData(), Column("id_", Integer, primary_key=True)
-        )
-        engine = await sqlalchemy_engines(data, table, dialect=dialect)
-        assert isinstance(engine, AsyncEngine)
-        assert _get_dialect(engine) == dialect
-        if dialect == "sqlite":
-            database = engine.url.database
-            assert database is not None
-            assert not Path(database).exists()
-        async with engine.begin() as conn:
-            await conn.run_sync(table.metadata.create_all)
-        ins = insert(table).values([(id_,) for id_ in ids])
-        async with engine.begin() as conn:
-            _ = await conn.execute(ins)
-        sel = select(table.c["id_"])
-        async with engine.begin() as conn:
-            results = (await conn.execute(sel)).scalars().all()
-        assert set(results) == ids
 
 
 class TestStrArrays:
@@ -1126,6 +1155,38 @@ class TestTimeDeltas2W:
         assert min_value <= timedelta <= max_value
 
 
+class TestTimeDeltas:
+    @given(data=data())
+    def test_main(self, *, data: DataObject) -> None:
+        min_value = data.draw(time_deltas_whenever() | none())
+        max_value = data.draw(time_deltas_whenever() | none())
+        with assume_does_not_raise(InvalidArgument):
+            delta = data.draw(
+                time_deltas_whenever(min_value=min_value, max_value=max_value)
+            )
+        assert isinstance(delta, TimeDelta)
+        assert TimeDelta.parse_common_iso(delta.format_common_iso()) == delta
+        if min_value is not None:
+            assert delta >= min_value
+        if max_value is not None:
+            assert delta <= max_value
+
+
+class TestTimes:
+    @given(data=data())
+    def test_main(self, *, data: DataObject) -> None:
+        min_value = data.draw(times_whenever() | none())
+        max_value = data.draw(times_whenever() | none())
+        with assume_does_not_raise(InvalidArgument):
+            time = data.draw(times_whenever(min_value=min_value, max_value=max_value))
+        assert isinstance(time, Time)
+        assert Time.parse_common_iso(time.format_common_iso()) == time
+        if min_value is not None:
+            assert time >= min_value
+        if max_value is not None:
+            assert time <= max_value
+
+
 class TestTriples:
     @given(data=data(), unique=booleans(), sorted_=booleans())
     def test_main(self, *, data: DataObject, unique: bool, sorted_: bool) -> None:
@@ -1237,3 +1298,24 @@ class TestZonedDateTimes:
             ZonedDateTimesError, match="Rounding requires a timedelta; got None"
         ):
             _ = data.draw(zoned_datetimes(round_="standard"))
+
+
+class TestZonedDateTimesWhenever:
+    @given(data=data(), time_zone=timezones())
+    @settings(suppress_health_check={HealthCheck.filter_too_much})
+    def test_main(self, *, data: DataObject, time_zone: ZoneInfo) -> None:
+        min_value = data.draw(zoned_datetimes_whenever() | none())
+        max_value = data.draw(zoned_datetimes_whenever() | none())
+        with assume_does_not_raise(InvalidArgument):
+            datetime = data.draw(
+                zoned_datetimes_whenever(
+                    min_value=min_value, max_value=max_value, time_zone=time_zone
+                )
+            )
+        assert isinstance(datetime, ZonedDateTime)
+        assert ZonedDateTime.parse_common_iso(datetime.format_common_iso()) == datetime
+        assert datetime.tz == time_zone.key
+        if min_value is not None:
+            assert datetime >= min_value
+        if max_value is not None:
+            assert datetime <= max_value

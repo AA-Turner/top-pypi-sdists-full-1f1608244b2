@@ -5,14 +5,17 @@
 
 from __future__ import annotations
 
-import time
 from logging import getLogger
+from time import perf_counter
+from typing import TYPE_CHECKING
 
 from requests import Response, Session
 from requests.exceptions import RequestException
 
 from .errors import FetcherException
-from .path import PathArg
+
+if TYPE_CHECKING:
+    from .path import PathArg
 
 HTTP_SESSION = Session()
 LOG = getLogger("fuzzfetch")
@@ -81,7 +84,7 @@ def download_url(url: str, outfile: PathArg, timeout: float | None = 30.0) -> No
         timeout: Number of seconds to wait for a response.
     """
     downloaded = 0
-    start_time = report_time = time.time()
+    start_time = report_time = perf_counter()
     resp = get_url(url, timeout)
     try:
         total_size = int(resp.headers["Content-Length"])
@@ -94,7 +97,7 @@ def download_url(url: str, outfile: PathArg, timeout: float | None = 30.0) -> No
             for chunk in resp.iter_content(256 * 1024):
                 build_zip.write(chunk)
                 downloaded += len(chunk)
-                now = time.time()
+                now = perf_counter()
                 if (now - report_time) > 30 and downloaded != total_size:
                     if total_size is None:
                         LOG.info(
@@ -112,5 +115,5 @@ def download_url(url: str, outfile: PathArg, timeout: float | None = 30.0) -> No
         except RequestException as exc:
             raise FetcherException(exc) from None
     LOG.info(
-        ".. downloaded (%sB/s)", si(float(downloaded) / (time.time() - start_time))
+        ".. downloaded (%sB/s)", si(float(downloaded) / (perf_counter() - start_time))
     )

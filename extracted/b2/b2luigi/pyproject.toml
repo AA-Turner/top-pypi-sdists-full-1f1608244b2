@@ -45,7 +45,9 @@ doc = [
     "sphinxcontrib-qthelp",
     "sphinxcontrib-serializinghtml",
     "sphinx-gallery",
-    "sphinx-autobuild"
+    "sphinx-autobuild",
+    "sphinx-sitemap",
+    "sphinx-notfound-page"
 ]
 dev = [
     "pre_commit",

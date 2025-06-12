@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import json
 import os
 import platform
@@ -16,6 +14,7 @@ import pytest
 import tomli_w
 
 import cibuildwheel.oci_container
+from cibuildwheel.ci import CIProvider, detect_ci_provider
 from cibuildwheel.environment import EnvironmentAssignmentBash
 from cibuildwheel.errors import OCIEngineTooOldError
 from cibuildwheel.oci_container import (
@@ -24,20 +23,13 @@ from cibuildwheel.oci_container import (
     OCIPlatform,
     _check_engine_version,
 )
-from cibuildwheel.util import CIProvider, detect_ci_provider
 
 # Test utilities
 
 # for these tests we use manylinux2014 images, because they're available on
 # multi architectures and include python3.8
-DEFAULT_IMAGE_TEMPLATE = "quay.io/pypa/manylinux2014_{machine}:2023-09-04-0828984"
+DEFAULT_IMAGE = "quay.io/pypa/manylinux2014:2025.03.08-1"
 pm = platform.machine()
-if pm in {"x86_64", "ppc64le", "s390x"}:
-    DEFAULT_IMAGE = DEFAULT_IMAGE_TEMPLATE.format(machine=pm)
-elif pm in {"aarch64", "arm64"}:
-    DEFAULT_IMAGE = DEFAULT_IMAGE_TEMPLATE.format(machine="aarch64")
-else:
-    DEFAULT_IMAGE = ""
 DEFAULT_OCI_PLATFORM = {
     "AMD64": OCIPlatform.AMD64,
     "x86_64": OCIPlatform.AMD64,
@@ -45,6 +37,7 @@ DEFAULT_OCI_PLATFORM = {
     "s390x": OCIPlatform.S390X,
     "aarch64": OCIPlatform.ARM64,
     "arm64": OCIPlatform.ARM64,
+    "ARM64": OCIPlatform.ARM64,
 }[pm]
 
 PODMAN = OCIContainerEngineConfig(name="podman")
@@ -246,16 +239,23 @@ def test_binary_output(container_engine):
         assert output == binary_data_string
 
 
-def test_file_operation(tmp_path: Path, container_engine: OCIContainerEngineConfig) -> None:
+@pytest.mark.parametrize(
+    "file_path",
+    ["test.dat", "path/to/test.dat"],
+)
+def test_file_operation(
+    tmp_path: Path, container_engine: OCIContainerEngineConfig, file_path: str
+) -> None:
     with OCIContainer(
         engine=container_engine, image=DEFAULT_IMAGE, oci_platform=DEFAULT_OCI_PLATFORM
     ) as container:
         # test copying a file in
         test_binary_data = bytes(random.randrange(256) for _ in range(1000))
-        original_test_file = tmp_path / "test.dat"
+        original_test_file = tmp_path / file_path
+        original_test_file.parent.mkdir(parents=True, exist_ok=True)
         original_test_file.write_bytes(test_binary_data)
 
-        dst_file = PurePath("/tmp/test.dat")
+        dst_file = PurePath("/tmp") / file_path
 
         container.copy_into(original_test_file, dst_file)
 
@@ -417,9 +417,7 @@ def test_create_args_volume(tmp_path: Path, container_engine: OCIContainerEngine
     )
 
     with OCIContainer(
-        engine=container_engine,
-        image=DEFAULT_IMAGE,
-        oci_platform=DEFAULT_OCI_PLATFORM,
+        engine=container_engine, image=DEFAULT_IMAGE, oci_platform=DEFAULT_OCI_PLATFORM
     ) as container:
         assert container.call(["cat", "/test_mount/test_file.txt"], capture_output=True) == "1234"
 
@@ -499,9 +497,7 @@ def test_parse_engine_config(config, name, create_args, capsys):
 @pytest.mark.skipif(pm != "x86_64", reason="Only runs on x86_64")
 def test_enforce_32_bit(container_engine):
     with OCIContainer(
-        engine=container_engine,
-        image=DEFAULT_IMAGE_TEMPLATE.format(machine="i686"),
-        oci_platform=OCIPlatform.i386,
+        engine=container_engine, image=DEFAULT_IMAGE, oci_platform=OCIPlatform.i386
     ) as container:
         assert container.call(["uname", "-m"], capture_output=True).strip() == "i686"
         container_args = subprocess.run(
@@ -554,8 +550,8 @@ def test_local_image(
     container_engine: OCIContainerEngineConfig, platform: OCIPlatform, tmp_path: Path
 ) -> None:
     if (
-        detect_ci_provider() in {CIProvider.travis_ci}
-        and pm in {"s390x", "ppc64le"}
+        detect_ci_provider() == CIProvider.travis_ci
+        and pm != "x86_64"
         and platform != DEFAULT_OCI_PLATFORM
     ):
         pytest.skip("Skipping test because docker on this platform does not support QEMU")
@@ -563,7 +559,7 @@ def test_local_image(
         # both GHA & local macOS arm64 podman desktop are failing
         pytest.xfail("podman fails with armv7l images")
 
-    remote_image = "debian:12-slim"
+    remote_image = "debian:trixie-slim"
     platform_name = platform.value.replace("/", "_")
     local_image = f"cibw_{container_engine.name}_{platform_name}_local:latest"
     dockerfile = tmp_path / "Dockerfile"
@@ -584,8 +580,8 @@ def test_local_image(
 @pytest.mark.parametrize("platform", list(OCIPlatform))
 def test_multiarch_image(container_engine, platform):
     if (
-        detect_ci_provider() in {CIProvider.travis_ci}
-        and pm in {"s390x", "ppc64le"}
+        detect_ci_provider() == CIProvider.travis_ci
+        and pm != "x86_64"
         and platform != DEFAULT_OCI_PLATFORM
     ):
         pytest.skip("Skipping test because docker on this platform does not support QEMU")
@@ -593,7 +589,7 @@ def test_multiarch_image(container_engine, platform):
         # both GHA & local macOS arm64 podman desktop are failing
         pytest.xfail("podman fails with armv7l images")
     with OCIContainer(
-        engine=container_engine, image="debian:12-slim", oci_platform=platform
+        engine=container_engine, image="debian:trixie-slim", oci_platform=platform
     ) as container:
         output = container.call(["uname", "-m"], capture_output=True)
         output_map_kernel = {
@@ -602,6 +598,7 @@ def test_multiarch_image(container_engine, platform):
             OCIPlatform.ARMV7: ("armv7l", "armv8l"),
             OCIPlatform.ARM64: ("aarch64",),
             OCIPlatform.PPC64LE: ("ppc64le",),
+            OCIPlatform.RISCV64: ("riscv64",),
             OCIPlatform.S390X: ("s390x",),
         }
         assert output.strip() in output_map_kernel[platform]
@@ -612,6 +609,7 @@ def test_multiarch_image(container_engine, platform):
             OCIPlatform.ARMV7: "armhf",
             OCIPlatform.ARM64: "arm64",
             OCIPlatform.PPC64LE: "ppc64el",
+            OCIPlatform.RISCV64: "riscv64",
             OCIPlatform.S390X: "s390x",
         }
         assert output_map_dpkg[platform] == output.strip()

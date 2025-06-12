@@ -65,6 +65,7 @@ class MixtureService(BaseService):
     def _mixtures_page(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         name_includes: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -89,6 +90,7 @@ class MixtureService(BaseService):
         response = list_mixtures.sync_detailed(
             client=self.client,
             modified_at=none_as_unset(modified_at),
+            created_at=none_as_unset(created_at),
             name=none_as_unset(name),
             name_includes=none_as_unset(name_includes),
             folder_id=none_as_unset(folder_id),
@@ -120,6 +122,7 @@ class MixtureService(BaseService):
     def list(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         name_includes: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -151,6 +154,7 @@ class MixtureService(BaseService):
         def api_call(next_token: NextToken) -> Response[MixturesPaginatedList]:
             return self._mixtures_page(
                 modified_at=modified_at,
+                created_at=created_at,
                 name=name,
                 name_includes=name_includes,
                 folder_id=folder_id,

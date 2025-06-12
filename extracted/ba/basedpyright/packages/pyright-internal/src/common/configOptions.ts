@@ -395,6 +395,9 @@ export interface DiagnosticRuleSet {
     // covering all possible cases.
     reportMatchNotExhaustive: DiagnosticLevel;
 
+    // Report code that is determined to be unreachable via type analysis.
+    reportUnreachable: DiagnosticLevel;
+
     // Report files that match stdlib modules.
     reportShadowedImports: DiagnosticLevel;
 
@@ -412,7 +415,6 @@ export interface DiagnosticRuleSet {
      */
     failOnWarnings: boolean;
     strictGenericNarrowing: boolean;
-    reportUnreachable: DiagnosticLevel;
     reportAny: DiagnosticLevel;
     reportExplicitAny: DiagnosticLevel;
     reportIgnoreCommentWithoutRule: DiagnosticLevel;
@@ -542,9 +544,9 @@ export function getDiagLevelDiagnosticRules() {
         DiagnosticRule.reportUnusedExpression,
         DiagnosticRule.reportUnnecessaryTypeIgnoreComment,
         DiagnosticRule.reportMatchNotExhaustive,
+        DiagnosticRule.reportUnreachable,
         DiagnosticRule.reportShadowedImports,
         DiagnosticRule.reportImplicitOverride,
-        DiagnosticRule.reportUnreachable,
         DiagnosticRule.reportAny,
         DiagnosticRule.reportExplicitAny,
         DiagnosticRule.reportIgnoreCommentWithoutRule,
@@ -677,11 +679,11 @@ export function getOffDiagnosticRuleSet(): DiagnosticRuleSet {
         reportUnusedExpression: 'none',
         reportUnnecessaryTypeIgnoreComment: 'none',
         reportMatchNotExhaustive: 'none',
+        reportUnreachable: 'hint',
         reportShadowedImports: 'none',
         reportImplicitOverride: 'none',
         failOnWarnings: false,
         strictGenericNarrowing: false,
-        reportUnreachable: 'hint',
         reportAny: 'none',
         reportExplicitAny: 'none',
         reportIgnoreCommentWithoutRule: 'none',
@@ -796,11 +798,11 @@ export function getBasicDiagnosticRuleSet(): DiagnosticRuleSet {
         reportUnusedExpression: 'warning',
         reportUnnecessaryTypeIgnoreComment: 'none',
         reportMatchNotExhaustive: 'none',
+        reportUnreachable: 'hint',
         reportShadowedImports: 'none',
         reportImplicitOverride: 'none',
         failOnWarnings: false,
         strictGenericNarrowing: false,
-        reportUnreachable: 'hint',
         reportAny: 'none',
         reportExplicitAny: 'none',
         reportIgnoreCommentWithoutRule: 'none',
@@ -915,11 +917,11 @@ export function getStandardDiagnosticRuleSet(): DiagnosticRuleSet {
         reportUnusedExpression: 'warning',
         reportUnnecessaryTypeIgnoreComment: 'none',
         reportMatchNotExhaustive: 'none',
+        reportUnreachable: 'hint',
         reportShadowedImports: 'none',
         reportImplicitOverride: 'none',
         failOnWarnings: false,
         strictGenericNarrowing: false,
-        reportUnreachable: 'hint',
         reportAny: 'none',
         reportExplicitAny: 'none',
         reportIgnoreCommentWithoutRule: 'none',
@@ -1264,11 +1266,11 @@ export function getStrictDiagnosticRuleSet(): DiagnosticRuleSet {
         reportUnusedExpression: 'error',
         reportUnnecessaryTypeIgnoreComment: 'none',
         reportMatchNotExhaustive: 'error',
+        reportUnreachable: 'hint',
         reportShadowedImports: 'none',
         reportImplicitOverride: 'none',
         failOnWarnings: false,
         strictGenericNarrowing: false,
-        reportUnreachable: 'hint',
         reportAny: 'none',
         reportExplicitAny: 'none',
         reportIgnoreCommentWithoutRule: 'none',

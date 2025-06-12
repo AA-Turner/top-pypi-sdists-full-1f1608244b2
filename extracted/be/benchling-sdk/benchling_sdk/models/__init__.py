@@ -51,6 +51,8 @@ __all__ = [
     "AppCanvasCreateBase",
     "AppCanvasCreateUiBlockList",
     "AppCanvasLeafNodeUiBlockList",
+    "AppCanvasNotePart",
+    "AppCanvasNotePartType",
     "AppCanvasUiBlockList",
     "AppCanvasUpdate",
     "AppCanvasUpdateBase",
@@ -175,9 +177,12 @@ __all__ = [
     "AssayRunsUnarchive",
     "AsyncTask",
     "AsyncTaskErrors",
+    "AsyncTaskErrorsItem",
     "AsyncTaskLink",
     "AsyncTaskResponse",
     "AsyncTaskStatus",
+    "AuditLogExport",
+    "AuditLogExportFormat",
     "AutoAnnotateAaSequences",
     "AutoAnnotateDnaSequences",
     "AutoAnnotateRnaSequences",
@@ -352,6 +357,10 @@ __all__ = [
     "ContainersList",
     "ContainersPaginatedList",
     "ContainersUnarchive",
+    "ConvertToASM",
+    "ConvertToASMResponse_200",
+    "ConvertToCSV",
+    "ConvertToCSVResponse_200Item",
     "CreateConsensusAlignmentAsyncTask",
     "CreateEntityIntoRegistry",
     "CreateNucleotideConsensusAlignmentAsyncTask",
@@ -384,8 +393,31 @@ __all__ = [
     "CustomField",
     "CustomFields",
     "CustomNotation",
+    "CustomNotationAlias",
     "CustomNotationRequest",
     "CustomNotationsPaginatedList",
+    "DataFrame",
+    "DataFrameColumnMetadata",
+    "DataFrameColumnTypeMetadata",
+    "DataFrameColumnTypeMetadataTarget",
+    "DataFrameColumnTypeNameEnum",
+    "DataFrameColumnTypeNameEnumName",
+    "DataFrameCreate",
+    "DataFrameCreateManifest",
+    "DataFrameCreateManifestManifestItem",
+    "DataFrameManifest",
+    "DataFrameManifestManifestItem",
+    "DataFrameUpdate",
+    "DataFrameUpdateUploadStatus",
+    "Dataset",
+    "DatasetCreate",
+    "DatasetCreator",
+    "DatasetUpdate",
+    "DatasetsArchivalChange",
+    "DatasetsArchive",
+    "DatasetsArchiveReason",
+    "DatasetsPaginatedList",
+    "DatasetsUnarchive",
     "DateAppConfigItem",
     "DateAppConfigItemType",
     "DatetimeAppConfigItem",
@@ -520,6 +552,8 @@ __all__ = [
     "EntryUpdatedFieldsEventEventType",
     "EntryUpdatedReviewRecordEvent",
     "EntryUpdatedReviewRecordEventEventType",
+    "EntryUpdatedReviewSnapshotBetaEvent",
+    "EntryUpdatedReviewSnapshotBetaEventEventType",
     "Enzyme",
     "EnzymesPaginatedList",
     "Event",
@@ -560,6 +594,22 @@ __all__ = [
     "FieldWithResolution",
     "Fields",
     "FieldsWithResolution",
+    "File",
+    "FileCreate",
+    "FileCreator",
+    "FileStatus",
+    "FileStatusUploadStatus",
+    "FileUpdate",
+    "FileUpdateUploadStatus",
+    "FileUploadUiBlock",
+    "FileUploadUiBlockCreate",
+    "FileUploadUiBlockType",
+    "FileUploadUiBlockUpdate",
+    "FilesArchivalChange",
+    "FilesArchive",
+    "FilesArchiveReason",
+    "FilesPaginatedList",
+    "FilesUnarchive",
     "FindMatchingRegionsAsyncTask",
     "FindMatchingRegionsAsyncTaskResponse",
     "FindMatchingRegionsAsyncTaskResponseAaSequenceMatchesItem",
@@ -586,6 +636,7 @@ __all__ = [
     "GenericApiIdentifiedAppConfigItemType",
     "GenericEntity",
     "GenericEntityCreator",
+    "GetDataFrameRowDataFormat",
     "GetUserWarehouseLoginsResponse_200",
     "InaccessibleResource",
     "InaccessibleResourceResourceType",
@@ -643,6 +694,7 @@ __all__ = [
     "ListContainersCheckoutStatus",
     "ListContainersSort",
     "ListCustomEntitiesSort",
+    "ListDatasetsSort",
     "ListDNAAlignmentsSort",
     "ListDNAOligosSort",
     "ListDNASequencesSort",
@@ -651,6 +703,7 @@ __all__ = [
     "ListEnzymesSort",
     "ListFeatureLibrariesSort",
     "ListFeaturesMatchType",
+    "ListFilesSort",
     "ListFoldersSection",
     "ListFoldersSort",
     "ListLocationsSort",
@@ -664,9 +717,11 @@ __all__ = [
     "ListRNAOligosSort",
     "ListRNASequencesSort",
     "ListTeamsSort",
+    "ListTestOrdersSort",
     "ListUsersSort",
     "ListWorkflowFlowchartsSort",
     "ListWorkflowTasksScheduledOn",
+    "ListingError",
     "Location",
     "LocationCreate",
     "LocationSchema",
@@ -745,6 +800,7 @@ __all__ = [
     "MonomersUnarchive",
     "MultipleContainersTransfer",
     "MultipleContainersTransfersList",
+    "NameTemplatePart",
     "NamingStrategy",
     "NotFoundError",
     "NotFoundErrorError",
@@ -980,6 +1036,13 @@ __all__ = [
     "TeamSummary",
     "TeamUpdate",
     "TeamsPaginatedList",
+    "TestDefinition",
+    "TestOrder",
+    "TestOrderBulkUpdate",
+    "TestOrderStatus",
+    "TestOrderUpdate",
+    "TestOrdersBulkUpdateRequest",
+    "TestOrdersPaginatedList",
     "TextAppConfigItem",
     "TextAppConfigItemType",
     "TextBoxNotePart",
@@ -1167,6 +1230,8 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.app_canvas_create_base
     import benchling_api_client.v2.stable.models.app_canvas_create_ui_block_list
     import benchling_api_client.v2.stable.models.app_canvas_leaf_node_ui_block_list
+    import benchling_api_client.v2.stable.models.app_canvas_note_part
+    import benchling_api_client.v2.stable.models.app_canvas_note_part_type
     import benchling_api_client.v2.stable.models.app_canvas_ui_block_list
     import benchling_api_client.v2.stable.models.app_canvas_update
     import benchling_api_client.v2.stable.models.app_canvas_update_base
@@ -1291,9 +1356,12 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.assay_runs_unarchive
     import benchling_api_client.v2.stable.models.async_task
     import benchling_api_client.v2.stable.models.async_task_errors
+    import benchling_api_client.v2.stable.models.async_task_errors_item
     import benchling_api_client.v2.stable.models.async_task_link
     import benchling_api_client.v2.stable.models.async_task_response
     import benchling_api_client.v2.stable.models.async_task_status
+    import benchling_api_client.v2.stable.models.audit_log_export
+    import benchling_api_client.v2.stable.models.audit_log_export_format
     import benchling_api_client.v2.stable.models.auto_annotate_aa_sequences
     import benchling_api_client.v2.stable.models.auto_annotate_dna_sequences
     import benchling_api_client.v2.stable.models.auto_annotate_rna_sequences
@@ -1468,6 +1536,10 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.containers_list
     import benchling_api_client.v2.stable.models.containers_paginated_list
     import benchling_api_client.v2.stable.models.containers_unarchive
+    import benchling_api_client.v2.stable.models.convert_to_asm
+    import benchling_api_client.v2.stable.models.convert_to_asm_response_200
+    import benchling_api_client.v2.stable.models.convert_to_csv
+    import benchling_api_client.v2.stable.models.convert_to_csv_response_200_item
     import benchling_api_client.v2.stable.models.create_consensus_alignment_async_task
     import benchling_api_client.v2.stable.models.create_entity_into_registry
     import benchling_api_client.v2.stable.models.create_nucleotide_consensus_alignment_async_task
@@ -1500,8 +1572,31 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.custom_field
     import benchling_api_client.v2.stable.models.custom_fields
     import benchling_api_client.v2.stable.models.custom_notation
+    import benchling_api_client.v2.stable.models.custom_notation_alias
     import benchling_api_client.v2.stable.models.custom_notation_request
     import benchling_api_client.v2.stable.models.custom_notations_paginated_list
+    import benchling_api_client.v2.stable.models.data_frame
+    import benchling_api_client.v2.stable.models.data_frame_column_metadata
+    import benchling_api_client.v2.stable.models.data_frame_column_type_metadata
+    import benchling_api_client.v2.stable.models.data_frame_column_type_metadata_target
+    import benchling_api_client.v2.stable.models.data_frame_column_type_name_enum
+    import benchling_api_client.v2.stable.models.data_frame_column_type_name_enum_name
+    import benchling_api_client.v2.stable.models.data_frame_create
+    import benchling_api_client.v2.stable.models.data_frame_create_manifest
+    import benchling_api_client.v2.stable.models.data_frame_create_manifest_manifest_item
+    import benchling_api_client.v2.stable.models.data_frame_manifest
+    import benchling_api_client.v2.stable.models.data_frame_manifest_manifest_item
+    import benchling_api_client.v2.stable.models.data_frame_update
+    import benchling_api_client.v2.stable.models.data_frame_update_upload_status
+    import benchling_api_client.v2.stable.models.dataset
+    import benchling_api_client.v2.stable.models.dataset_create
+    import benchling_api_client.v2.stable.models.dataset_creator
+    import benchling_api_client.v2.stable.models.dataset_update
+    import benchling_api_client.v2.stable.models.datasets_archival_change
+    import benchling_api_client.v2.stable.models.datasets_archive
+    import benchling_api_client.v2.stable.models.datasets_archive_reason
+    import benchling_api_client.v2.stable.models.datasets_paginated_list
+    import benchling_api_client.v2.stable.models.datasets_unarchive
     import benchling_api_client.v2.stable.models.date_app_config_item
     import benchling_api_client.v2.stable.models.date_app_config_item_type
     import benchling_api_client.v2.stable.models.datetime_app_config_item
@@ -1636,6 +1731,8 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.entry_updated_fields_event_event_type
     import benchling_api_client.v2.stable.models.entry_updated_review_record_event
     import benchling_api_client.v2.stable.models.entry_updated_review_record_event_event_type
+    import benchling_api_client.v2.stable.models.entry_updated_review_snapshot_beta_event
+    import benchling_api_client.v2.stable.models.entry_updated_review_snapshot_beta_event_event_type
     import benchling_api_client.v2.stable.models.enzyme
     import benchling_api_client.v2.stable.models.enzymes_paginated_list
     import benchling_api_client.v2.stable.models.event
@@ -1676,6 +1773,22 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.field_with_resolution
     import benchling_api_client.v2.stable.models.fields
     import benchling_api_client.v2.stable.models.fields_with_resolution
+    import benchling_api_client.v2.stable.models.file
+    import benchling_api_client.v2.stable.models.file_create
+    import benchling_api_client.v2.stable.models.file_creator
+    import benchling_api_client.v2.stable.models.file_status
+    import benchling_api_client.v2.stable.models.file_status_upload_status
+    import benchling_api_client.v2.stable.models.file_update
+    import benchling_api_client.v2.stable.models.file_update_upload_status
+    import benchling_api_client.v2.stable.models.file_upload_ui_block
+    import benchling_api_client.v2.stable.models.file_upload_ui_block_create
+    import benchling_api_client.v2.stable.models.file_upload_ui_block_type
+    import benchling_api_client.v2.stable.models.file_upload_ui_block_update
+    import benchling_api_client.v2.stable.models.files_archival_change
+    import benchling_api_client.v2.stable.models.files_archive
+    import benchling_api_client.v2.stable.models.files_archive_reason
+    import benchling_api_client.v2.stable.models.files_paginated_list
+    import benchling_api_client.v2.stable.models.files_unarchive
     import benchling_api_client.v2.stable.models.find_matching_regions_async_task
     import benchling_api_client.v2.stable.models.find_matching_regions_async_task_response
     import benchling_api_client.v2.stable.models.find_matching_regions_async_task_response_aa_sequence_matches_item
@@ -1702,6 +1815,7 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.generic_api_identified_app_config_item_type
     import benchling_api_client.v2.stable.models.generic_entity
     import benchling_api_client.v2.stable.models.generic_entity_creator
+    import benchling_api_client.v2.stable.models.get_data_frame_row_data_format
     import benchling_api_client.v2.stable.models.get_user_warehouse_logins_response_200
     import benchling_api_client.v2.stable.models.inaccessible_resource
     import benchling_api_client.v2.stable.models.inaccessible_resource_resource_type
@@ -1759,6 +1873,7 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.list_containers_checkout_status
     import benchling_api_client.v2.stable.models.list_containers_sort
     import benchling_api_client.v2.stable.models.list_custom_entities_sort
+    import benchling_api_client.v2.stable.models.list_datasets_sort
     import benchling_api_client.v2.stable.models.list_dna_alignments_sort
     import benchling_api_client.v2.stable.models.list_dna_oligos_sort
     import benchling_api_client.v2.stable.models.list_dna_sequences_sort
@@ -1767,6 +1882,7 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.list_enzymes_sort
     import benchling_api_client.v2.stable.models.list_feature_libraries_sort
     import benchling_api_client.v2.stable.models.list_features_match_type
+    import benchling_api_client.v2.stable.models.list_files_sort
     import benchling_api_client.v2.stable.models.list_folders_section
     import benchling_api_client.v2.stable.models.list_folders_sort
     import benchling_api_client.v2.stable.models.list_locations_sort
@@ -1780,9 +1896,11 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.list_rna_oligos_sort
     import benchling_api_client.v2.stable.models.list_rna_sequences_sort
     import benchling_api_client.v2.stable.models.list_teams_sort
+    import benchling_api_client.v2.stable.models.list_test_orders_sort
     import benchling_api_client.v2.stable.models.list_users_sort
     import benchling_api_client.v2.stable.models.list_workflow_flowcharts_sort
     import benchling_api_client.v2.stable.models.list_workflow_tasks_scheduled_on
+    import benchling_api_client.v2.stable.models.listing_error
     import benchling_api_client.v2.stable.models.location
     import benchling_api_client.v2.stable.models.location_create
     import benchling_api_client.v2.stable.models.location_schema
@@ -1861,6 +1979,7 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.monomers_unarchive
     import benchling_api_client.v2.stable.models.multiple_containers_transfer
     import benchling_api_client.v2.stable.models.multiple_containers_transfers_list
+    import benchling_api_client.v2.stable.models.name_template_part
     import benchling_api_client.v2.stable.models.naming_strategy
     import benchling_api_client.v2.stable.models.not_found_error
     import benchling_api_client.v2.stable.models.not_found_error_error
@@ -2096,6 +2215,13 @@ if TYPE_CHECKING:
     import benchling_api_client.v2.stable.models.team_summary
     import benchling_api_client.v2.stable.models.team_update
     import benchling_api_client.v2.stable.models.teams_paginated_list
+    import benchling_api_client.v2.stable.models.test_definition
+    import benchling_api_client.v2.stable.models.test_order
+    import benchling_api_client.v2.stable.models.test_order_bulk_update
+    import benchling_api_client.v2.stable.models.test_order_status
+    import benchling_api_client.v2.stable.models.test_order_update
+    import benchling_api_client.v2.stable.models.test_orders_bulk_update_request
+    import benchling_api_client.v2.stable.models.test_orders_paginated_list
     import benchling_api_client.v2.stable.models.text_app_config_item
     import benchling_api_client.v2.stable.models.text_app_config_item_type
     import benchling_api_client.v2.stable.models.text_box_note_part
@@ -2247,21 +2373,33 @@ if TYPE_CHECKING:
     AaSequenceBaseRequestForCreate = (
         benchling_api_client.v2.stable.models.aa_sequence_base_request_for_create.AaSequenceBaseRequestForCreate
     )
-    AaSequenceBulkCreate = benchling_api_client.v2.stable.models.aa_sequence_bulk_create.AaSequenceBulkCreate
-    AaSequenceBulkUpdate = benchling_api_client.v2.stable.models.aa_sequence_bulk_update.AaSequenceBulkUpdate
+    AaSequenceBulkCreate = (
+        benchling_api_client.v2.stable.models.aa_sequence_bulk_create.AaSequenceBulkCreate
+    )
+    AaSequenceBulkUpdate = (
+        benchling_api_client.v2.stable.models.aa_sequence_bulk_update.AaSequenceBulkUpdate
+    )
     AaSequenceBulkUpsertRequest = (
         benchling_api_client.v2.stable.models.aa_sequence_bulk_upsert_request.AaSequenceBulkUpsertRequest
     )
-    AaSequenceCreate = benchling_api_client.v2.stable.models.aa_sequence_create.AaSequenceCreate
+    AaSequenceCreate = (
+        benchling_api_client.v2.stable.models.aa_sequence_create.AaSequenceCreate
+    )
     AaSequenceRequestRegistryFields = (
         benchling_api_client.v2.stable.models.aa_sequence_request_registry_fields.AaSequenceRequestRegistryFields
     )
-    AaSequenceSummary = benchling_api_client.v2.stable.models.aa_sequence_summary.AaSequenceSummary
+    AaSequenceSummary = (
+        benchling_api_client.v2.stable.models.aa_sequence_summary.AaSequenceSummary
+    )
     AaSequenceSummaryEntityType = (
         benchling_api_client.v2.stable.models.aa_sequence_summary_entity_type.AaSequenceSummaryEntityType
     )
-    AaSequenceUpdate = benchling_api_client.v2.stable.models.aa_sequence_update.AaSequenceUpdate
-    AaSequenceUpsert = benchling_api_client.v2.stable.models.aa_sequence_upsert.AaSequenceUpsert
+    AaSequenceUpdate = (
+        benchling_api_client.v2.stable.models.aa_sequence_update.AaSequenceUpdate
+    )
+    AaSequenceUpsert = (
+        benchling_api_client.v2.stable.models.aa_sequence_upsert.AaSequenceUpsert
+    )
     AaSequenceWithEntityType = (
         benchling_api_client.v2.stable.models.aa_sequence_with_entity_type.AaSequenceWithEntityType
     )
@@ -2271,11 +2409,15 @@ if TYPE_CHECKING:
     AaSequencesArchivalChange = (
         benchling_api_client.v2.stable.models.aa_sequences_archival_change.AaSequencesArchivalChange
     )
-    AaSequencesArchive = benchling_api_client.v2.stable.models.aa_sequences_archive.AaSequencesArchive
+    AaSequencesArchive = (
+        benchling_api_client.v2.stable.models.aa_sequences_archive.AaSequencesArchive
+    )
     AaSequencesBulkCreateRequest = (
         benchling_api_client.v2.stable.models.aa_sequences_bulk_create_request.AaSequencesBulkCreateRequest
     )
-    AaSequencesBulkGet = benchling_api_client.v2.stable.models.aa_sequences_bulk_get.AaSequencesBulkGet
+    AaSequencesBulkGet = (
+        benchling_api_client.v2.stable.models.aa_sequences_bulk_get.AaSequencesBulkGet
+    )
     AaSequencesBulkUpdateRequest = (
         benchling_api_client.v2.stable.models.aa_sequences_bulk_update_request.AaSequencesBulkUpdateRequest
     )
@@ -2306,14 +2448,18 @@ if TYPE_CHECKING:
     AaSequencesSearchBasesSort = (
         benchling_api_client.v2.stable.models.aa_sequences_search_bases_sort.AaSequencesSearchBasesSort
     )
-    AaSequencesUnarchive = benchling_api_client.v2.stable.models.aa_sequences_unarchive.AaSequencesUnarchive
+    AaSequencesUnarchive = (
+        benchling_api_client.v2.stable.models.aa_sequences_unarchive.AaSequencesUnarchive
+    )
     AIGGenerateInputAsyncTask = (
         benchling_api_client.v2.stable.models.aig_generate_input_async_task.AIGGenerateInputAsyncTask
     )
     AlignedNucleotideSequence = (
         benchling_api_client.v2.stable.models.aligned_nucleotide_sequence.AlignedNucleotideSequence
     )
-    AlignedSequence = benchling_api_client.v2.stable.models.aligned_sequence.AlignedSequence
+    AlignedSequence = (
+        benchling_api_client.v2.stable.models.aligned_sequence.AlignedSequence
+    )
     AOPProcessOutputAsyncTask = (
         benchling_api_client.v2.stable.models.aop_process_output_async_task.AOPProcessOutputAsyncTask
     )
@@ -2323,32 +2469,54 @@ if TYPE_CHECKING:
     AppCanvasBaseArchiveRecord = (
         benchling_api_client.v2.stable.models.app_canvas_base_archive_record.AppCanvasBaseArchiveRecord
     )
-    AppCanvasCreate = benchling_api_client.v2.stable.models.app_canvas_create.AppCanvasCreate
-    AppCanvasCreateBase = benchling_api_client.v2.stable.models.app_canvas_create_base.AppCanvasCreateBase
+    AppCanvasCreate = (
+        benchling_api_client.v2.stable.models.app_canvas_create.AppCanvasCreate
+    )
+    AppCanvasCreateBase = (
+        benchling_api_client.v2.stable.models.app_canvas_create_base.AppCanvasCreateBase
+    )
     AppCanvasCreateUiBlockList = (
         benchling_api_client.v2.stable.models.app_canvas_create_ui_block_list.AppCanvasCreateUiBlockList
     )
     AppCanvasLeafNodeUiBlockList = (
         benchling_api_client.v2.stable.models.app_canvas_leaf_node_ui_block_list.AppCanvasLeafNodeUiBlockList
     )
-    AppCanvasUiBlockList = benchling_api_client.v2.stable.models.app_canvas_ui_block_list.AppCanvasUiBlockList
-    AppCanvasUpdate = benchling_api_client.v2.stable.models.app_canvas_update.AppCanvasUpdate
-    AppCanvasUpdateBase = benchling_api_client.v2.stable.models.app_canvas_update_base.AppCanvasUpdateBase
+    AppCanvasNotePart = (
+        benchling_api_client.v2.stable.models.app_canvas_note_part.AppCanvasNotePart
+    )
+    AppCanvasNotePartType = (
+        benchling_api_client.v2.stable.models.app_canvas_note_part_type.AppCanvasNotePartType
+    )
+    AppCanvasUiBlockList = (
+        benchling_api_client.v2.stable.models.app_canvas_ui_block_list.AppCanvasUiBlockList
+    )
+    AppCanvasUpdate = (
+        benchling_api_client.v2.stable.models.app_canvas_update.AppCanvasUpdate
+    )
+    AppCanvasUpdateBase = (
+        benchling_api_client.v2.stable.models.app_canvas_update_base.AppCanvasUpdateBase
+    )
     AppCanvasUpdateUiBlockList = (
         benchling_api_client.v2.stable.models.app_canvas_update_ui_block_list.AppCanvasUpdateUiBlockList
     )
-    AppCanvasWriteBase = benchling_api_client.v2.stable.models.app_canvas_write_base.AppCanvasWriteBase
+    AppCanvasWriteBase = (
+        benchling_api_client.v2.stable.models.app_canvas_write_base.AppCanvasWriteBase
+    )
     AppCanvasesArchivalChange = (
         benchling_api_client.v2.stable.models.app_canvases_archival_change.AppCanvasesArchivalChange
     )
-    AppCanvasesArchive = benchling_api_client.v2.stable.models.app_canvases_archive.AppCanvasesArchive
+    AppCanvasesArchive = (
+        benchling_api_client.v2.stable.models.app_canvases_archive.AppCanvasesArchive
+    )
     AppCanvasesArchiveReason = (
         benchling_api_client.v2.stable.models.app_canvases_archive_reason.AppCanvasesArchiveReason
     )
     AppCanvasesPaginatedList = (
         benchling_api_client.v2.stable.models.app_canvases_paginated_list.AppCanvasesPaginatedList
     )
-    AppCanvasesUnarchive = benchling_api_client.v2.stable.models.app_canvases_unarchive.AppCanvasesUnarchive
+    AppCanvasesUnarchive = (
+        benchling_api_client.v2.stable.models.app_canvases_unarchive.AppCanvasesUnarchive
+    )
     AppConfigItem = benchling_api_client.v2.stable.models.app_config_item.AppConfigItem
     AppConfigItemApiMixin = (
         benchling_api_client.v2.stable.models.app_config_item_api_mixin.AppConfigItemApiMixin
@@ -2377,7 +2545,9 @@ if TYPE_CHECKING:
     AppConfigItemBulkUpdateMixin = (
         benchling_api_client.v2.stable.models.app_config_item_bulk_update_mixin.AppConfigItemBulkUpdateMixin
     )
-    AppConfigItemCreate = benchling_api_client.v2.stable.models.app_config_item_create.AppConfigItemCreate
+    AppConfigItemCreate = (
+        benchling_api_client.v2.stable.models.app_config_item_create.AppConfigItemCreate
+    )
     AppConfigItemCreateMixin = (
         benchling_api_client.v2.stable.models.app_config_item_create_mixin.AppConfigItemCreateMixin
     )
@@ -2471,7 +2641,9 @@ if TYPE_CHECKING:
     AppConfigItemJsonUpdateType = (
         benchling_api_client.v2.stable.models.app_config_item_json_update_type.AppConfigItemJsonUpdateType
     )
-    AppConfigItemUpdate = benchling_api_client.v2.stable.models.app_config_item_update.AppConfigItemUpdate
+    AppConfigItemUpdate = (
+        benchling_api_client.v2.stable.models.app_config_item_update.AppConfigItemUpdate
+    )
     AppConfigItemsBulkCreateRequest = (
         benchling_api_client.v2.stable.models.app_config_items_bulk_create_request.AppConfigItemsBulkCreateRequest
     )
@@ -2483,16 +2655,24 @@ if TYPE_CHECKING:
     )
     AppSession = benchling_api_client.v2.stable.models.app_session.AppSession
     AppSessionApp = benchling_api_client.v2.stable.models.app_session_app.AppSessionApp
-    AppSessionCreate = benchling_api_client.v2.stable.models.app_session_create.AppSessionCreate
-    AppSessionMessage = benchling_api_client.v2.stable.models.app_session_message.AppSessionMessage
+    AppSessionCreate = (
+        benchling_api_client.v2.stable.models.app_session_create.AppSessionCreate
+    )
+    AppSessionMessage = (
+        benchling_api_client.v2.stable.models.app_session_message.AppSessionMessage
+    )
     AppSessionMessageCreate = (
         benchling_api_client.v2.stable.models.app_session_message_create.AppSessionMessageCreate
     )
     AppSessionMessageStyle = (
         benchling_api_client.v2.stable.models.app_session_message_style.AppSessionMessageStyle
     )
-    AppSessionStatus = benchling_api_client.v2.stable.models.app_session_status.AppSessionStatus
-    AppSessionUpdate = benchling_api_client.v2.stable.models.app_session_update.AppSessionUpdate
+    AppSessionStatus = (
+        benchling_api_client.v2.stable.models.app_session_status.AppSessionStatus
+    )
+    AppSessionUpdate = (
+        benchling_api_client.v2.stable.models.app_session_update.AppSessionUpdate
+    )
     AppSessionUpdateStatus = (
         benchling_api_client.v2.stable.models.app_session_update_status.AppSessionUpdateStatus
     )
@@ -2501,16 +2681,22 @@ if TYPE_CHECKING:
     )
     AppSummary = benchling_api_client.v2.stable.models.app_summary.AppSummary
     ArchiveRecord = benchling_api_client.v2.stable.models.archive_record.ArchiveRecord
-    ArchiveRecordSet = benchling_api_client.v2.stable.models.archive_record_set.ArchiveRecordSet
+    ArchiveRecordSet = (
+        benchling_api_client.v2.stable.models.archive_record_set.ArchiveRecordSet
+    )
     ArrayElementAppConfigItem = (
         benchling_api_client.v2.stable.models.array_element_app_config_item.ArrayElementAppConfigItem
     )
     ArrayElementAppConfigItemType = (
         benchling_api_client.v2.stable.models.array_element_app_config_item_type.ArrayElementAppConfigItemType
     )
-    AssayFieldsCreate = benchling_api_client.v2.stable.models.assay_fields_create.AssayFieldsCreate
+    AssayFieldsCreate = (
+        benchling_api_client.v2.stable.models.assay_fields_create.AssayFieldsCreate
+    )
     AssayResult = benchling_api_client.v2.stable.models.assay_result.AssayResult
-    AssayResultCreate = benchling_api_client.v2.stable.models.assay_result_create.AssayResultCreate
+    AssayResultCreate = (
+        benchling_api_client.v2.stable.models.assay_result_create.AssayResultCreate
+    )
     AssayResultCreateFieldValidation = (
         benchling_api_client.v2.stable.models.assay_result_create_field_validation.AssayResultCreateFieldValidation
     )
@@ -2523,7 +2709,9 @@ if TYPE_CHECKING:
     AssayResultIdsResponse = (
         benchling_api_client.v2.stable.models.assay_result_ids_response.AssayResultIdsResponse
     )
-    AssayResultSchema = benchling_api_client.v2.stable.models.assay_result_schema.AssayResultSchema
+    AssayResultSchema = (
+        benchling_api_client.v2.stable.models.assay_result_schema.AssayResultSchema
+    )
     AssayResultSchemaType = (
         benchling_api_client.v2.stable.models.assay_result_schema_type.AssayResultSchemaType
     )
@@ -2533,7 +2721,9 @@ if TYPE_CHECKING:
     AssayResultTransactionCreateResponse = (
         benchling_api_client.v2.stable.models.assay_result_transaction_create_response.AssayResultTransactionCreateResponse
     )
-    AssayResultsArchive = benchling_api_client.v2.stable.models.assay_results_archive.AssayResultsArchive
+    AssayResultsArchive = (
+        benchling_api_client.v2.stable.models.assay_results_archive.AssayResultsArchive
+    )
     AssayResultsArchiveReason = (
         benchling_api_client.v2.stable.models.assay_results_archive_reason.AssayResultsArchiveReason
     )
@@ -2543,7 +2733,9 @@ if TYPE_CHECKING:
     AssayResultsBulkCreateRequest = (
         benchling_api_client.v2.stable.models.assay_results_bulk_create_request.AssayResultsBulkCreateRequest
     )
-    AssayResultsBulkGet = benchling_api_client.v2.stable.models.assay_results_bulk_get.AssayResultsBulkGet
+    AssayResultsBulkGet = (
+        benchling_api_client.v2.stable.models.assay_results_bulk_get.AssayResultsBulkGet
+    )
     AssayResultsCreateErrorResponse = (
         benchling_api_client.v2.stable.models.assay_results_create_error_response.AssayResultsCreateErrorResponse
     )
@@ -2566,25 +2758,39 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.assay_results_paginated_list.AssayResultsPaginatedList
     )
     AssayRun = benchling_api_client.v2.stable.models.assay_run.AssayRun
-    AssayRunCreate = benchling_api_client.v2.stable.models.assay_run_create.AssayRunCreate
-    AssayRunCreatedEvent = benchling_api_client.v2.stable.models.assay_run_created_event.AssayRunCreatedEvent
+    AssayRunCreate = (
+        benchling_api_client.v2.stable.models.assay_run_create.AssayRunCreate
+    )
+    AssayRunCreatedEvent = (
+        benchling_api_client.v2.stable.models.assay_run_created_event.AssayRunCreatedEvent
+    )
     AssayRunCreatedEventEventType = (
         benchling_api_client.v2.stable.models.assay_run_created_event_event_type.AssayRunCreatedEventEventType
     )
-    AssayRunNotePart = benchling_api_client.v2.stable.models.assay_run_note_part.AssayRunNotePart
-    AssayRunNotePartType = benchling_api_client.v2.stable.models.assay_run_note_part_type.AssayRunNotePartType
-    AssayRunSchema = benchling_api_client.v2.stable.models.assay_run_schema.AssayRunSchema
+    AssayRunNotePart = (
+        benchling_api_client.v2.stable.models.assay_run_note_part.AssayRunNotePart
+    )
+    AssayRunNotePartType = (
+        benchling_api_client.v2.stable.models.assay_run_note_part_type.AssayRunNotePartType
+    )
+    AssayRunSchema = (
+        benchling_api_client.v2.stable.models.assay_run_schema.AssayRunSchema
+    )
     AssayRunSchemaAutomationInputFileConfigsItem = (
         benchling_api_client.v2.stable.models.assay_run_schema_automation_input_file_configs_item.AssayRunSchemaAutomationInputFileConfigsItem
     )
     AssayRunSchemaAutomationOutputFileConfigsItem = (
         benchling_api_client.v2.stable.models.assay_run_schema_automation_output_file_configs_item.AssayRunSchemaAutomationOutputFileConfigsItem
     )
-    AssayRunSchemaType = benchling_api_client.v2.stable.models.assay_run_schema_type.AssayRunSchemaType
+    AssayRunSchemaType = (
+        benchling_api_client.v2.stable.models.assay_run_schema_type.AssayRunSchemaType
+    )
     AssayRunSchemasPaginatedList = (
         benchling_api_client.v2.stable.models.assay_run_schemas_paginated_list.AssayRunSchemasPaginatedList
     )
-    AssayRunUpdate = benchling_api_client.v2.stable.models.assay_run_update.AssayRunUpdate
+    AssayRunUpdate = (
+        benchling_api_client.v2.stable.models.assay_run_update.AssayRunUpdate
+    )
     AssayRunUpdatedFieldsEvent = (
         benchling_api_client.v2.stable.models.assay_run_updated_fields_event.AssayRunUpdatedFieldsEvent
     )
@@ -2597,7 +2803,9 @@ if TYPE_CHECKING:
     AssayRunsArchivalChange = (
         benchling_api_client.v2.stable.models.assay_runs_archival_change.AssayRunsArchivalChange
     )
-    AssayRunsArchive = benchling_api_client.v2.stable.models.assay_runs_archive.AssayRunsArchive
+    AssayRunsArchive = (
+        benchling_api_client.v2.stable.models.assay_runs_archive.AssayRunsArchive
+    )
     AssayRunsArchiveReason = (
         benchling_api_client.v2.stable.models.assay_runs_archive_reason.AssayRunsArchiveReason
     )
@@ -2622,16 +2830,35 @@ if TYPE_CHECKING:
     AssayRunsBulkCreateResponseErrors = (
         benchling_api_client.v2.stable.models.assay_runs_bulk_create_response_errors.AssayRunsBulkCreateResponseErrors
     )
-    AssayRunsBulkGet = benchling_api_client.v2.stable.models.assay_runs_bulk_get.AssayRunsBulkGet
+    AssayRunsBulkGet = (
+        benchling_api_client.v2.stable.models.assay_runs_bulk_get.AssayRunsBulkGet
+    )
     AssayRunsPaginatedList = (
         benchling_api_client.v2.stable.models.assay_runs_paginated_list.AssayRunsPaginatedList
     )
-    AssayRunsUnarchive = benchling_api_client.v2.stable.models.assay_runs_unarchive.AssayRunsUnarchive
+    AssayRunsUnarchive = (
+        benchling_api_client.v2.stable.models.assay_runs_unarchive.AssayRunsUnarchive
+    )
     AsyncTask = benchling_api_client.v2.stable.models.async_task.AsyncTask
-    AsyncTaskErrors = benchling_api_client.v2.stable.models.async_task_errors.AsyncTaskErrors
+    AsyncTaskErrors = (
+        benchling_api_client.v2.stable.models.async_task_errors.AsyncTaskErrors
+    )
+    AsyncTaskErrorsItem = (
+        benchling_api_client.v2.stable.models.async_task_errors_item.AsyncTaskErrorsItem
+    )
     AsyncTaskLink = benchling_api_client.v2.stable.models.async_task_link.AsyncTaskLink
-    AsyncTaskResponse = benchling_api_client.v2.stable.models.async_task_response.AsyncTaskResponse
-    AsyncTaskStatus = benchling_api_client.v2.stable.models.async_task_status.AsyncTaskStatus
+    AsyncTaskResponse = (
+        benchling_api_client.v2.stable.models.async_task_response.AsyncTaskResponse
+    )
+    AsyncTaskStatus = (
+        benchling_api_client.v2.stable.models.async_task_status.AsyncTaskStatus
+    )
+    AuditLogExport = (
+        benchling_api_client.v2.stable.models.audit_log_export.AuditLogExport
+    )
+    AuditLogExportFormat = (
+        benchling_api_client.v2.stable.models.audit_log_export_format.AuditLogExportFormat
+    )
     AutoAnnotateAaSequences = (
         benchling_api_client.v2.stable.models.auto_annotate_aa_sequences.AutoAnnotateAaSequences
     )
@@ -2644,22 +2871,30 @@ if TYPE_CHECKING:
     AutofillPartsAsyncTask = (
         benchling_api_client.v2.stable.models.autofill_parts_async_task.AutofillPartsAsyncTask
     )
-    AutofillRnaSequences = benchling_api_client.v2.stable.models.autofill_rna_sequences.AutofillRnaSequences
-    AutofillSequences = benchling_api_client.v2.stable.models.autofill_sequences.AutofillSequences
+    AutofillRnaSequences = (
+        benchling_api_client.v2.stable.models.autofill_rna_sequences.AutofillRnaSequences
+    )
+    AutofillSequences = (
+        benchling_api_client.v2.stable.models.autofill_sequences.AutofillSequences
+    )
     AutofillTranscriptionsAsyncTask = (
         benchling_api_client.v2.stable.models.autofill_transcriptions_async_task.AutofillTranscriptionsAsyncTask
     )
     AutofillTranslationsAsyncTask = (
         benchling_api_client.v2.stable.models.autofill_translations_async_task.AutofillTranslationsAsyncTask
     )
-    AutomationFile = benchling_api_client.v2.stable.models.automation_file.AutomationFile
+    AutomationFile = (
+        benchling_api_client.v2.stable.models.automation_file.AutomationFile
+    )
     AutomationFileAutomationFileConfig = (
         benchling_api_client.v2.stable.models.automation_file_automation_file_config.AutomationFileAutomationFileConfig
     )
     AutomationFileInputsPaginatedList = (
         benchling_api_client.v2.stable.models.automation_file_inputs_paginated_list.AutomationFileInputsPaginatedList
     )
-    AutomationFileStatus = benchling_api_client.v2.stable.models.automation_file_status.AutomationFileStatus
+    AutomationFileStatus = (
+        benchling_api_client.v2.stable.models.automation_file_status.AutomationFileStatus
+    )
     AutomationInputGenerator = (
         benchling_api_client.v2.stable.models.automation_input_generator.AutomationInputGenerator
     )
@@ -2718,15 +2953,21 @@ if TYPE_CHECKING:
     BackTranslateHairpinParameters = (
         benchling_api_client.v2.stable.models.back_translate_hairpin_parameters.BackTranslateHairpinParameters
     )
-    BadRequestError = benchling_api_client.v2.stable.models.bad_request_error.BadRequestError
-    BadRequestErrorBulk = benchling_api_client.v2.stable.models.bad_request_error_bulk.BadRequestErrorBulk
+    BadRequestError = (
+        benchling_api_client.v2.stable.models.bad_request_error.BadRequestError
+    )
+    BadRequestErrorBulk = (
+        benchling_api_client.v2.stable.models.bad_request_error_bulk.BadRequestErrorBulk
+    )
     BadRequestErrorBulkError = (
         benchling_api_client.v2.stable.models.bad_request_error_bulk_error.BadRequestErrorBulkError
     )
     BadRequestErrorBulkErrorErrorsItem = (
         benchling_api_client.v2.stable.models.bad_request_error_bulk_error_errors_item.BadRequestErrorBulkErrorErrorsItem
     )
-    BadRequestErrorError = benchling_api_client.v2.stable.models.bad_request_error_error.BadRequestErrorError
+    BadRequestErrorError = (
+        benchling_api_client.v2.stable.models.bad_request_error_error.BadRequestErrorError
+    )
     BadRequestErrorErrorType = (
         benchling_api_client.v2.stable.models.bad_request_error_error_type.BadRequestErrorErrorType
     )
@@ -2737,12 +2978,18 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.barcode_validation_results.BarcodeValidationResults
     )
     BarcodesList = benchling_api_client.v2.stable.models.barcodes_list.BarcodesList
-    BaseAppConfigItem = benchling_api_client.v2.stable.models.base_app_config_item.BaseAppConfigItem
-    BaseAssaySchema = benchling_api_client.v2.stable.models.base_assay_schema.BaseAssaySchema
+    BaseAppConfigItem = (
+        benchling_api_client.v2.stable.models.base_app_config_item.BaseAppConfigItem
+    )
+    BaseAssaySchema = (
+        benchling_api_client.v2.stable.models.base_assay_schema.BaseAssaySchema
+    )
     BaseAssaySchemaOrganization = (
         benchling_api_client.v2.stable.models.base_assay_schema_organization.BaseAssaySchemaOrganization
     )
-    BaseDropdownUIBlock = benchling_api_client.v2.stable.models.base_dropdown_ui_block.BaseDropdownUIBlock
+    BaseDropdownUIBlock = (
+        benchling_api_client.v2.stable.models.base_dropdown_ui_block.BaseDropdownUIBlock
+    )
     BaseError = benchling_api_client.v2.stable.models.base_error.BaseError
     BaseNotePart = benchling_api_client.v2.stable.models.base_note_part.BaseNotePart
     BaseSearchInputUIBlock = (
@@ -2756,20 +3003,28 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.batch_or_inaccessible_resource.BatchOrInaccessibleResource
     )
     BatchSchema = benchling_api_client.v2.stable.models.batch_schema.BatchSchema
-    BatchSchemasList = benchling_api_client.v2.stable.models.batch_schemas_list.BatchSchemasList
+    BatchSchemasList = (
+        benchling_api_client.v2.stable.models.batch_schemas_list.BatchSchemasList
+    )
     BatchSchemasPaginatedList = (
         benchling_api_client.v2.stable.models.batch_schemas_paginated_list.BatchSchemasPaginatedList
     )
     BenchlingApp = benchling_api_client.v2.stable.models.benchling_app.BenchlingApp
-    BenchlingAppCreate = benchling_api_client.v2.stable.models.benchling_app_create.BenchlingAppCreate
+    BenchlingAppCreate = (
+        benchling_api_client.v2.stable.models.benchling_app_create.BenchlingAppCreate
+    )
     BenchlingAppDefinitionSummary = (
         benchling_api_client.v2.stable.models.benchling_app_definition_summary.BenchlingAppDefinitionSummary
     )
-    BenchlingAppUpdate = benchling_api_client.v2.stable.models.benchling_app_update.BenchlingAppUpdate
+    BenchlingAppUpdate = (
+        benchling_api_client.v2.stable.models.benchling_app_update.BenchlingAppUpdate
+    )
     BenchlingAppsArchivalChange = (
         benchling_api_client.v2.stable.models.benchling_apps_archival_change.BenchlingAppsArchivalChange
     )
-    BenchlingAppsArchive = benchling_api_client.v2.stable.models.benchling_apps_archive.BenchlingAppsArchive
+    BenchlingAppsArchive = (
+        benchling_api_client.v2.stable.models.benchling_apps_archive.BenchlingAppsArchive
+    )
     BenchlingAppsArchiveReason = (
         benchling_api_client.v2.stable.models.benchling_apps_archive_reason.BenchlingAppsArchiveReason
     )
@@ -2782,18 +3037,28 @@ if TYPE_CHECKING:
     Blob = benchling_api_client.v2.stable.models.blob.Blob
     BlobComplete = benchling_api_client.v2.stable.models.blob_complete.BlobComplete
     BlobCreate = benchling_api_client.v2.stable.models.blob_create.BlobCreate
-    BlobCreateType = benchling_api_client.v2.stable.models.blob_create_type.BlobCreateType
-    BlobMultipartCreate = benchling_api_client.v2.stable.models.blob_multipart_create.BlobMultipartCreate
+    BlobCreateType = (
+        benchling_api_client.v2.stable.models.blob_create_type.BlobCreateType
+    )
+    BlobMultipartCreate = (
+        benchling_api_client.v2.stable.models.blob_multipart_create.BlobMultipartCreate
+    )
     BlobMultipartCreateType = (
         benchling_api_client.v2.stable.models.blob_multipart_create_type.BlobMultipartCreateType
     )
     BlobPart = benchling_api_client.v2.stable.models.blob_part.BlobPart
-    BlobPartCreate = benchling_api_client.v2.stable.models.blob_part_create.BlobPartCreate
+    BlobPartCreate = (
+        benchling_api_client.v2.stable.models.blob_part_create.BlobPartCreate
+    )
     BlobType = benchling_api_client.v2.stable.models.blob_type.BlobType
-    BlobUploadStatus = benchling_api_client.v2.stable.models.blob_upload_status.BlobUploadStatus
+    BlobUploadStatus = (
+        benchling_api_client.v2.stable.models.blob_upload_status.BlobUploadStatus
+    )
     BlobUrl = benchling_api_client.v2.stable.models.blob_url.BlobUrl
     BlobsBulkGet = benchling_api_client.v2.stable.models.blobs_bulk_get.BlobsBulkGet
-    BooleanAppConfigItem = benchling_api_client.v2.stable.models.boolean_app_config_item.BooleanAppConfigItem
+    BooleanAppConfigItem = (
+        benchling_api_client.v2.stable.models.boolean_app_config_item.BooleanAppConfigItem
+    )
     BooleanAppConfigItemType = (
         benchling_api_client.v2.stable.models.boolean_app_config_item_type.BooleanAppConfigItemType
     )
@@ -2813,17 +3078,27 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.box_schema_container_schema.BoxSchemaContainerSchema
     )
     BoxSchemaType = benchling_api_client.v2.stable.models.box_schema_type.BoxSchemaType
-    BoxSchemasList = benchling_api_client.v2.stable.models.box_schemas_list.BoxSchemasList
+    BoxSchemasList = (
+        benchling_api_client.v2.stable.models.box_schemas_list.BoxSchemasList
+    )
     BoxSchemasPaginatedList = (
         benchling_api_client.v2.stable.models.box_schemas_paginated_list.BoxSchemasPaginatedList
     )
     BoxUpdate = benchling_api_client.v2.stable.models.box_update.BoxUpdate
-    BoxesArchivalChange = benchling_api_client.v2.stable.models.boxes_archival_change.BoxesArchivalChange
+    BoxesArchivalChange = (
+        benchling_api_client.v2.stable.models.boxes_archival_change.BoxesArchivalChange
+    )
     BoxesArchive = benchling_api_client.v2.stable.models.boxes_archive.BoxesArchive
-    BoxesArchiveReason = benchling_api_client.v2.stable.models.boxes_archive_reason.BoxesArchiveReason
+    BoxesArchiveReason = (
+        benchling_api_client.v2.stable.models.boxes_archive_reason.BoxesArchiveReason
+    )
     BoxesBulkGet = benchling_api_client.v2.stable.models.boxes_bulk_get.BoxesBulkGet
-    BoxesPaginatedList = benchling_api_client.v2.stable.models.boxes_paginated_list.BoxesPaginatedList
-    BoxesUnarchive = benchling_api_client.v2.stable.models.boxes_unarchive.BoxesUnarchive
+    BoxesPaginatedList = (
+        benchling_api_client.v2.stable.models.boxes_paginated_list.BoxesPaginatedList
+    )
+    BoxesUnarchive = (
+        benchling_api_client.v2.stable.models.boxes_unarchive.BoxesUnarchive
+    )
     BulkCreateAaSequencesAsyncTask = (
         benchling_api_client.v2.stable.models.bulk_create_aa_sequences_async_task.BulkCreateAaSequencesAsyncTask
     )
@@ -2918,26 +3193,54 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.bulk_update_rna_sequences_async_task_response.BulkUpdateRnaSequencesAsyncTaskResponse
     )
     ButtonUiBlock = benchling_api_client.v2.stable.models.button_ui_block.ButtonUiBlock
-    ButtonUiBlockCreate = benchling_api_client.v2.stable.models.button_ui_block_create.ButtonUiBlockCreate
-    ButtonUiBlockType = benchling_api_client.v2.stable.models.button_ui_block_type.ButtonUiBlockType
-    ButtonUiBlockUpdate = benchling_api_client.v2.stable.models.button_ui_block_update.ButtonUiBlockUpdate
+    ButtonUiBlockCreate = (
+        benchling_api_client.v2.stable.models.button_ui_block_create.ButtonUiBlockCreate
+    )
+    ButtonUiBlockType = (
+        benchling_api_client.v2.stable.models.button_ui_block_type.ButtonUiBlockType
+    )
+    ButtonUiBlockUpdate = (
+        benchling_api_client.v2.stable.models.button_ui_block_update.ButtonUiBlockUpdate
+    )
     ChartNotePart = benchling_api_client.v2.stable.models.chart_note_part.ChartNotePart
-    ChartNotePartChart = benchling_api_client.v2.stable.models.chart_note_part_chart.ChartNotePartChart
-    ChartNotePartType = benchling_api_client.v2.stable.models.chart_note_part_type.ChartNotePartType
-    CheckboxNotePart = benchling_api_client.v2.stable.models.checkbox_note_part.CheckboxNotePart
-    CheckboxNotePartType = benchling_api_client.v2.stable.models.checkbox_note_part_type.CheckboxNotePartType
-    CheckoutRecord = benchling_api_client.v2.stable.models.checkout_record.CheckoutRecord
-    CheckoutRecordStatus = benchling_api_client.v2.stable.models.checkout_record_status.CheckoutRecordStatus
+    ChartNotePartChart = (
+        benchling_api_client.v2.stable.models.chart_note_part_chart.ChartNotePartChart
+    )
+    ChartNotePartType = (
+        benchling_api_client.v2.stable.models.chart_note_part_type.ChartNotePartType
+    )
+    CheckboxNotePart = (
+        benchling_api_client.v2.stable.models.checkbox_note_part.CheckboxNotePart
+    )
+    CheckboxNotePartType = (
+        benchling_api_client.v2.stable.models.checkbox_note_part_type.CheckboxNotePartType
+    )
+    CheckoutRecord = (
+        benchling_api_client.v2.stable.models.checkout_record.CheckoutRecord
+    )
+    CheckoutRecordStatus = (
+        benchling_api_client.v2.stable.models.checkout_record_status.CheckoutRecordStatus
+    )
     ChipUiBlock = benchling_api_client.v2.stable.models.chip_ui_block.ChipUiBlock
-    ChipUiBlockCreate = benchling_api_client.v2.stable.models.chip_ui_block_create.ChipUiBlockCreate
-    ChipUiBlockType = benchling_api_client.v2.stable.models.chip_ui_block_type.ChipUiBlockType
-    ChipUiBlockUpdate = benchling_api_client.v2.stable.models.chip_ui_block_update.ChipUiBlockUpdate
-    CodonUsageTable = benchling_api_client.v2.stable.models.codon_usage_table.CodonUsageTable
+    ChipUiBlockCreate = (
+        benchling_api_client.v2.stable.models.chip_ui_block_create.ChipUiBlockCreate
+    )
+    ChipUiBlockType = (
+        benchling_api_client.v2.stable.models.chip_ui_block_type.ChipUiBlockType
+    )
+    ChipUiBlockUpdate = (
+        benchling_api_client.v2.stable.models.chip_ui_block_update.ChipUiBlockUpdate
+    )
+    CodonUsageTable = (
+        benchling_api_client.v2.stable.models.codon_usage_table.CodonUsageTable
+    )
     CodonUsageTablesPaginatedList = (
         benchling_api_client.v2.stable.models.codon_usage_tables_paginated_list.CodonUsageTablesPaginatedList
     )
     ConflictError = benchling_api_client.v2.stable.models.conflict_error.ConflictError
-    ConflictErrorError = benchling_api_client.v2.stable.models.conflict_error_error.ConflictErrorError
+    ConflictErrorError = (
+        benchling_api_client.v2.stable.models.conflict_error_error.ConflictErrorError
+    )
     ConflictErrorErrorConflictsItem = (
         benchling_api_client.v2.stable.models.conflict_error_error_conflicts_item.ConflictErrorErrorConflictsItem
     )
@@ -2945,41 +3248,63 @@ if TYPE_CHECKING:
     ContainerBulkUpdateItem = (
         benchling_api_client.v2.stable.models.container_bulk_update_item.ContainerBulkUpdateItem
     )
-    ContainerContent = benchling_api_client.v2.stable.models.container_content.ContainerContent
+    ContainerContent = (
+        benchling_api_client.v2.stable.models.container_content.ContainerContent
+    )
     ContainerContentUpdate = (
         benchling_api_client.v2.stable.models.container_content_update.ContainerContentUpdate
     )
     ContainerContentsList = (
         benchling_api_client.v2.stable.models.container_contents_list.ContainerContentsList
     )
-    ContainerCreate = benchling_api_client.v2.stable.models.container_create.ContainerCreate
-    ContainerLabels = benchling_api_client.v2.stable.models.container_labels.ContainerLabels
-    ContainerQuantity = benchling_api_client.v2.stable.models.container_quantity.ContainerQuantity
+    ContainerCreate = (
+        benchling_api_client.v2.stable.models.container_create.ContainerCreate
+    )
+    ContainerLabels = (
+        benchling_api_client.v2.stable.models.container_labels.ContainerLabels
+    )
+    ContainerQuantity = (
+        benchling_api_client.v2.stable.models.container_quantity.ContainerQuantity
+    )
     ContainerQuantityUnits = (
         benchling_api_client.v2.stable.models.container_quantity_units.ContainerQuantityUnits
     )
-    ContainerSchema = benchling_api_client.v2.stable.models.container_schema.ContainerSchema
-    ContainerSchemaType = benchling_api_client.v2.stable.models.container_schema_type.ContainerSchemaType
-    ContainerSchemasList = benchling_api_client.v2.stable.models.container_schemas_list.ContainerSchemasList
+    ContainerSchema = (
+        benchling_api_client.v2.stable.models.container_schema.ContainerSchema
+    )
+    ContainerSchemaType = (
+        benchling_api_client.v2.stable.models.container_schema_type.ContainerSchemaType
+    )
+    ContainerSchemasList = (
+        benchling_api_client.v2.stable.models.container_schemas_list.ContainerSchemasList
+    )
     ContainerSchemasPaginatedList = (
         benchling_api_client.v2.stable.models.container_schemas_paginated_list.ContainerSchemasPaginatedList
     )
-    ContainerTransfer = benchling_api_client.v2.stable.models.container_transfer.ContainerTransfer
+    ContainerTransfer = (
+        benchling_api_client.v2.stable.models.container_transfer.ContainerTransfer
+    )
     ContainerTransferBase = (
         benchling_api_client.v2.stable.models.container_transfer_base.ContainerTransferBase
     )
     ContainerTransferDestinationContentsItem = (
         benchling_api_client.v2.stable.models.container_transfer_destination_contents_item.ContainerTransferDestinationContentsItem
     )
-    ContainerUpdate = benchling_api_client.v2.stable.models.container_update.ContainerUpdate
+    ContainerUpdate = (
+        benchling_api_client.v2.stable.models.container_update.ContainerUpdate
+    )
     ContainerWithCoordinates = (
         benchling_api_client.v2.stable.models.container_with_coordinates.ContainerWithCoordinates
     )
-    ContainerWriteBase = benchling_api_client.v2.stable.models.container_write_base.ContainerWriteBase
+    ContainerWriteBase = (
+        benchling_api_client.v2.stable.models.container_write_base.ContainerWriteBase
+    )
     ContainersArchivalChange = (
         benchling_api_client.v2.stable.models.containers_archival_change.ContainersArchivalChange
     )
-    ContainersArchive = benchling_api_client.v2.stable.models.containers_archive.ContainersArchive
+    ContainersArchive = (
+        benchling_api_client.v2.stable.models.containers_archive.ContainersArchive
+    )
     ContainersArchiveReason = (
         benchling_api_client.v2.stable.models.containers_archive_reason.ContainersArchiveReason
     )
@@ -2989,13 +3314,29 @@ if TYPE_CHECKING:
     ContainersBulkUpdateRequest = (
         benchling_api_client.v2.stable.models.containers_bulk_update_request.ContainersBulkUpdateRequest
     )
-    ContainersCheckin = benchling_api_client.v2.stable.models.containers_checkin.ContainersCheckin
-    ContainersCheckout = benchling_api_client.v2.stable.models.containers_checkout.ContainersCheckout
-    ContainersList = benchling_api_client.v2.stable.models.containers_list.ContainersList
+    ContainersCheckin = (
+        benchling_api_client.v2.stable.models.containers_checkin.ContainersCheckin
+    )
+    ContainersCheckout = (
+        benchling_api_client.v2.stable.models.containers_checkout.ContainersCheckout
+    )
+    ContainersList = (
+        benchling_api_client.v2.stable.models.containers_list.ContainersList
+    )
     ContainersPaginatedList = (
         benchling_api_client.v2.stable.models.containers_paginated_list.ContainersPaginatedList
     )
-    ContainersUnarchive = benchling_api_client.v2.stable.models.containers_unarchive.ContainersUnarchive
+    ContainersUnarchive = (
+        benchling_api_client.v2.stable.models.containers_unarchive.ContainersUnarchive
+    )
+    ConvertToASM = benchling_api_client.v2.stable.models.convert_to_asm.ConvertToASM
+    ConvertToASMResponse_200 = (
+        benchling_api_client.v2.stable.models.convert_to_asm_response_200.ConvertToASMResponse_200
+    )
+    ConvertToCSV = benchling_api_client.v2.stable.models.convert_to_csv.ConvertToCSV
+    ConvertToCSVResponse_200Item = (
+        benchling_api_client.v2.stable.models.convert_to_csv_response_200_item.ConvertToCSVResponse_200Item
+    )
     CreateConsensusAlignmentAsyncTask = (
         benchling_api_client.v2.stable.models.create_consensus_alignment_async_task.CreateConsensusAlignmentAsyncTask
     )
@@ -3011,7 +3352,9 @@ if TYPE_CHECKING:
     CreateTemplateAlignmentAsyncTask = (
         benchling_api_client.v2.stable.models.create_template_alignment_async_task.CreateTemplateAlignmentAsyncTask
     )
-    CreationOrigin = benchling_api_client.v2.stable.models.creation_origin.CreationOrigin
+    CreationOrigin = (
+        benchling_api_client.v2.stable.models.creation_origin.CreationOrigin
+    )
     CustomEntitiesArchivalChange = (
         benchling_api_client.v2.stable.models.custom_entities_archival_change.CustomEntitiesArchivalChange
     )
@@ -3027,7 +3370,9 @@ if TYPE_CHECKING:
     CustomEntitiesBulkUpsertRequest = (
         benchling_api_client.v2.stable.models.custom_entities_bulk_upsert_request.CustomEntitiesBulkUpsertRequest
     )
-    CustomEntitiesList = benchling_api_client.v2.stable.models.custom_entities_list.CustomEntitiesList
+    CustomEntitiesList = (
+        benchling_api_client.v2.stable.models.custom_entities_list.CustomEntitiesList
+    )
     CustomEntitiesPaginatedList = (
         benchling_api_client.v2.stable.models.custom_entities_paginated_list.CustomEntitiesPaginatedList
     )
@@ -3050,16 +3395,24 @@ if TYPE_CHECKING:
     CustomEntityBulkUpsertRequest = (
         benchling_api_client.v2.stable.models.custom_entity_bulk_upsert_request.CustomEntityBulkUpsertRequest
     )
-    CustomEntityCreate = benchling_api_client.v2.stable.models.custom_entity_create.CustomEntityCreate
-    CustomEntityCreator = benchling_api_client.v2.stable.models.custom_entity_creator.CustomEntityCreator
+    CustomEntityCreate = (
+        benchling_api_client.v2.stable.models.custom_entity_create.CustomEntityCreate
+    )
+    CustomEntityCreator = (
+        benchling_api_client.v2.stable.models.custom_entity_creator.CustomEntityCreator
+    )
     CustomEntityRequestRegistryFields = (
         benchling_api_client.v2.stable.models.custom_entity_request_registry_fields.CustomEntityRequestRegistryFields
     )
-    CustomEntitySummary = benchling_api_client.v2.stable.models.custom_entity_summary.CustomEntitySummary
+    CustomEntitySummary = (
+        benchling_api_client.v2.stable.models.custom_entity_summary.CustomEntitySummary
+    )
     CustomEntitySummaryEntityType = (
         benchling_api_client.v2.stable.models.custom_entity_summary_entity_type.CustomEntitySummaryEntityType
     )
-    CustomEntityUpdate = benchling_api_client.v2.stable.models.custom_entity_update.CustomEntityUpdate
+    CustomEntityUpdate = (
+        benchling_api_client.v2.stable.models.custom_entity_update.CustomEntityUpdate
+    )
     CustomEntityUpsertRequest = (
         benchling_api_client.v2.stable.models.custom_entity_upsert_request.CustomEntityUpsertRequest
     )
@@ -3071,14 +3424,79 @@ if TYPE_CHECKING:
     )
     CustomField = benchling_api_client.v2.stable.models.custom_field.CustomField
     CustomFields = benchling_api_client.v2.stable.models.custom_fields.CustomFields
-    CustomNotation = benchling_api_client.v2.stable.models.custom_notation.CustomNotation
+    CustomNotation = (
+        benchling_api_client.v2.stable.models.custom_notation.CustomNotation
+    )
+    CustomNotationAlias = (
+        benchling_api_client.v2.stable.models.custom_notation_alias.CustomNotationAlias
+    )
     CustomNotationRequest = (
         benchling_api_client.v2.stable.models.custom_notation_request.CustomNotationRequest
     )
     CustomNotationsPaginatedList = (
         benchling_api_client.v2.stable.models.custom_notations_paginated_list.CustomNotationsPaginatedList
     )
-    DateAppConfigItem = benchling_api_client.v2.stable.models.date_app_config_item.DateAppConfigItem
+    DataFrame = benchling_api_client.v2.stable.models.data_frame.DataFrame
+    DataFrameColumnMetadata = (
+        benchling_api_client.v2.stable.models.data_frame_column_metadata.DataFrameColumnMetadata
+    )
+    DataFrameColumnTypeMetadata = (
+        benchling_api_client.v2.stable.models.data_frame_column_type_metadata.DataFrameColumnTypeMetadata
+    )
+    DataFrameColumnTypeMetadataTarget = (
+        benchling_api_client.v2.stable.models.data_frame_column_type_metadata_target.DataFrameColumnTypeMetadataTarget
+    )
+    DataFrameColumnTypeNameEnum = (
+        benchling_api_client.v2.stable.models.data_frame_column_type_name_enum.DataFrameColumnTypeNameEnum
+    )
+    DataFrameColumnTypeNameEnumName = (
+        benchling_api_client.v2.stable.models.data_frame_column_type_name_enum_name.DataFrameColumnTypeNameEnumName
+    )
+    DataFrameCreate = (
+        benchling_api_client.v2.stable.models.data_frame_create.DataFrameCreate
+    )
+    DataFrameCreateManifest = (
+        benchling_api_client.v2.stable.models.data_frame_create_manifest.DataFrameCreateManifest
+    )
+    DataFrameCreateManifestManifestItem = (
+        benchling_api_client.v2.stable.models.data_frame_create_manifest_manifest_item.DataFrameCreateManifestManifestItem
+    )
+    DataFrameManifest = (
+        benchling_api_client.v2.stable.models.data_frame_manifest.DataFrameManifest
+    )
+    DataFrameManifestManifestItem = (
+        benchling_api_client.v2.stable.models.data_frame_manifest_manifest_item.DataFrameManifestManifestItem
+    )
+    DataFrameUpdate = (
+        benchling_api_client.v2.stable.models.data_frame_update.DataFrameUpdate
+    )
+    DataFrameUpdateUploadStatus = (
+        benchling_api_client.v2.stable.models.data_frame_update_upload_status.DataFrameUpdateUploadStatus
+    )
+    Dataset = benchling_api_client.v2.stable.models.dataset.Dataset
+    DatasetCreate = benchling_api_client.v2.stable.models.dataset_create.DatasetCreate
+    DatasetCreator = (
+        benchling_api_client.v2.stable.models.dataset_creator.DatasetCreator
+    )
+    DatasetUpdate = benchling_api_client.v2.stable.models.dataset_update.DatasetUpdate
+    DatasetsArchivalChange = (
+        benchling_api_client.v2.stable.models.datasets_archival_change.DatasetsArchivalChange
+    )
+    DatasetsArchive = (
+        benchling_api_client.v2.stable.models.datasets_archive.DatasetsArchive
+    )
+    DatasetsArchiveReason = (
+        benchling_api_client.v2.stable.models.datasets_archive_reason.DatasetsArchiveReason
+    )
+    DatasetsPaginatedList = (
+        benchling_api_client.v2.stable.models.datasets_paginated_list.DatasetsPaginatedList
+    )
+    DatasetsUnarchive = (
+        benchling_api_client.v2.stable.models.datasets_unarchive.DatasetsUnarchive
+    )
+    DateAppConfigItem = (
+        benchling_api_client.v2.stable.models.date_app_config_item.DateAppConfigItem
+    )
     DateAppConfigItemType = (
         benchling_api_client.v2.stable.models.date_app_config_item_type.DateAppConfigItemType
     )
@@ -3110,14 +3528,18 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.deprecated_entity_schemas_list.DeprecatedEntitySchemasList
     )
     DnaAlignment = benchling_api_client.v2.stable.models.dna_alignment.DnaAlignment
-    DnaAlignmentBase = benchling_api_client.v2.stable.models.dna_alignment_base.DnaAlignmentBase
+    DnaAlignmentBase = (
+        benchling_api_client.v2.stable.models.dna_alignment_base.DnaAlignmentBase
+    )
     DnaAlignmentBaseAlgorithm = (
         benchling_api_client.v2.stable.models.dna_alignment_base_algorithm.DnaAlignmentBaseAlgorithm
     )
     DnaAlignmentBaseFilesItem = (
         benchling_api_client.v2.stable.models.dna_alignment_base_files_item.DnaAlignmentBaseFilesItem
     )
-    DnaAlignmentSummary = benchling_api_client.v2.stable.models.dna_alignment_summary.DnaAlignmentSummary
+    DnaAlignmentSummary = (
+        benchling_api_client.v2.stable.models.dna_alignment_summary.DnaAlignmentSummary
+    )
     DnaAlignmentsPaginatedList = (
         benchling_api_client.v2.stable.models.dna_alignments_paginated_list.DnaAlignmentsPaginatedList
     )
@@ -3129,9 +3551,15 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.dna_consensus_alignment_create_new_sequence.DnaConsensusAlignmentCreateNewSequence
     )
     DnaOligo = benchling_api_client.v2.stable.models.dna_oligo.DnaOligo
-    DnaOligoBulkUpdate = benchling_api_client.v2.stable.models.dna_oligo_bulk_update.DnaOligoBulkUpdate
-    DnaOligoCreate = benchling_api_client.v2.stable.models.dna_oligo_create.DnaOligoCreate
-    DnaOligoUpdate = benchling_api_client.v2.stable.models.dna_oligo_update.DnaOligoUpdate
+    DnaOligoBulkUpdate = (
+        benchling_api_client.v2.stable.models.dna_oligo_bulk_update.DnaOligoBulkUpdate
+    )
+    DnaOligoCreate = (
+        benchling_api_client.v2.stable.models.dna_oligo_create.DnaOligoCreate
+    )
+    DnaOligoUpdate = (
+        benchling_api_client.v2.stable.models.dna_oligo_update.DnaOligoUpdate
+    )
     DnaOligoWithEntityType = (
         benchling_api_client.v2.stable.models.dna_oligo_with_entity_type.DnaOligoWithEntityType
     )
@@ -3141,7 +3569,9 @@ if TYPE_CHECKING:
     DnaOligosArchivalChange = (
         benchling_api_client.v2.stable.models.dna_oligos_archival_change.DnaOligosArchivalChange
     )
-    DnaOligosArchive = benchling_api_client.v2.stable.models.dna_oligos_archive.DnaOligosArchive
+    DnaOligosArchive = (
+        benchling_api_client.v2.stable.models.dna_oligos_archive.DnaOligosArchive
+    )
     DnaOligosBulkCreateRequest = (
         benchling_api_client.v2.stable.models.dna_oligos_bulk_create_request.DnaOligosBulkCreateRequest
     )
@@ -3154,7 +3584,9 @@ if TYPE_CHECKING:
     DnaOligosPaginatedList = (
         benchling_api_client.v2.stable.models.dna_oligos_paginated_list.DnaOligosPaginatedList
     )
-    DnaOligosUnarchive = benchling_api_client.v2.stable.models.dna_oligos_unarchive.DnaOligosUnarchive
+    DnaOligosUnarchive = (
+        benchling_api_client.v2.stable.models.dna_oligos_unarchive.DnaOligosUnarchive
+    )
     DnaSequence = benchling_api_client.v2.stable.models.dna_sequence.DnaSequence
     DnaSequenceBaseRequest = (
         benchling_api_client.v2.stable.models.dna_sequence_base_request.DnaSequenceBaseRequest
@@ -3171,16 +3603,24 @@ if TYPE_CHECKING:
     DnaSequenceBulkUpsertRequest = (
         benchling_api_client.v2.stable.models.dna_sequence_bulk_upsert_request.DnaSequenceBulkUpsertRequest
     )
-    DnaSequenceCreate = benchling_api_client.v2.stable.models.dna_sequence_create.DnaSequenceCreate
-    DnaSequencePart = benchling_api_client.v2.stable.models.dna_sequence_part.DnaSequencePart
+    DnaSequenceCreate = (
+        benchling_api_client.v2.stable.models.dna_sequence_create.DnaSequenceCreate
+    )
+    DnaSequencePart = (
+        benchling_api_client.v2.stable.models.dna_sequence_part.DnaSequencePart
+    )
     DnaSequenceRequestRegistryFields = (
         benchling_api_client.v2.stable.models.dna_sequence_request_registry_fields.DnaSequenceRequestRegistryFields
     )
-    DnaSequenceSummary = benchling_api_client.v2.stable.models.dna_sequence_summary.DnaSequenceSummary
+    DnaSequenceSummary = (
+        benchling_api_client.v2.stable.models.dna_sequence_summary.DnaSequenceSummary
+    )
     DnaSequenceSummaryEntityType = (
         benchling_api_client.v2.stable.models.dna_sequence_summary_entity_type.DnaSequenceSummaryEntityType
     )
-    DnaSequenceUpdate = benchling_api_client.v2.stable.models.dna_sequence_update.DnaSequenceUpdate
+    DnaSequenceUpdate = (
+        benchling_api_client.v2.stable.models.dna_sequence_update.DnaSequenceUpdate
+    )
     DnaSequenceUpsertRequest = (
         benchling_api_client.v2.stable.models.dna_sequence_upsert_request.DnaSequenceUpsertRequest
     )
@@ -3193,11 +3633,15 @@ if TYPE_CHECKING:
     DnaSequencesArchivalChange = (
         benchling_api_client.v2.stable.models.dna_sequences_archival_change.DnaSequencesArchivalChange
     )
-    DnaSequencesArchive = benchling_api_client.v2.stable.models.dna_sequences_archive.DnaSequencesArchive
+    DnaSequencesArchive = (
+        benchling_api_client.v2.stable.models.dna_sequences_archive.DnaSequencesArchive
+    )
     DnaSequencesBulkCreateRequest = (
         benchling_api_client.v2.stable.models.dna_sequences_bulk_create_request.DnaSequencesBulkCreateRequest
     )
-    DnaSequencesBulkGet = benchling_api_client.v2.stable.models.dna_sequences_bulk_get.DnaSequencesBulkGet
+    DnaSequencesBulkGet = (
+        benchling_api_client.v2.stable.models.dna_sequences_bulk_get.DnaSequencesBulkGet
+    )
     DnaSequencesBulkUpdateRequest = (
         benchling_api_client.v2.stable.models.dna_sequences_bulk_update_request.DnaSequencesBulkUpdateRequest
     )
@@ -3220,7 +3664,9 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.dna_template_alignment_file.DnaTemplateAlignmentFile
     )
     Dropdown = benchling_api_client.v2.stable.models.dropdown.Dropdown
-    DropdownCreate = benchling_api_client.v2.stable.models.dropdown_create.DropdownCreate
+    DropdownCreate = (
+        benchling_api_client.v2.stable.models.dropdown_create.DropdownCreate
+    )
     DropdownFieldDefinition = (
         benchling_api_client.v2.stable.models.dropdown_field_definition.DropdownFieldDefinition
     )
@@ -3239,9 +3685,15 @@ if TYPE_CHECKING:
     DropdownMultiValueUiBlockUpdate = (
         benchling_api_client.v2.stable.models.dropdown_multi_value_ui_block_update.DropdownMultiValueUiBlockUpdate
     )
-    DropdownOption = benchling_api_client.v2.stable.models.dropdown_option.DropdownOption
-    DropdownOptionCreate = benchling_api_client.v2.stable.models.dropdown_option_create.DropdownOptionCreate
-    DropdownOptionUpdate = benchling_api_client.v2.stable.models.dropdown_option_update.DropdownOptionUpdate
+    DropdownOption = (
+        benchling_api_client.v2.stable.models.dropdown_option.DropdownOption
+    )
+    DropdownOptionCreate = (
+        benchling_api_client.v2.stable.models.dropdown_option_create.DropdownOptionCreate
+    )
+    DropdownOptionUpdate = (
+        benchling_api_client.v2.stable.models.dropdown_option_update.DropdownOptionUpdate
+    )
     DropdownOptionsArchivalChange = (
         benchling_api_client.v2.stable.models.dropdown_options_archival_change.DropdownOptionsArchivalChange
     )
@@ -3257,16 +3709,24 @@ if TYPE_CHECKING:
     DropdownSummariesPaginatedList = (
         benchling_api_client.v2.stable.models.dropdown_summaries_paginated_list.DropdownSummariesPaginatedList
     )
-    DropdownSummary = benchling_api_client.v2.stable.models.dropdown_summary.DropdownSummary
-    DropdownUiBlock = benchling_api_client.v2.stable.models.dropdown_ui_block.DropdownUiBlock
+    DropdownSummary = (
+        benchling_api_client.v2.stable.models.dropdown_summary.DropdownSummary
+    )
+    DropdownUiBlock = (
+        benchling_api_client.v2.stable.models.dropdown_ui_block.DropdownUiBlock
+    )
     DropdownUiBlockCreate = (
         benchling_api_client.v2.stable.models.dropdown_ui_block_create.DropdownUiBlockCreate
     )
-    DropdownUiBlockType = benchling_api_client.v2.stable.models.dropdown_ui_block_type.DropdownUiBlockType
+    DropdownUiBlockType = (
+        benchling_api_client.v2.stable.models.dropdown_ui_block_type.DropdownUiBlockType
+    )
     DropdownUiBlockUpdate = (
         benchling_api_client.v2.stable.models.dropdown_ui_block_update.DropdownUiBlockUpdate
     )
-    DropdownUpdate = benchling_api_client.v2.stable.models.dropdown_update.DropdownUpdate
+    DropdownUpdate = (
+        benchling_api_client.v2.stable.models.dropdown_update.DropdownUpdate
+    )
     DropdownsRegistryList = (
         benchling_api_client.v2.stable.models.dropdowns_registry_list.DropdownsRegistryList
     )
@@ -3275,7 +3735,9 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.entities_bulk_upsert_request.EntitiesBulkUpsertRequest
     )
     Entity = benchling_api_client.v2.stable.models.entity.Entity
-    EntityArchiveReason = benchling_api_client.v2.stable.models.entity_archive_reason.EntityArchiveReason
+    EntityArchiveReason = (
+        benchling_api_client.v2.stable.models.entity_archive_reason.EntityArchiveReason
+    )
     EntityBulkUpsertBaseRequest = (
         benchling_api_client.v2.stable.models.entity_bulk_upsert_base_request.EntityBulkUpsertBaseRequest
     )
@@ -3302,7 +3764,9 @@ if TYPE_CHECKING:
     EntitySchemaContainableType = (
         benchling_api_client.v2.stable.models.entity_schema_containable_type.EntitySchemaContainableType
     )
-    EntitySchemaType = benchling_api_client.v2.stable.models.entity_schema_type.EntitySchemaType
+    EntitySchemaType = (
+        benchling_api_client.v2.stable.models.entity_schema_type.EntitySchemaType
+    )
     EntitySchemasPaginatedList = (
         benchling_api_client.v2.stable.models.entity_schemas_paginated_list.EntitySchemasPaginatedList
     )
@@ -3313,31 +3777,47 @@ if TYPE_CHECKING:
     EntriesArchivalChange = (
         benchling_api_client.v2.stable.models.entries_archival_change.EntriesArchivalChange
     )
-    EntriesArchive = benchling_api_client.v2.stable.models.entries_archive.EntriesArchive
-    EntriesArchiveReason = benchling_api_client.v2.stable.models.entries_archive_reason.EntriesArchiveReason
-    EntriesPaginatedList = benchling_api_client.v2.stable.models.entries_paginated_list.EntriesPaginatedList
-    EntriesUnarchive = benchling_api_client.v2.stable.models.entries_unarchive.EntriesUnarchive
+    EntriesArchive = (
+        benchling_api_client.v2.stable.models.entries_archive.EntriesArchive
+    )
+    EntriesArchiveReason = (
+        benchling_api_client.v2.stable.models.entries_archive_reason.EntriesArchiveReason
+    )
+    EntriesPaginatedList = (
+        benchling_api_client.v2.stable.models.entries_paginated_list.EntriesPaginatedList
+    )
+    EntriesUnarchive = (
+        benchling_api_client.v2.stable.models.entries_unarchive.EntriesUnarchive
+    )
     Entry = benchling_api_client.v2.stable.models.entry.Entry
     EntryById = benchling_api_client.v2.stable.models.entry_by_id.EntryById
     EntryCreate = benchling_api_client.v2.stable.models.entry_create.EntryCreate
-    EntryCreatedEvent = benchling_api_client.v2.stable.models.entry_created_event.EntryCreatedEvent
+    EntryCreatedEvent = (
+        benchling_api_client.v2.stable.models.entry_created_event.EntryCreatedEvent
+    )
     EntryCreatedEventEventType = (
         benchling_api_client.v2.stable.models.entry_created_event_event_type.EntryCreatedEventEventType
     )
     EntryDay = benchling_api_client.v2.stable.models.entry_day.EntryDay
-    EntryExternalFile = benchling_api_client.v2.stable.models.entry_external_file.EntryExternalFile
+    EntryExternalFile = (
+        benchling_api_client.v2.stable.models.entry_external_file.EntryExternalFile
+    )
     EntryExternalFileById = (
         benchling_api_client.v2.stable.models.entry_external_file_by_id.EntryExternalFileById
     )
     EntryLink = benchling_api_client.v2.stable.models.entry_link.EntryLink
     EntryLinkType = benchling_api_client.v2.stable.models.entry_link_type.EntryLinkType
     EntryNotePart = benchling_api_client.v2.stable.models.entry_note_part.EntryNotePart
-    EntryReviewRecord = benchling_api_client.v2.stable.models.entry_review_record.EntryReviewRecord
+    EntryReviewRecord = (
+        benchling_api_client.v2.stable.models.entry_review_record.EntryReviewRecord
+    )
     EntryReviewRecordStatus = (
         benchling_api_client.v2.stable.models.entry_review_record_status.EntryReviewRecordStatus
     )
     EntrySchema = benchling_api_client.v2.stable.models.entry_schema.EntrySchema
-    EntrySchemaDetailed = benchling_api_client.v2.stable.models.entry_schema_detailed.EntrySchemaDetailed
+    EntrySchemaDetailed = (
+        benchling_api_client.v2.stable.models.entry_schema_detailed.EntrySchemaDetailed
+    )
     EntrySchemaDetailedType = (
         benchling_api_client.v2.stable.models.entry_schema_detailed_type.EntrySchemaDetailedType
     )
@@ -3345,11 +3825,17 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.entry_schemas_paginated_list.EntrySchemasPaginatedList
     )
     EntryTable = benchling_api_client.v2.stable.models.entry_table.EntryTable
-    EntryTableCell = benchling_api_client.v2.stable.models.entry_table_cell.EntryTableCell
+    EntryTableCell = (
+        benchling_api_client.v2.stable.models.entry_table_cell.EntryTableCell
+    )
     EntryTableRow = benchling_api_client.v2.stable.models.entry_table_row.EntryTableRow
     EntryTemplate = benchling_api_client.v2.stable.models.entry_template.EntryTemplate
-    EntryTemplateDay = benchling_api_client.v2.stable.models.entry_template_day.EntryTemplateDay
-    EntryTemplateUpdate = benchling_api_client.v2.stable.models.entry_template_update.EntryTemplateUpdate
+    EntryTemplateDay = (
+        benchling_api_client.v2.stable.models.entry_template_day.EntryTemplateDay
+    )
+    EntryTemplateUpdate = (
+        benchling_api_client.v2.stable.models.entry_template_update.EntryTemplateUpdate
+    )
     EntryTemplatesPaginatedList = (
         benchling_api_client.v2.stable.models.entry_templates_paginated_list.EntryTemplatesPaginatedList
     )
@@ -3366,14 +3852,30 @@ if TYPE_CHECKING:
     EntryUpdatedReviewRecordEventEventType = (
         benchling_api_client.v2.stable.models.entry_updated_review_record_event_event_type.EntryUpdatedReviewRecordEventEventType
     )
+    EntryUpdatedReviewSnapshotBetaEvent = (
+        benchling_api_client.v2.stable.models.entry_updated_review_snapshot_beta_event.EntryUpdatedReviewSnapshotBetaEvent
+    )
+    EntryUpdatedReviewSnapshotBetaEventEventType = (
+        benchling_api_client.v2.stable.models.entry_updated_review_snapshot_beta_event_event_type.EntryUpdatedReviewSnapshotBetaEventEventType
+    )
     Enzyme = benchling_api_client.v2.stable.models.enzyme.Enzyme
-    EnzymesPaginatedList = benchling_api_client.v2.stable.models.enzymes_paginated_list.EnzymesPaginatedList
+    EnzymesPaginatedList = (
+        benchling_api_client.v2.stable.models.enzymes_paginated_list.EnzymesPaginatedList
+    )
     Event = benchling_api_client.v2.stable.models.event.Event
     EventBase = benchling_api_client.v2.stable.models.event_base.EventBase
-    EventBaseSchema = benchling_api_client.v2.stable.models.event_base_schema.EventBaseSchema
-    EventsPaginatedList = benchling_api_client.v2.stable.models.events_paginated_list.EventsPaginatedList
-    ExecuteSampleGroups = benchling_api_client.v2.stable.models.execute_sample_groups.ExecuteSampleGroups
-    ExperimentalWellRole = benchling_api_client.v2.stable.models.experimental_well_role.ExperimentalWellRole
+    EventBaseSchema = (
+        benchling_api_client.v2.stable.models.event_base_schema.EventBaseSchema
+    )
+    EventsPaginatedList = (
+        benchling_api_client.v2.stable.models.events_paginated_list.EventsPaginatedList
+    )
+    ExecuteSampleGroups = (
+        benchling_api_client.v2.stable.models.execute_sample_groups.ExecuteSampleGroups
+    )
+    ExperimentalWellRole = (
+        benchling_api_client.v2.stable.models.experimental_well_role.ExperimentalWellRole
+    )
     ExperimentalWellRolePrimaryRole = (
         benchling_api_client.v2.stable.models.experimental_well_role_primary_role.ExperimentalWellRolePrimaryRole
     )
@@ -3383,18 +3885,26 @@ if TYPE_CHECKING:
     ExportAuditLogAsyncTaskResponse = (
         benchling_api_client.v2.stable.models.export_audit_log_async_task_response.ExportAuditLogAsyncTaskResponse
     )
-    ExportItemRequest = benchling_api_client.v2.stable.models.export_item_request.ExportItemRequest
-    ExportsAsyncTask = benchling_api_client.v2.stable.models.exports_async_task.ExportsAsyncTask
+    ExportItemRequest = (
+        benchling_api_client.v2.stable.models.export_item_request.ExportItemRequest
+    )
+    ExportsAsyncTask = (
+        benchling_api_client.v2.stable.models.exports_async_task.ExportsAsyncTask
+    )
     ExportsAsyncTaskResponse = (
         benchling_api_client.v2.stable.models.exports_async_task_response.ExportsAsyncTaskResponse
     )
-    ExternalFileNotePart = benchling_api_client.v2.stable.models.external_file_note_part.ExternalFileNotePart
+    ExternalFileNotePart = (
+        benchling_api_client.v2.stable.models.external_file_note_part.ExternalFileNotePart
+    )
     ExternalFileNotePartType = (
         benchling_api_client.v2.stable.models.external_file_note_part_type.ExternalFileNotePartType
     )
     Feature = benchling_api_client.v2.stable.models.feature.Feature
     FeatureBase = benchling_api_client.v2.stable.models.feature_base.FeatureBase
-    FeatureBulkCreate = benchling_api_client.v2.stable.models.feature_bulk_create.FeatureBulkCreate
+    FeatureBulkCreate = (
+        benchling_api_client.v2.stable.models.feature_bulk_create.FeatureBulkCreate
+    )
     FeatureCreate = benchling_api_client.v2.stable.models.feature_create.FeatureCreate
     FeatureCreateMatchType = (
         benchling_api_client.v2.stable.models.feature_create_match_type.FeatureCreateMatchType
@@ -3402,11 +3912,21 @@ if TYPE_CHECKING:
     FeatureLibrariesPaginatedList = (
         benchling_api_client.v2.stable.models.feature_libraries_paginated_list.FeatureLibrariesPaginatedList
     )
-    FeatureLibrary = benchling_api_client.v2.stable.models.feature_library.FeatureLibrary
-    FeatureLibraryBase = benchling_api_client.v2.stable.models.feature_library_base.FeatureLibraryBase
-    FeatureLibraryCreate = benchling_api_client.v2.stable.models.feature_library_create.FeatureLibraryCreate
-    FeatureLibraryUpdate = benchling_api_client.v2.stable.models.feature_library_update.FeatureLibraryUpdate
-    FeatureMatchType = benchling_api_client.v2.stable.models.feature_match_type.FeatureMatchType
+    FeatureLibrary = (
+        benchling_api_client.v2.stable.models.feature_library.FeatureLibrary
+    )
+    FeatureLibraryBase = (
+        benchling_api_client.v2.stable.models.feature_library_base.FeatureLibraryBase
+    )
+    FeatureLibraryCreate = (
+        benchling_api_client.v2.stable.models.feature_library_create.FeatureLibraryCreate
+    )
+    FeatureLibraryUpdate = (
+        benchling_api_client.v2.stable.models.feature_library_update.FeatureLibraryUpdate
+    )
+    FeatureMatchType = (
+        benchling_api_client.v2.stable.models.feature_match_type.FeatureMatchType
+    )
     FeatureUpdate = benchling_api_client.v2.stable.models.feature_update.FeatureUpdate
     FeaturesBulkCreateRequest = (
         benchling_api_client.v2.stable.models.features_bulk_create_request.FeaturesBulkCreateRequest
@@ -3415,19 +3935,63 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.features_paginated_list.FeaturesPaginatedList
     )
     Field = benchling_api_client.v2.stable.models.field.Field
-    FieldAppConfigItem = benchling_api_client.v2.stable.models.field_app_config_item.FieldAppConfigItem
+    FieldAppConfigItem = (
+        benchling_api_client.v2.stable.models.field_app_config_item.FieldAppConfigItem
+    )
     FieldAppConfigItemType = (
         benchling_api_client.v2.stable.models.field_app_config_item_type.FieldAppConfigItemType
     )
-    FieldDefinition = benchling_api_client.v2.stable.models.field_definition.FieldDefinition
+    FieldDefinition = (
+        benchling_api_client.v2.stable.models.field_definition.FieldDefinition
+    )
     FieldType = benchling_api_client.v2.stable.models.field_type.FieldType
     FieldValue = benchling_api_client.v2.stable.models.field_value.FieldValue
     FieldValueWithResolution = (
         benchling_api_client.v2.stable.models.field_value_with_resolution.FieldValueWithResolution
     )
-    FieldWithResolution = benchling_api_client.v2.stable.models.field_with_resolution.FieldWithResolution
+    FieldWithResolution = (
+        benchling_api_client.v2.stable.models.field_with_resolution.FieldWithResolution
+    )
     Fields = benchling_api_client.v2.stable.models.fields.Fields
-    FieldsWithResolution = benchling_api_client.v2.stable.models.fields_with_resolution.FieldsWithResolution
+    FieldsWithResolution = (
+        benchling_api_client.v2.stable.models.fields_with_resolution.FieldsWithResolution
+    )
+    File = benchling_api_client.v2.stable.models.file.File
+    FileCreate = benchling_api_client.v2.stable.models.file_create.FileCreate
+    FileCreator = benchling_api_client.v2.stable.models.file_creator.FileCreator
+    FileStatus = benchling_api_client.v2.stable.models.file_status.FileStatus
+    FileStatusUploadStatus = (
+        benchling_api_client.v2.stable.models.file_status_upload_status.FileStatusUploadStatus
+    )
+    FileUpdate = benchling_api_client.v2.stable.models.file_update.FileUpdate
+    FileUpdateUploadStatus = (
+        benchling_api_client.v2.stable.models.file_update_upload_status.FileUpdateUploadStatus
+    )
+    FileUploadUiBlock = (
+        benchling_api_client.v2.stable.models.file_upload_ui_block.FileUploadUiBlock
+    )
+    FileUploadUiBlockCreate = (
+        benchling_api_client.v2.stable.models.file_upload_ui_block_create.FileUploadUiBlockCreate
+    )
+    FileUploadUiBlockType = (
+        benchling_api_client.v2.stable.models.file_upload_ui_block_type.FileUploadUiBlockType
+    )
+    FileUploadUiBlockUpdate = (
+        benchling_api_client.v2.stable.models.file_upload_ui_block_update.FileUploadUiBlockUpdate
+    )
+    FilesArchivalChange = (
+        benchling_api_client.v2.stable.models.files_archival_change.FilesArchivalChange
+    )
+    FilesArchive = benchling_api_client.v2.stable.models.files_archive.FilesArchive
+    FilesArchiveReason = (
+        benchling_api_client.v2.stable.models.files_archive_reason.FilesArchiveReason
+    )
+    FilesPaginatedList = (
+        benchling_api_client.v2.stable.models.files_paginated_list.FilesPaginatedList
+    )
+    FilesUnarchive = (
+        benchling_api_client.v2.stable.models.files_unarchive.FilesUnarchive
+    )
     FindMatchingRegionsAsyncTask = (
         benchling_api_client.v2.stable.models.find_matching_regions_async_task.FindMatchingRegionsAsyncTask
     )
@@ -3446,11 +4010,15 @@ if TYPE_CHECKING:
     FindMatchingRegionsDnaAsyncTaskResponseDnaSequenceMatchesItem = (
         benchling_api_client.v2.stable.models.find_matching_regions_dna_async_task_response_dna_sequence_matches_item.FindMatchingRegionsDnaAsyncTaskResponseDnaSequenceMatchesItem
     )
-    FloatAppConfigItem = benchling_api_client.v2.stable.models.float_app_config_item.FloatAppConfigItem
+    FloatAppConfigItem = (
+        benchling_api_client.v2.stable.models.float_app_config_item.FloatAppConfigItem
+    )
     FloatAppConfigItemType = (
         benchling_api_client.v2.stable.models.float_app_config_item_type.FloatAppConfigItemType
     )
-    FloatFieldDefinition = benchling_api_client.v2.stable.models.float_field_definition.FloatFieldDefinition
+    FloatFieldDefinition = (
+        benchling_api_client.v2.stable.models.float_field_definition.FloatFieldDefinition
+    )
     FloatFieldDefinitionType = (
         benchling_api_client.v2.stable.models.float_field_definition_type.FloatFieldDefinitionType
     )
@@ -3459,12 +4027,24 @@ if TYPE_CHECKING:
     FoldersArchivalChange = (
         benchling_api_client.v2.stable.models.folders_archival_change.FoldersArchivalChange
     )
-    FoldersArchive = benchling_api_client.v2.stable.models.folders_archive.FoldersArchive
-    FoldersArchiveReason = benchling_api_client.v2.stable.models.folders_archive_reason.FoldersArchiveReason
-    FoldersPaginatedList = benchling_api_client.v2.stable.models.folders_paginated_list.FoldersPaginatedList
-    FoldersUnarchive = benchling_api_client.v2.stable.models.folders_unarchive.FoldersUnarchive
-    ForbiddenError = benchling_api_client.v2.stable.models.forbidden_error.ForbiddenError
-    ForbiddenErrorError = benchling_api_client.v2.stable.models.forbidden_error_error.ForbiddenErrorError
+    FoldersArchive = (
+        benchling_api_client.v2.stable.models.folders_archive.FoldersArchive
+    )
+    FoldersArchiveReason = (
+        benchling_api_client.v2.stable.models.folders_archive_reason.FoldersArchiveReason
+    )
+    FoldersPaginatedList = (
+        benchling_api_client.v2.stable.models.folders_paginated_list.FoldersPaginatedList
+    )
+    FoldersUnarchive = (
+        benchling_api_client.v2.stable.models.folders_unarchive.FoldersUnarchive
+    )
+    ForbiddenError = (
+        benchling_api_client.v2.stable.models.forbidden_error.ForbiddenError
+    )
+    ForbiddenErrorError = (
+        benchling_api_client.v2.stable.models.forbidden_error_error.ForbiddenErrorError
+    )
     ForbiddenRestrictedSampleError = (
         benchling_api_client.v2.stable.models.forbidden_restricted_sample_error.ForbiddenRestrictedSampleError
     )
@@ -3481,11 +4061,18 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.generic_api_identified_app_config_item_type.GenericApiIdentifiedAppConfigItemType
     )
     GenericEntity = benchling_api_client.v2.stable.models.generic_entity.GenericEntity
-    GenericEntityCreator = benchling_api_client.v2.stable.models.generic_entity_creator.GenericEntityCreator
+    GenericEntityCreator = (
+        benchling_api_client.v2.stable.models.generic_entity_creator.GenericEntityCreator
+    )
+    GetDataFrameRowDataFormat = (
+        benchling_api_client.v2.stable.models.get_data_frame_row_data_format.GetDataFrameRowDataFormat
+    )
     GetUserWarehouseLoginsResponse_200 = (
         benchling_api_client.v2.stable.models.get_user_warehouse_logins_response_200.GetUserWarehouseLoginsResponse_200
     )
-    InaccessibleResource = benchling_api_client.v2.stable.models.inaccessible_resource.InaccessibleResource
+    InaccessibleResource = (
+        benchling_api_client.v2.stable.models.inaccessible_resource.InaccessibleResource
+    )
     InaccessibleResourceResourceType = (
         benchling_api_client.v2.stable.models.inaccessible_resource_resource_type.InaccessibleResourceResourceType
     )
@@ -3500,14 +4087,18 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.ingredient_write_params.IngredientWriteParams
     )
     InitialTable = benchling_api_client.v2.stable.models.initial_table.InitialTable
-    InstrumentQuery = benchling_api_client.v2.stable.models.instrument_query.InstrumentQuery
+    InstrumentQuery = (
+        benchling_api_client.v2.stable.models.instrument_query.InstrumentQuery
+    )
     InstrumentQueryParams = (
         benchling_api_client.v2.stable.models.instrument_query_params.InstrumentQueryParams
     )
     InstrumentQueryValues = (
         benchling_api_client.v2.stable.models.instrument_query_values.InstrumentQueryValues
     )
-    IntegerAppConfigItem = benchling_api_client.v2.stable.models.integer_app_config_item.IntegerAppConfigItem
+    IntegerAppConfigItem = (
+        benchling_api_client.v2.stable.models.integer_app_config_item.IntegerAppConfigItem
+    )
     IntegerAppConfigItemType = (
         benchling_api_client.v2.stable.models.integer_app_config_item_type.IntegerAppConfigItemType
     )
@@ -3517,7 +4108,9 @@ if TYPE_CHECKING:
     IntegerFieldDefinitionType = (
         benchling_api_client.v2.stable.models.integer_field_definition_type.IntegerFieldDefinitionType
     )
-    InteractiveUiBlock = benchling_api_client.v2.stable.models.interactive_ui_block.InteractiveUiBlock
+    InteractiveUiBlock = (
+        benchling_api_client.v2.stable.models.interactive_ui_block.InteractiveUiBlock
+    )
     InventoryContainerTableNotePart = (
         benchling_api_client.v2.stable.models.inventory_container_table_note_part.InventoryContainerTableNotePart
     )
@@ -3536,7 +4129,9 @@ if TYPE_CHECKING:
     InventoryPlateTableNotePartType = (
         benchling_api_client.v2.stable.models.inventory_plate_table_note_part_type.InventoryPlateTableNotePartType
     )
-    JsonAppConfigItem = benchling_api_client.v2.stable.models.json_app_config_item.JsonAppConfigItem
+    JsonAppConfigItem = (
+        benchling_api_client.v2.stable.models.json_app_config_item.JsonAppConfigItem
+    )
     JsonAppConfigItemType = (
         benchling_api_client.v2.stable.models.json_app_config_item_type.JsonAppConfigItemType
     )
@@ -3559,15 +4154,27 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.lab_automation_transform_update.LabAutomationTransformUpdate
     )
     LabelTemplate = benchling_api_client.v2.stable.models.label_template.LabelTemplate
-    LabelTemplatesList = benchling_api_client.v2.stable.models.label_templates_list.LabelTemplatesList
-    LegacyWorkflow = benchling_api_client.v2.stable.models.legacy_workflow.LegacyWorkflow
-    LegacyWorkflowList = benchling_api_client.v2.stable.models.legacy_workflow_list.LegacyWorkflowList
-    LegacyWorkflowPatch = benchling_api_client.v2.stable.models.legacy_workflow_patch.LegacyWorkflowPatch
-    LegacyWorkflowSample = benchling_api_client.v2.stable.models.legacy_workflow_sample.LegacyWorkflowSample
+    LabelTemplatesList = (
+        benchling_api_client.v2.stable.models.label_templates_list.LabelTemplatesList
+    )
+    LegacyWorkflow = (
+        benchling_api_client.v2.stable.models.legacy_workflow.LegacyWorkflow
+    )
+    LegacyWorkflowList = (
+        benchling_api_client.v2.stable.models.legacy_workflow_list.LegacyWorkflowList
+    )
+    LegacyWorkflowPatch = (
+        benchling_api_client.v2.stable.models.legacy_workflow_patch.LegacyWorkflowPatch
+    )
+    LegacyWorkflowSample = (
+        benchling_api_client.v2.stable.models.legacy_workflow_sample.LegacyWorkflowSample
+    )
     LegacyWorkflowSampleList = (
         benchling_api_client.v2.stable.models.legacy_workflow_sample_list.LegacyWorkflowSampleList
     )
-    LegacyWorkflowStage = benchling_api_client.v2.stable.models.legacy_workflow_stage.LegacyWorkflowStage
+    LegacyWorkflowStage = (
+        benchling_api_client.v2.stable.models.legacy_workflow_stage.LegacyWorkflowStage
+    )
     LegacyWorkflowStageList = (
         benchling_api_client.v2.stable.models.legacy_workflow_stage_list.LegacyWorkflowStageList
     )
@@ -3589,16 +4196,24 @@ if TYPE_CHECKING:
     LinkedAppConfigResourceSummary = (
         benchling_api_client.v2.stable.models.linked_app_config_resource_summary.LinkedAppConfigResourceSummary
     )
-    ListAASequencesSort = benchling_api_client.v2.stable.models.list_aa_sequences_sort.ListAASequencesSort
+    ListAASequencesSort = (
+        benchling_api_client.v2.stable.models.list_aa_sequences_sort.ListAASequencesSort
+    )
     ListAppCanvasesEnabled = (
         benchling_api_client.v2.stable.models.list_app_canvases_enabled.ListAppCanvasesEnabled
     )
-    ListAppCanvasesSort = benchling_api_client.v2.stable.models.list_app_canvases_sort.ListAppCanvasesSort
+    ListAppCanvasesSort = (
+        benchling_api_client.v2.stable.models.list_app_canvases_sort.ListAppCanvasesSort
+    )
     ListAppConfigurationItemsSort = (
         benchling_api_client.v2.stable.models.list_app_configuration_items_sort.ListAppConfigurationItemsSort
     )
-    ListAppSessionsSort = benchling_api_client.v2.stable.models.list_app_sessions_sort.ListAppSessionsSort
-    ListAssayResultsSort = benchling_api_client.v2.stable.models.list_assay_results_sort.ListAssayResultsSort
+    ListAppSessionsSort = (
+        benchling_api_client.v2.stable.models.list_app_sessions_sort.ListAppSessionsSort
+    )
+    ListAssayResultsSort = (
+        benchling_api_client.v2.stable.models.list_assay_results_sort.ListAssayResultsSort
+    )
     ListBenchlingAppsSort = (
         benchling_api_client.v2.stable.models.list_benchling_apps_sort.ListBenchlingAppsSort
     )
@@ -3609,43 +4224,80 @@ if TYPE_CHECKING:
     ListContainersCheckoutStatus = (
         benchling_api_client.v2.stable.models.list_containers_checkout_status.ListContainersCheckoutStatus
     )
-    ListContainersSort = benchling_api_client.v2.stable.models.list_containers_sort.ListContainersSort
+    ListContainersSort = (
+        benchling_api_client.v2.stable.models.list_containers_sort.ListContainersSort
+    )
     ListCustomEntitiesSort = (
         benchling_api_client.v2.stable.models.list_custom_entities_sort.ListCustomEntitiesSort
+    )
+    ListDatasetsSort = (
+        benchling_api_client.v2.stable.models.list_datasets_sort.ListDatasetsSort
     )
     ListDNAAlignmentsSort = (
         benchling_api_client.v2.stable.models.list_dna_alignments_sort.ListDNAAlignmentsSort
     )
-    ListDNAOligosSort = benchling_api_client.v2.stable.models.list_dna_oligos_sort.ListDNAOligosSort
-    ListDNASequencesSort = benchling_api_client.v2.stable.models.list_dna_sequences_sort.ListDNASequencesSort
+    ListDNAOligosSort = (
+        benchling_api_client.v2.stable.models.list_dna_oligos_sort.ListDNAOligosSort
+    )
+    ListDNASequencesSort = (
+        benchling_api_client.v2.stable.models.list_dna_sequences_sort.ListDNASequencesSort
+    )
     ListEntriesReviewStatus = (
         benchling_api_client.v2.stable.models.list_entries_review_status.ListEntriesReviewStatus
     )
-    ListEntriesSort = benchling_api_client.v2.stable.models.list_entries_sort.ListEntriesSort
-    ListEnzymesSort = benchling_api_client.v2.stable.models.list_enzymes_sort.ListEnzymesSort
+    ListEntriesSort = (
+        benchling_api_client.v2.stable.models.list_entries_sort.ListEntriesSort
+    )
+    ListEnzymesSort = (
+        benchling_api_client.v2.stable.models.list_enzymes_sort.ListEnzymesSort
+    )
     ListFeatureLibrariesSort = (
         benchling_api_client.v2.stable.models.list_feature_libraries_sort.ListFeatureLibrariesSort
     )
     ListFeaturesMatchType = (
         benchling_api_client.v2.stable.models.list_features_match_type.ListFeaturesMatchType
     )
-    ListFoldersSection = benchling_api_client.v2.stable.models.list_folders_section.ListFoldersSection
-    ListFoldersSort = benchling_api_client.v2.stable.models.list_folders_sort.ListFoldersSort
-    ListLocationsSort = benchling_api_client.v2.stable.models.list_locations_sort.ListLocationsSort
-    ListMixturesSort = benchling_api_client.v2.stable.models.list_mixtures_sort.ListMixturesSort
-    ListMoleculesSort = benchling_api_client.v2.stable.models.list_molecules_sort.ListMoleculesSort
+    ListFilesSort = benchling_api_client.v2.stable.models.list_files_sort.ListFilesSort
+    ListFoldersSection = (
+        benchling_api_client.v2.stable.models.list_folders_section.ListFoldersSection
+    )
+    ListFoldersSort = (
+        benchling_api_client.v2.stable.models.list_folders_sort.ListFoldersSort
+    )
+    ListLocationsSort = (
+        benchling_api_client.v2.stable.models.list_locations_sort.ListLocationsSort
+    )
+    ListMixturesSort = (
+        benchling_api_client.v2.stable.models.list_mixtures_sort.ListMixturesSort
+    )
+    ListMoleculesSort = (
+        benchling_api_client.v2.stable.models.list_molecules_sort.ListMoleculesSort
+    )
     ListNucleotideAlignmentsSort = (
         benchling_api_client.v2.stable.models.list_nucleotide_alignments_sort.ListNucleotideAlignmentsSort
     )
-    ListOligosSort = benchling_api_client.v2.stable.models.list_oligos_sort.ListOligosSort
+    ListOligosSort = (
+        benchling_api_client.v2.stable.models.list_oligos_sort.ListOligosSort
+    )
     ListOrganizationsSort = (
         benchling_api_client.v2.stable.models.list_organizations_sort.ListOrganizationsSort
     )
-    ListPlatesSort = benchling_api_client.v2.stable.models.list_plates_sort.ListPlatesSort
-    ListProjectsSort = benchling_api_client.v2.stable.models.list_projects_sort.ListProjectsSort
-    ListRNAOligosSort = benchling_api_client.v2.stable.models.list_rna_oligos_sort.ListRNAOligosSort
-    ListRNASequencesSort = benchling_api_client.v2.stable.models.list_rna_sequences_sort.ListRNASequencesSort
+    ListPlatesSort = (
+        benchling_api_client.v2.stable.models.list_plates_sort.ListPlatesSort
+    )
+    ListProjectsSort = (
+        benchling_api_client.v2.stable.models.list_projects_sort.ListProjectsSort
+    )
+    ListRNAOligosSort = (
+        benchling_api_client.v2.stable.models.list_rna_oligos_sort.ListRNAOligosSort
+    )
+    ListRNASequencesSort = (
+        benchling_api_client.v2.stable.models.list_rna_sequences_sort.ListRNASequencesSort
+    )
     ListTeamsSort = benchling_api_client.v2.stable.models.list_teams_sort.ListTeamsSort
+    ListTestOrdersSort = (
+        benchling_api_client.v2.stable.models.list_test_orders_sort.ListTestOrdersSort
+    )
     ListUsersSort = benchling_api_client.v2.stable.models.list_users_sort.ListUsersSort
     ListWorkflowFlowchartsSort = (
         benchling_api_client.v2.stable.models.list_workflow_flowcharts_sort.ListWorkflowFlowchartsSort
@@ -3653,40 +4305,65 @@ if TYPE_CHECKING:
     ListWorkflowTasksScheduledOn = (
         benchling_api_client.v2.stable.models.list_workflow_tasks_scheduled_on.ListWorkflowTasksScheduledOn
     )
+    ListingError = benchling_api_client.v2.stable.models.listing_error.ListingError
     Location = benchling_api_client.v2.stable.models.location.Location
-    LocationCreate = benchling_api_client.v2.stable.models.location_create.LocationCreate
-    LocationSchema = benchling_api_client.v2.stable.models.location_schema.LocationSchema
-    LocationSchemaType = benchling_api_client.v2.stable.models.location_schema_type.LocationSchemaType
-    LocationSchemasList = benchling_api_client.v2.stable.models.location_schemas_list.LocationSchemasList
+    LocationCreate = (
+        benchling_api_client.v2.stable.models.location_create.LocationCreate
+    )
+    LocationSchema = (
+        benchling_api_client.v2.stable.models.location_schema.LocationSchema
+    )
+    LocationSchemaType = (
+        benchling_api_client.v2.stable.models.location_schema_type.LocationSchemaType
+    )
+    LocationSchemasList = (
+        benchling_api_client.v2.stable.models.location_schemas_list.LocationSchemasList
+    )
     LocationSchemasPaginatedList = (
         benchling_api_client.v2.stable.models.location_schemas_paginated_list.LocationSchemasPaginatedList
     )
-    LocationUpdate = benchling_api_client.v2.stable.models.location_update.LocationUpdate
+    LocationUpdate = (
+        benchling_api_client.v2.stable.models.location_update.LocationUpdate
+    )
     LocationsArchivalChange = (
         benchling_api_client.v2.stable.models.locations_archival_change.LocationsArchivalChange
     )
-    LocationsArchive = benchling_api_client.v2.stable.models.locations_archive.LocationsArchive
+    LocationsArchive = (
+        benchling_api_client.v2.stable.models.locations_archive.LocationsArchive
+    )
     LocationsArchiveReason = (
         benchling_api_client.v2.stable.models.locations_archive_reason.LocationsArchiveReason
     )
-    LocationsBulkGet = benchling_api_client.v2.stable.models.locations_bulk_get.LocationsBulkGet
+    LocationsBulkGet = (
+        benchling_api_client.v2.stable.models.locations_bulk_get.LocationsBulkGet
+    )
     LocationsPaginatedList = (
         benchling_api_client.v2.stable.models.locations_paginated_list.LocationsPaginatedList
     )
-    LocationsUnarchive = benchling_api_client.v2.stable.models.locations_unarchive.LocationsUnarchive
-    LookupTableNotePart = benchling_api_client.v2.stable.models.lookup_table_note_part.LookupTableNotePart
+    LocationsUnarchive = (
+        benchling_api_client.v2.stable.models.locations_unarchive.LocationsUnarchive
+    )
+    LookupTableNotePart = (
+        benchling_api_client.v2.stable.models.lookup_table_note_part.LookupTableNotePart
+    )
     LookupTableNotePartType = (
         benchling_api_client.v2.stable.models.lookup_table_note_part_type.LookupTableNotePartType
     )
-    MarkdownUiBlock = benchling_api_client.v2.stable.models.markdown_ui_block.MarkdownUiBlock
+    MarkdownUiBlock = (
+        benchling_api_client.v2.stable.models.markdown_ui_block.MarkdownUiBlock
+    )
     MarkdownUiBlockCreate = (
         benchling_api_client.v2.stable.models.markdown_ui_block_create.MarkdownUiBlockCreate
     )
-    MarkdownUiBlockType = benchling_api_client.v2.stable.models.markdown_ui_block_type.MarkdownUiBlockType
+    MarkdownUiBlockType = (
+        benchling_api_client.v2.stable.models.markdown_ui_block_type.MarkdownUiBlockType
+    )
     MarkdownUiBlockUpdate = (
         benchling_api_client.v2.stable.models.markdown_ui_block_update.MarkdownUiBlockUpdate
     )
-    MatchBasesRequest = benchling_api_client.v2.stable.models.match_bases_request.MatchBasesRequest
+    MatchBasesRequest = (
+        benchling_api_client.v2.stable.models.match_bases_request.MatchBasesRequest
+    )
     MatchBasesRequestArchiveReason = (
         benchling_api_client.v2.stable.models.match_bases_request_archive_reason.MatchBasesRequestArchiveReason
     )
@@ -3695,18 +4372,32 @@ if TYPE_CHECKING:
     )
     Measurement = benchling_api_client.v2.stable.models.measurement.Measurement
     Membership = benchling_api_client.v2.stable.models.membership.Membership
-    MembershipCreate = benchling_api_client.v2.stable.models.membership_create.MembershipCreate
-    MembershipCreateRole = benchling_api_client.v2.stable.models.membership_create_role.MembershipCreateRole
-    MembershipRole = benchling_api_client.v2.stable.models.membership_role.MembershipRole
-    MembershipUpdate = benchling_api_client.v2.stable.models.membership_update.MembershipUpdate
-    MembershipUpdateRole = benchling_api_client.v2.stable.models.membership_update_role.MembershipUpdateRole
+    MembershipCreate = (
+        benchling_api_client.v2.stable.models.membership_create.MembershipCreate
+    )
+    MembershipCreateRole = (
+        benchling_api_client.v2.stable.models.membership_create_role.MembershipCreateRole
+    )
+    MembershipRole = (
+        benchling_api_client.v2.stable.models.membership_role.MembershipRole
+    )
+    MembershipUpdate = (
+        benchling_api_client.v2.stable.models.membership_update.MembershipUpdate
+    )
+    MembershipUpdateRole = (
+        benchling_api_client.v2.stable.models.membership_update_role.MembershipUpdateRole
+    )
     MembershipsPaginatedList = (
         benchling_api_client.v2.stable.models.memberships_paginated_list.MembershipsPaginatedList
     )
     Mixture = benchling_api_client.v2.stable.models.mixture.Mixture
-    MixtureBulkUpdate = benchling_api_client.v2.stable.models.mixture_bulk_update.MixtureBulkUpdate
+    MixtureBulkUpdate = (
+        benchling_api_client.v2.stable.models.mixture_bulk_update.MixtureBulkUpdate
+    )
     MixtureCreate = benchling_api_client.v2.stable.models.mixture_create.MixtureCreate
-    MixtureCreator = benchling_api_client.v2.stable.models.mixture_creator.MixtureCreator
+    MixtureCreator = (
+        benchling_api_client.v2.stable.models.mixture_creator.MixtureCreator
+    )
     MixtureMeasurementUnits = (
         benchling_api_client.v2.stable.models.mixture_measurement_units.MixtureMeasurementUnits
     )
@@ -3726,7 +4417,9 @@ if TYPE_CHECKING:
     MixturesArchivalChange = (
         benchling_api_client.v2.stable.models.mixtures_archival_change.MixturesArchivalChange
     )
-    MixturesArchive = benchling_api_client.v2.stable.models.mixtures_archive.MixturesArchive
+    MixturesArchive = (
+        benchling_api_client.v2.stable.models.mixtures_archive.MixturesArchive
+    )
     MixturesBulkCreateRequest = (
         benchling_api_client.v2.stable.models.mixtures_bulk_create_request.MixturesBulkCreateRequest
     )
@@ -3736,29 +4429,43 @@ if TYPE_CHECKING:
     MixturesPaginatedList = (
         benchling_api_client.v2.stable.models.mixtures_paginated_list.MixturesPaginatedList
     )
-    MixturesUnarchive = benchling_api_client.v2.stable.models.mixtures_unarchive.MixturesUnarchive
+    MixturesUnarchive = (
+        benchling_api_client.v2.stable.models.mixtures_unarchive.MixturesUnarchive
+    )
     Molecule = benchling_api_client.v2.stable.models.molecule.Molecule
-    MoleculeBaseRequest = benchling_api_client.v2.stable.models.molecule_base_request.MoleculeBaseRequest
+    MoleculeBaseRequest = (
+        benchling_api_client.v2.stable.models.molecule_base_request.MoleculeBaseRequest
+    )
     MoleculeBaseRequestForCreate = (
         benchling_api_client.v2.stable.models.molecule_base_request_for_create.MoleculeBaseRequestForCreate
     )
-    MoleculeBulkUpdate = benchling_api_client.v2.stable.models.molecule_bulk_update.MoleculeBulkUpdate
+    MoleculeBulkUpdate = (
+        benchling_api_client.v2.stable.models.molecule_bulk_update.MoleculeBulkUpdate
+    )
     MoleculeBulkUpsertRequest = (
         benchling_api_client.v2.stable.models.molecule_bulk_upsert_request.MoleculeBulkUpsertRequest
     )
-    MoleculeCreate = benchling_api_client.v2.stable.models.molecule_create.MoleculeCreate
-    MoleculeStructure = benchling_api_client.v2.stable.models.molecule_structure.MoleculeStructure
+    MoleculeCreate = (
+        benchling_api_client.v2.stable.models.molecule_create.MoleculeCreate
+    )
+    MoleculeStructure = (
+        benchling_api_client.v2.stable.models.molecule_structure.MoleculeStructure
+    )
     MoleculeStructureStructureFormat = (
         benchling_api_client.v2.stable.models.molecule_structure_structure_format.MoleculeStructureStructureFormat
     )
-    MoleculeUpdate = benchling_api_client.v2.stable.models.molecule_update.MoleculeUpdate
+    MoleculeUpdate = (
+        benchling_api_client.v2.stable.models.molecule_update.MoleculeUpdate
+    )
     MoleculeUpsertRequest = (
         benchling_api_client.v2.stable.models.molecule_upsert_request.MoleculeUpsertRequest
     )
     MoleculesArchivalChange = (
         benchling_api_client.v2.stable.models.molecules_archival_change.MoleculesArchivalChange
     )
-    MoleculesArchive = benchling_api_client.v2.stable.models.molecules_archive.MoleculesArchive
+    MoleculesArchive = (
+        benchling_api_client.v2.stable.models.molecules_archive.MoleculesArchive
+    )
     MoleculesArchiveReason = (
         benchling_api_client.v2.stable.models.molecules_archive_reason.MoleculesArchiveReason
     )
@@ -3774,38 +4481,59 @@ if TYPE_CHECKING:
     MoleculesPaginatedList = (
         benchling_api_client.v2.stable.models.molecules_paginated_list.MoleculesPaginatedList
     )
-    MoleculesUnarchive = benchling_api_client.v2.stable.models.molecules_unarchive.MoleculesUnarchive
+    MoleculesUnarchive = (
+        benchling_api_client.v2.stable.models.molecules_unarchive.MoleculesUnarchive
+    )
     Monomer = benchling_api_client.v2.stable.models.monomer.Monomer
-    MonomerBaseRequest = benchling_api_client.v2.stable.models.monomer_base_request.MonomerBaseRequest
+    MonomerBaseRequest = (
+        benchling_api_client.v2.stable.models.monomer_base_request.MonomerBaseRequest
+    )
     MonomerCreate = benchling_api_client.v2.stable.models.monomer_create.MonomerCreate
-    MonomerPolymerType = benchling_api_client.v2.stable.models.monomer_polymer_type.MonomerPolymerType
+    MonomerPolymerType = (
+        benchling_api_client.v2.stable.models.monomer_polymer_type.MonomerPolymerType
+    )
     MonomerType = benchling_api_client.v2.stable.models.monomer_type.MonomerType
     MonomerUpdate = benchling_api_client.v2.stable.models.monomer_update.MonomerUpdate
-    MonomerVisualSymbol = benchling_api_client.v2.stable.models.monomer_visual_symbol.MonomerVisualSymbol
+    MonomerVisualSymbol = (
+        benchling_api_client.v2.stable.models.monomer_visual_symbol.MonomerVisualSymbol
+    )
     MonomersArchivalChange = (
         benchling_api_client.v2.stable.models.monomers_archival_change.MonomersArchivalChange
     )
-    MonomersArchive = benchling_api_client.v2.stable.models.monomers_archive.MonomersArchive
+    MonomersArchive = (
+        benchling_api_client.v2.stable.models.monomers_archive.MonomersArchive
+    )
     MonomersArchiveReason = (
         benchling_api_client.v2.stable.models.monomers_archive_reason.MonomersArchiveReason
     )
     MonomersPaginatedList = (
         benchling_api_client.v2.stable.models.monomers_paginated_list.MonomersPaginatedList
     )
-    MonomersUnarchive = benchling_api_client.v2.stable.models.monomers_unarchive.MonomersUnarchive
+    MonomersUnarchive = (
+        benchling_api_client.v2.stable.models.monomers_unarchive.MonomersUnarchive
+    )
     MultipleContainersTransfer = (
         benchling_api_client.v2.stable.models.multiple_containers_transfer.MultipleContainersTransfer
     )
     MultipleContainersTransfersList = (
         benchling_api_client.v2.stable.models.multiple_containers_transfers_list.MultipleContainersTransfersList
     )
-    NamingStrategy = benchling_api_client.v2.stable.models.naming_strategy.NamingStrategy
+    NameTemplatePart = (
+        benchling_api_client.v2.stable.models.name_template_part.NameTemplatePart
+    )
+    NamingStrategy = (
+        benchling_api_client.v2.stable.models.naming_strategy.NamingStrategy
+    )
     NotFoundError = benchling_api_client.v2.stable.models.not_found_error.NotFoundError
-    NotFoundErrorError = benchling_api_client.v2.stable.models.not_found_error_error.NotFoundErrorError
+    NotFoundErrorError = (
+        benchling_api_client.v2.stable.models.not_found_error_error.NotFoundErrorError
+    )
     NotFoundErrorErrorType = (
         benchling_api_client.v2.stable.models.not_found_error_error_type.NotFoundErrorErrorType
     )
-    NucleotideAlignment = benchling_api_client.v2.stable.models.nucleotide_alignment.NucleotideAlignment
+    NucleotideAlignment = (
+        benchling_api_client.v2.stable.models.nucleotide_alignment.NucleotideAlignment
+    )
     NucleotideAlignmentBase = (
         benchling_api_client.v2.stable.models.nucleotide_alignment_base.NucleotideAlignmentBase
     )
@@ -3848,7 +4576,9 @@ if TYPE_CHECKING:
     NucleotideTemplateAlignmentCreate = (
         benchling_api_client.v2.stable.models.nucleotide_template_alignment_create.NucleotideTemplateAlignmentCreate
     )
-    OAuthBadRequestError = benchling_api_client.v2.stable.models.o_auth_bad_request_error.OAuthBadRequestError
+    OAuthBadRequestError = (
+        benchling_api_client.v2.stable.models.o_auth_bad_request_error.OAuthBadRequestError
+    )
     OAuthBadRequestErrorError = (
         benchling_api_client.v2.stable.models.o_auth_bad_request_error_error.OAuthBadRequestErrorError
     )
@@ -3865,7 +4595,9 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.o_auth_unauthorized_error_error_type.OAuthUnauthorizedErrorErrorType
     )
     Oligo = benchling_api_client.v2.stable.models.oligo.Oligo
-    OligoBaseRequest = benchling_api_client.v2.stable.models.oligo_base_request.OligoBaseRequest
+    OligoBaseRequest = (
+        benchling_api_client.v2.stable.models.oligo_base_request.OligoBaseRequest
+    )
     OligoBaseRequestForCreate = (
         benchling_api_client.v2.stable.models.oligo_base_request_for_create.OligoBaseRequestForCreate
     )
@@ -3873,18 +4605,30 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.oligo_bulk_upsert_request.OligoBulkUpsertRequest
     )
     OligoCreate = benchling_api_client.v2.stable.models.oligo_create.OligoCreate
-    OligoNucleotideType = benchling_api_client.v2.stable.models.oligo_nucleotide_type.OligoNucleotideType
+    OligoNucleotideType = (
+        benchling_api_client.v2.stable.models.oligo_nucleotide_type.OligoNucleotideType
+    )
     OligoUpdate = benchling_api_client.v2.stable.models.oligo_update.OligoUpdate
-    OligoUpsertRequest = benchling_api_client.v2.stable.models.oligo_upsert_request.OligoUpsertRequest
-    OligosArchivalChange = benchling_api_client.v2.stable.models.oligos_archival_change.OligosArchivalChange
+    OligoUpsertRequest = (
+        benchling_api_client.v2.stable.models.oligo_upsert_request.OligoUpsertRequest
+    )
+    OligosArchivalChange = (
+        benchling_api_client.v2.stable.models.oligos_archival_change.OligosArchivalChange
+    )
     OligosArchive = benchling_api_client.v2.stable.models.oligos_archive.OligosArchive
     OligosBulkCreateRequest = (
         benchling_api_client.v2.stable.models.oligos_bulk_create_request.OligosBulkCreateRequest
     )
     OligosBulkGet = benchling_api_client.v2.stable.models.oligos_bulk_get.OligosBulkGet
-    OligosPaginatedList = benchling_api_client.v2.stable.models.oligos_paginated_list.OligosPaginatedList
-    OligosUnarchive = benchling_api_client.v2.stable.models.oligos_unarchive.OligosUnarchive
-    OptimizeCodons = benchling_api_client.v2.stable.models.optimize_codons.OptimizeCodons
+    OligosPaginatedList = (
+        benchling_api_client.v2.stable.models.oligos_paginated_list.OligosPaginatedList
+    )
+    OligosUnarchive = (
+        benchling_api_client.v2.stable.models.oligos_unarchive.OligosUnarchive
+    )
+    OptimizeCodons = (
+        benchling_api_client.v2.stable.models.optimize_codons.OptimizeCodons
+    )
     OptimizeCodonsGcContent = (
         benchling_api_client.v2.stable.models.optimize_codons_gc_content.OptimizeCodonsGcContent
     )
@@ -3892,7 +4636,9 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.optimize_codons_hairpin_parameters.OptimizeCodonsHairpinParameters
     )
     Organization = benchling_api_client.v2.stable.models.organization.Organization
-    OrganizationSummary = benchling_api_client.v2.stable.models.organization_summary.OrganizationSummary
+    OrganizationSummary = (
+        benchling_api_client.v2.stable.models.organization_summary.OrganizationSummary
+    )
     OrganizationsPaginatedList = (
         benchling_api_client.v2.stable.models.organizations_paginated_list.OrganizationsPaginatedList
     )
@@ -3900,7 +4646,9 @@ if TYPE_CHECKING:
     PartySummary = benchling_api_client.v2.stable.models.party_summary.PartySummary
     Plate = benchling_api_client.v2.stable.models.plate.Plate
     PlateCreate = benchling_api_client.v2.stable.models.plate_create.PlateCreate
-    PlateCreateWells = benchling_api_client.v2.stable.models.plate_create_wells.PlateCreateWells
+    PlateCreateWells = (
+        benchling_api_client.v2.stable.models.plate_create_wells.PlateCreateWells
+    )
     PlateCreateWellsAdditionalProperty = (
         benchling_api_client.v2.stable.models.plate_create_wells_additional_property.PlateCreateWellsAdditionalProperty
     )
@@ -3914,20 +4662,32 @@ if TYPE_CHECKING:
     PlateSchemaContainerSchema = (
         benchling_api_client.v2.stable.models.plate_schema_container_schema.PlateSchemaContainerSchema
     )
-    PlateSchemaType = benchling_api_client.v2.stable.models.plate_schema_type.PlateSchemaType
-    PlateSchemasList = benchling_api_client.v2.stable.models.plate_schemas_list.PlateSchemasList
+    PlateSchemaType = (
+        benchling_api_client.v2.stable.models.plate_schema_type.PlateSchemaType
+    )
+    PlateSchemasList = (
+        benchling_api_client.v2.stable.models.plate_schemas_list.PlateSchemasList
+    )
     PlateSchemasPaginatedList = (
         benchling_api_client.v2.stable.models.plate_schemas_paginated_list.PlateSchemasPaginatedList
     )
     PlateType = benchling_api_client.v2.stable.models.plate_type.PlateType
     PlateUpdate = benchling_api_client.v2.stable.models.plate_update.PlateUpdate
     PlateWells = benchling_api_client.v2.stable.models.plate_wells.PlateWells
-    PlatesArchivalChange = benchling_api_client.v2.stable.models.plates_archival_change.PlatesArchivalChange
+    PlatesArchivalChange = (
+        benchling_api_client.v2.stable.models.plates_archival_change.PlatesArchivalChange
+    )
     PlatesArchive = benchling_api_client.v2.stable.models.plates_archive.PlatesArchive
-    PlatesArchiveReason = benchling_api_client.v2.stable.models.plates_archive_reason.PlatesArchiveReason
+    PlatesArchiveReason = (
+        benchling_api_client.v2.stable.models.plates_archive_reason.PlatesArchiveReason
+    )
     PlatesBulkGet = benchling_api_client.v2.stable.models.plates_bulk_get.PlatesBulkGet
-    PlatesPaginatedList = benchling_api_client.v2.stable.models.plates_paginated_list.PlatesPaginatedList
-    PlatesUnarchive = benchling_api_client.v2.stable.models.plates_unarchive.PlatesUnarchive
+    PlatesPaginatedList = (
+        benchling_api_client.v2.stable.models.plates_paginated_list.PlatesPaginatedList
+    )
+    PlatesUnarchive = (
+        benchling_api_client.v2.stable.models.plates_unarchive.PlatesUnarchive
+    )
     Primer = benchling_api_client.v2.stable.models.primer.Primer
     PrintLabels = benchling_api_client.v2.stable.models.print_labels.PrintLabels
     Printer = benchling_api_client.v2.stable.models.printer.Printer
@@ -3936,43 +4696,67 @@ if TYPE_CHECKING:
     ProjectsArchivalChange = (
         benchling_api_client.v2.stable.models.projects_archival_change.ProjectsArchivalChange
     )
-    ProjectsArchive = benchling_api_client.v2.stable.models.projects_archive.ProjectsArchive
+    ProjectsArchive = (
+        benchling_api_client.v2.stable.models.projects_archive.ProjectsArchive
+    )
     ProjectsArchiveReason = (
         benchling_api_client.v2.stable.models.projects_archive_reason.ProjectsArchiveReason
     )
     ProjectsPaginatedList = (
         benchling_api_client.v2.stable.models.projects_paginated_list.ProjectsPaginatedList
     )
-    ProjectsUnarchive = benchling_api_client.v2.stable.models.projects_unarchive.ProjectsUnarchive
-    ReducedPattern = benchling_api_client.v2.stable.models.reduced_pattern.ReducedPattern
-    RegisterEntities = benchling_api_client.v2.stable.models.register_entities.RegisterEntities
+    ProjectsUnarchive = (
+        benchling_api_client.v2.stable.models.projects_unarchive.ProjectsUnarchive
+    )
+    ReducedPattern = (
+        benchling_api_client.v2.stable.models.reduced_pattern.ReducedPattern
+    )
+    RegisterEntities = (
+        benchling_api_client.v2.stable.models.register_entities.RegisterEntities
+    )
     RegisteredEntitiesList = (
         benchling_api_client.v2.stable.models.registered_entities_list.RegisteredEntitiesList
     )
-    RegistrationOrigin = benchling_api_client.v2.stable.models.registration_origin.RegistrationOrigin
+    RegistrationOrigin = (
+        benchling_api_client.v2.stable.models.registration_origin.RegistrationOrigin
+    )
     RegistrationTableNotePart = (
         benchling_api_client.v2.stable.models.registration_table_note_part.RegistrationTableNotePart
     )
     RegistrationTableNotePartType = (
         benchling_api_client.v2.stable.models.registration_table_note_part_type.RegistrationTableNotePartType
     )
-    RegistriesList = benchling_api_client.v2.stable.models.registries_list.RegistriesList
+    RegistriesList = (
+        benchling_api_client.v2.stable.models.registries_list.RegistriesList
+    )
     Registry = benchling_api_client.v2.stable.models.registry.Registry
-    RegistrySchema = benchling_api_client.v2.stable.models.registry_schema.RegistrySchema
+    RegistrySchema = (
+        benchling_api_client.v2.stable.models.registry_schema.RegistrySchema
+    )
     Request = benchling_api_client.v2.stable.models.request.Request
     RequestBase = benchling_api_client.v2.stable.models.request_base.RequestBase
     RequestCreate = benchling_api_client.v2.stable.models.request_create.RequestCreate
-    RequestCreatedEvent = benchling_api_client.v2.stable.models.request_created_event.RequestCreatedEvent
+    RequestCreatedEvent = (
+        benchling_api_client.v2.stable.models.request_created_event.RequestCreatedEvent
+    )
     RequestCreatedEventEventType = (
         benchling_api_client.v2.stable.models.request_created_event_event_type.RequestCreatedEventEventType
     )
-    RequestCreator = benchling_api_client.v2.stable.models.request_creator.RequestCreator
-    RequestFulfillment = benchling_api_client.v2.stable.models.request_fulfillment.RequestFulfillment
+    RequestCreator = (
+        benchling_api_client.v2.stable.models.request_creator.RequestCreator
+    )
+    RequestFulfillment = (
+        benchling_api_client.v2.stable.models.request_fulfillment.RequestFulfillment
+    )
     RequestFulfillmentsPaginatedList = (
         benchling_api_client.v2.stable.models.request_fulfillments_paginated_list.RequestFulfillmentsPaginatedList
     )
-    RequestRequestor = benchling_api_client.v2.stable.models.request_requestor.RequestRequestor
-    RequestResponse = benchling_api_client.v2.stable.models.request_response.RequestResponse
+    RequestRequestor = (
+        benchling_api_client.v2.stable.models.request_requestor.RequestRequestor
+    )
+    RequestResponse = (
+        benchling_api_client.v2.stable.models.request_response.RequestResponse
+    )
     RequestResponseSamplesItem = (
         benchling_api_client.v2.stable.models.request_response_samples_item.RequestResponseSamplesItem
     )
@@ -3985,7 +4769,9 @@ if TYPE_CHECKING:
     RequestResponseSamplesItemStatus = (
         benchling_api_client.v2.stable.models.request_response_samples_item_status.RequestResponseSamplesItemStatus
     )
-    RequestSampleGroup = benchling_api_client.v2.stable.models.request_sample_group.RequestSampleGroup
+    RequestSampleGroup = (
+        benchling_api_client.v2.stable.models.request_sample_group.RequestSampleGroup
+    )
     RequestSampleGroupCreate = (
         benchling_api_client.v2.stable.models.request_sample_group_create.RequestSampleGroupCreate
     )
@@ -4005,17 +4791,23 @@ if TYPE_CHECKING:
     RequestSchemaProperty = (
         benchling_api_client.v2.stable.models.request_schema_property.RequestSchemaProperty
     )
-    RequestSchemaType = benchling_api_client.v2.stable.models.request_schema_type.RequestSchemaType
+    RequestSchemaType = (
+        benchling_api_client.v2.stable.models.request_schema_type.RequestSchemaType
+    )
     RequestSchemasPaginatedList = (
         benchling_api_client.v2.stable.models.request_schemas_paginated_list.RequestSchemasPaginatedList
     )
     RequestStatus = benchling_api_client.v2.stable.models.request_status.RequestStatus
     RequestTask = benchling_api_client.v2.stable.models.request_task.RequestTask
-    RequestTaskBase = benchling_api_client.v2.stable.models.request_task_base.RequestTaskBase
+    RequestTaskBase = (
+        benchling_api_client.v2.stable.models.request_task_base.RequestTaskBase
+    )
     RequestTaskBaseFields = (
         benchling_api_client.v2.stable.models.request_task_base_fields.RequestTaskBaseFields
     )
-    RequestTaskSchema = benchling_api_client.v2.stable.models.request_task_schema.RequestTaskSchema
+    RequestTaskSchema = (
+        benchling_api_client.v2.stable.models.request_task_schema.RequestTaskSchema
+    )
     RequestTaskSchemaOrganization = (
         benchling_api_client.v2.stable.models.request_task_schema_organization.RequestTaskSchemaOrganization
     )
@@ -4040,7 +4832,9 @@ if TYPE_CHECKING:
     RequestTasksBulkUpdateResponse = (
         benchling_api_client.v2.stable.models.request_tasks_bulk_update_response.RequestTasksBulkUpdateResponse
     )
-    RequestTeamAssignee = benchling_api_client.v2.stable.models.request_team_assignee.RequestTeamAssignee
+    RequestTeamAssignee = (
+        benchling_api_client.v2.stable.models.request_team_assignee.RequestTeamAssignee
+    )
     RequestUpdate = benchling_api_client.v2.stable.models.request_update.RequestUpdate
     RequestUpdatedFieldsEvent = (
         benchling_api_client.v2.stable.models.request_updated_fields_event.RequestUpdatedFieldsEvent
@@ -4048,27 +4842,41 @@ if TYPE_CHECKING:
     RequestUpdatedFieldsEventEventType = (
         benchling_api_client.v2.stable.models.request_updated_fields_event_event_type.RequestUpdatedFieldsEventEventType
     )
-    RequestUserAssignee = benchling_api_client.v2.stable.models.request_user_assignee.RequestUserAssignee
-    RequestWriteBase = benchling_api_client.v2.stable.models.request_write_base.RequestWriteBase
+    RequestUserAssignee = (
+        benchling_api_client.v2.stable.models.request_user_assignee.RequestUserAssignee
+    )
+    RequestWriteBase = (
+        benchling_api_client.v2.stable.models.request_write_base.RequestWriteBase
+    )
     RequestWriteTeamAssignee = (
         benchling_api_client.v2.stable.models.request_write_team_assignee.RequestWriteTeamAssignee
     )
     RequestWriteUserAssignee = (
         benchling_api_client.v2.stable.models.request_write_user_assignee.RequestWriteUserAssignee
     )
-    RequestsBulkGet = benchling_api_client.v2.stable.models.requests_bulk_get.RequestsBulkGet
+    RequestsBulkGet = (
+        benchling_api_client.v2.stable.models.requests_bulk_get.RequestsBulkGet
+    )
     RequestsPaginatedList = (
         benchling_api_client.v2.stable.models.requests_paginated_list.RequestsPaginatedList
     )
-    ResultsTableNotePart = benchling_api_client.v2.stable.models.results_table_note_part.ResultsTableNotePart
+    ResultsTableNotePart = (
+        benchling_api_client.v2.stable.models.results_table_note_part.ResultsTableNotePart
+    )
     ResultsTableNotePartType = (
         benchling_api_client.v2.stable.models.results_table_note_part_type.ResultsTableNotePartType
     )
     RnaAnnotation = benchling_api_client.v2.stable.models.rna_annotation.RnaAnnotation
     RnaOligo = benchling_api_client.v2.stable.models.rna_oligo.RnaOligo
-    RnaOligoBulkUpdate = benchling_api_client.v2.stable.models.rna_oligo_bulk_update.RnaOligoBulkUpdate
-    RnaOligoCreate = benchling_api_client.v2.stable.models.rna_oligo_create.RnaOligoCreate
-    RnaOligoUpdate = benchling_api_client.v2.stable.models.rna_oligo_update.RnaOligoUpdate
+    RnaOligoBulkUpdate = (
+        benchling_api_client.v2.stable.models.rna_oligo_bulk_update.RnaOligoBulkUpdate
+    )
+    RnaOligoCreate = (
+        benchling_api_client.v2.stable.models.rna_oligo_create.RnaOligoCreate
+    )
+    RnaOligoUpdate = (
+        benchling_api_client.v2.stable.models.rna_oligo_update.RnaOligoUpdate
+    )
     RnaOligoWithEntityType = (
         benchling_api_client.v2.stable.models.rna_oligo_with_entity_type.RnaOligoWithEntityType
     )
@@ -4078,7 +4886,9 @@ if TYPE_CHECKING:
     RnaOligosArchivalChange = (
         benchling_api_client.v2.stable.models.rna_oligos_archival_change.RnaOligosArchivalChange
     )
-    RnaOligosArchive = benchling_api_client.v2.stable.models.rna_oligos_archive.RnaOligosArchive
+    RnaOligosArchive = (
+        benchling_api_client.v2.stable.models.rna_oligos_archive.RnaOligosArchive
+    )
     RnaOligosBulkCreateRequest = (
         benchling_api_client.v2.stable.models.rna_oligos_bulk_create_request.RnaOligosBulkCreateRequest
     )
@@ -4091,7 +4901,9 @@ if TYPE_CHECKING:
     RnaOligosPaginatedList = (
         benchling_api_client.v2.stable.models.rna_oligos_paginated_list.RnaOligosPaginatedList
     )
-    RnaOligosUnarchive = benchling_api_client.v2.stable.models.rna_oligos_unarchive.RnaOligosUnarchive
+    RnaOligosUnarchive = (
+        benchling_api_client.v2.stable.models.rna_oligos_unarchive.RnaOligosUnarchive
+    )
     RnaSequence = benchling_api_client.v2.stable.models.rna_sequence.RnaSequence
     RnaSequenceBaseRequest = (
         benchling_api_client.v2.stable.models.rna_sequence_base_request.RnaSequenceBaseRequest
@@ -4105,20 +4917,30 @@ if TYPE_CHECKING:
     RnaSequenceBulkUpdate = (
         benchling_api_client.v2.stable.models.rna_sequence_bulk_update.RnaSequenceBulkUpdate
     )
-    RnaSequenceCreate = benchling_api_client.v2.stable.models.rna_sequence_create.RnaSequenceCreate
-    RnaSequencePart = benchling_api_client.v2.stable.models.rna_sequence_part.RnaSequencePart
+    RnaSequenceCreate = (
+        benchling_api_client.v2.stable.models.rna_sequence_create.RnaSequenceCreate
+    )
+    RnaSequencePart = (
+        benchling_api_client.v2.stable.models.rna_sequence_part.RnaSequencePart
+    )
     RnaSequenceRequestRegistryFields = (
         benchling_api_client.v2.stable.models.rna_sequence_request_registry_fields.RnaSequenceRequestRegistryFields
     )
-    RnaSequenceUpdate = benchling_api_client.v2.stable.models.rna_sequence_update.RnaSequenceUpdate
+    RnaSequenceUpdate = (
+        benchling_api_client.v2.stable.models.rna_sequence_update.RnaSequenceUpdate
+    )
     RnaSequencesArchivalChange = (
         benchling_api_client.v2.stable.models.rna_sequences_archival_change.RnaSequencesArchivalChange
     )
-    RnaSequencesArchive = benchling_api_client.v2.stable.models.rna_sequences_archive.RnaSequencesArchive
+    RnaSequencesArchive = (
+        benchling_api_client.v2.stable.models.rna_sequences_archive.RnaSequencesArchive
+    )
     RnaSequencesBulkCreateRequest = (
         benchling_api_client.v2.stable.models.rna_sequences_bulk_create_request.RnaSequencesBulkCreateRequest
     )
-    RnaSequencesBulkGet = benchling_api_client.v2.stable.models.rna_sequences_bulk_get.RnaSequencesBulkGet
+    RnaSequencesBulkGet = (
+        benchling_api_client.v2.stable.models.rna_sequences_bulk_get.RnaSequencesBulkGet
+    )
     RnaSequencesBulkUpdateRequest = (
         benchling_api_client.v2.stable.models.rna_sequences_bulk_update_request.RnaSequencesBulkUpdateRequest
     )
@@ -4129,8 +4951,12 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.rna_sequences_unarchive.RnaSequencesUnarchive
     )
     SampleGroup = benchling_api_client.v2.stable.models.sample_group.SampleGroup
-    SampleGroupSamples = benchling_api_client.v2.stable.models.sample_group_samples.SampleGroupSamples
-    SampleGroupStatus = benchling_api_client.v2.stable.models.sample_group_status.SampleGroupStatus
+    SampleGroupSamples = (
+        benchling_api_client.v2.stable.models.sample_group_samples.SampleGroupSamples
+    )
+    SampleGroupStatus = (
+        benchling_api_client.v2.stable.models.sample_group_status.SampleGroupStatus
+    )
     SampleGroupStatusUpdate = (
         benchling_api_client.v2.stable.models.sample_group_status_update.SampleGroupStatusUpdate
     )
@@ -4154,7 +4980,9 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.schema_link_field_definition_type.SchemaLinkFieldDefinitionType
     )
     SchemaSummary = benchling_api_client.v2.stable.models.schema_summary.SchemaSummary
-    SearchBasesRequest = benchling_api_client.v2.stable.models.search_bases_request.SearchBasesRequest
+    SearchBasesRequest = (
+        benchling_api_client.v2.stable.models.search_bases_request.SearchBasesRequest
+    )
     SearchBasesRequestArchiveReason = (
         benchling_api_client.v2.stable.models.search_bases_request_archive_reason.SearchBasesRequestArchiveReason
     )
@@ -4173,7 +5001,9 @@ if TYPE_CHECKING:
     SearchInputMultiValueUiBlockUpdate = (
         benchling_api_client.v2.stable.models.search_input_multi_value_ui_block_update.SearchInputMultiValueUiBlockUpdate
     )
-    SearchInputUiBlock = benchling_api_client.v2.stable.models.search_input_ui_block.SearchInputUiBlock
+    SearchInputUiBlock = (
+        benchling_api_client.v2.stable.models.search_input_ui_block.SearchInputUiBlock
+    )
     SearchInputUiBlockCreate = (
         benchling_api_client.v2.stable.models.search_input_ui_block_create.SearchInputUiBlockCreate
     )
@@ -4186,10 +5016,18 @@ if TYPE_CHECKING:
     SearchInputUiBlockUpdate = (
         benchling_api_client.v2.stable.models.search_input_ui_block_update.SearchInputUiBlockUpdate
     )
-    SectionUiBlock = benchling_api_client.v2.stable.models.section_ui_block.SectionUiBlock
-    SectionUiBlockCreate = benchling_api_client.v2.stable.models.section_ui_block_create.SectionUiBlockCreate
-    SectionUiBlockType = benchling_api_client.v2.stable.models.section_ui_block_type.SectionUiBlockType
-    SectionUiBlockUpdate = benchling_api_client.v2.stable.models.section_ui_block_update.SectionUiBlockUpdate
+    SectionUiBlock = (
+        benchling_api_client.v2.stable.models.section_ui_block.SectionUiBlock
+    )
+    SectionUiBlockCreate = (
+        benchling_api_client.v2.stable.models.section_ui_block_create.SectionUiBlockCreate
+    )
+    SectionUiBlockType = (
+        benchling_api_client.v2.stable.models.section_ui_block_type.SectionUiBlockType
+    )
+    SectionUiBlockUpdate = (
+        benchling_api_client.v2.stable.models.section_ui_block_update.SectionUiBlockUpdate
+    )
     SecureTextAppConfigItem = (
         benchling_api_client.v2.stable.models.secure_text_app_config_item.SecureTextAppConfigItem
     )
@@ -4208,7 +5046,9 @@ if TYPE_CHECKING:
     SelectorInputMultiValueUiBlockUpdate = (
         benchling_api_client.v2.stable.models.selector_input_multi_value_ui_block_update.SelectorInputMultiValueUiBlockUpdate
     )
-    SelectorInputUiBlock = benchling_api_client.v2.stable.models.selector_input_ui_block.SelectorInputUiBlock
+    SelectorInputUiBlock = (
+        benchling_api_client.v2.stable.models.selector_input_ui_block.SelectorInputUiBlock
+    )
     SelectorInputUiBlockCreate = (
         benchling_api_client.v2.stable.models.selector_input_ui_block_create.SelectorInputUiBlockCreate
     )
@@ -4218,7 +5058,9 @@ if TYPE_CHECKING:
     SelectorInputUiBlockUpdate = (
         benchling_api_client.v2.stable.models.selector_input_ui_block_update.SelectorInputUiBlockUpdate
     )
-    SequenceFeatureBase = benchling_api_client.v2.stable.models.sequence_feature_base.SequenceFeatureBase
+    SequenceFeatureBase = (
+        benchling_api_client.v2.stable.models.sequence_feature_base.SequenceFeatureBase
+    )
     SequenceFeatureCustomField = (
         benchling_api_client.v2.stable.models.sequence_feature_custom_field.SequenceFeatureCustomField
     )
@@ -4228,8 +5070,12 @@ if TYPE_CHECKING:
     SimpleFieldDefinitionType = (
         benchling_api_client.v2.stable.models.simple_field_definition_type.SimpleFieldDefinitionType
     )
-    SimpleNotePart = benchling_api_client.v2.stable.models.simple_note_part.SimpleNotePart
-    SimpleNotePartType = benchling_api_client.v2.stable.models.simple_note_part_type.SimpleNotePartType
+    SimpleNotePart = (
+        benchling_api_client.v2.stable.models.simple_note_part.SimpleNotePart
+    )
+    SimpleNotePartType = (
+        benchling_api_client.v2.stable.models.simple_note_part_type.SimpleNotePartType
+    )
     StageEntry = benchling_api_client.v2.stable.models.stage_entry.StageEntry
     StageEntryCreatedEvent = (
         benchling_api_client.v2.stable.models.stage_entry_created_event.StageEntryCreatedEvent
@@ -4259,9 +5105,13 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.structured_table_column_info.StructuredTableColumnInfo
     )
     TableNotePart = benchling_api_client.v2.stable.models.table_note_part.TableNotePart
-    TableNotePartType = benchling_api_client.v2.stable.models.table_note_part_type.TableNotePartType
+    TableNotePartType = (
+        benchling_api_client.v2.stable.models.table_note_part_type.TableNotePartType
+    )
     TableUiBlock = benchling_api_client.v2.stable.models.table_ui_block.TableUiBlock
-    TableUiBlockCreate = benchling_api_client.v2.stable.models.table_ui_block_create.TableUiBlockCreate
+    TableUiBlockCreate = (
+        benchling_api_client.v2.stable.models.table_ui_block_create.TableUiBlockCreate
+    )
     TableUiBlockDataFrameSource = (
         benchling_api_client.v2.stable.models.table_ui_block_data_frame_source.TableUiBlockDataFrameSource
     )
@@ -4274,35 +5124,76 @@ if TYPE_CHECKING:
     TableUiBlockDatasetSourceType = (
         benchling_api_client.v2.stable.models.table_ui_block_dataset_source_type.TableUiBlockDatasetSourceType
     )
-    TableUiBlockSource = benchling_api_client.v2.stable.models.table_ui_block_source.TableUiBlockSource
-    TableUiBlockType = benchling_api_client.v2.stable.models.table_ui_block_type.TableUiBlockType
-    TableUiBlockUpdate = benchling_api_client.v2.stable.models.table_ui_block_update.TableUiBlockUpdate
+    TableUiBlockSource = (
+        benchling_api_client.v2.stable.models.table_ui_block_source.TableUiBlockSource
+    )
+    TableUiBlockType = (
+        benchling_api_client.v2.stable.models.table_ui_block_type.TableUiBlockType
+    )
+    TableUiBlockUpdate = (
+        benchling_api_client.v2.stable.models.table_ui_block_update.TableUiBlockUpdate
+    )
     Team = benchling_api_client.v2.stable.models.team.Team
     TeamCreate = benchling_api_client.v2.stable.models.team_create.TeamCreate
     TeamSummary = benchling_api_client.v2.stable.models.team_summary.TeamSummary
     TeamUpdate = benchling_api_client.v2.stable.models.team_update.TeamUpdate
-    TeamsPaginatedList = benchling_api_client.v2.stable.models.teams_paginated_list.TeamsPaginatedList
-    TextAppConfigItem = benchling_api_client.v2.stable.models.text_app_config_item.TextAppConfigItem
+    TeamsPaginatedList = (
+        benchling_api_client.v2.stable.models.teams_paginated_list.TeamsPaginatedList
+    )
+    TestDefinition = (
+        benchling_api_client.v2.stable.models.test_definition.TestDefinition
+    )
+    TestOrder = benchling_api_client.v2.stable.models.test_order.TestOrder
+    TestOrderBulkUpdate = (
+        benchling_api_client.v2.stable.models.test_order_bulk_update.TestOrderBulkUpdate
+    )
+    TestOrderStatus = (
+        benchling_api_client.v2.stable.models.test_order_status.TestOrderStatus
+    )
+    TestOrderUpdate = (
+        benchling_api_client.v2.stable.models.test_order_update.TestOrderUpdate
+    )
+    TestOrdersBulkUpdateRequest = (
+        benchling_api_client.v2.stable.models.test_orders_bulk_update_request.TestOrdersBulkUpdateRequest
+    )
+    TestOrdersPaginatedList = (
+        benchling_api_client.v2.stable.models.test_orders_paginated_list.TestOrdersPaginatedList
+    )
+    TextAppConfigItem = (
+        benchling_api_client.v2.stable.models.text_app_config_item.TextAppConfigItem
+    )
     TextAppConfigItemType = (
         benchling_api_client.v2.stable.models.text_app_config_item_type.TextAppConfigItemType
     )
-    TextBoxNotePart = benchling_api_client.v2.stable.models.text_box_note_part.TextBoxNotePart
-    TextBoxNotePartType = benchling_api_client.v2.stable.models.text_box_note_part_type.TextBoxNotePartType
-    TextInputUiBlock = benchling_api_client.v2.stable.models.text_input_ui_block.TextInputUiBlock
+    TextBoxNotePart = (
+        benchling_api_client.v2.stable.models.text_box_note_part.TextBoxNotePart
+    )
+    TextBoxNotePartType = (
+        benchling_api_client.v2.stable.models.text_box_note_part_type.TextBoxNotePartType
+    )
+    TextInputUiBlock = (
+        benchling_api_client.v2.stable.models.text_input_ui_block.TextInputUiBlock
+    )
     TextInputUiBlockCreate = (
         benchling_api_client.v2.stable.models.text_input_ui_block_create.TextInputUiBlockCreate
     )
-    TextInputUiBlockType = benchling_api_client.v2.stable.models.text_input_ui_block_type.TextInputUiBlockType
+    TextInputUiBlockType = (
+        benchling_api_client.v2.stable.models.text_input_ui_block_type.TextInputUiBlockType
+    )
     TextInputUiBlockUpdate = (
         benchling_api_client.v2.stable.models.text_input_ui_block_update.TextInputUiBlockUpdate
     )
     TokenCreate = benchling_api_client.v2.stable.models.token_create.TokenCreate
-    TokenCreateGrantType = benchling_api_client.v2.stable.models.token_create_grant_type.TokenCreateGrantType
+    TokenCreateGrantType = (
+        benchling_api_client.v2.stable.models.token_create_grant_type.TokenCreateGrantType
+    )
     TokenResponse = benchling_api_client.v2.stable.models.token_response.TokenResponse
     TokenResponseTokenType = (
         benchling_api_client.v2.stable.models.token_response_token_type.TokenResponseTokenType
     )
-    TransfersAsyncTask = benchling_api_client.v2.stable.models.transfers_async_task.TransfersAsyncTask
+    TransfersAsyncTask = (
+        benchling_api_client.v2.stable.models.transfers_async_task.TransfersAsyncTask
+    )
     TransfersAsyncTaskResponse = (
         benchling_api_client.v2.stable.models.transfers_async_task_response.TransfersAsyncTaskResponse
     )
@@ -4314,14 +5205,20 @@ if TYPE_CHECKING:
         benchling_api_client.v2.stable.models.translation_regions_item.TranslationRegionsItem
     )
     UnitSummary = benchling_api_client.v2.stable.models.unit_summary.UnitSummary
-    UnregisterEntities = benchling_api_client.v2.stable.models.unregister_entities.UnregisterEntities
-    UpdateEventMixin = benchling_api_client.v2.stable.models.update_event_mixin.UpdateEventMixin
+    UnregisterEntities = (
+        benchling_api_client.v2.stable.models.unregister_entities.UnregisterEntities
+    )
+    UpdateEventMixin = (
+        benchling_api_client.v2.stable.models.update_event_mixin.UpdateEventMixin
+    )
     User = benchling_api_client.v2.stable.models.user.User
     UserActivity = benchling_api_client.v2.stable.models.user_activity.UserActivity
     UserBulkCreateRequest = (
         benchling_api_client.v2.stable.models.user_bulk_create_request.UserBulkCreateRequest
     )
-    UserBulkUpdate = benchling_api_client.v2.stable.models.user_bulk_update.UserBulkUpdate
+    UserBulkUpdate = (
+        benchling_api_client.v2.stable.models.user_bulk_update.UserBulkUpdate
+    )
     UserBulkUpdateRequest = (
         benchling_api_client.v2.stable.models.user_bulk_update_request.UserBulkUpdateRequest
     )
@@ -4329,18 +5226,26 @@ if TYPE_CHECKING:
     UserInputMultiValueUiBlock = (
         benchling_api_client.v2.stable.models.user_input_multi_value_ui_block.UserInputMultiValueUiBlock
     )
-    UserInputUiBlock = benchling_api_client.v2.stable.models.user_input_ui_block.UserInputUiBlock
+    UserInputUiBlock = (
+        benchling_api_client.v2.stable.models.user_input_ui_block.UserInputUiBlock
+    )
     UserSummary = benchling_api_client.v2.stable.models.user_summary.UserSummary
     UserUpdate = benchling_api_client.v2.stable.models.user_update.UserUpdate
-    UserValidation = benchling_api_client.v2.stable.models.user_validation.UserValidation
+    UserValidation = (
+        benchling_api_client.v2.stable.models.user_validation.UserValidation
+    )
     UserValidationValidationStatus = (
         benchling_api_client.v2.stable.models.user_validation_validation_status.UserValidationValidationStatus
     )
-    UsersPaginatedList = benchling_api_client.v2.stable.models.users_paginated_list.UsersPaginatedList
+    UsersPaginatedList = (
+        benchling_api_client.v2.stable.models.users_paginated_list.UsersPaginatedList
+    )
     WarehouseCredentialSummary = (
         benchling_api_client.v2.stable.models.warehouse_credential_summary.WarehouseCredentialSummary
     )
-    WarehouseCredentials = benchling_api_client.v2.stable.models.warehouse_credentials.WarehouseCredentials
+    WarehouseCredentials = (
+        benchling_api_client.v2.stable.models.warehouse_credentials.WarehouseCredentials
+    )
     WarehouseCredentialsCreate = (
         benchling_api_client.v2.stable.models.warehouse_credentials_create.WarehouseCredentialsCreate
     )
@@ -4348,14 +5253,18 @@ if TYPE_CHECKING:
     WellOrInaccessibleResource = (
         benchling_api_client.v2.stable.models.well_or_inaccessible_resource.WellOrInaccessibleResource
     )
-    WellResourceType = benchling_api_client.v2.stable.models.well_resource_type.WellResourceType
+    WellResourceType = (
+        benchling_api_client.v2.stable.models.well_resource_type.WellResourceType
+    )
     WorkflowEndNodeDetails = (
         benchling_api_client.v2.stable.models.workflow_end_node_details.WorkflowEndNodeDetails
     )
     WorkflowEndNodeDetailsNodeType = (
         benchling_api_client.v2.stable.models.workflow_end_node_details_node_type.WorkflowEndNodeDetailsNodeType
     )
-    WorkflowFlowchart = benchling_api_client.v2.stable.models.workflow_flowchart.WorkflowFlowchart
+    WorkflowFlowchart = (
+        benchling_api_client.v2.stable.models.workflow_flowchart.WorkflowFlowchart
+    )
     WorkflowFlowchartConfigSummary = (
         benchling_api_client.v2.stable.models.workflow_flowchart_config_summary.WorkflowFlowchartConfigSummary
     )
@@ -4378,7 +5287,9 @@ if TYPE_CHECKING:
     WorkflowNodeTaskGroupSummary = (
         benchling_api_client.v2.stable.models.workflow_node_task_group_summary.WorkflowNodeTaskGroupSummary
     )
-    WorkflowOutput = benchling_api_client.v2.stable.models.workflow_output.WorkflowOutput
+    WorkflowOutput = (
+        benchling_api_client.v2.stable.models.workflow_output.WorkflowOutput
+    )
     WorkflowOutputArchiveReason = (
         benchling_api_client.v2.stable.models.workflow_output_archive_reason.WorkflowOutputArchiveReason
     )
@@ -4388,7 +5299,9 @@ if TYPE_CHECKING:
     WorkflowOutputBulkUpdate = (
         benchling_api_client.v2.stable.models.workflow_output_bulk_update.WorkflowOutputBulkUpdate
     )
-    WorkflowOutputCreate = benchling_api_client.v2.stable.models.workflow_output_create.WorkflowOutputCreate
+    WorkflowOutputCreate = (
+        benchling_api_client.v2.stable.models.workflow_output_create.WorkflowOutputCreate
+    )
     WorkflowOutputCreatedEvent = (
         benchling_api_client.v2.stable.models.workflow_output_created_event.WorkflowOutputCreatedEvent
     )
@@ -4401,11 +5314,15 @@ if TYPE_CHECKING:
     WorkflowOutputNodeDetailsNodeType = (
         benchling_api_client.v2.stable.models.workflow_output_node_details_node_type.WorkflowOutputNodeDetailsNodeType
     )
-    WorkflowOutputSchema = benchling_api_client.v2.stable.models.workflow_output_schema.WorkflowOutputSchema
+    WorkflowOutputSchema = (
+        benchling_api_client.v2.stable.models.workflow_output_schema.WorkflowOutputSchema
+    )
     WorkflowOutputSummary = (
         benchling_api_client.v2.stable.models.workflow_output_summary.WorkflowOutputSummary
     )
-    WorkflowOutputUpdate = benchling_api_client.v2.stable.models.workflow_output_update.WorkflowOutputUpdate
+    WorkflowOutputUpdate = (
+        benchling_api_client.v2.stable.models.workflow_output_update.WorkflowOutputUpdate
+    )
     WorkflowOutputUpdatedFieldsEvent = (
         benchling_api_client.v2.stable.models.workflow_output_updated_fields_event.WorkflowOutputUpdatedFieldsEvent
     )
@@ -4449,12 +5366,22 @@ if TYPE_CHECKING:
     WorkflowRouterNodeDetailsNodeType = (
         benchling_api_client.v2.stable.models.workflow_router_node_details_node_type.WorkflowRouterNodeDetailsNodeType
     )
-    WorkflowSample = benchling_api_client.v2.stable.models.workflow_sample.WorkflowSample
-    WorkflowSampleList = benchling_api_client.v2.stable.models.workflow_sample_list.WorkflowSampleList
+    WorkflowSample = (
+        benchling_api_client.v2.stable.models.workflow_sample.WorkflowSample
+    )
+    WorkflowSampleList = (
+        benchling_api_client.v2.stable.models.workflow_sample_list.WorkflowSampleList
+    )
     WorkflowStage = benchling_api_client.v2.stable.models.workflow_stage.WorkflowStage
-    WorkflowStageList = benchling_api_client.v2.stable.models.workflow_stage_list.WorkflowStageList
-    WorkflowStageRun = benchling_api_client.v2.stable.models.workflow_stage_run.WorkflowStageRun
-    WorkflowStageRunList = benchling_api_client.v2.stable.models.workflow_stage_run_list.WorkflowStageRunList
+    WorkflowStageList = (
+        benchling_api_client.v2.stable.models.workflow_stage_list.WorkflowStageList
+    )
+    WorkflowStageRun = (
+        benchling_api_client.v2.stable.models.workflow_stage_run.WorkflowStageRun
+    )
+    WorkflowStageRunList = (
+        benchling_api_client.v2.stable.models.workflow_stage_run_list.WorkflowStageRunList
+    )
     WorkflowStageRunStatus = (
         benchling_api_client.v2.stable.models.workflow_stage_run_status.WorkflowStageRunStatus
     )
@@ -4462,14 +5389,18 @@ if TYPE_CHECKING:
     WorkflowTaskArchiveReason = (
         benchling_api_client.v2.stable.models.workflow_task_archive_reason.WorkflowTaskArchiveReason
     )
-    WorkflowTaskBase = benchling_api_client.v2.stable.models.workflow_task_base.WorkflowTaskBase
+    WorkflowTaskBase = (
+        benchling_api_client.v2.stable.models.workflow_task_base.WorkflowTaskBase
+    )
     WorkflowTaskBulkCreate = (
         benchling_api_client.v2.stable.models.workflow_task_bulk_create.WorkflowTaskBulkCreate
     )
     WorkflowTaskBulkUpdate = (
         benchling_api_client.v2.stable.models.workflow_task_bulk_update.WorkflowTaskBulkUpdate
     )
-    WorkflowTaskCreate = benchling_api_client.v2.stable.models.workflow_task_create.WorkflowTaskCreate
+    WorkflowTaskCreate = (
+        benchling_api_client.v2.stable.models.workflow_task_create.WorkflowTaskCreate
+    )
     WorkflowTaskCreatedEvent = (
         benchling_api_client.v2.stable.models.workflow_task_created_event.WorkflowTaskCreatedEvent
     )
@@ -4485,7 +5416,9 @@ if TYPE_CHECKING:
     WorkflowTaskExecutionType = (
         benchling_api_client.v2.stable.models.workflow_task_execution_type.WorkflowTaskExecutionType
     )
-    WorkflowTaskGroup = benchling_api_client.v2.stable.models.workflow_task_group.WorkflowTaskGroup
+    WorkflowTaskGroup = (
+        benchling_api_client.v2.stable.models.workflow_task_group.WorkflowTaskGroup
+    )
     WorkflowTaskGroupArchiveReason = (
         benchling_api_client.v2.stable.models.workflow_task_group_archive_reason.WorkflowTaskGroupArchiveReason
     )
@@ -4543,7 +5476,9 @@ if TYPE_CHECKING:
     WorkflowTaskNodeDetailsNodeType = (
         benchling_api_client.v2.stable.models.workflow_task_node_details_node_type.WorkflowTaskNodeDetailsNodeType
     )
-    WorkflowTaskSchema = benchling_api_client.v2.stable.models.workflow_task_schema.WorkflowTaskSchema
+    WorkflowTaskSchema = (
+        benchling_api_client.v2.stable.models.workflow_task_schema.WorkflowTaskSchema
+    )
     WorkflowTaskSchemaBase = (
         benchling_api_client.v2.stable.models.workflow_task_schema_base.WorkflowTaskSchemaBase
     )
@@ -4556,7 +5491,9 @@ if TYPE_CHECKING:
     WorkflowTaskSchemasPaginatedList = (
         benchling_api_client.v2.stable.models.workflow_task_schemas_paginated_list.WorkflowTaskSchemasPaginatedList
     )
-    WorkflowTaskStatus = benchling_api_client.v2.stable.models.workflow_task_status.WorkflowTaskStatus
+    WorkflowTaskStatus = (
+        benchling_api_client.v2.stable.models.workflow_task_status.WorkflowTaskStatus
+    )
     WorkflowTaskStatusLifecycle = (
         benchling_api_client.v2.stable.models.workflow_task_status_lifecycle.WorkflowTaskStatusLifecycle
     )
@@ -4566,8 +5503,12 @@ if TYPE_CHECKING:
     WorkflowTaskStatusStatusType = (
         benchling_api_client.v2.stable.models.workflow_task_status_status_type.WorkflowTaskStatusStatusType
     )
-    WorkflowTaskSummary = benchling_api_client.v2.stable.models.workflow_task_summary.WorkflowTaskSummary
-    WorkflowTaskUpdate = benchling_api_client.v2.stable.models.workflow_task_update.WorkflowTaskUpdate
+    WorkflowTaskSummary = (
+        benchling_api_client.v2.stable.models.workflow_task_summary.WorkflowTaskSummary
+    )
+    WorkflowTaskUpdate = (
+        benchling_api_client.v2.stable.models.workflow_task_update.WorkflowTaskUpdate
+    )
     WorkflowTaskUpdatedAssigneeEvent = (
         benchling_api_client.v2.stable.models.workflow_task_updated_assignee_event.WorkflowTaskUpdatedAssigneeEvent
     )
@@ -4598,7 +5539,9 @@ if TYPE_CHECKING:
     WorkflowTasksArchivalChange = (
         benchling_api_client.v2.stable.models.workflow_tasks_archival_change.WorkflowTasksArchivalChange
     )
-    WorkflowTasksArchive = benchling_api_client.v2.stable.models.workflow_tasks_archive.WorkflowTasksArchive
+    WorkflowTasksArchive = (
+        benchling_api_client.v2.stable.models.workflow_tasks_archive.WorkflowTasksArchive
+    )
     WorkflowTasksBulkCopyRequest = (
         benchling_api_client.v2.stable.models.workflow_tasks_bulk_copy_request.WorkflowTasksBulkCopyRequest
     )
@@ -4659,6 +5602,8 @@ else:
         "AppCanvasCreateBase": "benchling_api_client.v2.stable.models.app_canvas_create_base",
         "AppCanvasCreateUiBlockList": "benchling_api_client.v2.stable.models.app_canvas_create_ui_block_list",
         "AppCanvasLeafNodeUiBlockList": "benchling_api_client.v2.stable.models.app_canvas_leaf_node_ui_block_list",
+        "AppCanvasNotePart": "benchling_api_client.v2.stable.models.app_canvas_note_part",
+        "AppCanvasNotePartType": "benchling_api_client.v2.stable.models.app_canvas_note_part_type",
         "AppCanvasUiBlockList": "benchling_api_client.v2.stable.models.app_canvas_ui_block_list",
         "AppCanvasUpdate": "benchling_api_client.v2.stable.models.app_canvas_update",
         "AppCanvasUpdateBase": "benchling_api_client.v2.stable.models.app_canvas_update_base",
@@ -4783,9 +5728,12 @@ else:
         "AssayRunsUnarchive": "benchling_api_client.v2.stable.models.assay_runs_unarchive",
         "AsyncTask": "benchling_api_client.v2.stable.models.async_task",
         "AsyncTaskErrors": "benchling_api_client.v2.stable.models.async_task_errors",
+        "AsyncTaskErrorsItem": "benchling_api_client.v2.stable.models.async_task_errors_item",
         "AsyncTaskLink": "benchling_api_client.v2.stable.models.async_task_link",
         "AsyncTaskResponse": "benchling_api_client.v2.stable.models.async_task_response",
         "AsyncTaskStatus": "benchling_api_client.v2.stable.models.async_task_status",
+        "AuditLogExport": "benchling_api_client.v2.stable.models.audit_log_export",
+        "AuditLogExportFormat": "benchling_api_client.v2.stable.models.audit_log_export_format",
         "AutoAnnotateAaSequences": "benchling_api_client.v2.stable.models.auto_annotate_aa_sequences",
         "AutoAnnotateDnaSequences": "benchling_api_client.v2.stable.models.auto_annotate_dna_sequences",
         "AutoAnnotateRnaSequences": "benchling_api_client.v2.stable.models.auto_annotate_rna_sequences",
@@ -4960,6 +5908,10 @@ else:
         "ContainersList": "benchling_api_client.v2.stable.models.containers_list",
         "ContainersPaginatedList": "benchling_api_client.v2.stable.models.containers_paginated_list",
         "ContainersUnarchive": "benchling_api_client.v2.stable.models.containers_unarchive",
+        "ConvertToASM": "benchling_api_client.v2.stable.models.convert_to_asm",
+        "ConvertToASMResponse_200": "benchling_api_client.v2.stable.models.convert_to_asm_response_200",
+        "ConvertToCSV": "benchling_api_client.v2.stable.models.convert_to_csv",
+        "ConvertToCSVResponse_200Item": "benchling_api_client.v2.stable.models.convert_to_csv_response_200_item",
         "CreateConsensusAlignmentAsyncTask": "benchling_api_client.v2.stable.models.create_consensus_alignment_async_task",
         "CreateEntityIntoRegistry": "benchling_api_client.v2.stable.models.create_entity_into_registry",
         "CreateNucleotideConsensusAlignmentAsyncTask": "benchling_api_client.v2.stable.models.create_nucleotide_consensus_alignment_async_task",
@@ -4992,8 +5944,31 @@ else:
         "CustomField": "benchling_api_client.v2.stable.models.custom_field",
         "CustomFields": "benchling_api_client.v2.stable.models.custom_fields",
         "CustomNotation": "benchling_api_client.v2.stable.models.custom_notation",
+        "CustomNotationAlias": "benchling_api_client.v2.stable.models.custom_notation_alias",
         "CustomNotationRequest": "benchling_api_client.v2.stable.models.custom_notation_request",
         "CustomNotationsPaginatedList": "benchling_api_client.v2.stable.models.custom_notations_paginated_list",
+        "DataFrame": "benchling_api_client.v2.stable.models.data_frame",
+        "DataFrameColumnMetadata": "benchling_api_client.v2.stable.models.data_frame_column_metadata",
+        "DataFrameColumnTypeMetadata": "benchling_api_client.v2.stable.models.data_frame_column_type_metadata",
+        "DataFrameColumnTypeMetadataTarget": "benchling_api_client.v2.stable.models.data_frame_column_type_metadata_target",
+        "DataFrameColumnTypeNameEnum": "benchling_api_client.v2.stable.models.data_frame_column_type_name_enum",
+        "DataFrameColumnTypeNameEnumName": "benchling_api_client.v2.stable.models.data_frame_column_type_name_enum_name",
+        "DataFrameCreate": "benchling_api_client.v2.stable.models.data_frame_create",
+        "DataFrameCreateManifest": "benchling_api_client.v2.stable.models.data_frame_create_manifest",
+        "DataFrameCreateManifestManifestItem": "benchling_api_client.v2.stable.models.data_frame_create_manifest_manifest_item",
+        "DataFrameManifest": "benchling_api_client.v2.stable.models.data_frame_manifest",
+        "DataFrameManifestManifestItem": "benchling_api_client.v2.stable.models.data_frame_manifest_manifest_item",
+        "DataFrameUpdate": "benchling_api_client.v2.stable.models.data_frame_update",
+        "DataFrameUpdateUploadStatus": "benchling_api_client.v2.stable.models.data_frame_update_upload_status",
+        "Dataset": "benchling_api_client.v2.stable.models.dataset",
+        "DatasetCreate": "benchling_api_client.v2.stable.models.dataset_create",
+        "DatasetCreator": "benchling_api_client.v2.stable.models.dataset_creator",
+        "DatasetUpdate": "benchling_api_client.v2.stable.models.dataset_update",
+        "DatasetsArchivalChange": "benchling_api_client.v2.stable.models.datasets_archival_change",
+        "DatasetsArchive": "benchling_api_client.v2.stable.models.datasets_archive",
+        "DatasetsArchiveReason": "benchling_api_client.v2.stable.models.datasets_archive_reason",
+        "DatasetsPaginatedList": "benchling_api_client.v2.stable.models.datasets_paginated_list",
+        "DatasetsUnarchive": "benchling_api_client.v2.stable.models.datasets_unarchive",
         "DateAppConfigItem": "benchling_api_client.v2.stable.models.date_app_config_item",
         "DateAppConfigItemType": "benchling_api_client.v2.stable.models.date_app_config_item_type",
         "DatetimeAppConfigItem": "benchling_api_client.v2.stable.models.datetime_app_config_item",
@@ -5128,6 +6103,8 @@ else:
         "EntryUpdatedFieldsEventEventType": "benchling_api_client.v2.stable.models.entry_updated_fields_event_event_type",
         "EntryUpdatedReviewRecordEvent": "benchling_api_client.v2.stable.models.entry_updated_review_record_event",
         "EntryUpdatedReviewRecordEventEventType": "benchling_api_client.v2.stable.models.entry_updated_review_record_event_event_type",
+        "EntryUpdatedReviewSnapshotBetaEvent": "benchling_api_client.v2.stable.models.entry_updated_review_snapshot_beta_event",
+        "EntryUpdatedReviewSnapshotBetaEventEventType": "benchling_api_client.v2.stable.models.entry_updated_review_snapshot_beta_event_event_type",
         "Enzyme": "benchling_api_client.v2.stable.models.enzyme",
         "EnzymesPaginatedList": "benchling_api_client.v2.stable.models.enzymes_paginated_list",
         "Event": "benchling_api_client.v2.stable.models.event",
@@ -5168,6 +6145,22 @@ else:
         "FieldWithResolution": "benchling_api_client.v2.stable.models.field_with_resolution",
         "Fields": "benchling_api_client.v2.stable.models.fields",
         "FieldsWithResolution": "benchling_api_client.v2.stable.models.fields_with_resolution",
+        "File": "benchling_api_client.v2.stable.models.file",
+        "FileCreate": "benchling_api_client.v2.stable.models.file_create",
+        "FileCreator": "benchling_api_client.v2.stable.models.file_creator",
+        "FileStatus": "benchling_api_client.v2.stable.models.file_status",
+        "FileStatusUploadStatus": "benchling_api_client.v2.stable.models.file_status_upload_status",
+        "FileUpdate": "benchling_api_client.v2.stable.models.file_update",
+        "FileUpdateUploadStatus": "benchling_api_client.v2.stable.models.file_update_upload_status",
+        "FileUploadUiBlock": "benchling_api_client.v2.stable.models.file_upload_ui_block",
+        "FileUploadUiBlockCreate": "benchling_api_client.v2.stable.models.file_upload_ui_block_create",
+        "FileUploadUiBlockType": "benchling_api_client.v2.stable.models.file_upload_ui_block_type",
+        "FileUploadUiBlockUpdate": "benchling_api_client.v2.stable.models.file_upload_ui_block_update",
+        "FilesArchivalChange": "benchling_api_client.v2.stable.models.files_archival_change",
+        "FilesArchive": "benchling_api_client.v2.stable.models.files_archive",
+        "FilesArchiveReason": "benchling_api_client.v2.stable.models.files_archive_reason",
+        "FilesPaginatedList": "benchling_api_client.v2.stable.models.files_paginated_list",
+        "FilesUnarchive": "benchling_api_client.v2.stable.models.files_unarchive",
         "FindMatchingRegionsAsyncTask": "benchling_api_client.v2.stable.models.find_matching_regions_async_task",
         "FindMatchingRegionsAsyncTaskResponse": "benchling_api_client.v2.stable.models.find_matching_regions_async_task_response",
         "FindMatchingRegionsAsyncTaskResponseAaSequenceMatchesItem": "benchling_api_client.v2.stable.models.find_matching_regions_async_task_response_aa_sequence_matches_item",
@@ -5194,6 +6187,7 @@ else:
         "GenericApiIdentifiedAppConfigItemType": "benchling_api_client.v2.stable.models.generic_api_identified_app_config_item_type",
         "GenericEntity": "benchling_api_client.v2.stable.models.generic_entity",
         "GenericEntityCreator": "benchling_api_client.v2.stable.models.generic_entity_creator",
+        "GetDataFrameRowDataFormat": "benchling_api_client.v2.stable.models.get_data_frame_row_data_format",
         "GetUserWarehouseLoginsResponse_200": "benchling_api_client.v2.stable.models.get_user_warehouse_logins_response_200",
         "InaccessibleResource": "benchling_api_client.v2.stable.models.inaccessible_resource",
         "InaccessibleResourceResourceType": "benchling_api_client.v2.stable.models.inaccessible_resource_resource_type",
@@ -5251,6 +6245,7 @@ else:
         "ListContainersCheckoutStatus": "benchling_api_client.v2.stable.models.list_containers_checkout_status",
         "ListContainersSort": "benchling_api_client.v2.stable.models.list_containers_sort",
         "ListCustomEntitiesSort": "benchling_api_client.v2.stable.models.list_custom_entities_sort",
+        "ListDatasetsSort": "benchling_api_client.v2.stable.models.list_datasets_sort",
         "ListDNAAlignmentsSort": "benchling_api_client.v2.stable.models.list_dna_alignments_sort",
         "ListDNAOligosSort": "benchling_api_client.v2.stable.models.list_dna_oligos_sort",
         "ListDNASequencesSort": "benchling_api_client.v2.stable.models.list_dna_sequences_sort",
@@ -5259,6 +6254,7 @@ else:
         "ListEnzymesSort": "benchling_api_client.v2.stable.models.list_enzymes_sort",
         "ListFeatureLibrariesSort": "benchling_api_client.v2.stable.models.list_feature_libraries_sort",
         "ListFeaturesMatchType": "benchling_api_client.v2.stable.models.list_features_match_type",
+        "ListFilesSort": "benchling_api_client.v2.stable.models.list_files_sort",
         "ListFoldersSection": "benchling_api_client.v2.stable.models.list_folders_section",
         "ListFoldersSort": "benchling_api_client.v2.stable.models.list_folders_sort",
         "ListLocationsSort": "benchling_api_client.v2.stable.models.list_locations_sort",
@@ -5272,9 +6268,11 @@ else:
         "ListRNAOligosSort": "benchling_api_client.v2.stable.models.list_rna_oligos_sort",
         "ListRNASequencesSort": "benchling_api_client.v2.stable.models.list_rna_sequences_sort",
         "ListTeamsSort": "benchling_api_client.v2.stable.models.list_teams_sort",
+        "ListTestOrdersSort": "benchling_api_client.v2.stable.models.list_test_orders_sort",
         "ListUsersSort": "benchling_api_client.v2.stable.models.list_users_sort",
         "ListWorkflowFlowchartsSort": "benchling_api_client.v2.stable.models.list_workflow_flowcharts_sort",
         "ListWorkflowTasksScheduledOn": "benchling_api_client.v2.stable.models.list_workflow_tasks_scheduled_on",
+        "ListingError": "benchling_api_client.v2.stable.models.listing_error",
         "Location": "benchling_api_client.v2.stable.models.location",
         "LocationCreate": "benchling_api_client.v2.stable.models.location_create",
         "LocationSchema": "benchling_api_client.v2.stable.models.location_schema",
@@ -5353,6 +6351,7 @@ else:
         "MonomersUnarchive": "benchling_api_client.v2.stable.models.monomers_unarchive",
         "MultipleContainersTransfer": "benchling_api_client.v2.stable.models.multiple_containers_transfer",
         "MultipleContainersTransfersList": "benchling_api_client.v2.stable.models.multiple_containers_transfers_list",
+        "NameTemplatePart": "benchling_api_client.v2.stable.models.name_template_part",
         "NamingStrategy": "benchling_api_client.v2.stable.models.naming_strategy",
         "NotFoundError": "benchling_api_client.v2.stable.models.not_found_error",
         "NotFoundErrorError": "benchling_api_client.v2.stable.models.not_found_error_error",
@@ -5588,6 +6587,13 @@ else:
         "TeamSummary": "benchling_api_client.v2.stable.models.team_summary",
         "TeamUpdate": "benchling_api_client.v2.stable.models.team_update",
         "TeamsPaginatedList": "benchling_api_client.v2.stable.models.teams_paginated_list",
+        "TestDefinition": "benchling_api_client.v2.stable.models.test_definition",
+        "TestOrder": "benchling_api_client.v2.stable.models.test_order",
+        "TestOrderBulkUpdate": "benchling_api_client.v2.stable.models.test_order_bulk_update",
+        "TestOrderStatus": "benchling_api_client.v2.stable.models.test_order_status",
+        "TestOrderUpdate": "benchling_api_client.v2.stable.models.test_order_update",
+        "TestOrdersBulkUpdateRequest": "benchling_api_client.v2.stable.models.test_orders_bulk_update_request",
+        "TestOrdersPaginatedList": "benchling_api_client.v2.stable.models.test_orders_paginated_list",
         "TextAppConfigItem": "benchling_api_client.v2.stable.models.text_app_config_item",
         "TextAppConfigItemType": "benchling_api_client.v2.stable.models.text_app_config_item_type",
         "TextBoxNotePart": "benchling_api_client.v2.stable.models.text_box_note_part",

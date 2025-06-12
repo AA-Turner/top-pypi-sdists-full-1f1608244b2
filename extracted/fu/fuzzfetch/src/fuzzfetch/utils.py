@@ -2,7 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 """Assorted fuzzfetch utilities"""
+
 import re
+from contextlib import suppress
 from datetime import datetime
 
 from pytz import timezone
@@ -30,7 +32,13 @@ def is_date(build: str) -> bool:
     Args:
         build: Build string.
     """
-    return bool(re.match(r"^\d{4}-\d{2}-\d{2}$", build))
+    with suppress(ValueError):
+        datetime.strptime(build, "%Y-%m-%d")
+        return True
+    with suppress(ValueError):
+        datetime.strptime(build, "%Y%m%d%H%M%S")
+        return True
+    return False
 
 
 def is_rev(build: str) -> bool:

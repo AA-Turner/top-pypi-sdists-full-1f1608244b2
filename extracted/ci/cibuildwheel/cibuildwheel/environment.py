@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import dataclasses
 from collections.abc import Mapping, Sequence
 from typing import Any, Protocol
@@ -104,7 +102,7 @@ class EnvironmentAssignmentBash:
         return False
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(kw_only=True)
 class ParsedEnvironment:
     assignments: list[EnvironmentAssignment]
 

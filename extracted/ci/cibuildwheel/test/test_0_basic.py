@@ -1,10 +1,10 @@
-from __future__ import annotations
-
 import textwrap
 
+import packaging.utils
 import pytest
 
 from cibuildwheel.logger import Logger
+from cibuildwheel.selector import EnableGroup
 
 from . import test_projects, utils
 
@@ -20,6 +20,15 @@ basic_project = test_projects.new_c_project(
 )
 
 
+@pytest.mark.serial
+def test_dummy_serial():
+    """A no-op test to ensure that at least one serial test is always found.
+
+    Without this no-op test, CI fails on CircleCI because no serial tests are
+    found, and pytest errors if a test suite finds no tests.
+    """
+
+
 def test(tmp_path, build_frontend_env, capfd):
     project_dir = tmp_path / "project"
     basic_project.generate(project_dir)
@@ -29,13 +38,17 @@ def test(tmp_path, build_frontend_env, capfd):
 
     # check that the expected wheels are produced
     expected_wheels = utils.expected_wheels("spam", "0.1.0")
-    assert set(actual_wheels) == set(expected_wheels)
+    actual_wheels_normalized = {packaging.utils.parse_wheel_filename(w) for w in actual_wheels}
+    expected_wheels_normalized = {packaging.utils.parse_wheel_filename(w) for w in expected_wheels}
+    assert actual_wheels_normalized == expected_wheels_normalized
 
-    # Verify pip warning not shown
-    captured = capfd.readouterr()
-    for stream in (captured.err, captured.out):
-        assert "WARNING: Running pip as the 'root' user can result" not in stream
-        assert "A new release of pip available" not in stream
+    enable_groups = utils.get_enable_groups()
+    if EnableGroup.GraalPy not in enable_groups:
+        # Verify pip warning not shown
+        captured = capfd.readouterr()
+        for stream in (captured.err, captured.out):
+            assert "WARNING: Running pip as the 'root' user can result" not in stream
+            assert "A new release of pip available" not in stream
 
 
 @pytest.mark.skip(reason="to keep test output clean")
@@ -54,19 +67,22 @@ def test_sample_build(tmp_path, capfd):
             logger.step_end()
 
 
-def test_build_identifiers(tmp_path):
+@pytest.mark.parametrize(
+    "enable_setting", ["", "cpython-prerelease", "pypy", "cpython-freethreading"]
+)
+def test_build_identifiers(tmp_path, enable_setting, monkeypatch):
     project_dir = tmp_path / "project"
     basic_project.generate(project_dir)
+
+    monkeypatch.setenv("CIBW_ENABLE", enable_setting)
 
     # check that the number of expected wheels matches the number of build
     # identifiers
     expected_wheels = utils.expected_wheels("spam", "0.1.0")
-    build_identifiers = utils.cibuildwheel_get_build_identifiers(
-        project_dir, prerelease_pythons=True
+    build_identifiers = utils.cibuildwheel_get_build_identifiers(project_dir)
+    assert len(expected_wheels) == len(build_identifiers), (
+        f"{expected_wheels} vs {build_identifiers}"
     )
-    assert len(expected_wheels) == len(
-        build_identifiers
-    ), f"{expected_wheels} vs {build_identifiers}"
 
 
 @pytest.mark.parametrize(
@@ -85,7 +101,7 @@ def test_allow_empty(tmp_path, add_args, env_allow_empty):
     # without error
     actual_wheels = utils.cibuildwheel_run(
         project_dir,
-        add_env={"CIBW_BUILD": "BUILD_NOTHING_AT_ALL", **env_allow_empty},
+        add_env={"CIBW_SKIP": "*", **env_allow_empty},
         add_args=add_args,
     )
 

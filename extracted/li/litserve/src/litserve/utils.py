@@ -13,6 +13,7 @@
 # limitations under the License.
 import asyncio
 import dataclasses
+import importlib.util
 import logging
 import os
 import pdb
@@ -76,20 +77,28 @@ def wrap_litserve_start(server: "LitServer"):
         if lit_api.spec:
             lit_api.spec.response_queue_id = 0
 
-    manager = server._init_manager(1)
-    processes = []
+    server.manager = server._init_manager(1)
+    server.inference_workers = []
     for lit_api in server.litapi_connector:
-        processes.extend(server.launch_inference_worker(lit_api))
+        server.inference_workers.extend(server.launch_inference_worker(lit_api))
     server._prepare_app_run(server.app)
+    if is_package_installed("mcp"):
+        from litserve.mcp import _LitMCPServerConnector
+
+        server.mcp_server = _LitMCPServerConnector()
+    else:
+        server.mcp_server = None
+
     try:
         yield server
     finally:
+        server._shutdown_event.set()
         # First close the transport to signal to the response_queue_to_buffer task that it should stop
         server._transport.close()
-        for p in processes:
+        for p in server.inference_workers:
             p.terminate()
             p.join()
-        manager.shutdown()
+        server.manager.shutdown()
 
 
 async def call_after_stream(streamer: AsyncIterator, callback, *args, **kwargs):
@@ -119,7 +128,7 @@ def _get_default_handler(stream, format):
 
 def configure_logging(
     level: Union[str, int] = logging.INFO,
-    format: str = "%(asctime)s - %(processName)s[%(process)d] - %(name)s - %(levelname)s - %(message)s",
+    format: str = "%(processName)s[%(process)d] - %(name)s - %(levelname)s - %(message)s",
     stream: TextIO = sys.stdout,
     use_rich: bool = False,
 ):
@@ -214,3 +223,8 @@ def set_trace_if_debug(debug_env_var="LITSERVE_DEBUG", debug_env_var_value="1"):
     """Set a tracepoint in the code if the environment variable LITSERVE_DEBUG is set."""
     if os.environ.get(debug_env_var) == debug_env_var_value:
         set_trace()
+
+
+def is_package_installed(package_name: str) -> bool:
+    spec = importlib.util.find_spec(package_name)
+    return spec is not None

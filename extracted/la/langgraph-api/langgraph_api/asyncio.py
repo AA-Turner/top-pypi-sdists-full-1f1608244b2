@@ -78,10 +78,13 @@ async def wait_if_not_done(coro: Coroutine[Any, Any, T], done: ValueEvent) -> T:
                 return await coro_task
             except asyncio.CancelledError as e:
                 if e.args and asyncio.isfuture(e.args[-1]):
+                    fut = e.args[-1]
                     await logger.ainfo(
-                        "Awaiting future upon cancellation", task=str(e.args[-1])
+                        "Awaiting future upon cancellation.",
+                        task=str(fut),
                     )
-                    await e.args[-1]
+                    await fut
+                    await logger.ainfo("Done awaiting.", task=str(fut))
                 if e.args and isinstance(e.args[0], Exception):
                     raise e.args[0] from None
                 raise

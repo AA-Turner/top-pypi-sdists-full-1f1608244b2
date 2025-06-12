@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from benchling_sdk.services.v2.beta.v2_beta_analysis_service import V2BetaAnalysisService
     from benchling_sdk.services.v2.beta.v2_beta_app_definition_service import V2BetaAppDefinitionService
     from benchling_sdk.services.v2.beta.v2_beta_app_service import V2BetaAppService
-    from benchling_sdk.services.v2.beta.v2_beta_audit_service import V2BetaAuditService
     from benchling_sdk.services.v2.beta.v2_beta_collaboration_service import V2BetaCollaborationService
     from benchling_sdk.services.v2.beta.v2_beta_entry_service import V2BetaEntryService
     from benchling_sdk.services.v2.beta.v2_beta_folder_service import V2BetaFolderService
@@ -81,19 +80,6 @@ class V2BetaService(BaseService):
         from .beta.v2_beta_app_definition_service import V2BetaAppDefinitionService
 
         return self._create_service(V2BetaAppDefinitionService)
-
-    @cached_property
-    def audit(self) -> V2BetaAuditService:
-        """
-        V2-Beta Audit.
-
-        Export audit log data for Benchling objects.
-
-        https://benchling.com/api/v2-beta/reference#/Audit
-        """
-        from .beta.v2_beta_audit_service import V2BetaAuditService
-
-        return self._create_service(V2BetaAuditService)
 
     @cached_property
     def collaborations(self) -> V2BetaCollaborationService:

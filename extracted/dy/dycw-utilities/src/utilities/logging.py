@@ -32,6 +32,7 @@ from typing import (
     override,
 )
 
+from utilities.atomicwrites import move_many
 from utilities.dataclasses import replace_non_sentinel
 from utilities.datetime import (
     SECOND,
@@ -43,6 +44,7 @@ from utilities.errors import ImpossibleCaseError
 from utilities.iterables import OneEmptyError, always_iterable, one
 from utilities.pathlib import ensure_suffix, get_path
 from utilities.sentinel import Sentinel, sentinel
+from utilities.tzlocal import get_now_local
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Mapping
@@ -190,7 +192,7 @@ def get_formatter(
 ) -> Formatter:
     """Get the formatter; colored if available."""
     if whenever:
-        from utilities.whenever import WheneverLogRecord
+        from utilities.whenever2 import WheneverLogRecord
 
         setLogRecordFactory(WheneverLogRecord)
         format_ = format_.replace("{asctime}", "{zoned_datetime}")
@@ -426,8 +428,6 @@ def _compute_rollover_actions(
     patterns: _RolloverPatterns | None = None,
     backup_count: int = 1,
 ) -> _RolloverActions:
-    from utilities.tzlocal import get_now_local
-
     patterns = (
         _compute_rollover_patterns(stem, suffix) if patterns is None else patterns
     )
@@ -470,8 +470,6 @@ class _RolloverActions:
     rotations: set[_Rotation] = field(default_factory=set)
 
     def do(self) -> None:
-        from utilities.atomicwrites import move_many
-
         for deletion in self.deletions:
             deletion.delete()
         move_many(*((r.file.path, r.destination) for r in self.rotations))

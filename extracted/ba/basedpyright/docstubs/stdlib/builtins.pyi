@@ -19,7 +19,6 @@ import types
 from _collections_abc import dict_items, dict_keys, dict_values
 from _typeshed import (
     AnnotationForm,
-    AnyStr_co,
     ConvertibleToFloat,
     ConvertibleToInt,
     FileDescriptorOrPath,
@@ -46,6 +45,7 @@ from _typeshed import (
 )
 from collections.abc import Awaitable, Callable, Iterable, Iterator, MutableSet, Reversible, Set as AbstractSet, Sized
 from io import BufferedRandom, BufferedReader, BufferedWriter, FileIO, TextIOWrapper
+from os import PathLike
 from types import CellType, CodeType, GenericAlias, TracebackType
 
 # mypy crashes if any of {ByteString, Sequence, MutableSequence, Mapping, MutableMapping}
@@ -253,6 +253,9 @@ class staticmethod(Generic[_P, _R_co]):
         def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _R_co:
             """Call self as a function."""
             ...
+    if sys.version_info >= (3, 14):
+        def __class_getitem__(cls, item: Any, /) -> GenericAlias: ...
+        __annotate__: AnnotateFunc | None
 
 class classmethod(Generic[_T, _P, _R_co]):
     """
@@ -293,6 +296,9 @@ class classmethod(Generic[_T, _P, _R_co]):
         __qualname__: str
         @property
         def __wrapped__(self) -> Callable[Concatenate[type[_T], _P], _R_co]: ...
+    if sys.version_info >= (3, 14):
+        def __class_getitem__(cls, item: Any, /) -> GenericAlias: ...
+        __annotate__: AnnotateFunc | None
 
 class type:
     """
@@ -655,13 +661,17 @@ class int:
     def __floor__(self) -> int:
         """Flooring an Integral returns itself."""
         ...
-    def __round__(self, ndigits: SupportsIndex = ..., /) -> int:
-        """
-        Rounding an Integral returns itself.
+    if sys.version_info >= (3, 14):
+        def __round__(self, ndigits: SupportsIndex | None = None, /) -> int: ...
+    else:
+        def __round__(self, ndigits: SupportsIndex = ..., /) -> int:
+            """
+            Rounding an Integral returns itself.
 
-        Rounding with an ndigits argument also returns an integer.
-        """
-        ...
+            Rounding with an ndigits argument also returns an integer.
+            """
+            ...
+
     def __getnewargs__(self) -> tuple[int]: ...
     def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
@@ -883,6 +893,9 @@ class float:
     def __bool__(self) -> bool:
         """True if self else False"""
         ...
+    if sys.version_info >= (3, 14):
+        @classmethod
+        def from_number(cls, number: float | SupportsIndex | SupportsFloat, /) -> Self: ...
 
 class complex:
     """
@@ -968,6 +981,9 @@ class complex:
         def __complex__(self) -> complex:
             """Convert this value to exact type complex."""
             ...
+    if sys.version_info >= (3, 14):
+        @classmethod
+        def from_number(cls, number: complex | SupportsComplex | SupportsFloat | SupportsIndex, /) -> Self: ...
 
 class _FormatMapMapping(Protocol):
     def __getitem__(self, key: str, /) -> Any: ...
@@ -2859,6 +2875,8 @@ class bytearray(MutableSequence[int]):
     def __release_buffer__(self, buffer: memoryview, /) -> None:
         """Release the buffer object that exposes the underlying memory of the object."""
         ...
+    if sys.version_info >= (3, 14):
+        def resize(self, size: int, /) -> None: ...
 
 _IntegerFormats: TypeAlias = Literal[
     "b", "B", "@b", "@B", "h", "H", "@h", "@H", "i", "I", "@i", "@I", "l", "L", "@l", "@L", "q", "Q", "@q", "@Q", "P", "@P"
@@ -3043,6 +3061,8 @@ class memoryview(Sequence[_I]):
     # See https://github.com/python/cpython/issues/125420
     index: ClassVar[None]  # type: ignore[assignment]
     count: ClassVar[None]  # type: ignore[assignment]
+    if sys.version_info >= (3, 14):
+        def __class_getitem__(cls, item: Any, /) -> GenericAlias: ...
 
 @final
 class bool(int):
@@ -3103,7 +3123,7 @@ class bool(int):
         """Return value^self."""
         ...
     def __getnewargs__(self) -> tuple[int]: ...
-    @deprecated("Will throw an error in Python 3.14. Use `not` for logical negation of bools instead.")
+    @deprecated("Will throw an error in Python 3.16. Use `not` for logical negation of bools instead.")
     def __invert__(self) -> int:
         """~self"""
         ...
@@ -3260,7 +3280,7 @@ class function:
     __annotations__: dict[str, AnnotationForm]
     if sys.version_info >= (3, 14):
         __annotate__: AnnotateFunc | None
-    __kwdefaults__: dict[str, Any]
+    __kwdefaults__: dict[str, Any] | None
     if sys.version_info >= (3, 10):
         @property
         def __builtins__(self) -> dict[str, Any]: ...
@@ -3268,6 +3288,26 @@ class function:
         __type_params__: tuple[TypeVar | ParamSpec | TypeVarTuple, ...]
 
     __module__: str
+    if sys.version_info >= (3, 13):
+        def __new__(
+            cls,
+            code: CodeType,
+            globals: dict[str, Any],
+            name: str | None = None,
+            argdefs: tuple[object, ...] | None = None,
+            closure: tuple[CellType, ...] | None = None,
+            kwdefaults: dict[str, object] | None = None,
+        ) -> Self: ...
+    else:
+        def __new__(
+            cls,
+            code: CodeType,
+            globals: dict[str, Any],
+            name: str | None = None,
+            argdefs: tuple[object, ...] | None = None,
+            closure: tuple[CellType, ...] | None = None,
+        ) -> Self: ...
+
     # mypy uses `builtins.function.__get__` to represent methods, properties, and getset_descriptors so we type the return as Any.
     def __get__(self, instance: object, owner: type | None = None, /) -> Any: ...
 
@@ -3991,11 +4031,6 @@ def chr(i: int | SupportsIndex, /) -> str:
     """Return a Unicode string of one character with ordinal i; 0 <= i <= 0x10ffff."""
     ...
 
-# We define this here instead of using os.PathLike to avoid import cycle issues.
-# See https://github.com/python/typeshed/pull/991#issuecomment-288160993
-class _PathLike(Protocol[AnyStr_co]):
-    def __fspath__(self) -> AnyStr_co: ...
-
 if sys.version_info >= (3, 10):
     def aiter(async_iterable: SupportsAiter[_SupportsAnextT_co], /) -> _SupportsAnextT_co:
         """Return an AsyncIterator for an AsyncIterable object."""
@@ -4032,7 +4067,7 @@ if sys.version_info >= (3, 10):
 @overload
 def compile(
     source: str | ReadableBuffer | _ast.Module | _ast.Expression | _ast.Interactive,
-    filename: str | ReadableBuffer | _PathLike[Any],
+    filename: str | ReadableBuffer | PathLike[Any],
     mode: str,
     flags: Literal[0],
     dont_inherit: bool = False,
@@ -4058,7 +4093,7 @@ def compile(
 @overload
 def compile(
     source: str | ReadableBuffer | _ast.Module | _ast.Expression | _ast.Interactive,
-    filename: str | ReadableBuffer | _PathLike[Any],
+    filename: str | ReadableBuffer | PathLike[Any],
     mode: str,
     *,
     dont_inherit: bool = False,
@@ -4083,7 +4118,7 @@ def compile(
 @overload
 def compile(
     source: str | ReadableBuffer | _ast.Module | _ast.Expression | _ast.Interactive,
-    filename: str | ReadableBuffer | _PathLike[Any],
+    filename: str | ReadableBuffer | PathLike[Any],
     mode: str,
     flags: Literal[1024],
     dont_inherit: bool = False,
@@ -4109,7 +4144,7 @@ def compile(
 @overload
 def compile(
     source: str | ReadableBuffer | _ast.Module | _ast.Expression | _ast.Interactive,
-    filename: str | ReadableBuffer | _PathLike[Any],
+    filename: str | ReadableBuffer | PathLike[Any],
     mode: str,
     flags: int,
     dont_inherit: bool = False,
@@ -6503,27 +6538,27 @@ if sys.version_info >= (3, 11):
             ...
         @overload
         def subgroup(
-            self, condition: type[_ExceptionT] | tuple[type[_ExceptionT], ...], /
+            self, matcher_value: type[_ExceptionT] | tuple[type[_ExceptionT], ...], /
         ) -> ExceptionGroup[_ExceptionT] | None: ...
         @overload
         def subgroup(
-            self, condition: type[_BaseExceptionT] | tuple[type[_BaseExceptionT], ...], /
+            self, matcher_value: type[_BaseExceptionT] | tuple[type[_BaseExceptionT], ...], /
         ) -> BaseExceptionGroup[_BaseExceptionT] | None: ...
         @overload
         def subgroup(
-            self, condition: Callable[[_BaseExceptionT_co | Self], bool], /
+            self, matcher_value: Callable[[_BaseExceptionT_co | Self], bool], /
         ) -> BaseExceptionGroup[_BaseExceptionT_co] | None: ...
         @overload
         def split(
-            self, condition: type[_ExceptionT] | tuple[type[_ExceptionT], ...], /
+            self, matcher_value: type[_ExceptionT] | tuple[type[_ExceptionT], ...], /
         ) -> tuple[ExceptionGroup[_ExceptionT] | None, BaseExceptionGroup[_BaseExceptionT_co] | None]: ...
         @overload
         def split(
-            self, condition: type[_BaseExceptionT] | tuple[type[_BaseExceptionT], ...], /
+            self, matcher_value: type[_BaseExceptionT] | tuple[type[_BaseExceptionT], ...], /
         ) -> tuple[BaseExceptionGroup[_BaseExceptionT] | None, BaseExceptionGroup[_BaseExceptionT_co] | None]: ...
         @overload
         def split(
-            self, condition: Callable[[_BaseExceptionT_co | Self], bool], /
+            self, matcher_value: Callable[[_BaseExceptionT_co | Self], bool], /
         ) -> tuple[BaseExceptionGroup[_BaseExceptionT_co] | None, BaseExceptionGroup[_BaseExceptionT_co] | None]: ...
         # In reality it is `NonEmptySequence`:
         @overload
@@ -6544,17 +6579,19 @@ if sys.version_info >= (3, 11):
         # We accept a narrower type, but that's OK.
         @overload  # type: ignore[override]
         def subgroup(
-            self, condition: type[_ExceptionT] | tuple[type[_ExceptionT], ...], /
+            self, matcher_value: type[_ExceptionT] | tuple[type[_ExceptionT], ...], /
         ) -> ExceptionGroup[_ExceptionT] | None: ...
         @overload
-        def subgroup(self, condition: Callable[[_ExceptionT_co | Self], bool], /) -> ExceptionGroup[_ExceptionT_co] | None: ...
+        def subgroup(
+            self, matcher_value: Callable[[_ExceptionT_co | Self], bool], /
+        ) -> ExceptionGroup[_ExceptionT_co] | None: ...
         @overload  # type: ignore[override]
         def split(
-            self, condition: type[_ExceptionT] | tuple[type[_ExceptionT], ...], /
+            self, matcher_value: type[_ExceptionT] | tuple[type[_ExceptionT], ...], /
         ) -> tuple[ExceptionGroup[_ExceptionT] | None, ExceptionGroup[_ExceptionT_co] | None]: ...
         @overload
         def split(
-            self, condition: Callable[[_ExceptionT_co | Self], bool], /
+            self, matcher_value: Callable[[_ExceptionT_co | Self], bool], /
         ) -> tuple[ExceptionGroup[_ExceptionT_co] | None, ExceptionGroup[_ExceptionT_co] | None]: ...
 
 if sys.version_info >= (3, 13):

@@ -17,6 +17,10 @@ class TerminalToolRule(UncheckedBaseModel):
     """
 
     type: typing.Literal["exit_loop"] = "exit_loop"
+    prompt_template: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Optional Jinja2 template for generating agent prompt about this tool rule.
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

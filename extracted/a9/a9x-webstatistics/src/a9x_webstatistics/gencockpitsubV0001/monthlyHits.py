@@ -2,44 +2,66 @@
 from operator import itemgetter
 import ipaddress
 
-def monthlyHitsVisitsChart(d, owndomain, omit):
+def monthlyHitsVisitsChart(d, owndomain, omit, verbosity):
     rdata = []
     sdata = []
     vdata = []
-    mcount = 0
     startPeriod = None
     endPeriod = None
+    lastPeriod = None    # Format YYYYMM. Entries must be before that period
     for k, v in sorted(d['v0001']['days'].items(), key=itemgetter(0), reverse=True):
-        # omit days:
-        if len(k) > 6:
+        if lastPeriod is None:
+            lastPeriod = k[0:6]    # YYYYMMM
+
+        if len(k) > 6:             # days
+            if k[0:6] < lastPeriod:
+                kx = k[0:6]
+            else:
+                continue
+        elif len(k) == 6:         # month summarized
+            kx = k
+        else:                     # years
             continue
-        if mcount > 31:
+
+        # consider max. 31 months
+        desktop_count = sum(1 for item in sdata if item['t'] == 'desktop')
+        if desktop_count > 31:
             break
-        mcount += 1
+
         if 'desktop' in d['v0001']['days'][k]['user']['deviceHits']:
-            sdata.append({'d': k, 't': 'desktop', 'c': d['v0001']['days'][k]['user']['deviceHits']['desktop']})
+            addHitData(sdata,  kx, 'desktop', d['v0001']['days'][k]['user']['deviceHits']['desktop'])
+            #sdata.append({'d': k, 't': 'desktop', 'c': d['v0001']['days'][k]['user']['deviceHits']['desktop']})
         else:
-            sdata.append({'d': k, 't': 'desktop', 'c': 0})
+            addHitData(sdata, kx, 'desktop', 0)
+            #sdata.append({'d': k, 't': 'desktop', 'c': 0})
         if 'mobile' in d['v0001']['days'][k]['user']['deviceHits']:
-            sdata.append({'d': k, 't': 'mobile', 'c': d['v0001']['days'][k]['user']['deviceHits']['mobile']})
+            addHitData(sdata,  kx, 'mobile', d['v0001']['days'][k]['user']['deviceHits']['mobile'])
+            #sdata.append({'d': k, 't': 'mobile', 'c': d['v0001']['days'][k]['user']['deviceHits']['mobile']})
         else:
-            sdata.append({'d': k, 't': 'mobile', 'c': 0})
+            addHitData(sdata,  kx, 'mobile', 0)
+            #sdata.append({'d': k, 't': 'mobile', 'c': 0})
         if 'tablet' in d['v0001']['days'][k]['user']['deviceHits']:
-            sdata.append({'d': k, 't': 'tablet', 'c': d['v0001']['days'][k]['user']['deviceHits']['tablet']})
+            addHitData(sdata,  kx, 'tablet', d['v0001']['days'][k]['user']['deviceHits']['tablet'])
+            #sdata.append({'d': k, 't': 'tablet', 'c': d['v0001']['days'][k]['user']['deviceHits']['tablet']})
         else:
-            sdata.append({'d': k, 't': 'tablet', 'c': 0})
+            addHitData(sdata,  kx, 'tablet', 0)
+            #sdata.append({'d': k, 't': 'tablet', 'c': 0})
 
         # visits:
         if 'visits' in d['v0001']['days'][k]['user']:
-            vdata.append({'d': k, 'c': d['v0001']['days'][k]['user']['visits']})
+            addHitData(vdata,  kx, 'visits', d['v0001']['days'][k]['user']['visits'])
+            #vdata.append({'d': k, 'c': d['v0001']['days'][k]['user']['visits']})
         else:
-            vdata.append({'d': k, 'c': 0})
+            addHitData(vdata,  kx, 'visits', 0)
+            #vdata.append({'d': k, 'c': 0})
 
         # robots
         if 'robotHits' in d['v0001']['days'][k]['robot']:
-            rdata.append({'d': k, 'c': d['v0001']['days'][k]['robot']['robotHits']})
+            addHitData(rdata,  kx, 'robotHits', d['v0001']['days'][k]['robot']['robotHits'])
+            #rdata.append({'d': k, 'c': d['v0001']['days'][k]['robot']['robotHits']})
         else:
-            rdata.append({'d': k, 'c': 0})
+            addHitData(rdata,  kx, 'robotHits', 0)
+            #rdata.append({'d': k, 'c': 0})
 
         # record start / end period to be displayed on chart:
         if startPeriod is None or k < startPeriod:
@@ -55,7 +77,6 @@ def monthlyHitsVisitsChart(d, owndomain, omit):
     h = "\n\n"
     h += '<div class="col-md-12 col-lg-12 col-xxl-12 pt-4">'
     h += '<h3>User Hits and Visits - Long Term</h3>'
-    #h += '<p>User hits and visits on ' + owndomain + ' from ' + startPeriod + ' to ' + endPeriod + ':</p>'
     
     h += "<p>User hits and visits on " + owndomain + " from <script>document.write(DT2Locale('" + startPeriod + "01'));</script> to "
     h += "<script>document.write(DT2Locale('" + endPeriod + "'+ daysInMonth('" + endPeriod[0:3] + "','" + endPeriod[4:5] + "')));</script>:</p>"
@@ -279,3 +300,13 @@ def monthlyHitsVisitsChart(d, owndomain, omit):
     h += "</script>"
     h += '</div>' + "\n"
     return h
+
+def addHitData(arr, kdate, ktype ,kcount):
+    for e in arr:
+        if e['d'] == kdate and e['t'] == ktype:
+            e['c'] += kcount
+            return
+    arr.append({'d': kdate, 't': ktype, 'c': kcount})
+
+    
+    

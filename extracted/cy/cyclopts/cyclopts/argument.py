@@ -273,10 +273,13 @@ class ArgumentCollection(list["Argument"]):
                 upstream_parameter,
                 immediate_parameter,
             )
+            assert isinstance(cparam.alias, tuple)
             if cparam.name:
                 if field_info.is_keyword:
                     assert isinstance(cparam.name, tuple)
-                    cparam = Parameter.combine(cparam, Parameter(name=_resolve_parameter_name(cparam.name)))
+                    cparam = Parameter.combine(
+                        cparam, Parameter(name=_resolve_parameter_name(cparam.name + cparam.alias))
+                    )
             else:
                 if field_info.kind in (field_info.POSITIONAL_ONLY, field_info.VAR_POSITIONAL):
                     # Name is only used for help-string
@@ -288,7 +291,11 @@ class ArgumentCollection(list["Argument"]):
                     #     attrs.converters.default_if_none(default_name_transform)
                     assert cparam.name_transform is not None
                     cparam = Parameter.combine(
-                        cparam, Parameter(name=("--" + cparam.name_transform(name) for name in field_info.names))
+                        cparam,
+                        Parameter(
+                            name=tuple("--" + cparam.name_transform(name) for name in field_info.names)
+                            + _resolve_parameter_name(cparam.alias)
+                        ),
                     )
 
         if field_info.is_keyword_only:
@@ -954,6 +961,7 @@ class Argument:
 
             unstructured_data = self._json()
             try:
+                # This inherently also invokes pydantic validators
                 return pydantic.TypeAdapter(self.field_info.annotation).validate_python(unstructured_data)
             except pydantic.ValidationError as e:
                 self._handle_pydantic_validation_error(e)
@@ -1155,6 +1163,9 @@ class Argument:
 
         def validate_pydantic(hint, val):
             if not pydantic:
+                return
+            if self._use_pydantic_type_adapter:
+                # Pydantic already called the validators
                 return
 
             try:

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-from __future__ import annotations
 
+import dataclasses
 import difflib
 import logging
 import subprocess
-from dataclasses import dataclass
+import tomllib
 from pathlib import Path
 from typing import Final
 
@@ -14,8 +14,6 @@ import rich
 from packaging.version import InvalidVersion, Version
 from rich.logging import RichHandler
 from rich.syntax import Syntax
-
-from cibuildwheel._compat import tomllib
 
 log = logging.getLogger("cibw")
 
@@ -30,7 +28,7 @@ GET_VIRTUALENV_URL_TEMPLATE: Final[str] = (
 )
 
 
-@dataclass(frozen=True, order=True)
+@dataclasses.dataclass(frozen=True, order=True)
 class VersionTuple:
     version: Version
     version_string: str

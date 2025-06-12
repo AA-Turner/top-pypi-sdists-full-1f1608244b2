@@ -1,10 +1,11 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: litestar-htmx
-Version: 0.4.1
-Summary: HTMX Integration for Litesstar
+Version: 0.5.0
+Summary: HTMX Integration for Litestar
 Author-email: Cody Fincher <cody@litestar.dev>
-Maintainer-email: Litestar Developers <hello@litestar.dev>, Cody Fincher <cody@litestar.dev>, Jacob Coffee <jacob@litestar.dev>, Janek Nouvertné <provinzkraut@litestar.dev>, Visakh Unnikrishnan <guacs@litestar.dev>, Alc <alc@litestar.dev>
+Maintainer-email: Litestar Developers <hello@litestar.dev>, Cody Fincher <cody@litestar.dev>, Jacob Coffee <jacob@litestar.dev>, Janek Nouvertné <provinzkraut@litestar.dev>
 License: MIT
+License-File: LICENSE
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: English
 Classifier: Operating System :: OS Independent
@@ -20,7 +21,7 @@ Classifier: Topic :: Software Development
 Classifier: Topic :: Software Development :: Libraries
 Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
-Requires-Python: <4.0,>=3.8
+Requires-Python: <4.0,>=3.9
 Description-Content-Type: text/markdown
 
 <!-- markdownlint-disable -->

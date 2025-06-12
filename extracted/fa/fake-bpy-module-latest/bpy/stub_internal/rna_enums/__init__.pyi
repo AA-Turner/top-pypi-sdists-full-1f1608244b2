@@ -2197,6 +2197,13 @@ type NodeSocketInOutItems = typing.Literal[
     "IN",  # Input.
     "OUT",  # Output.
 ]
+type NodeSocketStructureTypeItems = typing.Literal[
+    "AUTO",  # Auto.Automatically detect a good structure type based on how the socket is used.
+    "SINGLE",  # Single.Socket expects a single value.
+    "DYNAMIC",  # Dynamic.Socket can work with different kinds of structures.
+    "FIELD",  # Field.Socket expects a field.
+    "GRID",  # Grid.Socket expects a grid.
+]
 type NodeSocketTypeItems = typing.Literal[
     "CUSTOM",  # Custom.
     "VALUE",  # Value.

@@ -19,12 +19,23 @@ class ModelGroupManagementServiceStub(object):
                 request_serializer=qwak_dot_model__group_dot_model__group__pb2.CreateIfNotExistsModelGroupRequest.SerializeToString,
                 response_deserializer=qwak_dot_model__group_dot_model__group__pb2.ModelGroupBriefInfoResponse.FromString,
                 )
+        self.CreateRepositoriesForModelGroup = channel.unary_unary(
+                '/qwak.model_groups.management.ModelGroupManagementService/CreateRepositoriesForModelGroup',
+                request_serializer=qwak_dot_model__group_dot_model__group__pb2.CreateRepositoriesForModelGroupRequest.SerializeToString,
+                response_deserializer=qwak_dot_model__group_dot_model__group__pb2.CreateRepositoriesForModelGroupResponse.FromString,
+                )
 
 
 class ModelGroupManagementServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def CreateIfNotExistsModelGroup(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateRepositoriesForModelGroup(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -37,6 +48,11 @@ def add_ModelGroupManagementServiceServicer_to_server(servicer, server):
                     servicer.CreateIfNotExistsModelGroup,
                     request_deserializer=qwak_dot_model__group_dot_model__group__pb2.CreateIfNotExistsModelGroupRequest.FromString,
                     response_serializer=qwak_dot_model__group_dot_model__group__pb2.ModelGroupBriefInfoResponse.SerializeToString,
+            ),
+            'CreateRepositoriesForModelGroup': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateRepositoriesForModelGroup,
+                    request_deserializer=qwak_dot_model__group_dot_model__group__pb2.CreateRepositoriesForModelGroupRequest.FromString,
+                    response_serializer=qwak_dot_model__group_dot_model__group__pb2.CreateRepositoriesForModelGroupResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -62,5 +78,22 @@ class ModelGroupManagementService(object):
         return grpc.experimental.unary_unary(request, target, '/qwak.model_groups.management.ModelGroupManagementService/CreateIfNotExistsModelGroup',
             qwak_dot_model__group_dot_model__group__pb2.CreateIfNotExistsModelGroupRequest.SerializeToString,
             qwak_dot_model__group_dot_model__group__pb2.ModelGroupBriefInfoResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CreateRepositoriesForModelGroup(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/qwak.model_groups.management.ModelGroupManagementService/CreateRepositoriesForModelGroup',
+            qwak_dot_model__group_dot_model__group__pb2.CreateRepositoriesForModelGroupRequest.SerializeToString,
+            qwak_dot_model__group_dot_model__group__pb2.CreateRepositoriesForModelGroupResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

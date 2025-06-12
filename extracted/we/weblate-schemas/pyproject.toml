@@ -39,10 +39,10 @@ license = "MIT"
 license-files = ["LICENSE"]
 name = "weblate_schemas"
 requires-python = ">=3.9"
-version = "2025.1"
+version = "2025.2"
 
 [[project.authors]]
-email = "michal@cihar.com"
+email = "michal@weblate.org"
 name = "Michal Čihař"
 
 [project.entry-points."fedora.messages"]

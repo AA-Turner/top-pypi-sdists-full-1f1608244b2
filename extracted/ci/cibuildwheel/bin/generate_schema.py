@@ -6,17 +6,22 @@
 
 import argparse
 import copy
+import functools
 import json
+import sys
 from typing import Any
 
 import yaml
 
-parser = argparse.ArgumentParser()
+make_parser = functools.partial(argparse.ArgumentParser, allow_abbrev=False)
+if sys.version_info >= (3, 14):
+    make_parser = functools.partial(make_parser, color=True, suggest_on_error=True)
+parser = make_parser()
 parser.add_argument("--schemastore", action="store_true", help="Generate schema_store version")
 args = parser.parse_args()
 
 starter = """
-$schema: http://json-schema.org/draft-07/schema
+$schema: http://json-schema.org/draft-07/schema#
 $id: https://github.com/pypa/cibuildwheel/blob/main/cibuildwheel/resources/cibuildwheel.schema.json
 $defs:
   inherit:
@@ -28,9 +33,13 @@ $defs:
     description: How to inherit the parent's value.
   enable:
     enum:
+      - cpython-experimental-riscv64
       - cpython-freethreading
       - cpython-prerelease
+      - graalpy
+      - pyodide-prerelease
       - pypy
+      - pypy-eol
   description: A Python version or flavor to enable.
 additionalProperties: false
 description: cibuildwheel's settings.
@@ -104,7 +113,24 @@ properties:
   dependency-versions:
     default: pinned
     description: Specify how cibuildwheel controls the versions of the tools it uses
-    type: string
+    oneOf:
+      - enum: [pinned, latest]
+      - type: string
+        description: Path to a file containing dependency versions, or inline package specifications, starting with "packages:"
+        not:
+          enum: [pinned, latest]
+      - type: object
+        additionalProperties: false
+        properties:
+          file:
+            type: string
+      - type: object
+        additionalProperties: false
+        properties:
+          packages:
+            type: array
+            items:
+              type: string
   enable:
     description: Enable or disable certain builds.
     oneOf:
@@ -119,11 +145,6 @@ properties:
     description: Set environment variables on the host to pass-through to the container
       during the build.
     type: string_array
-  free-threaded-support:
-    type: boolean
-    default: false
-    description: The project supports free-threaded builds of Python (PEP703)
-    deprecated: Use the `enable` option instead.
   manylinux-aarch64-image:
     type: string
     description: Specify alternative manylinux / musllinux container images
@@ -145,6 +166,9 @@ properties:
   manylinux-pypy_x86_64-image:
     type: string
     description: Specify alternative manylinux / musllinux container images
+  manylinux-riscv64-image:
+    type: string
+    description: Specify alternative manylinux / musllinux container images
   manylinux-s390x-image:
     type: string
     description: Specify alternative manylinux / musllinux container images
@@ -163,15 +187,24 @@ properties:
   musllinux-ppc64le-image:
     type: string
     description: Specify alternative manylinux / musllinux container images
+  musllinux-riscv64-image:
+    type: string
+    description: Specify alternative manylinux / musllinux container images
   musllinux-s390x-image:
     type: string
     description: Specify alternative manylinux / musllinux container images
   musllinux-x86_64-image:
     type: string
     description: Specify alternative manylinux / musllinux container images
-  repair-wheel-command:
+  xbuild-tools:
+    description: Binaries on the path that should be included in an isolated cross-build environment
     type: string_array
+  pyodide-version:
+    type: string
+    description: Specify the version of Pyodide to use
+  repair-wheel-command:
     description: Execute a shell command to repair each built wheel.
+    type: string_array
   skip:
     description: Choose the Python versions to skip.
     type: string_array
@@ -180,6 +213,9 @@ properties:
     type: string_array
   test-extras:
     description: Install your wheel for testing using `extras_require`
+    type: string_array
+  test-sources:
+    description: Test files that are required by the test environment
     type: string_array
   test-groups:
     description: Install extra groups when testing
@@ -190,6 +226,9 @@ properties:
   test-skip:
     description: Skip running tests on some builds.
     type: string_array
+  test-environment:
+    description: Set environment variables for the test environment
+    type: string_table
 """
 
 schema = yaml.safe_load(starter)
@@ -258,6 +297,7 @@ items:
       properties:
         before-all: {"$ref": "#/$defs/inherit"}
         before-build: {"$ref": "#/$defs/inherit"}
+        xbuild-tools: {"$ref": "#/$defs/inherit"}
         before-test: {"$ref": "#/$defs/inherit"}
         config-settings: {"$ref": "#/$defs/inherit"}
         container-engine: {"$ref": "#/$defs/inherit"}
@@ -266,18 +306,19 @@ items:
         repair-wheel-command: {"$ref": "#/$defs/inherit"}
         test-command: {"$ref": "#/$defs/inherit"}
         test-extras: {"$ref": "#/$defs/inherit"}
+        test-sources: {"$ref": "#/$defs/inherit"}
         test-requires: {"$ref": "#/$defs/inherit"}
+        test-environment: {"$ref": "#/$defs/inherit"}
 """
 )
 
 for key, value in schema["properties"].items():
-    value["title"] = f'CIBW_{key.replace("-", "_").upper()}'
+    value["title"] = f"CIBW_{key.replace('-', '_').upper()}"
 
 non_global_options = {k: {"$ref": f"#/properties/{k}"} for k in schema["properties"]}
 del non_global_options["build"]
 del non_global_options["skip"]
 del non_global_options["test-skip"]
-del non_global_options["free-threaded-support"]
 del non_global_options["enable"]
 
 overrides["items"]["properties"]["select"]["oneOf"] = string_array
@@ -307,6 +348,7 @@ oses = {
     "windows": as_object(not_linux),
     "macos": as_object(not_linux),
     "pyodide": as_object(not_linux),
+    "ios": as_object(not_linux),
 }
 
 oses["linux"]["properties"]["repair-wheel-command"] = {
@@ -325,7 +367,6 @@ schema["properties"] |= oses
 
 if args.schemastore:
     schema["$id"] = "https://json.schemastore.org/partial-cibuildwheel.json"
-    schema["$schema"] = "http://json-schema.org/draft-07/schema#"
     schema["description"] = (
         "cibuildwheel's toml file, generated with ./bin/generate_schema.py --schemastore from cibuildwheel."
     )

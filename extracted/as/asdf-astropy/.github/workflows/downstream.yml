@@ -24,22 +24,22 @@ permissions:
 
 jobs:
   astropy:
-    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@924441154cf3053034c6513d5e06c69d262fb9a6  # v1.13.0
+    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@8c0fde6f7e926df6ed7057255d29afa9c1ad5320  # v1.16.0
     if: (github.repository == 'astropy/asdf-astropy' && (github.event_name == 'schedule' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'Downstream CI')))
     with:
       submodules: false
       # Any env name which does not start with `pyXY` will use this Python version.
-      default_python: '3.10'
+      default_python: '3.12'
       envs: |
         - linux: specutils
 
   stsci:
-    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@924441154cf3053034c6513d5e06c69d262fb9a6  # v1.13.0
+    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@8c0fde6f7e926df6ed7057255d29afa9c1ad5320  # v1.16.0
     if: (github.repository == 'astropy/asdf-astropy' && (github.event_name == 'schedule' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'Downstream CI')))
     with:
       submodules: false
       # Any env name which does not start with `pyXY` will use this Python version.
-      default_python: '3.10'
+      default_python: '3.12'
       envs: |
         - linux: gwcs
         - linux: jwst
@@ -47,12 +47,12 @@ jobs:
         - linux: roman_datamodels
 
   third-party:
-    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@924441154cf3053034c6513d5e06c69d262fb9a6  # v1.13.0
+    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@8c0fde6f7e926df6ed7057255d29afa9c1ad5320  # v1.16.0
     if: (github.repository == 'astropy/asdf-astropy' && (github.event_name == 'schedule' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'Downstream CI')))
     with:
       submodules: false
       # Any env name which does not start with `pyXY` will use this Python version.
-      default_python: '3.10'
+      default_python: '3.12'
       envs: |
         - linux: sunpy
         - linux: dkist

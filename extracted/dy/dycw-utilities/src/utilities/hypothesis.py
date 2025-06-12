@@ -24,6 +24,7 @@ from typing import (
     override,
 )
 
+import hypothesis.strategies
 from hypothesis import HealthCheck, Phase, Verbosity, assume, settings
 from hypothesis.errors import InvalidArgument
 from hypothesis.strategies import (
@@ -47,6 +48,7 @@ from hypothesis.strategies import (
     uuids,
 )
 from hypothesis.utils.conventions import not_set
+from whenever import Date, DateDelta, PlainDateTime, Time, TimeDelta
 
 from utilities.datetime import (
     DATETIME_MAX_NAIVE,
@@ -88,7 +90,21 @@ from utilities.platform import IS_WINDOWS
 from utilities.sentinel import Sentinel, sentinel
 from utilities.tempfile import TEMP_DIR, TemporaryDirectory
 from utilities.version import Version
-from utilities.zoneinfo import UTC
+from utilities.whenever2 import (
+    DATE_DELTA_MAX,
+    DATE_DELTA_MIN,
+    DATE_DELTA_PARSABLE_MAX,
+    DATE_DELTA_PARSABLE_MIN,
+    DATE_MAX,
+    DATE_MIN,
+    PLAIN_DATE_TIME_MAX,
+    PLAIN_DATE_TIME_MIN,
+    TIME_DELTA_MAX,
+    TIME_DELTA_MIN,
+    TIME_MAX,
+    TIME_MIN,
+)
+from utilities.zoneinfo import UTC, ensure_time_zone
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Hashable, Iterable, Iterator, Sequence
@@ -96,11 +112,10 @@ if TYPE_CHECKING:
 
     from hypothesis.database import ExampleDatabase
     from numpy.random import RandomState
-    from sqlalchemy.ext.asyncio import AsyncEngine
+    from whenever import ZonedDateTime
 
     from utilities.numpy import NDArrayB, NDArrayF, NDArrayI, NDArrayO
-    from utilities.sqlalchemy import Dialect, TableOrORMInstOrClass
-    from utilities.types import Duration, Number, RoundMode
+    from utilities.types import Duration, Number, RoundMode, TimeZoneLike
 
 
 _T = TypeVar("_T")
@@ -155,6 +170,57 @@ def bool_arrays(
         unique=draw2(draw, unique),
     )
     return draw(strategy)
+
+
+##
+
+
+@composite
+def date_deltas_whenever(
+    draw: DrawFn,
+    /,
+    *,
+    min_value: MaybeSearchStrategy[DateDelta | None] = None,
+    max_value: MaybeSearchStrategy[DateDelta | None] = None,
+    parsable: MaybeSearchStrategy[bool] = False,
+) -> DateDelta:
+    """Strategy for generating date deltas."""
+    min_value_, max_value_ = [draw2(draw, v) for v in [min_value, max_value]]
+    match min_value_:
+        case None:
+            min_value_ = DATE_DELTA_MIN
+        case DateDelta():
+            ...
+        case _ as never:
+            assert_never(never)
+    match max_value_:
+        case None:
+            max_value_ = DATE_DELTA_MAX
+        case DateDelta():
+            ...
+        case _ as never:
+            assert_never(never)
+    min_years, min_months, min_days = min_value_.in_years_months_days()
+    assert min_years == 0
+    assert min_months == 0
+    max_years, max_months, max_days = max_value_.in_years_months_days()
+    assert max_years == 0
+    assert max_months == 0
+    if draw2(draw, parsable):
+        parsable_min_years, parsable_min_months, parsable_min_days = (
+            DATE_DELTA_PARSABLE_MIN.in_years_months_days()
+        )
+        assert parsable_min_years == 0
+        assert parsable_min_months == 0
+        min_days = max(min_days, parsable_min_days)
+        parsable_max_years, parsable_max_months, parsable_max_days = (
+            DATE_DELTA_PARSABLE_MAX.in_years_months_days()
+        )
+        assert parsable_max_years == 0
+        assert parsable_max_months == 0
+        max_days = min(max_days, parsable_max_days)
+    days = draw(integers(min_value=min_days, max_value=max_days))
+    return DateDelta(days=days)
 
 
 ##
@@ -235,6 +301,39 @@ def dates_two_digit_year(
     min_value_ = max(min_value_, MIN_DATE_TWO_DIGIT_YEAR)
     max_value_ = min(max_value_, MAX_DATE_TWO_DIGIT_YEAR)
     return draw(dates(min_value=min_value_, max_value=max_value_))
+
+
+##
+
+
+@composite
+def dates_whenever(
+    draw: DrawFn,
+    /,
+    *,
+    min_value: MaybeSearchStrategy[Date | None] = None,
+    max_value: MaybeSearchStrategy[Date | None] = None,
+) -> Date:
+    """Strategy for generating dates."""
+    min_value_, max_value_ = [draw2(draw, v) for v in [min_value, max_value]]
+    match min_value_:
+        case None:
+            min_value_ = DATE_MIN
+        case Date():
+            ...
+        case _ as never:
+            assert_never(never)
+    match max_value_:
+        case None:
+            max_value_ = DATE_MAX
+        case Date():
+            ...
+        case _ as never:
+            assert_never(never)
+    py_date = draw(
+        dates(min_value=min_value_.py_date(), max_value=max_value_.py_date())
+    )
+    return Date.from_py_date(py_date)
 
 
 ##
@@ -922,7 +1021,7 @@ def _pairs_map(elements: list[_T], /) -> tuple[_T, _T]:
 
 def paths() -> SearchStrategy[Path]:
     """Strategy for generating `Path`s."""
-    reserved = {"NUL"}
+    reserved = {"AUX", "NUL"}
     strategy = text_ascii(min_size=1, max_size=10).filter(lambda x: x not in reserved)
     return lists(strategy, max_size=10).map(lambda parts: Path(*parts))
 
@@ -962,6 +1061,41 @@ class PlainDateTimesError(Exception):
     @override
     def __str__(self) -> str:
         return "Rounding requires a timedelta; got None"
+
+
+##
+
+
+@composite
+def plain_datetimes_whenever(
+    draw: DrawFn,
+    /,
+    *,
+    min_value: MaybeSearchStrategy[PlainDateTime | None] = None,
+    max_value: MaybeSearchStrategy[PlainDateTime | None] = None,
+) -> PlainDateTime:
+    """Strategy for generating plain datetimes."""
+    min_value_, max_value_ = [draw2(draw, v) for v in [min_value, max_value]]
+    match min_value_:
+        case None:
+            min_value_ = PLAIN_DATE_TIME_MIN
+        case PlainDateTime():
+            ...
+        case _ as never:
+            assert_never(never)
+    match max_value_:
+        case None:
+            max_value_ = PLAIN_DATE_TIME_MAX
+        case PlainDateTime():
+            ...
+        case _ as never:
+            assert_never(never)
+    py_datetime = draw(
+        datetimes(
+            min_value=min_value_.py_datetime(), max_value=max_value_.py_datetime()
+        )
+    )
+    return PlainDateTime.from_py_datetime(py_datetime)
 
 
 ##
@@ -1112,51 +1246,6 @@ def slices(
     start = draw(integers(0, iter_len_ - slice_len_))
     stop = start + slice_len_
     return slice(start, stop)
-
-
-##
-
-
-_STRATEGY_DIALECTS: list[Dialect] = ["sqlite", "postgresql"]
-_SQLALCHEMY_ENGINE_DIALECTS = sampled_from(_STRATEGY_DIALECTS)
-
-
-async def sqlalchemy_engines(
-    data: DataObject,
-    /,
-    *tables_or_orms: TableOrORMInstOrClass,
-    dialect: MaybeSearchStrategy[Dialect] = _SQLALCHEMY_ENGINE_DIALECTS,
-) -> AsyncEngine:
-    """Strategy for generating sqlalchemy engines."""
-    from utilities.sqlalchemy import create_async_engine
-
-    dialect_: Dialect = draw2(data, dialect)
-    if "CI" in environ:  # pragma: no cover
-        _ = assume(dialect_ == "sqlite")
-    match dialect_:
-        case "sqlite":
-            temp_path = data.draw(temp_paths())
-            path = Path(temp_path, "db.sqlite")
-            engine = create_async_engine("sqlite+aiosqlite", database=str(path))
-
-            class EngineWithPath(type(engine)): ...
-
-            engine_with_path = EngineWithPath(engine.sync_engine)
-            cast(
-                "Any", engine_with_path
-            ).temp_path = temp_path  # keep `temp_path` alive
-            return engine_with_path
-        case "postgresql":  # skipif-ci-and-not-linux
-            from utilities.sqlalchemy import ensure_tables_dropped
-
-            engine = create_async_engine(
-                "postgresql+asyncpg", host="localhost", port=5432, database="testing"
-            )
-            with assume_does_not_raise(ConnectionRefusedError):
-                await ensure_tables_dropped(engine, *tables_or_orms)
-            return engine
-        case _:  # pragma: no cover
-            raise NotImplementedError(dialect)
 
 
 ##
@@ -1319,6 +1408,41 @@ def text_printable(
 
 
 @composite
+def time_deltas_whenever(
+    draw: DrawFn,
+    /,
+    *,
+    min_value: MaybeSearchStrategy[TimeDelta | None] = None,
+    max_value: MaybeSearchStrategy[TimeDelta | None] = None,
+) -> TimeDelta:
+    """Strategy for generating time deltas."""
+    min_value_, max_value_ = [draw2(draw, v) for v in [min_value, max_value]]
+    match min_value_:
+        case None:
+            min_value_ = TIME_DELTA_MIN
+        case TimeDelta():
+            ...
+        case _ as never:
+            assert_never(never)
+    match max_value_:
+        case None:
+            max_value_ = TIME_DELTA_MAX
+        case TimeDelta():
+            ...
+        case _ as never:
+            assert_never(never)
+    py_time = draw(
+        hypothesis.strategies.timedeltas(
+            min_value=min_value_.py_timedelta(), max_value=max_value_.py_timedelta()
+        )
+    )
+    return TimeDelta.from_py_timedelta(py_time)
+
+
+##
+
+
+@composite
 def timedeltas_2w(
     draw: DrawFn,
     /,
@@ -1339,6 +1463,41 @@ def timedeltas_2w(
             max_value=min(max_value_, MAX_SERIALIZABLE_TIMEDELTA),
         )
     )
+
+
+##
+
+
+@composite
+def times_whenever(
+    draw: DrawFn,
+    /,
+    *,
+    min_value: MaybeSearchStrategy[Time | None] = None,
+    max_value: MaybeSearchStrategy[Time | None] = None,
+) -> Time:
+    """Strategy for generating times."""
+    min_value_, max_value_ = [draw2(draw, v) for v in [min_value, max_value]]
+    match min_value_:
+        case None:
+            min_value_ = TIME_MIN
+        case Time():
+            ...
+        case _ as never:
+            assert_never(never)
+    match max_value_:
+        case None:
+            max_value_ = TIME_MAX
+        case Time():
+            ...
+        case _ as never:
+            assert_never(never)
+    py_time = draw(
+        hypothesis.strategies.times(
+            min_value=min_value_.py_time(), max_value=max_value_.py_time()
+        )
+    )
+    return Time.from_py_time(py_time)
 
 
 ##
@@ -1474,6 +1633,46 @@ class ZonedDateTimesError(Exception):
         return "Rounding requires a timedelta; got None"
 
 
+##
+
+
+@composite
+def zoned_datetimes_whenever(
+    draw: DrawFn,
+    /,
+    *,
+    min_value: MaybeSearchStrategy[PlainDateTime | ZonedDateTime | None] = None,
+    max_value: MaybeSearchStrategy[PlainDateTime | ZonedDateTime | None] = None,
+    time_zone: MaybeSearchStrategy[TimeZoneLike] = UTC,
+) -> ZonedDateTime:
+    """Strategy for generating zoned datetimes."""
+    from whenever import PlainDateTime, ZonedDateTime
+
+    min_value_, max_value_ = [draw2(draw, v) for v in [min_value, max_value]]
+    time_zone_ = ensure_time_zone(draw2(draw, time_zone))
+    match min_value_:
+        case None | PlainDateTime():
+            ...
+        case ZonedDateTime():
+            with assume_does_not_raise(ValueError):
+                min_value_ = min_value_.to_tz(time_zone_.key).to_plain()
+        case _ as never:
+            assert_never(never)
+    match max_value_:
+        case None | PlainDateTime():
+            ...
+        case ZonedDateTime():
+            with assume_does_not_raise(ValueError):
+                max_value_ = max_value_.to_tz(time_zone_.key).to_plain()
+        case _ as never:
+            assert_never(never)
+    plain_datetime = draw(
+        plain_datetimes_whenever(min_value=min_value_, max_value=max_value_)
+    )
+    with assume_does_not_raise(ValueError):
+        return plain_datetime.assume_tz(time_zone_.key, disambiguate="raise")
+
+
 __all__ = [
     "Draw2Error",
     "MaybeSearchStrategy",
@@ -1482,8 +1681,10 @@ __all__ = [
     "ZonedDateTimesError",
     "assume_does_not_raise",
     "bool_arrays",
+    "date_deltas_whenever",
     "date_durations",
     "dates_two_digit_year",
+    "dates_whenever",
     "datetime_durations",
     "draw2",
     "float32s",
@@ -1507,12 +1708,12 @@ __all__ = [
     "paths",
     "plain_datetimes",
     "plain_datetimes",
+    "plain_datetimes_whenever",
     "random_states",
     "sentinels",
     "sets_fixed_length",
     "setup_hypothesis_profiles",
     "slices",
-    "sqlalchemy_engines",
     "str_arrays",
     "temp_dirs",
     "temp_paths",
@@ -1522,10 +1723,13 @@ __all__ = [
     "text_clean",
     "text_digits",
     "text_printable",
+    "time_deltas_whenever",
     "timedeltas_2w",
+    "times_whenever",
     "triples",
     "uint32s",
     "uint64s",
     "versions",
     "zoned_datetimes",
+    "zoned_datetimes_whenever",
 ]

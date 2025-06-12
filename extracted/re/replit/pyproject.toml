@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "replit"
-version = "4.1.1"  # Set by GitHub Actions
+version = "4.1.2"  # Set by GitHub Actions
 description = "A library for interacting with features of Replit"
 authors = ["Replit <contact@replit.com>", "mat <pypi@matdoes.dev>", "kennethreitz <me@kennethreitz.org>", "Scoder12 <pypi@scoder12.ml>", "AllAwesome497", ]
 license = "ISC"

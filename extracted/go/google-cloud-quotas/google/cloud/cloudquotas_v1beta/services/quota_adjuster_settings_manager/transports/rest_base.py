@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -113,6 +113,14 @@ class _BaseQuotaAdjusterSettingsManagerRestTransport(
                     "method": "get",
                     "uri": "/v1beta/{name=projects/*/locations/*/quotaAdjusterSettings}",
                 },
+                {
+                    "method": "get",
+                    "uri": "/v1beta/{name=folders/*/locations/*/quotaAdjusterSettings}",
+                },
+                {
+                    "method": "get",
+                    "uri": "/v1beta/{name=organizations/*/locations/*/quotaAdjusterSettings}",
+                },
             ]
             return http_options
 
@@ -161,6 +169,16 @@ class _BaseQuotaAdjusterSettingsManagerRestTransport(
                 {
                     "method": "patch",
                     "uri": "/v1beta/{quota_adjuster_settings.name=projects/*/locations/*/quotaAdjusterSettings}",
+                    "body": "quota_adjuster_settings",
+                },
+                {
+                    "method": "patch",
+                    "uri": "/v1beta/{quota_adjuster_settings.name=folders/*/locations/*/quotaAdjusterSettings}",
+                    "body": "quota_adjuster_settings",
+                },
+                {
+                    "method": "patch",
+                    "uri": "/v1beta/{quota_adjuster_settings.name=organizations/*/locations/*/quotaAdjusterSettings}",
                     "body": "quota_adjuster_settings",
                 },
             ]

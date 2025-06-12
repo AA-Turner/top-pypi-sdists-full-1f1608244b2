@@ -35,6 +35,33 @@ class RepositoryDetails(google.protobuf.message.Message):
 
 global___RepositoryDetails = RepositoryDetails
 
+class RemoteRepositoryDetails(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    DOCKER_REPOSITORY_FIELD_NUMBER: builtins.int
+    HUGGING_FACE_REPOSITORY_FIELD_NUMBER: builtins.int
+    REPOSITORY_REMOTE_URL_FIELD_NUMBER: builtins.int
+    @property
+    def docker_repository(self) -> global___DockerRepository:
+        """Docker repository"""
+    @property
+    def hugging_face_repository(self) -> global___HuggingFaceRepository:
+        """HuggingFace repository"""
+    repository_remote_url: builtins.str
+    """The remote repository URL"""
+    def __init__(
+        self,
+        *,
+        docker_repository: global___DockerRepository | None = ...,
+        hugging_face_repository: global___HuggingFaceRepository | None = ...,
+        repository_remote_url: builtins.str = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["docker_repository", b"docker_repository", "hugging_face_repository", b"hugging_face_repository", "repository_type", b"repository_type"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["docker_repository", b"docker_repository", "hugging_face_repository", b"hugging_face_repository", "repository_remote_url", b"repository_remote_url", "repository_type", b"repository_type"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["repository_type", b"repository_type"]) -> typing_extensions.Literal["docker_repository", "hugging_face_repository"] | None: ...
+
+global___RemoteRepositoryDetails = RemoteRepositoryDetails
+
 class DockerRepository(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 

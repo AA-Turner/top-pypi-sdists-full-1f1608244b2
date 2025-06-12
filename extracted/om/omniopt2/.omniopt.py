@@ -31,8 +31,6 @@ progress_bar_length: int = 0
 if os.environ.get("CUSTOM_VIRTUAL_ENV") == "1":
     oo_call = "omniopt"
 
-gotten_jobs: int = 0
-
 shown_run_live_share_command: bool = False
 ci_env: bool = os.getenv("CI", "false").lower() == "true"
 original_print = print
@@ -560,6 +558,7 @@ class ConfigLoader:
     checkout_to_latest_tested_version: bool
     load_data_from_existing_jobs: List[str]
     time: str
+    share_password: Optional[str]
     generate_all_jobs_at_once: bool
     result_names: Optional[List[str]]
     verbose_break_run_search_table: bool
@@ -655,6 +654,7 @@ class ConfigLoader:
         optional.add_argument('--show_generate_time_table', help='Generate a table at the end, showing how much time was spent trying to generate new points', action='store_true', default=False)
         optional.add_argument('--force_choice_for_ranges', help='Force float ranges to be converted to choice', action='store_true', default=False)
         optional.add_argument('--max_abandoned_retrial', help='Maximum number retrials to get when a job is abandoned post-generation', default=20, type=int)
+        optional.add_argument('--share_password', help='Use this as a password for share. Default is none.', default=None, type=str)
 
         speed.add_argument('--dont_warm_start_refitting', help='Do not keep Model weights, thus, refit for every generator (may be more accurate, but slower)', action='store_true', default=False)
         speed.add_argument('--refit_on_cv', help='Refit on Cross-Validation (helps in accuracy, but makes generating new points slower)', action='store_true', default=False)
@@ -882,8 +882,6 @@ if args.continue_previous_job is not None:
     if os.path.exists(path_to_force_choice_for_ranges):
         args.force_choice_for_ranges = True
 
-disable_logs = None
-
 try:
     with console.status("[bold green]Importing torch...") as status:
         import torch
@@ -1024,7 +1022,8 @@ except ImportError as e:
 
 with console.status("[bold green]Importing ax logger...") as status:
     from ax.utils.common.logger import disable_loggers
-disable_logs = disable_loggers(names=["ax.modelbridge.base"], level=logging.CRITICAL)
+
+    disable_loggers(names=["ax.modelbridge.base"], level=logging.CRITICAL)
 
 NVIDIA_SMI_LOGS_BASE = None
 global_gs: Optional[GenerationStrategy] = None
@@ -1338,7 +1337,7 @@ class ExternalProgramGenerationNode(ExternalGenerationNode):
         return temp_dir
 
     @beartype
-    def get_next_candidate(self: Any, pending_parameters: List[Any]) -> Any:
+    def get_next_candidate(self: Any, pending_parameters: List[TParameterization]) -> Any:
         if self.parameters is None:
             raise RuntimeError("Parameters are not initialized. Call update_generator_state first.")
 
@@ -1458,6 +1457,9 @@ def run_live_share_command(force: bool = False) -> Tuple[str, str]:
 
             if force:
                 _command = f"{_command} --force"
+
+            if args.share_password:
+                _command = f"{_command} --password='{args.share_password}'"
 
             if not shown_run_live_share_command:
                 print_debug(f"run_live_share_command: {_command}")
@@ -3911,7 +3913,7 @@ def _count_sobol_or_completed(this_csv_file_path: str, _type: str) -> int:
 
     assert df is not None, "DataFrame should not be None after reading CSV file"
 
-    if _type == "Sobol" or type == "SOBOL":
+    if _type.lower() == "sobol":
         rows = df[df["generation_node"] == _type]
     else:
         rows = df[df["trial_status"] == _type]
@@ -6601,26 +6603,27 @@ def write_continue_run_uuid_to_file() -> None:
 
 @beartype
 def save_state_files() -> None:
-    with console.status("[bold green]Saving state files..."):
-        write_state_file("joined_run_program", global_vars["joined_run_program"])
-        write_state_file("experiment_name", global_vars["experiment_name"])
-        write_state_file("mem_gb", str(global_vars["mem_gb"]))
-        write_state_file("max_eval", str(max_eval))
-        write_state_file("gpus", str(args.gpus))
-        write_state_file("time", str(global_vars["_time"]))
-        write_state_file("run.sh", "omniopt '" + " ".join(sys.argv[1:]) + "'")
-        write_state_file("run_uuid", str(run_uuid))
-        if args.external_generator:
-            write_state_file("external_generator", str(args.external_generator))
+    if len(args.calculate_pareto_front_of_job) == 0:
+        with console.status("[bold green]Saving state files..."):
+            write_state_file("joined_run_program", global_vars["joined_run_program"])
+            write_state_file("experiment_name", global_vars["experiment_name"])
+            write_state_file("mem_gb", str(global_vars["mem_gb"]))
+            write_state_file("max_eval", str(max_eval))
+            write_state_file("gpus", str(args.gpus))
+            write_state_file("time", str(global_vars["_time"]))
+            write_state_file("run.sh", "omniopt '" + " ".join(sys.argv[1:]) + "'")
+            write_state_file("run_uuid", str(run_uuid))
+            if args.external_generator:
+                write_state_file("external_generator", str(args.external_generator))
 
-        if args.follow:
-            write_state_file("follow", "True")
+            if args.follow:
+                write_state_file("follow", "True")
 
-        if args.main_process_gb:
-            write_state_file("main_process_gb", str(args.main_process_gb))
+            if args.main_process_gb:
+                write_state_file("main_process_gb", str(args.main_process_gb))
 
-        if args.force_choice_for_ranges:
-            write_state_file("force_choice_for_ranges", str(args.main_process_gb))
+            if args.force_choice_for_ranges:
+                write_state_file("force_choice_for_ranges", str(args.main_process_gb))
 
 @beartype
 def execute_evaluation(_params: list) -> Optional[int]:
@@ -6951,8 +6954,6 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
 
 @beartype
 def _generate_trials(n: int, recursion: bool) -> Tuple[Dict[int, Any], bool]:
-    global gotten_jobs
-
     trials_dict: Dict[int, Any] = {}
     trial_durations: List[float] = []
 
@@ -6985,7 +6986,6 @@ def _generate_trials(n: int, recursion: bool) -> Tuple[Dict[int, Any], bool]:
                 if trial_successful:
                     cnt += 1
                     trials_dict[trial_index] = arm.parameters
-                    gotten_jobs += 1
 
         return _finalize_generation(trials_dict, cnt, n, start_time)
 
@@ -9410,8 +9410,7 @@ def main() -> None:
 
         write_failed_logs(data_dict, error_description)
 
-    if len(args.calculate_pareto_front_of_job) == 0:
-        save_state_files()
+    save_state_files()
 
     print_run_info()
 

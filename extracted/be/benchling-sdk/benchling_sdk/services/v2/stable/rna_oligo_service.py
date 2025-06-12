@@ -80,6 +80,7 @@ class RnaOligoService(BaseService):
     def _rna_oligos_page(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         bases: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -106,6 +107,7 @@ class RnaOligoService(BaseService):
         response = list_rna_oligos.sync_detailed(
             client=self.client,
             modified_at=none_as_unset(modified_at),
+            created_at=none_as_unset(created_at),
             name=none_as_unset(name),
             bases=none_as_unset(bases),
             folder_id=none_as_unset(folder_id),
@@ -135,6 +137,7 @@ class RnaOligoService(BaseService):
     def list(
         self,
         modified_at: Optional[str] = None,
+        created_at: Optional[str] = None,
         name: Optional[str] = None,
         bases: Optional[str] = None,
         folder_id: Optional[str] = None,
@@ -166,6 +169,7 @@ class RnaOligoService(BaseService):
         def api_call(next_token: NextToken) -> Response[RnaOligosPaginatedList]:
             return self._rna_oligos_page(
                 modified_at=modified_at,
+                created_at=created_at,
                 name=name,
                 bases=bases,
                 folder_id=folder_id,

@@ -1,13 +1,11 @@
-from __future__ import annotations
-
 import ssl
 
 import certifi
 import pytest
 
-from cibuildwheel.util import download
+from cibuildwheel.util.file import download
 
-DOWNLOAD_URL = "https://raw.githubusercontent.com/pypa/cibuildwheel/v1.6.3/requirements-dev.txt"
+DOWNLOAD_URL = "https://cdn.jsdelivr.net/gh/pypa/cibuildwheel@v1.6.3/requirements-dev.txt"
 
 
 def test_download(monkeypatch, tmp_path):

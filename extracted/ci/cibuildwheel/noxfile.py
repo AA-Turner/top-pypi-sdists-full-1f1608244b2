@@ -1,45 +1,34 @@
-from __future__ import annotations
+#!/usr/bin/env -S uv run
+
+# /// script
+# dependencies = ["nox>=2025.2.9"]
+# ///
+
+"""
+cibuildwheel's nox support
+
+Tags:
+
+    lint: All linting jobs
+    update: All update jobs
+
+See sessions with `nox -l`
+"""
 
 import os
 import shutil
 import sys
 from pathlib import Path
-from typing import Any
 
 import nox
 
-nox.needs_version = ">=2024.4.15"
-nox.options.sessions = ["lint", "pylint", "check_manifest", "tests"]
+nox.needs_version = ">=2025.2.9"
 nox.options.default_venv_backend = "uv|virtualenv"
 
 DIR = Path(__file__).parent.resolve()
 
 
-def install_and_run(session: nox.Session, script: str, *args: str, **kwargs: Any) -> str | None:
-    deps = nox.project.load_toml(script)["dependencies"]
-    session.install(*deps)
-    return session.run("python", script, *args, **kwargs)
-
-
-def dep_group(group: str) -> list[str]:
-    return nox.project.load_toml("pyproject.toml")["dependency-groups"][group]  # type: ignore[no-any-return]
-
-
-@nox.session
-def tests(session: nox.Session) -> None:
-    """
-    Run the unit and regular tests.
-    """
-    session.install("-e.", *dep_group("test"))
-    if session.posargs:
-        session.run("pytest", *session.posargs)
-    else:
-        unit_test_args = ["--run-docker"] if sys.platform.startswith("linux") else []
-        session.run("pytest", "unit_test", *unit_test_args)
-        session.run("pytest", "test", "-x", "--durations", "0", "--timeout=2400", "test")
-
-
-@nox.session
+@nox.session(tags=["lint"])
 def lint(session: nox.Session) -> None:
     """
     Run the linter.
@@ -48,7 +37,7 @@ def lint(session: nox.Session) -> None:
     session.run("pre-commit", "run", "--all-files", *session.posargs)
 
 
-@nox.session
+@nox.session(tags=["lint"])
 def pylint(session: nox.Session) -> None:
     """
     Run pylint.
@@ -59,32 +48,40 @@ def pylint(session: nox.Session) -> None:
 
 
 @nox.session
-def check_manifest(session: nox.Session) -> None:
+def tests(session: nox.Session) -> None:
     """
-    Ensure all needed files are included in the manifest.
+    Run the unit and regular tests.
     """
+    pyproject = nox.project.load_toml()
+    session.install("-e.", *nox.project.dependency_groups(pyproject, "test"))
+    if session.posargs:
+        session.run("pytest", *session.posargs)
+    else:
+        unit_test_args = ["--run-docker"] if sys.platform.startswith("linux") else []
+        session.run("pytest", "unit_test", *unit_test_args)
+        session.run("pytest", "test", "-x", "--durations", "0", "--timeout=2400", "test")
 
-    session.install("check-manifest")
-    session.run("check-manifest", *session.posargs)
 
-
-@nox.session
+@nox.session(default=False, tags=["update"])
 def update_constraints(session: nox.Session) -> None:
     """
     Update the dependencies inplace.
     """
+
+    session.install("-e.", "click")
 
     resources = Path("cibuildwheel/resources")
 
     if session.venv_backend != "uv":
         session.install("uv>=0.1.23")
 
-    for minor_version in range(7, 14):
+    # CUSTOM_COMPILE_COMMAND is a pip-compile option that tells users how to
+    # regenerate the constraints files
+    env = os.environ.copy()
+    env["UV_CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
+
+    for minor_version in range(8, 15):
         python_version = f"3.{minor_version}"
-        env = os.environ.copy()
-        # CUSTOM_COMPILE_COMMAND is a pip-compile option that tells users how to
-        # regenerate the constraints files
-        env["UV_CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
         output_file = resources / f"constraints-python{python_version.replace('.', '')}.txt"
         session.run(
             "uv",
@@ -98,7 +95,7 @@ def update_constraints(session: nox.Session) -> None:
         )
 
     shutil.copyfile(
-        resources / "constraints-python312.txt",
+        resources / "constraints-python314.txt",
         resources / "constraints.txt",
     )
 
@@ -106,10 +103,19 @@ def update_constraints(session: nox.Session) -> None:
     pyodides = build_platforms["pyodide"]["python_configurations"]
     for pyodide in pyodides:
         python_version = ".".join(pyodide["version"].split(".")[:2])
-        pyodide_build_version = pyodide["pyodide_build_version"]
-        output_file = resources / f"constraints-pyodide{python_version.replace('.', '')}.txt"
+        pyodide_version = pyodide["default_pyodide_version"]
+
         tmp_file = Path(session.create_tmp()) / "constraints-pyodide.in"
-        tmp_file.write_text(f"pip\nbuild[virtualenv]\npyodide-build=={pyodide_build_version}")
+
+        session.run(
+            "python",
+            "bin/generate_pyodide_constraints.py",
+            "--output-file",
+            tmp_file,
+            pyodide_version,
+        )
+
+        output_file = resources / f"constraints-pyodide{python_version.replace('.', '')}.txt"
         session.run(
             "uv",
             "pip",
@@ -122,59 +128,62 @@ def update_constraints(session: nox.Session) -> None:
         )
 
 
-@nox.session
+@nox.session(default=False, tags=["update"])
 def update_pins(session: nox.Session) -> None:
     """
-    Update the python, docker and virtualenv pins version inplace.
+    Update the python, docker, virtualenv, node, and python-build-standalone
+    version pins inplace.
     """
-    session.install("-e.", *dep_group("bin"))
+    pyproject = nox.project.load_toml()
+    session.install("-e.", *nox.project.dependency_groups(pyproject, "bin"))
     session.run("python", "bin/update_pythons.py", "--force")
     session.run("python", "bin/update_docker.py")
     session.run("python", "bin/update_virtualenv.py", "--force")
     session.run("python", "bin/update_nodejs.py", "--force")
+    session.run("python", "bin/update_python_build_standalone.py")
 
 
-@nox.session(reuse_venv=True)
+@nox.session(default=False, reuse_venv=True, tags=["update"])
 def update_proj(session: nox.Session) -> None:
     """
     Update the README inplace.
     """
-    install_and_run(
-        session,
+    session.install_and_run_script(
         "bin/projects.py",
         "docs/data/projects.yml",
         *session.posargs,
     )
 
 
-@nox.session(reuse_venv=True)
+@nox.session(default=False, reuse_venv=True, tags=["update"])
 def generate_schema(session: nox.Session) -> None:
     """
     Generate the cibuildwheel.schema.json file.
     """
-    output = install_and_run(session, "bin/generate_schema.py", silent=True)
+    output = session.install_and_run_script("bin/generate_schema.py", silent=True)
     assert isinstance(output, str)
     DIR.joinpath("cibuildwheel/resources/cibuildwheel.schema.json").write_text(output)
 
 
-@nox.session(reuse_venv=True)
+@nox.session(default=False, reuse_venv=True)
 def bump_version(session: nox.Session) -> None:
     """
     Bump cibuildwheel's version. Interactive.
     """
-    install_and_run(session, "bin/bump_version.py")
+    session.install_and_run_script("bin/bump_version.py")
 
 
-@nox.session(python="3.12")
+@nox.session(default=False)
 def docs(session: nox.Session) -> None:
     """
     Build the docs. Will serve unless --non-interactive
     """
-    session.install("-e.", *dep_group("docs"))
+    pyproject = nox.project.load_toml()
+    session.install("-e.", *nox.project.dependency_groups(pyproject, "docs"))
     session.run("mkdocs", "serve" if session.interactive else "build", "--strict", *session.posargs)
 
 
-@nox.session
+@nox.session(default=False)
 def build(session: nox.Session) -> None:
     """
     Build an SDist and wheel.
@@ -190,3 +199,7 @@ def build(session: nox.Session) -> None:
 
     session.install("build")
     session.run("python", "-m", "build")
+
+
+if __name__ == "__main__":
+    nox.main()

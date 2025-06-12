@@ -19,6 +19,11 @@ class BaseResponses:
         message:str = "Invalid expand"
         description:str = "Invalid expand field(s) configuration are given. Check 'other' for more information."
 
+    class InvalidParameter(BadRequest):
+        code:str = "MAL-IPR-001"
+        message:str = "Invalid parameters"
+        description:str = "Invalid parameters and/or parameters combinations is given. Check 'other' for more information."
+
     class InvalidSystemRole(BadRequest):
         code:str = "MAL-ISR-001"
         message:str = "Invalid system role"

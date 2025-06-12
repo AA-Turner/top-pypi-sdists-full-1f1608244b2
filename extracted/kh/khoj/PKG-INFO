@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: khoj
-Version: 1.42.3
+Version: 1.42.5
 Summary: Your Second Brain
 Project-URL: Homepage, https://khoj.dev
 Project-URL: Documentation, https://docs.khoj.dev
@@ -53,7 +53,7 @@ Requires-Dist: magika~=0.5.1
 Requires-Dist: markdown-it-py~=3.0.0
 Requires-Dist: markdownify~=0.11.6
 Requires-Dist: openai-whisper>=20231117
-Requires-Dist: openai>=1.0.0
+Requires-Dist: openai>=1.86.0
 Requires-Dist: pgvector==0.2.4
 Requires-Dist: phonenumbers==8.13.27
 Requires-Dist: pillow~=10.0.0

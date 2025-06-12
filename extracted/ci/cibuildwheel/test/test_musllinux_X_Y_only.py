@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import textwrap
 
 import pytest
@@ -26,11 +24,11 @@ project_with_manylinux_symbols = test_projects.new_c_project(
 
 @pytest.mark.parametrize(
     "musllinux_image",
-    ["musllinux_1_1", "musllinux_1_2"],
+    ["musllinux_1_2"],
 )
 @pytest.mark.usefixtures("docker_cleanup")
 def test(musllinux_image, tmp_path):
-    if utils.platform != "linux":
+    if utils.get_platform() != "linux":
         pytest.skip("the container image test is only relevant to the linux build")
 
     project_dir = tmp_path / "project"
@@ -44,6 +42,7 @@ def test(musllinux_image, tmp_path):
         "CIBW_MUSLLINUX_AARCH64_IMAGE": musllinux_image,
         "CIBW_MUSLLINUX_PPC64LE_IMAGE": musllinux_image,
         "CIBW_MUSLLINUX_S390X_IMAGE": musllinux_image,
+        "CIBW_MUSLLINUX_ARMV7L_IMAGE": musllinux_image,
     }
 
     actual_wheels = utils.cibuildwheel_run(project_dir, add_env=add_env, single_python=True)

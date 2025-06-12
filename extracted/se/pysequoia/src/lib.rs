@@ -78,7 +78,7 @@ pub struct Decrypted {
 #[pymethods]
 impl Decrypted {
     #[getter]
-    pub fn bytes(&self) -> Option<Cow<[u8]>> {
+    pub fn bytes(&self) -> Option<Cow<'_, [u8]>> {
         self.content
             .as_ref()
             .map(|content| Cow::Borrowed(&content[..]))
@@ -93,6 +93,7 @@ impl Decrypted {
 #[pymodule]
 fn pysequoia(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<cert::Cert>()?;
+    m.add_class::<cert::Profile>()?;
     m.add_class::<signature::Sig>()?;
     m.add_class::<notation::Notation>()?;
     m.add_class::<sign::SignatureMode>()?;

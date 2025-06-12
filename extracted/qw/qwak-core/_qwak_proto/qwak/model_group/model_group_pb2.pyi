@@ -66,3 +66,39 @@ class ModelGroupBriefInfoResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["model_group_created_at", b"model_group_created_at", "model_group_description", b"model_group_description", "model_group_id", b"model_group_id", "repository_details", b"repository_details"]) -> None: ...
 
 global___ModelGroupBriefInfoResponse = ModelGroupBriefInfoResponse
+
+class CreateRepositoriesForModelGroupRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    MODEL_GROUP_UUID_FIELD_NUMBER: builtins.int
+    REPOSITORY_DETAILS_FIELD_NUMBER: builtins.int
+    model_group_uuid: builtins.str
+    """the model group UUID for which to create repositories"""
+    @property
+    def repository_details(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[qwak.model_group.model_group_repository_details_pb2.RemoteRepositoryDetails]:
+        """List of remote repository details to create for the model group"""
+    def __init__(
+        self,
+        *,
+        model_group_uuid: builtins.str = ...,
+        repository_details: collections.abc.Iterable[qwak.model_group.model_group_repository_details_pb2.RemoteRepositoryDetails] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["model_group_uuid", b"model_group_uuid", "repository_details", b"repository_details"]) -> None: ...
+
+global___CreateRepositoriesForModelGroupRequest = CreateRepositoriesForModelGroupRequest
+
+class CreateRepositoriesForModelGroupResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    ARTIFACTORY_REPOSITORY_DETAILS_FIELD_NUMBER: builtins.int
+    @property
+    def artifactory_repository_details(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[qwak.model_group.model_group_repository_details_pb2.RepositoryDetails]:
+        """List of repository details associated with this model group"""
+    def __init__(
+        self,
+        *,
+        artifactory_repository_details: collections.abc.Iterable[qwak.model_group.model_group_repository_details_pb2.RepositoryDetails] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["artifactory_repository_details", b"artifactory_repository_details"]) -> None: ...
+
+global___CreateRepositoriesForModelGroupResponse = CreateRepositoriesForModelGroupResponse

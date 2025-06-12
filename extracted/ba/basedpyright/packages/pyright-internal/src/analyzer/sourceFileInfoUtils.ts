@@ -16,7 +16,7 @@ export function isUserCode(fileInfo: SourceFileInfo | undefined) {
         !!fileInfo &&
         ((fileInfo.isTracked && !fileInfo.isThirdPartyImport && !fileInfo.isTypeshedFile) ||
             // notebooks are always user code (source: a comment on AnalyzerService.setFileOpened)
-            fileInfo.sourceFile.getIPythonMode() === IPythonMode.CellDocs)
+            fileInfo.ipythonMode === IPythonMode.CellDocs)
     );
 }
 
@@ -51,9 +51,9 @@ export function verifyNoCyclesInChainedFiles<T extends SourceFileInfo>(program: 
         return;
     }
 
-    const set = new Set<string>([fileInfo.sourceFile.getUri().key]);
+    const set = new Set<string>([fileInfo.uri.key]);
     while (nextChainedFile) {
-        const path = nextChainedFile.sourceFile.getUri().key;
+        const path = nextChainedFile.uri.key;
         if (set.has(path)) {
             // We found a cycle.
             fail(
@@ -103,11 +103,11 @@ export function createChainedByList<T extends SourceFileInfo>(program: ProgramVi
 
 function _parseAllOpenCells(program: ProgramView): void {
     for (const file of program.getSourceFileInfoList()) {
-        if (file.sourceFile.getIPythonMode() !== IPythonMode.CellDocs) {
+        if (file.ipythonMode !== IPythonMode.CellDocs) {
             continue;
         }
 
-        program.getParserOutput(file.sourceFile.getUri());
+        program.getParserOutput(file.uri);
         program.handleMemoryHighUsage();
     }
 }
